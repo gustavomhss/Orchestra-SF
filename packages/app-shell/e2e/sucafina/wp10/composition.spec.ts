@@ -3,6 +3,7 @@ import type { Page, Response, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfDomainPageCap03 } from "@orchestra/schema/sucafina/domain"
+import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { SfBiBiDataOutput, SfBiBiOptionsOutput } from "@orchestra/schema/sucafina/bi"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { createHash } from "node:crypto"
@@ -118,7 +119,11 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           if ((message.type() === "error" || message.type() === "warning") && browserEvents.length < 200) browserEvents.push({ kind: message.type(), message: redact(message.text()) })
         })
         page.on("pageerror", (error) => { if (browserEvents.length < 200) browserEvents.push({ kind: "pageerror", message: redact(error.message) }) })
+        let contextReadUrl: string | undefined
         page.on("response", (response) => {
+          const target = new URL(response.url())
+          if (response.request().method() === "GET" && target.origin === origin &&
+              target.pathname === "/sucafina/api/ui/context") contextReadUrl = target.toString()
           const route = safeRoute(response.url())
           if (route && http.length < 500 && ["document", "fetch", "xhr"].includes(response.request().resourceType())) http.push({ method: response.request().method(), route, status: response.status() })
         })
@@ -308,7 +313,29 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           record.facts.openHttp = response?.status() ?? 0
           expect(response?.status()).toBe(200)
           const sourcing = page.locator(".sf-u12-root")
-          await expect(sourcing.locator('p[data-request-summary="' + corpus.sourcing.requestId + '"]')).toContainText(corpus.sourcing.title)
+          try {
+            await expect(sourcing.locator('p[data-request-summary="' + corpus.sourcing.requestId + '"]')).toContainText(corpus.sourcing.title)
+          } catch (failure) {
+            // Inspect the original context only after admission failed. Preserve
+            // its actual selector URL; publish no identity, headers or cookies.
+            if (contextReadUrl) {
+              try {
+                const diagnostic = await page.request.get(contextReadUrl)
+                record.facts.contextHttp = diagnostic.status()
+                const original = Schema.decodeUnknownSync(SfContextResult)(await diagnostic.json())
+                record.facts.contextStatus = original.status
+                if (original.status === "ok") {
+                  record.facts.cap25Destinations = JSON.stringify(original.value.destinations
+                    .filter((entry) => entry.capabilityId === "CAP25")
+                    .map(({ capabilityId, canRead, allowedActionIds }) => ({ capabilityId, canRead, allowedActionIds })))
+                  record.facts.cap25Availability = JSON.stringify(original.value.availability.filter((entry) => entry.resource === "CAP25"))
+                }
+              } catch {
+                record.facts.contextDiagnostic = "Original context unavailable; original UI assertion retained"
+              }
+            }
+            throw failure
+          }
           await expect(sourcing.locator("header[data-source-version]")).toHaveAttribute("data-source-version", /^[1-9]\d*$/)
           const table = sourcing.getByRole("table", { name: "Quotations", exact: true })
           await expect(table.getByRole("columnheader")).toHaveText([
