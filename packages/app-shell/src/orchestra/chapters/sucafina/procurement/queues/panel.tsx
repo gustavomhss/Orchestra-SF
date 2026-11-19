@@ -144,7 +144,12 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
     {
       id: "request", labelKey: copyKey("sf.u10.queue.request"), align: "start",
       widthPolicy: { kind: "content", minPx: 100, maxPx: 240 },
-      render: (row) => <a href={"?request=" + encodeURIComponent(row.id) + "#" + encodeURIComponent(row.id)}>{row.id}</a>,
+      render: (row) => <a
+        href={"?request=" + encodeURIComponent(row.id) + "#" + encodeURIComponent(row.id)}
+        data-source-ref={row.sourceRef ?? undefined}
+        data-source-digest={row.sourceDigest ?? undefined}
+        data-source-version={row.sourceVersion === null ? undefined : String(row.sourceVersion)}
+      >{row.id}</a>,
     },
     {
       id: "value-basis", labelKey: copyKey("sf.u10.queue.valueBasis"), align: "start",

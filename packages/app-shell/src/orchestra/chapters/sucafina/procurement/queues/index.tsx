@@ -36,6 +36,7 @@ export function SfProcurementQueueView(props: SfSurfaceProps<"CAP25">) {
         group: null,
         sourceRef: record.sourceRef ?? null,
         sourceDigest: record.sourceDigest ?? null,
+        sourceVersion: record.sourceVersion ?? null,
         version: Number.isSafeInteger(version) ? version! : null,
         moneySentence: record.moneySentence ?? null,
         status: record.status,

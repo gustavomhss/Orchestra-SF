@@ -14,6 +14,7 @@ import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
+import { isPoWritable } from "../requests/model"
 import {
   editableSourcing, editableStages, quoteIsPersisted, recordedFx, requestRevision, sourcingSourceFields,
   requestVersion, uniqueRequest, type Cap25PageOk, type QuoteEdit, type SourcingAction,
@@ -142,6 +143,17 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
         resource.state!=="denied"&&resource.state!=="unavailable"&&
         resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25."+action&&
+          operation.state==="ready"&&operation.operational))
+  }
+  const poSubmitOpen=()=>{
+    const current=page(),ready=host.ready(),row=request()
+    if(!current||!ready||!row||!isPoWritable(row))return false
+    return ready.context.destinations.some((destination)=>destination.capabilityId==="CAP25"&&
+        destination.canRead&&destination.allowedActionIds.includes("submit_po"))&&
+      current.value.allowedActionIds.includes("submit_po")&&
+      ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
+        resource.state!=="denied"&&resource.state!=="unavailable"&&
+        resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25.submit_po"&&
           operation.state==="ready"&&operation.operational))
   }
   const read=async(token:string,requestRef:string|undefined,signal:AbortSignal):Promise<PageRead>=>{
@@ -821,8 +833,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
               </Show>
               <Show when={request()?.poEstimate}><p role="status">{request()?.poEstimate}</p></Show>
               <Show when={request()?.orderDifference}><p role="status">{request()?.orderDifference}</p></Show>
-              <Show when={request()?.status==="sourcing"}>
-                <button type="button" disabled>{language.t("sf.u11.remaining.submitPo")}</button>
+              <Show when={request()?.status==="sourcing"||request()?.status==="src_pending"}>
+                <button type="button" disabled={!poSubmitOpen()}>{language.t("sf.u11.remaining.submitPo")}</button>
               </Show>
             </section>
           </Show>

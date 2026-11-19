@@ -169,6 +169,7 @@ export const SfProcurementRequest = Schema.Struct({
   monetaryState: Schema.optional(Schema.NullOr(Schema.String)),
   sourceRef: Schema.optional(Schema.NullOr(Schema.String)),
   sourceDigest: Schema.optional(Schema.NullOr(Schema.String)),
+  sourceVersion: Schema.optional(Schema.NullOr(PositiveInteger)),
   moneySentence: Schema.optional(Schema.NullOr(Schema.String)),
   poEstimate: Schema.optional(Schema.NullOr(Schema.String)),
   orderDifference: Schema.optional(Schema.NullOr(Schema.String)),
