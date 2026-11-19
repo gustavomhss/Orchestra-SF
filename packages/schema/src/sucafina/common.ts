@@ -45,6 +45,8 @@ export const SfOperationIds = [
   "ctx.installations",
   "ctx.login",
   "ctx.logout",
+  "dashboard.dashboard-draft-read",
+  "dashboard.dashboard-hot-topic-draft-outcome",
   "dashboard.dashboard-agenda",
   "dashboard.dashboard-capture",
   "dashboard.dashboard-history",
