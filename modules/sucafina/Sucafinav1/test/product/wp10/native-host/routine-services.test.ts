@@ -15,6 +15,7 @@ import { createSfRoutineServices } from "../../../../../../../apps/cli/src/sucaf
 import { createSfRoutinePublicationContribution } from "../../../../../../../apps/cli/src/sucafina-product/routine-publication.ts"
 import type { SfRoutineNativePort, SfRoutineNativeRecord, SfRoutinePlan, SfRoutineServicesInput } from "../../../../../../../apps/cli/src/sucafina-product/routine-services.ts"
 import { acquireRoutineWorkflow } from "../../../../product/routines/publication.ts"
+import { createRoutineCapabilities } from "../../../../product/routines/capabilities.ts"
 import type { RoutinePublicationHost } from "../../../../product/routines/publication.ts"
 import { routineArtifactDigest, routineInputDigest } from "../../../../product/routines/result-access.ts"
 import type { RoutineAdmittedInput, RoutineArtifact, RoutineExecutionSnapshot } from "../../../../product/routines/result-access.ts"
@@ -22,18 +23,31 @@ import { createRoutineUiFixture } from "../../wp09/ui-authority-fixture.ts"
 
 const caseRef = { id: "case", incarnation: "incarnation", version: 1 }
 
-test("routine host registers every producer descriptor and refuses absent native admission explicitly", async () => {
+test("routine host distinguishes declared capabilities from absent installed ports", async () => {
   const ui = await createRoutineUiFixture("project", "person")
-  const service = createSfRoutineServices({
+  const input: SfRoutineServicesInput = {
     authority: {
       revalidateDomainContext: (call) => call.kind === "ui" ? ui.authority.revalidate(call) : Promise.resolve(false),
       receiptFor: (call, operation, digest, resultDigest) => call.kind === "ui" ? ui.authority.receiptFor(call, operation, digest, resultDigest) : undefined,
     },
     resolveCase: async () => ({ status: "ok", value: caseRef }), resolveInputs: async () => ({ status: "ok", value: [] }), revalidateSources: async () => true,
+  }
+  const service = createSfRoutineServices(input)
+  // Canonical definitions are metadata, not installed C07 or ScheduledTask readiness.
+  // Enumerating them must not invoke any absent runtime producer.
+  const metadataOnly = async (): Promise<never> => { throw new Error("Metadata enumeration invoked runtime I/O") }
+  const definitions = createRoutineCapabilities({
+    routines: service.routines, authority: input.authority,
+    resolveRecipe: metadataOnly, resolveCase: metadataOnly, prepareWatch: metadataOnly, revalidateOutput: metadataOnly,
+    requiredAuthority: {
+      sf_routine_catalog: ["routines:read"], sf_routine_prepare: ["routines:prepare"], sf_routine_run: ["routines:execute"],
+      sf_routine_status: ["routines:read"], sf_routine_result: ["routines:read"], sf_watch_prepare: ["routines:prepare"],
+    },
   })
-  expect(service.descriptors.map((descriptor) => descriptor.id)).toEqual([
+  expect(definitions.map((descriptor) => descriptor.id)).toEqual([
     "sf_routine_catalog", "sf_routine_prepare", "sf_routine_run", "sf_routine_status", "sf_routine_result", "sf_watch_prepare",
   ])
+  expect(service.descriptors).toEqual([])
   expect(await service.routines.catalog("review", ui.context)).toEqual({ status: "unavailable", reason: "routine-publication-port-unavailable" })
   expect(await service.routines.prepareAdmission({ publishedRecipeRef: "recipe", planRevisionId: "plan", writeScope: [], inputRefs: [], parameters: {} }, ui.context))
     .toEqual({ status: "unavailable", reason: "native-routine-admission-port-unavailable" })
@@ -87,6 +101,10 @@ test("routine host consumes pinned publication and native receipts without promo
           resolveCase: async () => ({ status: "ok", value: caseRef }), resolveInputs: async () => ({ status: "ok", value: [] }), revalidateSources: async () => true,
         }
         const service = createSfRoutineServices(dependencies)
+        expect(service.descriptors.map((descriptor) => descriptor.id)).toEqual([
+          "sf_routine_catalog", "sf_routine_prepare", "sf_routine_run", "sf_routine_status", "sf_routine_result",
+        ])
+        expect(service.descriptors.some((descriptor) => descriptor.id === "sf_watch_prepare")).toBe(false)
         expect(await service.routines.catalog("review", ui.context)).toEqual({ status: "needs-input", reason: "published-workflow-plan-required" })
         state.native = native
         expect(await service.routines.catalog("review", ui.context)).toMatchObject({ status: "ok", value: [{ documentId: draft.id, publishedVersion: draft.versionId, planRevisionId: "native-plan" }] })

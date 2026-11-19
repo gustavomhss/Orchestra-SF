@@ -413,8 +413,8 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   )
 
   const detail = (item: PlannerVersion) => {
-    const draft = draftValue()
-    const editable = !!draft && allowed(item, "save")
+    const draft = () => draftValue()
+    const editable = () => !!draft() && allowed(item, "save")
     const actions: readonly SfAction[] = ([
       { id: "copy", labelKey: key("sf.u46.copy"), tone: "secondary", disabled: !allowed(item, "copy"), busy: screen.busy,
         onInvoke: () => begin("copy", item) },
@@ -443,19 +443,19 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           id: "fields", titleKey: key("sf.u46.edit"), state: model.view.state,
           content: <div class="sf-u46-fields">
             <label for="sf-u46-name">{copy.t(key("sf.u46.name"))}</label>
-            <input id="sf-u46-name" type="text" class="mx-input" value={draft?.name ?? item.name} disabled={!editable}
+            <input id="sf-u46-name" type="text" class="mx-input" value={draft()?.name ?? item.name} disabled={!editable()}
               onInput={(event) => {
                 const state = screen.draft?.snapshot()
-                if (state?.availability === "active" && editable)
+                if (state?.availability === "active" && editable())
                   screen.draft?.edit({ ...state.value, name: event.currentTarget.value })
               }} />
             <label for="sf-u46-year">{copy.t(key("sf.u46.year"))}</label>
             <input id="sf-u46-year" type="number" class="mx-input" min="2001" max="2099"
-              value={String(draft?.year ?? item.year)} disabled={!editable || item.locked || item.official}
+              value={String(draft()?.year ?? item.year)} disabled={!editable() || item.locked || item.official}
               onInput={(event) => {
                 const state = screen.draft?.snapshot()
                 const raw = event.currentTarget.value
-                if (state?.availability === "active" && editable && /^\d{4}$/.test(raw))
+                if (state?.availability === "active" && editable() && /^\d{4}$/.test(raw))
                   screen.draft?.edit({ ...state.value, year: Number(raw) })
               }} />
             <Show when={screen.error}>
@@ -465,7 +465,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           </div>,
         }]}
         primaryAction={{
-          id: "save", labelKey: key("sf.u46.save"), tone: "primary", disabled: !editable || (() => { const s = screen.draft?.snapshot(); return s?.availability !== "active" || s.dirty !== true })(),
+          id: "save", labelKey: key("sf.u46.save"), tone: "primary", disabled: !editable() || (() => { const s = screen.draft?.snapshot(); return s?.availability !== "active" || s.dirty !== true })(),
           busy: screen.busy, onInvoke: () => begin("save", item),
         }}
         secondaryActions={actions.filter((item) => item.tone !== "danger")}
