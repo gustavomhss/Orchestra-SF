@@ -13,13 +13,13 @@ jobs:
       - name: Read completed proposal artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14578598211/zip > "$RUNNER_TEMP/proposals7.zip"
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14579967771/zip > "$RUNNER_TEMP/proposals8.zip"
       - name: Extract original producer observations and page text
         run: |
           python3 - <<'PY'
           import base64, io, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Proposal gate7 original fifth-journey timeline", "", "Read-only source run44623930895, artifact14578598211, snapshotfc566a0a339b674f71166119eac4563551315287. No rerun.", ""]
+          lines = ["# Proposal gate8 original fifth-journey timeline", "", "Read-only source run44626779891, artifact14579967771, snapshota2099c01c33fedebd2c8fe64c15a6af0a435ac6e. No rerun.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|idempotency[-_]?key|[?&](?:code|token|key)=", re.I)
           def clean(value):
               if isinstance(value, dict):
@@ -47,7 +47,7 @@ jobs:
                           lines.extend(["## Original fifth-journey report", "", "```json", rendered, "```", ""])
                   for key, item in value.items():
                       if key != "attachments" and isinstance(item, (dict, list)): visit(item)
-          with zipfile.ZipFile(root / "proposals7.zip") as archive:
+          with zipfile.ZipFile(root / "proposals8.zip") as archive:
               for name in archive.namelist():
                   if not name.endswith("/playwright-report/index.html"): continue
                   html = archive.read(name).decode("utf-8", "replace")
@@ -60,11 +60,11 @@ jobs:
           text = "\n".join(lines) + "\n"
           if not seen: raise RuntimeError("No original fifth-journey report found")
           if len(text) > 600000: raise RuntimeError("Original observation exceeds bounded audit limit")
-          payload = {"message": "docs(sf): retain original proposal gate7 fifth journey timeline", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
+          payload = {"message": "docs(sf): retain original proposal gate8 fifth journey timeline", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
           (root / "proposal-payload.json").write_text(json.dumps(payload))
           print("Read " + str(len(seen)) + " original observations; redacted credential fields only.")
           PY
       - name: Persist original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-timeline-44623930895.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-timeline-44626779891.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
