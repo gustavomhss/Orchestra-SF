@@ -38,9 +38,18 @@ export type {
   SfDensity, SfDisplayValue, SfLayoutMode, SfMessage, SfPageFrameProps,
   SfPlotSeries, SfRunStateProps, SfSource, SfStatePanelProps, SfText, SfUiState, SfUnit,
 } from "./types"
+export { SfDisplayValueText } from "./presentation"
 
 // W is the observed *usable content width* after the shell sidebar and page insets.
 // Do not decide from window.innerWidth, device type, or CSS viewport alone.
+function routeLocation() {
+  try {
+    return useLocation()
+  } catch {
+    return undefined
+  }
+}
+
 export function resolveSfLayoutMode(
   width: number,
   layout: SfPageFrameProps["layout"],
@@ -54,7 +63,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
   const id = createUniqueId()
   const { t } = useSfPresentation()
   const language = useLanguage()
-  const location = useLocation()
+  const location = routeLocation()
   const layout = useLayout()
   const global = useGlobal()
   const server = useServer()
@@ -72,7 +81,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
     return serverName(conn ?? server.current)
   }
   const area = () => {
-    const page = chapterPageTitleKey(location.pathname)
+    const page = location ? chapterPageTitleKey(location.pathname) : undefined
     if (page) {
       const text = language.t(page as Parameters<typeof language.t>[0])
       if (text !== page) return text

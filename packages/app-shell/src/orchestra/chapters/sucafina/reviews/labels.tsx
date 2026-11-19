@@ -1,6 +1,6 @@
 import { useLanguage } from "@/context/language"
 import type { SfContext } from "@orchestra/schema/sucafina/context"
-import { SfDisplayValueText, type SfCopyKey } from "../../shared/frame"
+import { SfDisplayValueText, type SfCopyKey } from "../shared/frame"
 
 const key = (value: string) => value as SfCopyKey
 const statusKey: Readonly<Record<string, SfCopyKey>> = {
