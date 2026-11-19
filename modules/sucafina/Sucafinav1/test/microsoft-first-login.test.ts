@@ -1,51 +1,46 @@
 import { expect, test } from "bun:test"
-import { randomUUID } from "node:crypto"
 import { writeFile } from "node:fs/promises"
 import path from "node:path"
-import { createModule } from "../index.ts"
-import type { Application } from "../runtime/application.ts"
+import { Layer } from "effect"
+import { HttpRouter, HttpServer } from "effect/unstable/http"
+import { createSfHostRuntime } from "../../../../apps/cli/src/sucafina-product/host-context.ts"
+import { composeSfInstallation } from "../../../../apps/cli/src/sucafina-product/installation.ts"
+import { createMicrosoftInstallation } from "../local/entry.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
-import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import { group, microsoftFixture, oid } from "./microsoft-login/oidc-fixture.ts"
 import { ingressOrigin, listenerOrigin, privateFixture, publicOrigin } from "./microsoft-login/private-fixture.ts"
+import { microsoftNativeHost } from "./microsoft-login/native-host.ts"
 
-test("first configured Microsoft member reaches all three HTML surfaces without an admin bootstrap", async () => {
+test("first configured Microsoft member reaches all three native surfaces without an admin bootstrap", async () => {
   const disk = await privateFixture()
-  let store: Awaited<ReturnType<typeof openLocalStore>> | undefined
+  const close: (() => void | Promise<void>)[] = [disk.close]
   try {
-    // The configuration is private owner input, not an identity asserted by HTTP.
+    // Private owner configuration selects roles and admits this principal to
+    // native context. It grants no product namespace, operation or human action.
     await writeFile(disk.file, JSON.stringify({
       ...disk.config,
       groups: { ...disk.config.groups, planner: { finance: `group:${group}` } },
+      grants: [{ principalRef: oid, namespaces: [], operations: [], humanActions: [] }],
     }), { mode: 0o600 })
     const provider = await microsoftFixture()
-    const profile = await prepareMicrosoftInstallation(
-      { origin: listenerOrigin }, disk.file, disk.environment,
+    const application = await createMicrosoftInstallation(
+      { origin: listenerOrigin, createHostRuntime: createSfHostRuntime }, disk.file, disk.environment,
       { fetch: provider.fetch, now: () => new Date(provider.clock.value) },
     )
-    store = await openLocalStore(path.join(disk.directory, "business-microsoft"))
-    const identity = profile.createIdentity(store.secrets)
-    const environment: Application["environment"] = async (request) => ({
-      at: new Date(provider.clock.value).toISOString(),
-      id: randomUUID,
-      directory: await identity.directory(request),
-      bankKey: profile.loaded.keys.bank,
-    })
-    const app = createModule(disk.config.mount, {
-      persistence: store, authenticate: identity.authenticate, environment,
-      maxJsonBytes: 2 * 1024 * 1024,
-    })
-    const request = async (suffix: string, cookie?: string) => {
-      const incoming = new Request(`${ingressOrigin}${disk.config.mount}${suffix}`, {
-        headers: { host: new URL(ingressOrigin).host, ...(cookie ? { cookie } : {}) },
-      })
-      const trusted = microsoftRequest(incoming, profile.transport)
-      if (!trusted) throw new Error("Synthetic ingress did not match configured transport")
-      const auth = await identity.handle(trusted)
-      if (auth) return auth
-      await identity.prepare(trusted)
-      return await app(trusted) ?? new Response("Not found", { status: 404 })
-    }
+    close.push(application.dispose)
+    const installation = await composeSfInstallation(application, listenerOrigin)
+    close.push((await microsoftNativeHost(disk, installation)).dispose)
+    const router = HttpRouter.toWebHandler(
+      Layer.merge(installation.layer, installation.privacy).pipe(Layer.provide(HttpServer.layerServices)),
+      { disableLogger: true },
+    )
+    close.push(router.dispose)
+    const store = await openLocalStore(path.join(disk.directory, "business-microsoft"))
+    close.push(store.dispose)
+    const request = (suffix: string, cookie?: string) => router.handler(new Request(
+      `${ingressOrigin}${disk.config.mount}${suffix}`,
+      { headers: { host: new URL(ingressOrigin).host, ...(cookie ? { cookie } : {}) } },
+    ))
     const anonymous = await request("/dashboard")
     expect(anonymous.status).toBe(303)
     expect(new URL(anonymous.headers.get("location")!, publicOrigin).pathname).toBe("/sucafina/auth/login")
@@ -61,21 +56,31 @@ test("first configured Microsoft member reaches all three HTML surfaces without 
     const cookie = callback.headers.getSetCookie().find((value) => value.includes("_session="))!.split(";")[0]!
     expect(cookie).toContain("__Secure-sucafina_")
 
-    for (const surface of ["dashboard", "planner", "procurement"]) {
-      const page = await request(`/${surface}`, cookie)
+    const surfaces = [
+      ["dashboard", "CAP01", "viewer"], ["planner", "CAP17", "finance"],
+      ["procurement", "CAP24", "requester"],
+    ] as const
+    for (const [surface, capabilityId, role] of surfaces) {
+      const page = await request("/api/ui/pages/" + capabilityId, cookie)
       expect(page.status).toBe(200)
-      expect(page.headers.get("content-type")).toContain("text/html")
-      expect(await page.text()).toContain("<html")
+      expect(page.headers.get("content-type")).toContain("application/json")
+      expect(await page.json()).toMatchObject({
+        status: "ok", context: { principalRef: oid }, value: { capabilityId },
+      })
+      const map = await store.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot.data.roleMap }))
+      expect(map).toEqual(expect.arrayContaining([expect.objectContaining({
+        surface, role, entra: `group:${group}`, by: "microsoft:installation-config",
+      })]))
+      expect((await request("/" + surface, cookie)).status).toBe(404)
     }
-    // Live Graph membership is still rechecked, including for an already issued cookie.
+    // Live Graph membership is rechecked for the same issued cookie.
     provider.account.groups.splice(0)
-    for (const surface of ["dashboard", "planner", "procurement"]) {
-      const denied = await request(`/${surface}`, cookie)
-      expect(denied.status).toBe(401)
-      expect(await denied.text()).toBe("Authentication required")
+    for (const [, capabilityId] of surfaces) {
+      const denied = await request("/api/ui/pages/" + capabilityId, cookie)
+      expect(denied.status).toBe(403)
+      expect(await denied.json()).toEqual({ status: "denied" })
     }
   } finally {
-    if (store) await store.dispose()
-    await disk.close()
+    for (const dispose of close.reverse()) await dispose()
   }
 })
