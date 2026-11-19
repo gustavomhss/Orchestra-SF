@@ -4,7 +4,7 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
-import type { SfSurfaceProps } from "../../context/contracts"
+import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
@@ -12,7 +12,6 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import { SfBoundAssets } from "../../shared/attachments/bound-assets"
-import type { SfDraftController } from "../../shared/draft"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
@@ -45,7 +44,7 @@ type ReviewedPrConflict = Readonly<{
   ref: SfRef
   version: number
   baseVersion: SfVersion | null
-  controller: SfDraftController<SfPrEdit>
+  controller: SfPublicDraftController<SfPrEdit>
   value: Readonly<SfPrEdit>
   source: Ready
   record: SfRequest
