@@ -135,7 +135,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const historyPage = await fetch(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-case", caseRef: created.outputRef })}`, { headers: { cookie: cookie ?? "" } })
     expect(historyPage.status).toBe(200)
     const historyHtml = await historyPage.text()
-    // This is the installed host's real list port over the saved, authorized case.
+    // This is the real host's list port over the saved, authorized case.
     // It must bootstrap its actual empty history, with no fabricated default value.
     expect(historyHtml).toContain('data-initial-history="{&quot;status&quot;:&quot;ok&quot;,&quot;value&quot;:[]}"')
     expect(historyHtml).toContain("No analyses yet.")

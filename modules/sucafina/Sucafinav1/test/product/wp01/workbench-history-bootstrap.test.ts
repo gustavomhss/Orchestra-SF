@@ -111,7 +111,7 @@ for (const change of ["grant", "request", "parent"] as const) test(`history egre
   f.ui.finish(f.parent)
 })
 
-test("the real list port refusal or failure stays unavailable instead of becoming an empty success", async () => {
+test("a list port refusal or failure stays unavailable instead of becoming an empty success", async () => {
   for (const failure of ["denied", "throws"] as const) {
     const f = await fixture()
     const runtime = { ...f.input.runtime, analyses: { ...f.input.runtime.analyses, list: async () => {
