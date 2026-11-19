@@ -21,7 +21,12 @@ import {
 // Keep the Client public type identical to the canonical, browser-safe wire union.
 export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 
-export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
+export type SfCallOptions = Readonly<{
+  signal: AbortSignal
+  idempotencyKey?: string
+  /** Only an explicit human retry of the last retained intent on this transport. */
+  retry?: "same-intent"
+}>
 /** Browser fetch the transport actually invokes. Callers must not substitute a CORS workaround. */
 export type SfTransportFetch = (...args: Parameters<typeof globalThis.fetch>) => ReturnType<typeof globalThis.fetch>
 export type SfTransport = Readonly<{
@@ -123,6 +128,15 @@ const KEY = /^[A-Za-z0-9._:-]{8,128}$/
 const MOUNT = /^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/
 const SURFACES = new Set(["dashboard", "planner", "procurement"])
 const MUTATION_LIMIT = 256
+// These original producers reauthorize and replay their retained C08 receipt
+// before CAS or side effects. This does not authorize automatic retry.
+const HUMAN_RETRY_OPERATIONS: ReadonlySet<SfOperationId> = new Set([
+  "decisions.decision-promote", "decisions.decision-choose",
+  "collaboration.thread-create", "collaboration.thread-reply",
+  "collaboration.thread-edit", "collaboration.answer-confirm",
+])
+type PendingMutation = Readonly<{ digest: string; owner?: SfContextStamp }>
+type RetainedMutation = PendingMutation & Readonly<{ key: string; confirmed: boolean }>
 type ErrorReason = SfTransportFailure["reason"]
 const failure = (reason: ErrorReason): SfTransportFailure => ({ kind: "transport-error", reason })
 
@@ -150,10 +164,12 @@ export function createSfTransport(options: Readonly<{
     : !options.desktop && !options.desktopBinding
   const webOrigin = () => typeof window !== "undefined" && window.location.origin === options.binding.publicOrigin
   let stamp: SfContextStamp | undefined
-  const pending = new Map<string, string>()
-  const reportInFlight = new Set<string>()
+  const pending = new Map<string, PendingMutation>()
+  const retained = new Map<SfOperationId, RetainedMutation>()
+  const mutationInFlight = new Set<string>()
 
-  const clear = () => { stamp = undefined; pending.clear() }
+  const clearIntents = () => { pending.clear(); retained.clear() }
+  const clear = () => { stamp = undefined; clearIntents() }
   const transport: SfTransport = {
     async execute<Input, Output>(
       operation: SfOperation<Input, Output>,
@@ -221,6 +237,10 @@ export function createSfTransport(options: Readonly<{
       if (!route) return failure("contract-mismatch")
       const postRead = metadata.method === "POST" && (metadata.effect === "read" || metadata.effect === "preview")
       const mutating = metadata.method === "POST" && !postRead
+      const humanRetry = call.retry === "same-intent"
+      if (call.retry !== undefined &&
+          (call.retry !== "same-intent" || !mutating || !HUMAN_RETRY_OPERATIONS.has(operation.operationId)))
+        return failure("contract-mismatch")
       if (postRead && call.idempotencyKey !== undefined) return failure("contract-mismatch")
       const key = metadata.method === "POST"
         ? postRead
@@ -247,25 +267,42 @@ export function createSfTransport(options: Readonly<{
       if (mutating && pending.size >= MUTATION_LIMIT && !pending.has(key!)) return failure("contract-unavailable")
       // Bind each mutation intent to the actual bytes as well as its metadata,
       // without serializing a Uint8Array or creating an optimistic retry.
+      const mutationOwner = mutating && stamp ? { ...stamp } : undefined
       const uploadDigest = upload ? await sha256Bytes(upload.bytes) : undefined
       if (upload && !uploadDigest) return failure("contract-unavailable")
       const digest = mutating ? await digestPayload(operation.operationId, route,
         (body ?? "") + (uploadDigest ? "\\u0000" + uploadDigest : "")) : undefined
       if (mutating && digest === undefined) return failure("contract-unavailable")
-      const ownerHeader = legacyMutation ? nativeOwnerHeader(stamp!) : undefined
+      const ownerHeader = legacyMutation && mutationOwner ? nativeOwnerHeader(mutationOwner) : undefined
       if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
       const previous = mutating ? pending.get(key!) : undefined
+      const last = retained.get(operation.operationId)
       const reportRetry = operation.operationId === "reviews.report.prepare"
       if (mutating) {
-        if (reportRetry && reportInFlight.has(key!)) return failure("outcome-unknown")
-        if (previous !== undefined) {
-          if (previous !== digest) return failure("contract-mismatch")
-          // Only this source producer has a stable operation identity and
-          // preserves the first artifact for the exact same command.
-          if (!reportRetry) return failure("outcome-unknown")
+        if (mutationOwner && (!stamp || !equalContextStamp(mutationOwner, stamp)))
+          return failure("contract-mismatch")
+        if (humanRetry && (!last || last.key !== key || last.digest !== digest ||
+            !last.owner || !stamp || !equalContextStamp(last.owner, stamp) ||
+            !previous && !last.confirmed))
+          return failure("contract-mismatch")
+        if (!humanRetry && last?.key === key) {
+          if (last.digest !== digest || !last.owner || !stamp || !equalContextStamp(last.owner, stamp))
+            return failure("contract-mismatch")
+          return failure("outcome-unknown")
         }
-        pending.set(key!, digest!)
-        if (reportRetry) reportInFlight.add(key!)
+        if (previous !== undefined) {
+          if (previous.digest !== digest ||
+              previous.owner && (!stamp || !equalContextStamp(previous.owner, stamp)))
+            return failure("contract-mismatch")
+          if (!reportRetry && !humanRetry) return failure("outcome-unknown")
+        }
+        if (mutationInFlight.has(key!)) return failure("outcome-unknown")
+        // A retry keeps the original intent record, including a valid receipt
+        // whose following read was lost. It may not adopt new owner/body/CAS.
+        if (!previous) pending.set(key!, {
+          digest: digest!, ...(mutationOwner ? { owner: mutationOwner } : {}),
+        })
+        mutationInFlight.add(key!)
       }
       try {
       if (!isCurrent() || call.signal.aborted) {
@@ -305,6 +342,12 @@ export function createSfTransport(options: Readonly<{
       if (key) headers["Idempotency-Key"] = key
       if (ownerHeader) headers["X-SF-Native-Owner"] = ownerHeader
       let dispatched = false
+      const rememberIntent = () => {
+        if (mutating && !humanRetry && mutationOwner && HUMAN_RETRY_OPERATIONS.has(operation.operationId))
+          retained.set(operation.operationId, {
+            key: key!, digest: digest!, owner: mutationOwner, confirmed: false,
+          })
+      }
       let response: Readonly<{ status: number; headers: SfPublicHeaders; body: unknown }> | SfTransportFailure
       if (options.desktop && options.desktopBinding) {
         const owner = { bindingHandle: options.desktopBinding.bindingHandle, generation: options.generation }
@@ -313,12 +356,13 @@ export function createSfTransport(options: Readonly<{
         call.signal.addEventListener("abort", cancel, { once: true })
         try {
           dispatched = true
+          rememberIntent()
           const result = await options.desktop.invoke({
             kind: "request", ...owner, requestId, operationId: operation.operationId,
             input: wireInput, ...(key ? { idempotencyKey: key } : {}),
             ...(upload ? { upload } : {}),
           })
-          if ("status" in result && (result.status === 401 || result.status === 403)) stamp = undefined
+          if ("status" in result && (result.status === 401 || result.status === 403)) clear()
           if (result.kind === "transport-error") response = result
           else if (result.kind === "byte-response" && isBytes && result.status === 200 &&
                    sfAllowedByteMime(operation.operationId, result.headers["content-type"])) {
@@ -366,6 +410,7 @@ export function createSfTransport(options: Readonly<{
       } else {
         try {
           dispatched = true
+          rememberIntent()
           const result = await options.fetch(route, {
             method: metadata.method,
             credentials: "same-origin",
@@ -376,7 +421,7 @@ export function createSfTransport(options: Readonly<{
             ...(requestBody !== undefined ? { body: requestBody } : {}),
           })
           const extracted = publicHeaders(result.headers)
-          if (result.status === 401 || result.status === 403) stamp = undefined
+          if (result.status === 401 || result.status === 403) clear()
           if (isBytes && (result.status === 401 || result.status === 403)) {
             clear()
             await result.body?.cancel().catch(() => undefined)
@@ -435,18 +480,29 @@ export function createSfTransport(options: Readonly<{
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
-          stamp = undefined
+          clear()
           return failure("invalid-response")
         }
         const result = parsedOutput.value
         if (typeof result === "object" && result !== null && "status" in result && result.status === "ok" && "value" in result && typeof result.value === "object" && result.value !== null && "stamp" in result.value && validContextStamp(result.value.stamp)) {
+          if (stamp && !equalContextStamp(stamp, result.value.stamp)) clearIntents()
           stamp = result.value.stamp
-        } else stamp = undefined
+        } else clear()
       }
-      if (mutating) pending.delete(key!)
+      if (mutating) {
+        pending.delete(key!)
+        const intent = retained.get(operation.operationId)
+        if (intent?.key === key) {
+          const result = parsedOutput.value
+          if (response.status >= 200 && response.status < 300 &&
+              typeof result === "object" && result !== null && "status" in result && result.status === "ok")
+            retained.set(operation.operationId, { ...intent, confirmed: true })
+          else retained.delete(operation.operationId)
+        }
+      }
       return { kind: "response", status: response.status, headers: response.headers, body: parsedOutput.value }
       } finally {
-        if (mutating && reportRetry) reportInFlight.delete(key!)
+        if (mutating) mutationInFlight.delete(key!)
       }
     },
     /**
