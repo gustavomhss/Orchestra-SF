@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: deff10482b4d2846ca838bb3e8e6f0e205f81f56 (recibo original e limpeza antes da releitura explícita; gate9 em execução)
+SHA de código: deff10482b4d2846ca838bb3e8e6f0e205f81f56 (UI54/CAP02 qualificados no run44630358847; registro permanente e integração pendentes)
 Data: 2026-11-19
 Estado: partial
 
@@ -22,12 +22,12 @@ Estado: partial
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
-- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:689`: casos1/2/3/4 passaram integralmente no gate8; caso5 confirmou Apply e alerta visível, mas a leitura final independente de C08 aguardou enquanto a redescoberta automática pós-Apply estava pendente até o limite original60s.
-- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:313,437`: novo consumo/renderização do recibo retornado e releitura explícita aguardam gate9. Root aprovou o recorte do consumidor após a timeline; nenhuma causa de deadlock foi comprovada ou corrigida no produtor.
-- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: captura/histórico/imutabilidade e source render passaram suas etapas no caso5, mas a jornada completa ainda aguarda o próximo gate. Save desconhecido não é repetido.
+- `sf/ci/suites.json` e `script/sf-ci/gate.mjs`: registrar propostas e demais WPs nas mesmas três suítes UI, com seleção explícita e igualdade exata entre arquivos selecionados e reportados. Root aprovou este WP7 após o gate9 completo.
+- Integração dos blobs qualificados UI54/CAP02 e migração dos cinco testes legados devem ser compostas com o registro permanente; parent root coordena o merge.
+- Baselines completas do CI só podem vir de inventário real no Actions e revisão independente. O gate estreito não fornece baseline das suítes canônicas.
 - `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241,461` e `.../dashboard-installed-closure/consumer-read.test.ts:53,168`: ainda mantidos até equivalência nativa passar; root coordena o remapeamento canônico. Os 2 units puros host-workbench :406/:430 permanecem.
 - Parent root compõe F02, health e registros; nunca copiar common/registry antigos desta branch sobre os adapters compostos.
-- Estado partial; sem qualificação dos cinco fluxos ou integração afirmada.
+- Estado partial apenas por registro permanente/migração/integração; os cinco fluxos estão qualificados pelo run44630358847. Nenhuma integração ou GO afirmados.
 
 ## Decisões e justificativas
 - Asserções removidas: nenhuma. Os testes legados continuam presentes. Todos os fatos/negativos foram portados para 5 jornadas Playwright; a mecânica de checkbox/refresh do console virou a confirmação S03 original, releitura do review e ausência de segundo Apply enquanto o retorno original está retido. O valor financeiro permanece condicionado/null do fixture original, sem fabricar baseline novo.
@@ -147,3 +147,11 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - Sobre o código do gate8 `3cfe8242dde39aa5e5fefa3629b6c3acf900275c`, somente proposals/index.tsx, sf-u38.ts, proposals.spec.ts e este handoff foram sobrepostos. Pedido app/Playwright/productionconfig restrito ao spec; nenhum sf-ci adicional.
 - Os cinco legados continuam intactos, mesmo se este gate passar, até root compor código e registro permanente em `sf/ci/suites.json`. Um run isolado não substitui a seleção futura no CI. Os dois units puros de host-workbench ficam preservados; a extração preparada confere ambos os corpos idênticos, sem commit de remoção.
 - Nenhuma baseline, contagem de inventário, digest ou GO foi inferido deste gate. Estado permanece partial.
+
+## Gate9 — cinco jornadas nativas qualificadas
+- Run [44630358847](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44630358847): **SUCCESS, 5 passed / 0 failed (3.3m)**. CLI/host, app-shell e fontes SF E2E typechecks SUCCESS. Job135935026633 e cleanup135941507545 SUCCESS.
+- Snapshot executado `1db9f18a623cc1331e07f582d989e5150d636da3`; código composto `1a8b23cef45c721b012078ed71f17460bc59ccf6`; código funcional de recibo `deff10482b4d2846ca838bb3e8e6f0e205f81f56` sobre092c6d.
+- Passaram integralmente: leitura atual/fonte e dirty draft; interrupção e retirada de leitura/escrita; retenção readonly/capture403; conflito na mesma identidade com duas propostas independentes; pauta real, captura/histórico/imutabilidade e preparação/revisão/Apply C12 com recibo original e leitura final independente.
+- O último caso verificou result.ok verdadeiro no CommandReceipt original, id/version/at iguais ao que a UI exibiu, exatamente um Apply/recibo, nenhum novo Confirm application e releitura explícita disponível. Não houve aumento de timeout nem inferência de resultado a partir da proposta.
+- **221 chamadas expect mantidas**, incluindo todas211 originais mais4 da releitura e6 do recibo. Nenhuma asserção removida ou enfraquecida. Os cinco testes Bun legados continuam presentes até o registro permanente ficar pronto; os dois units puros de descoberta serão preservados integralmente.
+- Próxima etapa autorizada pelo root: WP7 com specFiles explícitos nas mesmas8 suítes normativas, guards fechados e preparação de um Actions CI-SF-only fiel aos8shards originais, sem disparar esse inventário ou workflow420530405 neste checkpoint. Sem baseline inventada e sem declaração de GO.
