@@ -64,7 +64,7 @@ test("NAV-01: private search uses only bounded same-origin POST JSON, never a q 
   try {
     const fetcher: typeof fetch = async (input, init) => {
       calls.push({ input, init })
-      return Response.json({ status: "unavailable" }, { status: 503 })
+      return Response.json({ status: "unavailable" }, { status: 503, headers: { "content-type": "application/json" } })
     }
     const transport = createSfTransport({
       binding: installation,
