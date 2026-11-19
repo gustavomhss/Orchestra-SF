@@ -53,10 +53,10 @@ export async function procurementClosureJourney(page: Page, installation: { orig
   const audit = await page.context().newPage()
   try {
     const original = await openRequisition(audit, installation.origin, requestId)
-    const form = original.locator(`section[id="${requestId}-pr"] form[data-command="save"]`)
-    await expect(form).toHaveAttribute("data-version", "1")
-    await expect(form.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
-    await expect(original.locator("[data-request-summary]")).toContainText("Requisition draft")
+    await expect(original.locator("p").filter({ hasText: /^Status:/ })).toHaveText("Status: draft")
+    await expect(original.locator("p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: pr")
+    await expect(original.locator("p").filter({ hasText: /^Current source version:/ })).toHaveText("Current source version: 1")
+    await expect(original.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
   } finally { await audit.close() }
   // Published C12 is consumed here; no Apply is sent until its current preview and
   // a real, compatible domain approval both succeed. Missing stages never pass.
