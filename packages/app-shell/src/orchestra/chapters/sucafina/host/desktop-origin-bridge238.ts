@@ -3,7 +3,7 @@
  * opaque handles; no cross-origin renderer fetch, CORS, bearer tokens or
  * invented identity. Explicit remote selections require existing consent.
  */
-import { ServerConnection } from "../../../../context/server"
+import { ServerConnection } from "../../../../context/server-connection"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import {
   createSfTransport, type SfConnectionCandidate, type SfDesktopBinding,
