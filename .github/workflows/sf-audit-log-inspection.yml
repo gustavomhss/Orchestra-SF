@@ -1,7 +1,7 @@
-name: sf-native-transport-inspection
+name: sf-wp10-native6-original-trace
 on:
   push:
-    branches: [audit-logs-20261119]
+    branches: [audit-wp10-native6-trace-20261119]
 permissions:
   actions: read
   contents: write
@@ -10,73 +10,93 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read completed Operations artifact
+      - name: Read completed WP10 artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565396740/zip > "$RUNNER_TEMP/operations4.zip"
-      - name: Read completed Dashboard artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14569076992/zip > "$RUNNER_TEMP/dashboard4.zip"
-      - name: Extract bounded paths and statuses
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14582460843/zip > "$RUNNER_TEMP/wp10.zip"
+      - name: Extract original context metadata and native DOM
         run: |
           python3 - <<'PY'
-          import base64, io, json, os, pathlib, re, urllib.parse, zipfile
+          import base64, io, json, os, pathlib, re, zipfile
+          from urllib.parse import urlsplit
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          output = ["# Original native transport observations", "", "Read-only original Actions artifacts. No test rerun. Only method, path, sf mode and status; no headers, request bodies, response bodies or credentials are published.", ""]
+          output = ["# WP10 native6 original trace", "", "Source run44630493615, artifact14582460843. Read-only extraction; no HTTP replay or UI rerun.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          for label, run, artifact in [("operations4", 44594105701, 14565396740), ("dashboard4", 44601709564, 14569076992)]:
-              output += [f"## {label}: run {run}, artifact {artifact}", ""]
-              with zipfile.ZipFile(root / f"{label}.zip") as archive:
-                  members = archive.namelist()
-                  selected = [p for p in members if p.endswith("/trace.zip") and ("/sucafina-operations-" in p if label == "operations4" else "/sucafina-dashboard-install" in p)]
-                  output += [f"Selected traces: {len(selected)}", ""]
-                  for member in selected:
-                      output += [f"### {member}", ""]
-                      writes, reads = [], []
-                      with zipfile.ZipFile(io.BytesIO(archive.read(member))) as trace:
-                          for network in [p for p in trace.namelist() if p.endswith(".network")]:
-                              for raw in trace.read(network).decode("utf-8", errors="replace").splitlines():
-                                  try: entry = json.loads(raw)
-                                  except Exception: continue
-                                  snap = entry.get("snapshot", {})
-                                  req, res = snap.get("request", {}), snap.get("response", {})
-                                  if not isinstance(req, dict) or not isinstance(res, dict) or not isinstance(req.get("url"), str): continue
-                                  parsed = urllib.parse.urlsplit(req["url"])
-                                  query = urllib.parse.parse_qs(parsed.query)
-                                  item = {"method": req.get("method"), "path": parsed.path[:200], "sf": query.get("sf", [None])[0], "status": res.get("status"), "time": snap.get("_monotonicTime")}
-                                  if item["method"] == "POST": writes.append(item)
-                                  elif parsed.path.startswith("/sucafina/"): reads.append(item)
-                      output += ["POST observations:", json.dumps(writes[:120], ensure_ascii=False), "", "Final read observations:", json.dumps(reads[-16:], ensure_ascii=False), ""]
-                  if label == "dashboard4":
-                      for member in [p for p in members if p.endswith("/error-context.md")]:
-                          output += [f"### Screen: {member}", ""]
-                          for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:300]:
-                              if not sensitive.search(line): output.append(line[:1200])
-                          output.append("")
-                      diagnostics = [p for p in members if "dashboard-installed-transport" in p and p.endswith(".json")]
-                      output += ["Dashboard diagnostic files: " + ", ".join(diagnostics), ""]
-                      for member in diagnostics:
-                          try: value = json.loads(archive.read(member))
-                          except Exception: continue
-                          found = []
-                          def visit(value):
-                              if isinstance(value, list):
-                                  for item in value: visit(item)
-                              elif isinstance(value, dict):
-                                  if "event" in value or "method" in value:
-                                      record = {k: v for k, v in value.items() if k in ["event","method","path","mode","code","status","tab"] and isinstance(v, (str,int,float,bool)) and not sensitive.search(str(v))}
-                                      if record: found.append(record)
-                                  for item in value.values():
-                                      if isinstance(item, (dict,list)): visit(item)
-                          visit(value)
-                          output += [f"### Counters: {member}", json.dumps(found[-200:], ensure_ascii=False), ""]
+          watched = {"CAP01", "domain.page.CAP01", "CAP03", "domain.page.CAP03"}
+          def clean(text):
+              return "\n".join("[redacted]" if sensitive.search(line) else line for line in str(text).splitlines())
+          def facts(value, found):
+              if isinstance(value, list):
+                  for item in value: facts(item, found)
+              elif isinstance(value, dict):
+                  if any(value.get(key) in watched for key in ["operationId", "capabilityId", "resource", "id"] if isinstance(value.get(key), str)):
+                      selected = {key:item for key,item in value.items() if key in ["operationId","capabilityId","resource","id","state","status","reason","operational","availability","allowedActionIds","operations"] and (item is None or isinstance(item,(str,bool,int,float)) or isinstance(item,list) and all(isinstance(v,str) for v in item))}
+                      if selected not in found: found.append(selected)
+                  for item in value.values():
+                      if isinstance(item,(list,dict)): facts(item,found)
+          def visible(node, text, markers):
+              if isinstance(node, str):
+                  if node.strip() and not sensitive.search(node): text.append(node.strip())
+              elif isinstance(node, list):
+                  if node and isinstance(node[0],str):
+                      if node[0].lower() in ["script","style","head"]: return
+                      for item in node[1:]:
+                          if isinstance(item,dict):
+                              for key,value in item.items():
+                                  if key in ["data-sf-f01","data-sf-view","data-sf-discovery","data-sf-provider","data-sf-surface"] and isinstance(value,str):
+                                      markers.append({key:value})
+                          else: visible(item,text,markers)
+                  else:
+                      for item in node: visible(item,text,markers)
+          count = 0
+          with zipfile.ZipFile(root / "wp10.zip") as outer:
+              for member in outer.namelist():
+                  if not member.endswith("/trace.zip"): continue
+                  with zipfile.ZipFile(io.BytesIO(outer.read(member))) as trace:
+                      names = set(trace.namelist())
+                      for name in trace.namelist():
+                          if not name.endswith((".trace",".network")): continue
+                          for raw in trace.read(name).decode("utf-8","replace").splitlines():
+                              try: event = json.loads(raw)
+                              except Exception: continue
+                              if event.get("type") == "frame-snapshot":
+                                  snapshot = event.get("snapshot",{})
+                                  url = urlsplit(snapshot.get("frameUrl",""))
+                                  if url.path != "/orchestra/sf-dashboard/executive": continue
+                                  words, markers = [],[]
+                                  visible(snapshot.get("html",[]),words,markers)
+                                  output.extend(["## Original executive snapshot", "", json.dumps({"snapshot":snapshot.get("snapshotName"),"path":url.path,"markers":markers,"text":" ".join(words)[:16000]},ensure_ascii=False,indent=2), ""])
+                                  count += 1
+                              if event.get("type") != "resource-snapshot": continue
+                              snapshot = event.get("snapshot",{})
+                              request, response = snapshot.get("request",{}),snapshot.get("response",{})
+                              url = urlsplit(request.get("url",""))
+                              if url.path not in ["/sucafina/api/ui/context","/sucafina/api/ui/pages/CAP01"]: continue
+                              content = response.get("content",{})
+                              original = None
+                              sha = content.get("_sha1",content.get("sha1"))
+                              if isinstance(sha,str) and "resources/" + sha in names:
+                                  original = trace.read("resources/" + sha)
+                              elif isinstance(content.get("text"),str):
+                                  original = base64.b64decode(content["text"]) if content.get("encoding") == "base64" else content["text"].encode()
+                              detail = {"path":url.path,"method":request.get("method"),"status":response.get("status"),"mimeType":content.get("mimeType"),"originalBodyPresent":original is not None}
+                              if original is not None:
+                                  try:
+                                      value = json.loads(original)
+                                      matched = []
+                                      facts(value,matched)
+                                      detail.update({"topStatus":value.get("status") if isinstance(value,dict) else None,"topKeys":list(value) if isinstance(value,dict) else [],"originalMetadata":matched})
+                                  except Exception: detail["jsonReadable"] = False
+                              output.extend(["## Original native response metadata", "", clean(json.dumps(detail,ensure_ascii=False,indent=2)), ""])
+                              count += 1
+          if not count: raise RuntimeError("No requested original trace records were found")
           text = "\n".join(output) + "\n"
-          payload = {"message": "docs(sf): retain bounded original transport observations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
-          (root / "transport-payload.json").write_text(json.dumps(payload))
-          print("Published bounded diagnostic fields only; headers and bodies omitted.")
+          if len(text)>180000: raise RuntimeError("Trace observation exceeds bounded limit")
+          payload = {"message":"docs(sf): retain original WP10native6 admission trace","branch":"audit-wp10-native6-trace-20261119","content":base64.b64encode(text.encode()).decode()}
+          (root / "trace-payload.json").write_text(json.dumps(payload))
+          print("Original native snapshots and whitelisted metadata retained:", count)
           PY
-      - name: Persist bounded observations
+      - name: Persist original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-transport-20261119.md --input "$RUNNER_TEMP/transport-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-wp10-native6-trace-20261119.md --input "$RUNNER_TEMP/trace-payload.json" > /dev/null
