@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test"
-import type { Page, Response, TestInfo } from "@playwright/test"
+import type { Page, Request, Response, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfDomainPageCap03 } from "@orchestra/schema/sucafina/domain"
@@ -178,27 +178,21 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         }
 
         await observe("dashboard-budget", async (record) => {
-          const initial = page.waitForResponse((response) => response.request().method() === "GET" &&
-            new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP03" &&
-            new URL(response.url()).searchParams.get("year") === "2026")
-          const opened = await page.goto(origin + "/orchestra/sf-dashboard/budget?year=2026")
-          expect(opened?.status()).toBe(200)
-          const initialResponse = await initial
-          record.facts.openHttp = initialResponse.status()
-          await nativeBody(initialResponse)
+          const initial = await nativeBody(page, { method: "GET", path: "/sucafina/api/ui/pages/CAP03", query: { year: "2026" } }, async () => {
+            const opened = await page.goto(origin + "/orchestra/sf-dashboard/budget?year=2026")
+            expect(opened?.status()).toBe(200)
+          })
+          record.facts.openHttp = initial.response.status()
           await expect(page.getByRole("heading", { name: "Budget Overview", exact: true, level: 1 })).toBeVisible()
           state.authenticated = true
           const budget = page.locator('[data-sf-surface="CAP03"]')
           const year = budget.getByLabel("Year", { exact: true })
           await expect(year).toHaveValue("2026")
-          const pendingYear = page.waitForResponse((response) => response.request().method() === "GET" &&
-            new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP03" &&
-            new URL(response.url()).searchParams.get("year") === "2027")
-          await year.selectOption("2027")
-          const changed = await pendingYear
-          const projection = Schema.decodeUnknownSync(Schema.toType(SfDomainPageCap03.output))(await nativeBody(changed))
+          const changed = await nativeBody(page, { method: "GET", path: "/sucafina/api/ui/pages/CAP03", query: { year: "2027" } },
+            () => year.selectOption("2027"))
+          const projection = Schema.decodeUnknownSync(Schema.toType(SfDomainPageCap03.output))(changed.body)
           if (projection.status !== "ok") throw new Error("The original CAP03 financial projection was unavailable")
-          record.facts.filterHttp = changed.status()
+          record.facts.filterHttp = changed.response.status()
           expect(projection.value.selection.year).toBe(2027)
           expect(projection.value.data.totals?.opexActual).toBe(1000)
           expect(projection.value.data.totals?.opexForecast).toBe(2000)
@@ -243,13 +237,10 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           await create.getByRole("button", { name: "Review creation", exact: true }).click()
           await expect(create.getByRole("group", { name: "Review creation", exact: true }).getByRole("listitem")).toHaveText(criteria)
           expect(commands).toBe(0)
-          const pendingCreation = page.waitForResponse((response) => response.request().method() === "POST" &&
-            new URL(response.url()).pathname === "/sucafina/dashboard" &&
-            new URL(response.url()).searchParams.get("sf") === "workbench-command" &&
-            response.request().postDataJSON()?.operation === "sf_case_draft")
-          await create.getByRole("button", { name: "Confirm this decision creation", exact: true }).click()
-          const response = await pendingCreation
-          const result = await nativeBody(response)
+          const creation = await nativeBody(page, { method: "POST", path: "/sucafina/dashboard", query: { sf: "workbench-command" } },
+            () => create.getByRole("button", { name: "Confirm this decision creation", exact: true }).click())
+          const response = creation.response
+          const result = creation.body
           record.facts.commandHttp = response.status()
           record.facts.commandStatus = statusOf(result)
           record.facts.commandReason = reasonOf(result)
@@ -261,11 +252,9 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           expect(commands).toBe(1)
           const caseRef = result.outputRef
           record.facts.caseRefDigest = createHash("sha256").update(caseRef).digest("hex")
-          const initialCase = page.waitForResponse((current) => current.request().method() === "GET" &&
-            new URL(current.url()).pathname === "/sucafina/api/ui/projections/case" &&
-            new URL(current.url()).searchParams.get("caseRef") === caseRef)
-          await create.getByRole("link", { name: "Open decision", exact: true }).click()
-          const created = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.case"].output))(await nativeBody(await initialCase))
+          const initialCase = await nativeBody(page, { method: "GET", path: "/sucafina/api/ui/projections/case", query: { caseRef } },
+            () => create.getByRole("link", { name: "Open decision", exact: true }).click())
+          const created = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.case"].output))(initialCase.body)
           if (created.status !== "ok") throw new Error("The original case projection was unavailable")
           const originalCase = created.value.projection.case
           expect(originalCase).toMatchObject({ objective, version: 1, horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD" })
@@ -274,10 +263,9 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           await expect(page.getByRole("region", { name: "Question", exact: true })).toContainText(objective)
           await expect(page.locator(".sf-n24-metadata")).toContainText("Current version: 1")
           await capture(page, testInfo, record, "workbench-created")
-          const listed = page.waitForResponse((current) => current.request().method() === "GET" &&
-            new URL(current.url()).pathname === "/sucafina/api/ui/projections/cases")
-          await page.goto(origin + "/orchestra/sf-decisions")
-          const list = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.cases"].output))(await nativeBody(await listed))
+          const listed = await nativeBody(page, { method: "GET", path: "/sucafina/api/ui/projections/cases" },
+            () => page.goto(origin + "/orchestra/sf-decisions"))
+          const list = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.cases"].output))(listed.body)
           if (list.status !== "ok") throw new Error("The fresh authorized case list was unavailable")
           const exactCases = list.value.cases.filter((entry) => entry.caseRef === caseRef)
           expect(exactCases).toHaveLength(1)
@@ -289,12 +277,10 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           const destination = new URL((await link.getAttribute("href"))!, page.url())
           expect(destination.origin).toBe(origin)
           expect(destination.pathname).toBe("/orchestra/sf-decisions/" + encodeSfRouteRef(caseRef))
-          const pendingReopen = page.waitForResponse((current) => current.request().method() === "GET" &&
-            new URL(current.url()).pathname === "/sucafina/api/ui/projections/case" &&
-            new URL(current.url()).searchParams.get("caseRef") === caseRef)
-          await link.click()
-          const reopenedResponse = await pendingReopen
-          const reopened = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.case"].output))(await nativeBody(reopenedResponse))
+          const reopenedReply = await nativeBody(page, { method: "GET", path: "/sucafina/api/ui/projections/case", query: { caseRef } },
+            () => link.click())
+          const reopenedResponse = reopenedReply.response
+          const reopened = Schema.decodeUnknownSync(Schema.toType(SfDecisions.operations["projection.case"].output))(reopenedReply.body)
           if (reopened.status !== "ok") throw new Error("The fresh case read was unavailable")
           expect(reopened.value.projection.case).toEqual(originalCase)
           record.facts.reopenHttp = reopenedResponse.status()
@@ -492,21 +478,118 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
   }
 })
 
-async function nativeBody(response: Response): Promise<unknown> {
-  expect(response.status()).toBe(200)
-  expect(await response.finished()).toBeNull()
-  expect(response.request().failure()).toBeNull()
-  return response.json()
+type PausedNativeResponse = {
+  requestId: string
+  request: { url: string; method: string; postData?: string }
+  responseStatusCode?: number
+  responseHeaders?: { name: string; value: string }[]
+}
+
+/** Capture one original reply before a chapter navigation evicts its body.
+ * A unique browser Request and its terminal event are still required: a failed
+ * transport cannot pass merely because Chromium retained some response bytes.
+ */
+async function nativeBody(page: Page, target: {
+  method: "GET" | "POST"
+  path: "/sucafina/api/ui/pages/CAP03" | "/sucafina/api/ui/projections/case" |
+    "/sucafina/api/ui/projections/cases" | "/sucafina/dashboard"
+  query?: Readonly<Record<string, string>>
+}, action: () => Promise<unknown>): Promise<{ response: Response; body: unknown }> {
+  const session = await page.context().newCDPSession(page)
+  const captured = Promise.withResolvers<{ status: number; contentType: string; json: string }>()
+  const completed = Promise.withResolvers<void>()
+  const paused = new Set<string>()
+  let original: Request | undefined
+  let requestCount = 0
+  let capturing = false
+  const matches = (url: string, method: string) => {
+    const value = new URL(url)
+    return method === target.method && value.origin === origin && value.pathname === target.path &&
+      Object.entries(target.query ?? {}).every(([key, value]) => new URL(url).searchParams.get(key) === value)
+  }
+  const requested = (request: Request) => {
+    if (!matches(request.url(), request.method())) return
+    requestCount++
+    if (original) {
+      completed.reject(new Error("Ambiguous original WP10 response: more than one matching browser request"))
+      return
+    }
+    original = request
+  }
+  const finished = (request: Request) => { if (request === original) completed.resolve() }
+  const failed = (request: Request) => {
+    if (request === original) completed.reject(new Error("Original WP10 transport failed: " + request.failure()?.errorText))
+  }
+  page.on("request", requested)
+  page.on("requestfinished", finished)
+  page.on("requestfailed", failed)
+  session.on("Fetch.requestPaused", async (event: PausedNativeResponse) => {
+    paused.add(event.requestId)
+    try {
+      if (!matches(event.request.url, event.request.method) || capturing) {
+        await session.send("Fetch.continueRequest", { requestId: event.requestId })
+        paused.delete(event.requestId)
+        return
+      }
+      capturing = true
+      if (!original) throw new Error("Original WP10 browser Request was not observed")
+      expect(requestCount).toBe(1)
+      expect(event.request.url).toBe(original.url())
+      expect(event.request.method).toBe(original.method())
+      expect(event.request.postData ?? null).toBe(original.postData())
+      const status = event.responseStatusCode
+      if (typeof status !== "number") throw new Error("Original WP10 response status is missing")
+      const headers = event.responseHeaders ?? []
+      const contentType = headers.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
+      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
+      await session.send("Fetch.fulfillRequest", { requestId: event.requestId, responseCode: status,
+        responseHeaders: headers, body: bytes.toString("base64") })
+      paused.delete(event.requestId)
+      captured.resolve({ status, contentType, json: bytes.toString("utf8") })
+    } catch (error) {
+      try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
+      catch { /* Preserve the original capture error if the browser already released this request. */ }
+      paused.delete(event.requestId)
+      captured.reject(error)
+    }
+  })
+  const observed = Promise.all([
+    page.waitForResponse((response) => response.request() === original),
+    captured.promise, completed.promise,
+  ])
+  void observed.catch(() => undefined) // The same rejection is awaited after the action.
+  try {
+    await session.send("Fetch.enable", { patterns: [{ urlPattern: origin + target.path + "*", requestStage: "Response" }] })
+    await action()
+    const [response, reply] = await observed
+    expect(requestCount).toBe(1)
+    expect(response.request()).toBe(original)
+    expect(response.status()).toBe(reply.status)
+    expect(reply.status).toBe(200)
+    expect(reply.contentType).toContain("application/json")
+    expect(response.headers()["content-type"]).toBe(reply.contentType)
+    expect(response.request().failure()).toBeNull()
+    return { response, body: JSON.parse(reply.json) as unknown }
+  } finally {
+    page.off("request", requested)
+    page.off("requestfinished", finished)
+    page.off("requestfailed", failed)
+    for (const requestId of paused) {
+      try { await session.send("Fetch.continueRequest", { requestId }) }
+      catch { /* The same request may already have completed during teardown. */ }
+    }
+    await session.send("Fetch.disable")
+    await session.detach()
+  }
 }
 
 async function openBudgetBi(page: Page, expectedSelection?: string) {
   if (expectedSelection !== undefined) {
-    const reloaded = page.waitForResponse((response) => response.request().method() === "GET" &&
-      new URL(response.url()).searchParams.get("sf") === "bi-data" &&
-      new URL(response.url()).searchParams.get("viewId") === "BI01" &&
-      new URL(response.url()).searchParams.get("selectionRef") === expectedSelection)
-    await page.goto(origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI01"))
-    const body = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(await nativeBody(await reloaded))
+    const reloaded = await nativeBody(page, { method: "GET", path: "/sucafina/dashboard",
+      query: { sf: "bi-data", viewId: "BI01", selectionRef: expectedSelection } },
+      () => page.goto(origin + "/orchestra/sf-bi/" + encodeSfRouteRef("BI01")))
+    const body = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(reloaded.body)
     if (!("request" in body)) throw new Error("Reload did not reauthorize the original BI01 selection")
     expect(body.request.selectionRef).toBe(expectedSelection)
     expect(body.request.period).toEqual({ start: "2027-01-01", end: "2027-12-31" })
@@ -517,20 +600,17 @@ async function openBudgetBi(page: Page, expectedSelection?: string) {
   const panel = page.locator('[data-sf-catalog="UI46"]')
   await panel.locator('[data-sf-field="start"]').fill("2027-01-01")
   await panel.locator('[data-sf-field="end"]').fill("2027-12-31")
-  const pendingOptions = page.waitForResponse((response) => response.request().method() === "GET" &&
-    new URL(response.url()).searchParams.get("sf") === "bi-options")
-  await panel.getByRole("button", { name: "Choose context", exact: true }).click()
-  const options = Schema.decodeUnknownSync(Schema.toType(SfBiBiOptionsOutput))(await nativeBody(await pendingOptions))
+  const optionsReply = await nativeBody(page, { method: "GET", path: "/sucafina/dashboard", query: { sf: "bi-options" } },
+    () => panel.getByRole("button", { name: "Choose context", exact: true }).click())
+  const options = Schema.decodeUnknownSync(Schema.toType(SfBiBiOptionsOutput))(optionsReply.body)
   if (options.status !== "ok") throw new Error("The original BI01 catalog was unavailable")
   expect(options.value.choices).toHaveLength(1)
   const selection = panel.locator('[data-sf-field="selection"]')
   await expect(selection).toHaveValue("")
   await selection.selectOption(options.value.choices[0]!.selectionRef)
-  const pendingData = page.waitForResponse((response) => response.request().method() === "GET" &&
-    new URL(response.url()).searchParams.get("sf") === "bi-data" &&
-    new URL(response.url()).searchParams.get("viewId") === "BI01")
-  await panel.locator('[data-sf-action="view-data"]').click()
-  const result = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(await nativeBody(await pendingData))
+  const dataReply = await nativeBody(page, { method: "GET", path: "/sucafina/dashboard", query: { sf: "bi-data", viewId: "BI01" } },
+    () => panel.locator('[data-sf-action="view-data"]').click())
+  const result = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(dataReply.body)
   if (!("request" in result)) throw new Error("BI01 did not return its authorized original projection")
   expect(result.request.selectionRef).toBe(options.value.choices[0]!.selectionRef)
   return result
