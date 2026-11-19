@@ -141,7 +141,11 @@ export function createSfPortfolioCoverage(input: {
       if (!active || !proof || proof.source !== host.requestFor(call) || proof.source.signal.aborted || proof.binding !== binding(call) ||
         proof.run && !currentRun(proof.run) ||
         await readState(proof.selection, call) !== proof.state || !same(await business.readSourceFences(call), proof.sources)) return []
-      return await fresh(refs, call) ?? []
+      const order = proof.expected.costCoverage.evaluatedSourceRefs
+      // Reopen the exact producer order, after proving a bijection of full evidence identities.
+      if (refs.length !== order.length || refs.some((ref, index) => refs.findIndex((other) => same(other, ref)) !== index) ||
+        order.some((ref, index) => order.findIndex((other) => same(other, ref)) !== index || !refs.some((other) => same(other, ref)))) return []
+      return await fresh(structuredClone(order), call) ?? []
     },
     supports: (entry, resolutions) => {
       const classification = classifications.get(entry)

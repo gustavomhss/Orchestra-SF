@@ -73,22 +73,22 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
   })
   if (seeded.status !== "ok") throw new Error(`Empty BI case: ${JSON.stringify(seeded)}`)
   const classifications: { coverageRef: string; version: number; assessment: CostCoverageAssessment }[] = []
-  const classify = async (index: number, caseRef: typeof initialRef) => {
-    const source = sources[index]!
-    const coverage: BaselineCoverageRequest = { caseRef, source, basis, expectedVersion: 0,
+  for (const [index, source] of sources.entries()) {
+    const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0,
       entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
         ? { categoryId, status: "included", componentRefs: componentIds[index]!, evidenceRefs: [source], scopeNote: "Human classifies license service; all other categories remain pending" }
         : { categoryId, status: "pending", reason: "Awaiting human evidence" }) }
     const human = ok(await authority.human.admit(fixture.request(`bi-coverage-${index}`), "decisions.coverage", coverage), "Admit human BI coverage")
     try {
-      const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, caseRef, {}, () => business.baselineCoverage.register(coverage, human))), "Register human BI coverage")
-      const preserved = ok(await deadline.phase(`coverage.read.${index}`, () => business.withCase(human, caseRef, {}, () =>
+      const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () => business.baselineCoverage.register(coverage, human))), "Register human BI coverage")
+      const preserved = ok(await deadline.phase(`coverage.read.${index}`, () => business.withCase(human, initialRef, {}, () =>
         business.baselineCoverage.resolveForecastCoverage(registered.coverageRef, human))), "Reopen actual human BI assessment")
       expect(preserved.coverageRef).toBe(registered.coverageRef)
-      return { ...registered, assessment: preserved.assessment }
+      classifications.push({ ...registered, assessment: preserved.assessment })
     }
     finally { authority.human.finish(human) }
   }
+  expect(classifications[0]!.assessment.evaluatedSourceRefs).not.toEqual(classifications[1]!.assessment.evaluatedSourceRefs)
   const mutationHttp = portfolio.http({ origin: "https://example.test", mount: "/product" })
   const promote = async (index: number, caseRef: typeof initialRef) => {
     const payload = { caseRef, title: index ? "BI candidate" : "BI baseline", scenario: { baseRef: sources[index]!.refId, operations: [], assumptions: [] }, coverageRef: classifications[index]!.coverageRef }
@@ -101,12 +101,8 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
     if (!receipt.resultRef) throw new Error("Actual promotion did not persist its scenario")
     return { caseRef: receipt.caseRef, resultRef: receipt.resultRef }
   }
-  // Each promotion advances the case; admit the next human classification against that current version.
-  classifications.push(await classify(0, initialRef))
   const baseline = await promote(0, initialRef)
-  classifications.push(await classify(1, baseline.caseRef))
   const candidate = await promote(1, baseline.caseRef)
-  expect(classifications[0]!.assessment.evaluatedSourceRefs).not.toEqual(classifications[1]!.assessment.evaluatedSourceRefs)
   const snapshot = await authority.state.read(fixture.request(), "cases", (state) => state.cases[initialRef.id])
   if (snapshot.status !== "ok" || !snapshot.value) throw new Error("Promoted BI case unavailable")
   expect(snapshot.value.alternatives).toHaveLength(2)
