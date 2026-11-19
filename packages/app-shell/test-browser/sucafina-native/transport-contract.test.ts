@@ -30,6 +30,16 @@ describe("Q01 integrated transport contract / original producer", () => {
   test("Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension", () => {
     expect(Object.keys(catalog.operations)).toHaveLength(305)
     expect(SfOperationExtensions).toEqual({
+      "decisions.decision-edit": { method: "POST", pathTemplate: "{mount}/{surface}", effect: "mutation",
+        responseMode: "json", fixedQuery: { sf: "decision-edit" }, maxRequestBytes: 262144 },
+      "reviews.review-read": { method: "GET", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "review-read" } },
+      "reviews.review-agenda-options": { method: "GET", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "review-agenda" } },
+      "reviews.review-agenda": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "preview",
+        responseMode: "json", fixedQuery: { sf: "review-agenda" }, maxRequestBytes: 262144 },
+      "reviews.review-preserve": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "mutation",
+        responseMode: "json", fixedQuery: { sf: "review-preserve" }, maxRequestBytes: 262144 },
       "files.export.members": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
         responseMode: "bytes", fixedQuery: { download: "members" } },
       "files.export.po": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
@@ -39,6 +49,10 @@ describe("Q01 integrated transport contract / original producer", () => {
       "reviews.report.prepare": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "prepare",
         responseMode: "json", fixedQuery: { sf: "review-report" }, maxRequestBytes: 65536 },
     })
+    // Explicit original producers added after I00; do not rewrite its pinned 305 IDs.
+    // decision-domain-http.ts owns edit CAS; product/reviews/http.ts owns read/agenda/preserve.
+    for (const id of ["decisions.decision-edit", "reviews.review-read", "reviews.review-agenda-options", "reviews.review-agenda", "reviews.review-preserve"] as const)
+      expect(Object.hasOwn(catalog.operations, id)).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.po")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
