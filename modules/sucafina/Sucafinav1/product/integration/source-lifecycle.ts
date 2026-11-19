@@ -3,6 +3,7 @@ import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/co
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+import { createSfSnapshotMutationGuard } from "./snapshot-mutation-guard.ts"
 
 const sanctionedIdentity = new WeakSet<Snapshot>()
 
@@ -47,12 +48,12 @@ export function createSfSourcePersistence(input: {
     const scope = structuredClone(requested)
     if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
     if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
-    const before = digestSfValue(snapshot)
+    const unchanged = createSfSnapshotMutationGuard(snapshot)
     if (!await authorize(snapshot)) return undefined
     const projection = input.projectScope(surface, structuredClone(snapshot), structuredClone(scope))
     const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
     if (projection === undefined || !source || !await authorize(snapshot)) return undefined
-    if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
+    if (!unchanged()) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
     return { scope, projection, source, inputDigest: digestSfValue(projection) }
   }
   const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
