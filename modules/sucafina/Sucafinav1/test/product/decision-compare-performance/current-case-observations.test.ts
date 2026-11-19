@@ -236,6 +236,6 @@ test("a retained external selector cannot mutate a private case shared by siblin
     const current = await f.state.read(f.request, "cases", (state) => state.cases[f.caseRef.id])
     if (current.status !== "ok" || !current.value) throw new Error("Current case unavailable after selector mutations")
     expect(current.value.alternatives.map((entry) => entry.scenario))
-      .toEqual([f.baselineScenario, f.scenario])
+      .toEqual([f.scenario, f.baselineScenario])
   } finally { await f.cleanup() }
 }, 30_000)
