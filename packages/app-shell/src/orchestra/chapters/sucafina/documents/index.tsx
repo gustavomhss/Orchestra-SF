@@ -740,7 +740,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <Show when={state.opened}><blockquote>{state.opened!.excerpt}</blockquote></Show>
                 <button type="button" class="mx-btn" disabled={state.busy}
                   onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
-                <button type="button" class="mx-btn primary" disabled={state.busy}
+                <button type="button" class="mx-btn primary" disabled={state.busy || !permitted("files.document-confirm")}
                   onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
                 <label>{t("sf.u24.rejectReason")}
                   <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}

@@ -554,7 +554,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const isHistory = () => props.surfaceId === "UI57" && props.route.kind === "history"
   const isReference = () => props.surfaceId === "UI56" || (props.surfaceId === "UI57" && !isHistory())
   const isExport = () => props.surfaceId === "UI68"
-  const canApply = () => !state.busy && state.phase === "reviewing" &&
+  const canApply = () => permitted("files.import-apply") && !state.busy && state.phase === "reviewing" &&
     !!state.manifest && !state.manifest.domainApplied && state.manifest.state === "preview" &&
     !!state.reference && !state.reference.receipt &&
     (!isImport() || (!!state.reviewedSelectionRef &&

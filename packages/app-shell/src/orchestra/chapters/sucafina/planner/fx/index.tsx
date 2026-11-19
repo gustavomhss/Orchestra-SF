@@ -66,6 +66,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
   })
   const [draft, setDraft] = createSignal<SfPublicDraftController<RateDraft> | null>(null)
   const [localIntent, setLocalIntent] = createSignal<SfIntentRef | null>(null)
+  const [draftPage, setDraftPage] = createSignal<{ year: number | undefined; versionId: string } | null>(null)
   const currentValue = () => {
     const state = draft()?.snapshot()
     return state?.availability === "active" ? state.value : null
@@ -155,11 +156,20 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
         state: result.body.status === "denied" ? "denied" : "session-expired",
       })
       setDraft(null)
+      setDraftPage(null)
       return
     }
     setScreen("state", result.body.status === "stale" ? "stale" :
       result.body.status === "invalid" || result.body.status === "needs-input" ? "invalid" : "unavailable")
     setScreen("problem", "reason" in result.body ? result.body.reason : null)
+  }
+  let seenYear: { year: number | undefined } | undefined
+  const dropOpenDraft = () => {
+    draft()?.discard()
+    setDraft(null)
+    setLocalIntent(null)
+    setDraftPage(null)
+    setScreen({ intent: null, selection: null })
   }
   createEffect(() => {
     const generation = host.generation()
@@ -167,14 +177,16 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const versionId = screen.versionId
     const year = props.route.query.year
     const controller = new AbortController()
+    if (seenYear && seenYear.year !== year) dropOpenDraft()
+    seenYear = { year }
     if (status !== "ready" || !host.ready() || !canRead()) {
       setScreen({ state: status === "denied" || status === "ready" ? "denied" : "loading", page: null, intent: null })
       setDraft(null)
+      setDraftPage(null)
     } else {
       void read(controller.signal, generation, versionId)
     }
     onCleanup(() => controller.abort())
-    void year
   })
   const refresh = () => {
     void read(new AbortController().signal, host.generation(), screen.versionId)
@@ -188,6 +200,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     draft()?.discard()
     setDraft(null)
     setLocalIntent(null)
+    setDraftPage(null)
     setScreen({ versionId: next, selection: null, intent: null, problem: null, state: "loading" })
   }
   const displayed = () => {
@@ -232,6 +245,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       },
     })
     setDraft(controller)
+    setDraftPage({ year: props.route.query.year, versionId: activeVersionId()! })
     setScreen({ selection: row?.id ?? null, intent: null, problem: null })
   }
   const discard = () => {
@@ -241,6 +255,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     draft()?.discard()
     setDraft(null)
     setLocalIntent(null)
+    setDraftPage(null)
     setScreen({ intent: null, problem: null })
   }
   const prepare = (kind: Intent["kind"], id: string | null) => {
@@ -274,8 +289,10 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const versionId = activeVersionId()
     if (!intent || !owner || !versionId || screen.busy || !can(intent.kind)) return
     const prior = draft()?.snapshot()
+    const bound = draftPage()
     if (intent.kind === "save" && (!prior || prior.availability !== "active" ||
         prior.conflict !== null || prior.pendingOperation !== null ||
+        !bound || bound.versionId !== versionId || bound.year !== props.route.query.year ||
         !Object.is(prior.baseVersion, intent.id === null ? null : intent.version))) {
       setScreen({ state: "conflict", problem: language.t("sf.common.conflict") })
       return
@@ -341,7 +358,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       setScreen("state", status === 409 ? "conflict" : status === 403 ? "denied" :
         status === 404 ? "not-found" : status === 422 || status === 400 ? "invalid" : "unavailable")
       setScreen("problem", result.body.errors?.join("; ") ?? language.t("sf.cap22.errors"))
-      if (status === 403) { setScreen({ page: null, intent: null }); setDraft(null) }
+      if (status === 403) { setScreen({ page: null, intent: null }); setDraft(null); setDraftPage(null) }
       if (status === 409) draft()?.setPhase("conflict")
       else draft()?.setPhase("validation-error")
       return
@@ -353,7 +370,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
         operationRef: ref(intent.ref) as unknown as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
-      if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
+      if (draft()?.snapshot().availability === "confirmed-without-projection") { setDraft(null); setDraftPage(null) }
     }
     setScreen({ intent: null, selection: null, problem: null, state: "loading" })
     await read(new AbortController().signal, generation, screen.versionId)

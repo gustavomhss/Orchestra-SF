@@ -158,10 +158,10 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
       default: return key("sf.common.unavailable")
     }
   }
-  const showNumber = (value: number | null | undefined, currency = true) => {
+  const showNumber = (value: number | null | undefined, money = true) => {
     if (value === undefined || value === null) return copy.t(key("sf.u46.noValue"))
-    return new Intl.NumberFormat(copy.locale(), currency
-      ? { style: "currency", currency: "USD" } : { maximumFractionDigits: 2 }).format(value)
+    const text = new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(value)
+    return money ? text + " unspecified" : text
   }
   const metricRows = () => [
     { id: "budget", label: "sf.u06.totalBudget" as const, left: left()?.total, right: right()?.total },
