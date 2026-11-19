@@ -17,7 +17,7 @@ Estado: partial
 
 ## Pendente
 
-- packages/client/src/sucafina/transport.ts:528 — novo método e retenção observada aguardam cold review, typecheck e gate estreito. Não compor antes da revisão acordada com o integrador.
+- packages/client/src/sucafina/transport.ts:528 — novo método e retenção observada receberam revisão do integrador e passaram o gate de client 44627326343. Ainda falta typecheck do aplicativo e prova nativa com C08 instalado.
 - packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/record.tsx:193 (branch finish-choice, código c8a941331e8a4748f1f037d7b34804f504d727eb) — caller ainda retém somente memória; falta guardar a intenção antes do primeiro POST, reler e inspecionar dados não confiáveis após reload e só então oferecer o clique explícito.
 - packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts:43–79 — portar controles nativos preservando perda de resposta, reload, mesmo corpo/key, dois POSTs e uma escolha; nenhuma asserção foi removida.
 - Caso sem escolha/evento original correspondente permanece inconclusivo. Este delta não autoriza nova criação, não resolve uma perda anterior ao commit e não renova CAS/observação.
@@ -34,8 +34,8 @@ Estado: partial
 
 ## Como retomar
 
-1. Revisar os três arquivos do código 6e18d4c sobre a base 57070fcc.
-2. Executar o gate de client com human-retry.test.ts e recorded-choice-retry.test.ts, após revisão. Registrar resultado terminal antes de qualificar.
+1. Continuar do código175d8d2f sobre a base57070fcc; a revisão do integrador não encontrou defeito bloqueante no recorte.
+2. Gate de client 44627326343 concluído SUCCESS:22pass/0fail/403expect,288ms. Preservar essa qualificação limitada a codec/IPC.
 3. Ligar somente a folha UI38 ao método opcional, mantendo estado bloqueado quando a inspeção não comprovar a escolha original.
 4. Portar choice-history e executar o spec estreito real. O gate sintético não prova o efeito único C08; essa prova depende do produtor e do teste instalado.
 
@@ -43,5 +43,6 @@ Estado: partial
 
 - Nenhum shell, filesystem ou teste local utilizado.
 - [44626583090](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44626583090) FAILURE, job135921910068, cleanup135923237473 SUCCESS:18 pass/4 fail/353expect,5.37s. Os17 testes antigos de human-retry passaram. A inspeção nova retornou antes de GET porque exigia maxRequestBytes presente; registry decision-choose:58 não declara esse campo. O teste de concorrência atingiu seu timeout original5000ms por não chegar ao GET. Correção segue exatamente a regra existente: verificar o limite somente quando publicado. Sem aumentar timeout ou retirar assert.
+- [44627326343](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627326343) SUCCESS, test135924505197, cleanup135925839162 SUCCESS;22pass/0fail/403expect,288ms. Código175d8d2f5f407fe1dddcffcae80614a3b367bf19, snapshotf3adde429514845341a0a6105388f9f4f334dcbf. Requisição:{"package":"client","runner":"bun","args":["test/sucafina/human-retry.test.ts","test/sucafina/recorded-choice-retry.test.ts"]}. Os três typechecks e o navegador não fazem parte deste gate.
 - Prova independente de binding compare: run44620658522 SUCCESS 3 pass/0 fail/14 expect, código5da8d863a1f865b1c44bbc5cd782b996c3d7bf5f. Não cobre este delta.
-- Operations7 run44624816144 FAILURE antes do navegador por dois TS2367 nos callbacks de saúde. Corrigidos pelo integrador em 57070fcc com Object.is original; Operations8 run44625548030 em andamento quando este checkpoint foi escrito. Não são gates de UI38.
+- Operations7 run44624816144 FAILURE antes do navegador por dois TS2367 nos callbacks de saúde. Corrigidos pelo integrador em 57070fcc com Object.is original; Operations8 run44625548030 terminou FAILURE1pass/4fail, com três types e ClamD passados; são causas independentes em investigação. Não são gates de UI38.
