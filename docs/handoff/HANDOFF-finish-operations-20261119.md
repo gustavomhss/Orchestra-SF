@@ -1,8 +1,18 @@
 # Handoff — finish-operations-20261119
 
-SHA: dc38e037ec4232cab9bf25de38e97a096445861d (código; este documento é um checkpoint posterior)
+SHA: 460706e14903bc821aa04ab903b2526ceb69e701 (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
+
+## Checkpoint Operations8 e próxima correção
+
+- Run44625548030 FAILURE:1pass/4fail; CLI/app/E2E typechecks e ClamD real passaram; cleanup135923391917 SUCCESS. Fonte57070fcc, snapshote30d34135eb42381621039dd0afbc797bb30b3eb. OP-PROC-01 permaneceu PASS.
+- Auditoria somente leitura [44627529596](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627529596) SUCCESS sobre o artifact14579851540 (evidência, não digest de pacote). Documento em audit-operations8-20261119/docs/handoff/observed-operations8-44625548030.md. Não houve replay ou execução do produto; não foram publicados headers, cookies, credenciais, corpos HTTP ou identidades do owner.
+- PROC02 e PROC03 agora atravessam PR e aprovação200. Ambos ficam em outcome unknown no comando de sourcing seguinte, sem POST correspondente. CAP25.save/submit_sourcing estão ready e operational no contexto original. DOC cria Supplier200, mas upload não sai; files.asset.upload/link/download e documentos estão ready no contexto. Imports tem uma falha independente de leitura do corpo POSTVersions200, sob posse do integrador.
+- Causa concreta de sourcing: sourcing/index.tsx:574 guardava o input Stated total como string. schema/procurement.ts:10 e :50 exige NullOr(Finite) para Quote.total; qty/unitPrice aceitam NumericInput e não foram alterados. Código460706 converte somente total com valueAsNumber, vazio→null, preservando zero e o valor digitado sem cálculo.
+- Os helpers procurement-snapshot.ts:32 e procurement-refusal.ts:32 agora afirmam o número28000 no corpo real enviado. Todas as asserções anteriores e limites de tempo permanecem.
+- Esse delta numérico ainda não foi executado. A ausência de POST de upload permanece unbound em shared/attachments/bound-assets.tsx:173 e operations-support/documents.ts:103; leitura focal do codec/binding em andamento. Não alterar o produtor ou habilitar controles à força.
+- O próximo gate combinado será composto pelo integrador com a correção Imports1a1d830, a presente correção e a causa de upload confirmada. Nenhuma nova rodada geral disparada por este WP.
 
 ## Feito
 
