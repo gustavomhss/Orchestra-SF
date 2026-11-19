@@ -257,12 +257,12 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal) ||
       view.caseKey !== caseSelection || view.analysisKey !== skillSelection) return
-    if (!result || result.kind !== "response" || result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied" || result.status !== 200 || result.body.status !== "ok") {
+    if (!result || result.kind !== "response" || result.status === 401 || result.status === 403 || result.body.status === "denied" || result.status !== 200 || result.body.status !== "ok") {
       const bodyStatus = result?.kind === "response" ? result.body.status : ""
       const http = result?.kind === "response" ? result.status : 0
       setView({
         phase: "failed", notice: !result || result.kind !== "response" ? "sf.u37.unavailable" :
-          http === 401 || http === 403 || bodyStatus === "denied" || bodyStatus === "unauthenticated" ? "sf.u37.denied" :
+          http === 401 || http === 403 || bodyStatus === "denied" ? "sf.u37.denied" :
           bodyStatus === "stale" ? "sf.u37.stale" :
           bodyStatus === "needs-input" ? "sf.u37.needsInput" : "sf.u37.unavailable",
       })
@@ -294,17 +294,16 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       setView({ phase: "outcome-unknown", notice: "sf.u37.unknownOutcome" })
       return
     }
-    if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied") {
+    if (result.status === 401 || result.status === 403 || result.body.status === "denied") {
       commandSent = false
       setView({ phase: "failed", notice: "sf.u37.denied" })
       return
     }
     if (result.status !== 200 || result.body.status !== "ok") {
-      const refused = ["stale", "denied", "unauthenticated", "needs-input", "invalid", "conflict"].includes(result.body.status)
+      const refused = result.body.status === "stale" || result.body.status === "needs-input" || result.body.status === "invalid" || result.body.status === "conflict"
       if (refused) commandSent = false
       setView({ phase: refused ? "failed" : "outcome-unknown", notice:
         result.body.status === "stale" ? "sf.u37.stale" :
-          result.body.status === "denied" ? "sf.u37.denied" :
             result.body.status === "needs-input" ? "sf.u37.needsInput" :
               refused ? "sf.u37.unavailable" : "sf.u37.unknownOutcome" })
       return
@@ -337,7 +336,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       setView({ phase: "outcome-unknown", notice: "sf.u37.unknownOutcome" })
       return
     }
-    const refused = result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||
+    const refused = result.status === 401 || result.status === 403 ||
       result.body.status === "denied" || result.body.status === "stale" ||
       result.body.status === "needs-input" || result.body.status === "invalid" || result.body.status === "conflict"
     const acknowledged = result.status === 200 && result.body.status === "ok"
@@ -346,7 +345,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       phase: acknowledged || refused ? "idle" : "outcome-unknown",
       notice: acknowledged && result.body.value.cancelled ? "sf.u37.cancelled" :
         result.body.status === "stale" ? "sf.u37.stale" :
-          result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied" ? "sf.u37.denied" :
+          result.status === 401 || result.status === 403 || result.body.status === "denied" ? "sf.u37.denied" :
             acknowledged ? "sf.u37.unavailable" : "sf.u37.unknownOutcome",
     })
   }

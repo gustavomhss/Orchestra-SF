@@ -165,7 +165,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
             <Show when={props.route.kind === "detail"}>
               <dl class="sf-u38-meta">
                 <div><dt>{t(key("sf.u38.owner"))}</dt><dd>{topic().owner || t(key("sf.u38.unknown"))}</dd></div>
-                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{topic().due ? <time dateTime={topic().due}>{shownDate(topic().due)}</time> : t(key("sf.u38.unknown"))}</dd></div>
+                <div><dt>{t(key("sf.u38.due"))}</dt><dd>{(() => { const due = topic().due; return due ? <time dateTime={due}>{shownDate(due)}</time> : t(key("sf.u38.unknown")) })()}</dd></div>
                 <div><dt>{t(key("sf.u38.status"))}</dt>
                   <dd>{topic().status && labelForStatus(topic().status!) ? t(key(labelForStatus(topic().status!)!)) : t(key("sf.u38.unknown"))}</dd></div>
                 <div><dt>{t(key("sf.u38.priority"))}</dt>

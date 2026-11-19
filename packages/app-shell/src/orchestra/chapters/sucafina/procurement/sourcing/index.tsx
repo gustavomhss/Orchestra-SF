@@ -335,7 +335,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     setUi("lastError",null)
   }
   const quoteAmount = (quote: QuoteEdit) => {
-    const amount = quote.total == null || quote.total === "" ? "" : asString(quote.total)
+    const amount = quote.total == null ? "" : asString(quote.total)
     const currency = typeof quote.currency === "string" ? quote.currency.trim() : ""
     if (!amount && !currency) return null
     return amount ? amount + (currency ? " " + currency : " unspecified") : currency

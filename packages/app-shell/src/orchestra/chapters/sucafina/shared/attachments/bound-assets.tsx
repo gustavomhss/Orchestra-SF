@@ -274,7 +274,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
       </div>
     </Show>
     <Show when={ui.detail}>{(detail) => <p role={ui.phase === "denied" || ui.phase === "blocked" ||
-      ui.phase === "stale" || ui.phase === "outcome-unknown" ? "alert" : "status"}>{t(detail())}</p>}</Show>
+      ui.phase === "stale" || ui.phase === "outcome-unknown" ? "alert" : "status"}>{t(detail() as Parameters<typeof t>[0])}</p>}</Show>
     <Show when={ui.phase === "stale" || ui.phase === "outcome-unknown" || ui.phase === "accepted"}>
       <button type="button" class="mx-btn" disabled={ui.busy} onClick={props.onReconcile}>
         {t("orchestra.sf.s04.bound.reread")}

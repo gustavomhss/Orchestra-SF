@@ -116,7 +116,7 @@ export function SfQuestionConsume(props: Readonly<{
         return
       }
       if (result.status === 401 || result.status === 403 || result.body.status !== "ok" || result.status !== 200) {
-        setUi({ state: result.status === 401 || result.body.status === "unauthenticated" ? "session-expired" : sfFailureUiState(result.body.status, result.status), submitting: false })
+        setUi({ state: result.status === 401 ? "session-expired" : sfFailureUiState(result.body.status, result.status), submitting: false })
         return
       }
       setUi({ state: "ready", consumed: result.body.value, contribution: undefined,

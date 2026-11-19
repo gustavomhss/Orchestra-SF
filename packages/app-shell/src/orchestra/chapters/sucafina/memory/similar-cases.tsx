@@ -366,7 +366,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
             </label>
             <Show when={view.sourceState === "loading" || view.sourceState === "stale" || view.sourceState === "unavailable" || view.sourceState === "invalid"}>
               <SfStatePanel
-                state={view.sourceState === "loading" ? "loading" : view.sourceState}
+                state={view.sourceState === "loading" ? "loading" : view.sourceState === "stale" ? "stale" : view.sourceState === "invalid" ? "invalid" : "unavailable"}
                 messageKey={k(view.sourceState === "loading" ? "sf.common.loading" :
                   view.sourceState === "stale" ? "sf.common.stale" :
                   view.sourceState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")}

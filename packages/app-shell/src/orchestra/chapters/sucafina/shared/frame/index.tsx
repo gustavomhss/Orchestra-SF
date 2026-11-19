@@ -50,6 +50,14 @@ function routeLocation() {
   }
 }
 
+function shellContext<T>(read: () => T) {
+  try {
+    return read()
+  } catch {
+    return undefined
+  }
+}
+
 export function resolveSfLayoutMode(
   width: number,
   layout: SfPageFrameProps["layout"],
@@ -64,10 +72,11 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
   const { t } = useSfPresentation()
   const language = useLanguage()
   const location = routeLocation()
-  const layout = useLayout()
-  const global = useGlobal()
-  const server = useServer()
+  const layout = shellContext(useLayout)
+  const global = shellContext(useGlobal)
+  const server = shellContext(useServer)
   const profileName = () => {
+    if (!layout || !global) return ""
     const selection = layout.home.selection()
     const conn = global.servers.list().find((item) => ServerConnection.key(item) === selection.server)
     const directory = selection.directory
@@ -78,7 +87,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
       if (project) return displayName(project)
       return getFilename(directory) || directory
     }
-    return serverName(conn ?? server.current)
+    return server ? serverName(conn ?? server.current) : ""
   }
   const area = () => {
     const page = location ? chapterPageTitleKey(location.pathname) : undefined
@@ -86,6 +95,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
       const text = language.t(page as Parameters<typeof language.t>[0])
       if (text !== page) return text
     }
+    if (!layout) return t(props.titleKey)
     const route = layout.route()
     if (route.type === "chapter") {
       const label = navigation.find((item) => item.id === route.chapter)?.label

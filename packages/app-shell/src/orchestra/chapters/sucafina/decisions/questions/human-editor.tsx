@@ -104,8 +104,8 @@ export function SfQuestionHumanEditor(props: {
         mutation: { expectedStorageVersion: storageVersion, idempotencyKey: key },
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para gravar a resposta." })
+      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "denied")) {
+        setUi({ phase: "failed", error: result.status === 401 ? "Sessão expirada." : "Sem permissão para gravar a resposta." })
       } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Resposta pode ter sido gravada. Não repetir; chave ${key}.` })
       } else if (result.kind !== "response") {
@@ -200,8 +200,8 @@ export function SfQuestionHumanEditor(props: {
         },
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para confirmar a resposta." })
+      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "denied")) {
+        setUi({ phase: "failed", error: result.status === 401 ? "Sessão expirada." : "Sem permissão para confirmar a resposta." })
       } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Confirmação incerta. Não repetir; correlação ${key}.` })
       } else if (result.kind !== "response") {
@@ -241,8 +241,8 @@ export function SfQuestionHumanEditor(props: {
         caseRef, questionId, answerRef: answer.ref,
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para vincular a resposta." })
+      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "denied")) {
+        setUi({ phase: "failed", error: result.status === 401 ? "Sessão expirada." : "Sem permissão para vincular a resposta." })
       } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Vínculo ao caso incerto. Não repetir; correlação ${key}.` })
       } else if (result.kind !== "response") {
