@@ -95,6 +95,7 @@ import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth, observeSfReviewAgendaHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
+import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDashboardProposalHealth } from "./native-ui/dashboard-proposal-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
@@ -966,6 +967,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
+        observeSfImportHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: () => {
+            const assets = input.assets
+            if (services.productHttp !== productHttp || !identity() || !imports || !assets ||
+              assets.persistence !== input.persistence || typeof assets.services.scan !== "function") return undefined
+            return { producer: productHttp, service: imports, dependencies: [importHttp, imports, imports.imports,
+              imports.discover, imports.prepareTarget, imports.dispatch, imports.imports.admit, imports.imports.preview,
+              imports.imports.readPreviewReference, imports.imports.detail, imports.imports.apply,
+              assets, assets.persistence, assets.services, assets.services.scan, input.persistence.resolveScopedSource] }
+          } }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewReadHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
