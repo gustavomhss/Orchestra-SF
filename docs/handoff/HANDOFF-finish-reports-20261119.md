@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA: 7ca827d14a6eb63d898c466101089bd475ef14cb (código desta continuação; commit de handoff posterior).
+SHA: 291d28f31a726343c15a6f2fa4e5fc9d84f9a407 (código; commit de handoff posterior).
 Data: 2026-11-19
 Estado: partial
 
@@ -118,3 +118,10 @@ Estado: partial
 - Tipos CLI/app/SF-E2E da composição14: [44601278233](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44601278233) SUCCESS. Fonte/destinos após conserto de fixtures: [44602831989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44602831989) SUCCESS, 9 pass/146 expect; não são prova de Reports instalado.
 - Asserções removidas nesta alteração: nenhuma. Timeouts do spec e fixture permanecem180000, workers1/retries0.
 - Pendente/unbound: reports.spec.ts27,42,108,124 — próximo gate de Reports deve qualificar agenda, C05, sucessora, revogação e bytes DOCX/PPTX. Não há resultado desse gate ainda.
+
+## Fato nativo de evidência por valor
+
+- Código 291d28f31a726343c15a6f2fa4e5fc9d84f9a407, absorvendo os3blobs UI/copy de dafe5523272e9e4dae6f80d20ee5cea577e1bdca. UI47 simples e multidomínio exibem uma quarta coluna Evidence/Evidência, traduzindo somente value.evidenceState original (confirmed/estimated/hypothetical/absent). Não inferimos evidência a partir de valor, fonte, disponibilidade ou presença de dinheiro.
+- review-flow.ts73 e first-agenda.ts189 agora exigem as quatro células de cada valor: ID, valor com unidade/moeda, período e estado da evidência. As demais referências/contagens/valores e74expectativas da agenda continuam; a prova de cada campo ficou mais específica.
+- O run Reports9 [44606978085](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606978085), snapshot da22ff3ef01697a9859a93eba63fd543cde8a60c, está em andamento com a versão anterior3colunas. Não qualifica este campo novo. A próxima verificação instalada deve incluir estes5arquivos juntos, depois de analisar o resultado anterior.
+- Asserções removidas: nenhuma. Nenhum timeout, retry ou produtor mudou. Pendente: review-flow.ts73/first-agenda.ts189 — gate da renderização Evidence com os helpers atualizados.
