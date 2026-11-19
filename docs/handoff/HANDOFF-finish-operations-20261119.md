@@ -1,10 +1,15 @@
 # Handoff — finish-operations-20261119
 
-SHA: e9d9b65c99c59db988d411149eb7ba797eef617c (código; este documento é um checkpoint posterior)
+SHA: 2be558a43ab2b6d8244527fea338e9921e2b3754 (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- OP-PROC-01 passou no browser nativo no run 44606780612: comparação literal J04, seleção registrada, valores/FX, fila pending-approval e drilldown C02. Esse run terminou FAILURE nos quatro outros cenários; não qualifica Operations inteiro.
+- A causa pré-rede foi delimitada: CAP25/create e CAP27/create retornam contract-mismatch do transporte, sem POST, no run 44606780612. O código 20aeead764f651d8290e3c8c8d56f8206bf3b56c registra somente capability/action/kind/reason e classes de erro fechadas, sem valores de formulário.
+- O spec wp04/native-create.spec.ts isola os dois pré-requisitos reais, com matrículas únicas por spec, os mesmos helpers de criação dos cenários completos e releitura após reload. createRequest foi exportado e o trecho de criação de supplier foi extraído sem retirar suas asserções. O número do supplier é lido em .sf-s01-cell-value porque SfDataTable acrescenta Open record na mesma célula; o valor exato e o padrão SUP permanecem exigidos.
+- O snapshot ea9d406ee059a2d638e4415497cf42f1ccf35e45 parte da composição dbe6e348367d8e1f915dac918a23bc5028f8a408, preserva o host atual e inclui o diagnóstico F02 bcc25448d1771e051d3cd5d2c79ba6cd96d78006. Esse diagnóstico informa somente estágio e chaves/tipos conhecidos para os dois createIDs, mantendo todos os retornos de rejeição. O gate 44610451324 está em andamento neste checkpoint.
 
 - A identidade CAP25 agora usa a referência C02 original selada já preparada para o mesmo ator, em vez de procurar globalmente um scope individual que a coleção não emite. O lookup exige correspondência de incarnation/version, principal/accessRevision/policy, período, campos, projeção e registro; preserva inputDigest, refDigest e projectionDigest como conceitos distintos. Clones sem o selo original e referências ambíguas são recusados. Código e9d9b65c99c59db988d411149eb7ba797eef617c.
 - O gate C02 44602731257 passou com 4 testes, 114 asserções e atores requester/buyer autorizados sobre o mesmo PR. O teste mantém SQLite, autoridade e projeção originais; não qualifica sozinho o browser CAP25.
@@ -40,13 +45,12 @@ Estado: partial
 
 ## Pendente
 
-- packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts:48 — a correção do locator preserva pending-approval, mas ainda requer o gate nativo composto; o run Ops4 falhou antes deste patch.
-- packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:135, procurement-refusal.ts:156 e documents.ts:14 — Ops4 44594105701 esgotou a espera original pelo primeiro POST de criação. Os contextos publicados em docs/handoff/observed-native-screens-44594105701-v2.md na branch audit-logs-20261119 mostram revisão enviada seguida de outcome desconhecido. O extrato mínimo publicado pelo integrador em docs/handoff/observed-native-transport-20261119.md confirma zero POST nos três traces, somente GET200 de contexto/CAP25/CAP27; o mesmo parser capturou o POST Planner200 no trace de importação, como controle positivo. A causa está antes da rede; falta identificar codec/stamp/key/F02 exato. Não foram alterados matchers, timeouts ou fences por hipótese.
-- packages/app-shell/e2e/sucafina/operations-support/imports.ts:136 — nome do CAP23 estava desabilitado no Ops4; o integrador é dono do fix comum de reatividade CAP23 e da próxima composição. Esta branch não modifica esse arquivo neste checkpoint.
+- packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:135, procurement-refusal.ts:156 e documents.ts:14 — Ops4 44594105701 esgotou a espera original pelo primeiro POST de criação. Os contextos publicados em docs/handoff/observed-native-screens-44594105701-v2.md na branch audit-logs-20261119 mostram revisão enviada seguida de outcome desconhecido. O extrato mínimo publicado pelo integrador em docs/handoff/observed-native-transport-20261119.md confirma zero POST nos três traces, somente GET200 de contexto/CAP25/CAP27; o mesmo parser capturou o POST Planner200 no trace de importação, como controle positivo. Ops5 44606780612 identifica contract-mismatch; falta o estágio exato de codec/stamp/key/F02, agora instrumentado no gate estreito 44610451324. Não foram alterados matchers, timeouts ou fences por hipótese.
+- packages/app-shell/e2e/sucafina/operations-support/imports.ts:167 — Ops5 avançou após CAP23 e falhou em [data-import-workbench] ausente. O integrador é dono da ligação do importador nativo original e da próxima composição. Esta branch não modifica esse arquivo neste checkpoint.
 - packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:27 e apps/cli/src/sucafina-product/native-ui/procurement.ts:223–267 — o readback autenticado substitui o consumo DevTools e a origem C02 está qualificada por unidade, mas os oito cenários nativos ainda precisam de execução após a composição. Pontos de entrada: :159, :227, :328, :414, :474, :640, :721 e :812.
 - packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx:935 — proveniência histórica de campo permanece unbound. O schema PurchaseOrder em packages/schema/src/sucafina/procurement.ts:126–150 não a transmite. O capítulo informa somente a comparação de valores atuais.
 - packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts:11 — conserva dois testes isolados do controlador/shell legado com respostas controladas. Os passes não provam o controlador nativo nem execução de análise. O capítulo nativo decisions/analyses/index.tsx:144–145 admite preparação somente para sf-enquadrar-decisao; não há equivalência confirmada do start/status/cancel sourcing legado. Não substituir por runs ou receipts sintéticos.
-- packages/app-shell/e2e/sucafina/operations.spec.ts:13, :18, :23, :28 e :33 — o conjunto continua não qualificado. Ops4 terminou com 13 falhas e somente os dois testes isolados de sourcing-controller passando. Próximo gate pertence ao integrador, com infraestrutura compartilhada e ClamD real.
+- packages/app-shell/e2e/sucafina/operations.spec.ts:18, :23, :28 e :33 — o conjunto continua não qualificado. Ops5 terminou com 4 falhas e 1 passe nativo (OP-PROC-01). O gate completo seguinte será combinado com o integrador e o importador, usando a infraestrutura compartilhada e ClamD real.
 - packages/app-shell/e2e/sucafina/operations-support/installation.ts — a extensão test-only para grants explícitos originais e runtime.services está sob posse do WP C12 (wp2_resume), preservando os defaults. Não sobrescrever esse delta ao transplantar os arquivos desta branch.
 - apps/web/vite.config.ts e packages/app-shell/e2e/playwright.production.config.ts — infraestrutura compartilhada pertence ao WP de ingresso. O histórico abaixo conserva quais snapshots foram usados; não são arquivos próprios desta branch.
 
@@ -68,10 +72,10 @@ Estado: partial
 
 ## Como retomar
 
-1. Continuar em finish-operations-20261119, código e9d9b65c99c59db988d411149eb7ba797eef617c. O integrador transpõe somente os deltas próprios, preservando a factory C12 e infraestrutura de ingresso mais recentes.
+1. Continuar em finish-operations-20261119, código 2be558a43ab2b6d8244527fea338e9921e2b3754. O integrador transpõe somente os deltas próprios, preservando a factory C12 e infraestrutura de ingresso mais recentes.
 2. Usar o run 44602731257 e o teste product/wp04/queue-view.test.ts como prova da identidade C02, sem reinterpretá-los como sucesso do browser ou de Operations.
 3. Ler docs/handoff/observed-native-transport-20261119.md na branch audit-logs-20261119: os três fluxos com outcome desconhecido não emitiram POST. Localizar o campo/codec/stamp/key/F02 que recusou antes da rede, preservando os fences.
-4. Compor os fixes confirmados com o candidato atual e executar o spec nativo estreito que cobre a próxima causa. Não repetir gates sobre a branch antiga sem a infraestrutura compartilhada.
+4. Aguardar o gate estreito 44610451324 e corrigir somente a causa observada. Compor os fixes confirmados com o candidato atual e o importador do integrador para qualificar novamente os cinco cenários. Não repetir gates sobre a branch antiga sem a infraestrutura compartilhada.
 5. Preservar matrículas de uso único, atores reais, revisão humana, CAS, scanner e asserções de efeito. Não sintetizar fonte, recibo ou proveniência ausente.
 6. Atualizar este documento com SHA, resultado terminal e pendências file:line antes de entregar ao integrador. Este WP não faz merge nem dispara sf-ci.
 
@@ -96,3 +100,6 @@ Estado: partial
 
 - [44594105701](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44594105701) FAILURE, job 135807645498: os três typechecks e ClamD real passaram; 13 failed / 2 passed em 5,9 min. OP-PROC-01 falhou no filtro pending-approval; OP-PROC-02/03 e OP-DOC-01 mostraram outcome desconhecido e aguardaram o primeiro POST; OP-IMPORT-01 encontrou o input desabilitado. WP04 teve quatro erros DevTools NoData e quatro fontes null. Os dois passes pertencem a sourcing-controller. O artifact 14565396740 é evidência do teste, não digest de pacote. A extração read-only publicada pelo integrador não constitui novo teste.
 - [44602731257](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44602731257) SUCCESS, job 135838170460, cleanup 135839259625 SUCCESS. Código e9d9b65c99c59db988d411149eb7ba797eef617c, snapshot 3cdebb38b87e9a9f66b26259338066ee29b264b3. Requisição: {"package":"sucafina","runner":"bun","args":["Sucafinav1/test/product/wp04/queue-view.test.ts"]}. Resultado: 4 pass / 0 fail / 114 expect, 1,25 s. Nenhum gate E2E nativo foi executado sobre e9d9 neste checkpoint.
+
+- [44606780612](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606780612) FAILURE, job 135852465751, cleanup 135859493503 SUCCESS. Snapshot e74f0d5c4871d1b11c417a7be56283d5d74e95fd. CLI/app/E2E typechecks e ClamD real SUCCESS; 1 passed / 4 failed em 4,8 min. OP-PROC-01 passou nativo; CAP25/create falhou antes do POST em OP-PROC-02 e OP-PROC-03, CAP27/create idem em OP-DOC-01, todos contract-mismatch. OP-IMP-01 parou em imports.ts:167, seletor [data-import-workbench] ausente.
+- [44610451324](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44610451324) IN_PROGRESS neste checkpoint, job 135865306639. Snapshot ea9d406ee059a2d638e4415497cf42f1ccf35e45. Requisição: {"package":"app","runner":"playwright","config":"e2e/playwright.production.config.ts","args":["e2e/sucafina/wp04/native-create.spec.ts"]}. Sem conclusão inferida.
