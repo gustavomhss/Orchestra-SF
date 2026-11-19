@@ -56,36 +56,37 @@ export function dashboardRecordIssuanceReader(issuer: object, host: DomainPortHo
 
 /** The returned scope is host-private and conveys read visibility, not write authority. */
 export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort }) {
+  const host = input.host, scopedSources = input.scopedSources
   const read: RecordIssuanceReader = async (selection, context) => {
-    const request = input.host.requestFor(context), lease = context.lease
+    const request = host.requestFor(context), lease = context.lease
     const binding = digestSfValue([context.kind, context.binding])
     const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
     const selectionDigest = digestSfValue(selection)
-    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(context) === request && context.lease === lease &&
+    const currentAuthority = () => !!request && !request.signal.aborted && host.requestFor(context) === request && context.lease === lease &&
       digestSfValue([context.kind, context.binding]) === binding && digestSfValue(selection) === selectionDigest &&
       digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
-    if (!request || !currentAuthority() || !await input.host.revalidate(context) || !currentAuthority() || !selection || !selection.page || !selection.recordType || selection.recordType === "dashboard-page" || !selection.recordId || selection.recordId === "__singleton__" || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !isSfPeriod(selection.period)) return undefined
+    if (!request || !currentAuthority() || !await host.revalidate(context) || !currentAuthority() || !selection || !selection.page || !selection.recordType || selection.recordType === "dashboard-page" || !selection.recordId || selection.recordId === "__singleton__" || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !isSfPeriod(selection.period)) return undefined
     const wanted = { page: selection.page, fields: [...selection.fields].sort(), period: structuredClone(selection.period) }
-    const authenticate = (snapshot: Snapshot) => dashboardSelector(input.host, request, context, snapshot, wanted)
-    const selector = await input.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await authenticate(snapshot) }), { signal: request.signal }).catch(() => undefined)
+    const authenticate = (snapshot: Snapshot) => dashboardSelector(host, request, context, snapshot, wanted)
+    const selector = await host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await authenticate(snapshot) }), { signal: request.signal }).catch(() => undefined)
     if (!selector || !currentAuthority()) return undefined
     const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, recordType: selection.recordType, recordId: selection.recordId, selector }
     const scopeDigest = digestSfValue(scope)
-    const current = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
+    const current = await scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
     if (!current) return undefined
     const original = structuredClone(current)
     const sourceDigest = digestSfValue(original)
-    if (!await input.host.revalidate(context) || !currentAuthority()) return undefined
-    const environment = await input.host.environment(request)
-    if (!Number.isFinite(Date.parse(environment.at)) || !await input.host.revalidate(context) || !currentAuthority()) return undefined
-    const observed = await input.host.persistence.transaction("dashboard", async (snapshot) => {
+    if (!await host.revalidate(context) || !currentAuthority()) return undefined
+    const environment = await host.environment(request)
+    if (!Number.isFinite(Date.parse(environment.at)) || !await host.revalidate(context) || !currentAuthority()) return undefined
+    const observed = await host.persistence.transaction("dashboard", async (snapshot) => {
       if (digestSfValue(await authenticate(snapshot)) !== digestSfValue(selector)) return { commit: false, value: undefined }
       return { commit: false, value: projectSfSourceScope("dashboard", snapshot, scope, environment.at) }
     }, { signal: request.signal }).catch(() => undefined)
     if (observed === undefined || digestSfValue(observed) !== original.inputDigest) return undefined
-    const again = await input.scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
+    const again = await scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
     const sameObservation = () => !!again && digestSfValue(current) === sourceDigest && digestSfValue(again) === sourceDigest && digestSfValue(scope) === scopeDigest && currentAuthority()
-    if (!sameObservation() || !await input.host.revalidate(context) || !sameObservation()) return undefined
+    if (!sameObservation() || !await host.revalidate(context) || !sameObservation()) return undefined
     const projection = object(original.projection)
     if (typeof original.incarnation !== "string" || !original.incarnation || !Number.isSafeInteger(original.version) || original.version < 1 || !/^[a-f0-9]{64}$/.test(original.inputDigest) ||
       !original.projection || typeof original.projection !== "object" || Array.isArray(original.projection) || digestSfValue(Object.keys(projection).sort()) !== digestSfValue(wanted.fields)) return undefined
@@ -101,14 +102,14 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
     }))
     // The record consumer's final authority check remains independent. Borrowed
     // source bodies and request pins are checked again after that callback.
-    if (!await input.host.revalidate(context) || !sameObservation()) return undefined
+    if (!await host.revalidate(context) || !sameObservation()) return undefined
     return completed
   }
   const issue = async (selection: DashboardRecordSelection, context: TrustedDomainContext) => {
     const completed = await read(selection, context)
     return completed && structuredClone(completed.issued)
   }
-  recordIssuanceReaders.set(issue, { host: input.host, sources: input.scopedSources, read })
+  recordIssuanceReaders.set(issue, { host: host, sources: scopedSources, read })
   return issue
 }
 
