@@ -8,6 +8,7 @@ import { SfContextStamp } from "./context"
  * and validates the installed skill input against its inputSchemaRef.
  */
 const Text = Schema.NonEmptyString
+const Surface = Schema.Literals(["dashboard", "planner", "procurement"])
 const CaseRef = Schema.Struct({
   id: Text,
   incarnation: Text,
@@ -51,7 +52,7 @@ const Failure = Schema.Struct({
   reason: Schema.String.pipe(optional),
 })
 
-export const SfIntelligenceAnalysisChoicesInput = Schema.Struct({})
+export const SfIntelligenceAnalysisChoicesInput = Schema.Struct({ surface: Surface })
 export const SfIntelligenceAnalysisChoices = Schema.Union([
   Schema.Struct({
     status: Schema.Literal("ok"),
@@ -78,6 +79,7 @@ export const SfIntelligenceAnalysisChoices = Schema.Union([
 // it is validated inside the real producer after admission, not interpreted here.
 const Selection = Schema.Record(Schema.String, Schema.Json)
 export const SfIntelligenceAnalysisPrepareInput = Schema.Struct({
+  surface: Surface,
   input: Schema.Struct({ request: Request, selection: Selection }),
 })
 export const SfIntelligenceAnalysisPrepare = Schema.Union([
@@ -87,6 +89,7 @@ export const SfIntelligenceAnalysisPrepare = Schema.Union([
 
 // The installed skill's declared inputSchemaRef controls this JSON subtree.
 export const SfIntelligenceAnalysisStartInput = Schema.Struct({
+  surface: Surface,
   input: Schema.Struct({
     request: Request,
     skillInput: Schema.Json,
@@ -104,19 +107,19 @@ export const SfIntelligenceAnalysisStart = Schema.Union([
   Failure,
 ])
 
-export const SfIntelligenceAnalysisReadInput = Schema.Struct({ runRef: Text })
+export const SfIntelligenceAnalysisReadInput = Schema.Struct({ surface: Surface, runRef: Text })
 export const SfIntelligenceAnalysisRead = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: Run }),
   Failure,
 ])
 
-export const SfIntelligenceAnalysisListInput = Schema.Struct({ caseRef: CaseRef })
+export const SfIntelligenceAnalysisListInput = Schema.Struct({ surface: Surface, caseRef: CaseRef })
 export const SfIntelligenceAnalysisList = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: Schema.Array(Run) }),
   Failure,
 ])
 
-export const SfIntelligenceAnalysisOutputInput = Schema.Struct({ runRef: Text })
+export const SfIntelligenceAnalysisOutputInput = Schema.Struct({ surface: Surface, runRef: Text })
 export const SfIntelligenceAnalysisOutput = Schema.Union([
   Schema.Struct({
     status: Schema.Literal("ok"),
@@ -136,7 +139,7 @@ export const SfIntelligenceAnalysisOutput = Schema.Union([
   Failure,
 ])
 
-export const SfIntelligenceAnalysisCancelInput = Schema.Struct({ runRef: Text })
+export const SfIntelligenceAnalysisCancelInput = Schema.Struct({ surface: Surface, runRef: Text })
 export const SfIntelligenceAnalysisCancel = Schema.Union([
   Schema.Struct({
     status: Schema.Literal("ok"),

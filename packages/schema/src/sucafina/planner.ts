@@ -11,7 +11,7 @@ const Through = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)).check(Schema.
 const Year = Schema.Int.check(Schema.isGreaterThanOrEqualTo(2024)).check(Schema.isLessThanOrEqualTo(2027))
 const Optional = Schema.optionalKey
 const NullableAmount = Schema.Union([Schema.Finite, Schema.Null])
-const EditableAmount = Schema.Union([Schema.String, NullableAmount])
+const EditableAmount = NullableAmount
 const Amounts = Schema.Array(Schema.Finite).check(Schema.isMinLength(12)).check(Schema.isMaxLength(12))
 const NullableAmounts = Schema.Array(NullableAmount).check(Schema.isMinLength(12)).check(Schema.isMaxLength(12))
 const RecordVersion = Schema.Struct({ version: NonNegativeInt })
@@ -162,7 +162,7 @@ const ImportValues = Schema.Struct({
 const LineFields = {
   name: Optional(Schema.String), desc: Optional(Schema.String), owner: Optional(Schema.String),
   entity: Optional(Schema.String), alloc: Optional(Schema.String), cls: Optional(Schema.String),
-  cur: Optional(Schema.String), annual: Optional(Schema.Union([Schema.String, Schema.Finite])),
+  cur: Optional(Schema.String), annual: Optional(Schema.Finite),
   b: Optional(Amounts), a: Optional(NullableAmounts), f: Optional(NullableAmounts),
   el: Optional(Schema.String), proj: Optional(Schema.String), domain: Optional(Schema.String),
   month: Optional(Schema.Union([MonthIndex, Schema.String])), value: Optional(EditableAmount),
@@ -240,7 +240,7 @@ const CommandValues = {
     "import-workbook": ImportValues,
   },
   CAP22: {
-    save: Schema.Struct({ versionId: NonEmpty, cur: Optional(Schema.String), rate: Optional(Schema.Union([Schema.String, NullableAmount])),
+    save: Schema.Struct({ versionId: NonEmpty, cur: Optional(Schema.String), rate: Optional(NullableAmount),
       sourceRef: Optional(Schema.String), provider: Optional(Schema.String), observedAt: Optional(Schema.String) }),
     delete: Schema.Struct({ versionId: NonEmpty }), "import-workbook": ImportValues,
   },
@@ -273,7 +273,10 @@ function legacyInput<
     confirmed: Optional(Schema.Boolean),
   })
 }
-const DraftCell = Schema.Struct({ measure: Schema.Literals(["budget","actual","forecast"]), month: Month, text: Schema.String })
+const MonthlyAmountText = Schema.String.check(Schema.makeFilter((value) =>
+  value !== "budget" && value !== "actual" && value !== "forecast" || "amount cannot be a measure label",
+))
+const DraftCell = Schema.Struct({ measure: Schema.Literals(["budget","actual","forecast"]), month: Month, text: MonthlyAmountText })
 const Draft = Schema.Struct({ rowId: NonEmpty, revision: NonNegativeInt, cells: Schema.Array(DraftCell).check(Schema.isMinLength(1)).check(Schema.isMaxLength(36)) })
 const MonthlyRequest = Schema.Struct({ page: Schema.Literals(["OPEX","CAPEX"]), versionId: NonEmpty, drafts: Schema.Array(Draft).check(Schema.isMinLength(1)).check(Schema.isMaxLength(500)) })
 const MonthlyRow = Schema.Struct({

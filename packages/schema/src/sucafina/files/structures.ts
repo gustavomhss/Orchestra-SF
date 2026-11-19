@@ -222,7 +222,7 @@ export const SfFilesFailure = Schema.Struct({
 })
 export const SfFilesLegacyFailure = Schema.Struct({
   ok: Schema.Literal(false),
-  status: Schema.Int,
+  status: Schema.Int.check(Schema.isGreaterThanOrEqualTo(400)),
   errors: Schema.Array(Schema.String).pipe(optional),
 })
 export const SfFilesPortResult = <S extends Schema.Top>(value: S) => Schema.Union([
@@ -242,6 +242,8 @@ export const SfImportReadDetail = Schema.Struct({
   receipt: SfImportReceiptSummary.pipe(optional),
 })
 
-export const SfFilesDownloadBytes = Schema.Uint8Array.annotate({ identifier: "SfFiles.DownloadBytes" })
+export const SfFilesDownloadBytes = Schema.Uint8Array.check(Schema.makeFilter(
+  (value) => value.byteLength > 0 || "empty download is not a successful export",
+)).annotate({ identifier: "SfFiles.DownloadBytes" })
 /** Bytes are never represented as JSON, a local pathname, a detached link or a fake clean-scan status. */
 export const SfFilesUploadBytes = Schema.Uint8Array.annotate({ identifier: "SfFiles.UploadBytes" })
