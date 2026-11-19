@@ -1,10 +1,9 @@
 import { randomBytes, randomUUID } from "node:crypto"
-import { chmod, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
+import { chmod, mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
-import { createEmbeddedRoutes } from "../../../../server/src/routes.ts"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../../../modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
@@ -15,7 +14,6 @@ import type { Command } from "../../../../../modules/sucafina/Sucafinav1/runtime
 import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
-import { createOperationsInstallation } from "../operations-support/installation.ts"
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
@@ -23,6 +21,25 @@ import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/
 // The three isolated local-operator sessions exercise distinct actors, not Entra identities.
 const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
 await chmod(directory, 0o700)
+// Core and product storage belong to the same disposable Actions installation.
+const hostDirectories = ["host-data", "host-config", "host-cache", "host-state", "host-tmp"]
+await Promise.all(hostDirectories.map((name) => mkdir(path.join(directory, name), { mode: 0o700 })))
+Object.assign(process.env, {
+  ORCHESTRA_DB: path.join(directory, "host-data", "orchestra.db"),
+  ORCHESTRA_INHERIT_CREDENTIALS: "0",
+  ORCHESTRA_CONFIG_DIR: path.join(directory, "host-config"),
+  ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(directory, "host-credential.key"),
+  TMPDIR: path.join(directory, "host-tmp"),
+  XDG_DATA_HOME: path.join(directory, "host-data"),
+  XDG_CONFIG_HOME: path.join(directory, "host-config"),
+  XDG_CACHE_HOME: path.join(directory, "host-cache"),
+  XDG_STATE_HOME: path.join(directory, "host-state"),
+})
+// These imports capture host configuration, so load them after private setup.
+const [{ createEmbeddedRoutes }, { createOperationsInstallation }] = await Promise.all([
+  import("../../../../server/src/routes.ts"),
+  import("../operations-support/installation.ts"),
+])
 const at = "2026-11-13T12:00:00Z"
 const driver = await openLocalStore(directory)
 const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
