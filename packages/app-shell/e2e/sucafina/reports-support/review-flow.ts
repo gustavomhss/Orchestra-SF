@@ -255,7 +255,7 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
       "?" + new URLSearchParams({ year: String(corpus.year) }))
     const loadedResponse = await loaded
     expect(loadedResponse.status()).toBe(200)
-    const loadedBody = object(await loadedResponse.json())
+    const loadedBody = object(await readNativeReportResponse(loadedResponse))
     expect(loadedBody.status).toBe("ok")
     const versions = object(object(loadedBody.value).versions)
     const version = Number(versions["opexEntries:reports-opex-01"])
@@ -298,10 +298,10 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
       page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
       values: { ownerId: "reports-opex", year: corpus.year, month: 1, budget: 100, actual: 100, forecast: 190, versions },
     })
-    expect(object(await applyResponse.json())).toMatchObject({ ok: true })
+    expect(object(await readNativeReportResponse(applyResponse))).toMatchObject({ ok: true })
     const refreshedResponse = await refreshed
     expect(refreshedResponse.status()).toBe(200)
-    const refreshedBody = object(await refreshedResponse.json())
+    const refreshedBody = object(await readNativeReportResponse(refreshedResponse))
     expect(refreshedBody.status).toBe("ok")
     expect(object(object(refreshedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
     expect(mutations, "One explicit confirmation must submit once").toHaveLength(1)
@@ -310,7 +310,7 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await source.reload()
     const reloadedResponse = await reloaded
     expect(reloadedResponse.status()).toBe(200)
-    const reloadedBody = object(await reloadedResponse.json())
+    const reloadedBody = object(await readNativeReportResponse(reloadedResponse))
     expect(reloadedBody.status).toBe("ok")
     expect(object(object(reloadedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
     await expect(month.getByRole("button", { name: "Save month", exact: true })).toBeEnabled()

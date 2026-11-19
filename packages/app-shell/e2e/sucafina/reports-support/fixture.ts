@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test"
-import { retainReportResponse } from "./model.ts"
+import { object, retainReportResponse } from "./model.ts"
+import { Option, Schema } from "effect"
+import { SfReviewDomainProjection } from "@orchestra/schema/sucafina/reviews"
 import { reportsCorpus } from "./corpus.ts"
 import type { ReportsCorpus } from "./corpus.ts"
 import { withReportsInstallation } from "./production-installation.ts"
@@ -50,14 +52,37 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
       }
       page.on("console", diagnostic)
       const dashboardPath = new URL(app.dashboardURL).pathname
+      let observedStamp: Record<string, unknown> | undefined
       const reportJson = (url: URL) => url.origin === new URL(page.url()).origin &&
         (url.pathname.endsWith("/api/ui/projections/review") ||
-          url.pathname === app.mount + "/api/ui/pages/CAP03" && url.searchParams.get("year") === String(corpus.year) ||
-          url.pathname === dashboardPath && url.searchParams.has("sf") &&
-            url.searchParams.get("sf") !== "review-download")
+          url.pathname === app.mount + "/api/ui/context" ||
+          ["/api/ui/pages/CAP03", "/api/ui/pages/CAP04"].some((path) => url.pathname === app.mount + path) &&
+            url.searchParams.get("year") === String(corpus.year) ||
+          url.pathname === dashboardPath && (url.searchParams.has("sf") &&
+            url.searchParams.get("sf") !== "review-download" ||
+            !url.searchParams.has("sf") && url.searchParams.get("page") === "OPEX Detail"))
       await page.route(reportJson, async (route) => {
+        const request = route.request(), url = new URL(request.url())
+        if (url.pathname === dashboardPath && !url.searchParams.has("sf") &&
+            (request.method() !== "POST" || object(request.postDataJSON()).action !== "save-entry")) return route.continue()
         const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
-        await retainReportResponse(route.request(), original)
+        await retainReportResponse(request, original)
+        // Compare only the original responses already delivered to this page.
+        // No extra context GET, stored authority, owner values or replay.
+        if (url.pathname === app.mount + "/api/ui/context") {
+          const body = object(await original.json())
+          observedStamp = body.status === "ok" ? object(object(body.value).stamp) : undefined
+        } else if (url.searchParams.get("sf") === "review-read" && original.status() === 200) {
+          const body = object(await original.json()), saved = object(body.value)
+          const sections = Array.isArray(saved.sections) ? saved.sections : []
+          console.info("SF_REPORTS_OWNER_COMPARISON", JSON.stringify(sections.map((value) => {
+            const section = object(value), content = object(section.content), context = object(content.context)
+            return { title: section.title, projectionValid: Option.isSome(Schema.decodeUnknownOption(SfReviewDomainProjection)(content)),
+              originalContextCaptured: observedStamp !== undefined,
+              matchesCurrentStamp: Object.fromEntries(["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"]
+                .map((key) => [key, observedStamp === undefined ? null : context[key] === observedStamp[key]])) }
+          })))
+        }
         await route.fulfill({ response: original })
       })
       try { await use({ app, corpus }) }
