@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: 4ed90938b10c3532b773fb5732688608e7a589f2 (checkpoint causal após gate5; ainda não qualificado)
+SHA de código: a9b4e29a810c7d1884e9641b9898e2606941c269 (checkpoint causal após gate5 e revisão de identidade; ainda não qualificado)
 Data: 2026-11-19
 Estado: partial
 
@@ -80,8 +80,10 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 ## Correções causais após gate5 (4ed9093, aguardando revisão/gate)
 - `host/owner-runtime231.tsx:587-605` coloca view em resolving e desmonta a folha ao admitir a nova URL. `proposals/draft.tsx:217` agora retém somente o resultado real {draftRef,version} recebido do produtor, junto do input exato, no registry efêmero do owner. Não inventa operationRef nem chama confirmSave com identificador sintético.
 - `proposals/draft.tsx:142` consome/descarta o resultado quando a descoberta original autorizada corresponder a todos os campos, referências e versão esperados. Abrir uma proposta por leitura sem o resultado retido nunca produz Saved.
-- `host/draft-revalidation-proposal.ts:14` revalida apenas esse escopo UI54, por dashboard.dashboard-draft-read original: input fechado, case/id/incarnation, source original, destino e disponibilidade atuais. O PortResult não publica body.context: fresh.stamp nomeia o contexto F01 observado; o F02 cerca o transport/generation e o registry cerca signal/owner. Nenhuma alteração no F01 global ou uso de CAP02.domain como autorização de proposta privada.
+- `host/draft-revalidation-proposal.ts:14` revalida apenas esse escopo UI54, por dashboard.dashboard-draft-read original: input fechado, case/id/incarnation e draftRef exato do resultado, source original, destino e disponibilidade atuais. O PortResult não publica body.context: fresh.stamp nomeia o contexto F01 observado; o F02 cerca o transport/generation e o registry cerca signal/owner. Nenhuma alteração no F01 global ou uso de CAP02.domain como autorização de proposta privada.
 - Causa estática da segunda falha: `apps/cli/src/sucafina-product/dashboard-services.ts:210` cria fields na ordem action/owner/due/notes/priority; `dashboard-decisions.ts:205` usa action/owner/due/priority/notes. O JSON.stringify da comparação distinguia a ordem apesar de valores idênticos. Após validação, draftFor ordena somente os cinco campos conhecidos e conserva quaisquer propriedades remanescentes; nenhuma referência/array/valor é omitido.
 - Cleanup do spec aguarda todos os handlers originais de página/contexto antes de fechar. Não converte falha de fetch em sucesso nem ignora erros. Se uma jornada falhar, o fixture anexa suas últimas oito observações originais do host e texto das páginas ainda montadas; o erro original continua lançado.
 - Asserções removidas/relaxadas: nenhuma. Permanecem 211 chamadas expect e os timeouts originais; não houve reexecução de produto ainda.
 - `proposals.spec.ts:134` e `capture.tsx:1`: ainda unbound de qualificação dos cinco fluxos, até o gate no checkpoint composto terminal. Os testes legados continuam mantidos. Nenhuma alegação de integração ou GO.
+
+- Revisão do root acrescentou igualdade explícita current.draftRef === original.draftRef no revalidador (a9b4e29), além da comparação integral no consumo. O leitor de edição pode retornar uma versão ativa mais nova; o portador de confirmação não restaura esse resultado como se fosse o mesmo draftRef.
