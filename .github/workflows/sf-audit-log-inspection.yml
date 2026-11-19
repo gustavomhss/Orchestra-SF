@@ -1,0 +1,38 @@
+name: sf-audit-log-inspection
+on:
+  push:
+    branches: [audit-logs-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read the original completed job log
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/gustavomhss/Orchestra-SF/actions/jobs/135778309143/logs > "$RUNNER_TEMP/original-job.log"
+      - name: Extract bounded failure locations
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, pathlib, re
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          lines = (root / "original-job.log").read_text(errors="replace").splitlines()
+          keep = re.compile(r"\(fail\)|error:|Expected:|Received:| at .*\.[cm]?[jt]sx?:\d+|\b\d+ pass$|\b\d+ fail$|expect\(\) calls|Ran \d+ tests|timed out|TimeoutError")
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|access.token", re.I)
+          selected = []
+          for line in lines:
+              line = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", line)
+              if keep.search(line) and not sensitive.search(line):
+                  selected.append(line[:1000])
+          text = "Original run: 44585817131\nOriginal job: 135778309143\nSnapshot: 2dcbd93a41608e171dfde8896e0721a42fbede6d\nThis is a bounded log excerpt, not a rerun or a passing receipt.\n\n" + "\n".join(selected[:500]) + "\n"
+          payload = {"message": "docs(sf): retain original app browser failure locations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "log-payload.json").write_text(json.dumps(payload))
+          print(text)
+          PY
+      - name: Persist the observed excerpt on this audit branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/audit-logs-135778309143.txt --input "$RUNNER_TEMP/log-payload.json" > /dev/null
