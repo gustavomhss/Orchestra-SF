@@ -79,7 +79,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(currency).toHaveAttribute("aria-describedby", "sf-u12-currency-0")
   await expect(page.locator("#sf-u12-currency-0")).toHaveText(producer)
   await expect(currency).toHaveAccessibleDescription(producer)
-  await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: sourcing · Source version: " + version)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
   await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText(summary)
   await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText("Status: sourcing")
@@ -92,7 +92,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}/review`)
   await expect(page.getByRole("button", { name: "Approve current step", exact: true })).toHaveCount(0)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-  await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: sourcing · Source version: " + version)
   await expect(page.locator("fieldset.sf-u12-quote legend").first()).toContainText(quoteId)
   await expect(page.locator("fieldset.sf-u12-quote").first().getByRole("combobox", { name: "Registered supplier", exact: true })).toHaveValue(supplier)
   await page.getByRole("button", { name: "Compare quotations", exact: true }).click()
@@ -172,7 +172,7 @@ async function fillEnabledScores(quote: Locator) {
 }
 
 async function sourceVersion(page: Page) {
-  const line = page.locator(".sf-u12-heading p")
+  const line = page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })
   await expect(line).toHaveText(/^Stage: \S+ · Source version: [1-9]\d*$/)
   return (await line.innerText()).replace(/^Stage: \S+ · Source version: /, "")
 }
