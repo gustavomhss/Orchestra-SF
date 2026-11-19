@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, test } from "bun:test"
+import { beforeAll, expect, test } from "bun:test"
 import { createServer } from "node:http"
 import { writeFile } from "node:fs/promises"
 import { createRequire } from "node:module"
@@ -10,7 +10,7 @@ import type { EntraOptions } from "../runtime/local-contract.ts"
 import type { MicrosoftTransport } from "../runtime/microsoft-installation.ts"
 import { microsoftFixture } from "./microsoft-login/oidc-fixture.ts"
 import { privateFixture, ingressOrigin, publicOrigin } from "./microsoft-login/private-fixture.ts"
-import { integrationModule, removeIntegrationModules } from "./microsoft-login/integration-fixture.ts"
+import { integrationModule } from "./microsoft-login/integration-fixture.ts"
 
 type Installation = { mount: `/${string}`; handler: (request: Request) => Promise<Response | undefined>; dispose: () => void | Promise<void>; transport?: MicrosoftTransport }
 type Entry = { createMicrosoftInstallation: (context: { origin: string }, file: string | undefined, environment: Readonly<Record<string, string | undefined>>, overrides?: { fetch?: EntraOptions["fetch"]; now?: () => Date }) => Promise<Installation> }
@@ -31,7 +31,6 @@ beforeAll(async () => {
   loader = await integrationModule<Loader>("apps/cli/src/sucafina-product/installation.ts")
   serve = await integrationModule<PreflightServe>("apps/cli/src/commands/handlers/serve.ts")
 })
-afterAll(removeIntegrationModules)
 
 test("actual serve preflight rejects absent Microsoft configuration before requiring daemon or database services", async () => {
   const f = await privateFixture()
@@ -73,8 +72,11 @@ test("real Node ingress strips forwarded hints before toWeb and reaches the pinn
       ))
       yield* Effect.promise(async () => {
         // Node's raw URL is only a path. Without the pre-toWeb strip, Effect uses this forged HTTPS hint and the ingress fence fails.
-        const request = (pathname: string, headers: Record<string, string> = {}) => fetch(`${listener}${pathname}`, {
-          redirect: "manual", headers: { host: new URL(ingressOrigin).host, connection: "close", forwarded: "proto=https;host=evil.example", "x-forwarded-proto": "https", "x-forwarded-host": "evil.example", ...headers },
+        const request = (pathname: string, headers: Record<string, string> = {}, body?: Record<string, unknown>) => fetch(`${listener}${pathname}`, {
+          method: body === undefined ? "GET" : "POST",
+          redirect: "manual", headers: { host: new URL(ingressOrigin).host, connection: "close", forwarded: "proto=https;host=evil.example", "x-forwarded-proto": "https", "x-forwarded-host": "evil.example",
+            ...(body === undefined ? {} : { origin: publicOrigin, "content-type": "application/json" }), ...headers },
+          ...(body === undefined ? {} : { body: JSON.stringify(body) }),
         })
         const begin = await request("/sucafina/auth/login?returnTo=%2Fsucafina%2Fdashboard")
         expect(begin.status).toBe(303)
@@ -91,9 +93,15 @@ test("real Node ingress strips forwarded hints before toWeb and reaches the pinn
         expect(session).toContain("HttpOnly")
         expect(session).toContain("Secure")
         expect(session).toContain("SameSite=Lax")
-        const authenticated = await request("/sucafina/dashboard", { cookie: session.split(";")[0] })
-        expect(authenticated.status).toBe(401) // Authenticated guest has no initialized product role map.
+        // The signed member receives only its configured viewer role. Exercise
+        // the live producer command to prove that login cannot grant write access.
+        const authenticated = await request("/sucafina/dashboard", { cookie: session.split(";")[0] }, {
+          page: "IT Risks", action: "save", version: 0,
+          values: { name: "Denied viewer risk", impact: 3, probability: 2 },
+        })
+        expect(authenticated.status).toBe(403)
         await authenticated.arrayBuffer()
+        expect((await request("/sucafina/dashboard", { cookie: session.split(";")[0] })).status).toBe(404)
         expect((await request("/sucafina/status", { host: "evil.example", "x-forwarded-host": new URL(ingressOrigin).host })).status).toBe(403)
         for (const pathname of ["/outside", "/sucafina-other"]) expect((await request(pathname)).status).toBe(404)
         expect(spans).toHaveLength(0)

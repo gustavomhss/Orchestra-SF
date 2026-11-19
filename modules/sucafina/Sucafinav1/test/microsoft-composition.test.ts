@@ -1,39 +1,45 @@
-import { afterAll, afterEach, beforeAll, expect, test } from "bun:test"
+import { afterEach, beforeAll, expect, test } from "bun:test"
 import { writeFile } from "node:fs/promises"
 import path from "node:path"
 import { Layer, Tracer } from "effect"
+import type { SfInstallation } from "../../../../apps/cli/src/sucafina-product/installation.ts"
+import { createSfHostRuntime } from "../../../../apps/cli/src/sucafina-product/host-context.ts"
+import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
+import { microsoftNativeHost } from "./microsoft-login/native-host.ts"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import type { EntraOptions } from "../runtime/local-contract.ts"
-import type { MicrosoftTransport } from "../runtime/microsoft-installation.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { microsoftFixture, group, other, oid } from "./microsoft-login/oidc-fixture.ts"
 import { privateFixture, listenerOrigin, ingressOrigin, publicOrigin } from "./microsoft-login/private-fixture.ts"
-import { integrationModule, removeIntegrationModules } from "./microsoft-login/integration-fixture.ts"
+import { integrationModule } from "./microsoft-login/integration-fixture.ts"
 
-type Installation = { mount: `/${string}`; handler: (request: Request) => Promise<Response | undefined>; dispose: () => void | Promise<void>; transport?: MicrosoftTransport }
+type Installation = SfInstallation
 type Entry = {
-  createMicrosoftInstallation: (context: { origin: string }, file: string | undefined, environment: Readonly<Record<string, string | undefined>>, overrides?: { fetch?: EntraOptions["fetch"]; now?: () => Date }) => Promise<Installation>
+  createMicrosoftInstallation: (context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>>, overrides?: { fetch?: EntraOptions["fetch"]; now?: () => Date }) => Promise<Installation>
   createLocalInstallation: (context: { origin: string }, file: string | undefined, environment: Readonly<Record<string, string | undefined>>) => Promise<Installation>
 }
 type Loader = { composeSfInstallation: (value: unknown, origin: string) => Promise<Installation & { layer: Layer.Layer<never, never, HttpRouter.HttpRouter>; privacy: Layer.Layer<never> }> }
 let entry: Entry
 let loader: Loader
+let nativeFixture: Awaited<ReturnType<typeof setup>>
 const cleanups: (() => Promise<void>)[] = []
 beforeAll(async () => {
   entry = await integrationModule<Entry>("modules/sucafina/Sucafinav1/local/entry.ts")
   loader = await integrationModule<Loader>("apps/cli/src/sucafina-product/installation.ts")
+  nativeFixture = await setup(true)
 })
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close() })
-afterAll(removeIntegrationModules)
 
-async function setup() {
+async function setup(native = false) {
   const f = await privateFixture()
   cleanups.push(f.close)
   const provider = await microsoftFixture()
-  await writeFile(f.file, JSON.stringify({ ...f.config, groups: { ...f.config.groups, dashboard: { viewer: `group:${group}`, admin: `group:${other}` } } }))
-  const application = await entry.createMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  await writeFile(f.file, JSON.stringify({ ...f.config, groups: { ...f.config.groups, dashboard: { viewer: `group:${group}`, admin: `group:${other}` } },
+    grants: native ? [oid, other].map((principalRef) => ({ principalRef, namespaces: [], operations: [], humanActions: [] })) : [] }))
+  const application = await entry.createMicrosoftInstallation({ origin: listenerOrigin, ...(native ? { createHostRuntime: createSfHostRuntime } : {}) }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
   cleanups.push(async () => { await application.dispose() })
   const installation = await loader.composeSfInstallation(application, listenerOrigin)
+  if (native) cleanups.push((await microsoftNativeHost(f, installation)).dispose)
   const spans: Tracer.NativeSpan[] = []
   const tracer = Tracer.make({ span(options) { const span = new Tracer.NativeSpan(options); spans.push(span); return span } })
   const router = HttpRouter.toWebHandler(Layer.mergeAll(installation.layer, installation.privacy, Layer.succeed(Tracer.Tracer)(tracer)).pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
@@ -63,28 +69,43 @@ async function setup() {
   return { ...f, provider, application, installation, spans, request, login, store }
 }
 
-test("exact proposed entry and CLI route compose Microsoft login, bootstrap and existing product pages", async () => {
-  const f = await setup()
+test("installed Microsoft viewer reads the native projection without gaining administrator rights", async () => {
+  const f = nativeFixture
   expect(f.application.transport).toEqual({ kind: "explicit-https-proxy", listenerOrigin, ingressOrigin, publicOrigin })
-  const anonymous = await f.request("/sucafina/dashboard")
-  expect(anonymous.status).toBe(303)
-  expect(anonymous.headers.get("location")).toBe("/sucafina/auth/login?returnTo=%2Fsucafina%2Fdashboard")
+  const anonymous = await f.request("/sucafina/api/ui/pages/CAP01")
+  expect(anonymous.status).toBe(401)
+  expect(await anonymous.json()).toMatchObject({ status: "unauthenticated" })
   const first = await f.login()
-  // An assigned viewer cannot silently become the first administrator.
-  expect((await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })).status).toBe(401)
-  expect(await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.roleMap }))).toBeUndefined()
-  f.provider.account.groups.push(other)
-  expect((await f.request("/sucafina/dashboard", { headers: { cookie: first.cookie } })).status).toBe(200)
+  const viewer = await f.request("/sucafina/api/ui/pages/CAP01", { headers: { cookie: first.cookie } })
+  expect(viewer.status).toBe(200)
+  expect(await viewer.json()).toMatchObject({
+    status: "ok", context: { principalRef: oid },
+    value: { capabilityId: "CAP01", allowedActionIds: [] },
+  })
   const rows = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.roleMap }))
   expect(rows).toEqual(expect.arrayContaining([expect.objectContaining({ surface: "dashboard", role: "viewer", entra: `group:${group}` })]))
+  // Only a real membership change may grant the separately configured admin role.
+  f.provider.account.groups.push(other)
+  const promoted = await f.request("/sucafina/api/ui/pages/CAP01", { headers: { cookie: first.cookie } })
+  expect(promoted.status).toBe(200)
+  expect(await promoted.json()).toMatchObject({
+    value: { allowedActionIds: expect.arrayContaining(["save-users", "save-benchmark"]) },
+  })
   const guest = await f.login(other)
-  const page = await f.request("/sucafina/dashboard", { headers: { cookie: guest.cookie } })
+  const page = await f.request("/sucafina/api/ui/pages/CAP01", { headers: { cookie: guest.cookie } })
   expect(page.status).toBe(200)
-  expect(page.headers.get("content-type")).toContain("text/html")
-  expect(await page.text()).not.toContain("Homologação local")
-  expect((await f.request("/sucafina/planner", { headers: { cookie: guest.cookie } })).status).toBe(401)
+  expect(page.headers.get("content-type")).toContain("application/json")
+  const body = await page.text()
+  expect(JSON.parse(body)).toMatchObject({
+    status: "ok", context: { principalRef: other },
+    value: { capabilityId: "CAP01", allowedActionIds: [] },
+  })
+  expect(body).not.toContain("Homologação local")
+  expect((await f.request("/sucafina/api/ui/pages/CAP17", { headers: { cookie: guest.cookie } })).status).toBe(403)
   const deniedWrite = await f.request("/sucafina/dashboard?page=IT%20Risks", { method: "POST", headers: { origin: publicOrigin, cookie: guest.cookie, "content-type": "application/json" }, body: JSON.stringify({ page: "IT Risks", action: "save", version: 0, values: { name: "Denied viewer risk", impact: 3, probability: 2 } }) })
   expect(deniedWrite.status).toBe(403)
+  for (const surface of ["dashboard", "planner", "procurement"])
+    expect((await f.request("/sucafina/" + surface, { headers: { cookie: guest.cookie } })).status).toBe(404)
   expect(f.spans).toHaveLength(0)
 })
 
