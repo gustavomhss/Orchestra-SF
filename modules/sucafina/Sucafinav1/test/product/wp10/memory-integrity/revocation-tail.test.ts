@@ -5,7 +5,7 @@ import { createSfDecisionMemoryVerifier } from "../../../../../../../apps/cli/sr
 import { createSfAnalysisSelectionReaders } from "../../../../../../../apps/cli/src/sucafina-product/analysis-services-readers.ts"
 import { sfAnalysisSourcesAuthorized } from "../../../../../../../apps/cli/src/sucafina-product/analysis-memory-evidence.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
-import { revalidateSfAtlasRecall } from "../../../../product/host-binding/atlas-memory.ts"
+import { revalidateSfAtlasRecall, withSfAtlasRecallObservation } from "../../../../product/host-binding/atlas-memory.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { verifierOutputFixture } from "../analysis-composition/verifier-output-fixture.ts"
 import { withMemoryIntegrityFixture } from "./fixture.ts"
@@ -160,3 +160,39 @@ test("Memory integrity revocation tail refuses the same output proof after autho
   })
 }, 120_000)
 
+
+test("Memory observation rejects nested ownership and a different call consuming its canonical witness", async () => {
+  expectSpawn(import.meta.path)
+  await withMemoryIntegrityFixture(async (f) => {
+    const request = f.request()
+    const call = await f.admit(request)
+    const other = await f.admit(f.request())
+    let records: readonly unknown[] | undefined
+    try {
+      const current = () => f.authority.host.requestFor(call) === request && !request.signal.aborted
+      const observed = await withSfAtlasRecallObservation(call, current, async () => {
+        const recalled = await f.atlas.memory.recall(f.caseRef, call)
+        expect(recalled.status).toBe("ok")
+        if (recalled.status !== "ok") throw new Error("The actual canonical Atlas read failed")
+        records = recalled.records
+        let nestedWork = false
+        const nested = await withSfAtlasRecallObservation(call, current, async () => {
+          nestedWork = true
+          return true
+        })
+        expect(nested).toBeUndefined()
+        expect(nestedWork).toBe(false)
+        expect(await revalidateSfAtlasRecall([recalled.records], call)).toBe(true)
+        expect(await revalidateSfAtlasRecall([recalled.records], other)).toBe(false)
+        expect(await revalidateSfAtlasRecall([recalled.records], call)).toBe(false)
+        return true
+      })
+      expect(observed).toBeUndefined()
+      if (!records) throw new Error("The canonical witness was never issued")
+      expect(await revalidateSfAtlasRecall([records], call)).toBe(false)
+    } finally {
+      f.authority.human.finish(other)
+      f.authority.human.finish(call)
+    }
+  }, "recall-observation-owner")
+}, 120_000)
