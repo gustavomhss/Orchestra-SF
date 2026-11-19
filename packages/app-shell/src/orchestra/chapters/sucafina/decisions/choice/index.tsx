@@ -2,6 +2,7 @@
  * N25/U18 UI38 — current choice. The read/prepare/promote trio is the original
  * A04 producer; no browsing of another case, fabricated choice or replay-on-timeout.
  */
+import { A } from "@solidjs/router"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { SfOperationRef } from "@orchestra/schema/sucafina/context"
@@ -20,6 +21,7 @@ import {
   u18Ref, u18TransportState, type SfChoiceOptions, type SfChoiceReview,
 } from "./model"
 import { SfRecordChoice } from "./record"
+import { sfDecisionHref } from "../cases/route"
 import "./u18.css"
 
 type View = {
@@ -272,6 +274,10 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="comparison"
       onLayoutMode={() => undefined}
     >
+      <nav aria-label={t("sf.ui38.author.title")}>
+        <A class="mx-btn" href={sfDecisionHref(props.route, "list")}>{t("sf.ui38.author.returnList")}</A>
+        <A class="mx-btn" href={sfDecisionHref(props.route, "case", String(props.route.params.caseRef))}>{t("sf.ui38.author.returnCase")}</A>
+      </nav>
       <SfRecordChoice caseRef={String(props.route.params.caseRef)} />
       <SfStatePanel
         state={currentState()} messageKey={u18ErrorKey(currentState())}

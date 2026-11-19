@@ -29,7 +29,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
   const [ui, setUi] = createStore<{
     phase: Phase; baseline: string; alternative: string; criteria: readonly string[]; reason: string; message: string
     comparison?: Compare; criterion: string; operator: "" | "lte" | "gte" | "eq"; limit: string
-    evidence: readonly string[]; rule?: { criterionId: string; expectedVersion: number; evidence: RuleEvidence }
+    evidence: readonly string[]; savedRuleVersion?: number; rule?: { criterionId: string; expectedVersion: number; evidence: RuleEvidence }
   }>({ phase: "editing", baseline: "", alternative: "", criteria: [], reason: "", message: "",
     criterion: "", operator: "", limit: "", evidence: [] })
   let pending: AbortController | undefined
@@ -73,7 +73,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
     ui.baseline !== ui.alternative && ui.criteria.length > 0 &&
     record()?.criteria.every((item) => !item.required || ui.criteria.includes(item.id)) === true
   const resetComparison = () => setUi({ comparison: undefined, rule: undefined, criterion: "",
-    operator: "", limit: "", evidence: [], message: "" })
+    operator: "", limit: "", evidence: [], message: "", savedRuleVersion: undefined })
   const begin = () => {
     const snapshot = scope()
     if (!snapshot) return undefined
@@ -157,7 +157,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
     if (["denied", "unauthenticated", "context-mismatch"].includes(owner.status) ||
         ready && retainedStamp && JSON.stringify(ready.context.stamp) !== retainedStamp) forgetRetained()
     setUi({ phase: "editing", baseline: "", alternative: "", criteria: record()?.criteria.map((item) => item.id) ?? [],
-      reason: "", message: "", comparison: undefined, rule: undefined, criterion: "", operator: "", limit: "", evidence: [] })
+      reason: "", message: "", comparison: undefined, rule: undefined, criterion: "", operator: "", limit: "", evidence: [], savedRuleVersion: undefined })
     inspectRetained()
   }))
   onCleanup(() => pending?.abort())
@@ -257,7 +257,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
         setUi("message", "unavailable"); return
       }
       resetComparison()
-      setUi("message", "ruleSaved")
+      setUi({ message: "ruleSaved", savedRuleVersion: reply.body.value.version })
     } catch { if (current(context.snapshot, context.abort)) setUi({ phase: "unknown", message: "ruleUnknown" }) }
     finally { if (current(context.snapshot, context.abort) && ui.phase === "saving-rule") setUi("phase", "editing") }
   }
@@ -303,6 +303,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
     <h2>{t("title")}</h2>
     <Show when={record()} fallback={<p role="status">{t("unavailable")}</p>}>{(selected) => <>
       <p>{selected().objective}</p>
+      <p data-sf-choice-case-summary>{selected().state} · {t("caseVersion")} {selected().version} · {selected().horizon.start} – {selected().horizon.end} · {selected().currency}</p>
       <p>{t("boundary")}</p>
       <form onSubmit={(event) => { event.preventDefault(); void choose() }}>
         <fieldset disabled={locked()}>
@@ -367,6 +368,8 @@ export function SfRecordChoice(props: { caseRef: string }) {
       </Show>
       <Show when={ui.phase === "reconcile"}><button type="button" class="mx-btn" onClick={source.reload}>{t("refresh")}</button></Show>
       <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>
+      <Show when={ui.savedRuleVersion !== undefined}><p data-sf-rule-version={ui.savedRuleVersion}>{t("ruleVersion")}: {ui.savedRuleVersion}</p></Show>
+      <Show when={selected().preparedChanges.length === 0}><p>{t("noChanges")}</p></Show>
       <section aria-label={t("history")}><h3>{t("history")}</h3>
         <Show when={selected().choices.length} fallback={<p>{t("noChoices")}</p>}>
           <For each={selected().choices}>{(choice) => <article data-sf-choice-id={choice.id}>
@@ -375,6 +378,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
             <dl><dt>{t("knownSubtotal")}</dt><dd>{choice.result.knownSubtotal ?? t("missing")} {choice.result.currency}</dd>
               <dt>{t("completeTotal")}</dt><dd>{choice.result.total ?? t("missing")}</dd>
               <dt>{t("knownDifference")}</dt><dd>{choice.comparison.knownDifference ?? t("missing")}</dd>
+              <dt>{t("completeDifference")}</dt><dd>{choice.comparison.completeDifference ?? t("missing")}</dd>
               <dt>{t("comparison")}</dt><dd>{choice.comparisonStatus}</dd>
               <dt>{t("coverage")}</dt><dd>{choice.costCoverage.coverageState}</dd></dl>
             <p>{choice.result.horizon.start} – {choice.result.horizon.end}</p>

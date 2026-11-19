@@ -2,6 +2,10 @@
 // Producer-owned labels, IDs and values remain literal data, not translated UI copy.
 export const SF_U18_COPY = {
   "sf.ui38.author.title": "Compare and choose",
+  "sf.ui38.author.returnList": "Back to decisions",
+  "sf.ui38.author.returnCase": "Open decision",
+  "sf.ui38.author.caseVersion": "Version",
+  "sf.ui38.author.noChanges": "No changes prepared.",
   "sf.ui38.author.pair": "Select two recorded alternatives",
   "sf.ui38.author.baseline": "Baseline",
   "sf.ui38.author.alternative": "Alternative",
@@ -120,6 +124,10 @@ export const SF_U18_COPY = {
 
 export const SF_U18_COPY_BR: Readonly<Record<keyof typeof SF_U18_COPY, string>> = {
   "sf.ui38.author.title": "Comparar e escolher",
+  "sf.ui38.author.returnList": "Voltar às decisões",
+  "sf.ui38.author.returnCase": "Abrir decisão",
+  "sf.ui38.author.caseVersion": "Versão",
+  "sf.ui38.author.noChanges": "Nenhuma alteração preparada.",
   "sf.ui38.author.pair": "Selecione duas alternativas registradas",
   "sf.ui38.author.baseline": "Base",
   "sf.ui38.author.alternative": "Alternativa",

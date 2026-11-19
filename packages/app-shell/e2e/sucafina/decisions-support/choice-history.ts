@@ -1,8 +1,9 @@
 import { expect, test, type Page, type Request } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, isCommand, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, isCommand, readCaseProjection, reopenCase } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 import { changePlannerSource } from "./planner-sources"
 import { registerKnownIncreaseRule } from "./comparison-rule"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
 type Selection = {
   reference: string
@@ -16,12 +17,16 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
   const identity = caseIdentity(selection.reference)
   const reason = "I choose the candidate under the recorded pending cost conditions. This choice does not approve any financial change."
   await reopenCase(page, selection.reference, selection.objective)
-  const choice = page.locator("form[data-decision-choice]")
-  await expect(choice).toHaveAttribute("data-sf-choice-ready", "true")
-  const before = asRecord(JSON.parse((await choice.getAttribute("data-context"))!))
-  expect(before.caseRef).toEqual({ ...identity, version: 4 })
-  expect(before.choices).toEqual([])
-  const alternative = (before.alternatives as unknown[]).map(asRecord).find((item) => item.title === selection.titles.candidate)
+  await page.getByRole("link", { name: "Compare and choose", exact: true }).click()
+  await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions/" + encodeSfRouteRef(selection.reference) + "/choice")
+  const choice = page.locator("[data-sf-choice-author]")
+  await expect(choice).toHaveAttribute("data-sf-case-ref", selection.reference)
+  await expect(choice).toHaveAttribute("data-sf-case-version", "4")
+  const before = await readCaseProjection(page, selection.reference)
+  expect(before.case).toMatchObject({ ...identity, version: 4 })
+  expect(before.case.choices).toEqual([])
+  const originalCaseRef = { id: before.case.id, incarnation: before.case.incarnation, version: before.case.version }
+  const alternative = before.case.alternatives.find((item) => item.title === selection.titles.candidate)
   expect(alternative).toBeDefined()
   await choice.locator('select[name="baseline"]').selectOption({ label: selection.titles.baseline })
   await choice.locator('select[name="alternative"]').selectOption({ label: selection.titles.candidate })
@@ -35,8 +40,10 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
   await choice.getByLabel("Reason for choosing", { exact: true }).fill(reason)
   await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeEnabled()
   const commands: { body: string | null; key: string | undefined }[] = []
+  const otherDashboardPosts: string[] = []
   const capture = (request: Request) => {
     if (isCommand(request, "decision-choose")) commands.push({ body: request.postData(), key: request.headers()["idempotency-key"] })
+    else if (request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/dashboard") otherDashboardPosts.push(new URL(request.url()).searchParams.get("sf") ?? "")
   }
   page.on("request", capture)
   try {
@@ -53,7 +60,7 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
       expect(lost.httpStatus).toBe(200)
       expect(lost.contentType).toContain("application/json")
       expect(lost.body).toEqual({ status: "ok", value: { caseRef: { ...identity, version: 5 } } })
-      expect(lost.payload).toEqual({ caseRef: before.caseRef, alternativeId: alternative!.id, alternativeVersion: alternative!.version,
+      expect(lost.payload).toEqual({ caseRef: originalCaseRef, alternativeId: alternative!.id, alternativeVersion: alternative!.version,
         comparison: compared.request, criteria: asRecord(compared.request).criteria, reason })
       expect(commands).toHaveLength(1)
       expect(commands[0]!.key).toMatch(/^[a-f0-9-]{36}$/)
@@ -63,17 +70,22 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
       await expect(choice.getByRole("button", { name: "Retry the same choice", exact: true })).toBeEnabled()
       page.once("dialog", (dialog) => dialog.accept())
       await page.reload()
-      await expect(choice).toHaveAttribute("data-sf-choice-ready", "true")
-      const reloaded = asRecord(JSON.parse((await choice.getAttribute("data-context"))!))
-      expect(reloaded.caseRef).toEqual({ ...identity, version: 5 })
-      expect(reloaded.choices).toHaveLength(1)
+      await expect(choice).toHaveAttribute("data-sf-case-version", "5")
+      const reloaded = await readCaseProjection(page, selection.reference)
+      expect(reloaded.case).toMatchObject({ ...identity, version: 5 })
+      expect(reloaded.case.choices).toHaveLength(1)
       await expect(choice.getByLabel("Reason for choosing", { exact: true })).toHaveValue(reason)
       await expect(choice.getByLabel("Reason for choosing", { exact: true })).toBeDisabled()
       await expect(choice.getByRole("button", { name: "Retry the same choice", exact: true })).toBeEnabled()
       expect(commands).toHaveLength(1)
-      const reloadedAfterRetry = page.waitForEvent("domcontentloaded")
+      const reloadedAfterRetry = page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return response.request().method() === "GET" && url.pathname === "/sucafina/api/ui/projections/case" &&
+          url.searchParams.get("caseRef") === selection.reference
+      })
       const reconciled = await clickCommand(page, choice.getByRole("button", { name: "Retry the same choice", exact: true }), "decision-choose", observations)
-      await reloadedAfterRetry
+      expect((await reloadedAfterRetry).status()).toBe(200)
+      await expect(choice.getByLabel("Reason for choosing", { exact: true })).toBeEnabled()
       expect(reconciled).toEqual(lost.body)
       expect(commands).toHaveLength(2)
       expect(commands[1]).toEqual(commands[0])
@@ -82,11 +94,11 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
     })
     const snapshot = await test.step("read the durable choice without treating it as financial approval", async () => {
       const current = await currentChoice(page, selection.reference, selection.objective)
-      expect(current.caseRef).toEqual({ ...identity, version: 5 })
-      expect(current.choices).toHaveLength(1)
-      const saved = asRecord((current.choices as unknown[])[0])
+      expect(current.case).toMatchObject({ ...identity, version: 5 })
+      expect(current.case.choices).toHaveLength(1)
+      const saved = asRecord(current.case.choices[0])
       expect(saved).toMatchObject({ alternativeId: alternative!.id, alternativeVersion: 1, basisVersion: 1,
-        principalRef: asRecord(before.authority).principalRef, reason, comparisonStatus: "conditioned" })
+        principalRef: before.context.principalRef, reason, comparisonStatus: "conditioned" })
       expect(typeof saved.id).toBe("string")
       expect(Number.isFinite(Date.parse(String(saved.at)))).toBe(true)
       expect(saved.criteria).toEqual(asRecord(compared.request).criteria)
@@ -100,33 +112,32 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
       expect(asRecord(saved.scenario).operations).toEqual([])
       expect(asRecord(saved.scenario).assumptions).toEqual([])
       await assertHistoricalChoice(page, reason)
-      const prepare = page.locator("[data-decision-prepare]")
-      await expect(prepare.getByRole("button", { name: "Prepare changes from this choice", exact: true })).toBeDisabled()
-      await expect(prepare.locator("[data-choice-prepare-status]")).toHaveText("This recorded choice contains no executable operations. No changes were prepared.")
+      expect(current.case.preparedChanges).toEqual([])
+      await expect(choice.getByText("This recorded choice contains no executable operations. No changes were prepared.", { exact: true })).toBeVisible()
+      expect(otherDashboardPosts).toEqual([])
       await expect(page.getByText("No changes prepared.", { exact: true })).toBeVisible()
       await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
-      observations.push({ stage: "persisted-human-choice", caseRef: current.caseRef, choice: saved,
+      observations.push({ stage: "persisted-human-choice", caseRef: { ...identity, version: current.case.version }, choice: saved,
         financialApproval: false, financialApplication: false, applicationBoundary: "The public Planner alternatives contain no executable Procurement operation." })
       return saved
     })
     await test.step("reopen the same choice and retain its historical values after the real Planner source changes", async () => {
       await page.reload()
-      expect((await currentChoice(page, selection.reference, selection.objective)).choices).toEqual([snapshot])
+      expect((await currentChoice(page, selection.reference, selection.objective)).case.choices).toEqual([snapshot])
       await reopenCase(page, selection.reference, selection.objective)
-      expect((await currentChoice(page, selection.reference, selection.objective)).choices).toEqual([snapshot])
+      expect((await currentChoice(page, selection.reference, selection.objective)).case.choices).toEqual([snapshot])
       await changePlannerSource(page, installation.origin, selection.sources.candidate, 3600, observations)
       await enterWorkbench(page, installation.origin)
-      const link = page.getByRole("link", { name: selection.objective, exact: true })
-      await expect(link).toHaveCount(1)
-      expect(new URL((await link.getAttribute("href"))!, page.url()).searchParams.get("caseRef")).toBe(selection.reference)
-      await link.click()
+      // reopenCase checks the exact persisted reference, objective, one native link and its opaque-ref pathname.
+      await reopenCase(page, selection.reference, selection.objective)
       const historical = await currentChoice(page, selection.reference, selection.objective)
-      expect(historical.caseRef).toEqual({ ...identity, version: 5 })
+      expect(historical.case).toMatchObject({ ...identity, version: 5 })
       // Compare the complete emitted immutable record, not only its title or subtotal.
-      expect(historical.choices).toEqual([snapshot])
+      expect(historical.case.choices).toEqual([snapshot])
       await assertHistoricalChoice(page, reason)
       expect(commands).toHaveLength(2)
-      observations.push({ stage: "historical-choice-after-source-change", caseRef: historical.caseRef,
+      expect(otherDashboardPosts).toEqual([])
+      observations.push({ stage: "historical-choice-after-source-change", caseRef: { ...identity, version: historical.case.version },
         choiceId: snapshot.id, originalChoice: snapshot, currentSourceAnnualInput: 3600, choiceUnchanged: true,
         mutationRequests: commands.length, nativeRestartProved: false, financialApplication: false })
     })
@@ -134,27 +145,30 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
 }
 
 async function currentChoice(page: Page, reference: string, objective: string) {
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
-  const decision = page.getByRole("region", { name: "Decision", exact: true })
-  await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
-  await expect(decision.locator("header > p")).toHaveText(`chosen · Version 5 · ${draft.horizon.start} – ${draft.horizon.end} · USD`)
-  const form = page.locator("form[data-decision-choice]")
-  await expect(form).toHaveAttribute("data-sf-choice-ready", "true")
-  return asRecord(JSON.parse((await form.getAttribute("data-context"))!))
+  const casePath = "/orchestra/sf-decisions/" + encodeSfRouteRef(reference)
+  if (new URL(page.url()).pathname === casePath)
+    await page.getByRole("link", { name: "Compare and choose", exact: true }).click()
+  await expect(page).toHaveURL((url) => url.pathname === casePath + "/choice")
+  const choice = page.locator("[data-sf-choice-author]")
+  await expect(choice).toHaveAttribute("data-sf-case-ref", reference)
+  await expect(choice).toHaveAttribute("data-sf-case-version", "5")
+  await expect(choice.getByText(objective, { exact: true })).toBeVisible()
+  await expect(choice.locator("[data-sf-choice-case-summary]")).toHaveText(`chosen · Version 5 · ${draft.horizon.start} – ${draft.horizon.end} · USD`)
+  const projection = await readCaseProjection(page, reference)
+  expect(projection.case).toMatchObject({ ...caseIdentity(reference), version: 5, objective,
+    state: "chosen", horizon: draft.horizon, currency: "USD" })
+  return projection
 }
 
 async function assertHistoricalChoice(page: Page, reason: string) {
-  const decision = page.getByRole("region", { name: "Decision", exact: true })
-  const history = decision.locator(":scope > details").filter({ has: page.getByText("History and sources", { exact: true }) })
-  await expect(history).toHaveCount(1)
-  if (!(await history.getAttribute("open") === "")) await history.getByText("History and sources", { exact: true }).click()
-  const choice = history.locator(":scope > article")
+  const history = page.locator("[data-sf-choice-author]").getByRole("region", { name: "Recorded choices", exact: true })
+  const choice = history.locator("article[data-sf-choice-id]")
   await expect(choice).toHaveCount(1)
   await expect(choice.getByText(reason, { exact: true })).toBeVisible()
-  await expect(choice.getByText("Known subtotal: 2400 USD", { exact: true })).toBeVisible()
-  await expect(choice.getByText("Known difference: 1200 USD", { exact: true })).toBeVisible()
-  await expect(choice.getByText(/^Total:/)).toHaveCount(0)
-  await expect(choice.getByText(/^Difference:/)).toHaveCount(0)
-  await expect(choice.getByRole("list", { name: "Pending cost categories", exact: true }).getByRole("listitem")).toHaveCount(9)
-  await expect(choice).not.toContainText("Known subtotal: 3600")
+  await expect(choice.locator("dt").filter({ hasText: /^Historical known subtotal$/ }).locator("+ dd")).toHaveText("2400 USD")
+  await expect(choice.locator("dt").filter({ hasText: /^Known difference$/ }).locator("+ dd")).toHaveText("1200")
+  await expect(choice.locator("dt").filter({ hasText: /^Complete total$/ }).locator("+ dd")).toHaveText("Unavailable")
+  await expect(choice.locator("dt").filter({ hasText: /^Complete difference$/ }).locator("+ dd")).toHaveText("Unavailable")
+  await expect(choice.getByRole("list", { name: "Cost coverage categories", exact: true }).getByRole("listitem")).toHaveCount(9)
+  await expect(choice.locator("dt").filter({ hasText: /^Historical known subtotal$/ }).locator("+ dd")).not.toContainText("3600")
 }

@@ -6,7 +6,7 @@
 import { encodeSfRouteRef } from "../../navigation-state"
 import type { SfHref, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 
-export type SfDecisionDestination = "list" | "case" | "alternatives" | "assumptions" | "questions"
+export type SfDecisionDestination = "list" | "case" | "alternatives" | "assumptions" | "questions" | "choice"
 
 export function sfDecisionHref(
   route: SfResolvedRoute,

@@ -121,6 +121,7 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
               <Show when={route()}>
                 {(current) => <nav class="sf-n24-actions" aria-label={t("sf.ui34.title")}>
                   <A class="mx-btn" href={sfDecisionHref(current(), "alternatives", String(source()))}>{t("sf.ui34.openAlternatives")}</A>
+                  <Show when={record().alternatives.length >= 2}><A class="mx-btn" href={sfDecisionHref(current(), "choice", String(source()))}>{t("sf.ui38.author.title")}</A></Show>
                   <A class="mx-btn" href={sfDecisionHref(current(), "assumptions", String(source()))}>{t("sf.ui34.openAssumptions")}</A>
                   <A class="mx-btn" href={sfDecisionHref(current(), "questions", String(source()))}>{t("sf.ui34.openQuestions")}</A>
                 </nav>}

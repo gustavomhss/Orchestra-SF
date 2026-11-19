@@ -176,7 +176,7 @@ async function checkedReply(record: { mode: string | null; httpStatus: number; c
   return result
 }
 
-export async function readCase(page: Page, reference: string) {
+export async function readCaseProjection(page: Page, reference: string) {
   const url = new URL("/sucafina/api/ui/projections/case", page.url())
   url.searchParams.set("caseRef", reference)
   const response = await page.request.get(url.href)
@@ -185,7 +185,11 @@ export async function readCase(page: Page, reference: string) {
   const result = Schema.decodeUnknownSync(Schema.toType(SfProjectionCase.output), { onExcessProperty: "error" })(await response.json())
   if (result.status !== "ok") throw new Error("The original case projection was not admitted")
   expect(result.value.projection.case).toMatchObject(caseIdentity(reference))
-  return result.value.projection.case
+  return result.value.projection
+}
+
+export async function readCase(page: Page, reference: string) {
+  return (await readCaseProjection(page, reference)).case
 }
 
 export async function assertCase(page: Page, reference: string, objective: string, version: number) {
