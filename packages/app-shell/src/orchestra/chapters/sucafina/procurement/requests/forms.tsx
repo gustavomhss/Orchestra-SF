@@ -71,7 +71,8 @@ export function SfRequisitionForm(props: PrProps) {
                   step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
                   required={props.creating && field === "title"}
                   value={textValue(value())}
-                  onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
+                  onInput={(event) => edit(field, field === "estAmount" || field === "estAnnual" ?
+                    event.currentTarget.value === "" ? null : event.currentTarget.valueAsNumber : event.currentTarget.value)} />
               }>
                 <textarea name={`pr.${field}`} aria-label={label()} aria-invalid={error() ? "true" : undefined}
                   aria-describedby={error() ? errorId : undefined} rows={3} value={textValue(value())}
