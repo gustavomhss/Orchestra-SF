@@ -1,6 +1,6 @@
 # Handoff — finish-bindings-20261119
 
-SHA: base d93d7c7687c2335cb89fd1e26bec562d07d9ec7f; o snapshot aponta para o commit de código.
+SHA: 9f3bcf615d19613521432f6e9b9e21e7c9309e15 (código do gate unitário).
 Data: 2026-11-19
 Estado: partial
 
@@ -16,7 +16,7 @@ Estado: partial
 
 - packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx:14 — editor de anexos sob finish-ingress-20261119; ainda não qualificado.
 - apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts:12 — qualificar na instalação real com UI33/34 e BI; o unitário de codec não prova readiness instalada.
-- packages/client/test/sucafina/decision-edit.test.ts:12 — gate estreito ainda não iniciado ao gravar este documento.
+- O codec foi qualificado; permanece pendente a instalação real com o editor nativo.
 
 ## Decisões e justificativas
 
@@ -33,5 +33,6 @@ Estado: partial
 
 ## Comandos e resultados
 
+- [44580136464](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44580136464): SUCCESS3/0/13expect, snapshot56a5407ab724dd3630d247614bc9a2b50a764e7d, código9f3bcf615d19613521432f6e9b9e21e7c9309e15. Test135758238396 e cleanup135759354951 success.
 - GitHub Actions exclusivamente; nenhum shell local.
 - Nenhum resultado de navegador ou GO declarado.
