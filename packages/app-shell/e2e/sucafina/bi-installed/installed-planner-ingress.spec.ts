@@ -166,6 +166,7 @@ test("BI62 installed Planner first save exposes its real HTTP outcome before BI 
     expect(record.name).toMatch(/\S+/)
     expect(Number.isInteger(record.year) && record.year > 2000 && record.year < 2100).toBe(true)
     await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions")
+    expect(new URL(page.url()).searchParams.get("year")).toBe(String(record.year))
     const row = page.locator('tr[data-sf-row="' + record.id + '"]')
     await expect(row).toHaveCount(1)
     await expect(row).toBeVisible()
