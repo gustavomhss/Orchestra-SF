@@ -958,27 +958,36 @@ async function refreshSfFileAuthority(options: Readonly<{
   binding: SfInstallationDescriptor; fetch: SfTransportFetch;
   operations: SfOperationBindings;
 }>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
+  // Diagnostic only: enum stages, scoped to the original supplier upload. No values or headers.
+  const observed = (stage: string) => {
+    if (operationId === "files.asset.upload") {
+      try { console.info("[sf-file-authority] files.asset.upload stage=" + stage) } catch { /* Diagnostics never admit a request. */ }
+    }
+  }
+  const refused = (stage: string) => { observed(stage); return false }
   const meta = cataloguedRoute("ctx.context")
   const codec = options.operations["ctx.context"]
-  if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
+  if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return refused("context-metadata")
   const tuple = { installationId: options.binding.installationId,
     projectId: options.binding.projectId, hostId: options.binding.hostId }
   const route = operationUrl(options.binding, meta, tuple, "ctx.context")
-  if (!route) return false
+  if (!route) return refused("context-route")
   try {
     const reply = await options.fetch(route, {
       method: "GET", credentials: "same-origin", cache: "no-store", redirect: "error",
       headers: { Accept: "application/json" },
     })
-    if (reply.status !== 200 || !isJsonContentType(reply.headers.get("content-type"))) return false
+    if (reply.status !== 200) return refused("context-status")
+    if (!isJsonContentType(reply.headers.get("content-type"))) return refused("context-media-type")
     const wire = await readJsonBounded(reply)
-    if (wire === undefined) return false
+    if (wire === undefined) return refused("context-body")
     const context = codec.decodeOutput(wire)
-    if (context.status !== "ok" || !validContextOutcome(context.value, options.binding, 200)) return false
+    if (context.status !== "ok") return refused("context-codec")
+    if (!validContextOutcome(context.value, options.binding, 200)) return refused("context-outcome")
     const value = context.value
     if (!value || typeof value !== "object" || !("status" in value) ||
         value.status !== "ok" || !("value" in value) || !value.value ||
-        typeof value.value !== "object" || !("stamp" in value.value)) return false
+        typeof value.value !== "object" || !("stamp" in value.value)) return refused("context-envelope")
     const current = value.value.stamp
     const availability = "availability" in value.value ? value.value.availability : undefined
     const permitted = Array.isArray(availability) && availability.some((resource: unknown) =>
@@ -987,11 +996,15 @@ async function refreshSfFileAuthority(options: Readonly<{
         !!item && typeof item === "object" && "operationId" in item &&
         "state" in item && "operational" in item && item.operationId === operationId &&
         item.state === "ready" && item.operational === true))
-    return permitted && validContextStamp(current) && sameStampInstallation(current, options.binding) &&
-      current.principalRef === expected.principalRef &&
-      current.policyVersion === expected.policyVersion &&
-      current.accessRevision === expected.accessRevision
-  } catch { return false }
+    if (!permitted) return refused("operation-unavailable")
+    if (!validContextStamp(current)) return refused("stamp-invalid")
+    if (!sameStampInstallation(current, options.binding)) return refused("installation-changed")
+    if (current.principalRef !== expected.principalRef) return refused("principal-changed")
+    if (current.policyVersion !== expected.policyVersion) return refused("policy-changed")
+    if (current.accessRevision !== expected.accessRevision) return refused("access-changed")
+    observed("ready")
+    return true
+  } catch { return refused("context-exception") }
 }
 
 // Reuse the public, already-exported transport entry for desktop protocol and broker.
