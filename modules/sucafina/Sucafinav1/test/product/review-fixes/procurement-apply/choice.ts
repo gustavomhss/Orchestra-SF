@@ -8,7 +8,7 @@ import { createChoiceSnapshot } from "../../../../product/decisions/choice.ts"
 import { at, period } from "./fixture.ts"
 import type { Fixture } from "./fixture.ts"
 
-export async function seedChoice(fixture: Fixture, amount = 150) {
+export async function seedChoice(fixture: Fixture, amount = 150, unresolvedConditions: readonly string[] = ["Coverage pending in seeded decision"]) {
   const current = await fixture.storedCase()
   const ref = fixture.evidence
   const operation: ScenarioOperation = { kind: "replace", targetRef: ref.refId, amount, currency: "USD", period }
@@ -17,7 +17,7 @@ export async function seedChoice(fixture: Fixture, amount = 150) {
   // SkillLoadReceipt is fabricated; all preparation/review/Apply consumers are real.
   const result: ScenarioResult = {
     id: "fixture-result", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [ref],
-    unresolvedConditions: ["Coverage pending in seeded decision"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: amount, total: null,
+    unresolvedConditions: [...unresolvedConditions], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: amount, total: null,
     costCoverage: { basisId: basis.id, basisVersion: basis.version, alternativeId: "fixture-alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: ["Coverage pending"], evaluatedSourceRefs: [ref], coverageState: "pending", entries: [{ status: "pending", categoryId: "purchase", reason: "Fixture has no complete cost assertion" }], derivedMissingCategoryIds: ["purchase"] },
   }
   const seeded: DecisionCase = {

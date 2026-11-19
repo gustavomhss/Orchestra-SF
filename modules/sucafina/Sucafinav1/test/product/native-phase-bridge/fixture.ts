@@ -41,6 +41,7 @@ import type { createSfExecutionBindingRegistry } from "../../../product/host-bin
 import { SF_ROUTINE_PHASE_SCOPE } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-scope.ts"
 import type { SfRoutineNativeRuntimeResources } from "../../../../../../apps/cli/src/sucafina-product/routine-native-runtime.ts"
 import { WriteRootsV2 } from "../../../../../../modules/maestro/coordination/src/v2/governance/write-roots.ts"
+import { phaseResidentLocationNode } from "./native-fixture.ts"
 
 /** COMPONENT ONLY: real public Session/runner/coordinator/Task/Scope/skill loader and source adapters; deterministic
  * in-process LLM stream. UI identity and installation predicates are fixtures. Non-Task Maestro registrations below
@@ -148,7 +149,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
       ...(prepared.bridge.contribution.replacements ?? []),
       [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)], [Snapshot.node, Snapshot.noopLayer],
       [Global.node, Global.layerWith({ home: temporary.path, config: path.join(temporary.path, ".global"), data: path.join(temporary.path, ".data") })]],
-    [...(prepared.bridge.contribution.locationNodes ?? []), ToolSafety.node])
+    [...(prepared.bridge.contribution.locationNodes ?? []), phaseResidentLocationNode(), ToolSafety.node])
     return yield* Effect.gen(function* () { const f = yield* setup(directory, prepared); return yield* use({ ...f, trace }) }).pipe(Effect.provide(application))
   })))
 }

@@ -97,7 +97,7 @@ export async function reassessScenarioCoverage(incoming: {
     }
     if (input.baseline.basisId !== input.basis.id || input.baseline.basisVersion !== input.basis.version) return undefined
     const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
-    const evidence = orderBaselineCoverageEvidence(captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs))), input.baseline.evaluatedSourceRefs)
+    const evidence = orderBasisCoverageEvidence(orderBaselineCoverageEvidence(captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs))), input.baseline.evaluatedSourceRefs), input.basis.sourceRefs)
     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
     // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
     const derivedMissingCategories = new Set<string>(input.baseline.derivedMissingCategoryIds)
@@ -109,6 +109,15 @@ export async function reassessScenarioCoverage(incoming: {
   } catch {
     return undefined
   }
+}
+
+function orderBasisCoverageEvidence(evidence: readonly BusinessEvidenceResolution[], basis: readonly BusinessEvidenceRef[]): BusinessEvidenceResolution[] {
+  const ranked = basis.flatMap((ref) => {
+    const match = evidence.find((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref))
+    return match ? [match] : []
+  })
+  const retained = new Set(ranked.map((item) => digestSfValue(item.ref)))
+  return [...ranked, ...evidence.filter((item) => !retained.has(digestSfValue(item.ref)))]
 }
 
 /** Evidence order is part of the human assessment digest. A reassessment must not rank basis sources ahead of sources that assessment already evaluated. */

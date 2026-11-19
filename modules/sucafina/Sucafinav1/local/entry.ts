@@ -1,6 +1,5 @@
 import path from "node:path"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
-import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule, contributions, type ModuleServices } from "../index.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
@@ -88,7 +87,7 @@ export async function createConfiguredInstallation(
   // os.userInfo().username comes from the environment and degrades to
   // "unknown"), because the sealed credential is bound to this exact person.
   const operator = config.authentication === "local-operator" && config.localOperator
-    ? { ...config.localOperator, name: config.localOperator.name ?? userInfo().username }
+    ? recordedOperator(config.localOperator)
     : undefined
   const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
   const now = () => new Date().toISOString()
@@ -364,7 +363,13 @@ export async function createConfiguredInstallation(
     async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
   }
 
-  function localChrome(response: Response) {
+function recordedOperator(operator: { installationId: string; uid: number; buyer?: boolean; name?: string }) {
+  const name = operator.name?.trim()
+  if (!name) throw new Error("Recorded local operator display name required")
+  return { ...operator, name }
+}
+
+function localChrome(response: Response) {
     return response.text().then((body) => {
       const html = body.replace('<div id="content" class="content">', '<div id="content" class="content"><p role="status" class="environment-banner">Homologação local · ' + esc(operator!.name) + ' · Microsoft 365 desativado neste perfil</p>')
         .replace('<!--local-tools-->', `<a href="${config.mount}/backups">Backups</a><details data-notifications="${config.mount}/notifications"><summary>Notifications <span class="notification-count" data-notification-count></span></summary><div class="notification-popover" data-notification-items><p>Loading notifications…</p></div></details>`)

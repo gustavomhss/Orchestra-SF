@@ -9,7 +9,7 @@ import { seedChoice } from "../review-fixes/procurement-apply/choice.ts"
 test("real C08 Procurement preparation exposes the M31 blocker and cannot manufacture an original capture", async () => {
   const fixture = await createFixture("draft")
   try {
-    const selection = await seedChoice(fixture, 150)
+    const selection = await seedChoice(fixture, 150, ["Coverage pending in seeded decision", "financial-approval-command-unavailable"])
     const sourceCall = await fixture.ui("sf_request_read", { requestRef: fixture.evidence.refId })
     try {
       expect(await fixture.business.individual.resolveForPreparation(fixture.evidence.refId, sourceCall)).toMatchObject({ status: "ok", value: { evidence: fixture.evidence } })

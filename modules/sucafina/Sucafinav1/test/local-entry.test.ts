@@ -116,11 +116,22 @@ test("enrolled operator authenticates when the serving process cannot resolve th
     const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
     expect(enrolled?.status).toBe(303)
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
-    const dashboard = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
-    expect(dashboard?.status).toBe(200)
-    const html = await dashboard!.text()
+    const retired = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
+    expect(retired?.status).toBe(404)
+    expect(await retired?.text()).toBe("legacy console decommissioned — use /")
+    const backups = await installation.handler(new Request(`${origin}/sucafina/backups`, { headers: { cookie } }))
+    expect(backups?.status).toBe(200)
+    const html = await backups!.text()
     expect(html).toContain("Homologação local")
     expect(html).toContain(name)
+    expect(html).not.toContain(userInfo().username)
+    const saved = await installation.handler(new Request(`${origin}/sucafina/dashboard`, {
+      method: "POST", headers: { cookie, "content-type": "application/json" },
+      body: JSON.stringify({ page: "Budget Overview", action: "save", version: 0, values: { year: 2026, budget: 10, actual: 4 } }),
+    }))
+    expect(saved?.status).toBe(200)
+    const snapshot = await installation.store.read("dashboard")
+    expect(snapshot.audit.at(-1)?.name).toBe(name)
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 
