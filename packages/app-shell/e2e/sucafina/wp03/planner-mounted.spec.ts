@@ -6,37 +6,43 @@ import { startPlannerInstallation } from "./installation-fixture"
 test.use({ trace: "off" })
 
 // The application under test is the existing CLI installation. The production
-// Playwright config still serves the built shell; this journey uses the module's
-// own mounted URL. No responses, HTML, authority handlers or domain code are mocked.
+// Playwright config serves the built native shell on :3000; producer API reads
+// keep the installation origin. No authority handlers or domain code are mocked.
 test("real mounted Planner preserves monthly edits, filters and official-version controls", async ({ page, browser }, info) => {
   test.setTimeout(180_000)
   const installation = await startPlannerInstallation(info)
   const pageErrors: string[] = []
   page.on("pageerror", (error) => pageErrors.push(error.message))
-  const planner = (name: string, version?: string, mode?: string) => `${installation.origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}), ...(mode ? { mode } : {}) })}`
-  const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
+  const planner = (name: "Versions" | "OPEX" | "CAPEX", version?: string) =>
+    "/orchestra/sf-planner/" + ({ Versions: "versions", OPEX: "opex", CAPEX: "capex" }[name]) +
+    (version ? "?" + new URLSearchParams({ version }) : "")
+  const producer = (name: string, version?: string) =>
+    installation.origin + "/sucafina/planner?" + new URLSearchParams({ page: name, ...(version ? { version } : {}) })
+  const versionRow = (id: string) => page.locator('tr[data-sf-row="' + id + '"]')
   try {
     await test.step("enroll through the production local identity and create the fiscal version", async () => {
       await page.context().addCookies([installation.cookie])
-      await page.goto(`${installation.origin}/sucafina/dashboard`)
-      await expect(page).toHaveURL(`${installation.origin}/sucafina/dashboard`)
-      await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
+      await page.goto(planner("Versions"))
+      await expect(page).toHaveURL(/\/orchestra\/sf-planner\/versions$/)
+      await expect(page.locator('[data-sf-surface="CAP23"]')).toBeVisible()
     })
 
-    await page.goto(planner("Versions"))
+    await page.goto("/orchestra/sf-planner/versions/new")
     const first = await command(page, page.getByRole("button", { name: "Create first version", exact: true }), "save")
     expect(typeof first.value).toBe("string")
     const versionId = first.value as string
-    await expect(versionRow(versionId)).toBeVisible()
-    await versionRow(versionId).getByRole("button", { name: "Manage", exact: true }).click()
-    const versionEditor = page.getByRole("dialog", { name: "Manage record", exact: true })
-    await versionEditor.getByLabel("Name", { exact: true }).fill("WP03 Browser Plan")
-    await versionEditor.getByLabel("Year", { exact: true }).fill("2027")
-    await command(page, versionEditor.getByRole("button", { name: "Save", exact: true }), "save")
+    await page.goto(planner("Versions"))
+    await expect(versionRow(versionId)).toHaveCount(1)
+    await versionRow(versionId).locator('button[data-sf-action="select"]').click()
+    await expect(page.locator("#sf-u46-name")).toBeEditable()
+    await page.locator("#sf-u46-name").fill("WP03 Browser Plan")
+    await page.locator("#sf-u46-year").fill("2027")
+    await command(page, page.getByRole("button", { name: "Save", exact: true }), "save")
+    await page.goto(planner("Versions"))
     await expect(versionRow(versionId).getByRole("cell", { name: "WP03 Browser Plan", exact: true })).toBeVisible()
 
     await test.step("preview invalid pasted cells, correct them, save both rows and reload", async () => {
-      await page.goto(planner("OPEX", versionId, "forecast"))
+      await page.goto(planner("OPEX", versionId))
       await addLine(page, "OPEX", "WP03 License A", "1200", installation.actorId)
       await addLine(page, "OPEX", "WP03 License B", "2400", installation.actorId)
       const editor = monthlyEditor(page)
@@ -47,7 +53,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
       await cell("WP03 License A", 1).focus()
       await page.keyboard.press("Tab")
       await expect(cell("WP03 License A", 2)).toBeFocused()
-      await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: installation.origin })
+      await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: new URL(page.url()).origin })
       await page.evaluate(() => navigator.clipboard.writeText("0\t125\n75\tbad"))
       await cell("WP03 License A", 1).focus()
       await page.keyboard.press("Control+V")
@@ -80,7 +86,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
     })
 
     await test.step("filter actual CAPEX rows by project owner, classification and normalized text", async () => {
-      await page.goto(planner("CAPEX", versionId, "forecast"))
+      await page.goto(planner("CAPEX", versionId))
       const addProject = page.locator('form[data-page="CAPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Project name", { exact: true }) })
       await addProject.getByLabel("Project name", { exact: true }).fill("WP03 Browser Project")
       const created = await command(page, addProject.getByRole("button", { name: "Add project", exact: true }), "save")
@@ -121,7 +127,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
       expect(typeof copy.value).toBe("string")
       const copyId = copy.value as string
       await expect(versionRow(copyId)).toBeVisible()
-      await page.goto(planner("OPEX", copyId, "forecast"))
+      await page.goto(planner("OPEX", copyId))
       await monthlyEditor(page).getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
       await expect(monthlyEditor(page).getByRole("textbox", { name: "licenses · WP03 License A forecast month 1", exact: true })).toHaveValue("0")
       await expect(monthlyEditor(page).getByRole("textbox", { name: "licenses · WP03 License B forecast month 2", exact: true })).toHaveValue("150")
@@ -136,7 +142,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
       await expect(official.getByRole("button", { name: "unlock", exact: true })).toBeDisabled()
       await expect(official.getByLabel("Year", { exact: true })).toBeDisabled()
       await official.getByRole("button", { name: "Close editor", exact: true }).click()
-      await page.goto(planner("OPEX", versionId, "forecast"))
+      await page.goto(planner("OPEX", versionId))
       await monthlyEditor(page).getByRole("combobox", { name: "Measure", exact: true }).selectOption("budget")
       await expect(monthlyEditor(page).getByRole("textbox", { name: "licenses · WP03 License A budget month 1", exact: true })).toBeDisabled()
       await monthlyEditor(page).getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
@@ -147,10 +153,10 @@ test("real mounted Planner preserves monthly edits, filters and official-version
     await test.step("deny a separate anonymous browser read and write", async () => {
       const anonymous = await browser.newContext()
       try {
-        const read = await anonymous.request.get(planner("OPEX", versionId), { maxRedirects: 0 })
+        const read = await anonymous.request.get(producer("OPEX", versionId), { maxRedirects: 0 })
         expect(read.status()).toBe(303)
         expect(read.headers().location).toContain("/sucafina/auth/login")
-        const write = await anonymous.request.post(planner("Versions"), {
+        const write = await anonymous.request.post(producer("Versions"), {
           headers: { origin: installation.origin },
           data: { page: "Versions", action: "delete", id: versionId, version: 0, values: {}, confirmed: true },
         })
@@ -164,6 +170,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
   } finally { await installation.stop() }
 })
 
+// UNBOUND: the legacy bulk preview/apply contract below has no verified native equivalent.
 function monthlyEditor(page: Page) {
   return page.locator("section").filter({ has: page.getByRole("heading", { name: "Edit monthly values together", exact: true }) })
 }
@@ -172,6 +179,10 @@ async function command(page: Page, button: Locator, action: string) {
   await expect(button).toBeEnabled()
   const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
   await button.click()
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await expect(review.getByRole("button", { name: "Confirm", exact: true })).toBeEnabled()
+  await review.getByRole("button", { name: "Confirm", exact: true }).click()
   const response = await pending
   expect(response.status()).toBe(200)
   const body = await response.json() as { ok: boolean; value?: unknown }

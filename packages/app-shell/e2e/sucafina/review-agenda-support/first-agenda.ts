@@ -11,11 +11,14 @@ import { firstAgendaCorpus } from "./source-corpus.ts"
 
 /** Extends the existing RPT-01 journey; there is no new test or nominal CI selection. */
 export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo) {
-  await page.goto(app.workbenchURL)
-  await expect(page.locator("#content").getByRole("heading", { name: "Decisions", exact: true })).toBeVisible()
+  await page.goto("/orchestra/sf-dashboard/budget?" + new URLSearchParams({ year: String(corpus.year) }))
+  await expect(page.locator('[data-sf-surface="CAP03"]')).toBeVisible()
   const sourceBefore = await readSourceData(page.request, app)
-  await page.goto(`${app.dashboardURL}?page=Budget%20Overview&year=${corpus.year}`)
-  await page.getByText("Reports and backup", { exact: true }).click()
+  const reportsEntry = page.getByRole("link", { name: "Reports and backup", exact: true })
+  await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda")
+  await reportsEntry.click()
+  await expect(page.locator('[data-sf-surface="UI47"]')).toBeVisible()
+  // UNBOUND: UI47 has a dashboard-section picker, not the legacy multi-domain agenda form.
   const form = page.locator("form.report-form")
   await expect(form).toHaveCount(1)
   await form.getByLabel("Format", { exact: true }).selectOption("docx")
