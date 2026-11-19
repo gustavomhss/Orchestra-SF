@@ -23,7 +23,7 @@ Briefing lido integralmente uma vez em sf-handoff-brief. Esta entrega não decla
 
 ### Identidade dos WPs
 
-| WP | Branch | SHA de código | Head com handoff | Gate |
+| WP | Branch | SHA de código integrado | Head integrado com handoff | Gate |
 |---|---|---|---|---|
 | 1 | lastmile-wp1-20261119 | 60c72befab1648133123ac5240ab134001a31194 | 450a82a72798cf8a62a1cb580b71641430411680 | 44548593492 — failure, 4 failed |
 | 2 | lastmile-wp2-20261119 | d8139cfcc8a0881ca3244ab8221a241293165a71 | 37bf31b863c397df4cfc71d0e3bf8f32b078e360 | 44548107962 — failure, 2 failed; testou 2e947689575b64cea7e51f42f3140c70dd386373 |
@@ -33,12 +33,31 @@ Briefing lido integralmente uma vez em sf-handoff-brief. Esta entrega não decla
 
 Os cinco handoffs individuais estão no candidato integrado em docs/handoff/HANDOFF-lastmile-wpN-20261119.md. As declarações locais de "sem merge/pacote/sf-ci" descrevem o momento anterior à integração; esta seção registra o estado posterior.
 
+### Arquivos de escopo
+
+Todos os caminhos desta tabela partem de packages/app-shell/e2e/sucafina/.
+
+| WP | Arquivos |
+|---|---|
+| 1 | reports-support/review-flow.ts |
+| 2 | dashboard-installed/support.ts; dashboard-installed/records-signals-history.spec.ts; dashboard-installed/confirmation-access.spec.ts |
+| 3 | bi-installed/installed-fixture.ts; bi-installed/installed-planner-ingress.spec.ts |
+| 4 | wp03/planner-mounted.spec.ts; wp10/extended-flows.ts; review-agenda-support/first-agenda.ts |
+| 5 | wp04/procurement.spec.ts; wp04/sourcing-controller.spec.ts inspecionado e mantido inalterado |
+
+### Correção posterior ao congelamento
+
+- [PR356](https://github.com/gustavomhss/Orchestra-SF/pull/356) draft, base sf-join-four; não integrada e NOT-VERIFIED.
+- Código8375685071b5b2603fa0391e4c4b5ec862330d5c; head com handoff5567496a6831aeaa8bc59010e78cf9e5bc47b7ed na branch lastmile-wp1-20261119. Esses dois commits são posteriores ao head WP1 integrado na tabela acima.
+- Uma linha em review-flow.ts:105 muda a serialização diagnóstica para options.removeOne ?? false. O guard e todas as asserções permanecem. Corrige por inspeção a comparação impossível apontada por TS2367; nenhum compilador/teste executou o patch.
+- Candidato sf-join-four e pacote permanecem4372b98d8e4db09a56f8ad589fb298c8779c84bf, com a versão anterior. Handoff WP1 atualizado na branch do patch, não no candidato congelado.
+
 ## Pendente
 
 Caminhos E2E abaixo partem de packages/app-shell/e2e/sucafina/. O inventário completo está em cada handoff individual.
 
 - WP1 reports-support/review-flow.ts:21 — Reports and backup ausente no gate antes dos helpers alterados; :27,110 remoção individual; :154 sucessor; :429,430 destino nativo autorizado de fonte; :446 total anual. reports.spec.ts:49,56,86 ainda assume review-read/ordem Projects-first, enquanto UI48 usa dashboard-review/ordem salva.
-- Regressão introduzida no WP1 — reports-support/review-flow.ts:105:126: TS2367 em `removeOne: options.removeOne === true`, pois o guard anterior já estreitou o valor para false|undefined. O typecheck E2E do sf-ci real apontou esse diagnóstico. Pendente corrigir a serialização do booleano (por exemplo `options.removeOne ?? false`) sem remover o guard nem as asserções. Correção não aplicada ao SHA congelado e não verificada; não atribuir esse erro à base.
+- Regressão introduzida no WP1 — reports-support/review-flow.ts:105:126: TS2367 em `removeOne: options.removeOne === true`, pois o guard anterior já estreitou o valor para false|undefined. O typecheck E2E do sf-ci real apontou esse diagnóstico. Pendente corrigir a serialização do booleano (por exemplo `options.removeOne ?? false`) sem remover o guard nem as asserções. Correção de uma linha preparada na PR356 (código8375685071b5b2603fa0391e4c4b5ec862330d5c), não aplicada ao SHA congelado e não verificada; não atribuir esse erro à base.
 - Erros herdados fora dos WPs — decisions-support/planner-sources.ts:21,39 duplica `name`; operations-support/imports.ts:106,182 duplica `detail`, com efeitos de tipo em :193,194,195,220. Bloqueiam a coleta de DECISIONS/OPERATIONS. Blobs iguais na basef590 e no mergeaece: 7b1441822f3e3d305e4c2a2a4eb06e47758242c8 e 46515f500616b327ad3de082cf56e4d08ccadd84, respectivamente.
 - WP2 dashboard-installed/records-signals-history.spec.ts:27 — Sign out ausente; confirmation-access.spec.ts:10 — timeout existente durante primeiro passo. support.ts:117,166,173 ainda tem confirmação/disclosure mensal legados; history/conflict/risk/signals têm a lista completa no handoff. Correções 7e448802e5f89e8aed59ed77c3d2b61c00e66be5 e d8139cfcc8a0881ca3244ab8221a241293165a71 posteriores ao gate não foram executadas. A contagem por pathname/page/action não prova equivalência de origem.
 - WP3 bi-installed/installed-fixture.ts:217,337 — Create first version ausente; installed-planner-ingress.spec.ts:81 — Versions ausente. installed-fixture.ts:279 monthly bulk ainda legado; :49,51,53 preparação Decisions guardada antes de :4110.
@@ -65,7 +84,7 @@ Caminhos E2E abaixo partem de packages/app-shell/e2e/sucafina/. O inventário co
 ## Como retomar
 
 1. Partir de sf-join-four @ 4372b98d8e4db09a56f8ad589fb298c8779c84bf e dos cinco handoffs individuais. Conferir head antes de novas edições.
-2. Corrigir primeiro o TS2367 introduzido em review-flow.ts:105, preservando o bloqueio de removeOne; eliminar as redeclarações herdadas de name/detail sem mudar as asserções. Depois resolver enrollment e binding da instalação real ao shell; então os specs poderão alcançar os contratos nativos alterados. Usar discovery/contexto/identidade reais.
+2. Qualificar e integrar o patch TS2367 da PR356 para review-flow.ts:105, preservando o bloqueio de removeOne; eliminar as redeclarações herdadas de name/detail sem mudar as asserções. Depois resolver enrollment e binding da instalação real ao shell; então os specs poderão alcançar os contratos nativos alterados. Usar discovery/contexto/identidade reais.
 3. Concluir somente os bindings e fatos pendentes que tenham contrato do produtor conferido; preservar identidades, CAS, períodos, fontes, cálculos, persistência e bloqueios de autorização.
 4. Reexecutar na retomada o spec estreito que alcance cada mudança; não repetir suites inteiras para procurar seletor.
 5. Para o gate exato, numa nova retomada autorizada, acionar workflow420530405 por workflow_dispatch com refsf-join-four: `gh workflow run 420530405 --ref sf-join-four -R gustavomhss/Orchestra-SF`. Esse comando não foi executado nesta sessão. Conferir github.sha/checkout e não aceitar apenas head_sha da API.
