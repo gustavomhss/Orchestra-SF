@@ -121,6 +121,10 @@ export function SfQuestionAnswer(props: Readonly<{
       commandInFlight = undefined
     }
   }
+  const canConfirmReuse = () => {
+    const ready = props.owner.ready()
+    return !!ready && sfOperationReady(ready.context, "collaboration.answer-confirm")
+  }
   const confirm = async () => {
     const active = props.owner.ready()
     const preparation = ui.prepared
@@ -174,7 +178,8 @@ export function SfQuestionAnswer(props: Readonly<{
   return (
     <section class="mx-card sf-n24-section" aria-label={t("sf.ui37.answer")}>
       <h3>{t("sf.ui37.answer")}</h3>
-      <Show when={ui.readState === "ready" && ui.answer} fallback={
+      <Show when={ui.reviewState !== "denied" && ui.reviewState !== "session-expired" && ui.readState === "ready" && ui.answer} fallback={
+        ui.reviewState === "denied" || ui.reviewState === "session-expired" ? null :
         <SfStatePanel state={ui.readState}
           messageKey={"sf.ui37.noAnswers" as import("../../shared/frame").SfCopyKey} />
       }>
@@ -191,8 +196,15 @@ export function SfQuestionAnswer(props: Readonly<{
           <p><bdi>{prepared().answer}</bdi></p>
           <p><bdi>{prepared().authorRef}</bdi> · {prepared().observedSourceVersion}</p>
           <button class="mx-btn primary" type="button"
+            disabled={!canConfirmReuse()}
             onClick={() => void confirm()}>{t("sf.ui37.answerConfirm")}</button>
         </section>}
+      </Show>
+      <Show when={ui.reviewState === "denied" || ui.reviewState === "session-expired"}>
+        <SfStatePanel
+          state={ui.reviewState}
+          messageKey={(ui.reviewState === "session-expired" ? "sf.common.loginAgain" : "sf.common.noAccess") as import("../../shared/frame").SfCopyKey}
+        />
       </Show>
       <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "stale"}>
         <SfStatePanel state={ui.reviewState} messageKey={"sf.ui37.answerUnknown" as import("../../shared/frame").SfCopyKey} />

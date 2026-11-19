@@ -9,14 +9,15 @@ import { useLanguage } from "@/context/language"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { SfPageFrame } from "../../shared/frame"
-import type { SfCoverage, SfDisplayValue, SfUiState } from "../../shared/frame"
+import type { SfCoverage, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot, type SfEffect, type SfReviewConfirmation } from "../../shared/change-review"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
+import { sfOperationReady } from "../cases/model"
 import {
   u18Coverage, u18ErrorKey, u18Key, u18Message, u18PortState,
-  u18Ref, u18Text, u18TransportState, type SfChoiceOptions, type SfChoiceReview,
+  u18Ref, u18TransportState, type SfChoiceOptions, type SfChoiceReview,
 } from "./model"
 import "./u18.css"
 
@@ -43,6 +44,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
   let readAbort: AbortController | undefined
   let mutationAbort: AbortController | undefined
   let mutationFence = 0
+  let shownCase = ""
 
   const selected = () => view.options?.selected
   const chosen = () => selected()?.choices.find((entry) => entry.id === view.selectedChoiceId)
@@ -101,11 +103,23 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     }
   }
 
+  const canPromote = () => {
+    const ready = owner.ready()
+    return !!ready && sfOperationReady(ready.context, "decisions.current-choice-promote")
+  }
   createEffect(() => {
+    const ref = props.route.params.caseRef
+    if (ref !== shownCase) {
+      shownCase = ref
+      mutationAbort?.abort()
+      mutationFence++
+      setView({
+        options: null, review: null, outcome: "idle", resultRef: null, selectedChoiceId: null, operationRef: null,
+      })
+    }
     owner.generation()
     owner.ready()
     owner.state().status
-    props.route.params.caseRef
     void read()
     onCleanup(() => {
       readAbort?.abort()
@@ -162,8 +176,11 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     const review = view.review
     const current = selected()
     const ready = owner.ready()
-    if (!review || !current || !ready || !view.selectedChoiceId ||
+    if (!review || !current || !ready || !canPromote() || !view.selectedChoiceId ||
       view.busy || view.outcome !== "idle" || currentState() !== "ready" ||
+      !sameRouteCase(props.route.params.caseRef, review.promotion.caseRef.id, review.promotion.caseRef.incarnation) ||
+      review.promotion.caseRef.id !== current.caseRef.id ||
+      review.promotion.caseRef.incarnation !== current.caseRef.incarnation ||
       review.promotion.caseRef.version !== current.caseRef.version ||
       review.promotion.choiceId !== view.selectedChoiceId) return
     const generation = owner.generation()
@@ -178,7 +195,14 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.body.status === "ok") {
-        setView({ outcome: "confirmed", resultRef: result.body.value.resultRef, review: null, busy: false })
+        const returned = result.body.value.caseRef
+        if (returned.id !== review.promotion.caseRef.id ||
+          returned.incarnation !== review.promotion.caseRef.incarnation ||
+          !sameRouteCase(props.route.params.caseRef, returned.id, returned.incarnation)) {
+          setView({ state: "stale", review: null, outcome: "idle", resultRef: null })
+        } else {
+          setView({ outcome: "confirmed", resultRef: result.body.value.resultRef, review: null, busy: false })
+        }
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)
@@ -198,18 +222,9 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     }
   }
 
-  const reviewFields = (item: SfChoiceReview["current"]): readonly SfReviewField[] => [
-    { path: "knownSubtotal", label: u18Message("sf.u18.choice.knownSubtotal"), value: financial(item.knownSubtotal, item.currency) },
-    { path: "total", label: u18Message("sf.u18.choice.total"), value: financial(item.total, item.currency) },
-    { path: "comparisonStatus", label: u18Message("sf.u18.choice.status"), value: u18Text(item.comparisonStatus) },
-    { path: "coverageState", label: u18Message("sf.u18.choice.coverage"), value: u18Text(item.costCoverage.coverageState) },
-    { path: "horizon", label: u18Message("sf.u18.choice.period"), value: u18Text(item.horizon.start + " – " + item.horizon.end) },
-  ]
-  const financial = (value: number | null, currency: string): SfDisplayValue =>
-    value === null ? { kind: "missing", reason: u18Message("sf.common.unknown") } :
-      { kind: "text", text: { kind: "data", text: String(value) + " " + currency } }
-  const snapshot = (item: SfChoiceReview["current"]): SfReviewSnapshot => ({
-    kind: "persisted", ref: u18Ref(item.id), version: item.version, fields: reviewFields(item),
+  const postedSnapshot = (review: SfChoiceReview): SfReviewSnapshot => ({
+    kind: "persisted", ref: u18Ref(review.promotion.choiceId),
+    version: review.promotion.caseRef.version, fields: postedFields(review.promotion),
   })
   const coverage = (): SfCoverage => view.review ? u18Coverage(view.review.current.costCoverage) : {
     state: "unavailable", summary: u18Message("sf.u18.choice.coverage"),
@@ -220,7 +235,8 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     view.review.current.costCoverage.coverageState === "complete" &&
     view.review.current.unresolvedConditions.length === 0 &&
     view.review.current.restrictions.length === 0 &&
-    view.outcome === "idle" && !view.busy && currentState() === "ready"
+    view.outcome === "idle" && !view.busy && currentState() === "ready" && canPromote() &&
+    sameRouteCase(props.route.params.caseRef, view.review.promotion.caseRef.id, view.review.promotion.caseRef.incarnation)
   const reviewConfirmation = (): SfReviewConfirmation => view.review && admitted()
     ? {
       kind: "admitted", labelKey: u18Key("sf.u18.choice.confirm"), purpose: "select",
@@ -236,7 +252,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     if (!review) return []
     return [{
       id: review.promotion.resultRef, domain: "decisions", title: { kind: "data", text: chosen()?.title ?? review.promotion.choiceId },
-      state: "proposed", details: [...reviewFields(review.current)],
+      state: "proposed", details: postedFields(review.promotion),
     }]
   }
 
@@ -288,9 +304,9 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                     label: u18Message("sf.u18.choice.review"),
                     scope: { kind: "data", text: selected()?.title ?? "" },
                   }}
-                  base={snapshot(review().historical)}
-                  current={snapshot(review().current)}
-                  proposed={snapshot(review().current)}
+                  base={null}
+                  current={null}
+                  proposed={postedSnapshot(review())}
                   effects={effect()}
                   coverage={coverage()}
                   blockingReasons={review().current.unresolvedConditions.map(() => u18Message("sf.u18.choice.condition"))}
@@ -332,4 +348,37 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       </Show>
     </SfPageFrame>
   )
+}
+
+function sameRouteCase(routeRef: string, id: string, incarnation: string) {
+  return `case:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}` === routeRef
+}
+
+function postedFields(promotion: SfChoiceReview["promotion"]): readonly SfReviewField[] {
+  const label = (path: string) => ({ key: u18Key("sf.u18.choice.conditionNamed"), params: { note: path } })
+  const text = (path: string, value: string): SfReviewField => ({
+    path, label: label(path), value: { kind: "text", text: { kind: "data", text: value } },
+  })
+  const scenario = promotion.scenario
+  return [
+    text("caseRef.id", promotion.caseRef.id),
+    text("caseRef.incarnation", promotion.caseRef.incarnation),
+    text("caseRef.version", String(promotion.caseRef.version)),
+    text("choiceId", promotion.choiceId),
+    text("choiceDigest", promotion.choiceDigest),
+    text("alternativeRef.id", promotion.alternativeRef.id),
+    text("alternativeRef.version", String(promotion.alternativeRef.version)),
+    text("resultRef", promotion.resultRef),
+    text("resultDigest", promotion.resultDigest),
+    text("coverageRef", promotion.coverageRef),
+    text("scenario.baseRef", scenario.baseRef),
+    text("scenario.operations", scenario.operations.map((op) => [
+      op.kind, op.targetRef, op.replacementRef ?? "",
+      op.amount === undefined ? "" : String(op.amount), op.currency ?? "",
+      op.period ? op.period.start + "/" + op.period.end : "",
+    ].filter(Boolean).join(" ")).join("; ")),
+    text("scenario.assumptions", scenario.assumptions.map((item) => [
+      item.id, String(item.value), item.state, item.evidenceRefs.map((source) => source.refId).join(","),
+    ].join(" ")).join("; ")),
+  ]
 }

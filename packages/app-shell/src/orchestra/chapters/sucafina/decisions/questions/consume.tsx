@@ -143,6 +143,7 @@ export function SfQuestionConsume(props: Readonly<{
             <p>{t("sf.ui37.proposalScope")}</p>
             <p><bdi>{contribution().result.question}</bdi></p>
             <p>{t("sf.ui35.version")}: {contribution().caseRef.version}</p>
+            <p>{t("sf.ui35.horizon")}: {props.caseRecord.horizon.start} – {props.caseRecord.horizon.end}</p>
             <label class="sf-n24-field">
               <span>{t("sf.ui37.scope")}</span>
               <select value={ui.sourceRef} onChange={(event) => setUi("sourceRef", event.currentTarget.value)}

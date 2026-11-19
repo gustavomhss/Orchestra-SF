@@ -16,6 +16,7 @@ import {
 } from "../../shared/change-review"
 import { SfReceiptView, type SfReceipt } from "../../shared/receipt"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
+import { sfOperationReady } from "../cases/model"
 import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
 import {
@@ -193,11 +194,15 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
             field[side === "before" ? "beforeCurrency" : "afterCurrency"] : ""),
       ),
     })) ?? []
+  const operationGranted = (operationId: string) => {
+    const ready = owner.ready()
+    return !!ready && sfOperationReady(ready.context, operationId)
+  }
   const reviewAllowed = () => {
     const change = selected()
     const review = view.review
     const data = view.caseData
-    return !!(change && review && data &&
+    return !!(change && review && data && operationGranted("decisions.decision-apply") &&
       review.state === "planned" && change.state === "planned" &&
       change.caseVersion === data.version &&
       review.expectedVersion === change.expectedVersion &&
@@ -235,7 +240,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const change = selected()
     const data = view.caseData
     const ready = owner.ready()
-    if (!reviewAllowed() || !r || !change || !data || !ready) return
+    if (!reviewAllowed() || !r || !change || !data || !ready || !operationGranted("decisions.decision-apply")) return
     const controller = new AbortController()
     writeAbort = controller
     const fence = ++mutationFence
@@ -277,7 +282,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const change = selected()
     const data = view.caseData
     const ready = owner.ready()
-    if (!change || !data || !ready || view.busy || privateState()) return
+    if (!change || !data || !ready || view.busy || privateState() || !operationGranted("decisions.decision-recover")) return
     const controller = new AbortController()
     writeAbort = controller
     const generation = owner.generation()
@@ -399,7 +404,6 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   onConfirm={() => void apply()}
                   onRevise={() => setView("review", null)}
                   onCancel={() => setView("review", null)}
-                  onReconcile={() => void reconcile()}
                 />}
               </Show>
               <Show when={view.applyOutcome}>
@@ -421,7 +425,6 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   producerStatus={receipts().length ? { kind: "receipt-found" } : { kind: "pending" }}
                   effects={effects()} receipts={receipts()}
                   state={view.outcomeUnknown ? "outcome-unknown" : active()}
-                  onReconcileRead={() => void reconcile()}
                 />
               </Show>
               <Show when={view.outcomeUnknown}>
@@ -434,8 +437,9 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     </SfStatePanel>
     <Show when={view.outcomeUnknown && active() === "outcome-unknown"}>
       <button type="button" class="mx-btn"
-        disabled={view.busy} onClick={() => void reconcile()}>
-        {t("sf.u18.receipts.reconcile")}
+        disabled={view.busy || !operationGranted("decisions.decision-recover")}
+        onClick={() => void reconcile()}>
+        decisions.decision-recover
       </button>
     </Show>
   </SfPageFrame>
