@@ -317,8 +317,16 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                 <div><dt>{t("sf.u44.incarnation")}</dt><dd><code>{scope()!.sourceRef.incarnation}</code></dd></div>
                 <div><dt>{t("sf.u44.period")}</dt><dd><SfPeriodText start={scope()!.period.start} end={scope()!.period.end} /></dd></div>
                 <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{prepared()!.sourceVersion}</dd></div>
+                <div><dt>{t("sf.u44.fingerprint")}</dt><dd><code>{prepared()!.scopeFingerprint}</code></dd></div>
+                <div><dt>{t("sf.u44.storageVersion")}</dt><dd>{storageVersion()}</dd></div>
                 <div><dt>{t("sf.u44.fields")}</dt><dd>{scope()!.fields.join(", ")}</dd></div>
-                <div><dt>{t("sf.u44.dependencies")}</dt><dd>{scope()!.materialDependencies.length}</dd></div>
+                <div><dt>{t("sf.u44.dependencies")}</dt><dd>
+                  <Show when={scope()!.materialDependencies.length} fallback={<span>{t("sf.u44.noDependencies")}</span>}>
+                    <ul><For each={scope()!.materialDependencies}>{(dependency) =>
+                      <li><code>{dependency.surface} · {dependency.type} · {dependency.id} · {dependency.incarnation} · {dependency.version}</code></li>
+                    }</For></ul>
+                  </Show>
+                </dd></div>
               </dl>
               <h3>{t("sf.u44.materialValues")}</h3>
               <ul><For each={prepared()!.projection.values}>

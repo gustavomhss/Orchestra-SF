@@ -8,6 +8,11 @@ export const SF_CROSS_COPY = {
   "sf.cross.kind.risk": "Risk",
   "sf.cross.kind.stakeholder": "Stakeholder",
   "sf.cross.kind.topic": "Topic",
+  "sf.cross.nav": "Executive cross-links",
+  "sf.cross.agenda": "Create review agenda",
+  "sf.cross.topics": "Hot Topics & actions",
+  "sf.cross.risks": "Risks",
+  "sf.cross.stakeholders": "Stakeholders",
 } as const
 
 export const SF_CROSS_COPY_BR: Readonly<Record<keyof typeof SF_CROSS_COPY, string>> = {
@@ -20,4 +25,9 @@ export const SF_CROSS_COPY_BR: Readonly<Record<keyof typeof SF_CROSS_COPY, strin
   "sf.cross.kind.risk": "Risco",
   "sf.cross.kind.stakeholder": "Parte interessada",
   "sf.cross.kind.topic": "Tópico",
+  "sf.cross.nav": "Vínculos executivos",
+  "sf.cross.agenda": "Criar pauta de revisão",
+  "sf.cross.topics": "Hot Topics e ações",
+  "sf.cross.risks": "Riscos",
+  "sf.cross.stakeholders": "Partes interessadas",
 }

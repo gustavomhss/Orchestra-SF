@@ -3,6 +3,7 @@ import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import { useSfContext } from "../context"
 import { sfCommonKey, useSfPresentation } from "../shared/frame/presentation"
+import type { SfCopyKey } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { sfExecutiveLinkAllowed, type SfExecutiveLink, type SfExecutiveSourceRoute } from "./index"
 
@@ -12,13 +13,15 @@ const display = (value: unknown, fallback: string) =>
   typeof value === "string" && value.trim() ? value : fallback
 
 /** No optimistic navigation: owner-bound F01 must authorize and reread first. */
+const copy = (value: string) => value as SfCopyKey
 export function SfExecutiveAction(props: Readonly<{
   from: SfExecutiveSourceRoute
   target: SfExecutiveLink
-  label: Label
+  label?: Label
+  labelKey?: SfCopyKey
 }>): JSX.Element {
   const owner = useSfContext()
-  const { locale } = useSfPresentation()
+  const { locale, t } = useSfPresentation()
   const [busy, setBusy] = createSignal(false)
   const [failure, setFailure] = createSignal<"denied" | "invalid" | "unavailable">()
   const pt = () => locale().toLowerCase().startsWith("pt")
@@ -45,7 +48,7 @@ export function SfExecutiveAction(props: Readonly<{
   return <div data-sf-executive-action={props.target.kind}>
     <button type="button" class="mx-btn" disabled={!allowed() || busy()} aria-busy={busy()}
       onClick={() => { void invoke() }}>
-      {pt() ? props.label.pt : props.label.en}
+      {props.labelKey ? t(props.labelKey) : pt() ? props.label?.pt ?? "" : props.label?.en ?? ""}
     </button>
     <Show when={failure()}>{(state) =>
       <SfStatePanel state={state()} messageKey={failureKey()} />
@@ -63,17 +66,20 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
   omit: Related["kind"]
 }>): JSX.Element {
   const owner = useSfContext()
-  const { locale } = useSfPresentation()
+  const { t } = useSfPresentation()
   const [records, setRecords] = createSignal<readonly Related[]>([])
   const [choice, setChoice] = createSignal("")
   const [loading, setLoading] = createSignal(false)
   const [failed, setFailed] = createSignal(false)
-  const pt = () => locale().toLowerCase().startsWith("pt")
+  const [denied, setDenied] = createSignal(false)
   const chosen = () => records().find((item) => JSON.stringify([item.kind, item.ref]) === choice())
+  const kindLabel = (kind: Related["kind"]) => t(copy(
+    kind === "risk" ? "sf.cross.kind.risk" :
+    kind === "stakeholder" ? "sf.cross.kind.stakeholder" : "sf.cross.kind.topic"))
 
   createEffect(() => {
     const generation = owner.generation(), state = owner.state(), ready = owner.ready()
-    setRecords([]); setChoice(""); setLoading(false); setFailed(false)
+    setRecords([]); setChoice(""); setLoading(false); setFailed(false); setDenied(false)
     if (state.status !== "ready" || !ready) return
     const controller = new AbortController()
     const { signal } = controller
@@ -88,7 +94,10 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
         if (response.reason !== "aborted") setFailed(true)
         return
       }
-      if (response.body?.status === "denied" || response.status === 401 || response.status === 403) return
+      if (response.body?.status === "denied" || response.status === 401 || response.status === 403) {
+        setDenied(true)
+        return
+      }
       setFailed(true)
     }
     const jobs: Promise<void>[] = []
@@ -140,31 +149,31 @@ export function SfExecutiveRelatedLinks(props: Readonly<{
   })
 
   return <section class="mt-3" data-sf-executive-record-links>
-    <h3>{pt() ? "Referências executivas" : "Executive references"}</h3>
+    <h3>{t(copy("sf.cross.references"))}</h3>
     <div class="flex flex-wrap items-end gap-2">
       <label class="flex flex-col gap-1">
-        <span>{pt() ? "Abrir registro canônico" : "Open canonical record"}</span>
+        <span>{t(copy("sf.cross.openCanonical"))}</span>
         <select class="mx-input" value={choice()} onChange={(event) => setChoice(event.currentTarget.value)}
           disabled={loading() || records().length === 0}>
-          <option value="">{loading() ? (pt() ? "Carregando..." : "Loading...") :
-            (pt() ? "Selecione um registro" : "Select a record")}</option>
+          <option value="">{loading() ? t(copy("sf.cross.loading")) : t(copy("sf.cross.select"))}</option>
           <For each={records()}>{(row) => <option value={JSON.stringify([row.kind, row.ref])}>
-            {row.kind + " · " + row.label}
+            {kindLabel(row.kind) + " · " + row.label}
           </option>}</For>
         </select>
       </label>
       <Show when={chosen()}>{(row) =>
         <SfExecutiveAction from={props.from} target={{ kind: row().kind, ref: row().ref }}
-          label={{ pt: "Abrir referência", en: "Open reference" }} />}
+          labelKey={copy("sf.cross.open")} />}
       </Show>
     </div>
-    <Show when={!loading() && failed()}>
+    <Show when={!loading() && denied()}>
+      <SfStatePanel state="denied" messageKey={sfCommonKey("sf.common.noAccess")} />
+    </Show>
+    <Show when={!loading() && failed() && !denied()}>
       <SfStatePanel state="unavailable" messageKey={sfCommonKey("sf.common.unavailable")} />
     </Show>
-    <Show when={!loading() && !failed() && records().length === 0}>
-      <p role="status" class="text-sm">
-        {pt() ? "Nenhum destino autorizado ou disponível" : "No authorized or available destinations"}
-      </p>
+    <Show when={!loading() && !failed() && !denied() && records().length === 0}>
+      <p role="status" class="text-sm">{t(copy("sf.cross.empty"))}</p>
     </Show>
   </section>
 }
