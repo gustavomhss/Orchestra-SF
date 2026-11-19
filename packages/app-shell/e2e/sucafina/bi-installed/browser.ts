@@ -26,7 +26,7 @@ export async function showBi(page: Page, origin: string, viewId: "BI09" | "BI10"
   await catalog.locator("form.sf-bi-catalog-form").getByRole("button", { name: "Choose context", exact: true }).click()
   const optionsResponse = await pending
   expect(optionsResponse.status()).toBe(200)
-  const options = asRecord(Schema.decodeUnknownSync(SfBiBiOptionsOutput)(await optionsResponse.json()))
+  const options = asRecord(Schema.decodeUnknownSync(Schema.toType(SfBiBiOptionsOutput))(await optionsResponse.json()))
   expect(options.status).toBe("ok")
   const selected = records(asRecord(options.value).choices).filter((choice) => choose(String(choice.label)))
   expect(selected, "The exact saved producer identities must be available under current authority").toHaveLength(1)
@@ -46,7 +46,7 @@ export async function showBi(page: Page, origin: string, viewId: "BI09" | "BI10"
 export async function biReply(response: Response) {
   expect(response.status()).toBe(200)
   expect(response.headers()["content-type"]).toContain("application/json")
-  const result = asRecord(Schema.decodeUnknownSync(SfBiBiDataOutput)(await response.json()))
+  const result = asRecord(Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(await response.json()))
   expect(asRecord(asRecord(result.projection).context)).toMatchObject({ period: horizon, currency: "USD" })
   expect(records(asRecord(result.projection).values).length).toBeGreaterThan(0)
   return result
