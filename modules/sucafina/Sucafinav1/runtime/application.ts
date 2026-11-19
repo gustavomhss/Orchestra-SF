@@ -16,6 +16,45 @@ import { publicSfData } from "../product/integration/public-state.ts"
 import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
 import { renderInstalledConsole } from "./installed-console.ts"
 
+
+// Snapshot-only diagnostics: fixed modes and numeric metadata; never credentials or payloads.
+const auditModes = new Set(["workbench", "workbench-case", "workbench-analysis", "bi-options", "decision-criteria", "decision-list", "decision-controls", "decision-create", "decision-read", "decision-source", "decision-promote", "decision-compare", "decision-portfolio-catalog", "review", "review-read", "review-agenda", "review-preserve", "review-report", "review-download", "review-update", "review-source", "review-thread-context", "collaboration-recipients", "collaboration-thread-create", "collaboration-thread-read", "collaboration-thread-reply", "collaboration-thread-edit", "collaboration-answer-prepare", "collaboration-answer-prepare-message", "collaboration-answer-confirm", "collaboration-answer-read", "collaboration-storage-version"])
+const auditInFlight = new Map<number, string>()
+let auditSequence = 0
+const auditCounts = () => {
+  const counts = new Map<string, number>()
+  for (const mode of auditInFlight.values()) counts.set(mode, (counts.get(mode) ?? 0) + 1)
+  return [...counts].sort(([a], [b]) => a.localeCompare(b)).map(([mode, count]) => mode + "_" + count).join("_") || "NONE"
+}
+if (process.env.SF_REPORTS_TRACE === "1") {
+  let previousTime = performance.now(), previousCpu = process.cpuUsage()
+  const timer = setInterval(() => {
+    const now = performance.now(), cpu = process.cpuUsage(), gap = Math.round(now - previousTime)
+    if (auditInFlight.size || gap > 2000) console.info("SF_REPORTS_TRACE_LOOP_AT_" + Date.now() + "_GAP_MS_" + gap + "_CPU_USER_MS_" + Math.round((cpu.user - previousCpu.user) / 1000) + "_CPU_SYSTEM_MS_" + Math.round((cpu.system - previousCpu.system) / 1000) + "_INFLIGHT_" + auditInFlight.size + "_" + auditCounts())
+    previousTime = now
+    previousCpu = cpu
+  }, 1000)
+  timer.unref()
+}
+function auditRequest(request: Request) {
+  if (process.env.SF_REPORTS_TRACE !== "1") return (_response?: Response) => {}
+  const url = new URL(request.url), selected = url.searchParams.get("sf")
+  const pageMode = !url.searchParams.has("page") ? "other"
+    : url.searchParams.has("download") ? "reports-entry"
+    : url.searchParams.get("asset") === "page" ? "page-fragment"
+    : url.searchParams.get("asset") === "admission" ? "page-admission" : "page-shell"
+  const mode = (selected && auditModes.has(selected) ? selected : pageMode).toUpperCase().replaceAll("-", "_")
+  const method = ["GET", "HEAD", "POST"].includes(request.method) ? request.method : "OTHER"
+  const id = ++auditSequence, started = performance.now(), label = method + "_" + mode, cpuStarted = process.cpuUsage()
+  auditInFlight.set(id, label)
+  console.info("SF_REPORTS_TRACE_REQUEST_BEGIN_AT_" + Date.now() + "_ID_" + id + "_" + label + "_INFLIGHT_" + auditInFlight.size)
+  return (response?: Response) => {
+    auditInFlight.delete(id)
+    const cpu = process.cpuUsage(cpuStarted)
+    console.info("SF_REPORTS_TRACE_REQUEST_END_AT_" + Date.now() + "_ID_" + id + "_" + label + "_MS_" + Math.round(performance.now() - started) + "_CPU_USER_MS_" + Math.round(cpu.user / 1000) + "_CPU_SYSTEM_MS_" + Math.round(cpu.system / 1000) + "_STATUS_" + (response?.status ?? 0) + "_ABORTED_" + Number(request.signal.aborted) + "_INFLIGHT_" + auditInFlight.size)
+  }
+}
+
 export type Contribution = {
   pages: readonly string[]
   domain: Domain
@@ -49,7 +88,7 @@ export function createApplication(mount: string, application: Application) {
     throw new Error("HTTP and jobs must use the same authoritative persistence adapter")
   if (!Number.isSafeInteger(application.maxJsonBytes) || application.maxJsonBytes <= 0)
     throw new Error("JSON request limit required")
-  return async (request: Request): Promise<Response | undefined> => {
+  const handle = async (request: Request): Promise<Response | undefined> => {
     const url = new URL(request.url)
     if (url.pathname !== mount && !url.pathname.startsWith(`${mount}/`)) return undefined
     const surface = url.pathname.slice(mount.length + 1)
@@ -427,6 +466,12 @@ export function createApplication(mount: string, application: Application) {
           headers: response.headers,
         })
       : response
+  }
+  return async (request: Request): Promise<Response | undefined> => {
+    const finish = auditRequest(request)
+    let response: Response | undefined
+    try { response = await handle(request); return response }
+    finally { finish(response) }
   }
 }
 
