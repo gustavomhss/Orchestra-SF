@@ -17,7 +17,7 @@ const entries: Readonly<Record<SfNativeChapterId, string>> = {
   "sf-reviews": "/orchestra/sf-reviews/agenda",
   "sf-imports": "/orchestra/sf-imports/new",
   "sf-documents": "/orchestra/sf-documents",
-  "sf-memory": "/orchestra/sf-memory",
+  "sf-memory": "/orchestra/sf-memory/signals",
   "sf-routines": "/orchestra/sf-routines",
 }
 
