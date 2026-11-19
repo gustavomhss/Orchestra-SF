@@ -447,7 +447,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
-  const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
+  const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources, readSourceProjection: product.readSourceProjection })
   const procurementProducer = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })

@@ -91,26 +91,26 @@ export function createSfScenarioOperationAccess(input: {
       const external = domain.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
       if (external.length && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveProcurementEvidence }, captured, item, call)) return false
       const plannerOperations = domain.filter((operation) => !operation.targetRef.startsWith("sf-procurement:"))
-      const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
-      if (source.status !== "ok") {
-        if (source.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
+      if (item.result.currency !== "USD") return false
+      // One canonical source observation already authenticates and projects
+      // twice. Keep its exact evidence/body together when authorizing selectors.
+      const observed = await input.projectPlanner.readSource(item.scenario.baseRef, call, { period: item.result.horizon, currency: item.result.currency })
+      if (observed.status !== "ok") {
+        if (observed.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
         continue
       }
-      if (!refs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence))) return false
-      if (item.result.currency !== "USD") return false
-      // This guard authorizes component selectors against the real domain
-      // projection. Comparing a forecast with itself also reopens its coverage,
-      // which can recursively revisit this same case during every case read.
-      const current = await input.projectPlanner(source.value.evidence, call, { period: item.result.horizon, currency: item.result.currency })
-      if (current.status !== "ok" || current.value.engineVersion !== "planner-runtime-v1" || current.value.version !== source.value.evidence.target.version ||
-        current.value.context.installationId !== call.binding.installationId || current.value.context.projectId !== call.binding.projectId ||
-        current.value.context.principalRef !== call.binding.principalRef || current.value.context.accessRevision !== call.binding.accessRevision ||
-        current.value.context.policyVersion !== call.binding.policyVersion || current.value.context.surface !== "planner" || current.value.context.currency !== item.result.currency ||
-        digestSfValue(current.value.context.period) !== digestSfValue(item.result.horizon) || !current.value.context.sourceRefs.length ||
-        current.value.context.sourceRefs.some((ref) => !covered(ref, [source.value.evidence])) ||
-        new Set(current.value.values.map((entry) => entry.id)).size !== current.value.values.length) return false
+      const source = observed.value.source
+      if (!refs.some((ref) => digestSfValue(ref) === digestSfValue(source.evidence))) return false
+      const current = observed.value.projection
+      if (current.engineVersion !== "planner-runtime-v1" || current.version !== source.evidence.target.version ||
+        current.context.installationId !== call.binding.installationId || current.context.projectId !== call.binding.projectId ||
+        current.context.principalRef !== call.binding.principalRef || current.context.accessRevision !== call.binding.accessRevision ||
+        current.context.policyVersion !== call.binding.policyVersion || current.context.surface !== "planner" || current.context.currency !== item.result.currency ||
+        digestSfValue(current.context.period) !== digestSfValue(item.result.horizon) || !current.context.sourceRefs.length ||
+        current.context.sourceRefs.some((ref) => !covered(ref, [source.evidence])) ||
+        new Set(current.values.map((entry) => entry.id)).size !== current.values.length) return false
       for (const operation of plannerOperations) {
-        const targets = current.value.components.filter((component) => component.id === operation.targetRef)
+        const targets = current.components.filter((component) => component.id === operation.targetRef)
         if (targets.length !== 1 || !targets[0]!.sourceRefs.length || targets[0]!.sourceRefs.some((ref) => !covered(ref, refs))) return false
         if (operation.replacementRef) {
           const replacement = await input.scenarioInputs.resolveAmount(operation.replacementRef, call)
@@ -127,8 +127,13 @@ export function createSfScenarioOperationAccess(input: {
             operation.period !== undefined && digestSfValue(operation.period) !== digestSfValue(replacement.value.period)) return false
         }
       }
-      const again = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
-      if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(source.value.evidence)) return false
+      // Replacement lookups await another producer after the canonical source.
+      // Reopen it in that case. Pure selector checks have no intervening await;
+      // the complete before/after source fence below still covers every item.
+      if (plannerOperations.some((operation) => operation.replacementRef)) {
+        const again = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
+        if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(source.evidence)) return false
+      }
     }
     if (digestSfValue(value) !== original || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call) || !currentAuthority()) return false
     if (!proofs.size) return true
