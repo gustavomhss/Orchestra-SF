@@ -1,5 +1,5 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -91,12 +91,12 @@ export function SfInitialAlternative(props: {
         !sameCase(current.caseRef) || inspected.source.refDigest !== ui.source ||
         inspected.expectedVersion === undefined || !ui.reason.trim() ||
         !readyFor("decisions.decision-coverage")) return
-    const input: Coverage = {
+    const input: Coverage = structuredClone(unwrap({
       caseRef: current.caseRef, source: inspected.source, basis: inventory,
       entries: [...inventory.categoryIds, ...inventory.additionalCategoryIds].map((categoryId) =>
         ({ categoryId, status: "pending" as const, reason: ui.reason.trim() })),
       expectedVersion: inspected.expectedVersion,
-    }
+    }))
     const selectedBasis = ui.basis
     const abort = new AbortController()
     pending = abort
@@ -136,10 +136,11 @@ export function SfInitialAlternative(props: {
     if (!retry) {
       if (!canPromote()) return
       const current = selected()!, inspected = forecast()!
+      const body: Promote = structuredClone(unwrap({ caseRef: current.caseRef, title: ui.title.trim(),
+        scenario: { baseRef: inspected.source.refId, operations: [], assumptions: [] },
+        coverageRef: ui.coverage!.ref }))
       intention = { transport: active.transport, generation: props.owner.generation(), owner,
-        key: crypto.randomUUID(), body: { caseRef: current.caseRef, title: ui.title.trim(),
-          scenario: { baseRef: inspected.source.refId, operations: [], assumptions: [] },
-          coverageRef: ui.coverage!.ref } }
+        key: crypto.randomUUID(), body }
     }
     const original = intention
     if (!original || original.transport !== active.transport || original.owner !== owner ||
