@@ -13,15 +13,15 @@ jobs:
       - name: Read completed Reports artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14570277425/zip > "$RUNNER_TEMP/reports8.zip"
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14570563923/zip > "$RUNNER_TEMP/reports9.zip"
       - name: Extract original failure screen and bounded steps
         run: |
           python3 - <<'PY'
           import base64, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Reports native read observation", "", "Original run 44601697015, artifact 14570277425. Read-only diagnostic, no rerun and no product assertion changed.", ""]
+          lines = ["# Reports native read observation", "", "Original run 44606978085, artifact 14570563923. Read-only diagnostic, no rerun and no product assertion changed.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          with zipfile.ZipFile(root / "reports8.zip") as archive:
+          with zipfile.ZipFile(root / "reports9.zip") as archive:
               names = archive.namelist()
               for member in [p for p in names if p.endswith("/error-context.md")]:
                   lines += [f"## {member}", ""]
@@ -51,4 +51,4 @@ jobs:
       - name: Persist original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-read-44601697015.md --input "$RUNNER_TEMP/reports-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-read-44606978085.md --input "$RUNNER_TEMP/reports-payload.json" > /dev/null
