@@ -38,8 +38,7 @@ export function SfOpexReportEntry(props: { year: number }) {
     await client["dashboard.dashboard-agenda"]({ sections })
   }
   return (
-    <div id="content">
-      <h2>Decisions</h2>
+    <>
       <form class="sf-budget-form report-form" onSubmit={(event) => { event.preventDefault(); setPrepared(true) }}>
         <label>{t("sf.u39.reportFormat")}
           <select value={format()} onChange={(event) => setFormat(event.currentTarget.value)}>
@@ -69,6 +68,6 @@ export function SfOpexReportEntry(props: { year: number }) {
           <button class="mx-btn" type="button" onClick={() => { void load() }}>{t("sf.u39.loadSelection")}</button>
         </section>
       </Show>
-    </div>
+    </>
   )
 }
