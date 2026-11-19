@@ -154,7 +154,7 @@ export function SfLocalAdministrationView(_props: SfSurfaceProps<"UI69">): JSX.E
               </section>
               <section aria-labelledby="sf-u28-export">
                 <h2 id="sf-u28-export">{heading("sf.u28.backups")}</h2>
-                <Show when={data().backups.length} fallback={<p>{heading("sf.common.empty")}</p>}>
+                <Show when={data().backups.length} fallback={<SfStatePanel state="empty" messageKey={copyKey("sf.common.empty")} />}>
                   <div class="sf-u28-table-scroll" role="region" aria-label={heading("sf.u28.backups")} tabindex="0">
                     <table>
                       <caption>{heading("sf.u28.backups")}</caption>

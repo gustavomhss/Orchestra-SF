@@ -1,10 +1,12 @@
 // S04 evidence presentation only: producer owns authorization and source reopening.
-import { createMemo, createUniqueId, For, Match, Show, Switch, type JSX } from "solid-js"
+import { createMemo, createUniqueId, For, Show, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import type {
   SfDisplayValue, SfEvidence, SfEvidencePanelProps, SfMessage, SfText,
 } from "./types"
 import { canInspectEvidence, canPresentEvidence } from "./guards"
+import { SfStatePanel } from "../states"
+import type { SfCopyKey, SfUiState } from "../frame/types"
 import "./s04.css"
 
 export type { SfEvidence, SfEvidencePanelProps } from "./types"
@@ -16,6 +18,20 @@ const labels = {
   unavailable: "orchestra.sf.s04.evidence.unavailable",
   revoked: "orchestra.sf.s04.evidence.revoked",
 } as const
+
+function evidenceWellKey(state: SfUiState): SfCopyKey {
+  if (state === "loading") return "sf.common.loading" as SfCopyKey
+  if (state === "empty") return "orchestra.sf.s04.evidence.empty" as SfCopyKey
+  if (state === "filtered-empty") return "sf.common.filterEmpty" as SfCopyKey
+  if (state === "denied") return "sf.common.noAccess" as SfCopyKey
+  if (state === "session-expired") return "sf.common.loginAgain" as SfCopyKey
+  if (state === "unavailable") return "sf.common.unavailable" as SfCopyKey
+  if (state === "outcome-unknown") return "sf.common.operationUnknown" as SfCopyKey
+  if (state === "invalid") return "sf.common.invalidLink" as SfCopyKey
+  if (state === "not-found") return "sf.common.removed" as SfCopyKey
+  if (state === "stale" || state === "conflict") return "sf.common.stale" as SfCopyKey
+  return "orchestra.sf.s04.evidence.hidden" as SfCopyKey
+}
 
 // Source-provided SfMessage keys remain data from the frozen typed dictionary.
 // Register the S04 leaf centrally through the integrator; never display a raw key.
@@ -75,20 +91,7 @@ export function SfEvidencePanel(props: SfEvidencePanelProps): JSX.Element {
       </header>
 
       <Show when={!canPresentEvidence(props.state)}>
-        <p role={props.state === "denied" || props.state === "session-expired" ? "alert" : "status"} class="mx-note">
-          <Switch fallback={language.t("orchestra.sf.s04.evidence.hidden")}>
-            <Match when={props.state === "loading"}>{language.t("sf.common.loading")}</Match>
-            <Match when={props.state === "empty"}>{language.t("orchestra.sf.s04.evidence.empty")}</Match>
-            <Match when={props.state === "filtered-empty"}>{language.t("sf.common.filterEmpty")}</Match>
-            <Match when={props.state === "denied"}>{language.t("sf.common.noAccess")}</Match>
-            <Match when={props.state === "session-expired"}>{language.t("sf.common.loginAgain")}</Match>
-            <Match when={props.state === "unavailable"}>{language.t("sf.common.unavailable")}</Match>
-            <Match when={props.state === "outcome-unknown"}>{language.t("sf.common.operationUnknown")}</Match>
-            <Match when={props.state === "invalid"}>{language.t("sf.common.invalidLink")}</Match>
-            <Match when={props.state === "not-found"}>{language.t("sf.common.removed")}</Match>
-            <Match when={props.state === "stale" || props.state === "conflict"}>{language.t("sf.common.stale")}</Match>
-          </Switch>
-        </p>
+        <SfStatePanel state={props.state} messageKey={evidenceWellKey(props.state)} />
       </Show>
 
       <Show when={canPresentEvidence(props.state)}>

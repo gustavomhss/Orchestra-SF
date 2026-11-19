@@ -33,6 +33,14 @@ export const SF_SIMILARITY217_COPY = {
   "sf.u26.similarVersion": "Source case version",
   "sf.u26.similarNoCausality": "A similar case is a precedent for inspection, not proof of a current recommendation or causal effect.",
   "sf.u26.similarRefresh": "Refresh current authorization",
+  "sf.u26.similarState.fresh": "Fresh",
+  "sf.u26.similarState.historical": "Historical",
+  "sf.u26.similarState.stale": "Stale",
+  "sf.u26.similarState.revoked": "Revoked",
+  "sf.u26.similarState.replaced": "Replaced",
+  "sf.u26.similarState.missing": "Missing",
+  "sf.u26.similarState.invalid": "Invalid",
+  "sf.u26.similarState.unavailable": "Unavailable",
 } as const
 
 export const SF_SIMILARITY217_COPY_BR: Readonly<Record<keyof typeof SF_SIMILARITY217_COPY, string>> = {
@@ -65,4 +73,12 @@ export const SF_SIMILARITY217_COPY_BR: Readonly<Record<keyof typeof SF_SIMILARIT
   "sf.u26.similarVersion": "Versão do caso de origem",
   "sf.u26.similarNoCausality": "Semelhança permite inspecionar precedentes; não comprova recomendação atual ou efeito causal.",
   "sf.u26.similarRefresh": "Atualizar autorização atual",
+  "sf.u26.similarState.fresh": "Atual",
+  "sf.u26.similarState.historical": "Histórico",
+  "sf.u26.similarState.stale": "Desatualizado",
+  "sf.u26.similarState.revoked": "Revogado",
+  "sf.u26.similarState.replaced": "Substituído",
+  "sf.u26.similarState.missing": "Ausente",
+  "sf.u26.similarState.invalid": "Inválido",
+  "sf.u26.similarState.unavailable": "Indisponível",
 }

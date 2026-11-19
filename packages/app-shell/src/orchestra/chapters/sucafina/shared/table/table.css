@@ -14,6 +14,12 @@
   border-radius: var(--orchestra-radius-md);
   background: var(--mx-raised, transparent);
   scrollbar-gutter: stable;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 20px), transparent),
+    linear-gradient(to bottom, #000 calc(100% - 20px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 20px), transparent),
+    linear-gradient(to bottom, #000 calc(100% - 20px), transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
 .sf-s01-table table {
