@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA de código: 0da542a699bb5ff6fb936ec9bc4ff39fbfe8868c.
+SHA de código: 11d2e40afcf4b7041afb6b99a9a143f2142a882f.
 Data: 2026-11-19
 Estado: partial
 
@@ -159,3 +159,12 @@ Estado: partial
 - changeForecast chama o helper existente connectInstalledShell para escolher o mesmo host/projeto na nova aba, conservando a sessão de operador do contexto. Mantidas mutação única, valores110→190, CAS, reload e captura imutável. Falha registra apenas estado/heading antes do fechamento e é relançada.
 - UI47 de um ou vários domínios agora exibe observedAt original em elemento time separado, mantendo a linha completa de identidade da fonte. Fonte do delta8ac1d6963c9905e8ca302f5efb065138ac594aa5.
 - Nenhuma asserção removida. Estado continua partial; unbound em review-flow.ts:236 (mutação da fonte), exportReview/meeting/answer/revogação ainda dependem do gate Reports12.
+
+
+## Reports12 observado e correções causais
+- [44620413443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44620413443): FAILURE, 4failed/0passed; três typechecks SUCCESS, cleanup135907276098 SUCCESS. Snapshotd43683da6560dad1c85643d10b1074e396a7bd97 sobreAssembly31. Artifact14577009822.
+- RPT02–04 avançaram: CAP03 carregou, preview/preservação200 e UI48 montou com o review original integral (696181–714931 caracteres). O seletor genérico data-section-id alcançou tanto li.mx-card da sequência quanto section da seção aberta. Código11d2e40afcf4b7041afb6b99a9a143f2142a882f qualifica o li observado e mantém título/quantidade de cada seção, sem first()/skip ou diminuição de conteúdo.
+- RPT01 preservou as7seções e chegou ao editor de origem, mas a segunda inicialização do shell em nova aba parou procurando Status/Servers numa raiz já configurada (DOM com Sessions by impact/Spend by model). changeForecast usa agora a página já admitida e a mesma sessão. A origem continua sendo editada pelo controle CAP04/S03, com110→190, CAS+1, um POST e reload. O teste lê o review antes/depois e exportReview abre sua URL em seguida; navegar para a origem não recalcula o review preservado.
+- Teardown aguarda page.unrouteAll({behavior:"wait"}), em vez de remover o handler enquanto route.fetch/fulfill original ainda está em curso. Não ignora erros nem repete requisição.
+- Asserções removidas/relaxadas: nenhuma. Retirada somente a criação/fechamento da aba auxiliar e a configuração duplicada do shell; mesmo fluxo de negócio, mesmo timeout180000ms.
+- `packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:236`: source edit ainda unbound de qualificação após essa correção. `review-flow.ts:122`: preservar/ler passou até o seletor ambíguo, gate13 deve atravessá-lo.
