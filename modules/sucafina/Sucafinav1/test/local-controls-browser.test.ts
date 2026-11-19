@@ -18,6 +18,8 @@ test("actual local inbox delivery, read receipt, backups and logout operate thro
       return { commit: true, value: undefined }
     })
     phase("notice seed complete")
+    // Enrollment enters Orchestra; utility controls live in an explicit installed page.
+    await f.page.goto("http://localhost:4110/sucafina/dashboard?page=Executive%20Dashboard")
     phase("Backups navigation start")
     await Promise.all([
       f.page.waitForURL("http://localhost:4110/sucafina/backups", { timeout: 10000 }),

@@ -36,7 +36,8 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
     // C08 selection writes fence all three persisted surfaces, including an otherwise empty one.
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     const session = { active: true, approved: false }
-    const host: DomainPortHost = { persistence, authenticate: async (_request, context) => resolve("finance", [...context!.roleMap], (group) => session.active && group === "finance-group"), environment: async () => ({ at: "2028-01-01T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: "finance" } }), revalidate: async () => session.active && await store.transaction("planner", async () => ({ commit: false, value: true })) }
+    const request = new Request("https://example.test", { headers: { authorization: "finance" } })
+    const host: DomainPortHost = { persistence, authenticate: async (_request, context) => resolve("finance", [...context!.roleMap], (group) => session.active && group === "finance-group"), environment: async () => ({ at: "2028-01-01T00:00:00Z", id: randomUUID, directory: [] }), requestFor: () => request, revalidate: async () => session.active && await store.transaction("planner", async () => ({ commit: false, value: true })) }
     const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "fixture has no forecast coverage" }) })
     const issued = await planner.issueSource("v0", call)
     expect(issued.status).toBe("ok")
