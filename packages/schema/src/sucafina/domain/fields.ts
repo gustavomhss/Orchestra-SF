@@ -10,7 +10,7 @@ export const SfDomainJsonValue: Schema.Schema<SfDomainJson> = Schema.suspend(() 
 
 export const SfDomainScalar = Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.Null])
 export const SfDomainRecordId = Schema.Union([Schema.String, Schema.Finite])
-export const SfDomainAmountInput = Schema.NullOr(Schema.Finite)
+export const SfDomainAmountInput = Schema.Union([Schema.Finite, Schema.String, Schema.Null])
 export const SfDomainYears = Schema.Int.check(Schema.isBetween({ minimum: 2024, maximum: 2027 }))
 export const SfDomainMonths = Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 12 }))
 export const SfDomainVersionNumbers = Schema.Record(Schema.String, NonNegativeInt )

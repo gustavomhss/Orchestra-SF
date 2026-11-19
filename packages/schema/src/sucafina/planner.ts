@@ -11,7 +11,7 @@ const Through = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)).check(Schema.
 const Year = Schema.Int.check(Schema.isGreaterThanOrEqualTo(2024)).check(Schema.isLessThanOrEqualTo(2027))
 const Optional = Schema.optionalKey
 const NullableAmount = Schema.Union([Schema.Finite, Schema.Null])
-const EditableAmount = NullableAmount
+const EditableAmount = Schema.Union([Schema.String, NullableAmount])
 const Amounts = Schema.Array(Schema.Finite).check(Schema.isMinLength(12)).check(Schema.isMaxLength(12))
 const NullableAmounts = Schema.Array(NullableAmount).check(Schema.isMinLength(12)).check(Schema.isMaxLength(12))
 const RecordVersion = Schema.Struct({ version: NonNegativeInt })
@@ -162,7 +162,7 @@ const ImportValues = Schema.Struct({
 const LineFields = {
   name: Optional(Schema.String), desc: Optional(Schema.String), owner: Optional(Schema.String),
   entity: Optional(Schema.String), alloc: Optional(Schema.String), cls: Optional(Schema.String),
-  cur: Optional(Schema.String), annual: Optional(Schema.Finite),
+  cur: Optional(Schema.String), annual: Optional(Schema.Union([Schema.String, Schema.Finite])),
   b: Optional(Amounts), a: Optional(NullableAmounts), f: Optional(NullableAmounts),
   el: Optional(Schema.String), proj: Optional(Schema.String), domain: Optional(Schema.String),
   month: Optional(Schema.Union([MonthIndex, Schema.String])), value: Optional(EditableAmount),
@@ -240,7 +240,7 @@ const CommandValues = {
     "import-workbook": ImportValues,
   },
   CAP22: {
-    save: Schema.Struct({ versionId: NonEmpty, cur: Optional(Schema.String), rate: Optional(NullableAmount),
+    save: Schema.Struct({ versionId: NonEmpty, cur: Optional(Schema.String), rate: Optional(Schema.Union([Schema.String, NullableAmount])),
       sourceRef: Optional(Schema.String), provider: Optional(Schema.String), observedAt: Optional(Schema.String) }),
     delete: Schema.Struct({ versionId: NonEmpty }), "import-workbook": ImportValues,
   },
