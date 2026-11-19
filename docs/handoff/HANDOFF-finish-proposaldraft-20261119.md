@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA: 77a407c2a26d4fa3b0f7036b635c356fb4e33828 (3 cenários; este commit corrige a mutabilidade do estado local do Solid)
+SHA: e448570cd2d784cb8620d8cc642972c7f9f781c7 (tipagem; este checkpoint acrescenta captura/histórico e os 5 cenários originais migrados)
 Data: 2026-11-19
 Estado: partial
 
@@ -15,32 +15,35 @@ Estado: partial
 - Instalação de testes em `proposals-support/host.ts` usa o factory original Operations, C08 e SQLite reais, sessão cifrada e rotas nativas. Os controles privados apenas retiram autoridade ou observam estado original.
 - Negação da escrita não apaga a leitura privada. Save 403 bloqueia a escrita e retém os valores até uma nova leitura real; somente negação de leitura/contexto limpa o editor e os metadados do pai.
 - Releitura da mesma base não exige nova confirmação; mudança de fonte/proposta exige confirmação. Retirada de escrita desabilita campos sem descartar valores.
+- CAP02 detalhe agora usa dashboard.dashboard-capture e dashboard.dashboard-history originais: retrato individual em preferences, com histórico sob ACL atual, fonte/incarnation/version, valores/períodos/evidenceState. Não confunde capture com review-preserve.
+- UI54 atualiza workbench após preparar C12; revisão permanece estável durante Apply pendente e confirma somente um comando/recibo. Leitores encerrados não são abortados no cleanup.
+- Selects têm nomes acessíveis explícitos. O fixture bufferiza uma única resposta HTTP original com route.fetch(maxRetries:0,maxRedirects:0) e route.fulfill({response:original}), preservando status/headers/bytes; nenhuma resposta positiva inventada ou requisição repetida.
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
-- UI54: `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/draft.tsx:1` implementado, ainda sem typecheck/gate; revisar tipos e comportamento no composto com o health original.
-- Composição F02: WP5 publicou `f5760ad992f59d258406aa52679e469c512294e5`, com exceção fechada para a chave original de outcome. Copiar seu common/registry composto, preservando os adapters; os 4 blobs domain/client são idênticos aos desta branch.
-- Composição de disponibilidade: root publicou `56de64aba20f85804c4ae584e3940e187e011c47` com health original e os 2 IDs em 3 resources. Selector preferences/receipts corrigido em `22a11d693269b870a1f049bd87a465833607af22`, run `44604756705` SUCCESS. Composição para o gate nativo: `8a279c2e011954b3fa27e9f69f7b1fb78b4d3104`.
-- Fixture/browser: `test/product/wp02/host-workbench.test.ts:147` e `test/product/dashboard-installed-closure/consumer-read.test.ts:64` ainda navegam no console404. Migrar para instalação nativa3000 conservando todos os fatos e negativos.
-- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:1`: 3 cenários publicados, ainda sem gate: os 2 consumer-read e o write-withdrawal de host-workbench. Asserção de preservar registro agora usa UI47 com o topic original selecionado, preview real e Confirm preservation desabilitado; não usa a rota UI53 incorreta.
-- `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241`: faltam os cenários completos agenda/histórico/C12 e conflito com segundo draft. Os 2 testes unitários puros :406/:432 permanecem. Só remapear ou retirar as jornadas Bun após qualificação nativa equivalente, sob coordenação root.
-- UI ainda sem gate. Não há qualificação de UI ou integração afirmada.
+- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:1`: qualificar os 5 cenários (2 consumer-read e 3 host-workbench), sem aumento dos timeouts originais. Composição base para próximo gate: `dbe6e348367d8e1f915dac918a23bc5028f8a408`, com health/capture/history e Evidence UI47 do root.
+- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: novo consumidor original implementado, ainda sem gate. Save desconhecido não é repetido; GET histórico não atribui recibo a tentativa desconhecida.
+- `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241,463` e `.../dashboard-installed-closure/consumer-read.test.ts:53,168`: ainda mantidos até equivalência nativa passar; root coordena o remapeamento canônico. Os 2 units puros host-workbench :406/:432 permanecem.
+- Parent root compõe F02, health e registros; nunca copiar common/registry antigos desta branch sobre os adapters compostos.
+- Sem qualificação de UI ou integração afirmada neste checkpoint.
 
 ## Decisões e justificativas
-- Asserções removidas: nenhuma. Os testes legados não foram apagados ou enfraquecidos.
+- Asserções removidas: nenhuma. Os testes legados continuam presentes. Todos os fatos/negativos foram portados para 5 jornadas Playwright; a mecânica de checkbox/refresh do console virou a confirmação S03 original, releitura do review e ausência de segundo Apply enquanto o retorno original está retido. O valor financeiro permanece condicionado/null do fixture original, sem fabricar baseline novo.
+- Retirada de captura agora é verificada no botão CAP02 do produtor dashboard-capture, não no botão distinto de preservação de pauta. O fluxo positivo verifica ambas separadamente.
+- Inspeção `44608463854` SUCCESS leu somente artifact original: os error-context não continham DOM após fechamento do contexto. Nenhuma inferência de tela foi apresentada como observada; diagnóstico local do painel é emitido antes do cleanup se selecionar falhar.
 - O produtor privado existe (`dashboard-decisions.ts:119-208`), inclusive revalidação com leitura retirada, fonte histórica, active draft e fences. A falta está na ligação/consumidor UI54, não em dados de negócio.
 - CAP02 CRUD de Hot Topics não substitui proposta privada C08. Os fluxos permanecem distintos.
 - `hot-topic-draft.ts:133-186` encontra o primeiro save somente pela operação original e valida seu recibo/digest contra o draft protegido. Não basta selecionar um item semelhante de uma lista.
 - Registry/common nesta branch têm base sf-join-four. Ao compor com a branch retry, aplicar apenas os dois novos IDs, preservando os overrides de rotas e a construção SfFrozenOperationRoutes daquela branch.
 
 ## Como retomar
-1. Sobrepor os 4 blobs de UI/copy e os 4 arquivos proposals-support/proposals.spec desta branch à composição `8a279c2e011954b3fa27e9f69f7b1fb78b4d3104`.
-2. Rodar test-ci app-shell/playwright `e2e/sucafina/dashboard-installed/proposals.spec.ts`; manter timeout original de 60s por teste.
-3. Corrigir somente os erros concretos, registrar SHA/run/resultado; depois completar/remapear as jornadas legadas restantes. O gate de transporte não substitui o navegador.
+1. Sobrepor os 9 blobs UI/fixture/spec desta branch à composição `dbe6e348367d8e1f915dac918a23bc5028f8a408`.
+2. Pedido test-ci: package `app`, directory `packages/app-shell`, runner `playwright`, config `e2e/playwright.production.config.ts`, args `["e2e/sucafina/dashboard-installed/proposals.spec.ts"]`, env ORCHESTRA_CHANNEL=prod.
+3. Corrigir erros concretos, registrar SHA/run/resultado. Depois remapear as jornadas Bun correspondentes, mantendo as duas unidades puras e todas asserções de negócio.
 
 ## Comandos e resultados
 - Typegate composto [44605860232](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44605860232): CLI/SF E2E/Sucafina SUCCESS; app-shell FAILURE em draft.tsx:242-243 porque Fields readonly do Schema foi usado no createStore. Corrigido por tipo local mapeado removendo apenas readonly; contrato e validação preservados.
 - `bun run check:guards --base origin/dev`: não rodado neste checkpoint.
 - Fronteira F02/codec: [44604361124](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604361124) SUCCESS, 19 pass / 0 fail / 380 expect. Snapshot `9a541ff36821c6952aa2f5b7d0a26fef260f3ccd`, parent `f5760ad992f59d258406aa52679e469c512294e5`; essa prova cobre transporte/codec, não C08/UI.
 - Primeiro pedido de navegador [44606254001](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606254001): FAILURE antes de executar produto, TEST_PACKAGE_NOT_FOUND:app-shell. O pacote atual é `app`, config `e2e/playwright.production.config.ts`; briefing estava desatualizado nesse campo. Cleanup SUCCESS. Nenhuma evidência de navegador nessa tentativa.
-- Gate de navegador com pedido corrigido: pendente. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.
+- [44606767134](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606767134): FAILURE, 3 testes falharam; CLI/host/app-shell/SF E2E typechecks SUCCESS; cleanup SUCCESS. Casos1/3 aguardaram Select case; caso2 perdeu corpo CDP após HTTP200. Diagnóstico original arquivado por run [44608463854](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44608463854), SUCCESS. Fixes de nomes acessíveis/cleanup/pass-through estão neste checkpoint; novo gate ainda pendente. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.

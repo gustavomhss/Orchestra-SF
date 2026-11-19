@@ -183,7 +183,7 @@ export function SfHotTopicPrivateDraft(props: {
       setNeedsCurrent(!same(candidate, retained))
       setCanWrite(object(value.permissions)?.draft === true); setState("current")
     } catch { if (live()) setState("unavailable") }
-    finally { if (sequence === ticket) setBusy(false) }
+    finally { if (sequence === ticket) { controller = undefined; setBusy(false) } }
   }
   function candidate() {
     const value = needsCurrent() ? reviewed() ? currentDraft() : undefined : selection()
@@ -219,7 +219,7 @@ export function SfHotTopicPrivateDraft(props: {
       setDirty(false); setNeedsCurrent(false); setReviewed(false); setState("saved")
       props.onSaved(saved.draftRef)
     } catch { if (live()) { setState("unknown"); setCanWrite(false) } }
-    finally { if (sequence === ticket) setBusy(false) }
+    finally { if (sequence === ticket) { controller = undefined; setBusy(false) } }
   }
   async function recoverFirstSave() {
     const retained = firstSave, current = ready()
@@ -239,7 +239,7 @@ export function SfHotTopicPrivateDraft(props: {
       setBase(retained.input.fields); setDirty(false); setNeedsCurrent(false); setState("saved")
       props.onSaved(saved.draftRef)
     } catch { /* The original outcome remains unknown; no command is repeated. */ }
-    finally { if (sequence === ticket) setBusy(false) }
+    finally { if (sequence === ticket) { controller = undefined; setBusy(false) } }
   }
   const edit = (field: typeof names[number], value: string) => {
     if (field === "priority") {
@@ -252,11 +252,11 @@ export function SfHotTopicPrivateDraft(props: {
     <h2>{t(key("sf.u38.privateProposal"))}</h2>
     <Show when={state() !== "denied"} fallback={<p role="alert">{t(key("sf.u38.privateReadDenied"))}</p>}>
       <Show when={props.reference === "new" && !selection()}>
-        <label>{t(key("sf.u38.selectCase"))}<select value={selectedCase()} onChange={(event) => { setSelectedCase(event.currentTarget.value); chooseSource() }}>
+        <label>{t(key("sf.u38.selectCase"))}<select aria-label={t(key("sf.u38.selectCase"))} value={selectedCase()} onChange={(event) => { setSelectedCase(event.currentTarget.value); chooseSource() }}>
           <option value="">{t(key("sf.u38.selectCase"))}</option>
           <For each={cases()}>{(item) => <option value={item.caseRef.id}>{item.label}</option>}</For>
         </select></label>
-        <label>{t(key("sf.u38.selectSource"))}<select value={selectedRecord()} onChange={(event) => { setSelectedRecord(event.currentTarget.value); chooseSource() }}>
+        <label>{t(key("sf.u38.selectSource"))}<select aria-label={t(key("sf.u38.selectSource"))} value={selectedRecord()} onChange={(event) => { setSelectedRecord(event.currentTarget.value); chooseSource() }}>
           <option value="">{t(key("sf.u38.selectSource"))}</option>
           <For each={sources()}>{(item) => <option value={item.sourceRef}>{item.label}</option>}</For>
         </select></label>
@@ -264,7 +264,7 @@ export function SfHotTopicPrivateDraft(props: {
       <Show when={selection()}>
         <div class="sf-u38-fields">
           <For each={names}>{(field) => <label>{t(key(("sf.u38." + field) as Key))}
-            <Show when={field !== "priority"} fallback={<select value={values.priority} disabled={busy() || state() === "unknown" || !canWrite()} onChange={(event) => edit(field, event.currentTarget.value)}>
+            <Show when={field !== "priority"} fallback={<select aria-label={t(key("sf.u38.priority"))} value={values.priority} disabled={busy() || state() === "unknown" || !canWrite()} onChange={(event) => edit(field, event.currentTarget.value)}>
               <For each={["normal", "high", "critical"] as const}>{(value) => <option value={value}>{t(key(("sf.u38." + value) as Key))}</option>}</For>
             </select>}>
               <Show when={field !== "notes"} fallback={<textarea value={values.notes} disabled={busy() || state() === "unknown" || !canWrite()} onInput={(event) => edit(field, event.currentTarget.value)} />}>

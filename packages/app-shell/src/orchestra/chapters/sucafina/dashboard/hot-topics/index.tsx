@@ -13,6 +13,7 @@ import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../sha
 import type { SfCopyKey } from "../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import { SfHotTopicEditor } from "./edit"
+import { SfHotTopicCapture } from "./capture"
 import { useHotTopicsSource } from "./reader"
 import type { Topic, TopicStatus } from "./reader"
 import "./u38.css"
@@ -191,6 +192,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                   label={{ pt: "Relacionar ação por referência", en: "Relate action by reference" }} />
               </div>
               <SfExecutiveRelatedLinks from={props.route} omit="topic" />
+              <SfHotTopicCapture topicId={topic().id} version={version()} year={props.route.query.year} />
               <div class="sf-u38-actions">
                 <button type="button" class="mx-btn primary" disabled={!source.allowed("save") || version() === undefined}
                   onClick={edit}>{t(key("sf.u38.editTopic"))}</button>

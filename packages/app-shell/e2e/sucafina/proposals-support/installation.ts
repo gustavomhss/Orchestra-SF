@@ -89,6 +89,17 @@ export async function withProposalHost<T>(
 }
 
 export async function enterProposalShell(page: Page, installation: Awaited<ReturnType<typeof createProposalInstallation>>, host: ProposalReady) {
+  // Buffer each one original JSON response before Chromium's CDP body eviction.
+  // Preserve its actual status, headers and bytes; authentication is not intercepted.
+  const modes = new Set(["dashboard-workbench", "dashboard-draft-read", "dashboard-hot-topic-draft",
+    "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review",
+    "dashboard-hot-topic-apply", "dashboard-agenda", "dashboard-review-preserve", "dashboard-capture", "dashboard-history"])
+  await page.context().route((url) => url.origin === installation.origin &&
+    (url.pathname === "/sucafina/dashboard" && modes.has(url.searchParams.get("sf") ?? "") ||
+      url.pathname === "/sucafina/api/ui/projections/review"), async (route) => {
+    const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+    await route.fulfill({ response: original })
+  })
   const cookie = readOperatorSessionCookie(new Headers({ "set-cookie": host.cookie }), installation.origin)
   await page.context().addCookies([cookie])
   const discoveryURL = new URL("/api/sucafina/installations", installation.origin)
