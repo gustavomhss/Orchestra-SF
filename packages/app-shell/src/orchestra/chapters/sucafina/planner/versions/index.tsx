@@ -263,6 +263,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                 ? await client["domain.command.CAP23.unlock"]({ ...command, action: "unlock", values: {} }, options)
                 : await client["domain.command.CAP23.delete"]({ ...command, action: "delete", values: {} }, options)
       if (abort.signal.aborted || model.owner.generation() !== generation || screen.review?.ref !== request.ref) return
+      if (commandAbort === abort) commandAbort = undefined
       if (result.kind !== "response") {
         setScreen({ outcome: result.reason === "outcome-unknown" ? "unknown" : "failed", busy: false, error: result.reason })
         if (request.action === "save" && !request.first)
