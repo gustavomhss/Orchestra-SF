@@ -71,8 +71,28 @@ const Requisition = Schema.Struct({
   category: Schema.optional(Schema.String),
   requesterName: Schema.optional(Schema.String),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const QuoteComparison = Schema.Struct({
+  id: Schema.NullOr(Schema.String),
+  index: NonNegativeInteger,
+  baseAmount: Schema.NullOr(Schema.Finite),
+  baseCurrency: Schema.NullOr(Schema.String),
+  fxRate: Schema.NullOr(Schema.Finite),
+  fxBasis: Schema.NullOr(Schema.Literals(["base", "submitted FX", "current FX"])),
+  baseFxText: Schema.String,
+  rank: Schema.NullOr(Schema.Finite),
+  premiumAmount: Schema.NullOr(Schema.Finite),
+  premiumPercent: Schema.NullOr(Schema.Finite),
+  excludedReason: Schema.NullOr(Schema.String),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SourcingComparison = Schema.Struct({
+  eligibleCount: NonNegativeInteger,
+  quotes: Schema.Array(QuoteComparison),
+  rankLine: Schema.NullOr(Schema.String),
+  premiumLine: Schema.NullOr(Schema.String),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Sourcing = Schema.Struct({
   quotes: Schema.optional(Schema.Array(Quote)),
+  comparison: Schema.optional(SourcingComparison),
   evaluator: Schema.optional(Schema.String),
   selectedId: Schema.optional(Schema.NullOr(Schema.String)),
   fewQuotesJustification: Schema.optional(Schema.String),

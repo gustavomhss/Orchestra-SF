@@ -8,6 +8,7 @@ import { approvalQueue, procurementDashboard } from "../../../../../modules/suca
 import type { RequestView } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
 import { publicSfData } from "../../../../../modules/sucafina/Sucafinav1/product/integration/public-state.ts"
 import { readProcurementQueueView, procurementApprovalGroups } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
+import { projectSourcingComparison } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
 import type { ProcurementQueueView } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
 
 type Capability = "CAP24" | "CAP25" | "CAP26" | "CAP27" | "CAP28"
@@ -139,7 +140,7 @@ function selectPurchaseOrder(value: unknown) {
   return order
 }
 /** All data passed here has already crossed domain.view's current visibility boundary. */
-function selectRequest(source: Record<string, unknown>, detail: boolean, actor: Actor) {
+function selectRequest(source: Record<string, unknown>, detail: boolean, actor: Actor, formSettings?: unknown) {
   if (!detail) {
     const minimal = pick(source, ["number", "status", "createdBy", "value"])
     if (Object.hasOwn(source, "po")) minimal.po = pick(source.po, ["expenseType"])
@@ -148,8 +149,10 @@ function selectRequest(source: Record<string, unknown>, detail: boolean, actor: 
   const request = pick(source, requestKeys.filter((key) => !["pr", "sourcing", "po", "history"].includes(key)))
   if (Object.hasOwn(source, "pr"))
     request.pr = source.pr === null ? null : pick(source.pr, requisitionKeys)
-  if (Object.hasOwn(source, "sourcing"))
-    request.sourcing = selectSourcing(source.sourcing)
+  if (Object.hasOwn(source, "sourcing")) {
+    const sourcing = selectSourcing(source.sourcing)
+    request.sourcing = sourcing && formSettings ? { ...sourcing, comparison: projectSourcingComparison(source, formSettings) } : sourcing
+  }
   if (Object.hasOwn(source, "po"))
     request.po = selectPurchaseOrder(source.po)
   if (Object.hasOwn(source, "prApproval"))
@@ -190,7 +193,7 @@ function hasRequestShape(value: Record<string, unknown>): value is RequestView &
     (value.number === undefined || typeof value.number === "string")
 }
 function approvalGroups(
-  requests: readonly Record<string, unknown>[], actor: Actor, queue: ProcurementQueueView | undefined,
+  requests: readonly Record<string, unknown>[], actor: Actor, queue: ProcurementQueueView | undefined, formSettings: unknown,
 ) {
   const valid = requests.filter(hasRequestShape)
   if (queue) {
@@ -198,7 +201,7 @@ function approvalGroups(
     const fromRows = (arr: readonly { id: string }[]) =>
       arr.flatMap((row) => {
         const request = valid.find((request) => request.number === row.id)
-        return request ? [selectRequest(request, true, actor)] : []
+        return request ? [selectRequest(request, true, actor, formSettings)] : []
       })
     return {
       waitingForYou: fromRows(groups.waitingForYou),
@@ -208,9 +211,9 @@ function approvalGroups(
   }
   const groups = approvalQueue(valid, actor.id)
   return {
-    waitingForYou: groups.waitingForYou.map((row) => selectRequest(row, true, actor)),
-    waitingForOthers: groups.waitingForOthers.map((row) => selectRequest(row, true, actor)),
-    unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor)),
+    waitingForYou: groups.waitingForYou.map((row) => selectRequest(row, true, actor, formSettings)),
+    waitingForOthers: groups.waitingForOthers.map((row) => selectRequest(row, true, actor, formSettings)),
+    unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor, formSettings)),
   }
 }
 function pageData(
@@ -224,7 +227,7 @@ function pageData(
     Object.hasOwn(prepared, "procurementQueueView") && (!queue || !visibleQueue(queue, requests))) return undefined
   const formSettings = pick(data.formSettings, formSettingsKeys)
   const directory = rows(data.directory).map((row) => pick(row, ["id", "name"]))
-  const requestsDetail = requests.map((row) => selectRequest(row, true, actor))
+  const requestsDetail = requests.map((row) => selectRequest(row, true, actor, data.formSettings))
   const requestsSummary = requests.map((row) => selectRequest(row, false, actor))
   const requestsVersion = versionsFor(view, requestKeysFor(requests))
   if (capability === "CAP24") {
@@ -245,7 +248,7 @@ function pageData(
     versions: requestsVersion,
   }
   if (capability === "CAP26") return {
-    data: { requests: requestsDetail, ...approvalGroups(requests, actor, queue), directory, formSettings },
+    data: { requests: requestsDetail, ...approvalGroups(requests, actor, queue, data.formSettings), directory, formSettings },
     versions: requestsVersion,
   }
   if (capability === "CAP27") return {
