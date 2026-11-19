@@ -87,7 +87,7 @@ test("record projection refuses a borrowed final source mutated by final revalid
 })
 
 
-test("record issuance uses two canonical observations and equivalent wrappers retain four", async () => {
+test("record issuance keeps two source reads with canonical metadata verification and wrapper equivalence", async () => {
   const fixture = await createRelationsFixture()
   try {
     const selection = { page: "Portfolio Dashboard", recordType: "projects", recordId: "project",
@@ -195,6 +195,104 @@ test("record issuance does not publish a factory observation after issuer substi
     const result = await records.issue({ page: "Portfolio Dashboard", recordType: "projects",
       recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
     expect(changed).toBe(true)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+
+for (const changed of ["incarnation", "version"] as const)
+test("record issuance rejects matching forged " + changed + " in both source returns", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const read = fixture.persistence.readScopedSource
+    let observations = 0
+    fixture.persistence.readScopedSource = async (...args) => {
+      const value = await read(...args)
+      if (!value) return value
+      observations++
+      return { ...value, [changed]: changed === "incarnation" ? "fabricated-incarnation" : value.version + 10 }
+    }
+    const result = await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
+    expect(observations).toBe(2)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+test("a substituted checker cannot attest fabricated source metadata", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const read = fixture.persistence.readScopedSource, resolve = fixture.persistence.resolveScopedSource
+    let observations = 0, resolutions = 0, fakeChecks = 0
+    fixture.persistence.readScopedSource = async (...args) => {
+      const value = await read(...args)
+      if (!value) return value
+      observations++
+      return { ...value, incarnation: "fabricated-incarnation", version: value.version + 10 }
+    }
+    fixture.persistence.checkScopedSource = async () => { fakeChecks++; return true }
+    fixture.persistence.resolveScopedSource = async (...args) => { resolutions++; return resolve(...args) }
+    const result = await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
+    expect(observations).toBe(2)
+    expect(resolutions).toBe(1)
+    expect(fakeChecks).toBe(0)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+test("record issuance refuses checker replacement during an in-flight observation", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const environment = fixture.host.environment
+    let changed = false, fakeChecks = 0
+    fixture.host.environment = async (request) => {
+      const value = await environment(request)
+      changed = true
+      fixture.persistence.checkScopedSource = async () => { fakeChecks++; return true }
+      return value
+    }
+    const result = await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
+    expect(changed).toBe(true)
+    expect(fakeChecks).toBe(0)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+for (const fault of ["headers", "lease", "binding", "selection"] as const)
+test("record issuance refuses " + fault + " mutation at the last authority callback", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const selection = { page: "Portfolio Dashboard", recordType: "projects", recordId: "project",
+      fields: ["name"], period: fixture.period }
+    const context = { ...fixture.read }
+    const requestFor = fixture.host.requestFor, revalidate = fixture.host.revalidate
+    fixture.host.requestFor = (candidate) => requestFor(candidate === context ? fixture.read : candidate)
+    const read = fixture.persistence.readScopedSource
+    let observations = 0, finalChecks = 0
+    fixture.persistence.readScopedSource = async (...args) => {
+      const value = await read(...args)
+      if (value) observations++
+      return value
+    }
+    fixture.host.revalidate = async (candidate) => {
+      const allowed = await revalidate(candidate === context ? fixture.read : candidate)
+      if (observations === 2 && ++finalChecks === 2) {
+        if (fault === "headers") requestFor(fixture.read)!.headers.set("actor", "another-person")
+        if (fault === "lease") Reflect.set(context, "lease", {})
+        if (fault === "binding") Reflect.set(context, "binding", { ...context.binding, policyVersion: "replaced-policy" })
+        if (fault === "selection") selection.fields.push("status")
+      }
+      return allowed
+    }
+    const result = await fixture.records.issue(selection, context)
+    expect(observations).toBe(2)
+    expect(finalChecks).toBe(2)
     expect(result.status).not.toBe("ok")
     expect(result).not.toHaveProperty("value")
   } finally { await fixture.dispose() }

@@ -9,6 +9,7 @@ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { createDashboardSourceHost, dashboardSourceSelector } from "../dashboard/sources.ts"
 import type { SfScopedSourcePort, SfSourceScope } from "./source-lifecycle.ts"
+import { canonicalScopedSourceCheck } from "./source-lifecycle.ts"
 import { projectSfSourceScope } from "./source-projections.ts"
 
 /** Issues only scopes derived from the current authenticated request and current role map. */
@@ -46,23 +47,25 @@ type CompletedRecordIssuance = {
 type RecordIssuanceReader = (selection: DashboardRecordSelection, context: TrustedDomainContext) => Promise<CompletedRecordIssuance | undefined>
 // Only this factory registers readers. The registry retains providers, never an
 // observation or a proof from an earlier call.
-const recordIssuanceReaders = new WeakMap<object, { host: DomainPortHost; sources: SfScopedSourcePort; read: RecordIssuanceReader }>()
+const recordIssuanceReaders = new WeakMap<object, { host: DomainPortHost; sources: SfScopedSourcePort; check: ReturnType<typeof canonicalScopedSourceCheck>; read: RecordIssuanceReader }>()
 
 /** Wrappers and other hosts keep the independent resolver path. */
 export function dashboardRecordIssuanceReader(issuer: object, host: DomainPortHost, sources: SfScopedSourcePort): RecordIssuanceReader | undefined {
   const owned = recordIssuanceReaders.get(issuer)
-  return owned?.host === host && owned.sources === sources ? owned.read : undefined
+  return owned?.host === host && owned.sources === sources && owned.check && canonicalScopedSourceCheck(sources) === owned.check ? owned.read : undefined
 }
 
 /** The returned scope is host-private and conveys read visibility, not write authority. */
 export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort }) {
   const host = input.host, scopedSources = input.scopedSources
-  const read: RecordIssuanceReader = async (selection, context) => {
+  const check = canonicalScopedSourceCheck(scopedSources)
+  const read = async (selection: DashboardRecordSelection, context: TrustedDomainContext, canonicalCheck?: ReturnType<typeof canonicalScopedSourceCheck>): Promise<CompletedRecordIssuance | undefined> => {
     const request = host.requestFor(context), lease = context.lease
     const binding = digestSfValue([context.kind, context.binding])
     const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
     const selectionDigest = digestSfValue(selection)
     const currentAuthority = () => !!request && !request.signal.aborted && host.requestFor(context) === request && context.lease === lease &&
+      (!canonicalCheck || canonicalScopedSourceCheck(scopedSources) === canonicalCheck) &&
       digestSfValue([context.kind, context.binding]) === binding && digestSfValue(selection) === selectionDigest &&
       digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
     if (!request || !currentAuthority() || !await host.revalidate(context) || !currentAuthority() || !selection || !selection.page || !selection.recordType || selection.recordType === "dashboard-page" || !selection.recordId || selection.recordId === "__singleton__" || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !isSfPeriod(selection.period)) return undefined
@@ -100,6 +103,11 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
         version: original.version, fields: wanted.fields, period: wanted.period, observedAt: new Date(environment.at).toISOString() } },
       evidence: { ...evidence, refDigest: digestSfEvidenceRef(evidence) },
     }))
+    // Two returned bodies can agree about fabricated metadata. Reopen the real
+    // registry through its factory-owned checker before accepting their identity.
+    if (canonicalCheck && (!await canonicalCheck("dashboard", scope,
+      async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector),
+      { incarnation: original.incarnation, version: original.version, inputDigest: original.inputDigest }) || !sameObservation())) return undefined
     // The record consumer's final authority check remains independent. Borrowed
     // source bodies and request pins are checked again after that callback.
     if (!await host.revalidate(context) || !sameObservation()) return undefined
@@ -109,7 +117,8 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
     const completed = await read(selection, context)
     return completed && structuredClone(completed.issued)
   }
-  recordIssuanceReaders.set(issue, { host: host, sources: scopedSources, read })
+  const complete: RecordIssuanceReader = (selection, context) => read(selection, context, check)
+  recordIssuanceReaders.set(issue, { host, sources: scopedSources, check, read: complete })
   return issue
 }
 
