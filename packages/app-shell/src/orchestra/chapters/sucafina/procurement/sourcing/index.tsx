@@ -571,7 +571,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
                 value={asString(quote[name])}
                 aria-invalid={refusal?"true":undefined}
                 aria-describedby={described}
-                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+                onInput={(event)=>updateQuote(index,name,name==="total"
+                  ? event.currentTarget.value.trim()===""?null:event.currentTarget.valueAsNumber
+                  : event.currentTarget.value)}/>
             </label>
             <Show when={refusal}>
               <span id={described}>{refusal?.message}</span>
