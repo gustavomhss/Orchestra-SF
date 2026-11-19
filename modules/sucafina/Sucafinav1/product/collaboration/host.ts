@@ -196,20 +196,19 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   // from a thread already returned by the authenticated reader, then keep the
   // canonical reread and answer-reuse source/commit fences below.
   const answerReference = (questionId: string, message: { id: string; incarnation: string; version: number }) => `sf-thread-answer:${encodeURIComponent(questionId)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${message.version}`
-  // C05 membership is an identity check, not a source grant. The answer reader
-  // authenticates exposure; resolve/observe and their protected fences authorize
-  // the complete preserved review and all sources before any successful result.
+  // Membership is an identity check, not a source grant. The answer reader
+  // authenticates exposure; scope/observe and their protected fences authorize
+  // the current or preserved basis and all sources before any successful result.
   const answerBelongsToQuestion = async (questionId: string, answerRef: string, context: TrustedDomainContext) => {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return false
     const loaded = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[questionId] : undefined)
     if (loaded.status !== "ok" || !isThread(loaded.value) || loaded.value.id !== questionId || !await input.host.revalidate(context)) return false
     const thread = loaded.value
-    if (!thread.messages[0]?.sourceContext?.reviewContext) return answerEvidence.belongsToQuestion(questionId, answerRef, context)
     if (thread.kind === "comment" || thread.recipientRef !== context.binding.principalRef && !thread.messages.some((message) => message.authorRef === context.binding.principalRef)) return false
     const message = thread.messages.findLast((entry, index) => index > 0 && entry.authorRef === thread.recipientRef)
     const basis = message ? threadMessageContext(thread, message) : undefined
-    return !!message && !!basis?.reviewContext && basis.evidenceRefs.every((ref) => ref.installationId === context.binding.installationId && ref.projectId === context.binding.projectId) && answerReference(questionId, message) === answerRef && await input.host.revalidate(context)
+    return !!message && !!basis && basis.evidenceRefs.every((ref) => ref.installationId === context.binding.installationId && ref.projectId === context.binding.projectId) && answerReference(questionId, message) === answerRef && await input.host.revalidate(context)
   }
   const answerReuse = input.confirmationSource ? createAnswerReusePort<T>({
     host: input.host,
