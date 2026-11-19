@@ -62,7 +62,11 @@ export async function localBrowser() {
     console.info("browser fixture: installation")
     const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, configFile, environment)
     cleanup.push(() => installation.dispose())
-    const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+    const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => {
+      const url = new URL(request.url)
+      if (url.pathname === "/") return new Response("<!doctype html><title>Orchestra</title><main>Orchestra</main>", { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } })
+      return await installation.handler(request) ?? new Response(null, { status: 404 })
+    } })
     const stopServer = () => server.stop(true)
     cleanup.push(stopServer)
     const { chromium } = await import("@playwright/test")
@@ -195,7 +199,9 @@ export async function localBrowser() {
       page.goto(destination.href, { waitUntil: "domcontentloaded", timeout: 10000 }),
     ]).catch((error) => { throw new Error("Private test browser enrollment failed: " + (error instanceof Error ? error.message : String(error))) })
     if (enrollment.status() !== 303) throw new Error(`Test enrollment failed with status ${enrollment.status()}`)
-    await page.waitForURL("http://localhost:4110/sucafina/dashboard", { timeout: 10000 })
+    const landed = enrollment.headers()["location"]
+    if (landed !== "/") throw new Error(`Test enrollment did not open the Orchestra shell: ${landed ?? ""}`)
+    await page.waitForURL((url) => url.origin === "http://localhost:4110" && url.pathname === "/", { timeout: 10000 })
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
     return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose }

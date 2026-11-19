@@ -69,12 +69,29 @@ export function preparedOriginalIntent(request: PreparedApplyRequest, change: Pr
 }
 
 export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][]) {
+  return intentState(state, request, change, choices, reviewDigest, context, entries, request)
+}
+
+/** An already-applied change is resumed from the current case version. The stored attempt keeps the version at dispatch. */
+export function preparedResumeIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][], currentVersion: number) {
+  if (request.caseRef.version !== currentVersion || !entries.length || entries.length !== 1) return "mismatch"
+  const attempt = entries[0]?.value
+  if (!attempt || typeof attempt !== "object" || Array.isArray(attempt) || !("originalIntent" in attempt) || !attempt.originalIntent || typeof attempt.originalIntent !== "object" || Array.isArray(attempt.originalIntent) || !("request" in attempt.originalIntent)) return "mismatch"
+  const stored = attempt.originalIntent.request
+  if (!stored || typeof stored !== "object" || Array.isArray(stored) || !("caseRef" in stored) || !stored.caseRef || typeof stored.caseRef !== "object") return "mismatch"
+  const caseRef = stored.caseRef
+  if (!("id" in caseRef) || !("incarnation" in caseRef) || !("version" in caseRef) || caseRef.id !== request.caseRef.id || caseRef.incarnation !== request.caseRef.incarnation || typeof caseRef.version !== "number" || caseRef.version > request.caseRef.version) return "mismatch"
+  if (!("changeId" in stored) || !("choiceId" in stored) || stored.changeId !== request.changeId || stored.choiceId !== request.choiceId) return "mismatch"
+  return intentState(state, request, change, choices, reviewDigest, context, entries, { ...request, caseRef: { id: request.caseRef.id, incarnation: request.caseRef.incarnation, version: caseRef.version } })
+}
+
+function intentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][], intentRequest: PreparedApplyRequest) {
   if (!entries.length) return "missing"
   if (entries.length !== 1 || choices.length !== 1) return "mismatch"
   const proof = entries[0]!
   const attempt = proof.value
   if (!attempt || typeof attempt !== "object" || Array.isArray(attempt) || !("originalIntent" in attempt)) return "missing"
-  const expected = preparedOriginalIntent(request, change, choices[0]!, reviewDigest, context)
+  const expected = preparedOriginalIntent(intentRequest, change, choices[0]!, reviewDigest, context)
   return proof.namespace === "cases" && proof.scopeDigest === digestSfValue(["cases"]) && proof.incarnation === state.incarnation &&
     proof.principalRef === context.binding.principalRef && proof.targetRef === request.caseRef.id && proof.targetIncarnation === request.caseRef.incarnation &&
     proof.commandDigest === digestSfValue(attempt) && digestSfValue(attempt.originalIntent) === digestSfValue(expected) ? "matched" : "mismatch"

@@ -6,7 +6,7 @@ import type { DomainPortHost, PortResult, PreparedApplyPort } from "../contracts
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateResult } from "../contracts/state.ts"
 import { caseApplicationState, reconcileDomainReceipt } from "./receipts.ts"
-import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
+import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, preparedResumeIntentState, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
 import { applicationAttempt, applicationAttemptKey, applicationAttempts } from "./application-attempt.ts"
 
 /** Explicit human application; each domain commits its own receipt before the case is reconciled. */
@@ -56,10 +56,11 @@ export function createPreparedExecution(input: {
       const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? {
         proof: state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)],
         intent: preparedOriginalIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, applicationAttempts(state, request)),
+        resume: mode === "apply" && change.receipt ? preparedResumeIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, applicationAttempts(state, request), value.version) : "mismatch",
       } : undefined).catch(() => undefined)
       if (!bound || bound.status !== "ok" || !bound.value?.proof) return { status: "unavailable", reason: "review-proof-unbound" }
       if (bound.value.proof.commandDigest !== receiptReviewBinding(change, reviewDigest) || digestSfValue(bound.value.proof.value) !== digestSfValue(lookup.value.receipt)) return { status: "conflict", reason: "review-proof-mismatch" }
-      if (bound.value.intent !== "matched") return { status: bound.value.intent === "missing" ? "unavailable" : "conflict", reason: bound.value.intent === "missing" ? "original-intent-unverifiable" : "original-intent-mismatch" }
+      if (bound.value.intent !== "matched" && bound.value.resume !== "matched") return { status: bound.value.intent === "missing" ? "unavailable" : "conflict", reason: bound.value.intent === "missing" ? "original-intent-unverifiable" : "original-intent-mismatch" }
       if (change.receipt) {
         if (digestSfValue(change.receipt) !== digestSfValue(lookup.value.receipt)) return { status: "unavailable", reason: "receipt-identity-collision" }
         if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }

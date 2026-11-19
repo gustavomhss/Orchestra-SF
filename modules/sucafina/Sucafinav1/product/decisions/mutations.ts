@@ -120,9 +120,10 @@ export function createDecisionMutations(input: MutationHost) {
       if (coverageError) return { status: "conflict", reason: coverageError }
       const existingBasis = loaded.value.case.costCoverageBases.find((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version)
       if (existingBasis && digestSfValue(existingBasis) !== digestSfValue(coverage.value.basis)) return { status: "conflict", reason: "coverage-inventory-version-conflict" }
-      const alternative = { id: result.costCoverage.alternativeId, version: result.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result }
+      const preview = stampUnappliedPreview(result)
+      const alternative = { id: preview.costCoverage.alternativeId, version: preview.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result: preview }
       if (!alternative.id.trim() || !Number.isSafeInteger(alternative.version)) return { status: "conflict", reason: "alternative-identity-conflict" }
-      return saveCase(input, loaded.value, context, "add-alternative", request, (value) => ({ ...value, state: value.choices.length ? "reconsidering" : "comparing", alternatives: [...value.alternatives.filter((item) => item.id !== alternative.id), alternative], costCoverageBases: value.costCoverageBases.some((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version) ? value.costCoverageBases : [...value.costCoverageBases, coverage.value.basis] }), { request: request.scenario, result, sourceFence: (snapshot: import("../../runtime/contract.ts").Snapshot) => input.coverageEvidence === coverageEvidence && coverageEvidence.verifySnapshot(snapshot, result, basis, context) })
+      return saveCase(input, loaded.value, context, "add-alternative", request, (value) => ({ ...value, state: value.choices.length ? "reconsidering" : "comparing", alternatives: [...value.alternatives.filter((item) => item.id !== alternative.id), alternative], costCoverageBases: value.costCoverageBases.some((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version) ? value.costCoverageBases : [...value.costCoverageBases, coverage.value.basis] }), { request: request.scenario, result: preview, sourceFence: (snapshot: import("../../runtime/contract.ts").Snapshot) => input.coverageEvidence === coverageEvidence && coverageEvidence.verifySnapshot(snapshot, preview, basis, context) })
     },
     prepareChanges: async (incoming: { caseRef: CaseRef; choiceId: string; operations: readonly ScenarioOperation[] }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
       const request = structuredClone(incoming)
@@ -288,6 +289,14 @@ async function callMutationPort<T>(work: () => Promise<PortResult<T>>): Promise<
     return await work()
   } catch {
     return { status: "unavailable", reason: "domain-source-unavailable" }
+  }
+}
+
+function stampUnappliedPreview(result: ScenarioResult): ScenarioResult {
+  return {
+    ...result,
+    unresolvedConditions: result.unresolvedConditions.includes("scenario-is-hypothetical") ? result.unresolvedConditions : [...result.unresolvedConditions, "scenario-is-hypothetical"],
+    restrictions: result.restrictions.includes("preview-not-applied") ? result.restrictions : [...result.restrictions, "preview-not-applied"],
   }
 }
 
