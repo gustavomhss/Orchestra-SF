@@ -20,6 +20,39 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Closed Collaboration inputs use the original dashboard adapter (host-context/http-routes).
+  "collaboration.answer-confirm": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-confirm"}},
+  "collaboration.answer-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-prepare"}},
+  "collaboration.answer-prepare-message": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-prepare-message"}},
+  "collaboration.answer-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-read"}},
+  "collaboration.confirmation-confirm": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-confirmation-confirm"}},
+  "collaboration.confirmation-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-confirmation-prepare"}},
+  "collaboration.confirmation-project": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-confirmation-project"}},
+  "collaboration.cycle-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-cycle-read"}},
+  "collaboration.handoff-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-handoff-create"}},
+  "collaboration.handoff-link": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-handoff-link"}},
+  "collaboration.handoff-update": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-handoff-update"}},
+  "collaboration.question-consume": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-question-consume"}},
+  "collaboration.question-output": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-question-output"}},
+  "collaboration.recipients": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-recipients"}},
+  "collaboration.relation-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-relation-create"}},
+  "collaboration.relation-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-relation-read"}},
+  "collaboration.relation-remove": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-relation-remove"}},
+  "collaboration.selection-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-selection-create"}},
+  "collaboration.selection-list": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-selection-list"}},
+  "collaboration.selection-version": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-selection-version"}},
+  "collaboration.storage-version": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-storage-version"}},
+  "collaboration.thread-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-create"}},
+  "collaboration.thread-edit": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-edit"}},
+  "collaboration.thread-history": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-history"}},
+  "collaboration.thread-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-read"}},
+  "collaboration.thread-reply": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-reply"}},
+  "collaboration.thread-resolve": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-resolve"}},
+  "collaboration.work-destination": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-work-destination"}},
+  "collaboration.work-list": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-work-list"}},
+  // Original portfolio-http accepts these human intents on the dashboard adapter.
+  "decisions.decision-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-promote"}},
+  "decisions.decision-choose": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-choose"}},
   // Original human case edit; CAS/evidence/idempotency stay with decision-domain-http.
   "decisions.decision-edit": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-edit"},"maxRequestBytes":262144},
   // Original review read accepts all preserved domain sources under current C08/ACL fences.

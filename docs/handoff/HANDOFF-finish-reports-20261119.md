@@ -98,3 +98,13 @@ Estado: partial
 - A auditoria44585817131 revelou cinco falhas C05 em meeting-fixture.ts:28: a descoberta emitia recordOptions dentro de agenda.section e o consumidor original devolvia essa section ao dashboard-agenda, cujo contrato fechado rejeita metadados extras com400.
 - Correção na origem: recordOptions fica em agenda, separado de section. A section conserva exatamente os campos originais de seleção; o adaptador native-ui/reviews.ts continua publicando os mesmos recordOptions nos itens somente de leitura usados por UI47. Nenhuma mudança no schema de comando, grants ou asserções.
 - Pendente: gate estreito dos dois specs ui-review/review-context e review-context-history; native Reports/Dashboard continuam exigindo seus gates completos.
+
+## Atualização — recuperação explícita C05
+
+- Código de produtores anterior: dd0ab93f78ad9871c71704eb3e727e9f5e243b17; esta alteração liga somente o clique Retry action a retry=same-intent, depois de Reconcile action. Pergunta/resposta/edição/confirmação iniciais não recebem essa opção.
+- A intenção retém o payload, a chave e a observação originais. A confirmação continua usando Prepared retido em Intent; não reconstruímos recibos ou autoridade. A política F02 revalida contexto, corpo, chave e registro da chamada anterior.
+- Mantida a prova de resposta de criação recebida seguida de perda da leitura: o segundo POST explícito deve repetir exatamente corpo/chave e obter o mesmo recibo, com uma única escrita C08. Nenhuma asserção foi removida ou substituída por leitura somente.
+- Gate de produtores [44591754105](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44591754105): SUCCESS, 5 pass, 0 fail, 42 expect; snapshot c64cd8dcbde4b2809f3f127759dc961b75237de8. As cinco provas C05 originais voltaram a aceitar agenda.section sem metadados extras.
+- Gate do contrato F02 [44593918880](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44593918880): SUCCESS, 22 pass, 316 expect; código670eff1f0cfb1569ec47fba1c23780970307cb37. É dependência desta mudança; não qualifica sozinho a UI.
+- Reports6 [44589429193](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589429193): FAILURE, 4 fail. Snapshot anterior ao conserto do loop de contexto5bd79e e aos bindings C05; RPT01/03 não montaramUI48 e RPT02/04 ficaram na leitura interrompida. Sem alegação de sucesso.
+- Pendente: packages/app-shell/e2e/sucafina/reports.spec.ts:27,42,108,124 — executar o gate instalado com F01 estável, bindings originais completos e este botão de recuperação.
