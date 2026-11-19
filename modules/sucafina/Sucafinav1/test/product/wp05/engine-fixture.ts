@@ -7,6 +7,7 @@ import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisi
 import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { ScenarioRequest, SensitivityRequest } from "../../../product/contracts/operations.ts"
 import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
+import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
 import { createCriterionComparisonBindings } from "../../../product/decisions/criterion-comparison.ts"
@@ -33,7 +34,29 @@ const november = { start: "2027-11-01", end: "2027-11-30" }
 const now = () => "2026-11-13T00:00:00Z"
 const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
-type FixtureOptions = { mode?: "eur-missing-fx" | "renewal-usd"; training?: "bundled" | "omitted" | "confirmed" | "zero" | "null"; composed?: boolean }
+type ScenarioCoverageInput = {
+  sourceRefs: RecordEvidence[]
+  scenario: ScenarioRequest
+  baselineScenario: ScenarioRequest
+  planner: ReturnType<typeof createPlannerPort>
+  context: Extract<TrustedDomainContext, { kind: "ui" }>
+  evidence: BusinessContextService
+  caseRef: Pick<DecisionCase, "id" | "incarnation" | "version">
+  basis: CostCoverageBasis
+  sources: PlannerSourceHost
+  selectedResult: ScenarioResult
+  baselineResult: ScenarioResult
+}
+type FixtureOptions = {
+  mode?: "eur-missing-fx" | "renewal-usd"
+  training?: "bundled" | "omitted" | "confirmed" | "zero" | "null"
+  composed?: boolean
+  assessScenarios?: (fixture: ScenarioCoverageInput) => Promise<{
+    selected: CostCoverageAssessment
+    baseline: CostCoverageAssessment
+    scopeRefs: readonly BusinessEvidenceRef[]
+  }>
+}
 
 function initial(options: FixtureOptions): Snapshot {
   const line = (id: string, amount: number | null) => ({ id, sec: "opex", el: "licenses", cur: "USD", b: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0), a: Array(12).fill(null), f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) })
@@ -87,7 +110,8 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
       const ref: RecordEvidence = { schema: "sf-evidence-v1", refId: id, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `planner-${id}`, version: 1, fields: Object.keys(projection), period: wp05Horizon, projectionDigest: digestSfValue({ versionId: id, projection }) } }
       return { ...ref, refDigest: digestSfEvidenceRef(ref) }
     })
-    const sourceMatches = (ref: BusinessEvidenceRef) => !access.revokedSources.has(ref.refId) && sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))
+    const scopeRefs: BusinessEvidenceRef[] = []
+    const sourceMatches = (ref: BusinessEvidenceRef) => !access.revokedSources.has(ref.refId) && [...sourceRefs, ...scopeRefs].some((source) => digestSfValue(source) === digestSfValue(ref))
     const basis: CostCoverageBasis = { id: "renewal-transition", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs }
     const coverageAccess: { resolve?: PlannerSourceHost["resolveForecastCoverage"] } = {}
     const host: DomainPortHost = {
@@ -129,9 +153,13 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
     const baselinePreview = await planner.simulateScenario(baselineScenario, context)
     if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") throw new Error(`Planner simulation unavailable: ${JSON.stringify({ selectedPreview, baselinePreview })}`)
     if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("WP05 fixture requires the actual conditioned Planner preview")
-    // Assign case identity to the producer assessment without changing values or completeness.
-    const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
-    const baselineResult: ScenarioResult = { ...baselinePreview.value, costCoverage: { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }
+    // The coverage consumer assesses real components before C08 and criterion bindings are issued.
+    const pendingSelected: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
+    const pendingBaseline: ScenarioResult = { ...baselinePreview.value, costCoverage: { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }
+    const assessed = await options.assessScenarios?.({ sourceRefs, scenario, baselineScenario, planner, context, evidence: evidenceService, caseRef, basis, sources, selectedResult: pendingSelected, baselineResult: pendingBaseline })
+    if (assessed) scopeRefs.push(...structuredClone(assessed.scopeRefs))
+    const selectedResult: ScenarioResult = assessed ? { ...pendingSelected, costCoverage: assessed.selected } : pendingSelected
+    const baselineResult: ScenarioResult = assessed ? { ...pendingBaseline, costCoverage: assessed.baseline } : pendingBaseline
     const decision: DecisionCase = { ...caseRef, state: "comparing", objective: "renewal", currency: "USD", horizon: wp05Horizon, criteria: [{ id: "renewal-difference", description: "Explicit known subtotal criterion", required: true }], participants: ["finance"], sourceRefs, alternatives: [{ id: "selected", version: 1, title: "Transition", scenario, result: selectedResult }, { id: "baseline", version: 1, title: "Renewal", scenario: baselineScenario, result: baselineResult }], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     const seeded = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "wp05-seed-case", commandDigest: digestSfValue(decision), targetRef: caseRef.id, targetIncarnation: caseRef.incarnation }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })
     if (seeded.status !== "ok" || !seeded.value) throw new Error(`Case persistence unavailable: ${seeded.status}`)
@@ -186,7 +214,7 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
       results, persistent, comparisonBindings, comparisonRef, comparison: compared.value,
       sensitivityRequest, issuer, exact, exactCalls, preview, evidence: evidenceService,
       revokeSource: (reference: string) => {
-        if (!sourceRefs.some((source) => source.refId === reference)) throw new Error("Unknown fixture source")
+        if (![...sourceRefs, ...scopeRefs].some((source) => source.refId === reference)) throw new Error("Unknown fixture source")
         access.revokedSources.add(reference)
       },
       reviseRule: () => { ruleOperation.id = "wp05-criterion-revision"; return rules.register({ ...ruleInput, value: criterion.value + 1, expectedRuleVersion: 1 }, context) },
