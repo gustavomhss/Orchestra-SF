@@ -125,9 +125,9 @@ test("enrolled operator authenticates when the serving process cannot resolve th
     expect(html).toContain("Homologação local")
     expect(html).toContain(name)
     expect(html).not.toContain(userInfo().username)
-    const saved = await installation.handler(new Request(`${origin}/sucafina/dashboard`, {
-      method: "POST", headers: { cookie, "content-type": "application/json" },
-      body: JSON.stringify({ page: "Budget Overview", action: "save", version: 0, values: { year: 2026, budget: 10, actual: 4 } }),
+    const saved = await installation.handler(new Request(`${origin}/sucafina/dashboard?page=IT%20Risks`, {
+      method: "POST", headers: { origin, cookie, "content-type": "application/json" },
+      body: JSON.stringify({ page: "IT Risks", action: "save", version: 0, values: { name: "Recorded operator risk", impact: 3, probability: 2 } }),
     }))
     expect(saved?.status).toBe(200)
     await f.store.transaction("dashboard", async (snapshot) => {
