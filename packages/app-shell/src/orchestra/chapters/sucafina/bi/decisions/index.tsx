@@ -57,6 +57,53 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
   const scenario = () => { const current = decision(); return current?.kind === "scenario" ? current : undefined }
   const isView = () => packet().request.viewId === props.viewId && presentation().viewId === props.viewId
   const exactValue = (valueId: string) => projection().values.find((value) => value.id === valueId)
+  const [periodInput, setPeriodInput] = createSignal({ start: "", end: "" })
+  const [displayPeriod, setDisplayPeriod] = createSignal({ start: "", end: "" })
+  const periodKey = () => JSON.stringify(["sf-bi-display-period", projection().context.installationId,
+    projection().context.projectId, projection().context.principalRef, projection().context.policyVersion,
+    projection().context.accessRevision, props.viewId, packet().request.selectionRef, packet().request.period])
+  const validPeriod = (value: unknown): value is { start: string; end: string } => {
+    if (!value || typeof value !== "object" || !("start" in value) || !("end" in value)) return false
+    return typeof value.start === "string" && typeof value.end === "string" &&
+      /^\d{4}-\d{2}-\d{2}$/.test(value.start) && /^\d{4}-\d{2}-\d{2}$/.test(value.end) &&
+      Number.isFinite(Date.parse(value.start)) && Number.isFinite(Date.parse(value.end)) && value.start <= value.end
+  }
+  let restoredPeriod = ""
+  createEffect(() => {
+    const key = periodKey()
+    if (key === restoredPeriod) return
+    restoredPeriod = key
+    let selected = packet().request.period
+    try {
+      const stored: unknown = JSON.parse(sessionStorage.getItem(key) ?? "null")
+      if (validPeriod(stored)) selected = stored
+    } catch { /* Presentation storage is optional; the authorized horizon remains authoritative. */ }
+    setPeriodInput({ ...selected })
+    setDisplayPeriod({ ...selected })
+  })
+  const applyPeriod = () => {
+    const period = periodInput()
+    if (!validPeriod(period)) return
+    setDisplayPeriod({ ...period })
+    try { sessionStorage.setItem(periodKey(), JSON.stringify(period)) } catch { /* No business state is stored. */ }
+  }
+  const dateVisible = (valueId: string) => {
+    const value = exactValue(valueId)?.value
+    const period = displayPeriod()
+    return typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
+      !validPeriod(period) || value >= period.start && value <= period.end
+  }
+  const valueVisible = (id: string) => props.viewId !== "BI10" ||
+    !presentation().timeline?.items.some((item) => item.dateValueId === id) || dateVisible(id)
+  const timeline = () => presentation().timeline?.items.filter((item) => dateVisible(item.dateValueId)) ?? []
+  const dateX = (valueId: string) => {
+    const value = exactValue(valueId)
+    if (value?.evidenceState === "absent" || typeof value?.value !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(value.value) || !validPeriod(displayPeriod())) return null
+    const date = Date.parse(value.value), start = Date.parse(displayPeriod().start), end = Date.parse(displayPeriod().end)
+    if (!Number.isFinite(date) || date < start || date > end) return null
+    return 25 + (date - start) / (end - start || 1) * 570
+  }
 
   type RecordedValue = SfDecisionBiProjection["projection"]["values"][number]
   const numeric = (value: RecordedValue | undefined) => value?.evidenceState !== "absent" &&
@@ -68,6 +115,11 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
     return sources.filter((source, index) => sources.findIndex((other) => other.refDigest === source.refDigest) === index)
   }
   const [sourceChoice, setSourceChoice] = createSignal<{ value: RecordedValue; label: string }>()
+  let sourceOpener: HTMLElement | SVGElement | undefined
+  const closeSources = () => {
+    setSourceChoice(undefined)
+    queueMicrotask(() => { if (sourceOpener?.isConnected) sourceOpener.focus() })
+  }
   createEffect(() => { props.projection; setSourceChoice(undefined) })
   const openValueSource = (value: RecordedValue, referenceDigest: string) => {
     const source = origins(value).find((entry) => entry.refDigest === referenceDigest)
@@ -79,7 +131,11 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
   const chooseValueSource = (value: RecordedValue, label: string) => {
     const choices = origins(value)
     if (choices.length === 1) openValueSource(value, choices[0]!.refDigest)
-    else if (choices.length > 1) setSourceChoice({ value, label })
+    else if (choices.length > 1) {
+      const active = document.activeElement
+      sourceOpener = active instanceof HTMLElement || active instanceof SVGElement ? active : undefined
+      setSourceChoice({ value, label })
+    }
   }
   const sourceButtons = (value: RecordedValue | undefined) => <Show when={value}>
     {(recorded) => <Show when={origins(recorded()).length} fallback={<span>{t("sf.u22.chart.noSource")}</span>}>
@@ -206,7 +262,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
     ] as const
     return {
       caption: msg("sf.u22.chart.caption"), columns,
-      rows: presentation().series.flatMap((item) => item.valueIds.map((valueId) => {
+      rows: presentation().series.flatMap((item) => item.valueIds.filter(valueVisible).map((valueId) => {
         const measured = exactValue(valueId)
         const source = measured?.drilldown ?? measured?.sourceRefs[0]
         const sourceToken = source ? tokenFor(source.refDigest) : undefined
@@ -294,7 +350,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
                 <th scope="col">{t("sf.u22.chart.evidenceState")}</th><th scope="col">{t("sf.u22.chart.source")}</th>
                 <th scope="col">{t("sf.u22.chart.drilldown")}</th>
               </tr></thead>
-              <tbody><For each={projection().values}>{(value) => <tr data-sf-bi-value={value.id}>
+              <tbody><For each={projection().values.filter((value) => valueVisible(value.id))}>{(value) => <tr data-sf-bi-value={value.id}>
                 <td>{value.id}</td><td>{literal(value)}</td><td>{value.currency ?? value.unit ?? t("sf.u22.chart.missing")}</td>
                 <td>{value.period.start} – {value.period.end}</td><td>{value.evidenceState}</td>
                 <td>{origins(value).map((source) => source.refId).join(", ") || t("sf.u22.chart.noSource")}</td>
@@ -302,9 +358,12 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
               </tr>}</For></tbody>
             </table></div>
           </section>
-          <Show when={sourceChoice()}>{(choice) => <section class="sf-u22-detail" data-bi-source-chooser>
+          <Show when={sourceChoice()}>{(choice) => <section class="sf-u22-detail" data-bi-source-chooser
+            role="group" aria-label={t("sf.u22.values.sourceFor", { label: choice().label })}
+            onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); closeSources() } }}>
             <h3>{t("sf.u22.values.chooseSource")}: {choice().label}</h3>
             {sourceButtons(choice().value)}
+            <button class="mx-btn" type="button" onClick={closeSources}>{t("sf.u22.values.cancelSource")}</button>
           </section>}</Show>
           <Show when={props.viewId === "BI09"}>
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.components")}>
@@ -372,19 +431,41 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             </section>
           </Show>
           <Show when={props.viewId === "BI10"}>
-            <section class="sf-u22-detail" aria-label={t("sf.u22.chart.timeline")}>
-              <h3>{t("sf.u22.chart.timeline")}</h3>
+            <section class="sf-u22-detail" data-sf-bi-timeline aria-label={t("sf.u22.chart.timeline")}>
+              <h3>{t("sf.u22.timeline.title")}</h3>
+              <form onSubmit={(event) => { event.preventDefault(); applyPeriod() }}>
+                <label>{t("sf.u22.timeline.start")}<input type="date" value={periodInput().start}
+                  onInput={(event) => setPeriodInput((current) => ({ ...current, start: event.currentTarget.value }))} /></label>
+                <label>{t("sf.u22.timeline.end")}<input type="date" value={periodInput().end}
+                  onInput={(event) => setPeriodInput((current) => ({ ...current, end: event.currentTarget.value }))} /></label>
+                <button type="submit" class="mx-btn" disabled={!validPeriod(periodInput())}>{t("sf.u22.timeline.apply")}</button>
+              </form>
+              <p role="status">{t("sf.u22.timeline.whole")}</p>
               <Show when={presentation().timeline} fallback={<p>{t("sf.u22.chart.noData")}</p>}>
-                {(timeline) => <ol class="sf-u22-timeline">
-                  <For each={timeline().items}>
-                    {(entry) => <li>
-                      <span class="sf-u22-status">{entry.state === "planned" ? t("sf.u22.chart.planned") :
-                        entry.state === "completed" ? t("sf.u22.chart.completed") : t("sf.u22.chart.unknown")}</span>
-                      <strong>{entry.label}</strong>
-                      <span>{readValue(entry.dateValueId)}</span>
-                    </li>}
-                  </For>
-                </ol>}
+                <svg viewBox="0 0 620 90" width="100%" role="group" aria-label={t("sf.u22.timeline.chart")}>
+                  <line x1="25" x2="595" y1="40" y2="40" stroke="currentColor" />
+                  <For each={timeline()}>{(entry) => <Show when={dateX(entry.dateValueId) !== null}>
+                    <g data-bi-focus={entry.dateValueId}
+                      role={exactValue(entry.dateValueId) && origins(exactValue(entry.dateValueId)!).length ? "button" : undefined}
+                      tabindex={exactValue(entry.dateValueId) && origins(exactValue(entry.dateValueId)!).length ? 0 : undefined}
+                      aria-label={entry.label + ": " + readValue(entry.dateValueId)}
+                      onClick={() => { const value = exactValue(entry.dateValueId); if (value) chooseValueSource(value, entry.label) }}
+                      onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault(); const value = exactValue(entry.dateValueId); if (value) chooseValueSource(value, entry.label)
+                      } }}>
+                      <title>{entry.label}: {readValue(entry.dateValueId)}</title>
+                      <circle cx={dateX(entry.dateValueId)!} cy="40" r="6" fill="currentColor" />
+                    </g>
+                  </Show>}</For>
+                </svg>
+                <ol class="sf-u22-timeline" aria-label={t("sf.u22.timeline.list")}>
+                  <For each={timeline()}>{(entry) => <li>
+                    <span class="sf-u22-status">{entry.state === "planned" ? t("sf.u22.chart.planned") :
+                      entry.state === "completed" ? t("sf.u22.chart.completed") : t("sf.u22.chart.unknown")}</span>
+                    <strong>{entry.label}</strong><span>{readValue(entry.dateValueId)}</span>
+                    {sourceButtons(exactValue(entry.dateValueId))}
+                  </li>}</For>
+                </ol>
               </Show>
             </section>
           </Show>
@@ -437,6 +518,13 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
               </Show>
             </section>
           </Show>
+          <Show when={decision()?.kind === "portfolio"}>{() => {
+            const current = decision()
+            if (current?.kind !== "portfolio") return null
+            const token = tokenForResult(current.portfolioResultRef)
+            return <Show when={token}>{(target) => <button class="mx-btn" type="button"
+              onClick={() => props.onSelect(ref(target()))}>{t("sf.u22.portfolio.open", { ref: current.portfolioResultRef })}</button>}</Show>
+          }}</Show>
           <Show when={navigation()?.entries.length}>
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.drilldown")}>
               <h3>{t("sf.u22.chart.drilldown")}</h3>

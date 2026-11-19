@@ -1,6 +1,17 @@
 // N25 / SF_U22. Exclusive leaf dictionary. I00/125 registers both exports.
 // Producer-owned labels, IDs and values remain literal data, not translated UI copy.
 export const SF_U22_COPY = {
+  "sf.u22.values.sourceFor": "Choose a source for {{label}}",
+  "sf.u22.values.cancelSource": "Cancel source selection",
+  "sf.u22.timeline.title": "Dates and milestones supplied by the producer",
+  "sf.u22.timeline.start": "Display start date",
+  "sf.u22.timeline.end": "Display end date",
+  "sf.u22.timeline.apply": "Apply display filter",
+  "sf.u22.timeline.whole": "Values from partially selected periods remain whole.",
+  "sf.u22.timeline.chart": "Milestones in the horizon; the list provides state, date and source",
+  "sf.u22.timeline.list": "Dated milestones",
+  "sf.u22.portfolio.open": "Open portfolio {{ref}}",
+  "sf.u22.detail.close": "Back to analysis",
   "sf.u22.values.caption": "Source values and references",
   "sf.u22.values.id": "Value ID",
   "sf.u22.values.chooseSource": "Choose an original source",
@@ -69,6 +80,17 @@ export const SF_U22_COPY = {
 } as const
 
 export const SF_U22_COPY_BR: Readonly<Record<keyof typeof SF_U22_COPY, string>> = {
+  "sf.u22.values.sourceFor": "Escolher origem de {{label}}",
+  "sf.u22.values.cancelSource": "Cancelar escolha de origem",
+  "sf.u22.timeline.title": "Datas e marcos fornecidos pelo domínio",
+  "sf.u22.timeline.start": "Início do período",
+  "sf.u22.timeline.end": "Fim do período",
+  "sf.u22.timeline.apply": "Aplicar filtro",
+  "sf.u22.timeline.whole": "Os valores de períodos parcialmente selecionados permanecem integrais.",
+  "sf.u22.timeline.chart": "Marcos no horizonte; a lista informa estado, data e origem",
+  "sf.u22.timeline.list": "Marcos com data",
+  "sf.u22.portfolio.open": "Abrir portfólio {{ref}}",
+  "sf.u22.detail.close": "Voltar à análise",
   "sf.u22.values.caption": "Dados e referências",
   "sf.u22.values.id": "ID do valor",
   "sf.u22.values.chooseSource": "Escolher uma origem original",
