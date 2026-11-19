@@ -25,22 +25,35 @@ type ControlsBody = { cases: readonly { ref: string; title: string; version: num
 } }
 type Controls = ControlsBody & { fingerprint: string; selectionFingerprint: string }
 
+let auditControlsSequence = 0
+
 /** This reader enumerates identities only; every displayed value goes through its real authorized port. */
 export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, request: Request): Promise<PortResult<Controls>> {
+  const auditId = ++auditControlsSequence, auditStarted = performance.now(), auditCpu = process.cpuUsage()
+  const audit = (phase: string, count = 0) => {
+    if (process.env.SF_REPORTS_TRACE !== "1") return
+    const cpu = process.cpuUsage(auditCpu)
+    console.info("SF_REPORTS_TRACE_CONTROLS_" + phase + "_AT_" + Date.now() + "_ID_" + auditId + "_MS_" + Math.round(performance.now() - auditStarted) + "_CPU_USER_MS_" + Math.round(cpu.user / 1000) + "_CPU_SYSTEM_MS_" + Math.round(cpu.system / 1000) + "_COUNT_" + count + "_ABORTED_" + Number(request.signal.aborted))
+  }
+  audit("ENTER")
   const url = new URL(request.url)
   const wanted = url.searchParams.get("case") ?? ""
   const digest = digestSfValue({ caseRef: wanted })
   const access = await runtime.authority.ui.admit(request, "sf_case_read", digest)
+  audit("ADMISSION")
   if (access.status !== "ok") return access
   const call = access.value
   try {
     if (!await runtime.authority.ui.validate(call, "sf_case_read", digest)) return { status: "denied", reason: "decision-controls-authority-unavailable" }
+    audit("VALIDATED")
     const identities = await runtime.authority.state.read(request, "cases", (state, actor) => sameActor(actor, call)
       ? Object.values(state.cases).filter((value) => value.participants.includes(actor.principalRef)).map((value) => encodeCaseRef(value)) : undefined)
     if (identities.status !== "ok" || !identities.value || identities.value.length > 100) return { status: "unavailable", reason: "decision-controls-case-list-unavailable" }
+    audit("CASE_IDENTITIES", identities.value.length)
     const cases: { ref: string; title: string; version: number }[] = []
     for (const ref of identities.value) {
       const value = await runtime.business.cases.read({ caseRef: ref }, call)
+      audit("CASE_LIST_READ")
       if (value.status === "ok") cases.push({ ref, title: value.value.case.objective, version: value.value.case.version })
     }
     const currentList = async () => {
@@ -48,18 +61,24 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         encodeCaseRef(current) === item.ref && current.version === item.version && current.objective === item.title && current.participants.includes(actor.principalRef))))
       return checked.status === "ok" && checked.value === true
     }
+    audit("CASE_LIST_DONE", cases.length)
     const actions = await runtime.authority.humanActions(request)
+    audit("HUMAN_ACTIONS", actions.length)
     const base = { cases, actions, accessRevision: call.binding.accessRevision }
     if (!wanted) return await currentList() && await runtime.authority.host.revalidate(call) ? { status: "ok", value: withFingerprint(base) } : { status: "denied", reason: "decision-controls-authority-changed" }
     if (!cases.some((value) => value.ref === wanted)) return { status: "denied", reason: "decision-controls-case-unavailable" }
     const current = await runtime.business.cases.read({ caseRef: wanted }, call)
+    audit("SELECTED_CASE")
     if (current.status !== "ok") return current
     const decision = current.value.case
     const caseRef = { id: decision.id, incarnation: decision.incarnation, version: decision.version }
-    return await runtime.business.withCase<Controls>(call, caseRef, {}, async () => {
+    audit("WITH_CASE_BEGIN")
+    const completed = await runtime.business.withCase<Controls>(call, caseRef, {}, async () => {
+      audit("WITH_CASE_ENTER")
       const refs = current.value.evidenceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.target.surface === "planner")
       if (refs.length > 64) return { status: "needs-input", reason: "decision-controls-evidence-budget-exceeded" }
       const resolved = await runtime.business.context.context({ refs }, call)
+      audit("PLANNER_EVIDENCE", refs.length)
       if (resolved.length !== refs.length) return { status: "unavailable", reason: "decision-controls-evidence-unavailable" }
       const evidence: Evidence[] = []
       const forecasts: { source: RecordEvidence; label: string }[] = []
@@ -91,28 +110,36 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
       // Procurement records behind the saved alternatives. These readers cannot issue scopes.
       const procurementRefs = current.value.evidenceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId.startsWith("sf-procurement:"))
       if (procurementRefs.length > 64) return { status: "needs-input", reason: "decision-controls-evidence-budget-exceeded" }
+      audit("PROCUREMENT_REFS_BEGIN", procurementRefs.length)
       for (const ref of procurementRefs) {
         const resolved = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+        audit("PROCUREMENT_REF_RESOLVE")
         if (resolved.status !== "ok" || !same(resolved.value.evidence, ref)) continue
         const projected = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
+        audit("PROCUREMENT_REF_PROJECT")
         if (projected.status !== "ok" || projected.value.context.currency !== decision.currency || !same(projected.value.context.period, decision.horizon)) continue
         const source = projected.value.context.sourceRefs.find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
         if (!source) continue
         const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+        audit("PROCUREMENT_REF_AGAIN")
         if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
         evidence.push({ evidence: ref, source, fields: source.fields, label: `Requisition ${ref.target.recordId} · estimated amount · source revision ${ref.target.version}` })
       }
+      audit("PROCUREMENT_REFS_DONE")
       const selectedSource = url.searchParams.get("source")
       const matching = forecasts.filter((value) => value.source.refDigest === selectedSource)
       if (selectedSource && matching.length !== 1) return { status: "denied", reason: "decision-controls-source-unavailable" }
       const forecast = matching.length === 1 ? await readForecast(runtime, request, caseRef, matching[0]!.source, call) : undefined
+      audit("SELECTED_FORECAST", Number(!!forecast))
       if (forecast && forecast.status !== "ok") return forecast
       const identities = await runtime.authority.state.read(request, "cases", (state, actor) => sameActor(actor, call)
         ? Object.values((state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults ?? {}).filter((value) => value.kind === "scenario" && value.caseRef.id === caseRef.id && value.caseRef.incarnation === caseRef.incarnation).map((value) => value.resultRef) : undefined)
       if (identities.status !== "ok" || !identities.value || identities.value.length > 100) return { status: "unavailable", reason: "decision-controls-scenarios-unavailable" }
+      audit("SCENARIO_IDENTITIES", identities.value.length)
       const scenarios: Scenario[] = []
       for (const ref of identities.value) {
         const stored = await runtime.business.results.readHistoricalScenario({ resultRef: ref }, call)
+        audit("SCENARIO_READ")
         if (stored.status !== "ok" || stored.value.kind !== "scenario") continue
         const alternatives = decision.alternatives.filter((value) => digestSfValue(value.scenario) === stored.value.requestDigest && digestSfValue(value.result) === stored.value.resultDigest)
         if (alternatives.length !== 1) continue
@@ -121,37 +148,49 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
           ? [{ ref: operation.targetRef, label: `Substituição ${index + 1} · ${operation.amount} ${operation.currency}${operation.period ? ` · ${operation.period.start} a ${operation.period.end}` : ""}` }] : [])
         scenarios.push({ ref, title: `${alternative.title} · revisão ${alternative.version}`, alternativeId: alternative.id, parameters })
       }
+      audit("SCENARIOS_DONE", scenarios.length)
       const rules: { id: string; expectedVersion?: number }[] = []
       for (const criterion of decision.criteria) {
         const rule = await runtime.domain.criteria.resolve({ caseRef, criterionId: criterion.id }, call)
+        audit("CRITERION_RULE")
         rules.push({ id: criterion.id, ...(rule.status === "ok" ? { expectedVersion: rule.value.version } : rule.status === "needs-input" && rule.reason === "criterion-rule-unavailable" ? { expectedVersion: 0 } : {}) })
       }
+      audit("RULES_DONE", rules.length)
       const scenarioRef = url.searchParams.get("scenario")
       const baselineRef = url.searchParams.get("baseline")
       const parameterRef = url.searchParams.get("parameter")
       const unitSelection = scenarioRef && baselineRef && parameterRef ? { scenarioRef, baselineRef, parameterRef } : undefined
       if (unitSelection && (!scenarios.some((value) => value.ref === baselineRef) || !scenarios.some((value) => value.ref === scenarioRef && value.parameters.some((parameter) => parameter.ref === parameterRef)))) return { status: "denied", reason: "decision-controls-units-unavailable" }
       const units = unitSelection ? await runtime.domain.units.issue(unitSelection, call) : undefined
+      audit("UNITS", Number(!!units))
       if (units && units.status !== "ok") return units
       const environment = await runtime.authority.host.environment(request)
+      audit("ENVIRONMENT")
       const recipients = decision.participants.flatMap((ref) => {
         if (ref === call.binding.principalRef) return [{ ref, label: "Você" }]
         const person = environment.directory.find((person) => person.id === ref)
         return person ? [{ ref, label: person.name }] : []
       })
       const conditions = decision.choices.length ? await runtime.domain.materiality.registry.list(caseRef, call) : undefined
+      audit("CONDITIONS", Number(!!conditions))
+      audit("PROCUREMENT_EVIDENCE_BEGIN", Number(url.searchParams.get("procurement") === "attached"))
       const procurementEvidence = await (url.searchParams.get("procurement") === "attached"
         ? readAttachedProcurementEvidence(runtime, decision, call)
         : readProcurementEvidence(runtime, request, caseRef, call)).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
+      audit("PROCUREMENT_EVIDENCE_END")
       const again = await runtime.business.cases.read({ caseRef: wanted }, call)
+      audit("CASE_AGAIN")
       if (again.status !== "ok" || !same(again.value.case, decision) || !await currentList() || !await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
+      audit("FENCES_DONE")
       return { status: "ok", value: withFingerprint({ ...base, selected: { ref: wanted, caseRef, decision, forecasts,
         ...(forecast?.status === "ok" ? { forecast: forecast.value } : {}), scenarios, rules,
         ...(procurementEvidence.status === "ok" ? { procurementEvidence: procurementEvidence.value } : {}),
         ...(units?.status === "ok" && unitSelection ? { units: units.value.units, unitSelection } : {}), evidence, recipients,
         conditions: conditions?.status === "ok" ? conditions.records.map((record) => ({ label: record.selection.label, revision: record.revision })) : [] } }) }
     })
-  } finally { runtime.authority.ui.finish(call) }
+    audit("WITH_CASE_END")
+    return completed
+  } finally { runtime.authority.ui.finish(call); audit("END") }
 }
 
 async function readForecast(runtime: SfDecisionHttpRuntime, request: Request, caseRef: CaseRef, source: RecordEvidence, call: TrustedUiContext): Promise<PortResult<Forecast>> {

@@ -35,6 +35,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     ORCHESTRA_DISABLE_PROJECT_CONFIG: "1",
     ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(directory, "host-credential.key"),
     ORCHESTRA_LOG_LEVEL: "DEBUG",
+    SF_REPORTS_TRACE: "1",
     SUCAFINA_LOCAL_CONFIG: path.join(directory, "installation.json"),
     TMPDIR: path.join(directory, "host-tmp"),
     XDG_DATA_HOME: path.join(directory, "host-data"),
@@ -55,7 +56,14 @@ export async function startPlannerInstallation(info: TestInfo) {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })
   const state = { log: "", error: undefined as Error | undefined, stopped: false, secrets: [] as string[] }
-  const capture = (chunk: Buffer) => { state.log = (state.log + chunk.toString("utf8")).slice(-64_000) }
+  let auditTracePending = ""
+  const capture = (chunk: Buffer) => {
+    const value = chunk.toString("utf8")
+    state.log = (state.log + value).slice(-64_000)
+    const lines = (auditTracePending + value).split("\n")
+    auditTracePending = (lines.pop() ?? "").slice(-64_000)
+    for (const line of lines) for (const marker of line.match(/\bSF_REPORTS_TRACE_[A-Z0-9_]+\b/g) ?? []) console.info(marker)
+  }
   child.stdout.on("data", capture)
   child.stderr.on("data", capture)
   child.once("error", (error) => { state.error = error })

@@ -47,6 +47,13 @@ export function createSfDecisionDomainHttp(input: { origin: string; mount: strin
       finally { runtime.authority.ui.finish(admitted.value) }
     }
     if (mode === "decision-controls") {
+      const auditStarted = performance.now(), auditCpu = process.cpuUsage()
+      const audit = (phase: string) => {
+        if (process.env.SF_REPORTS_TRACE !== "1") return
+        const cpu = process.cpuUsage(auditCpu)
+        console.info("SF_REPORTS_TRACE_CONTROLS_HTTP_" + phase + "_AT_" + Date.now() + "_MS_" + Math.round(performance.now() - auditStarted) + "_CPU_USER_MS_" + Math.round(cpu.user / 1000) + "_CPU_SYSTEM_MS_" + Math.round(cpu.system / 1000) + "_ABORTED_" + Number(request.signal.aborted))
+      }
+      audit("ENTER")
       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
       const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "procurement", "format"]
       if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) ||
@@ -56,10 +63,12 @@ export function createSfDecisionDomainHttp(input: { origin: string; mount: strin
       if (!runtime) return reply({ status: "unavailable" }, 503)
       try {
         const result = await readSfDecisionControls(runtime, request)
+        audit("RESULT_STATUS_" + (["ok", "denied", "stale", "conflict", "unavailable", "needs-input"].includes(result.status) ? result.status.toUpperCase().replaceAll("-", "_") : "OTHER"))
         if (result.status !== "ok" || url.searchParams.get("format") === "json") return reply(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
         const html = sfDecisionControlsHtml(result.value, surface)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
-      } catch { return reply({ status: "unavailable", reason: "decision-controls-unavailable" }, 503) }
+      } catch { audit("THREW"); return reply({ status: "unavailable", reason: "decision-controls-unavailable" }, 503) }
+      finally { audit("END") }
     }
     if (request.headers.get("origin") !== input.origin) return reply({ status: "denied" }, 403)
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
