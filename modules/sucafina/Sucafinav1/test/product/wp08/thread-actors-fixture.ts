@@ -99,7 +99,9 @@ export async function createThreadActorsFixture(options: Pick<Parameters<typeof 
     return current.status === "ok" ? { state: "historical", ref, currentRef: current.value, authorizedProjection: original.projection, differences: [], accessRevision: context.binding.accessRevision, checkedAt: at } : { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
   }, proveContinuity: async (original, current, context) => {
     if (!historical.allowed || historical.revoked || !archived.has(original.refDigest) || original.kind !== "record") return false
-    const refreshed = await refresh(original, context)
+    if (current.kind !== "record" || digestSfValue({ surface: current.target.surface, recordType: current.target.recordType, recordId: current.target.recordId, fields: [...current.target.fields].sort(), period: current.target.period }) !== digestSfValue({ surface: original.target.surface, recordType: original.target.recordType, recordId: original.target.recordId, fields: [...original.target.fields].sort(), period: original.target.period })) return false
+    // Reopen the exact current source; refresh already issued it in this pass.
+    const refreshed = await records.resolve(current.refId, context)
     return refreshed.status === "ok" && digestSfValue(refreshed.value) === digestSfValue(current) && await historicalAccess(original, context)
   }, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
   const sourceAuthority = createCollaborationAuthority({ host, evidence })

@@ -63,7 +63,11 @@ export async function createThreadHistoryFixture(options: { supplement?: { refer
     },
     proveContinuity: async (original, current, context) => {
       if (!historical.allowed || context.binding.principalRef !== fixture.person.id || !archive.has(original.refDigest) || original.kind !== "record") return false
-      const live = await currentForHistory(original, context)
+      const selected = options.currentTarget ? options.currentTarget(structuredClone(original), fixture.clock.at) : original.target
+      if (current.kind !== "record" || digestSfValue({ surface: current.target.surface, recordType: current.target.recordType, recordId: current.target.recordId, fields: [...current.target.fields].sort(), period: current.target.period }) !== digestSfValue({ surface: selected.surface, recordType: selected.recordType, recordId: selected.recordId, fields: [...selected.fields].sort(), period: selected.period })) return false
+      // The exact current ref was issued by resolveSource in this pass. Reopen
+      // its real source reader instead of issuing the same selector again.
+      const live = await fixture.records.resolve(current.refId, context)
       return live.status === "ok" && digestSfValue(live.value) === digestSfValue(current) && await historicalAccess(original, context)
     },
     recall: async () => [],
