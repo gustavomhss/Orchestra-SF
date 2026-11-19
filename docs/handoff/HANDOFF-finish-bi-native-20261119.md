@@ -1,6 +1,6 @@
 # Handoff — finish-bi-native-20261119
 
-SHA: ee0481af14c07a28bc51a29f14a963da746f7431 (código; este documento é o commit seguinte)
+SHA: 3aca6a6e8cbe0b9bf7ed1d4b635f5aba4e28ddc7 (código; este documento é o commit seguinte)
 Data: 2026-11-19
 Estado: partial
 
@@ -34,3 +34,13 @@ Estado: partial
 - bun typecheck (app-shell) neste commit: não rodado; somente Actions autorizado.
 - bun run check:guards --base origin/dev neste commit: não rodado; responsabilidade da raiz.
 - bun run test:ci neste commit: não rodado; aguardando composição e gate estreito.
+
+
+## BI5 — comandos originais e controles CAP18
+
+- Run [44615378884](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44615378884), snapshot d7d10e1a2a1e62ceea82d529c4cd1b7eaf005c16, job 135882522614: FAILURE, 2 failed / 1 did not run; os três typechecks e cleanup 135885787142 passaram. A regressão parou no save da versão existente: resposta original HTTP200 application/json, seguida de net::ERR_ABORTED; nenhum reenvio. O cenário principal criou e editou a versão2027 e chegou ao CAP18, onde o formulário visível não foi encontrado pelo seletor de atributos.
+- Evidência extraída dos artefatos originais: audit [44617274066](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44617274066), doc audit-dashboard7-bi5-20261119/docs/handoff/observed-dashboard7-bi5-20261119.md, contém a região OPEX, versão correta e Name/Owner/Element/Currency/Annual budget/Save. Audit [44618520535](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618520535), doc audit-dashboard7-bi5-transport-20261119/docs/handoff/observed-dashboard7-bi5-transport-20261119.md, retém o observer bi62-regression-canonical-setup.json. SUCCESS nesses dois runs significa só extração, nunca BI qualificado.
+- Código 3aca6a6e8cbe0b9bf7ed1d4b635f5aba4e28ddc7, somente installed-fixture.ts: o fixture retém a resposta original completa de POST /sucafina/planner?page=Versions ou OPEX, sem sf, com route.fetch maxRetries0/maxRedirects0 e fulfill da própria resposta. Usa os helpers Reports existentes, sem inventar resultado/status/headers, sem POST adicional e sem retry. O observer continua recusando qualquer requestfailed ou outcome-unknown; os guards de HTTP200/body.ok e exatamente1POST permanecem.
+- addLine usa agora a região nativa OPEX única e seus labels reais Name, Owner, Element, Currency e Annual budget, conferidos no renderer planner/opex/budget-view.tsx:867–898 e no DOM original. Mantém a rota fechada CAP18, count1, controle visível, owner original, USD, valores literais, confirmação humana, CAS e leitura original da linha criada. O seletor técnico form[data-page][data-command][data-record] deixou de ser necessário; nenhuma comparação de dado ou resultado foi removida.
+- Asserções removidas: nenhuma asserção de negócio, autoridade, contagem de POST, ID, moeda, período, treinamento40000, zeros, coverage ou reload. Não aumentou timeout. Pendente/unbound: installed-fixture.ts:407 (criação de linha), :419 (comando observado) e :344 (grade mensal) dependem do gate; os cenários BI09/BI10 ainda não chegaram à comparação.
+- Retomar: compor o único blob deste código sobre o candidato com reports-support/model.ts original de retainReportResponse/observedReportResponse. Executar somente installed-bi.spec.ts e installed-bi-regressions.spec.ts, uma vez no gate coordenado pela raiz. Os resultados antigos não qualificam este novo checkpoint.
