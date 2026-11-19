@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA de código: f588ce55645766c8fe417c8db096927374cc4b02.
+SHA de código: 0da542a699bb5ff6fb936ec9bc4ff39fbfe8868c.
 Data: 2026-11-19
 Estado: partial
 
@@ -158,4 +158,4 @@ Estado: partial
 - prepareReview agora aguarda a resposta original CAP03 da navegação, verifica200/status/capabilityId/ano e mantém as mesmas asserções do link. A resposta é retida pelo pass-through original sem reenvio. Nenhum timeout mudou.
 - changeForecast chama o helper existente connectInstalledShell para escolher o mesmo host/projeto na nova aba, conservando a sessão de operador do contexto. Mantidas mutação única, valores110→190, CAS, reload e captura imutável. Falha registra apenas estado/heading antes do fechamento e é relançada.
 - UI47 de um ou vários domínios agora exibe observedAt original em elemento time separado, mantendo a linha completa de identidade da fonte. Fonte do delta8ac1d6963c9905e8ca302f5efb065138ac594aa5.
-- Nenhuma asserção removida. Estado continua partial; unbound em review-flow.ts:1 (mutação da fonte), exportReview/meeting/answer/revogação ainda dependem do gate Reports12.
+- Nenhuma asserção removida. Estado continua partial; unbound em review-flow.ts:236 (mutação da fonte), exportReview/meeting/answer/revogação ainda dependem do gate Reports12.
