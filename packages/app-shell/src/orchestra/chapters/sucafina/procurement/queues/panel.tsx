@@ -181,7 +181,7 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       columns={columns}
       selectedKey={visible().selected?.id}
       sort={props.sort}
-      page={props.page}
+      page={{ kind: "none", total: visible().rows.length }}
       onSort={props.onSort}
       onPage={props.onPage}
       onSelect={(ref) => { if (authorized() && props.rows.some((row) => row.id === ref)) props.onSelect(ref) }}

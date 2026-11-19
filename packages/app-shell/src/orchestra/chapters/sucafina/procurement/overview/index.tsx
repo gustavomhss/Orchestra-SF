@@ -151,11 +151,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
       context={[]}
       tabs={[]}
       activeTab={null}
-      primaryAction={{
-        id: "open-requests", labelKey: key("sf.cap24.primary"), tone: "primary",
-        disabled: true, reasonKey: sfCommonKey("sf.common.unavailable"),
-        busy: false, onInvoke: () => undefined,
-      }}
+      primaryAction={undefined}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
