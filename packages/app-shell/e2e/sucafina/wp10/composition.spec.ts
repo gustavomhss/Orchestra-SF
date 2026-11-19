@@ -311,11 +311,11 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           const table = sourcing.getByRole("table", { name: "Quotations", exact: true })
           await expect(table.getByRole("columnheader")).toHaveText([
             "Supplier", "Eligibility", "Currency", "Stated total", "Base amount / FX", "Technical", "Price",
-            "Commercial", "Overall", "Rank", "Excluded reason", "Quantity", "Unit price", "Technical scores", "Commercial scores",
+            "Commercial", "Overall", "Rank", "Excluded reason", "Quantity", "Unit price", "Technical scores", "Commercial scores", "Actions",
           ])
           await expect(table.getByRole("row")).toHaveCount(4)
-          const a = table.getByRole("row").filter({ has: table.getByRole("cell", { name: "Synthetic Supplier A", exact: true }) })
-          const b = table.getByRole("row").filter({ has: table.getByRole("cell", { name: "Synthetic Supplier B", exact: true }) })
+          const a = table.locator("tbody tr").filter({ has: table.locator(".sf-s01-cell-value").filter({ hasText: /^Synthetic Supplier A$/ }) })
+          const b = table.locator("tbody tr").filter({ has: table.locator(".sf-s01-cell-value").filter({ hasText: /^Synthetic Supplier B$/ }) })
           await expect(a.getByRole("cell", { name: "87.9", exact: true })).toBeVisible()
           await expect(b.getByRole("cell", { name: "85.0", exact: true })).toBeVisible()
           await expect(b.getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toBeVisible()

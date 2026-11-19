@@ -66,7 +66,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
     await page.locator("#sf-u46-year").fill("2027")
     await command(page, page.getByRole("button", { name: "Save", exact: true }), "save")
     await page.goto(planner("Versions"))
-    await expect(versionRow(versionId).getByRole("cell", { name: "WP03 Browser Plan", exact: true })).toBeVisible()
+    await expect(versionRow(versionId).locator(".sf-s01-cell-value")).toHaveText("WP03 Browser Plan")
 
     await test.step("keep invalid pasted text, exclude that row from partial apply, correct both rows and reload", async () => {
       await page.goto(planner("OPEX", versionId))
