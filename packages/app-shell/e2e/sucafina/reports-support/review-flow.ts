@@ -8,9 +8,7 @@ import { agendaResult, object, projection, readReview, responseFor, review, text
 import { inspectReport } from "./ooxml.ts"
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
-  const shell = info.project.use.baseURL ?? "http://127.0.0.1:3000"
-  if (new URL(shell).port === "4110") throw new Error("Reports open the Orchestra chapter on Playwright baseURL, not :4110")
-  await page.goto(new URL("/orchestra/sf-dashboard/opex", shell).href)
+  await page.goto("/orchestra/sf-dashboard/opex")
   await expect(page.locator("#content").getByRole("heading", { name: "Decisions", exact: true }),
     "The real installation must enter Workbench before Reports").toBeVisible()
   await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
