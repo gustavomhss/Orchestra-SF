@@ -1,11 +1,17 @@
-import type { Page } from "@playwright/test"
-import { localBrowser } from "../../fixture/local-browser.ts"
+import { chromium, type Page } from "@playwright/test"
 
 /** Keep browser waits inside the test lifetime so the shared listener is always released. */
 export async function inspectWp05Browser(label: string, inspect: (page: Page, phase: (name: string) => void) => Promise<void>) {
   const startedAt = Date.now()
   console.info("WP05 browser phase", { label, phase: "fixture-setup", elapsedMs: 0 })
-  const fixture = await localBrowser().catch((error: unknown) => {
+  // This harness mounts a pure renderer on about:blank. Its canonical Planner
+  // ports run in the caller; no installation, session or legacy console is used.
+  const fixture = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] }).then(async (browser) => {
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+      return { browser, page, dispose: () => browser.close() }
+    } catch (error) { await browser.close(); throw error }
+  }).catch((error: unknown) => {
     console.error("WP05 browser fixture setup failed", { label, phase: "fixture-setup", elapsedMs: Date.now() - startedAt }, error)
     throw error
   })
@@ -31,7 +37,7 @@ export async function inspectWp05Browser(label: string, inspect: (page: Page, ph
       }, deadline.milliseconds)
     })
     const body = async () => {
-      // Reuse the fixture's enrolled page instead of leaving it alive in a second context.
+      // The renderer receives one blank page; all source/authority checks stay in the caller.
       const page = fixture.page
       phase("navigate")
       if (page.isClosed() || !fixture.browser.isConnected()) throw new Error(`WP05 browser ${label} returned a closed fixture before navigation`)
