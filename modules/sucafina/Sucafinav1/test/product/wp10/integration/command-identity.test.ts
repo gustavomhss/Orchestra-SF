@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { sfUiCommandIdentity } from "../../../../../../../apps/cli/src/sucafina-product/command-identity.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { object } from "../../../../runtime/contract.ts"
 import { createCollaborationHttp } from "../../../../product/collaboration/http.ts"
 import { createCollaborationHttpRoutes } from "../../../../product/collaboration/http-routes.ts"
 import { sfHumanReadActions } from "../../../../product/integration/human-authority.ts"
@@ -28,6 +29,14 @@ test("installed read command identities preserve real admission, storage and rev
       admitRead: async (request, operation, payload) => sfHumanReadActions.some((action) => action === operation)
         ? f.authority.human.admit(request, operation as SfHumanAction, payload)
         : { status: "denied", reason: "unregistered-read" }, finishRead: f.authority.human.finish })
+    // A directory entry and an admitted read do not create recipient access.
+    const hidden = await http(request("collaboration-recipients"))
+    expect(hidden?.status).toBe(200)
+    expect(await hidden!.json()).toEqual({ status: "ok", value: [] })
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.access = { ...object(snapshot.data.access), person: {} }
+      return { commit: true, value: undefined }
+    })
     const stateRequest = new Request(origin + mount + "/dashboard")
     const before = await f.authority.state.read(stateRequest, "threads", () => null)
     const response = await http(request("collaboration-recipients"))
