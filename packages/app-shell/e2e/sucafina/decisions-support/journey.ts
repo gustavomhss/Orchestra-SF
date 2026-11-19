@@ -77,7 +77,8 @@ function receiptDiagnostic(value: string) {
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
-  await page.goto(`${origin}/sucafina/dashboard`)
+  // The bare dashboard is retired; enter the authenticated product operation.
+  await page.goto(`${origin}/sucafina/dashboard?sf=workbench`)
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
   const link = page.getByRole("link", { name: "Workbench", exact: true })
   await expect(link).toHaveCount(1)
