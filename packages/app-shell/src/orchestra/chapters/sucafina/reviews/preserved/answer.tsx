@@ -175,11 +175,11 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
   if (typeof window !== "undefined") window.addEventListener("focus", onFocus)
   onCleanup(() => { if (typeof window !== "undefined") window.removeEventListener("focus", onFocus) })
 
-  const call = async (current: Intent, signal: AbortSignal) => {
+  const call = async (current: Intent, signal: AbortSignal, retry?: "same-intent") => {
     const active = owner.ready()
     if (!active) return
     const client = createSfCollaborationClient(active.transport)
-    const options = { signal, idempotencyKey: current.key }
+    const options = { signal, idempotencyKey: current.key, ...(retry ? { retry } : {}) }
     if (current.kind === "question") return client["collaboration.thread-create"](current.payload as CreateInput, options)
     if (current.kind === "reply") return client["collaboration.thread-reply"](current.payload as ReplyInput, options)
     if (current.kind === "edit") return client["collaboration.thread-edit"](current.payload as EditInput, options)
@@ -250,15 +250,16 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     setUi("status", copy["sf.u32.answerConfirmed"])
   }
 
-  const submitIntent = async () => {
+  const submitIntent = async (retry?: "same-intent") => {
     const current = intent
     const active = owner.ready()
     if (!current || !active) return
+    if (retry && !current.reconciled) throw new Error("Reconcile the retained action before retrying")
     current.reconciled = false
     setUi({ reconciled: false, prepared: undefined })
     const abort = new AbortController()
     operation = abort
-    const result = await call(current, abort.signal)
+    const result = await call(current, abort.signal, retry)
     if (abort.signal.aborted || !result) return
     if (result.kind !== "response" || result.status !== 200 || result.body.status !== "ok")
       throw new Error("Review discussion unavailable")
@@ -477,7 +478,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
         <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, reconcileAction)}>{copy["sf.u32.reconcileAction"]}</button>
       </Show>
       <Show when={ui.reconciled}>
-        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, submitIntent)}>{copy["sf.u32.retryAction"]}</button>
+        <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, () => submitIntent("same-intent"))}>{copy["sf.u32.retryAction"]}</button>
       </Show>
       <Show when={ui.suspended && !ui.hasIntent}>
         <button type="button" data-review-recovery="true" disabled={ui.busy} onClick={() => void run(true, reconcileDiscussion)}>{copy["sf.u32.reconcileDiscussion"]}</button>
