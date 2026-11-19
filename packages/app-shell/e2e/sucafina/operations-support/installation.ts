@@ -12,6 +12,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { observeSfAssetHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { createSfActionSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -130,6 +131,7 @@ export async function createOperationsInstallation(input: {
       observeSfPlannerPages(application, request, stamp),
       observeSfDashboardPages(application, request, stamp),
       observeSfDomainHealth(dependencies, handlers, request, stamp),
+      observeSfAssetHealth(dependencies, () => application.assets === assets ? business : undefined, request, stamp),
       observeSfHome(runtime.services?.(), request, stamp),
       observeSfCases(dependencies, handlers, request, stamp),
       actions.operational(request, stamp),
