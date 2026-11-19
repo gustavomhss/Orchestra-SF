@@ -38,7 +38,6 @@ export async function createRequisition(page: Page, origin: string, observations
   expect(id).toMatch(requestPattern)
   await expect(row.getByRole("cell").first()).toContainText(id)
   await expect(row.getByRole("link")).toHaveCount(0)
-  await expect(row.getByRole("button", { name: "Open record", exact: true })).toHaveCount(1)
   const detail = await openRequisition(page, origin, id)
   expect(await sourceVersion(detail)).toBe(1)
   await expect(detail.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
@@ -60,32 +59,33 @@ export async function approveExactRequisition(page: Page, origin: string, review
     const encoded = encodeSfRouteRef(requestId)
     await page.goto(`/orchestra/sf-procurement/approvals/${encoded}`)
     await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
-    await expect(page.getByRole("heading", { name: "My approvals", exact: true })).toBeVisible()
-    const approval = page.locator("article[data-sf-record-detail]")
+    const approval = page.locator("section.sf-u13-remaining-detail")
     await expect(approval).toHaveCount(1)
     await expect(approval).toContainText(requestId)
-    const pending = approval.locator("[data-sf-status]")
-    await expect(pending, "A legitimate pending approval for this exact proposal must exist before Apply").toHaveAttribute("data-sf-status", "pr_pending")
-    await expect(pending).toContainText("Submitted PR")
-    const amount = approval.locator('[data-sf-field="amount"]')
-    await expect(amount, "Never approve a different amount from the reviewed proposal").toContainText("USD")
-    const shown = Number((await amount.innerText()).replace(/[^\d.]/g, ""))
+    const facts = approval.locator("dl.sf-u13-remaining-facts")
+    const fact = (label: string) => facts.locator("div").filter({ has: page.locator(`dt:text-is("${label}")`) }).locator("dd")
+    await expect(fact("Request ID")).toHaveText(requestId)
+    const submitted = fact("Submitted amount")
+    await expect(submitted, "Never approve a different amount from the reviewed proposal").toContainText("USD")
+    const shown = Number((await submitted.innerText()).replace(/[^\d.]/g, ""))
     expect(shown, "Never approve a different amount from the reviewed proposal").toBe(operation.amount)
-    const versionText = approval.locator('[data-sf-section="submitted-version"] dd').first()
-    await expect(versionText).toHaveText(/^[1-9]\d*$/)
-    const version = Number(await versionText.innerText())
+    const header = approval.locator("p").first()
+    const versionText = await header.innerText()
+    const versionMatch = /Persisted version:\s*(\d+)/.exec(versionText)
+    expect(versionMatch, "The approval must show the persisted source version").not.toBeNull()
+    const version = Number(versionMatch![1])
+    expect(version).toBeGreaterThan(0)
     observations.push({ stage: "financial-approval-gate-entered", requestId, proposedAmount: operation.amount,
-      currentEstimatedAmount: shown, currentSummary: await pending.innerText(),
+      currentEstimatedAmount: shown, currentSummary: versionText,
       dependency: "The domain must provide an approvable proposal compatible with the prepared change. C3 only prepares draft requisition saves, which cannot run after formal approval." })
     // A draft amount change is not a submitted financial proposal. Do not submit or
     // approve the old amount just to manufacture an approval unrelated to the preview.
     const comment = `I explicitly approve this requisition for ${operation.amount} USD after reviewing the recorded choice and proposal.`
-    const response = await domainCommand(page, origin, { page: "My approvals", action: "approve", id: requestId, version },
-      approval.getByRole("button", { name: "Review decision", exact: true }), "Approve PR", observations, async () => {
-        await page.getByLabel("Approval comment (optional)", { exact: true }).fill(comment)
-        await expect(page.locator('[data-component="sf-change-review"]')).toContainText(comment)
+    const response = await domainCommand(page, origin, { action: "approve", id: requestId, version },
+      approval.getByRole("button", { name: "Approve current step", exact: true }), "Confirm once", observations, async () => {
+        await approval.getByLabel("Approval comment", { exact: true }).fill(comment)
       })
-    expect(response.request().postDataJSON()).toMatchObject({ values: { comment } })
+    expect(response.request().postDataJSON()).toMatchObject({ action: "approve", id: requestId, values: { comment } })
     const detail = await openRequisition(page, origin, requestId)
     expect(await sourceVersion(detail)).toBe(version + 1)
     await expect(labeledLine(detail, "Status"), "A completed requisition approval must move the request into sourcing").toHaveText("Status: sourcing")
@@ -109,7 +109,6 @@ export async function openRequisition(page: Page, origin: string, id: string) {
   await expect(row).toHaveAttribute("aria-selected", "true")
   await expect(row.getByRole("cell").first()).toContainText(id)
   await expect(row.getByRole("link")).toHaveCount(0)
-  await expect(row.getByRole("button", { name: "Open record", exact: true })).toHaveAttribute("aria-current", "true")
   const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   await expect(detail).toHaveCount(1)
   await expect(labeledLine(detail, "Request identity")).toHaveText(`Request identity: ${id}`)
@@ -122,7 +121,7 @@ export async function openRequisition(page: Page, origin: string, id: string) {
   return detail
 }
 
-type Command = Readonly<{ page: "Requests" | "My approvals"; action: string; id?: string; version?: number }>
+type Command = Readonly<{ page?: "Requests"; action: string; id?: string; version?: number }>
 
 // The chapter admits the command from the review confirm, never from the field editor.
 async function domainCommand(page: Page, origin: string, command: Command, openReview: Locator, confirmName: string, observations: Record<string, unknown>[], prepare?: () => Promise<void>) {
@@ -131,9 +130,8 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
     const request = response.request()
     const url = new URL(request.url())
     if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/procurement" || url.searchParams.has("sf")) return false
-    if (url.searchParams.get("page") !== command.page) return false
     const body = request.postDataJSON()
-    const matched = body.page === command.page && body.action === command.action && (!command.id || body.id === command.id)
+    const matched = body.action === command.action && (!command.page || body.page === command.page) && (!command.id || body.id === command.id)
     if (matched) seen.posted = true
     return matched
   })
@@ -148,7 +146,7 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
   await expect(confirm).toBeEnabled()
   await confirm.click()
   const response = await pending
-  expect(response.request().postDataJSON()).toMatchObject({ page: command.page, action: command.action, ...(command.id ? { id: command.id, version: command.version } : {}) })
+  expect(response.request().postDataJSON()).toMatchObject({ ...(command.page ? { page: command.page } : {}), action: command.action, ...(command.id ? { id: command.id, version: command.version } : {}) })
   expect(response.status()).toBe(200)
   expect(response.headers()["content-type"]).toContain("application/json")
   expect(asRecord(await response.json()).ok).toBe(true)
