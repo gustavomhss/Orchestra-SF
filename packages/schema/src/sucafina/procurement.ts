@@ -170,6 +170,9 @@ export const SfProcurementRequest = Schema.Struct({
   sourceRef: Schema.optional(Schema.NullOr(Schema.String)),
   sourceDigest: Schema.optional(Schema.NullOr(Schema.String)),
   moneySentence: Schema.optional(Schema.NullOr(Schema.String)),
+  poEstimate: Schema.optional(Schema.NullOr(Schema.String)),
+  orderDifference: Schema.optional(Schema.NullOr(Schema.String)),
+  requestSummary: Schema.optional(Schema.NullOr(Schema.String)),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const BankField = Schema.String
 const SupplierContact = Schema.Struct({

@@ -3,7 +3,7 @@ import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admi
 import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot, View } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
-import { procurementMonetaryFacts, procurementMoneySentence } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+import { procurementMonetaryFacts, procurementMoneySentence, procurementOrderPresentation, procurementRequestSummary } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
 import { procurementRowSourceIdentity } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
 import { procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { approvalQueue, procurementDashboard } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
@@ -218,15 +218,19 @@ function approvalGroups(
     unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor, formSettings)),
   }
 }
-function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown) {
+function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number) {
   const baseCurrency = text(object(formSettings).currency)
   const facts = procurementMonetaryFacts(row, baseCurrency, formSettings)
+  const order = procurementOrderPresentation(row, baseCurrency, formSettings)
   const identity = typeof row.number === "string" ? procurementRowSourceIdentity(snapshot, row.number) : undefined
   return {
     monetaryState: facts.monetaryState,
     sourceRef: identity?.sourceRef ?? null,
     sourceDigest: identity?.sourceDigest ?? null,
     moneySentence: procurementMoneySentence(facts, baseCurrency),
+    poEstimate: order.estimate,
+    orderDifference: order.difference,
+    requestSummary: procurementRequestSummary(row, baseCurrency, version, formSettings),
   }
 }
 function pageData(
@@ -257,7 +261,7 @@ function pageData(
     data: {
       requests: requests.map((row) => ({
         ...selectRequest(row, true, actor, data.formSettings),
-        ...publishedRequestBasis(row, snapshot, data.formSettings),
+        ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0),
       })),
       suppliers: suppliers.map((row) => selectSupplier(row, false)),
       directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,

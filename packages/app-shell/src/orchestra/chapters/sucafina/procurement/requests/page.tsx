@@ -669,12 +669,35 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <p>{t("sf.u11.remaining.identity")}: {ref}</p>
           <p>{t("sf.u11.remaining.status")}: {current?.status}</p>
           <p>{t("sf.u11.remaining.version")}: {version() ?? "—"}</p>
+          <Show when={current?.requestSummary}>
+            <p data-request-summary={ref}>{current?.requestSummary}</p>
+          </Show>
           <Show when={current?.moneySentence}>
-            <p>{current?.moneySentence}</p>
+            <p data-request-money={ref}>{current?.moneySentence}</p>
           </Show>
         </Show>
         <Show when={current}>
           <p>{t("sf.u11.remaining.stage")}: {stage()}</p>
+        </Show>
+        <Show when={current?.poEstimate}><p role="status">{current?.poEstimate}</p></Show>
+        <Show when={current?.orderDifference}><p role="status">{current?.orderDifference}</p></Show>
+        <Show when={current?.status === "sourcing"}>
+          <section>
+            <Show when={current?.po}>
+              <fieldset disabled>
+                <label>{t("sf.u11.remaining.field.supplier")}
+                  <input type="text" value={current?.po?.supplier ?? ""} disabled />
+                </label>
+                <label>{t("sf.u11.remaining.field.currency")}
+                  <input type="text" value={current?.po?.currency ?? ""} disabled />
+                </label>
+                <label>{t("sf.u11.remaining.field.unitPrice")}
+                  <input type="number" step="any" value={displayScalar(current?.po?.lines?.[0]?.unitPrice)} disabled />
+                </label>
+              </fieldset>
+            </Show>
+            <button type="button" disabled>{t("sf.u11.remaining.submitPo")}</button>
+          </section>
         </Show>
       </header>
       <Show when={current && ref}>
