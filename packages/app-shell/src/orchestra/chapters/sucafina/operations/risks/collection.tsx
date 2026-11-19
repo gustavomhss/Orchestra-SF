@@ -317,7 +317,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
         currentDraft!.controller.setPhase("submitting")
       }
       const result: WriteResult = action === "save" && snap?.availability === "active"
-        ? await spec.save(r.ready.transport, { id: row ? String(row.id) : undefined,
+        ? await spec.save(r.ready.transport, { ...(row ? { id: String(row.id) } : {}),
           version: row ? version(row)! : 0, values: snap.value }, abort.signal, callKey)
         : action === "delete" && row
           ? await spec.delete(r.ready.transport, { id: String(row.id), version: version(row)! },

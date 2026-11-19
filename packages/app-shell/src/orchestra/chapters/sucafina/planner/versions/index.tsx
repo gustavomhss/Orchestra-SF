@@ -244,7 +244,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       }
       const client = createSfPlannerClient(ready.transport)
       const options = { signal: abort.signal, idempotencyKey: request.idempotencyKey }
-      const command = { page: "Versions" as const, id: request.versionId || undefined,
+      const command = { page: "Versions" as const, ...(request.versionId ? { id: request.versionId } : {}),
         version: request.expected, confirmed: true }
       // Each case is a source-locked catalog operation; never a generic action dispatcher.
       const result = request.action === "save"
