@@ -98,7 +98,11 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await expect(confirmed).toBeVisible()
   await expect(confirmed.locator("dd").first()).toHaveText(saved.id)
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+  const nativeRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
+  const nativeResponse = await nativeRead
+  expect(nativeResponse.status()).toBe(200)
+  expect(object(await readNativeReportResponse(nativeResponse)).value).toEqual(saved)
   const preparation = page.locator('[data-sf-surface="UI48"]')
   await expect(preparation).toBeVisible()
   const article = preparation.locator(`[data-review-ref="${saved.id}"]`)
@@ -171,7 +175,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   await page.getByRole("button", { name: "Check for updates", exact: true }).click()
   const updated = await update
   expect(updated.status()).toBe(200)
-  const updateBody = object(await updated.json())
+  const updateBody = object(await readNativeReportResponse(updated))
   expect(updateBody.status).toBe("ok")
   expect(object(updateBody.value)).toMatchObject({ previousReviewRef: prior.id, available: true, unavailableSections: [] })
   await page.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
@@ -307,7 +311,11 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
 }
 
 export async function exportReview(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, format: "docx" | "pptx", info: TestInfo) {
+  const nativeRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.goto("/orchestra/sf-reviews/reports/" + encodeReviewRef(saved.id))
+  const nativeResponse = await nativeRead
+  expect(nativeResponse.status()).toBe(200)
+  expect(object(await readNativeReportResponse(nativeResponse)).value).toEqual(saved)
   const report = page.locator('[data-sf-surface="UI50"]')
   await expect(report).toBeVisible()
   await expect(report.locator("[data-preserved-review]")).toHaveAttribute("data-preserved-review", saved.id)
@@ -390,7 +398,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
   const response = await pending
   expect(response.status()).toBe(200)
-  expect(object(await response.json()).value).toEqual(saved)
+  expect(object(await readNativeReportResponse(response)).value).toEqual(saved)
   const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + saved.id + '"]')
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   const surface = page.locator('[data-sf-surface="UI48"]')
@@ -408,7 +416,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   await page.reload()
   const reopened = await reload
   expect(reopened.status()).toBe(200)
-  expect(object(await reopened.json()).value).toEqual(saved)
+  expect(object(await readNativeReportResponse(reopened)).value).toEqual(saved)
   await expect(surface).toHaveAttribute("data-sf-presentation", "false")
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
@@ -463,11 +471,11 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
   await link.click()
-  expect(object(await (await read).json()).value).toEqual(saved)
+  expect(object(await readNativeReportResponse(await read)).value).toEqual(saved)
   const resolved = await resolution
   expect(resolved.status()).toBe(200)
   expect(resolved.headers()["cache-control"]).toBe("no-store")
-  const links = object(await resolved.json()).links
+  const links = object(await readNativeReportResponse(resolved)).links
   expect(Array.isArray(links)).toBe(true)
   expect(links).toHaveLength(1)
   const authorized = object((links as unknown[])[0])
