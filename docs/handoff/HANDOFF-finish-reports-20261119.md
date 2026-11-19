@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA de código: ef081b983ab9258f99d266611afb8a8204ce3600.
+SHA de código: f588ce55645766c8fe417c8db096927374cc4b02.
 Data: 2026-11-19
 Estado: partial
 
@@ -149,3 +149,13 @@ Estado: partial
 - prepareReview e exportReview agora aguardam o GET original review-read da navegação e comparam o corpo inteiro com a revisão salva antes das mesmas asserções de UI48/UI50. É a mesma sincronização já usada por openAndReopenMeeting; nenhum timeout aumentado.
 - Removido apenas o interceptador diagnóstico de /api/ui/context: a descoberta mantém seu caminho nativo e cancelamento original. O buffer conserva somente respostas de Reports necessárias às asserções. Reabertura, reload, update e source usam os mesmos bytes retidos, sem GET substituto.
 - Nenhuma asserção removida. Unbound: review-flow.ts:101 (primeiro ingresso UI48), :314 (UI50/export), first-agenda.ts:160 (equivalência integral do produtor) até gate Reports11.
+
+## Reports11 — fonte preservada e ingresso das abas
+
+- [44615920474](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44615920474): **failure**,4jornadas;3typechecks passaram; cleanup135890240329 success. Snapshot964ea1b349d8ef805b8f3c002ad2415c02569199.
+- RPT01 passou descoberta, preview, seleção e preservação das7seções com25projetos e comparação integral de projection/context. O clone removeu a recusa pré-POST. A falha posterior ocorreu esperando a primeira leitura CAP04 em uma aba criada sem selecionar o host/projeto instalado.
+- RPT02–04 falharam antes do link de Reports. A extração original [44618356136](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618356136) success mostrou o link e o orçamento completos depois da falha de espera: o helper iniciava a asserção antes da leitura CAP03. O arquivo CAP03 é o mesmo blob nos runs10 e11.
+- prepareReview agora aguarda a resposta original CAP03 da navegação, verifica200/status/capabilityId/ano e mantém as mesmas asserções do link. A resposta é retida pelo pass-through original sem reenvio. Nenhum timeout mudou.
+- changeForecast chama o helper existente connectInstalledShell para escolher o mesmo host/projeto na nova aba, conservando a sessão de operador do contexto. Mantidas mutação única, valores110→190, CAS, reload e captura imutável. Falha registra apenas estado/heading antes do fechamento e é relançada.
+- UI47 de um ou vários domínios agora exibe observedAt original em elemento time separado, mantendo a linha completa de identidade da fonte. Fonte do delta8ac1d6963c9905e8ca302f5efb065138ac594aa5.
+- Nenhuma asserção removida. Estado continua partial; unbound em review-flow.ts:1 (mutação da fonte), exportReview/meeting/answer/revogação ainda dependem do gate Reports12.
