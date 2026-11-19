@@ -82,11 +82,6 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
         setUi("choicesState", sfFailureUiState(result.body.status, result.status))
         return
       }
-      const selectedCase = result.body.value.selected?.caseRef
-      if (selectedCase && !sameRouteCase(current, selectedCase.id, selectedCase.incarnation)) {
-        setUi({ choices: undefined, choicesState: "stale" })
-        return
-      }
       setUi({ choices: result.body.value, choicesState: "ready" })
     }).catch((error: unknown) => {
       if (abort.signal.aborted) return
@@ -118,8 +113,6 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
         setUi("reviewState", "outcome-unknown")
       } else if (result.body.status !== "ok") {
         setUi("reviewState", sfFailureUiState(result.body.status, result.status))
-      } else if (!sameRouteCase(sourceRef(), result.body.value.promotion.caseRef.id, result.body.value.promotion.caseRef.incarnation)) {
-        setUi({ choiceReview: undefined, reviewState: "stale" })
       } else {
         setUi({ choiceReview: result.body.value, reviewState: "ready" })
       }
@@ -249,8 +242,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   </dl>
                 </section>}
               </Show>
-              <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "denied" || ui.reviewState === "session-expired" || ui.reviewState === "unavailable" || ui.reviewState === "stale"}>
-                <SfStatePanel state={ui.reviewState} messageKey={k(ui.reviewState === "session-expired" ? "sf.common.loginAgain" : ui.reviewState === "denied" ? "sf.common.noAccess" : "sf.ui35.error")} />
+              <Show when={ui.reviewState === "outcome-unknown" || ui.reviewState === "conflict" || ui.reviewState === "denied" || ui.reviewState === "unavailable"}>
+                <SfStatePanel state={ui.reviewState} messageKey={k("sf.ui35.error")} />
               </Show>
             </section>
           </>}
@@ -258,8 +251,4 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       </div>
     </SfPageFrame>
   )
-}
-
-function sameRouteCase(routeRef: string, id: string, incarnation: string) {
-  return `case:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}` === routeRef
 }

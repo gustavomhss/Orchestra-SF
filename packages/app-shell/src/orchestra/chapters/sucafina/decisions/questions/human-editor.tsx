@@ -104,13 +104,9 @@ export function SfQuestionHumanEditor(props: {
         mutation: { expectedStorageVersion: storageVersion, idempotencyKey: key },
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para gravar a resposta." })
-      } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Resposta pode ter sido gravada. Não repetir; chave ${key}.` })
-      } else if (result.kind !== "response") {
-        setUi({ phase: "unknown", error: `Resposta pode ter sido gravada. Não repetir; chave ${key}.` })
-      } else if (result.status !== 200 || result.body.status !== "ok") {
+      } else if (result.body.status !== "ok") {
         setUi({ phase: "failed", error: `Produtor rejeitou: ${sfFailureUiState(result.body.status, result.status)}.` })
       } else {
         const current = result.body.value
@@ -200,13 +196,9 @@ export function SfQuestionHumanEditor(props: {
         },
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para confirmar a resposta." })
-      } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Confirmação incerta. Não repetir; correlação ${key}.` })
-      } else if (result.kind !== "response") {
-        setUi({ phase: "unknown", error: `Confirmação incerta. Não repetir; correlação ${key}.` })
-      } else if (result.status !== 200 || result.body.status !== "ok") {
+      } else if (result.body.status !== "ok") {
         setUi({ phase: "failed", error: `Confirmação negada: ${sfFailureUiState(result.body.status, result.status)}.` })
       } else if (result.body.value.answerRef !== prepared.answerRef) {
         setUi({ phase: "unknown", error: `Recibo incompatível. Correlação ${key}.` })
@@ -241,13 +233,9 @@ export function SfQuestionHumanEditor(props: {
         caseRef, questionId, answerRef: answer.ref,
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para vincular a resposta." })
-      } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Vínculo ao caso incerto. Não repetir; correlação ${key}.` })
-      } else if (result.kind !== "response") {
-        setUi({ phase: "unknown", error: `Vínculo ao caso incerto. Não repetir; correlação ${key}.` })
-      } else if (result.status !== 200 || result.body.status !== "ok") {
+      } else if (result.body.status !== "ok") {
         setUi({ phase: "failed", error: `Vínculo não confirmado: ${sfFailureUiState(result.body.status, result.status)}. O recibo de confirmação foi preservado.` })
       } else if (result.body.value.caseRef.id !== caseRef.id ||
         result.body.value.caseRef.incarnation !== caseRef.incarnation ||
@@ -294,11 +282,9 @@ export function SfQuestionHumanEditor(props: {
         <Show when={ui.phase === "prepared" && ui.prepared}>
           {(prepared) => <div class="sf-n24-review">
             <h4>Revisar confirmação (recibo da fonte)</h4>
-            <p>questionId <bdi>{props.question.id}</bdi></p>
-            <p>answerRef <bdi>{prepared().answerRef}</bdi> · <bdi>{prepared().answer}</bdi> · <bdi>{prepared().authorRef}</bdi></p>
-            <p>observationRef <bdi>{prepared().observationRef}</bdi> · v{prepared().observedSourceVersion}</p>
-            <p>expectedStorageVersion {ui.confirmationVersion} · expectedScopeFingerprint <bdi>{prepared().expectedScopeFingerprint}</bdi></p>
-            <button type="button" class="mx-btn primary" disabled={!authorized("collaboration.answer-confirm")}
+            <p><bdi>{prepared().answer}</bdi> · <bdi>{prepared().authorRef}</bdi></p>
+            <p>Observação: <bdi>{prepared().observationRef}</bdi> · v{prepared().observedSourceVersion}</p>
+            <button type="button" class="mx-btn primary"
               onClick={() => void confirm()}>Confirmar resposta humana com CAS</button>
           </div>}
         </Show>

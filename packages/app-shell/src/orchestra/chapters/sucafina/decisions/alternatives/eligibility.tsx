@@ -79,13 +79,9 @@ export function SfEligibilityRegistration(props: {
         request, { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || generation !== props.owner.generation()) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setUi({ phase: "failed", request: undefined, error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para registrar a escolha." })
-      } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Resultado incerto. Não reenviar; correlação ${key}.` })
-      } else if (result.kind !== "response") {
-        setUi({ phase: "unknown", error: `Resultado incerto. Não reenviar; correlação ${key}.` })
-      } else if (result.status !== 200 || result.body.status !== "ok") {
+      } else if (result.body.status !== "ok") {
         setUi({ phase: "failed", request: undefined, error: `Registro não confirmado: ${sfFailureUiState(result.body.status, result.status)}.` })
       } else if (result.body.value.caseRef.id !== request.caseRef.id ||
         result.body.value.caseRef.incarnation !== request.caseRef.incarnation ||
@@ -120,12 +116,9 @@ export function SfEligibilityRegistration(props: {
         <Show when={ui.phase === "reviewing" && ui.request}>
           {(request) => <div class="sf-n24-review">
             <h3>Revisar decisão (impacta o caso)</h3>
-            <p>caseRef <bdi>{request().caseRef.id}</bdi> · <bdi>{request().caseRef.incarnation}</bdi> · v{request().caseRef.version}</p>
-            <p>alternativeId <bdi>{request().alternativeId}</bdi> · v{request().alternativeVersion}</p>
-            <p>criteria <bdi>{request().criteria.join(", ")}</bdi></p>
-            <p>comparison.criteria <bdi>{request().comparison.criteria.join(", ")}</bdi></p>
-            <p>scenarioRefs <bdi>{request().comparison.scenarioRefs.join(" / ")}</bdi></p>
-            <p>reason <bdi>{request().reason}</bdi></p>
+            <p>Case v{request().caseRef.version} · alternativa v{request().alternativeVersion}</p>
+            <p><bdi>{request().reason}</bdi></p>
+            <p>Source result refs: <bdi>{request().comparison.scenarioRefs.join(" / ")}</bdi></p>
           </div>}
         </Show>
         <Show when={ui.phase === "committed" ? ui.receipt : undefined}>

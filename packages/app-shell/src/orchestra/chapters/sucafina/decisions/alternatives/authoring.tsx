@@ -174,13 +174,9 @@ export function SfAlternativeAuthoring(props: {
         request, { signal: controller.signal, idempotencyKey: correlation },
       )
       if (controller.signal.aborted || props.owner.generation() !== generation) return
-      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setForm({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para gravar.", prepared: undefined })
-      } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setForm({ phase: "unknown", error: `Resultado desconhecido; não reenviar. Correlação: ${correlation}` })
-      } else if (result.kind !== "response") {
-        setForm({ phase: "unknown", error: `Resultado desconhecido; não reenviar. Correlação: ${correlation}` })
-      } else if (result.status !== 200 || result.body.status !== "ok") {
+      } else if (result.body.status !== "ok") {
         const state = sfFailureUiState(result.body.status, result.status)
         setForm({ phase: "failed", error: `Produtor rejeitou: ${state} (${result.body.status}).`, prepared: undefined })
       } else if (result.body.value.caseRef.id !== request.caseRef.id ||
@@ -346,19 +342,11 @@ export function SfAlternativeAuthoring(props: {
         <Show when={form.phase === "reviewing" && form.prepared}>
           {(request) => <div class="sf-n24-review" role="group" aria-label="Revisão da escrita com CAS">
             <h3>Confirmar escrita governada</h3>
-            <p>caseRef <bdi>{request().caseRef.id}</bdi> · <bdi>{request().caseRef.incarnation}</bdi> · v{request().caseRef.version}</p>
-            <p>coverageRef <bdi>{request().coverageRef}</bdi></p>
-            <p>title <bdi>{request().title}</bdi></p>
-            <Show when={"alternativeRef" in request() && request().alternativeRef}>
-              <p>alternativeRef <bdi>{request().alternativeRef?.id}</bdi> · v{request().alternativeRef?.version}</p>
-            </Show>
-            <p>baseRef <bdi>{request().scenario.baseRef}</bdi></p>
-            <For each={request().scenario.operations}>{(op) =>
-              <p>{op.kind} · <bdi>{op.targetRef}</bdi> · <bdi>{op.replacementRef ?? ""}</bdi> · {op.amount ?? ""} <bdi>{op.currency ?? ""}</bdi> · {op.period ? op.period.start + "–" + op.period.end : ""}</p>
-            }</For>
-            <For each={request().scenario.assumptions}>{(item) =>
-              <p><bdi>{item.id}</bdi> · <bdi>{String(item.value)}</bdi> · <bdi>{item.state}</bdi> · <bdi>{item.evidenceRefs.map((source) => source.refId).join(", ")}</bdi></p>
-            }</For>
+            <p>Case version: {request().caseRef.version} · fonte: <bdi>{request().coverageRef}</bdi></p>
+            <p><bdi>{request().title}</bdi> · {request().scenario.operations.length} operações · {request().scenario.assumptions.length} premissas</p>
+            <ul class="sf-n24-list"><For each={request().scenario.assumptions.flatMap((item) => item.evidenceRefs)}>
+              {(source) => <li><bdi>{source.refId}</bdi></li>}
+            </For></ul>
           </div>}
         </Show>
         <Show when={form.phase === "committed" && form.receipt}>
