@@ -23,6 +23,9 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await reportsEntry.click()
   const agenda = page.locator('[data-sf-surface="UI47"]')
   await expect(agenda).toBeVisible()
+  if (options.removeOne) {
+    throw new Error("UNBOUND WP1: UI47 can remove a section, but has no control to remove one authorized record (reviews/agenda/index.tsx:308).")
+  }
   for (const pageName of reportPages) {
     await agenda.getByLabel(/Source dashboard page|Página de origem do dashboard/).fill(pageName)
     const found = page.waitForResponse((response) => {
@@ -103,6 +106,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   return { preparation, saved }
 }
 
+// UNBOUND: UI47 currently removes whole sections only; retain the record-level contract.
 async function removeOneProject(page: Page, app: ReportsInstallation, selected: ReviewAgendaPreview) {
   const section = selected.sections.filter((entry) => entry.title === "Projects")
   expect(section).toHaveLength(1)
@@ -146,6 +150,7 @@ export async function readSourceData(request: APIRequestContext, app: ReportsIns
   return { projects: data.projects, opexOwners: data.opexOwners, opexEntries: data.opexEntries, hotTopics: data.hotTopics }
 }
 
+// UNBOUND: UI48 reads successor availability, but does not create/preserve a revision.
 export async function preserveNewRevision(page: Page, app: ReportsInstallation, prior: PreservedReview, corpus: ReportsCorpus) {
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const load = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
@@ -179,65 +184,90 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
 
 export async function changeForecast(page: Page, app: ReportsInstallation, corpus: ReportsCorpus) {
   const source = await page.context().newPage()
+  const pageRead = (response: Response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === app.origin &&
+      url.pathname === app.mount + "/api/ui/pages/CAP04" && url.searchParams.get("year") === String(corpus.year)
+  }
+  const mutations: Request[] = []
+  const recordMutation = (request: Request) => {
+    const url = new URL(request.url())
+    if (request.method() === "POST" && url.origin === app.origin &&
+        url.pathname === new URL(app.dashboardURL).pathname && !url.searchParams.has("sf") &&
+        object(request.postDataJSON()).action === "save-entry") mutations.push(request)
+  }
+  source.on("request", recordMutation)
   try {
-    await source.goto(`/orchestra/sf-dashboard/opex?${new URLSearchParams({ year: String(corpus.year) })}`)
-    const form = source.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
-    await expect(form).toHaveCount(1)
-    const row = source.getByRole("row").filter({ has: form })
-    await expect(row).toHaveCount(1)
-    await row.getByRole("button", { name: "Edit", exact: true }).click()
-    const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
-    await expect(editor).toBeVisible()
-    // Regression: Forecast exists in a closed Save month disclosure. The
-    // operator must open that real control; hidden-field fills are not valid.
-    const monthPanel = editor.locator("details.editor-panel").filter({ has: form })
-    await expect(monthPanel.locator("summary")).toHaveText("Save month")
-    await expect(monthPanel).not.toHaveAttribute("open", "")
-    await expect(form).toBeHidden()
-    await monthPanel.locator("summary").click()
-    await expect(monthPanel).toHaveAttribute("open", "")
-    await expect(form).toBeVisible()
-    await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
-    const version = Number(await form.getAttribute("data-version"))
+    const loaded = source.waitForResponse(pageRead)
+    await source.goto("/orchestra/sf-dashboard/opex/" + encodeReviewRef("reports-opex") +
+      "?" + new URLSearchParams({ year: String(corpus.year) }))
+    const loadedResponse = await loaded
+    expect(loadedResponse.status()).toBe(200)
+    const loadedBody = object(await loadedResponse.json())
+    expect(loadedBody.status).toBe("ok")
+    const versions = object(object(loadedBody.value).versions)
+    const version = Number(versions["opexEntries:reports-opex-01"])
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
-    await form.getByLabel("Forecast", { exact: true }).fill("190")
-    const previewed = source.waitForResponse((response) => response.url() === source.url() &&
-      response.request().method() === "POST" && object(response.request().postDataJSON()).action === "preview-change")
-    await form.getByRole("button", { name: "Save month", exact: true }).click()
-    const previewResponse = await previewed
-    expect(previewResponse.status()).toBe(200)
-    expect(object(previewResponse.request().postDataJSON())).toMatchObject({
-      page: "OPEX Detail", action: "preview-change", values: { command: {
-        page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
-        values: { ownerId: "reports-opex", month: 1, budget: 100, actual: 100, forecast: 190 },
-      } },
-    })
-    const previewBody = object(await previewResponse.json())
-    expect(previewBody.ok).toBe(true)
-    const preview = object(previewBody.value)
-    expect(preview.status).toBe("preview")
-    const previewRef = text(preview.previewRef)
-    const confirmation = form.getByRole("region", { name: "Review changes", exact: true })
-    await expect(confirmation).toHaveAttribute("data-preview-ref", previewRef)
-    await expect(confirmation.getByRole("heading", { name: "Review changes before applying", exact: true })).toBeVisible()
-    await expect(confirmation.getByRole("listitem").filter({ hasText: /forecast: 110 → 190$/ })).toHaveCount(1)
+    const month = source.locator('.sf-budget-detail tr[data-sf-month="1"]')
+    await expect(month).toHaveCount(1)
+    await expect(month.getByRole("button", { name: "Save month", exact: true })).toBeEnabled()
+    await month.getByRole("button", { name: "Save month", exact: true }).click()
+    const editor = source.locator('section.sf-budget-editor[data-sf-action="save-entry"]')
+    const form = editor.locator("form.sf-budget-form")
+    await expect(form).toHaveCount(1)
+    await expect(form.getByLabel("forecast", { exact: true })).toHaveValue("110")
+    await form.getByLabel("forecast", { exact: true }).fill("190")
+    await form.getByRole("button", { name: /^(Review changes|Revisar alterações)$/ }).click()
+    const confirmation = editor.locator('[data-component="sf-change-review"]')
+    await expect(confirmation).toHaveAttribute("data-state", "ready")
+    await expect(confirmation.getByRole("heading", { name: /^(Review changes|Revisar alterações)$/ })).toBeVisible()
+    const current = confirmation.getByRole("region", { name: /^(Current source|Fonte atual)$/ })
+    const proposed = confirmation.getByRole("region", { name: /^(Proposed values|Valores propostos)$/ })
+    await expect(current.locator("dl > div").filter({ has: source.getByText("forecast", { exact: true }) }).locator("dd")).toHaveText("110")
+    await expect(proposed.locator("dl > div").filter({ has: source.getByText("forecast", { exact: true }) }).locator("dd")).toHaveText("190")
+    expect(mutations, "Reviewing the native draft must not write the source").toHaveLength(0)
     const beforeApply = await readSourceData(source.request, app)
     expect(beforeApply.opexEntries).toEqual(expect.arrayContaining([
       expect.objectContaining({ id: "reports-opex-01", forecast: 110 }),
     ]))
-    const applied = source.waitForResponse((response) => response.url() === source.url() &&
-      response.request().method() === "POST" && object(response.request().postDataJSON()).action === "apply-preview")
-    await confirmation.getByRole("button", { name: "Confirm and apply", exact: true }).click()
+    const applied = source.waitForResponse((response) => {
+      const request = response.request()
+      const url = new URL(response.url())
+      return request.method() === "POST" && url.origin === app.origin &&
+        url.pathname === new URL(app.dashboardURL).pathname && url.searchParams.get("page") === "OPEX Detail" &&
+        object(request.postDataJSON()).action === "save-entry"
+    })
+    const refreshed = source.waitForResponse(pageRead)
+    await expect(confirmation.getByRole("button", { name: "Save", exact: true })).toBeEnabled()
+    await confirmation.getByRole("button", { name: "Save", exact: true }).click()
     const applyResponse = await applied
     expect(applyResponse.status()).toBe(200)
-    expect(object(applyResponse.request().postDataJSON())).toMatchObject({ page: "OPEX Detail", action: "apply-preview", values: { previewRef } })
-    expect(object(await applyResponse.json())).toMatchObject({ ok: true, value: { applied: true, previewRef } })
-    await expect(editor).not.toBeVisible()
-    await expect(form).toHaveAttribute("data-version", String(version + 1))
+    expect(object(applyResponse.request().postDataJSON())).toMatchObject({
+      page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
+      values: { ownerId: "reports-opex", year: corpus.year, month: 1, budget: 100, actual: 100, forecast: 190, versions },
+    })
+    expect(object(await applyResponse.json())).toMatchObject({ ok: true })
+    const refreshedResponse = await refreshed
+    expect(refreshedResponse.status()).toBe(200)
+    const refreshedBody = object(await refreshedResponse.json())
+    expect(refreshedBody.status).toBe("ok")
+    expect(object(object(refreshedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
+    expect(mutations, "One explicit confirmation must submit once").toHaveLength(1)
+    await expect(editor).toHaveCount(0)
+    const reloaded = source.waitForResponse(pageRead)
     await source.reload()
-    await expect(form).toHaveAttribute("data-version", String(version + 1))
-    await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("190")
-  } finally { await source.close() }
+    const reloadedResponse = await reloaded
+    expect(reloadedResponse.status()).toBe(200)
+    const reloadedBody = object(await reloadedResponse.json())
+    expect(reloadedBody.status).toBe("ok")
+    expect(object(object(reloadedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
+    await expect(month.getByRole("button", { name: "Save month", exact: true })).toBeEnabled()
+    await month.getByRole("button", { name: "Save month", exact: true }).click()
+    await expect(form.getByLabel("forecast", { exact: true })).toHaveValue("190")
+  } finally {
+    source.off("request", recordMutation)
+    await source.close()
+  }
 }
 
 export async function exportReview(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, format: "docx" | "pptx", info: TestInfo) {
@@ -308,25 +338,41 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
-  const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
-  await expect(open).toBeVisible()
-  await expect(open).toBeEnabled()
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await open.click()
-  expect(object(await (await pending).json()).value).toEqual(saved)
-  const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+  await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
+  const response = await pending
+  expect(response.status()).toBe(200)
+  expect(object(await response.json()).value).toEqual(saved)
+  const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + saved.id + '"]')
+  await expect(article).toHaveAttribute("data-review-version", String(saved.version))
+  const surface = page.locator('[data-sf-surface="UI48"]')
+  await expect(surface).toHaveAttribute("data-sf-presentation", "false")
+  const present = page.getByRole("button", { name: /^(Present review|Apresentar revisão)$/ })
+  await expect(present).toBeVisible()
+  await expect(present).toBeEnabled()
+  await present.click()
+  await expect(surface).toHaveAttribute("data-sf-presentation", "true")
+  const meeting = article.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)
-  await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
+  await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
   const url = page.url()
-  const reload = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+  const reload = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
   await page.reload()
-  expect(object(await (await reload).json()).value).toEqual(saved)
-  await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
+  const reopened = await reload
+  expect(reopened.status()).toBe(200)
+  expect(object(await reopened.json()).value).toEqual(saved)
+  await expect(surface).toHaveAttribute("data-sf-presentation", "false")
+  await expect(article).toHaveAttribute("data-review-version", String(saved.version))
+  await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
   expect(page.url()).toBe(url)
-  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
-  await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+  expect(saved.sections.length).toBeGreaterThan(0)
+  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText(saved.sections[0]!.title)
+  const budgetIndex = saved.sections.findIndex((section) => section.title === "Budget")
+  expect(budgetIndex).toBeGreaterThanOrEqual(0)
+  for (const section of saved.sections.slice(1, budgetIndex + 1)) {
+    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { level: 2 })).toHaveText(section.title)
+  }
   await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
   return { meeting, url }
 }
@@ -334,10 +380,25 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
 export async function expectCapturedBudget(page: Page, corpus: ReportsCorpus, amount = corpus.before) {
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
-  await expect(meeting.getByRole("listitem").filter({ hasText: new RegExp(`^budgetMetrics\\.${corpus.year}\\.totalForecast:`) }))
-    .toHaveText(new RegExp(`^budgetMetrics\\.${corpus.year}\\.totalForecast: ${amount} unspecified · ${corpus.annual.start} – ${corpus.annual.end} · sf-source:`))
-  await expect(meeting.getByRole("listitem").filter({ hasText: new RegExp(`^budget:${corpus.year}-01:forecast:`) }))
-    .toHaveText(new RegExp(`^budget:${corpus.year}-01:forecast: 110 unspecified · ${corpus.january.start} – ${corpus.january.end} · sf-source:`))
+  const navigation = meeting.getByRole("list", { name: "Preserved source navigation", exact: true })
+  for (const value of [
+    { id: "budgetMetrics." + corpus.year + ".totalForecast", amount, period: corpus.annual },
+    { id: "budget:" + corpus.year + "-01:forecast", amount: 110, period: corpus.january },
+  ]) {
+    const prefix = value.id + ": " + value.amount + " unspecified · " + value.period.start + " – " + value.period.end + " · "
+    const line = meeting.getByRole("listitem").filter({ hasText: new RegExp("^" + value.id.replace(/[.*+?^{}$()|[\]\\]/g, "\\$&") + ":") })
+    await expect(line).toHaveText(new RegExp("^" + prefix.replace(/[.*+?^{}$()|[\]\\]/g, "\\$&") + "\\S.+$"))
+    const references = text(await line.textContent()).slice(prefix.length).split(", ")
+    expect(references.length).toBeGreaterThan(0)
+    expect(new Set(references).size).toBe(references.length)
+    for (const reference of references) {
+      expect(text(reference)).not.toBe("source unavailable")
+      expect(reference).toBe(reference.trim())
+      const source = navigation.getByRole("button", { name: "Open source " + reference, exact: true })
+      await expect(source).toHaveCount(1)
+      await expect(source).toBeEnabled()
+    }
+  }
 }
 
 export async function followBudgetSource(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus) {
@@ -351,7 +412,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const navigation = page.getByRole("list", { name: "Preserved source navigation", exact: true })
   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
-  const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+  const read = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
   const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
   await link.click()
   expect(object(await (await read).json()).value).toEqual(saved)
@@ -363,9 +424,10 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   expect(links).toHaveLength(1)
   const authorized = object((links as unknown[])[0])
   const destination = new URL(text(authorized.url), app.dashboardURL)
-  expect(destination.origin).toBe(app.origin)
-  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
-  expect(destination.searchParams.get("page")).toBe("Budget Overview")
+  // Do not rewrite a producer URL into an invented authorized native destination.
+  const nativeOrigin = new URL(page.url()).origin
+  expect(destination.origin, "UNBOUND WP1: the source producer must emit a destination on the native browser origin").toBe(nativeOrigin)
+  expect(destination.pathname, "UNBOUND WP1: a legacy dashboard destination is not a native source link").toBe("/orchestra/sf-dashboard/budget")
   expect(destination.searchParams.get("year")).toBe(String(corpus.year))
   // The host offers the producer-authorized destination for an explicit choice.
   // Opening the evidence button alone does not navigate away from the review.
@@ -375,14 +437,14 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   await expect(open).toHaveAttribute("href", destination.toString())
   await open.click()
   await expect(page).toHaveURL(destination.toString())
-  await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
+  const dashboard = page.locator('[data-sf-surface="CAP03"]')
+  await expect(dashboard).toBeVisible()
   const target = new URL(page.url())
-  expect(target.origin).toBe(app.origin)
-  expect(target.pathname).toBe(new URL(app.dashboardURL).pathname)
-  expect(target.searchParams.get("page")).toBe("Budget Overview")
+  expect(target.origin).toBe(nativeOrigin)
+  expect(target.pathname).toBe("/orchestra/sf-dashboard/budget")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
-  await expect(page.locator("article.metric").filter({ has: page.getByText("Known forecast — 12 months", { exact: true }) }).locator("strong"))
-    .toHaveText(`$${corpus.after}`)
+  await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
+    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(String(corpus.after))
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
 }
 
