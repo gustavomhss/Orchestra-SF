@@ -128,10 +128,10 @@ const KEY = /^[A-Za-z0-9._:-]{8,128}$/
 const MOUNT = /^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/
 const SURFACES = new Set(["dashboard", "planner", "procurement"])
 const MUTATION_LIMIT = 256
-// These original producers reauthorize and replay their retained C08 receipt
-// before CAS or side effects. This does not authorize automatic retry.
+// These original producers own receipt recovery and current authority/CAS
+// checks. This only permits an explicit retry of the retained original intent.
 const HUMAN_RETRY_OPERATIONS: ReadonlySet<SfOperationId> = new Set([
-  "decisions.decision-promote", "decisions.decision-choose",
+  "decisions.decision-promote", "decisions.decision-choose", "decisions.decision-apply",
   "collaboration.thread-create", "collaboration.thread-reply",
   "collaboration.thread-edit", "collaboration.answer-confirm",
 ])
