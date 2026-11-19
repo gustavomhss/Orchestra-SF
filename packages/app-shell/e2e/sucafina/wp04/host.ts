@@ -36,15 +36,15 @@ Object.assign(process.env, {
   XDG_STATE_HOME: path.join(directory, "host-state"),
 })
 // These imports capture host configuration, so load them after private setup.
-const [{ createEmbeddedRoutes }, { createOperationsInstallation },
-  { AppNodeBuilder }, { LayerNode }, { PermissionSaved }, { ClaudeCodeAccount }] = await Promise.all([
-  import("../../../../server/src/routes.ts"),
-  import("../operations-support/installation.ts"),
-  import("@orchestra/core/effect/app-node-builder"),
-  import("@orchestra/core/effect/layer-node"),
-  import("@orchestra/core/permission/saved"),
-  import("@orchestra/core/claude-code-account"),
-])
+// Global completes asynchronous directory initialization before graph modules
+// read Global.node; concurrent roots can otherwise observe its uninitialized export.
+await import("@orchestra/core/global")
+const { createEmbeddedRoutes } = await import("../../../../server/src/routes.ts")
+const { createOperationsInstallation } = await import("../operations-support/installation.ts")
+const { AppNodeBuilder } = await import("@orchestra/core/effect/app-node-builder")
+const { LayerNode } = await import("@orchestra/core/effect/layer-node")
+const { PermissionSaved } = await import("@orchestra/core/permission/saved")
+const { ClaudeCodeAccount } = await import("@orchestra/core/claude-code-account")
 const at = "2026-11-13T12:00:00Z"
 const driver = await openLocalStore(directory)
 const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
