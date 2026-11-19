@@ -1,4 +1,4 @@
-import { afterAll, afterEach, beforeAll, expect, test } from "bun:test"
+import { afterEach, beforeAll, expect, test } from "bun:test"
 import { writeFile } from "node:fs/promises"
 import path from "node:path"
 import { Layer, Tracer } from "effect"
@@ -8,7 +8,7 @@ import type { MicrosoftTransport } from "../runtime/microsoft-installation.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { microsoftFixture, group, other, oid } from "./microsoft-login/oidc-fixture.ts"
 import { privateFixture, listenerOrigin, ingressOrigin, publicOrigin } from "./microsoft-login/private-fixture.ts"
-import { integrationModule, removeIntegrationModules } from "./microsoft-login/integration-fixture.ts"
+import { integrationModule } from "./microsoft-login/integration-fixture.ts"
 
 type Installation = { mount: `/${string}`; handler: (request: Request) => Promise<Response | undefined>; dispose: () => void | Promise<void>; transport?: MicrosoftTransport }
 type Entry = {
@@ -24,7 +24,6 @@ beforeAll(async () => {
   loader = await integrationModule<Loader>("apps/cli/src/sucafina-product/installation.ts")
 })
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close() })
-afterAll(removeIntegrationModules)
 
 async function setup() {
   const f = await privateFixture()
@@ -63,7 +62,7 @@ async function setup() {
   return { ...f, provider, application, installation, spans, request, login, store }
 }
 
-test("exact proposed entry and CLI route compose Microsoft login, bootstrap and existing product pages", async () => {
+test("installed entry and CLI route compose Microsoft login, bootstrap and product authorization", async () => {
   const f = await setup()
   expect(f.application.transport).toEqual({ kind: "explicit-https-proxy", listenerOrigin, ingressOrigin, publicOrigin })
   const anonymous = await f.request("/sucafina/dashboard")

@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, test } from "bun:test"
+import { beforeAll, expect, test } from "bun:test"
 import { createServer } from "node:http"
 import { writeFile } from "node:fs/promises"
 import { createRequire } from "node:module"
@@ -10,7 +10,7 @@ import type { EntraOptions } from "../runtime/local-contract.ts"
 import type { MicrosoftTransport } from "../runtime/microsoft-installation.ts"
 import { microsoftFixture } from "./microsoft-login/oidc-fixture.ts"
 import { privateFixture, ingressOrigin, publicOrigin } from "./microsoft-login/private-fixture.ts"
-import { integrationModule, removeIntegrationModules } from "./microsoft-login/integration-fixture.ts"
+import { integrationModule } from "./microsoft-login/integration-fixture.ts"
 
 type Installation = { mount: `/${string}`; handler: (request: Request) => Promise<Response | undefined>; dispose: () => void | Promise<void>; transport?: MicrosoftTransport }
 type Entry = { createMicrosoftInstallation: (context: { origin: string }, file: string | undefined, environment: Readonly<Record<string, string | undefined>>, overrides?: { fetch?: EntraOptions["fetch"]; now?: () => Date }) => Promise<Installation> }
@@ -31,7 +31,6 @@ beforeAll(async () => {
   loader = await integrationModule<Loader>("apps/cli/src/sucafina-product/installation.ts")
   serve = await integrationModule<PreflightServe>("apps/cli/src/commands/handlers/serve.ts")
 })
-afterAll(removeIntegrationModules)
 
 test("actual serve preflight rejects absent Microsoft configuration before requiring daemon or database services", async () => {
   const f = await privateFixture()
