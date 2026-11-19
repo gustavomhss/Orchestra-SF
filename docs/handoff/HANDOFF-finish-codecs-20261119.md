@@ -1,8 +1,8 @@
 # Handoff — finish-codecs-20261119
 
-SHA: base 57aafbd892e5f3425f97ab53d6bb3b59345b69aa; commit de código é o pai do snapshot de verificação.
+SHA: 5e01992d1972156b20acae55c61297bc7beb3415 (código testado).
 Data: 2026-11-19
-Estado: partial
+Estado: complete
 
 ## Feito
 
@@ -12,20 +12,21 @@ Estado: partial
 
 ## Pendente
 
-- packages/client/test/sucafina/native-codecs.test.ts:17 — aguardar diagnóstico do primeiro parse para decidir a correção mínima nos callers.
+- Nenhuma pendência neste teste do codec. A qualificação da escrita real pertence à branch de ingresso.
 - packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx:247 — primeira escrita nativa ainda aguardando gate de ingresso sob finish-ingress-20261119.
 
 ## Decisões e justificativas
 
-- A hipótese de que apenas Schema.Json rejeita undefined ainda não foi demonstrada. Não normalizar antes da validação estrita nem apagar campos desconhecidos.
+- O run demonstrou sourceAccepted:false, wire:invalid, sourceOwnUndefined:false: Schema.optionalKey já rejeita id:undefined no primeiro parse. A hipótese de falha apenas em Schema.Json foi descartada. bindings.ts permanece intacto; a correção mínima é omitir id quando ausente nos callers.
 - Asserções removidas: nenhuma.
 
 ## Como retomar
 
-1. Ler SF_CODEC_OPTIONAL_DIAGNOSTIC no run.
-2. Se o schema também negar id:undefined, omitir o campo opcional nos callers; não mudar bindings.ts.
-3. Qualificar a escrita real no ingresso e registrar os runs.
+1. Conservar o codec estrito e suas provas negativas.
+2. finish-ingress-20261119 omite os campos opcionais ausentes nos três callers confirmados.
+3. Qualificar a escrita real no ingresso e registrar os runs; este gate unitário não a substitui.
 
 ## Comandos e resultados
 
-- Toda verificação ocorre por GitHub Actions; gate ainda não iniciado na gravação deste documento.
+- [44578426680](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44578426680): SUCCESS, 3 pass / 0 fail / 8 expect. Snapshot95e8a749c816bcb7d8433ffbc10c5782823e86af, código5e01992d1972156b20acae55c61297bc7beb3415. Test135752155677 e cleanup135753511559 success.
+- Nenhum shell local, timeout ampliado ou asserção removida.
