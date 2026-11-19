@@ -5,7 +5,9 @@ import {
   globalSettingsSection,
   permissionAction,
   permissionLock,
+  permissionObject,
   permissionRules,
+  permissionSource,
   permissionWrite,
   SETTINGS_SECTIONS,
   settingsSection,
@@ -86,8 +88,26 @@ describe("permission defaults", () => {
         rule("*", "*", "deny"),
       ]),
     ).toEqual([rule("bash", "*", "ask"), rule("*", "*", "deny")])
-    expect(permissionRules({ bash: "ask" })).toEqual([])
     expect(permissionRules(undefined)).toEqual([])
+    expect(permissionRules({ bash: "maybe", read: 1 })).toEqual([])
+  })
+
+  test("the object form is rules, so a tool set to ask shows ask", () => {
+    expect(permissionRules({ bash: "ask" })).toEqual([rule("bash", "*", "ask")])
+    expect(permissionAction(permissionRules({ bash: "ask" }), "bash")).toBe("ask")
+    expect(permissionAction(permissionRules({ bash: "ask" }), "read")).toBe("allow")
+    expect(permissionRules({ read: { "*": "deny", "*.md": "allow" }, edit: "ask" })).toEqual([
+      rule("read", "*", "deny"),
+      rule("read", "*.md", "allow"),
+      rule("edit", "*", "ask"),
+    ])
+    expect(permissionRules("deny")).toEqual([rule("*", "*", "deny")])
+    expect(permissionAction(permissionRules("deny"), "external_directory")).toBe("deny")
+    expect(permissionSource({ permissions: [], permission: { bash: "ask" } })).toEqual({ bash: "ask" })
+    expect(permissionSource({ permissions: [rule("read", "*", "deny")], permission: { bash: "ask" } })).toEqual({
+      bash: "ask",
+    })
+    expect(permissionSource({ permissions: [rule("read", "*", "deny")] })).toEqual([rule("read", "*", "deny")])
   })
 })
 
@@ -110,6 +130,13 @@ describe("permission writes", () => {
   test("refuses a tool whose rules are all patterns", () => {
     expect(permissionWrite([rule("read", "*.env", "deny")], "read", "allow")).toEqual({ locked: "patterns" })
     expect(permissionLock([rule("read", "*.env", "deny")], "read")).toBe("patterns")
+  })
+
+  test("writes the object form, keeping a tool's patterns beside its default", () => {
+    expect(permissionObject([rule("bash", "*", "ask"), rule("read", "*", "allow"), rule("read", "*.env", "deny")])).toEqual({
+      bash: "ask",
+      read: { "*": "allow", "*.env": "deny" },
+    })
   })
 
   test("refuses a write that a later wildcard rule would override", () => {

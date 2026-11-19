@@ -1,13 +1,18 @@
 import { useNavigate } from "@solidjs/router"
-import { createMemo, createSignal, For, Show } from "solid-js"
+import { useQuery } from "@tanstack/solid-query"
+import { createMemo, createSignal, For, Match, Show, Switch } from "solid-js"
 import { createStore } from "solid-js/store"
+import { modelUnavailable } from "@/components/subagent-model-rules"
+import { directoryKey } from "@/context/global-sync/utils"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { ServerConnection } from "@/context/server"
 import { useServerSync } from "@/context/server-sync"
 import { useTabs } from "@/context/tabs"
+import type { Agent } from "@/v2-wire"
 import { agentRoster } from "@/orchestra/chapters/agents-roster"
 import { MxBadge, MxToggle } from "@/orchestra/chapters/kit"
+import { mcpAction, type McpStatus } from "@/orchestra/chapters/mcp-model"
 import { showToast } from "@/utils/toast"
 import { SettingsSec } from "./settings-sec"
 
@@ -36,6 +41,28 @@ export function AgentsSection(props: { server: ServerConnection.Any; directory: 
   const [opening, setOpening] = createSignal(false)
   const store = () => serverSync().child(props.directory)[0]
   const agents = createMemo(() => agentRoster(store().agent))
+  const providers = useQuery(() => serverSync().queryOptions.providers(directoryKey(props.directory)))
+  const connected = createMemo(() => new Set(providers.isSuccess ? providers.data.connected : []))
+  const availability = (agent: Agent) => {
+    if (!providers.isSuccess) return
+    const provider = agent.model?.providerID
+    if (agent.model && provider && connected().has(provider)) {
+      const issue = modelUnavailable(providers.data.all.get(provider)?.models[agent.model.modelID])
+      if (issue)
+        return {
+          ok: false,
+          title: language.t(`orchestra.agents.model.${issue}`, { model: `${provider}/${agent.model.modelID}` }),
+        }
+    }
+    if (provider ? connected().has(provider) : connected().size > 0)
+      return { ok: true, title: language.t("orchestra.settings.agents.available") }
+    return {
+      ok: false,
+      title: provider
+        ? language.t("orchestra.agents.providerMissingTitle", { provider })
+        : language.t("orchestra.agents.noProviderTitle"),
+    }
+  }
   const openChat = () => {
     setOpening(true)
     void tabs
@@ -56,7 +83,7 @@ export function AgentsSection(props: { server: ServerConnection.Any; directory: 
       description={language.t("orchestra.settings.agents.description")}
       action={
         <button type="button" class="mx-btn" onClick={() => navigate("/orchestra/agents")}>
-          {language.t("orchestra.settings.agents.create")}
+          {language.t("orchestra.agents.roster")}
         </button>
       }
     >
@@ -89,7 +116,11 @@ export function AgentsSection(props: { server: ServerConnection.Any; directory: 
                   <Show when={item.agent.steps}>
                     {(steps) => <MxBadge>{language.t("orchestra.settings.agents.steps", { count: steps() })}</MxBadge>}
                   </Show>
-                  <MxBadge tone="good">{language.t("orchestra.settings.agents.available")}</MxBadge>
+                  <Show when={availability(item.agent)}>
+                    {(status) => (
+                      <MxBadge tone={status().ok ? "good" : "bad"}>{status().title}</MxBadge>
+                    )}
+                  </Show>
                 </div>
                 <footer class="mx-card-foot">
                   <button type="button" class="mx-btn" onClick={() => navigate("/orchestra/agents")}>
@@ -196,19 +227,14 @@ export function McpSection(props: { directory: string }) {
                   <Show when={config(name)}>{(entry) => <MxBadge>{entry().transport}</MxBadge>}</Show>
                 </div>
                 <footer class="mx-card-foot">
-                  <div>
-                    <button type="button" class="mx-btn" onClick={openPage}>
-                      {language.t("orchestra.settings.configure")}
-                    </button>{" "}
-                    <button type="button" class="mx-btn" onClick={openPage}>
-                      {language.t("orchestra.settings.mcp.tools")}
-                    </button>
-                  </div>
-                  <MxToggle
-                    checked={status.status === "connected"}
-                    label={language.t("orchestra.settings.mcp.enable", { name })}
-                    disabled={!store().mcp_ready || status.status === "pending" || !!pending[name]}
-                    onChange={() => toggle(name)}
+                  <button type="button" class="mx-btn" onClick={openPage}>
+                    {language.t("orchestra.settings.configure")}
+                  </button>
+                  <McpControl
+                    name={name}
+                    status={status.status}
+                    busy={!store().mcp_ready || !!pending[name]}
+                    onToggle={() => toggle(name)}
                   />
                 </footer>
               </article>
@@ -217,5 +243,32 @@ export function McpSection(props: { directory: string }) {
         </div>
       </Show>
     </SettingsSec>
+  )
+}
+
+function McpControl(props: { name: string; status: McpStatus["status"]; busy: boolean; onToggle: () => void }) {
+  const language = useLanguage()
+  const action = () => mcpAction(props.status)
+  return (
+    <Switch>
+      <Match when={action() === "authenticate"}>
+        <button type="button" class="mx-btn" disabled={props.busy} onClick={props.onToggle}>
+          {language.t("orchestra.mcp.authenticate")}
+        </button>
+      </Match>
+      <Match when={props.status === "failed"}>
+        <button type="button" class="mx-btn" disabled={props.busy} onClick={props.onToggle}>
+          {language.t("orchestra.mcp.tryAgain")}
+        </button>
+      </Match>
+      <Match when={action() === "disconnect" || props.status === "disabled"}>
+        <MxToggle
+          checked={props.status === "connected"}
+          label={language.t("orchestra.settings.mcp.enable", { name: props.name })}
+          disabled={props.busy}
+          onChange={props.onToggle}
+        />
+      </Match>
+    </Switch>
   )
 }

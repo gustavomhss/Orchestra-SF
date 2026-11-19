@@ -1,4 +1,5 @@
 import { ProviderIcon } from "@orchestra/ui/provider-icon"
+import type { PermissionConfig } from "@/v2-wire"
 import { useSearchParams } from "@solidjs/router"
 import { createMemo, createSignal, For, Match, Show, Switch } from "solid-js"
 import { reconcile } from "solid-js/store"
@@ -23,7 +24,10 @@ import {
   PERMISSION_TOOLS,
   permissionAction,
   permissionLock,
+  permissionObject,
+  permissionObjectForm,
   permissionRules,
+  permissionSource,
   permissionWrite,
   SETTINGS_SECTIONS,
   settingsSection,
@@ -147,18 +151,24 @@ export function SettingsView(props: { server: ServerConnection.Any; directory: s
 function PermissionsSection() {
   const language = useLanguage()
   const serverSync = useServerSync()
-  const rules = () => permissionRules(serverSync().data.config.permissions)
+  const source = () => permissionSource(serverSync().data.config)
+  const rules = () => permissionRules(source())
   const set = (tool: PermissionTool, action: PermissionAction) => {
-    const current = rules()
-    if (permissionAction(current, tool) === action) return
-    const result = permissionWrite(current, tool, action)
+    const current = source()
+    const parsed = rules()
+    if (permissionAction(parsed, tool) === action) return
+    const result = permissionWrite(parsed, tool, action)
     if ("locked" in result) return
-    // permissionRules returns fresh objects, so `current` stays a detached copy to restore.
+    const listed = serverSync().data.config.permissions
+    const previous = serverSync().data.config.permission
+    const object = permissionObjectForm(current) ? permissionObject(result.next) : undefined
     serverSync().set("config", "permissions", reconcile(result.next))
+    if (object) serverSync().set("config", "permission", object as PermissionConfig)
     serverSync()
       .updateConfig({ permissions: result.next })
       .catch((err: unknown) => {
-        serverSync().set("config", "permissions", reconcile(current))
+        serverSync().set("config", "permissions", reconcile(listed ?? []))
+        if (object) serverSync().set("config", "permission", previous)
         showToast({
           title: language.t("settings.permissions.toast.updateFailed.title"),
           description: err instanceof Error ? err.message : String(err),
