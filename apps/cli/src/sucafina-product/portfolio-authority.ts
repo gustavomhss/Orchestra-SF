@@ -14,6 +14,7 @@ import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/produc
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
+import { createSfConditionedCriterionMetric } from "./portfolio-criterion-observation.ts"
 
 /** Private host callbacks supplement, never replace, the producer's C08 and C17 checks. */
 export function createSfPortfolioAuthority(input: {
@@ -36,6 +37,7 @@ export function createSfPortfolioAuthority(input: {
     return results.length === refs.length && results.every((result, index) => result.state === "fresh" && !!result.authorizedProjection &&
       !!result.currentRef && digestSfValue(result.ref) === digestSfValue(refs[index]) && digestSfValue(result.currentRef) === digestSfValue(result.ref)) && await host.revalidate(call)
   }
+  const observedMetric = createSfConditionedCriterionMetric({ authority, business })
   const readMetric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
     if (!scenarios || request.metricRef !== "planner:known-subtotal-difference" || !request.baselineRef)
       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
@@ -46,6 +48,8 @@ export function createSfPortfolioAuthority(input: {
     if (stored.status !== "ok") return stored
     if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== captured.caseRef.id || stored.value.caseRef.incarnation !== captured.caseRef.incarnation || stored.value.caseRef.version > captured.caseRef.version)
       return { status: "denied", reason: "criterion-scenario-scope-mismatch" }
+    const fromObservation = await observedMetric(request, call, stored.value)
+    if (fromObservation) return fromObservation
     // Observe only this invocation's real producer reads. The public comparator
     // reopens both scenarios and validates these final snapshots before return.
     // No observation serves a resolve call or survives this metric invocation.
