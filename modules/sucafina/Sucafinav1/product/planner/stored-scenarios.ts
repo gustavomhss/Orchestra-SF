@@ -12,6 +12,7 @@ import type { PlannerScenarioHost, ResolvedScenario } from "./scenario-compariso
 
 type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
 type CaseObservation = Awaited<ReturnType<DecisionCasePort["read"]>>
+type ObservedCase = Extract<CaseObservation, { status: "ok" }>["value"]["case"]
 type PreparedScenario = { reference: string; stored: StoredScenario; caseDigest: string; value: ResolvedScenario }
 
 /** Resolve stored scenarios only when they are exact current, authorized case alternatives. */
@@ -37,8 +38,8 @@ export function createStoredPlannerScenarioHost(input: {
     const sameCaseReader = () => input.cases === cases && cases.read === readCase
     // A case observation never leaves this invocation. Each later phase reads
     // and clones again; sibling envelopes only reuse its private expected digest.
-    const caseDigests = new WeakMap<DecisionCase, string>()
-    const privateCaseDigest = (value: DecisionCase) => {
+    const caseDigests = new WeakMap<ObservedCase, string>()
+    const privateCaseDigest = (value: ObservedCase) => {
       const known = caseDigests.get(value)
       if (known !== undefined) return known
       const digest = digestSfValue(value)
