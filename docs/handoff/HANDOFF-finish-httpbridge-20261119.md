@@ -34,3 +34,11 @@ Estado: partial
 - test-ci solicitado: package=sucafina, runner=bun, args=[Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts]; resultado pendente.
 - bun run typecheck / check:guards: não executados neste patch de teste.
 - Sem verificação local/shell e sem sf-ci final.
+
+## Correção do gate de autorização
+
+- Código: `bf49cd6a148b5ad36f34a449be0480a24f8cc645`.
+- Run [44613781714](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44613781714): **failure**, 0 passed / 1 failed / 20 expects; cleanup success. As três páginas HTML antigas retornaram 404 com o texto de descomissionamento esperado. A primeira leitura C02 retornou 503 porque esta composição de identidade Microsoft não instala o runtime nativo.
+- Decisão: usar o GET original `/sucafina/procurement?download=suppliers`, confirmado em `runtime/application.ts:524–559`, como sonda de autorização. O produtor preserva o authenticate/roleMap na mesma transação e não depende do runtime de projeções nativas.
+- Mantidas as duas asserções 401 para a sessão guest sem papel, o logout forjado 403, logout original 204 e o redirecionamento 303 após revogação, além de body limit, cookies, proxy, spans e ausência de segredos. Nenhuma asserção foi apagada ou relaxada. `runtime/application.ts` foi apenas lido.
+- Pendente: gate estreito deste arquivo no novo SHA; estado continua **partial** até resultado terminal.
