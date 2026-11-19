@@ -62,7 +62,7 @@ export function createSfRoutinePhaseOrigin(input: string | (() => string | undef
   const directory = () => {
     const value = typeof input === "string" ? input : input()
     if (!value || !path.isAbsolute(value)) throw new Error("SF_NATIVE_PHASE_ORIGIN_DIRECTORY_INVALID")
-    return value
+    return path.resolve(value)
   }
   const creating = new Set<string>()
   const privateDirectory = (resources: SfRoutineNativeRuntimeResources) => {

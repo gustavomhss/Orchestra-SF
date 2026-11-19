@@ -79,14 +79,14 @@ async function fixture() {
 test("real Microsoft-authenticated dashboard route grants only its assigned viewer role", async () => {
   const f = await fixture()
   const cookie = await f.login()
-  const dashboard = await f.request("/dashboard?page=Executive%20Dashboard", cookie)
+  const dashboard = await f.request("/dashboard?page=Executive%20Dashboard&asset=page", cookie)
   expect(dashboard.status).toBe(200)
   const html = await dashboard.text()
-  expect(html).toContain('data-page="Executive Dashboard"')
+  expect(html).toContain('name="page" value="Executive Dashboard"')
   expect(html).not.toContain("synthetic-access-")
   expect(html).not.toContain("synthetic-refresh-")
   expect(html).not.toContain("same-synthetic@example.test")
-  expect((await f.request("/dashboard?page=Talent%20Review", cookie)).status).toBe(403)
+  expect((await f.request("/dashboard?page=Talent%20Review&asset=page", cookie)).status).toBe(403)
   expect((await f.request("/planner", cookie)).status).toBe(401)
   const before = await f.snapshot("dashboard")
   const write = await f.request("/dashboard", cookie, { page: "Executive Dashboard", action: "configure-summaries", version: 0, values: { pages: ["Talent Review"] } })
@@ -98,8 +98,8 @@ test("real Microsoft-authenticated dashboard route grants only its assigned view
 test("actual routes deny a signed-in guest with no group role and revalidate role removal", async () => {
   const f = await fixture()
   const cookie = await f.login()
-  expect((await f.request("/dashboard", cookie)).status).toBe(200)
-  expect((await f.request("/procurement?page=Requests", cookie)).status).toBe(200)
+  expect((await f.request("/dashboard?asset=page", cookie)).status).toBe(200)
+  expect((await f.request("/procurement?page=Requests&asset=page", cookie)).status).toBe(200)
   const before = await f.snapshot("procurement")
   f.provider.account.groups.splice(0)
   const unassignedCookie = await f.login()
@@ -110,7 +110,7 @@ test("actual routes deny a signed-in guest with no group role and revalidate rol
   }
   expect(await f.snapshot("procurement")).toEqual(before)
   // A different, still-assigned immutable object retains its own access despite identical name/email claims.
-  expect((await f.request("/procurement?page=Requests", await f.login(other))).status).toBe(200)
+  expect((await f.request("/procurement?page=Requests&asset=page", await f.login(other))).status).toBe(200)
 })
 
 test("actual Procurement HTTP ownership uses resource-tenant oid despite matching names and email claims", async () => {
@@ -143,7 +143,7 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
     [first, firstId, firstTitle, secondId, secondTitle],
     [second, secondId, secondTitle, firstId, firstTitle],
   ] as const) {
-    for (const suffix of ["/procurement?page=Requests", "/procurement?download=register"]) {
+    for (const suffix of ["/procurement?page=Requests&asset=page", "/procurement?download=register"]) {
       const response = await f.request(suffix, cookie)
       expect(response.status).toBe(200)
       const body = await response.text()
@@ -152,7 +152,7 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
       expect(body).not.toContain(hiddenTitle)
       expect(body).not.toContain(hiddenId)
     }
-    const deepLink = await f.request(`/procurement?page=Requests&request=${encodeURIComponent(hiddenId)}`, cookie)
+    const deepLink = await f.request(`/procurement?page=Requests&request=${encodeURIComponent(hiddenId)}&asset=page`, cookie)
     expect(deepLink.status).toBe(200)
     expect(await deepLink.text()).not.toContain(hiddenTitle)
   }
@@ -186,7 +186,7 @@ test("logout revokes a retained session at the actual business routes without af
   expect((await f.request("/auth/logout", first, {})).status).toBe(204)
   expect((await f.request("/dashboard", first)).status).toBe(401)
   expect((await f.post(first, "create", { pr: { title: "Revoked write" } })).status).toBe(401)
-  expect((await f.request("/procurement?page=Requests", second)).status).toBe(200)
+  expect((await f.request("/procurement?page=Requests&asset=page", second)).status).toBe(200)
 })
 
 test("real Microsoft group membership requires a separate product grant bound to the resource-tenant oid", async () => {
@@ -211,7 +211,7 @@ test("real Microsoft group membership requires a separate product grant bound to
   }
   const firstRequest = await request(first)
   const secondRequest = await request(second)
-  for (const cookie of [first, second]) expect((await f.request("/dashboard", cookie)).status).toBe(200)
+  for (const cookie of [first, second]) expect((await f.request("/dashboard?asset=page", cookie)).status).toBe(200)
   const ungranted = product(f.profile.grants)
   for (const current of [firstRequest, secondRequest]) {
     expect(await ungranted.humanActions(current)).toEqual([])
@@ -234,5 +234,5 @@ test("real Microsoft group membership requires a separate product grant bound to
   const removedRole = await request(first)
   expect(await granted.humanActions(removedRole)).toEqual([])
   expect(await granted.state.read(removedRole, "preferences", () => "revoked-data")).toMatchObject({ status: "denied" })
-  expect((await f.request("/dashboard", second)).status).toBe(200)
+  expect((await f.request("/dashboard?asset=page", second)).status).toBe(200)
 })

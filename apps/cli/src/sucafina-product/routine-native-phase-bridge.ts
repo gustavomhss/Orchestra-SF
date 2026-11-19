@@ -364,15 +364,15 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
           Effect.tap((valid) => valid ? Effect.void : Effect.sync(state.close)),
           Effect.catch(() => Effect.sync(state.close)), Effect.repeat(Schedule.spaced("1 second")),
         ))
+        // Scaffold has a durable denial-only parent marker before any input. It contains no prompt/model data.
+        if (!state.proof) yield* provenance.reserve(state.resources, state.sessions, state.context, sessionID, state.current)
+          .pipe(Effect.mapError(() => unavailable()))
         // A Claude parent has no genuine governed-load observer. Report that before any prompt, provider, or admission work.
         const parent = yield* state.resources.store.get(sessionID)
         if (parent?.agent === AgentV2.defaultID) {
           const engine = yield* ExecutionHost.engineOf(state.resources.agents, state.resources.store)(parent).pipe(Effect.mapError(() => unavailable()))
           if (engine === "claude-code") return yield* new BridgeError({ reason: "SF_NATIVE_PHASE_GOVERNED_HOST_RECEIPT_API_REQUIRED" })
         }
-        // Scaffold has a durable denial-only parent marker before any input. It contains no prompt/model data.
-        if (!state.proof) yield* provenance.reserve(state.resources, state.sessions, state.context, sessionID, state.current)
-          .pipe(Effect.mapError(() => unavailable()))
         return yield* state.resources.execution.withRunner(sessionID, (runner) => Effect.gen(function* () {
           // Verify the actual installed runner adapter BEFORE sensitive durable admission, not a ready:true callback.
           if (!fence.installed(runner)) return yield* unavailable()
