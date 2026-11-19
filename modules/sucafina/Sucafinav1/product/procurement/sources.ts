@@ -11,6 +11,9 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfScopedSourceIdentity } from "../integration/source-lifecycle.ts"
 import type { SfScopedSourcePort, SfSourceScope } from "../integration/source-lifecycle.ts"
 import { projectProcurementScope, procurementRequestFields, procurementSupplierFields } from "./source-projection.ts"
+import { procurementMonetaryFacts } from "./monetary.ts"
+import { quoteAssessment, quoteComparisonPresentation } from "../../src/form.ts"
+import type { FormSettings } from "../../src/form.ts"
 import { procurementKeys } from "../../src/nav.ts"
 
 /** Individual selectors identify persisted scopes; they never confer authority. */
@@ -278,6 +281,98 @@ export function digestProcurementSource(value: unknown, settings: unknown, kind?
     },
     settings: basis,
   })
+}
+
+export function projectSourcingComparison(record: Record<string, unknown>, formSettings: unknown) {
+  const sourcing = object(record.sourcing)
+  const quotes = rows(sourcing.quotes)
+  const settings = { ...object(formSettings), currency: text(object(formSettings).currency) } as FormSettings
+  const status = text(record.status)
+  const snapshotRequired = sourcing.fxSnapshot != null || sourcing.approval != null || sourcing.approvalBaseCurrency != null || ["src_pending", "po_draft", "po_pending", "po_approved", "po_issued", "po_rejected"].includes(status)
+  const sameBase = !snapshotRequired || text(sourcing.approvalBaseCurrency) === settings.currency
+  const assessed = quoteAssessment({ sourcing: assessmentSourcing(sourcing, snapshotRequired, settings.currency) }, settings)
+  const presentation = quoteComparisonPresentation({ sourcing: sourcing as Parameters<typeof quoteComparisonPresentation>[0]["sourcing"] }, settings, { submitted: snapshotRequired, submittedBaseCurrency: text(sourcing.approvalBaseCurrency) })
+  const money = quotes.map((quote) => quoteMonetary(record, quote, snapshotRequired, settings.currency, formSettings))
+  const eligibleCount = assessed.filter((item) => item.eligible).length
+  const available = rankingAvailable(sourcing, settings, quotes, presentation, assessed, sameBase)
+  const eligibleBases = assessed.flatMap((item, index) => {
+    const amount = money[index]?.baseAmount
+    return item.eligible && typeof amount === "number" && Number.isFinite(amount) && amount > 0 ? [amount] : []
+  })
+  const lowest = eligibleBases.length ? Math.min(...eligibleBases) : null
+  const leader = available ? assessed.find((item) => item.rank === 1 && item.complete && item.eligible) : undefined
+  const leaderIndex = leader ? assessed.indexOf(leader) : -1
+  const leaderBase = leaderIndex >= 0 ? money[leaderIndex]?.baseAmount : null
+  const premium = available && typeof leaderBase === "number" && Number.isFinite(leaderBase) && lowest != null ? leaderBase - lowest : null
+  const leaderQuotes = leader ? quotes.filter((quote) => quote.id === leader.id) : []
+  const supplier = leaderQuotes.length === 1 ? text(leaderQuotes[0]?.supplier) : ""
+  return {
+    eligibleCount,
+    rankLine: leader && typeof leader.rank === "number" ? `Rank ${leader.rank}: ${supplier || "Supplier unavailable"}` : null,
+    premiumLine: premium != null && lowest != null && lowest > 0 && /^[A-Z]{3}$/.test(settings.currency) ? `${Number(premium.toPrecision(15))} ${settings.currency} (${(premium / lowest * 100).toFixed(2)}%) above the lowest eligible proposal` : null,
+    quotes: quotes.map((quote, index) => quoteProjection(quote, index, assessed[index], presentation[index], money[index], available, lowest, settings.currency)),
+  }
+}
+
+function assessmentSourcing(sourcing: Record<string, unknown>, snapshotRequired: boolean, currency: string) {
+  if (!snapshotRequired || sourcing.fxSnapshot != null) return sourcing as Parameters<typeof quoteAssessment>[0]["sourcing"]
+  return { ...sourcing, fxSnapshot: { [currency]: 1 } } as Parameters<typeof quoteAssessment>[0]["sourcing"]
+}
+
+function quoteMonetary(record: Record<string, unknown>, quote: Record<string, unknown>, snapshotRequired: boolean, baseCurrency: string, formSettings: unknown) {
+  const id = typeof quote.id === "string" ? quote.id : ""
+  if (!id) return null
+  const status = text(record.status)
+  const viewStatus = ["sourcing", "src_pending", "src_rejected"].includes(status) ? status : snapshotRequired ? "src_pending" : "sourcing"
+  return procurementMonetaryFacts({ status: viewStatus, createdBy: text(record.createdBy) || "projection", sourcing: { ...object(record.sourcing), selectedId: id }, po: null }, baseCurrency, formSettings)
+}
+
+function rankingAvailable(sourcing: Record<string, unknown>, settings: FormSettings, quotes: readonly Record<string, unknown>[], presentation: ReturnType<typeof quoteComparisonPresentation>, assessed: ReturnType<typeof quoteAssessment>, sameBase: boolean) {
+  const weights = object(sourcing.weights)
+  const technical = rows(sourcing.weights == null ? settings.criteria : weights.criteria)
+  const commercial = rows(sourcing.weights == null ? settings.commCriteria : weights.commCriteria)
+  const criteriaValid = [...technical, ...commercial].every((criterion) => typeof criterion.name === "string" && criterion.name.trim().length > 0 && typeof criterion.weight === "number" && Number.isFinite(criterion.weight)) && commercial.every((criterion) => criterion.auto == null || typeof criterion.auto === "boolean")
+  const technicalWeight = sourcing.weights == null ? settings.techWeight : weights.tech
+  const commercialWeight = sourcing.weights == null ? settings.commWeight : weights.comm
+  const numericTechnicalWeight = typeof technicalWeight === "number" && Number.isFinite(technicalWeight) ? technicalWeight : null
+  const numericCommercialWeight = typeof commercialWeight === "number" && Number.isFinite(commercialWeight) ? commercialWeight : null
+  const configured = technical.length > 0 && commercial.length > 0 && criteriaValid && numericTechnicalWeight != null && numericCommercialWeight != null && technical.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && commercial.some((criterion) => typeof criterion.weight === "number" && criterion.weight > 0) && numericTechnicalWeight + numericCommercialWeight > 0
+  const statedDiffer = quotes.some((quote) => {
+    const calculated = typeof quote.qty === "number" && typeof quote.unitPrice === "number" ? quote.qty * quote.unitPrice : null
+    const stated = typeof quote.total === "number" ? quote.total : null
+    return calculated != null && (!Number.isFinite(calculated) || stated != null && Number.isFinite(stated) && Math.abs(stated - calculated) > 0.005)
+  })
+  const monetaryProblem = quotes.some((_, index) => {
+    const shown = presentation[index]
+    const issues = shown?.monetary ?? ["monetary-data-unavailable"]
+    return issues.length > 0 || shown?.total != null && shown.fxRate != null && !Number.isFinite(shown.total * shown.fxRate)
+  }) || statedDiffer
+  return !monetaryProblem && sameBase && configured && !assessed.some((item) => item.eligible && !item.complete) && assessed.filter((item) => item.eligible).length >= 2
+}
+
+function quoteProjection(quote: Record<string, unknown>, index: number, item: ReturnType<typeof quoteAssessment>[number] | undefined, shown: ReturnType<typeof quoteComparisonPresentation>[number] | undefined, money: ReturnType<typeof procurementMonetaryFacts> | null, available: boolean, lowest: number | null, baseCurrency: string) {
+  const basis = money?.fxSource === "base" ? "base" as const : money?.fxSource === "submitted" ? "submitted FX" as const : money?.fxSource === "current" ? "current FX" as const : null
+  const amount = money?.baseAmount
+  const rate = money?.validRate
+  const knownAmount = typeof amount === "number" && Number.isFinite(amount) ? amount : null
+  const knownRate = typeof rate === "number" && Number.isFinite(rate) ? rate : null
+  const eligible = item?.eligible === true
+  const rawPremium = available && eligible && knownAmount != null && lowest != null && lowest > 0 ? knownAmount - lowest : null
+  const premiumAmount = rawPremium == null ? null : Number(rawPremium.toPrecision(15))
+  const reasons = [...(quote.techPass === false ? ["Technically ineligible"] : []), ...(shown?.monetary ?? []).map((issue) => `Monetary issue: ${issue}`)]
+  return {
+    id: typeof quote.id === "string" && quote.id ? quote.id : null,
+    index,
+    baseAmount: knownAmount,
+    baseCurrency: /^[A-Z]{3}$/.test(baseCurrency) ? baseCurrency : null,
+    fxRate: knownRate,
+    fxBasis: basis,
+    baseFxText: knownAmount != null && basis && knownRate != null && /^[A-Z]{3}$/.test(baseCurrency) ? `${Number(knownAmount.toPrecision(15))} ${baseCurrency} (${basis}: ${knownRate})` : `Unavailable${shown?.monetary.length ? ` (${shown.monetary.join(", ")})` : ""}`,
+    rank: available && typeof item?.rank === "number" ? item.rank : null,
+    premiumAmount,
+    premiumPercent: rawPremium != null && lowest != null && lowest > 0 ? Number((rawPremium / lowest * 100).toFixed(2)) : null,
+    excludedReason: eligible ? null : reasons.length ? reasons.join(", ") : null,
+  }
 }
 
 function select(record: Record<string, unknown>, fields: readonly string[]) {

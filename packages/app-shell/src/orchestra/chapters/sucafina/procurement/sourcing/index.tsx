@@ -659,6 +659,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(!row)return <SfStatePanel state="not-found" messageKey={k("sf.u12.notFound")}/>
     const recorded=row.sourcing?.quotes??[]
     const fx=recordedFx(row)
+    const facts=row.sourcing?.comparison??null
+    const limited=!!facts&&facts.eligibleCount<2
+    const fxRow=(quote:QuoteEdit)=>{
+      const id=quote.id
+      if(!id||!facts)return null
+      const matches=facts.quotes.filter((item)=>item.id===id)
+      return matches.length===1?matches[0]!:null
+    }
     const scoreCopy=(quote:QuoteEdit,kind:"scores"|"cscores")=>
       quote[kind]===undefined?"—":Array.isArray(quote[kind])
         ? quote[kind].map((x)=>asString(x)).join(", ")
@@ -685,6 +693,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:120,weight:2},render:(quote)=><>{quote.supplier??""}</>},
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
           {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{asString(quote.total)||t("sf.u12.missing")}</>},
+          {id:"baseFx",labelKey:k("sf.u12.baseFx"),align:"end",widthPolicy:{kind:"content",minPx:220,maxPx:360},render:(quote)=><>{fxRow(quote)?.baseFxText??t("sf.u12.missing")}</>},
           {id:"qty",labelKey:k("sf.u12.quoteQty"),align:"end",widthPolicy:{kind:"content",minPx:85,maxPx:140},render:(quote)=><>{asString(quote.qty)||t("sf.u12.missing")}</>},
           {id:"unitPrice",labelKey:k("sf.u12.quotePrice"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:160},render:(quote)=><>{asString(quote.unitPrice)||t("sf.u12.missing")}</>},
           {id:"scores",labelKey:k("sf.u12.quoteScores"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:260},render:(quote)=><>{scoreCopy(quote,"scores")}</>},
@@ -699,8 +708,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         captionKey={k("sf.u12.quotes")} density="comfortable"
         state={recorded.length===0?"empty":quotes().length===0?"filtered-empty":"ready"}
       />
-      <p role="status">{t("sf.u12.rankUnavailable")}</p>
-      <p>{t("sf.u12.fxUnavailable")}</p>
+      <Show when={facts?.rankLine}>{(line)=><p role="status">{line()}</p>}</Show>
+      <Show when={facts?.premiumLine}>{(line)=><p role="status">{line()}</p>}</Show>
+      <Show when={limited}><p role="status">Comparison is limited: fewer than two proposals are eligible.</p></Show>
+      <Show when={!facts}>
+        <p role="status">{t("sf.u12.rankUnavailable")}</p>
+        <p>{t("sf.u12.fxUnavailable")}</p>
+      </Show>
+      <Show when={!!facts&&!limited&&!facts.rankLine}><p role="status">{t("sf.u12.rankUnavailable")}</p></Show>
       <Show when={fx}><dl>{Object.entries(fx??{}).map(([currency,rate])=>
         <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):asString(rate)}</dd></div>)}</dl></Show>
       <p>{t("sf.u12.selectedSaved")}</p>
