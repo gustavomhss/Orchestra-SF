@@ -1,7 +1,7 @@
-name: sf-reports-read-inspection
+name: sf-proposal-screens-inspection
 on:
   push:
-    branches: [audit-logs-20261119]
+    branches: [audit-proposal-screens-20261119]
 permissions:
   actions: read
   contents: write
@@ -10,18 +10,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read completed Reports artifact
+      - name: Read completed proposal artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14570277425/zip > "$RUNNER_TEMP/reports8.zip"
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14571166555/zip > "$RUNNER_TEMP/proposals2.zip"
       - name: Extract original failure screen and bounded steps
         run: |
           python3 - <<'PY'
           import base64, json, os, pathlib, re, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Reports native read observation", "", "Original run 44601697015, artifact 14570277425. Read-only diagnostic, no rerun and no product assertion changed.", ""]
+          lines = ["# Proposal native read observation", "", "Original run 44606767134, artifact 14571166555. Read-only diagnostic, no rerun and no product assertion changed.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          with zipfile.ZipFile(root / "reports8.zip") as archive:
+          with zipfile.ZipFile(root / "proposals2.zip") as archive:
               names = archive.namelist()
               for member in [p for p in names if p.endswith("/error-context.md")]:
                   lines += [f"## {member}", ""]
@@ -44,11 +44,11 @@ jobs:
                   visit(value)
                   lines += ["## Bounded step outcomes", json.dumps(found[-120:], ensure_ascii=False), ""]
           text = "\n".join(lines) + "\n"
-          payload = {"message": "docs(sf): retain original Reports read failure observation", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
-          (root / "reports-payload.json").write_text(json.dumps(payload))
+          payload = {"message": "docs(sf): retain original proposal read failure observation", "branch": "audit-proposal-screens-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "proposal-payload.json").write_text(json.dumps(payload))
           print("Extracted original failure screens and bounded step names, excluding sensitive lines.")
           PY
       - name: Persist original observation
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-read-44601697015.md --input "$RUNNER_TEMP/reports-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-proposal-read-44606767134.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
