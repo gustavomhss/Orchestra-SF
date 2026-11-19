@@ -5,6 +5,7 @@ import type { ScenarioRequest, SensitivityRequest } from "../contracts/operation
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import { plannerPreviewDigest, plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import { createSensitivityEvaluator, quantifiedSensitivityScenario } from "./sensitivity.ts"
 import type { SensitivitySampledResult } from "./sensitivity.ts"
@@ -111,9 +112,10 @@ export function createPlannerSensitivity(input: {
       revalidate: async (_samples, _threshold, trusted) => {
         const latest = structuredClone(await input.resolve(structuredClone(request), trusted))
         if (latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(binding) || !await input.revalidate(structuredClone(binding), trusted)) return false
-        const currentSource = structuredClone(await readScenario(request.scenarioRef, trusted))
-        const currentBaseline = structuredClone(await readScenario(binding.baselineRef, trusted))
-        if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
+        const currentResultStore = input.results
+        const [currentSource, currentBaseline] = (await readHistoricalScenarios(currentResultStore,
+          [request.scenarioRef, binding.baselineRef], trusted)).map((value) => structuredClone(value))
+        if (input.results !== currentResultStore || currentSource?.status !== "ok" || currentBaseline?.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         const checked = await Promise.all(samples.map(async (sample) => {
           const stored = structuredClone(await input.results.read({ kind: "scenario", resultRef: sample.resultRef }, trusted))
           const current = structuredClone(await input.preview({ baselineRef: binding.baselineRef, scenario: structuredClone(sample.request) }, trusted))
