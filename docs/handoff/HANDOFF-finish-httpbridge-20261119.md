@@ -1,6 +1,6 @@
 # Handoff — finish-httpbridge-20261119
 
-SHA de código: c243bef49c4674b0b80db398f498289a9f56e4eb
+SHA de código: 0b29978dfdda4249ac0126ee55786fa0e273140e.
 Base: sf-join-four @ bd45b3135c2a0cfc0a3cc2f5bdc6ed7373caebb5
 Data: 2026-11-19
 Estado: partial
@@ -42,3 +42,11 @@ Estado: partial
 - Decisão: usar o GET original `/sucafina/procurement?download=suppliers`, confirmado em `runtime/application.ts:524–559`, como sonda de autorização. O produtor preserva o authenticate/roleMap na mesma transação e não depende do runtime de projeções nativas.
 - Mantidas as duas asserções 401 para a sessão guest sem papel, o logout forjado 403, logout original 204 e o redirecionamento 303 após revogação, além de body limit, cookies, proxy, spans e ausência de segredos. Nenhuma asserção foi apagada ou relaxada. `runtime/application.ts` foi apenas lido.
 - Pendente: gate estreito deste arquivo no novo SHA; estado continua **partial** até resultado terminal.
+
+## Papel real da fixture Microsoft
+
+- Código: `0b29978dfdda4249ac0126ee55786fa0e273140e`.
+- [44615396341](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44615396341): failure, primeira sonda de exportação retornou 200 em vez de 401; cleanup 135883850246 success.
+- Conferido no código: `test/microsoft-login/private-fixture.ts:22` concede Dashboard viewer e Procurement requester ao grupo sintético; Planner não tem grupo configurado. O 200 do fornecedor foi acesso autorizado real, não bypass. O comentário herdado “sem role map inicializado” estava desatualizado.
+- A sonda agora usa `/sucafina/planner?download=xlsx`, caminho original retido em `runtime/application.ts:524–559`, para testar precisamente o papel ausente desta fixture. As duas asserções 401 permanecem, assim como 403 da tentativa de logout forjada, 204 do logout real e 303 após revogação. Não há alteração de autenticação, grants, produtor ou timeout.
+- Estado partial; gate estreito pendente. Nenhuma asserção removida.
