@@ -241,7 +241,9 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+  const confirmation = preparation.locator("[data-preserved-review-ref]")
+  await expect(confirmation).toHaveAttribute("data-preserved-review-ref", saved.id)
+  await expect(confirmation).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
   const transport = observeReviewTransport(page, app, "review-report")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
   const response = await (async () => {
@@ -296,7 +298,9 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   const transport = observeReviewTransport(page, app, "review-read", "GET")
   try {
     const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-    await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+    const confirmation = preparation.locator("[data-preserved-review-ref]")
+    await expect(confirmation).toHaveAttribute("data-preserved-review-ref", saved.id)
+    await expect(confirmation).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
     const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
     await expect(open).toBeVisible()
     await expect(open).toBeEnabled()

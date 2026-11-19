@@ -23,6 +23,7 @@ export function createReviewPreparationView(input: {
   onPreserved?: (reviewRef: string) => void
 }) {
   const client = input.client ?? createReviewPreparationBrowser()
+  const preservedMessage = "Review preserved. Source updates will not replace this meeting's captured values."
   const root = document.createElement("section")
   root.setAttribute("aria-label", "Prepare review")
   let disposed = false
@@ -49,6 +50,11 @@ export function createReviewPreparationView(input: {
     status.setAttribute("aria-live", "polite")
     root.append(status)
     if (revoked) return
+    if (state.review) {
+      const confirmation = state.message === preservedMessage ? status : node("p", preservedMessage)
+      confirmation.setAttribute("data-preserved-review-ref", state.review.id)
+      if (confirmation !== status) root.append(confirmation)
+    }
     if (!state.reviewRef && !state.routine && picker) {
       picker.update(); root.append(picker.element)
       const chosen = document.createElement("ol")
@@ -250,7 +256,7 @@ export function createReviewPreparationView(input: {
     state.review = result.value
     state.reviewRef = result.value.id
     state.order = result.value.sections.map((section) => section.id)
-    state.message = "Review preserved. Source updates will not replace this meeting's captured values."
+    state.message = preservedMessage
     input.onPreserved?.(state.reviewRef)
   })
   const report = (format: "pptx" | "docx") => run(`Generating ${format.toUpperCase()} from the preserved review…`, async (current) => {
