@@ -160,10 +160,12 @@ const layer = Layer.effect(
       // Before agent selection and promotion: a refused turn leaves pending input pending.
       yield* governance.beforeTurn(session)
       const agent = yield* agents.select(session.agent)
-      // A Session's own permission rules, after its agent's as the earlier runtime merged them, so a Session rule wins over the agent's.
+      // Agent denies are repeated after session rules so a later session allow cannot erase an earlier agent deny.
+      const agentRules = agent.info?.permissions.map((rule) => ({ ...rule })) ?? []
       const effectiveRules = [
-        ...(agent.info?.permissions.map((rule) => ({ ...rule })) ?? []),
+        ...agentRules,
         ...(yield* store.permissions(session.id)),
+        ...agentRules.filter((rule) => rule.effect === "deny"),
       ]
       const initialized = yield* SessionContextEpoch.initialize(db, loadSystemContext(session.id, agent), session.id)
       const toolFibers = yield* FiberSet.make<void, ToolOutputStore.Error>()
@@ -324,6 +326,8 @@ const layer = Layer.effect(
             const decision = yield* store.charge(session.id, { type: "tool", name: input.safety?.tool ?? input.action })
             if (!decision.admitted) return yield* new PermissionV2.CorrectedError({ feedback: decision.deviation.detail })
           }
+          if (input.resources.length === 0)
+            return yield* new PermissionV2.BlockedError({ rules: [] })
           yield* permissions
             .authorize({
               sessionID: session.id,
