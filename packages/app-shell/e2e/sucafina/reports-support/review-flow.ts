@@ -325,7 +325,7 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
       headings: Array.from(body.querySelectorAll("h1,h2,[role=alert]")).map((node) => node.textContent?.slice(0, 180)),
     })).catch(() => ({ closed: true }))))
     throw error
- finally {
+  } finally {
     source.off("request", recordMutation)
     await source.close()
   }
