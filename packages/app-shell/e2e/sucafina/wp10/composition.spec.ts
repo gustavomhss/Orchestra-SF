@@ -340,7 +340,7 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           expect(result.projection.values).toHaveLength(48)
           await expect(panel.getByRole("heading", { name: "How do budget, actuals and outlook evolve?", exact: true }).first()).toBeVisible()
           const table = panel.getByRole("table", { name: "Authorized values and source references", exact: true })
-          await expect(table.getByRole("columnheader")).toHaveText(["Measure", "Value", "Unit", "Period", "Granularity", "Evidence", "Source reference"])
+          await expect(table.getByRole("columnheader")).toHaveText(["Measure", "Value", "Unit", "Period", "Granularity", "Evidence", "Source reference", "Show details"])
           await expect(table.getByRole("row")).toHaveCount(49)
           const values = new Map(result.projection.values.map((value) => [value.id, value]))
           const rows = result.presentation.series.flatMap((series) => series.valueIds.map((id) => {
