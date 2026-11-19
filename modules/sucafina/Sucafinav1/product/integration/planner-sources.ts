@@ -31,10 +31,9 @@ export function createSfPlannerSourceHost(input: {
   host: DomainPortHost
   scopedSources: SfScopedSourcePort
   coverageFor: PlannerSourceHost["resolveForecastCoverage"]
-}): PlannerSourceHost {
-  return {
-    resolveForecastCoverage: input.coverageFor,
-    resolveForecastSource: async (reference, context): Promise<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>> => {
+}) {
+  type Source = { versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; projection: Record<string, unknown> }
+  const observe = async (reference: string, context: TrustedDomainContext): Promise<PortResult<Source>> => {
       const parts = /^planner-version:([^:]+):([^:]+):([1-9]\d*)$/.exec(reference)
       if (!parts) return { status: "needs-input", reason: "invalid-planner-source-selector" }
       const decoded = [parts[1]!, parts[2]!].map((part) => {
@@ -91,9 +90,36 @@ export function createSfPlannerSourceHost(input: {
       if (!evidence) return { status: "unavailable", reason: "invalid-source-period" }
       const again = await read().catch(() => undefined)
       if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
-      return { status: "ok", value: { versionId: decoded[0], evidence } }
-    },
+      return { status: "ok", value: { versionId: decoded[0], evidence, projection: again.projection } }
   }
+  const resolveForecastSource: PlannerSourceHost["resolveForecastSource"] = async (reference, context) => {
+    const result = await observe(reference, context)
+    return result.status === "ok" ? { status: "ok", value: { versionId: result.value.versionId, evidence: result.value.evidence } } : result
+  }
+  // The composition can use the exact body from this completed two-observation
+  // producer. Nothing is cached or accepted from a caller as an observation.
+  const readProjection = async (reference: string, context: TrustedDomainContext): Promise<PortResult<Source>> => {
+    const request = input.host.requestFor(context)
+    const binding = digestSfValue([context.kind, context.binding]), lease = context.lease
+    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+    const current = () => !!request && !request.signal.aborted && input.host.requestFor(context) === request && context.lease === lease &&
+      digestSfValue([context.kind, context.binding]) === binding &&
+      digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
+    if (!current() || context.binding.principalRef.startsWith("local:")) return { status: "denied", reason: "source-authority-unavailable" }
+    const result = await observe(reference, context)
+    if (!current()) return { status: "stale", reason: "source-or-authority-changed" }
+    if (result.status !== "ok") return result
+    const projection = structuredClone(result.value.projection)
+    freezeProjection(projection)
+    return { status: "ok", value: { ...result.value, projection } }
+  }
+  return { resolveForecastCoverage: input.coverageFor, resolveForecastSource, readProjection }
+}
+
+function freezeProjection(value: unknown): void {
+  if (!value || typeof value !== "object" || Object.isFrozen(value)) return
+  Object.values(value).forEach(freezeProjection)
+  Object.freeze(value)
 }
 
 function safeDecode(value: string) {

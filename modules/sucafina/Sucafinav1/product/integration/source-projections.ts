@@ -89,7 +89,8 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
         selector.fields.some((field) => !["id", "action", "owner", "due", "status", "priority", "notes"].includes(field))) return undefined
       return Object.fromEntries([...selector.fields].sort().map((field) => [field, record[field]]))
     }
-    const year = record.year === undefined ? Number(period.start.slice(0, 4)) : Number(record.year)
+    // Undated live records belong to the observation year, not a caller-selected historical window.
+    const year = record.year === undefined ? Number(asOf.slice(0, 4)) : Number(record.year)
     const month = record.month === undefined ? undefined : Number(record.month)
     if (!Number.isInteger(year) || year < 2024 || year > 2027 || (month !== undefined && (!Number.isInteger(month) || month < 1 || month > 12))) return undefined
     const start = month === undefined ? `${year}-01-01` : `${year}-${String(month).padStart(2, "0")}-01`

@@ -29,8 +29,9 @@ function fixture() {
   const denied = new Set<string>()
   const storage = testPersistence()
   const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async () => identity })
+  const request = new Request("https://example.test")
   const port = createReviewPort({
-    state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, now: () => "2026-11-14T00:00:00Z", requestFor: () => new Request("https://example.test"),
+    state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, now: () => "2026-11-14T00:00:00Z", requestFor: () => request,
     select: async () => ({ status: "ok", value: [section] }),
     authorizeSections: async () => true, authorizeComments: async () => true, authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSensitivity: async () => true,
     revalidate: async (_context, refs) => refs.every((ref) => !denied.has(ref.id)),
