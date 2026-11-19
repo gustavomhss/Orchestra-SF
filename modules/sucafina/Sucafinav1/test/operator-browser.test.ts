@@ -30,9 +30,10 @@ test("Chrome follows private enrollment while retired console routes remain unav
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
     page.on("pageerror", (error) => { failures.push(error.message) })
     const exportUrl = `${origin}/sucafina/dashboard?download=json`
-    const anonymous = await page.request.get(exportUrl)
-    expect(anonymous.status()).toBe(401)
-    expect(await anonymous.text()).toBe("Authentication required")
+    const anonymous = await page.request.get(exportUrl, { maxRedirects: 0, maxRetries: 0 })
+    expect(anonymous.status()).toBe(303)
+    expect(anonymous.headers()["location"]).toBe("/sucafina/auth/login?returnTo=" + encodeURIComponent("/sucafina/dashboard?download=json"))
+    expect(anonymous.headers()["cache-control"]).toBe("no-store")
     const [enrollment] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -47,9 +48,9 @@ test("Chrome follows private enrollment while retired console routes remain unav
     const cookies = (await page.context().cookies(exportUrl)).filter((cookie) => cookie.name.startsWith("sucafina_operator_"))
     expect(cookies).toHaveLength(1)
     expect(cookies[0]).toMatchObject({ path: "/sucafina", httpOnly: true, sameSite: "Lax" })
-    // This installation mounts the original producer, not the Orchestra shell.
-    // The authorized retained export proves that the browser handoff established
-    // the real session even though the three former document consoles are gone.
+    // The enrollment redirects to the original root. The retained authorized
+    // download independently proves the real browser session after retirement
+    // of the three former document consoles.
     const store = await openLocalStore(path.join(root, "business-local"))
     try {
       const expected = await store.transaction("dashboard", async (snapshot) => ({
