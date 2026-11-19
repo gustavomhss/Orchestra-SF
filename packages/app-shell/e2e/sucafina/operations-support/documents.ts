@@ -27,18 +27,8 @@ async function valueOf<T>(response: APIResponse | Response): Promise<T> {
   return body.value
 }
 
-/** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
-export async function documentJourney(page: Page, info: TestInfo) {
-  const account = await login(page, "first", "suppliers")
-  const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
-  const text = "Price: 42\nReference: " + key + "\n"
-  const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")
-  const endpoint = (mode: string, query: Record<string, string> = {}) => modeURL(account, "procurement", mode, query).href
-  const isMode = (url: string, mode: string) => {
-    const candidate = new URL(url)
-    return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
-  }
-  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
+/** The original native supplier creation, shared by document admission and its narrow prerequisite proof. */
+export async function createDocumentSupplier(page: Page, account: Account, key: string, name: string) {
   expect((await page.goto("/orchestra/sf-procurement/suppliers"))?.status()).toBe(200)
   const suppliers = page.locator(".sf-u14-layout")
   await expect(suppliers).toHaveCount(1)
@@ -78,10 +68,27 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect((await page.goto(suppliersURL))?.status()).toBe(200)
   const supplierRow = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name, exact: true }) })
   await expect(supplierRow).toHaveCount(1)
-  const supplierNumber = (await supplierRow.getByRole("cell").first().innerText()).trim()
+  const supplierNumber = (await supplierRow.getByRole("cell").first().locator(".sf-s01-cell-value").innerText()).trim()
   expect(supplierNumber).toMatch(/^SUP-\d+$/)
   const supplier = await supplierRow.getAttribute("data-sf-row")
   if (!supplier || !/^[a-zA-Z0-9_-]+$/.test(supplier)) throw new Error("The supplier chapter did not expose the created supplier identity")
+  return { supplier, supplierNumber }
+}
+
+/** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
+export async function documentJourney(page: Page, info: TestInfo) {
+  const account = await login(page, "first", "suppliers")
+  const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
+  const text = "Price: 42\nReference: " + key + "\n"
+  const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")
+  const endpoint = (mode: string, query: Record<string, string> = {}) => modeURL(account, "procurement", mode, query).href
+  const isMode = (url: string, mode: string) => {
+    const candidate = new URL(url)
+    return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
+  }
+  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
+  const { supplier, supplierNumber } = await createDocumentSupplier(page, account, key, name)
+  const suppliersURL = "/orchestra/sf-procurement/suppliers"
   const supplierRoute = `/orchestra/sf-procurement/suppliers/${encodeSfRouteRef(supplier)}`
   expect((await page.goto(supplierRoute))?.status()).toBe(200)
   const supplierDetail = page.locator(`[data-sf-supplier-ref="${supplier}"]`)

@@ -196,6 +196,7 @@ for (const [index, account] of accounts.entries()) {
     "procurement.spec.ts": ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"],
     "operations.spec.ts": ["comparison", "settings", "validation", "journey", "suppliers"],
     "native-ingress.spec.ts": ["comparison"],
+    "native-create.spec.ts": ["settings", "suppliers"],
   }
   for (const [spec, names] of Object.entries(scenarios)) {
     for (const scenario of names) {

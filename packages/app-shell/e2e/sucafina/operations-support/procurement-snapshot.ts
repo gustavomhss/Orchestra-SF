@@ -80,7 +80,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   }
 }
 
-async function createRequest(page: Page, account: Account, title: string) {
+export async function createRequest(page: Page, account: Account, title: string) {
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)

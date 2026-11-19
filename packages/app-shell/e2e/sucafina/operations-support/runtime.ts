@@ -49,7 +49,7 @@ export async function login(page: Page, key: "first" | "second" | "viewer", scen
   // Bounded failure codes only: never emit form values, auth data or response bodies.
   page.on("console", (message) => {
     const text = message.text()
-    if (text.startsWith("SF_PROCUREMENT_COMMAND_BOUNDARY ")) console.info(text.slice(0, 512))
+    if (text.startsWith("SF_PROCUREMENT_COMMAND_BOUNDARY ")) console.info(text.slice(0, 2048))
   })
   const manifest = await readManifest()
   const selected = manifest.accounts[key]
