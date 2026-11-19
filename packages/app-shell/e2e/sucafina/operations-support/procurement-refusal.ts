@@ -1,75 +1,157 @@
 import { randomUUID } from "node:crypto"
-import { expect } from "@playwright/test"
-import type { Page, TestInfo } from "@playwright/test"
+import { expect, type Locator, type Page, type TestInfo } from "@playwright/test"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { login, observation, readManifest } from "./runtime"
-import { commandResponse, createDraft, openRequest, queueIdentity, requestAction } from "./procurement"
+import type { Account } from "./runtime"
 
 export async function missingFxRefusal(page: Page, info: TestInfo) {
   const account = await login(page, "first", "validation")
   const supplier = (await readManifest()).records.supplier
-  const id = await createDraft(page, account, "Operations missing FX " + randomUUID())
-  const detail = page.locator('details[id="' + id + '"]')
-  await requestAction(page, id, detail.locator('section[id="' + id + '-pr"] form[data-command="submit_pr"]'), "Submit requisition")
-  await requestAction(page, id, detail.locator('form[data-command="approve"]'), "Approve")
-  const sourcing = detail.locator('section[id="' + id + '-sourcing"]')
-  const form = sourcing.locator('form[data-command="save"]')
-  await form.getByRole("textbox", { name: "Technical evaluator", exact: true }).fill("Synthetic Operations evaluator")
-  await form.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("Isolated quotation for an unavailable FX refusal")
-  await form.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Selected quotation still requires a configured FX rate")
-  await form.locator('[name="sourcing.quotes.0.supplier"]').fill("Journey registered supplier")
-  await form.locator('[name="sourcing.quotes.0.supplierId"]').selectOption(supplier)
-  // JPY is absent from the real initial settings. The test does not add a rate or compute a substitute.
-  await form.locator('[name="sourcing.quotes.0.currency"]').fill("JPY")
-  await form.locator('[name="sourcing.quotes.0.total"]').fill("28000")
-  await form.locator('[name="sourcing.quotes.0.qty"]').fill("1")
-  await form.locator('[name="sourcing.quotes.0.unitPrice"]').fill("28000")
-  for (const index of [0, 1, 2, 3, 4]) await form.locator(`[name="sourcing.quotes.0.scores.${index}"]`).fill("4")
-  for (const index of [1, 2]) await form.locator(`[name="sourcing.quotes.0.cscores.${index}"]`).fill("4")
-  await requestAction(page, id, form, "Save sourcing")
-  const quoteId = await form.locator('[name="sourcing.quotes.0.id"]').inputValue()
+  const title = "Operations missing FX " + randomUUID()
+  const id = await createRequest(page, account, title)
+  const encoded = encodeSfRouteRef(id)
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
+  await expect(detail).toHaveCount(1)
+  await confirmCommand(page, account, "submit_pr", id, detail.getByRole("button", { name: "Submit requisition", exact: true }), "Confirm action")
+  await approveRequest(page, account, id)
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
+  await page.getByRole("textbox", { name: "Evaluator", exact: true }).fill("Synthetic Operations evaluator")
+  await page.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("Isolated quotation for an unavailable FX refusal")
+  await page.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Selected quotation still requires a configured FX rate")
+  const quote = page.locator("fieldset.sf-u12-quote").first()
+  await quote.getByRole("textbox", { name: "Supplier", exact: true }).fill("Journey registered supplier")
+  await quote.getByRole("combobox", { name: "Registered supplier", exact: true }).selectOption(supplier)
+  await quote.getByRole("textbox", { name: "Currency", exact: true }).fill("JPY")
+  await quote.getByRole("spinbutton", { name: "Stated total", exact: true }).fill("28000")
+  await quote.getByRole("spinbutton", { name: "Quantity", exact: true }).fill("1")
+  await quote.getByRole("spinbutton", { name: "Unit price", exact: true }).fill("28000")
+  await fillEnabledScores(quote)
+  await confirmCommand(page, account, "save", id, page.getByRole("button", { name: "Save sourcing", exact: true }), "Confirm once")
+  await expect(page.getByRole("textbox", { name: "Selection justification", exact: true })).toHaveValue("Selected quotation still requires a configured FX rate")
+  const quoteId = ((await page.locator("fieldset.sf-u12-quote legend").first().innerText()).split(" · ")[1] ?? "").trim()
   expect(quoteId).not.toBe("")
-  const selection = sourcing.locator('form[data-command="select_quote"]')
-  await selection.getByRole("combobox", { name: "Winning quote", exact: true }).selectOption({ label: "Journey registered supplier · JPY 28000" })
-  const selected = await requestAction(page, id, selection, "Select quote")
+  expect(quoteId).not.toBe("Unavailable")
+  await page.getByRole("button", { name: "Compare quotations", exact: true }).click()
+  const comparison = page.locator("section.sf-u12-comparison")
+  const row = comparison.getByRole("row").filter({ hasText: "Journey registered supplier" })
+  await expect(row).toHaveCount(1)
+  await expect(row.getByRole("cell", { name: "Unavailable (fx-missing)", exact: true })).toHaveCount(1)
+  await expect(comparison.getByRole("status", { name: "Comparison is limited: fewer than two proposals are eligible.", exact: true })).toBeVisible()
+  const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
+  await winning.selectOption({ label: "Journey registered supplier · JPY 28000" })
+  const selected = await confirmCommand(page, account, "select_quote", id, comparison.getByRole("button", { name: "Select winning quote", exact: true }), "Confirm once")
   expect(selected.request().postDataJSON()).toMatchObject({ values: { quoteId } })
-  const comparison = sourcing.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Base amount / FX", exact: true }) })
-  const quote = comparison.getByRole("row").filter({ has: page.getByRole("cell", { name: "Journey registered supplier", exact: true }) })
-  await expect(quote).toHaveCount(1)
-  await expect(quote.getByRole("cell")).toHaveText([
-    "Journey registered supplier", "Unavailable: monetary data", "28000 JPY", "28000 JPY", "Unavailable (fx-missing)",
-    "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable",
-  ])
-  await expect(sourcing).toContainText("Comparison ranking unavailable: at least one proposal has missing, invalid or inconsistent monetary data.")
-  const version = await form.getAttribute("data-version")
-  if (!version || !/^[1-9]\d*$/.test(version)) throw new Error("The saved quotation must have a positive domain version")
-  const before = await queueIdentity(page, account, id, "Unavailable")
-  const summary = await detail.locator("[data-request-summary]").innerText()
-  const history = detail.locator('section[id="' + id + '-history"]')
-  const historyCells = await history.getByRole("cell").allTextContents()
-  const pending = commandResponse(page, "submit_sourcing", id)
-  await sourcing.getByRole("button", { name: "Submit sourcing", exact: true }).click()
+  await page.getByRole("button", { name: "Sourcing", exact: true }).click()
+  const version = await sourceVersion(page)
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/history`)
+  const history = page.locator(`article[data-sf-request-ref="${id}"] [data-stage="history"]`)
+  const historyText = await history.innerText()
+  const summary = await page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ }).innerText()
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
+  const pending = commandResponse(page, account.origin, "submit_sourcing", id)
+  await page.getByRole("button", { name: "Submit sourcing", exact: true }).click()
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await review.getByRole("button", { name: "Confirm once", exact: true }).click()
   const rejected = await pending
-  const message = "Quote 1: no FX rate defined for JPY (Settings → Currencies)"
+  const producer = "Quote 1: no FX rate defined for JPY (Settings → Currencies)"
+  const alert = "sourcing.quotes.0.currency: " + producer
   expect(rejected.status()).toBe(422)
   expect(rejected.request().postDataJSON()).toMatchObject({ page: "Requests", action: "submit_sourcing", id, version: Number(version) })
-  expect(await rejected.json()).toMatchObject({ ok: false, errors: [message], fieldErrors: [{ field: "sourcing.quotes.0.currency", message }] })
-  const currency = form.locator('[name="sourcing.quotes.0.currency"]')
+  expect(await rejected.json()).toMatchObject({ ok: false, errors: [producer], fieldErrors: [{ field: "sourcing.quotes.0.currency", message: producer }] })
+  await expect(page.getByRole("alert").filter({ hasText: alert })).toHaveText(alert)
+  await expect(page.getByRole("alert", { name: "The producer did not accept this operation.", exact: true })).toBeVisible()
+  const currency = page.locator("fieldset.sf-u12-quote").first().getByRole("textbox", { name: "Currency", exact: true })
   await expect(currency).toHaveValue("JPY")
-  await expect(currency).toHaveAttribute("aria-invalid", "true")
-  await expect(currency).toHaveAccessibleDescription(message)
-  await expect(form).toHaveAttribute("data-version", version)
-  await expect(detail.locator("[data-request-summary]")).toContainText("Value unavailable")
-  await expect(detail.locator("[data-request-summary]")).not.toContainText("Sourcing approval")
-  await openRequest(page, account, id)
-  await expect(form).toHaveAttribute("data-version", version)
-  await expect(currency).toHaveValue("JPY")
-  await expect(detail.locator("[data-request-summary]")).toHaveText(summary)
-  await expect(detail.locator("[data-request-money]")).toHaveText("Current request value: 28000 JPY; base value: Unavailable; FX: Unavailable.")
-  await expect(history.getByRole("cell")).toHaveText(historyCells)
-  await expect(form.locator('[name="sourcing.quotes.0.id"]')).toHaveValue(quoteId)
-  await expect(form.locator('[name="sourcing.quotes.0.supplierId"]')).toHaveValue(supplier)
-  await expect(selection.getByRole("combobox", { name: "Winning quote", exact: true })).toHaveValue(quoteId)
-  await expect(detail.locator('form[data-command="approve"]')).toHaveCount(0)
-  const after = await queueIdentity(page, account, id, "Unavailable")
-  await observation(info, "operations-missing-fx-refusal", { recordId: id, quoteId, supplierId: supplier, domainVersion: version, before, after, historyCells, refusal: { status: 422, field: "sourcing.quotes.0.currency", message }, submitted: false })
+  await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: sourcing · Source version: " + version)
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
+  await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText(summary)
+  await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText("Status: sourcing")
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/history`)
+  await expect(page.locator(`article[data-sf-request-ref="${id}"] [data-stage="history"]`)).toHaveText(historyText)
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
+  await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(page.locator("fieldset.sf-u12-quote legend").first()).toContainText(quoteId)
+  await expect(page.locator("fieldset.sf-u12-quote").first().getByRole("combobox", { name: "Registered supplier", exact: true })).toHaveValue(supplier)
+  await page.getByRole("button", { name: "Compare quotations", exact: true }).click()
+  await expect(page.getByRole("combobox", { name: "Selected quotation", exact: true })).toHaveValue(quoteId)
+  await observation(info, "operations-missing-fx-refusal", { recordId: id, quoteId, supplierId: supplier, domainVersion: version, refusal: { status: 422, field: "sourcing.quotes.0.currency", message: producer }, submitted: false })
+}
+
+async function createRequest(page: Page, account: Account, title: string) {
+  const form = page.locator('form[data-command="create"][data-page="Requests"]')
+  await expect(form).toHaveCount(1)
+  await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
+  await form.getByRole("combobox", { name: "Type", exact: true }).selectOption("service")
+  await form.getByRole("textbox", { name: "Description", exact: true }).fill("Isolated Operations sourcing scope")
+  await form.getByRole("spinbutton", { name: "Estimated amount", exact: true }).fill("100")
+  await form.getByRole("textbox", { name: "Cost center", exact: true }).fill("Synthetic IT")
+  await form.getByLabel("Needed by", { exact: true }).fill("2026-12-01")
+  await form.getByRole("textbox", { name: "Justification", exact: true }).fill("Operations fixture only")
+  await confirmCommand(page, account, "create", undefined, form.getByRole("button", { name: "Create request", exact: true }), "Confirm action")
+  const row = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
+  await expect(row).toHaveCount(1)
+  const id = (await row.getAttribute("data-sf-row")) ?? ""
+  expect(id).toMatch(/^PR-2026-\d+$/)
+  return id
+}
+
+async function approveRequest(page: Page, account: Account, id: string) {
+  const encoded = encodeSfRouteRef(id)
+  await page.goto(`/orchestra/sf-procurement/approvals/${encoded}`)
+  await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
+  await page.getByRole("button", { name: "Review decision", exact: true }).click()
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await page.getByRole("textbox", { name: "Approval comment (optional)", exact: true }).fill("Operations missing FX approval")
+  const pending = commandResponse(page, account.origin, "approve", id)
+  await review.getByRole("button", { name: "Approve PR", exact: true }).click()
+  const response = await pending
+  expect(response.status()).toBe(200)
+  expect(await response.json()).toMatchObject({ ok: true })
+  expect(response.request().postDataJSON()).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations missing FX approval" } })
+}
+
+async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {
+  await expect(openReview).toBeEnabled()
+  await openReview.click()
+  const review = page.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  const pending = commandResponse(page, account.origin, action, id)
+  await expect(review.getByRole("button", { name: confirmName, exact: true })).toBeEnabled()
+  await review.getByRole("button", { name: confirmName, exact: true }).click()
+  const response = await pending
+  expect(response.status()).toBe(200)
+  expect(await response.json()).toMatchObject({ ok: true })
+  expect(response.request().postDataJSON()).toMatchObject({ page: "Requests", action, ...(id ? { id } : {}) })
+  return response
+}
+
+function commandResponse(page: Page, origin: string, action: string, id?: string) {
+  return page.waitForResponse((response) => {
+    const request = response.request()
+    const url = new URL(request.url())
+    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/procurement") return false
+    const body = request.postDataJSON() as { action?: string; id?: string }
+    return body.action === action && (id === undefined || body.id === id)
+  })
+}
+
+async function fillEnabledScores(quote: Locator) {
+  for (const name of ["Technical scores", "Commercial scores"]) {
+    const section = quote.locator("section").filter({ has: quote.page().getByRole("heading", { name, exact: true }) })
+    const scores = section.getByRole("spinbutton")
+    const count = await scores.count()
+    for (let index = 0; index < count; index++) {
+      const input = scores.nth(index)
+      if (await input.isEnabled()) await input.fill("4")
+    }
+  }
+}
+
+async function sourceVersion(page: Page) {
+  const line = page.locator(".sf-u12-heading p")
+  await expect(line).toHaveText(/^Stage: \S+ · Source version: [1-9]\d*$/)
+  return (await line.innerText()).replace(/^Stage: \S+ · Source version: /, "")
 }
