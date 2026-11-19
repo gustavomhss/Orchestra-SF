@@ -1,4 +1,4 @@
-name: sf-native-screen-inspection
+name: sf-native-transport-inspection
 on:
   push:
     branches: [audit-logs-20261119]
@@ -10,38 +10,73 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read the completed Operations artifact
+      - name: Read completed Operations artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565396740/zip > "$RUNNER_TEMP/operations4.zip"
-      - name: Extract only bounded screen context
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14565396740/zip > "$RUNNER_TEMP/operations4.zip"
+      - name: Read completed Dashboard artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14569076992/zip > "$RUNNER_TEMP/dashboard4.zip"
+      - name: Extract bounded paths and statuses
         run: |
           python3 - <<'PY'
-          import base64, json, os, pathlib, re, zipfile
+          import base64, io, json, os, pathlib, re, urllib.parse, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          output = ["# Original native screen observations", "", "Read-only extraction from already completed Actions; no tests rerun.", ""]
+          output = ["# Original native transport observations", "", "Read-only original Actions artifacts. No test rerun. Only method, path, sf mode and status; no headers, request bodies, response bodies or credentials are published.", ""]
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          for name, run, artifact in [("operations4", 44594105701, 14565396740)]:
-              output += [f"## Run {run}; artifact {artifact}", ""]
-              with zipfile.ZipFile(root / f"{name}.zip") as archive:
-                  all_contexts = [item for item in archive.namelist() if item.endswith("/error-context.md")]
-                  members = [item for item in all_contexts if re.search(r"/sucafina-operations-", item, re.I)]
-                  output += ["Available contexts: " + ", ".join(all_contexts), ""]
-                  output += [f"Screen context files: {len(members)}", ""]
-                  for member in members:
+          for label, run, artifact in [("operations4", 44594105701, 14565396740), ("dashboard4", 44601709564, 14569076992)]:
+              output += [f"## {label}: run {run}, artifact {artifact}", ""]
+              with zipfile.ZipFile(root / f"{label}.zip") as archive:
+                  members = archive.namelist()
+                  selected = [p for p in members if p.endswith("/trace.zip") and ("/sucafina-operations-" in p if label == "operations4" else "/sucafina-dashboard-install" in p)]
+                  output += [f"Selected traces: {len(selected)}", ""]
+                  for member in selected:
                       output += [f"### {member}", ""]
-                      for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:420]:
-                          if sensitive.search(line):
-                              continue
-                          output.append(line[:1200])
-                      output.append("")
+                      writes, reads = [], []
+                      with zipfile.ZipFile(io.BytesIO(archive.read(member))) as trace:
+                          for network in [p for p in trace.namelist() if p.endswith(".network")]:
+                              for raw in trace.read(network).decode("utf-8", errors="replace").splitlines():
+                                  try: entry = json.loads(raw)
+                                  except Exception: continue
+                                  snap = entry.get("snapshot", {})
+                                  req, res = snap.get("request", {}), snap.get("response", {})
+                                  if not isinstance(req, dict) or not isinstance(res, dict) or not isinstance(req.get("url"), str): continue
+                                  parsed = urllib.parse.urlsplit(req["url"])
+                                  query = urllib.parse.parse_qs(parsed.query)
+                                  item = {"method": req.get("method"), "path": parsed.path[:200], "sf": query.get("sf", [None])[0], "status": res.get("status"), "time": snap.get("_monotonicTime")}
+                                  if item["method"] == "POST": writes.append(item)
+                                  elif parsed.path.startswith("/sucafina/"): reads.append(item)
+                      output += ["POST observations:", json.dumps(writes[:120], ensure_ascii=False), "", "Final read observations:", json.dumps(reads[-16:], ensure_ascii=False), ""]
+                  if label == "dashboard4":
+                      for member in [p for p in members if p.endswith("/error-context.md")]:
+                          output += [f"### Screen: {member}", ""]
+                          for line in archive.read(member).decode("utf-8", errors="replace").splitlines()[:300]:
+                              if not sensitive.search(line): output.append(line[:1200])
+                          output.append("")
+                      diagnostics = [p for p in members if "dashboard-installed-transport" in p and p.endswith(".json")]
+                      output += ["Dashboard diagnostic files: " + ", ".join(diagnostics), ""]
+                      for member in diagnostics:
+                          try: value = json.loads(archive.read(member))
+                          except Exception: continue
+                          found = []
+                          def visit(value):
+                              if isinstance(value, list):
+                                  for item in value: visit(item)
+                              elif isinstance(value, dict):
+                                  if "event" in value or "method" in value:
+                                      record = {k: v for k, v in value.items() if k in ["event","method","path","mode","code","status","tab"] and isinstance(v, (str,int,float,bool)) and not sensitive.search(str(v))}
+                                      if record: found.append(record)
+                                  for item in value.values():
+                                      if isinstance(item, (dict,list)): visit(item)
+                          visit(value)
+                          output += [f"### Counters: {member}", json.dumps(found[-200:], ensure_ascii=False), ""]
           text = "\n".join(output) + "\n"
-          payload = {"message": "docs(sf): preserve original failed native screen observations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
-          (root / "screen-payload.json").write_text(json.dumps(payload))
-          print(f"Extracted {len(output)} bounded lines; no trace, headers or requests were read.")
+          payload = {"message": "docs(sf): retain bounded original transport observations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "transport-payload.json").write_text(json.dumps(payload))
+          print("Published bounded diagnostic fields only; headers and bodies omitted.")
           PY
-      - name: Persist the observed screen context
+      - name: Persist bounded observations
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-screens-44594105701-v2.md --input "$RUNNER_TEMP/screen-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-native-transport-20261119.md --input "$RUNNER_TEMP/transport-payload.json" > /dev/null
