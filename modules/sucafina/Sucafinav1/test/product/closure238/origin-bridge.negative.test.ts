@@ -5,7 +5,7 @@ import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { validateSfOwnedLocationProbe } from "../../../../../../apps/desktop/src/main/sucafina/connections"
 import { createSfDesktopOriginBridge238 } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/host/desktop-origin-bridge238"
-import { ServerConnection } from "../../../../../../packages/app-shell/src/context/server"
+import type { ServerConnection } from "../../../../../../packages/app-shell/src/context/server-connection"
 import type { SfDesktopCapability, SfDesktopInvalidation } from "@orchestra/client/sucafina/transport"
 import type { SfInstallationDescriptor, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
 
