@@ -14,6 +14,8 @@ import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/
 import type { DecisionCase } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
+import { decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission"
+import { createProcurementSourceResolver } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/sources"
 import { prepareC12Change } from "../../../../../modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture"
 import { SfSourceEvidenceInput } from "../../../../schema/src/sucafina/decisions/source-contracts"
 import type { C12Configuration, C12Prepared, C12Ready, C12Traffic } from "./c12-protocol"
@@ -162,8 +164,40 @@ if (!retained) {
   const queue = object(await queueResponse.json())
   const matches = rows(object(queue.value).rows).filter((row) => row.id === "PR-1")
   if (queue.status !== "ok" || matches.length !== 1) throw new Error("C12_REAL_C02_SOURCE_AMBIGUOUS")
-  const evidence = Schema.decodeUnknownSync(Schema.toType(SfSourceEvidenceInput))(matches[0]!.evidence)
-  if (evidence.kind !== "record") throw new Error("C12_RECORD_EVIDENCE_REQUIRED")
+  const rowEvidence = Schema.decodeUnknownSync(Schema.toType(SfSourceEvidenceInput))(matches[0]!.evidence)
+  if (rowEvidence.kind !== "record" || rowEvidence.target.surface !== "procurement" ||
+      rowEvidence.target.recordType !== "procurement-request" || rowEvidence.target.recordId !== "PR-1")
+    throw new Error("C12_RECORD_EVIDENCE_REQUIRED")
+  // C02 identifies the row through its collection scope. C12 requires the
+  // producer's individual, persisted selector, as the canonical fixture does.
+  const sourceInput = { requestRef: rowEvidence.refId }
+  const sourceCall = await authority.ui.admit(request(), "sf_request_read", digestSfValue(sourceInput))
+  if (sourceCall.status !== "ok") throw new Error("C12_ORIGINAL_SOURCE_ADMISSION_FAILED")
+  const evidence = await (async () => {
+    try {
+      if (!await authority.ui.revalidate(sourceCall.value)) throw new Error("C12_ORIGINAL_SOURCE_AUTHORITY_CHANGED")
+      const read = await authority.dispatch("sf_request_read", sourceInput, sourceCall.value)
+      if (read.status !== "ok") throw new Error("C12_ORIGINAL_SOURCE_READ_FAILED status=" + read.status)
+      const projection = decodeSfOperationOutput("sf_request_read", read.result)
+      if (!projection.ok) throw new Error("C12_ORIGINAL_SOURCE_PROJECTION_INVALID")
+      const individual = createProcurementSourceResolver({
+        host: authority.host, scopedSources: store,
+        contextFor: async (call) => call === sourceCall.value && await authority.host.revalidate(call)
+          ? { status: "ok", value: projection.value.context }
+          : { status: "denied", reason: "fixture-source-authority-changed" },
+      })
+      const issued = await individual.issue("procurement-request", rowEvidence.target.recordId, sourceCall.value)
+      if (issued.status !== "ok") throw new Error("C12_ORIGINAL_INDIVIDUAL_SOURCE_FAILED status=" + issued.status)
+      const resolved = await individual.resolve(issued.value, sourceCall.value)
+      if (resolved.status !== "ok" || resolved.value.evidence.target.recordId !== rowEvidence.target.recordId ||
+          digestSfValue(resolved.value.evidence.target.period) !== digestSfValue(selectionPayload.period) ||
+          !await authority.ui.revalidate(sourceCall.value))
+        throw new Error("C12_ORIGINAL_INDIVIDUAL_SOURCE_CHANGED")
+      return resolved.value.evidence
+    } finally {
+      authority.ui.finish(sourceCall.value)
+    }
+  })()
   // C12 qualifies Apply/Recover, not authoring. Persist the synthetic case
   // through the same authenticated C08 creation target and SQLite authority.
   const decision: DecisionCase = {
