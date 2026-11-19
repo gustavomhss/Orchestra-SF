@@ -417,7 +417,10 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
             <section class="mx-card" aria-label={t("sf.u27.recipe")}>
               <h2>{t("sf.u27.recipe")}</h2>
               <Show when={view.recipesState === "ready"} fallback={
-                <p role="status">{view.recipesState === "empty" ? t("sf.u27.noRecipes") : t(n29StateKey(view.recipesState))}</p>
+                <SfStatePanel
+                  state={view.recipesState}
+                  messageKey={view.recipesState === "empty" ? n29Key("sf.u27.noRecipes") : n29StateKey(view.recipesState)}
+                />
               }>
                 <label class="sf-n29-field">
                   <span>{t("sf.u27.selectRecipe")}</span>
