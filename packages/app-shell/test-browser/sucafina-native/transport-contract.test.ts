@@ -23,13 +23,80 @@ if (sourceBlob !== "31dbec1726fd8147156b01dc545726650ffd49e1") {
 }
 const catalog = JSON.parse(catalogText) as {
   operations: Record<string, { method: string; pathTemplate: string; effect: string; responseMode?: string;
-    fixedQuery?: Record<string, string>; fixedBodyDiscriminator?: Record<string, string> }>
+    fixedQuery?: Record<string, string>; fixedBodyDiscriminator?: Record<string, string>; maxRequestBytes?: number }>
+}
+
+// These closed inputs omit surface. Bind only to the verified original adapters;
+// the immutable I00 catalog remains the source for every other metadata field.
+const surfaceBindings: Readonly<Record<string, "dashboard" | "procurement">> = {
+  "collaboration.answer-confirm": "dashboard",
+  "collaboration.answer-prepare": "dashboard",
+  "collaboration.answer-prepare-message": "dashboard",
+  "collaboration.answer-read": "dashboard",
+  "collaboration.confirmation-confirm": "dashboard",
+  "collaboration.confirmation-prepare": "dashboard",
+  "collaboration.confirmation-project": "dashboard",
+  "collaboration.cycle-read": "dashboard",
+  "collaboration.handoff-create": "dashboard",
+  "collaboration.handoff-link": "dashboard",
+  "collaboration.handoff-update": "dashboard",
+  "collaboration.question-consume": "dashboard",
+  "collaboration.question-output": "dashboard",
+  "collaboration.recipients": "dashboard",
+  "collaboration.relation-create": "dashboard",
+  "collaboration.relation-read": "dashboard",
+  "collaboration.relation-remove": "dashboard",
+  "collaboration.selection-create": "dashboard",
+  "collaboration.selection-list": "dashboard",
+  "collaboration.selection-version": "dashboard",
+  "collaboration.storage-version": "dashboard",
+  "collaboration.thread-create": "dashboard",
+  "collaboration.thread-edit": "dashboard",
+  "collaboration.thread-history": "dashboard",
+  "collaboration.thread-read": "dashboard",
+  "collaboration.thread-reply": "dashboard",
+  "collaboration.thread-resolve": "dashboard",
+  "collaboration.work-destination": "dashboard",
+  "collaboration.work-list": "dashboard",
+  "decisions.choice.read": "dashboard",
+  "decisions.command.sf_case_draft": "dashboard",
+  "decisions.command.sf_change_prepare": "dashboard",
+  "decisions.command.sf_question_prepare": "dashboard",
+  "decisions.controls.read": "dashboard",
+  "decisions.current-choice-prepare": "dashboard",
+  "decisions.current-choice-promote": "dashboard",
+  "decisions.decision-add-question": "dashboard",
+  "decisions.decision-answer-question": "dashboard",
+  "decisions.decision-apply": "procurement",
+  "decisions.decision-choose": "dashboard",
+  "decisions.decision-condition": "dashboard",
+  "decisions.decision-coverage": "dashboard",
+  "decisions.decision-criteria": "dashboard",
+  "decisions.decision-prepare-changes": "procurement",
+  "decisions.decision-promote": "dashboard",
+  "decisions.decision-recover": "procurement",
+  "decisions.decision-review": "procurement",
+  "decisions.decision-select-portfolio": "dashboard",
 }
 
 describe("Q01 integrated transport contract / original producer", () => {
   test("Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension", () => {
     expect(Object.keys(catalog.operations)).toHaveLength(305)
-    expect(SfOperationExtensions).toEqual({
+    const expectedExtensions = {
+      "dashboard.dashboard-draft-read": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "dashboard-draft-read" } },
+      "dashboard.dashboard-hot-topic-draft-outcome": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "dashboard-hot-topic-draft-outcome" } },
+      "decisions.decision-edit": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "mutation",
+        responseMode: "json", fixedQuery: { sf: "decision-edit" }, maxRequestBytes: 262144 },
+      "reviews.review-read": { method: "GET", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "review-read" } },
+      "reviews.review-agenda-options": { method: "GET", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "review-agenda" } },
+      "reviews.review-agenda": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "preview",
+        responseMode: "json", fixedQuery: { sf: "review-agenda" }, maxRequestBytes: 262144 },
+      "reviews.review-preserve": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "mutation",
+        responseMode: "json", fixedQuery: { sf: "review-preserve" }, maxRequestBytes: 262144 },
       "files.export.members": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
         responseMode: "bytes", fixedQuery: { download: "members" } },
       "files.export.po": { method: "GET", pathTemplate: "{mount}/{surface}", effect: "read",
@@ -38,7 +105,26 @@ describe("Q01 integrated transport contract / original producer", () => {
         responseMode: "bytes", fixedQuery: { sf: "review-download" } },
       "reviews.report.prepare": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "prepare",
         responseMode: "json", fixedQuery: { sf: "review-report" }, maxRequestBytes: 65536 },
-    })
+    }
+    expect(Object.keys(SfOperationExtensions).sort()).toEqual([...Object.keys(expectedExtensions), ...Object.keys(surfaceBindings)].sort())
+    for (const [id, expected] of Object.entries(expectedExtensions))
+      expect(SfOperationExtensions[id as keyof typeof SfOperationExtensions]).toEqual(expected)
+    for (const [id, surface] of Object.entries(surfaceBindings)) {
+      const source = catalog.operations[id]
+      if (!source) throw new Error("Original bound operation is absent from the frozen catalog: " + id)
+      expect(source.pathTemplate).toBe("{mount}/{surface}")
+      expect(SfOperationExtensions[id as keyof typeof SfOperationExtensions]).toEqual({
+        method: source.method, pathTemplate: "{mount}/" + surface, effect: source.effect,
+        responseMode: source.responseMode ?? "json",
+        ...(source.fixedQuery ? { fixedQuery: source.fixedQuery } : {}),
+        ...(source.fixedBodyDiscriminator ? { fixedBodyDiscriminator: source.fixedBodyDiscriminator } : {}),
+        ...(source.maxRequestBytes !== undefined ? { maxRequestBytes: source.maxRequestBytes } : {}),
+      })
+    }
+    // Explicit original producers added after I00; do not rewrite its pinned 305 IDs.
+    // decision-domain-http.ts owns edit CAS; product/reviews/http.ts owns read/agenda/preserve.
+    for (const id of ["dashboard.dashboard-draft-read", "dashboard.dashboard-hot-topic-draft-outcome", "decisions.decision-edit", "reviews.review-read", "reviews.review-agenda-options", "reviews.review-agenda", "reviews.review-preserve"] as const)
+      expect(Object.hasOwn(catalog.operations, id)).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.po")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)
@@ -73,7 +159,7 @@ describe("Q01 integrated transport contract / original producer", () => {
       method: "POST", pathTemplate: "{mount}/api/ui/projections/search", effect: "read",
       responseMode: "json", maxRequestBytes: 4096,
     })
-    const expected = [...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases, reviewThreadContext].sort()
+    const expected = [...new Set([...Object.keys(catalog.operations), ...Object.keys(SfOperationExtensions), similarCases, reviewThreadContext])].sort()
     expect(Object.keys(SfOperationRegistry).sort()).toEqual(expected)
     expect([...SfOperationIds].sort()).toEqual(expected)
     expect(SfOperationRegistry["files.export.members"]).toEqual(SfOperationExtensions["files.export.members"])
@@ -84,7 +170,7 @@ describe("Q01 integrated transport contract / original producer", () => {
       const actual: SfNativeOperationRoute = SfOperationRegistry[id as keyof typeof SfOperationRegistry]
       expect(actual, "Q01 integrated metadata missing " + id).toBeDefined()
       expect(actual.method, "Q01 producer method " + id).toBe(id === privateSearch ? "POST" : source.method)
-      expect(actual.pathTemplate).toBe(source.pathTemplate)
+      expect(actual.pathTemplate).toBe(surfaceBindings[id] ? "{mount}/" + surfaceBindings[id] : source.pathTemplate)
       expect(actual.effect).toBe(source.effect)
       // The pinned 305 records do not encode responseMode; verify only claims
       // actually in the frozen source, and validate the normalized enum otherwise.

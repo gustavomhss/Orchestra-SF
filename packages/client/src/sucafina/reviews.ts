@@ -9,6 +9,7 @@ import {
   SfDashboardDashboardReviewPreserve, SfProjectionReview,
   SfReviewsExportDocx, SfReviewsExportPptx, SfReviewsReportPrepare,
   SfReviewsReviewSource, SfReviewsReviewThreadContext, SfReviewsReviewUpdate,
+  SfReviewsReviewAgendaOptions, SfReviewsReviewAgenda, SfReviewsReviewPreserve, SfReviewsReviewRead,
 } from "@orchestra/schema/sucafina/reviews"
 import type { SfCallOptions, SfTransport } from "./transport"
 
@@ -85,6 +86,28 @@ const report = (value: Input<typeof SfReviewsExportDocx>) =>
  */
 export function createSfReviewsClient(transport: SfTransport) {
   return {
+    "reviews.review-read": (
+      input: Input<typeof SfReviewsReviewRead>, options: SfCallOptions,
+    ) => text(input.reviewRef, 2048) && readOptions(options)
+      ? transport.execute(SfReviewsReviewRead, input, options)
+      : Promise.resolve(mismatch()),
+    "reviews.review-agenda-options": (
+      input: Input<typeof SfReviewsReviewAgendaOptions>, options: SfCallOptions,
+    ) => period(input) && readOptions(options)
+      ? transport.execute(SfReviewsReviewAgendaOptions, input, options)
+      : Promise.resolve(mismatch()),
+    "reviews.review-agenda": (
+      input: Input<typeof SfReviewsReviewAgenda>, options: SfCallOptions,
+    ) => !!input && Array.isArray(input.items) && input.items.length >= 1 && input.items.length <= 30 &&
+      distinct(input.items.map((item) => item.id), 1, 30) && input.items.every((item) => period(item.period)) &&
+      readOptions(options)
+      ? transport.execute(SfReviewsReviewAgenda, input, options)
+      : Promise.resolve(mismatch()),
+    "reviews.review-preserve": (
+      input: Input<typeof SfReviewsReviewPreserve>, options: SfCallOptions,
+    ) => review(input) && mutationKey(options)
+      ? transport.execute(SfReviewsReviewPreserve, input, options)
+      : Promise.resolve(mismatch()),
     "dashboard.dashboard-agenda": (
       input: Input<typeof SfDashboardDashboardAgenda>, options: SfCallOptions,
     ) => agenda(input) && readOptions(options)
