@@ -177,6 +177,10 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     // Transport treats any uncertain dispatched upload as outcome-unknown; do not retry.
     if (signal.aborted || !current(snapshot)) return
     if (response.kind === "transport-error") {
+      // Enum-only observation of the refused request; no file, owner or body data.
+      if (["contract-mismatch", "contract-unavailable", "invalid-response", "outcome-unknown", "aborted", "context-mismatch", "network"].includes(response.reason)) {
+        try { console.info("[sf-asset-upload] reason=" + response.reason) } catch { /* Observation cannot change the refusal. */ }
+      }
       setUi({ busy: false, file: undefined,
         phase: response.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable",
         detail: "orchestra.sf.s04.bound.unconfirmed" })

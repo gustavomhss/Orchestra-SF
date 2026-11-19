@@ -77,6 +77,13 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
 
 /** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
 export async function documentJourney(page: Page, info: TestInfo) {
+  page.on("console", (message) => {
+    const text = message.text()
+    try {
+      if (/^\[sf-asset-upload\] reason=(contract-mismatch|contract-unavailable|invalid-response|outcome-unknown|aborted|context-mismatch|network)$/.test(text)) console.info(text)
+      if (/^\[sf-file-authority\] files\.asset\.upload stage=(context-metadata|context-route|context-status|context-media-type|context-body|context-codec|context-outcome|context-envelope|operation-unavailable|stamp-invalid|installation-changed|principal-changed|policy-changed|access-changed|ready|context-exception)$/.test(text)) console.info(text)
+    } catch { /* Diagnostic logging never changes the test action. */ }
+  })
   const account = await login(page, "first", "suppliers")
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"

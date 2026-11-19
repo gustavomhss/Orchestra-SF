@@ -23,3 +23,7 @@ Executar somente `e2e/sucafina/operations.spec.ts` com package app, Playwright p
 ## Runs e resultado
 - [44624816144](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44624816144): FAILURE antes do navegador. Snapshot 4faa4f8274367678d071dc43276c15ba4f881ba2; job135915701407 falhou no CLI typecheck (TS2367 em975/998 e narrowing never em1002); cleanup135917606431 SUCCESS.
 - Gate com esta correção: pendente.
+
+## Evidência posterior
+- Operations8 [44625548030](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44625548030): FAILURE1pass/4fail. Os3typechecks e ClamD foram SUCCESS; cleanup135923391917 SUCCESS. As comparaçõesObject.is estão compiladas. As falhas funcionais permanecem e não são qualificadas pelos tipos.
+- Auditoria44627529596 SUCCESS do artifact14579851540 mostra CAP25/save/submit_sourcing e files.asset.upload READY/operationaltrue. Os comandos seguintes não chegaram ao produtor; code460706 corrige somente total numérico de sourcing, code1a1d observa o POSTVersions original de Imports, e5e618 adiciona diagnóstico fechado do upload. Próximo gate: Operations9; sem timeout/assert removidos.

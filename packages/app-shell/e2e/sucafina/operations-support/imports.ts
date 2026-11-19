@@ -3,7 +3,7 @@ import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, Response, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { login, modeURL, observation } from "./runtime.ts"
@@ -75,13 +75,36 @@ async function confirmVersion(page: Page, account: Account, opener: Locator) {
   await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
   const confirm = review.getByRole("button", { name: "Confirm", exact: true })
   await expect(confirm).toBeEnabled()
-  const pending = versionSave(page, account)
-  await confirm.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  const body = await response.json() as { ok?: boolean; value?: unknown }
-  expect(body).toMatchObject({ ok: true })
-  return { response, body }
+  const path = new URL(account.baseURL).pathname + "/planner"
+  const matching = (url: URL) => url.origin === account.origin && url.pathname === path && url.searchParams.get("page") === "Versions"
+  const observed = new WeakMap<Request, { status: number; body: unknown; delivered: Promise<void> }>()
+  let forwarded = 0
+  const forward = async (route: Route) => {
+    const request = route.request()
+    if (request.method() !== "POST" || request.postDataJSON()?.action !== "save") return route.continue()
+    expect(++forwarded, "One native confirmation forwards exactly one original version command").toBe(1)
+    const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+    const body: unknown = await original.json()
+    const delivered = route.fulfill({ response: original })
+    observed.set(request, { status: original.status(), body, delivered })
+    await delivered
+  }
+  await page.route(matching, forward)
+  try {
+    const pending = versionSave(page, account)
+    await confirm.click()
+    const response = await pending
+    expect(response.status()).toBe(200)
+    const original = observed.get(response.request())
+    expect(original, "The same browser request must retain its original producer response").toBeDefined()
+    if (!original) throw new Error("IMPORT_VERSION_RESPONSE_NOT_OBSERVED")
+    await original.delivered
+    expect(original.status).toBe(response.status())
+    expect(forwarded).toBe(1)
+    const body = original.body as { ok?: boolean; value?: unknown }
+    expect(body).toMatchObject({ ok: true })
+    return { response, body }
+  } finally { await page.unroute(matching, forward) }
 }
 
 /** PR34 15df31a: actual XLSX admission, C02 preview, one Apply, delivery loss and read-only reconciliation. */
