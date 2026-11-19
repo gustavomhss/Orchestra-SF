@@ -46,12 +46,14 @@ type Edit = Readonly<{
   name: string; desc: string; owner: string; entity: string; alloc: string;
   cls: string; cur: string; el: string; proj: string; code: string;
   approvalState: string; investmentStart: string; investmentEnd: string;
+  annual: string;
 }>
-type ReviewKind = "line-save" | "project-save" | "line-delete" | "project-delete" |
+type LineDraft = Readonly<{ name: string; owner: string; el: string; cur: string; annual: string }>
+type ReviewKind = "line-save" | "line-create" | "project-save" | "line-delete" | "project-delete" |
   "spread" | "reset" | "closed" | "split"
 type Review = Readonly<{
   kind: ReviewKind; id: string; revision: number; operationRef: SfOperationRef;
-  target?: string; through?: number; nextSplit?: boolean;
+  target?: string; through?: number; nextSplit?: boolean; draft?: LineDraft;
 }>
 const key = (s: string) => s as SfCopyKey
 const msg = (s: string): SfMessage => ({ key: key(s) })
@@ -69,9 +71,12 @@ const initialEdit = (row: PlanLine | PlanProject): Edit => ({
   approvalState: "approvalState" in row ? row.approvalState ?? "" : "",
   investmentStart: "investmentStart" in row ? row.investmentStart ?? "" : "",
   investmentEnd: "investmentEnd" in row ? row.investmentEnd ?? "" : "",
+  annual: "annual" in row && typeof row.annual === "number" ? String(row.annual) : "",
 })
 const cellKey = (coord: SfCellCoordinate) =>
   JSON.stringify([coord.measure, coord.month])
+const blankLine = (): LineDraft => ({ name: "", owner: "", el: "licenses", cur: "USD", annual: "" })
+const finiteAnnual = (value: string) => /^-?\d+(\.\d+)?$/.test(value.trim())
 const fullCoverage = () => ({
   state: "complete" as const, summary: msg("sf.u07.source"), reasons: [],
   knownCount: 1, expectedCount: 1,
@@ -102,6 +107,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     review: null as Review | null,
     closedChoice: 0,
     draftRevision: 0,
+    create: blankLine(),
   })
   const editors = new Map<string, SfPublicDraftController<Edit>>()
   const monthlyDrafts = new Map<string, SfPublicDraftController<Readonly<Record<string,string>>>>()
@@ -144,6 +150,24 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     ...(props.route.query.filter === undefined ? {} : { q: props.route.query.filter }),
   })
   const reload = () => setState("refresh", (n) => n + 1)
+  const directory = () => {
+    const data = state.page?.data
+    if (!data || !("directory" in data)) return []
+    return data.directory ?? []
+  }
+  const currencyCodes = () => {
+    const data = state.page?.data
+    const listed = data && "currencies" in data ? data.currencies ?? [] : []
+    return [...new Set(["USD", ...listed, line()?.cur ?? ""].filter((code) => code !== ""))]
+  }
+  const elements = () => {
+    const listed = splitRows().map((row) => row.element)
+    const extras = [line()?.el, state.create.el].filter((value): value is string => !!value && !listed.includes(value))
+    return [...extras, ...listed]
+  }
+  const lineCas = (id: string) => state.page?.versions[`${versionId()}:lines:${id}`]?.version ?? 0
+  const reviewState = (): SfUiState =>
+    state.phase === "empty" || state.phase === "filtered-empty" ? "ready" : state.phase
 
   createEffect(() => {
     const generation = owner.generation()
@@ -156,7 +180,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       editors.clear()
       monthlyDrafts.clear()
       setState({ selected: "", chosenVersion: "", paste: { phase: "idle" }, pasteInput: null, review: null,
-        uncertainty: false })
+        uncertainty: false, create: blankLine() })
       lastIdentity = identity
     }
     if (!ready || !contextDest()?.canRead) {
@@ -219,7 +243,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (owner.state().status !== "ready") {
       editors.clear()
       monthlyDrafts.clear()
-      setState({ page: null, selected: "", paste: { phase: "idle" }, pasteInput: null, review: null })
+      setState({ page: null, selected: "", paste: { phase: "idle" }, pasteInput: null, review: null, create: blankLine() })
     }
   })
 
@@ -480,6 +504,18 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     reload()
   }
 
+  const beginCreate = () => {
+    if (!isOpex() || !versionId() || !allowed("save")) return
+    const draft = state.create
+    if (!draft.name.trim() || !finiteAnnual(draft.annual) || !draft.el || !draft.cur) {
+      setState("error", t("sf.common.fieldErrorSummary"))
+      return
+    }
+    setState("review", {
+      kind: "line-create", id: "", revision: 0,
+      operationRef: crypto.randomUUID() as SfOperationRef, draft,
+    })
+  }
   const openReview = (kind:ReviewKind, id:string, revision:number|undefined,
     extras?:Partial<Pick<Review,"target"|"through"|"nextSplit">>) => {
     const action = kind.endsWith("delete") ? "delete" : kind === "spread" ? "spread" : kind === "reset" ? "reset" : "save"
@@ -504,6 +540,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (!r) return [] as SfReviewField[]
     if (r.kind === "closed") return fields({period:version()?.closed ?? 0})
     if (r.kind === "split") return fields({element:r.target ?? "", split:!r.nextSplit})
+    if (r.kind === "line-create") return []
     const rec = record()
     if (!rec) return []
     return fields(initialEdit(rec))
@@ -513,6 +550,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (!r) return [] as SfReviewField[]
     if (r.kind === "closed") return fields({period:r.through ?? 0})
     if (r.kind === "split") return fields({element:r.target ?? "", split:r.nextSplit ?? false})
+    if (r.kind === "line-create") return fields(r.draft ?? state.create)
     if (r.kind === "line-save" || r.kind === "project-save") {
       const rec=record();const snap=rec && getEditor(rec)?.snapshot()
       if (snap?.availability === "active") return fields(snap.value)
@@ -554,7 +592,26 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     setState({busy:true,error:""})
     try {
       let reply: {kind:string;status?:number;body?:{ok:boolean;errors?:readonly string[]}} | undefined
-      if (r.kind==="line-save" && sourceRecord) {
+      if (r.kind==="line-create" && isOpex()) {
+        const draft = r.draft
+        if (!draft || !draft.name.trim() || !finiteAnnual(draft.annual) || r.revision !== 0) {
+          setState({ phase: "invalid", error: t("sf.common.fieldErrorSummary") })
+          return
+        }
+        reply = await client["domain.command.CAP18.save"]({
+          ...base, page: "OPEX", action: "save",
+          values: {
+            versionId: versionId(), collection: "lines",
+            name: draft.name.trim(),
+            ...(draft.owner ? { owner: draft.owner } : {}),
+            el: draft.el, cur: draft.cur, annual: draft.annual.trim(),
+          },
+        }, { signal, idempotencyKey: idem })
+      } else if (r.kind==="line-save" && sourceRecord) {
+        if (lineCas(r.id) !== r.revision) {
+          setState({ phase: "conflict", error: t("sf.common.conflict") })
+          return
+        }
         const snapshot=getEditor(sourceRecord)?.snapshot()
         if (snapshot?.availability!=="active" || snapshot.conflict || snapshot.phase==="conflict") {
           setState({ phase: "conflict", error: t("sf.common.conflict") })
@@ -563,6 +620,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         const original=snapshot.base ?? initialEdit(sourceRecord)
         const values=Object.fromEntries(Object.entries(snapshot.value).filter(([field,value]) =>
           field!=="code" && value !== original[field as keyof Edit]))
+        if ("annual" in values && !finiteAnnual(String(values.annual))) {
+          setState({ phase: "invalid", error: t("sf.common.fieldErrorSummary") })
+          return
+        }
         const input={...base,page:pageName(),action:"save" as const,id:r.id,
           values:{versionId:versionId(),collection:"lines" as const,...values}}
         reply=isOpex()
@@ -612,7 +673,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           error:reply.status===409 ? t("sf.common.conflict") : reply.body?.errors?.join("; ")??t("sf.common.failed")})
       } else {
         if (sourceRecord) getEditor(sourceRecord)?.discard()
-        setState({review:null,phase:"loading",error:t("sf.u07.saved")})
+        setState({review:null,phase:"loading",error:t("sf.u07.saved"),create:blankLine()})
         reload()
       }
     } catch(error) {
@@ -661,7 +722,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
               <label>{t("sf.u07.version")}
                 <select value={page().data.selectedVersion?.id ?? ""} disabled={state.busy || state.uncertainty}
                   onChange={(event) => setState({ chosenVersion: event.currentTarget.value,
-                    selected: "", review: null, paste: { phase: "idle" }, pasteInput: null })}>
+                    selected: "", review: null, paste: { phase: "idle" }, pasteInput: null, create: blankLine() })}>
                   <For each={page().data.versions}>{(entry) =>
                     <option value={entry.id}>{entry.name} · {entry.year}</option>}
                   </For>
@@ -709,23 +770,63 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
               <h2 id="sf-u07-lines">{t("sf.u07.lines")}</h2>
               <div class="sf-u07-table-scroll" role="region" tabIndex={0}>
                 <table><thead><tr>
-                  <th>{t("sf.u07.columns.line")}</th><th>{t("sf.u07.columns.owner")}</th>
-                  <th>{t(isOpex()?"sf.u07.columns.element":"sf.u07.columns.project")}</th>
-                  <th>{t("sf.u07.columns.currency")}</th><th>{t("sf.u07.columns.id")}</th>
+                  <th>{t("sf.u07.name")}</th><th>{t("sf.u07.owner")}</th>
+                  <th>{t(isOpex()?"sf.u07.element":"sf.u07.columns.project")}</th>
+                  <th>{t("sf.u07.currency")}</th>
+                  <Show when={isOpex()}><th>{t("sf.u07.annual")}</th></Show>
+                  <th>{t("sf.u07.columns.id")}</th>
                   <th>{t("sf.common.showDetails")}</th>
                 </tr></thead><tbody>
-                  <For each={page().data.lines}>{(rec)=><tr>
-                    <th scope="row">{rec.name}</th>
-                    <td>{rec.owner??"—"}</td>
-                    <td>{isOpex()?rec.el??"—":rec.proj??"—"}</td>
-                    <td>{rec.cur??"—"}</td><td><code>{rec.id}</code></td>
+                  <For each={page().data.lines}>{(rec)=><tr data-sf-row={rec.id}>
+                    <td>{rec.name}</td>
+                    <td>{rec.owner??""}</td>
+                    <td>{isOpex()?rec.el??"":rec.proj??""}</td>
+                    <td>{rec.cur??""}</td>
+                    <Show when={isOpex()}><td data-sf-field="annual">{rec.annual == null ? "" : String(rec.annual)}</td></Show>
+                    <td><code>{rec.id}</code></td>
                     <td><button type="button" class="mx-btn" onClick={()=>setState("selected",rec.id)}>
-                      {t("sf.common.showDetails")}
+                      {t(isOpex() ? "sf.u07.manage" : "sf.common.showDetails")}
                     </button></td>
                   </tr>}</For>
                 </tbody></table>
               </div>
             </section>
+            <Show when={isOpex() && versionId()}>
+              <form data-page="OPEX" data-command="save" data-record="" onSubmit={(event) => {
+                event.preventDefault()
+                beginCreate()
+              }}>
+                <label>Name
+                  <input name="name" aria-label="Name" value={state.create.name} disabled={!allowed("save")}
+                    onInput={(event) => setState({ create: { ...state.create, name: event.currentTarget.value } })} />
+                </label>
+                <label>Owner
+                  <select name="owner" aria-label="Owner" value={state.create.owner} disabled={!allowed("save")}
+                    onChange={(event) => setState({ create: { ...state.create, owner: event.currentTarget.value } })}>
+                    <option value=""></option>
+                    <For each={directory()}>{(person) => <option value={person.id}>{person.name}</option>}</For>
+                  </select>
+                </label>
+                <label>Element
+                  <select name="el" aria-label="Element" value={state.create.el} disabled={!allowed("save")}
+                    onChange={(event) => setState({ create: { ...state.create, el: event.currentTarget.value } })}>
+                    <For each={elements()}>{(element) => <option value={element}>{element}</option>}</For>
+                  </select>
+                </label>
+                <label>Currency
+                  <select name="cur" aria-label="Currency" value={state.create.cur} disabled={!allowed("save")}
+                    onChange={(event) => setState({ create: { ...state.create, cur: event.currentTarget.value } })}>
+                    <For each={currencyCodes()}>{(code) => <option value={code}>{code}</option>}</For>
+                  </select>
+                </label>
+                <label>Annual budget
+                  <input name="annual" aria-label="Annual budget" inputMode="decimal" value={state.create.annual}
+                    disabled={!allowed("save")}
+                    onInput={(event) => setState({ create: { ...state.create, annual: event.currentTarget.value } })} />
+                </label>
+                <button type="submit" class="mx-btn primary" disabled={!allowed("save")}>{t("sf.common.save")}</button>
+              </form>
+            </Show>
             <Show when={!isOpex() && "projects" in page().data}>
               <section><h2>{t("sf.u07.projects")}</h2>
                 <div class="sf-u07-project-list">
@@ -748,7 +849,88 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 </li>}</For></ul>
               </section>
             </Show>
-            <Show when={record()}>
+            <Show when={isOpex() ? line() : undefined}>
+              {(rec) => <section class="sf-u07-detail" data-sf-record-detail aria-label="Manage record">
+                <h2>{rec().name}</h2>
+                <p><code>{rec().id}</code> · {t("sf.u07.currentVersion")}: {rec().revision}</p>
+                <dl>
+                  <div data-sf-field="name"><dt>Name</dt><dd>{rec().name}</dd></div>
+                  <div data-sf-field="owner"><dt>Owner</dt><dd>{rec().owner ?? ""}</dd></div>
+                  <div data-sf-field="element"><dt>Element</dt><dd>{rec().el ?? ""}</dd></div>
+                  <div data-sf-field="currency"><dt>Currency</dt><dd>{rec().cur ?? ""}</dd></div>
+                  <div data-sf-field="annual"><dt>Annual budget</dt><dd>{rec().annual == null ? "" : String(rec().annual)}</dd></div>
+                </dl>
+                <Show when={!rec().id.startsWith("HR:") ? activeRecord() : undefined}>
+                  {(draft) => <form data-page="OPEX" data-command="save" data-record={rec().id} onSubmit={(event) => {
+                    event.preventDefault()
+                    if (draft().value.annual.trim() && !finiteAnnual(draft().value.annual)) {
+                      setState("error", t("sf.common.fieldErrorSummary"))
+                      return
+                    }
+                    const revision = lineCas(rec().id)
+                    if (revision !== rec().revision) {
+                      setState({ phase: "conflict", error: t("sf.common.conflict") })
+                      return
+                    }
+                    openReview("line-save", rec().id, revision)
+                  }}>
+                    <label>Name
+                      <input name="name" aria-label="Name" value={draft().value.name} disabled={!allowed("save")}
+                        onInput={(event) => {
+                          const ctrl = getEditor(rec())
+                          const snapshot = ctrl?.snapshot()
+                          if (snapshot?.availability === "active") ctrl?.edit({ ...snapshot.value, name: event.currentTarget.value })
+                        }} />
+                    </label>
+                    <label>Owner
+                      <select name="owner" aria-label="Owner" value={draft().value.owner} disabled={!allowed("save")}
+                        onChange={(event) => {
+                          const ctrl = getEditor(rec())
+                          const snapshot = ctrl?.snapshot()
+                          if (snapshot?.availability === "active") ctrl?.edit({ ...snapshot.value, owner: event.currentTarget.value })
+                        }}>
+                        <option value=""></option>
+                        <For each={directory()}>{(person) => <option value={person.id}>{person.name}</option>}</For>
+                        <Show when={rec().owner && !directory().some((person) => person.id === rec().owner)}>
+                          <option value={rec().owner}>{rec().owner}</option>
+                        </Show>
+                      </select>
+                    </label>
+                    <label>Element
+                      <select name="el" aria-label="Element" value={draft().value.el} disabled={!allowed("save")}
+                        onChange={(event) => {
+                          const ctrl = getEditor(rec())
+                          const snapshot = ctrl?.snapshot()
+                          if (snapshot?.availability === "active") ctrl?.edit({ ...snapshot.value, el: event.currentTarget.value })
+                        }}>
+                        <For each={elements()}>{(element) => <option value={element}>{element}</option>}</For>
+                      </select>
+                    </label>
+                    <label>Currency
+                      <select name="cur" aria-label="Currency" value={draft().value.cur || "USD"} disabled={!allowed("save")}
+                        onChange={(event) => {
+                          const ctrl = getEditor(rec())
+                          const snapshot = ctrl?.snapshot()
+                          if (snapshot?.availability === "active") ctrl?.edit({ ...snapshot.value, cur: event.currentTarget.value })
+                        }}>
+                        <For each={currencyCodes()}>{(code) => <option value={code}>{code}</option>}</For>
+                      </select>
+                    </label>
+                    <label>Annual budget
+                      <input name="annual" aria-label="Annual budget" inputMode="decimal" value={draft().value.annual}
+                        disabled={!allowed("save")}
+                        onInput={(event) => {
+                          const ctrl = getEditor(rec())
+                          const snapshot = ctrl?.snapshot()
+                          if (snapshot?.availability === "active") ctrl?.edit({ ...snapshot.value, annual: event.currentTarget.value })
+                        }} />
+                    </label>
+                    <button type="submit" class="mx-btn primary" disabled={!allowed("save") || !draft().dirty}>{t("sf.common.save")}</button>
+                  </form>}
+                </Show>
+              </section>}
+            </Show>
+            <Show when={isOpex() && line() ? undefined : record()}>
               {(rec)=><section class="sf-u07-detail">
                 <h2>{rec().name}</h2>
                 <p><code>{rec().id}</code> · {t("sf.u07.currentVersion")}: {rec().revision}</p>
@@ -829,12 +1011,13 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             coverage={fullCoverage()}
             blockingReasons={allowed(reviewAction())?[]:[msg("sf.u07.readDenied")]}
             confirmation={allowed(reviewAction())?{kind:"admitted",
-              labelKey:key(isOpex()?"sf.cap18.primary":"sf.cap19.primary"),purpose:reviewAction(),
+              labelKey:key(r().kind==="line-create"||r().kind==="line-save"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
+              purpose:r().kind==="line-create"?"create":reviewAction(),
               binding:{kind:"catalog-command",operationId:reviewOperationId(),
                 version:{kind:"record",expectedVersion:r().revision},confirmation:"presentation-only"}}:
-              {kind:"blocked",labelKey:key(isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
+              {kind:"blocked",labelKey:key(r().kind==="line-create"||r().kind==="line-save"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
                 reasons:[msg("sf.u07.readDenied")]}}
-            state={state.phase}
+            state={reviewState()}
             onConfirm={()=>void submitReview()}
             onRevise={()=>setState("review",null)}
             onCancel={()=>setState("review",null)}
