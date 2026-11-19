@@ -79,3 +79,12 @@ Estado: partial
 - Asserções removidas: nenhuma. Sem alteração de timeout. O novo delta não atribui sucesso a Apply, não muda estado pendente e não repete a mutação.
 - Pendente/unbound: wp03/planner-mounted.spec.ts:110/responseBody:282 (qualificar Apply parcial/correção/reload); wp10/composition.spec.ts:152/317/487 (admissão de CAP03/UI33/CAP25 e conclusão observável de respostas originais); extended-flows.ts não foi alcançado neste run.
 - Como retomar: compor somente planner/opex/budget-view.tsx deste checkpoint no próximo candidato; manter os deltas WP4 anteriores. Gate mínimo para este patch é somente wp03/planner-mounted.spec.ts. Não repetir o WP10 antes de resolver a nova evidência de admissão/transport. A raiz coordena os gates e o único sf-ci final.
+
+
+## WP10 — ingresso pelo capítulo selecionado no shell
+
+- Código 6a8f39d7819712928053e5bae1e9360d0a81f1c2, composition.spec.ts:149–157: depois dos controles reais de servidor/projeto, usa os botões existentes de navegação Orchestra para abrir sf-dashboard e espera CAP01 mais Sign out admitidos. As rotas e asserções posteriores de cada fluxo permanecem iguais.
+- Justificativa: run44620053356 mostrou os três primeiros fluxos sem leitura de domínio, embora o contexto CAP25 original fosse saudável. connectInstalledShell encerrava assim que o perfil mostrava o diretório, antes de qualquer capítulo nativo publicar a admissão. O novo passo exercita a entrada real, sem sleep, URL/owner inventado, mudança de contexto global ou timeout maior.
+- Estado: partial; nenhum gate deste ingresso foi executado. O patch mensal97d0ef fica preservado e está em gate separado somente WP03.
+- Pendente/unbound: composition.spec.ts:495 nativeBody ainda aguarda finished de BI01 que o run original demonstrou abortar após200. Preparar captura fiel da resposta original pelo padrão CDP Response-stage já existente em decisions-support/journey.ts:123 antes de repetir a composição. Não apagar a prova de falha nem reenviar request.
+- Asserções removidas: nenhuma; acrescentadas somente admissão real de CAP01 e presença de Sign out antes das jornadas.
