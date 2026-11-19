@@ -12,7 +12,7 @@ import type { DecisionCasePort, DomainPortHost } from "../../../../modules/sucaf
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
-import { cloneSfAtlasRecallResult, type createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+import { cloneSfAtlasRecallResult, withSfAtlasRecallObservation, type createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { deriveSfMemoryOwner } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
 import type { SfProcurementRecordObservation } from "./procurement-record-read-scope.ts"
@@ -344,7 +344,7 @@ export function createSfMemoryCaseReadScope(input: {
       open: true, invalid: false, busy: new Set(), proofs: new Map(), memoryBusy: new Set(), memories: new Map() }
     active.set(call, scope)
     try {
-      return await local.run(scope, async () => {
+      return await local.run(scope, () => withSfAtlasRecallObservation(call, () => current(scope), async () => {
         if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) return undefined
         const result = await work(scope)
         if (result === undefined || !current(scope)) return undefined
@@ -357,7 +357,7 @@ export function createSfMemoryCaseReadScope(input: {
             proofs.some((proof) => final.cases[caseKey(proof.ref)] !== digestSfValue(proof.value.case)) || !current(scope)) return undefined
         } else if (!await input.host.revalidate(call) || !current(scope)) return undefined
         return structuredClone(result)
-      })
+      }))
     } catch { return undefined }
     finally { scope.open = false; scope.proofs.clear(); scope.memories.clear(); if (active.get(call) === scope) active.delete(call) }
   }

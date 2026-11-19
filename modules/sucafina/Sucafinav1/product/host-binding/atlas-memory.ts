@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { createMemoryEmit, createMemoryRead, versioned } from "@orchestra/atlas-boundary/business-memory-ports"
 import type { MemoryRecord, NamedScanner } from "@orchestra/atlas-boundary/business-memory-ports"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
@@ -17,22 +18,85 @@ import { mapSfEvidenceInOrder } from "./evidence-order.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
+type RecallObservationOwner = {
+  call: TrustedDomainContext; current: () => boolean; open: boolean; invalid: boolean; completing: boolean
+  records: Set<readonly unknown[]>; snapshot?: { sourceState: string; sourceFence: string }
+}
 type RecallObservation = {
   call: TrustedDomainContext; stable: () => boolean; recordsDigest: string; sourceState: string; sourceFence: string
   complete: (observations: readonly { records: readonly unknown[]; observed?: RecallObservation }[], call: TrustedDomainContext) => Promise<boolean>
+  owner?: RecallObservationOwner
 }
 const recallObservations = new WeakMap<readonly unknown[], RecallObservation>()
+const recallOwner = new AsyncLocalStorage<RecallObservationOwner>()
+const activeRecallOwners = new WeakMap<TrustedDomainContext, RecallObservationOwner>()
 
-/** Consume private canonical observations and reopen one C08 scope for the
- * complete result. Fabricated arrays, mixed readers and reused observations deny. */
+function currentRecallOwner(owner: RecallObservationOwner) {
+  try { return recallOwner.getStore() === owner && owner.open && !owner.invalid && activeRecallOwners.get(owner.call) === owner && owner.current() }
+  catch { return false }
+}
+
+/** One protected case observation owns its canonical witnesses across both rank passes.
+ * No records enter here: only the canonical issuer below can register a witness.
+ * Its caller retains the complete case/source snapshot fence through final egress. */
+export async function withSfAtlasRecallObservation<Value>(call: TrustedDomainContext, current: () => boolean,
+  work: () => Promise<Value | undefined>): Promise<Value | undefined> {
+  if (recallOwner.getStore() || activeRecallOwners.has(call) || !current()) return undefined
+  const owner: RecallObservationOwner = { call, current, open: true, invalid: false, completing: false, records: new Set() }
+  activeRecallOwners.set(call, owner)
+  try {
+    return await recallOwner.run(owner, async () => {
+      const value = await work()
+      return currentRecallOwner(owner) && !owner.completing ? value : undefined
+    })
+  } finally {
+    owner.open = false
+    for (const records of owner.records) recallObservations.delete(records)
+    owner.records.clear()
+    if (activeRecallOwners.get(call) === owner) activeRecallOwners.delete(call)
+  }
+}
+
+function rememberRecallObservation(records: readonly unknown[], observation: Omit<RecallObservation, "owner">) {
+  const owner = recallOwner.getStore()
+  if (!owner) { recallObservations.set(records, observation); return true }
+  if (!currentRecallOwner(owner) || owner.completing || observation.call !== owner.call ||
+    owner.snapshot && (owner.snapshot.sourceState !== observation.sourceState || owner.snapshot.sourceFence !== observation.sourceFence)) {
+    owner.invalid = true
+    return false
+  }
+  owner.snapshot ??= { sourceState: observation.sourceState, sourceFence: observation.sourceFence }
+  owner.records.add(records)
+  recallObservations.set(records, { ...observation, owner })
+  return true
+}
+
+/** Every rank reopens the complete C08/authority proof. An explicit owner consumes
+ * its witnesses on observation exit; ordinary callers retain immediate single use. */
 export async function revalidateSfAtlasRecall(groups: readonly (readonly unknown[])[], call: TrustedDomainContext) {
   const selected = [...groups]
   const stable = () => groups.length === selected.length && selected.every((records, index) => groups[index] === records)
   const observations = selected.map((records) => ({ records, observed: recallObservations.get(records) }))
-  selected.forEach((records) => recallObservations.delete(records))
+  const owner = recallOwner.getStore()
+  if (!owner) selected.forEach((records) => recallObservations.delete(records))
   const first = observations[0]?.observed
-  if (!first || !stable() || new Set(selected).size !== selected.length || observations.some(({ observed }) => observed?.complete !== first.complete || observed.call !== call)) return false
-  try { return await first.complete(observations, call) && stable() } catch { return false }
+  const owned = owner ? currentRecallOwner(owner) && !owner.completing && owner.call === call &&
+    observations.every(({ records, observed }) => observed?.owner === owner && owner.records.has(records)) :
+    observations.every(({ observed }) => !observed?.owner)
+  if (!owned || !first || !stable() || new Set(selected).size !== selected.length ||
+    observations.some(({ observed }) => observed?.complete !== first.complete || observed.call !== call)) {
+    if (owner) owner.invalid = true
+    return false
+  }
+  if (owner) owner.completing = true
+  try {
+    const valid = await first.complete(observations, call) && stable() && (!owner || currentRecallOwner(owner))
+    if (!valid && owner) owner.invalid = true
+    return valid
+  } catch {
+    if (owner) owner.invalid = true
+    return false
+  } finally { if (owner) owner.completing = false }
 }
 
 /** Canonical readers copy results so callers cannot mutate a protected root.
@@ -203,8 +267,8 @@ export function createSfAtlasMemory(input: {
           latest.value.outboxVersion !== outbox.value.version || digestSfValue(latest.value.case) !== digestSfValue(caseBefore.value) || !stable())
           return { status: "unavailable" as const }
         const records: never[] = []
-        recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
-          sourceState: latest.value.sourceState, sourceFence: latest.value.sourceFence })
+        if (!rememberRecallObservation(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
+          sourceState: latest.value.sourceState, sourceFence: latest.value.sourceFence })) return { status: "unavailable" as const }
         return { status: "ok" as const, records }
       }
       const partition = snapshot.value as AtlasPartition
@@ -279,8 +343,8 @@ export function createSfAtlasMemory(input: {
       }).catch(() => undefined)
       if (!latest || latest.status !== "ok" || !latest.value || !stable() ||
         digestSfValue(latest.value) !== digestSfValue(before.value)) return { status: "unavailable" as const }
-      recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
-        sourceState: before.value.sourceState, sourceFence: before.value.sourceFence })
+      if (!rememberRecallObservation(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
+        sourceState: before.value.sourceState, sourceFence: before.value.sourceFence })) return { status: "unavailable" as const }
       return { status: "ok" as const, records }
       } catch { return { status: "unavailable" as const } }
   }
