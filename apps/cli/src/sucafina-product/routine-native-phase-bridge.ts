@@ -43,7 +43,7 @@ export type PlanningLease = Readonly<{
 export class BridgeError extends Schema.TaggedErrorClass<BridgeError>()("SfNativePhaseBridge.Error", {
   reason: Schema.String,
 }) {
-  get message() { return this.reason }
+  override get message() { return this.reason }
 }
 export interface NativePhaseBridge {
   withPlanning<A, E>(source: Source, use: (lease: PlanningLease) => Effect.Effect<A, E>): Effect.Effect<A, E | BridgeError>
