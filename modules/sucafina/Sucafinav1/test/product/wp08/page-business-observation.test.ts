@@ -41,6 +41,16 @@ async function pageFixture() {
     reset: () => { counts.reads = 0; bodies.length = 0; projections.length = 0 } }
 }
 
+function mutablePageCall(f: Awaited<ReturnType<typeof pageFixture>>) {
+  // Keep the real admission/request. The shallow caller object is mutable so
+  // these faults exercise the observation's own binding/lease identity fences.
+  const call = { ...f.read }
+  const requestFor = f.host.requestFor, revalidate = f.host.revalidate
+  f.host.requestFor = (candidate) => requestFor(candidate === call ? f.read : candidate)
+  f.host.revalidate = (candidate) => revalidate(candidate === call ? f.read : candidate)
+  return call
+}
+
 test("Page BCS keeps the full four-observation port and seven-observation fallback", async () => {
   const f = await pageFixture()
   try {
@@ -129,6 +139,7 @@ for (const fault of ["source", "access", "headers", "request", "period", "lease"
 test("Page BCS refuses " + fault + " drift during real projection work", async () => {
   const f = await pageFixture()
   try {
+    const call = fault === "lease" || fault === "binding" ? mutablePageCall(f) : f.read
     const environment = f.host.environment
     let changed = false
     f.host.environment = async (request) => {
@@ -143,12 +154,12 @@ test("Page BCS refuses " + fault + " drift during real projection work", async (
         if (fault === "headers") request.headers.set("actor", "another-person")
         if (fault === "request") f.host.requestFor = () => new Request(request.url, { headers: request.headers })
         if (fault === "period") Reflect.set(f.ref.target.period!, "end", "2026-11-30")
-        if (fault === "lease") Reflect.set(f.read, "lease", {})
-        if (fault === "binding") Reflect.set(f.read, "binding", { ...f.read.binding })
+        if (fault === "lease") expect(Reflect.set(call, "lease", {})).toBe(true)
+        if (fault === "binding") expect(Reflect.set(call, "binding", { ...call.binding })).toBe(true)
       }
       return value
     }
-    const result = await f.access(f.ref, f.read)
+    const result = await f.access(f.ref, call)
     expect(changed).toBe(true)
     expect(result.state).toBe("unavailable")
     expect(result).not.toHaveProperty("currentRef")
@@ -201,14 +212,15 @@ for (const fault of ["headers", "lease", "binding", "ref", "input-owner", "issue
 test("Page BCS refuses " + fault + " replacement after its final await", async () => {
   const f = await pageFixture()
   try {
+    const call = fault === "lease" || fault === "binding" ? mutablePageCall(f) : f.read
     const revalidate = f.host.revalidate
     let last = 0
     f.host.revalidate = async (context) => {
       const allowed = await revalidate(context)
       if (f.bodies.length === 4 && ++last === 5) {
         if (fault === "headers") f.host.requestFor(context)!.headers.set("late", "changed")
-        if (fault === "lease") Reflect.set(context, "lease", {})
-        if (fault === "binding") Reflect.set(context, "binding", { ...context.binding })
+        if (fault === "lease") expect(Reflect.set(context, "lease", {})).toBe(true)
+        if (fault === "binding") expect(Reflect.set(context, "binding", { ...context.binding })).toBe(true)
         if (fault === "ref") Reflect.set(f.ref.target, "recordId", "another-page")
         if (fault === "input-owner") f.input.host = { ...f.host }
         if (fault === "issuer-owner") f.issuerOwners.scopedSources = { ...f.persistence }
@@ -226,7 +238,7 @@ test("Page BCS refuses " + fault + " replacement after its final await", async (
       }
       return allowed
     }
-    const result = await f.access(f.ref, f.read)
+    const result = await f.access(f.ref, call)
     expect(last).toBe(5)
     expect(result.state).toBe("unavailable")
     expect(result).not.toHaveProperty("authorizedProjection")
@@ -349,5 +361,28 @@ test("Page signals keep their original record callbacks and never enter the comp
     const legacy = createSfDashboardSourceAccess({ host: f.host, issue: f.issue, dashboard: { read: dashboard.read } })
     expect(await legacy(ref, f.read)).toEqual(result)
     expect({ reads: f.counts.reads, issues, resolves }).toEqual(originalCounts)
+  } finally { await f.dispose() }
+})
+
+test("the ordinary signals path refuses a different Request identity before issuing record evidence", async () => {
+  const f = await pageFixture()
+  try {
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      const topic = rows(snapshot.data.hotTopics).find((entry) => entry.id === "topic")
+      if (!topic) throw new Error("Real signal source missing")
+      topic.due = "2026-11-01"
+      return { commit: true, value: undefined }
+    })
+    const selection = { page: "Executive Dashboard", fields: ["signals"], period: f.period }
+    const ref = available(await f.issue(selection, f.read)).evidence
+    const request = f.host.requestFor(f.read)!
+    f.host.requestFor = () => new Request(request.url, { method: request.method, headers: request.headers })
+    expect(f.host.requestFor(f.read)).not.toBe(f.host.requestFor(f.read))
+    expect(await f.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics",
+      recordId: "topic", fields: ["due", "status"], period: { start: f.clock.at.slice(0, 10), end: f.clock.at.slice(0, 10) } }, f.read))
+      .toEqual({ status: "denied", reason: "source-unavailable" })
+    const dashboard = createDashboardPort({ host: f.host, sources: f.sources, recordEvidence: f.records })
+    expect(await dashboard.read({ selectionRef: ref.refId, fields: selection.fields, period: f.period }, f.read))
+      .toEqual({ status: "unavailable", reason: "signal-evidence-unavailable" })
   } finally { await f.dispose() }
 })
