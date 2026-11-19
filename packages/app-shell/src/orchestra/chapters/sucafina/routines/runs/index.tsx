@@ -285,7 +285,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                 <section class="mx-card" aria-label={t("sf.u27.pending")}>
                   <h2>{t("sf.u27.pending")}</h2>
                   <Show when={source().pending.length} fallback={<p>{t("sf.common.empty")}</p>}>
-                    <ul><For each={source().pending}>{(item) => <li><bdi>{item}</bdi></li>}</For></ul>
+                    <ul><For each={source().pending}>{(item) => <li><StatusText value={item} /></li>}</For></ul>
                   </Show>
                 </section>
                 <section class="mx-card" aria-label={t("sf.u27.resultRef")}>

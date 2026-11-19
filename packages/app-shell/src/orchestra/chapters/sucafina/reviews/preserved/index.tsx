@@ -82,6 +82,17 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     }
     onCleanup(() => { controller.abort(); successorAbort?.abort() })
   })
+  const successorMessage = (status: string) => {
+    if (status === "denied") return "sf.common.noAccess"
+    if (status === "session-expired") return "sf.common.loginAgain"
+    if (status === "stale") return "sf.u32.stale"
+    if (status === "conflict") return "sf.common.conflict"
+    if (status === "invalid") return "sf.common.invalidLink"
+    if (status === "outcome-unknown") return "sf.common.operationUnknown"
+    if (status === "not-found") return "sf.common.removed"
+    if (status === "partial") return "sf.common.needsInput"
+    return "sf.common.unavailable"
+  }
   const update = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review
     if (!active || state.status !== "ready" || !review || store.updateStatus === "loading") return
@@ -201,11 +212,11 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <h3>{t("sf.u32.confirmations")}</h3>
                   <ul><For each={next().confirmations}>{(item) => <li>{item.label}</li>}</For></ul>
                   <h3>{t("sf.u32.unavailableSections")}</h3>
-                  <ul><For each={next().unavailableSections}>{(item) => <li><strong>{item.title}</strong>: {item.reason}</li>}</For></ul>
+                  <ul><For each={next().unavailableSections}>{(item) => <li><strong>{item.title}</strong>: <StatusText value={item.reason} /></li>}</For></ul>
                 </section>}
               </Show>
               <Show when={store.updateStatus !== "ready" && store.updateStatus !== "loading"}>
-                <p role="alert">{t("sf.u32.stale")}</p>
+                <p role="alert">{t(successorMessage(store.updateStatus))}</p>
               </Show>
             </article>}
           </Show>

@@ -284,7 +284,8 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
         return
       }
       const observed = result.body.value
-      if (observed.runRef !== runRef) {
+      if (observed.runRef !== runRef || observed.principalRef !== stamp.principalRef || observed.projectId !== stamp.projectId) {
+        setView("run", null)
         setView("runState", "stale")
         return
       }
@@ -470,7 +471,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                   <div><dt>{t("sf.u34.state")}</dt><dd><StatusText value={view.run?.admission ?? ""} /></dd></div>
                   <div><dt>{t("sf.u34.result")}</dt><dd><bdi>{view.run?.resultRef ?? t("sf.u27.noResult")}</bdi></dd></div>
                 </dl>
-                <ul><For each={view.run?.pending ?? []}>{(reason) => <li><bdi>{reason}</bdi></li>}</For></ul>
+                <ul><For each={view.run?.pending ?? []}>{(reason) => <li><StatusText value={reason} /></li>}</For></ul>
               </Show>
               <Show when={view.runState !== "ready" && view.runState !== "empty"}>
                 <SfStatePanel state={view.runState} messageKey={n29StateKey(view.runState)} />

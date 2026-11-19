@@ -455,7 +455,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
             <section class="mx-card" aria-label={t("sf.u27.readiness")}>
               <h2>{t("sf.u27.readiness")}</h2>
               <p>{t("sf.u27.reviewSummary")}</p>
-              <Show when={view.requestError}><p role="status">{view.requestError}</p></Show>
+              <Show when={view.requestError}><p role="status">{t(n29StateKey(view.admissionState))}</p></Show>
               <Show when={view.phase === "reviewing"}>
                 <div class="sf-n29-review" role="group" aria-label={t("sf.u27.review")}>
                   <h3>{t("sf.u27.review")}</h3>
@@ -493,7 +493,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
               </Show>
               <Show when={view.preparation && view.preparation.pending.length}>
                 <div role="status"><h3>{t("sf.u27.pending")}</h3>
-                  <ul><For each={view.preparation?.pending ?? []}>{(item) => <li><bdi>{item}</bdi></li>}</For></ul>
+                  <ul><For each={view.preparation?.pending ?? []}>{(item) => <li><StatusText value={item} /></li>}</For></ul>
                 </div>
               </Show>
               <Show when={view.admissionState === "partial"}>

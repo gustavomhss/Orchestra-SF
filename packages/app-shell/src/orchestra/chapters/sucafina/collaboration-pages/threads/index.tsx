@@ -120,7 +120,7 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
       ref: message.id as SfRef, incarnation: message.incarnation, version: message.version,
       author: { kind: "data" as const, text: message.authorRef },
       createdAt: message.createdAt, text: message.body,
-      sourceRefs: (message.sourceContext?.evidenceRefs ?? source.evidenceRefs).map((ref) => ref.refId as SfRef),
+      sourceRefs: (message.sourceContext?.evidenceRefs ?? []).map((ref) => ref.refId as SfRef),
     })) ?? []
   })
   const write = async (request: { threadRef: SfRef; incarnation: string; expectedVersion: number; text: string }) => {

@@ -10,7 +10,7 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
 import { n29ContextState, n29Key, n29Permitted, n29ResponseState, n29SameAuthority, n29StateKey, useN29Copy } from "../catalog/ui"
-import { StatusText, WhenText } from "../../reviews/labels"
+import { operationGranted, StatusText, WhenText } from "../../reviews/labels"
 import "./residents.css"
 
 type Profile = (typeof SfResidentCatalog)["Type"]["profiles"][number]
@@ -152,8 +152,9 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
     const valid = () => !abort.signal.aborted && n29SameAuthority(owner, generation, stamp) &&
       view.selected === profile.id && view.caseKey === selectedKey
     onCleanup(() => abort.abort())
+    const decisionGranted = operationGranted(current.context, "projection.case")
     setView({ run: null, runState: "loading", output: null, outputState: "empty",
-      choice: null, ledger: [], choiceState: "loading" })
+      choice: null, ledger: [], choiceState: decisionGranted ? "loading" : "unavailable" })
 
     const readRun = async () => {
       if (!n29Permitted(current.context, "analysis", "intelligence.analysis.list") ||
@@ -222,6 +223,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
       setView({ output: output.body.value, outputState: "ready" })
     }
     const readDecision = async () => {
+      if (!decisionGranted) return
       const response = await createSfDecisionsClient(current.transport)["projection.case"](
         { caseRef: caseRouteRef(originalCase) }, { signal: abort.signal })
       if (!valid()) return
