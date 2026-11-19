@@ -899,7 +899,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 <Show when={!isOpex()}>
                   <label>{t("sf.u07.project")}
                     <select name="proj" value={state.create.proj} disabled={!allowed("save")}
-                      onChange={(event) => setState("create", "proj", event.currentTarget.value)}>
+                      onChange={(event) => setState({ create: { ...state.create, proj: event.currentTarget.value } })}>
                       <option value=""></option>
                       <For each={projectRows()}>{(project) => <option value={project.id}>{project.name}</option>}</For>
                     </select>
@@ -908,7 +908,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                     <select name="cls" value={state.create.cls} disabled={!allowed("save")}
                       onChange={(event) => {
                         const value = event.currentTarget.value
-                        if (value === "capex" || value === "opex") setState("create", "cls", value)
+                        if (value === "capex" || value === "opex") setState({ create: { ...state.create, cls: value } })
                       }}>
                       <option value="capex">capex</option><option value="opex">opex</option>
                     </select>
@@ -922,7 +922,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 <form data-sf-create-project onSubmit={(event) => { event.preventDefault(); beginCreateProject() }}>
                   <label>{t("sf.u07.projectName")}
                     <input value={state.createProject.name} disabled={!allowed("save")}
-                      onInput={(event) => setState("createProject", "name", event.currentTarget.value)} />
+                      onInput={(event) => setState({ createProject: { name: event.currentTarget.value } })} />
                   </label>
                   <button type="submit" class="mx-btn" disabled={!allowed("save") || !state.createProject.name.trim()}>
                     {t("sf.u07.addProject")}
