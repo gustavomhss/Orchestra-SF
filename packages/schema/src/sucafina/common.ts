@@ -71,6 +71,7 @@ export const SfOperationIds = [
   "decisions.decision-add-question",
   "decisions.decision-answer-question",
   "decisions.decision-apply",
+  "decisions.decision-compare",
   "decisions.decision-choose",
   "decisions.decision-condition",
   "decisions.decision-coverage",

@@ -57,6 +57,9 @@ export function createSfDecisionsClient(transport: SfTransport) {
     "decisions.decision-condition": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-condition"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.decision-condition"], input, options),
 
+    "decisions.decision-compare": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-compare"]["input"]>, options: SfCallOptions) =>
+      transport.execute(SfDecisions.operations["decisions.decision-compare"], input, options),
+
     "decisions.decision-choose": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-choose"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.decision-choose"], input, options),
 

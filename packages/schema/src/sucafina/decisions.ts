@@ -15,7 +15,7 @@ import {
   SfSourceInput_sf_scenario_simulate,
   SfSourceInput_sf_scenario_compare,
   SfSourceCaseRead, SfSourceCaseDraft, SfSourceChangePrepare,
-  SfSourceQuestionPrepare, SfSourceScenarioResult, SfSourceDomainProjection,
+  SfSourceQuestionPrepare, SfSourceScenarioResult, SfSourceScenarioComparison, SfSourceDomainProjection,
   SfSourceRecordSource, SfSourceCostCoverageBasis, SfSourceEvidenceInput,
 } from "./decisions/source-contracts"
 
@@ -177,6 +177,9 @@ export const SfDecisionsDecisionSelectPortfolio = {operationId:"decisions.decisi
 /** valid(payload,mode=decision-condition); catalog decision-controls */
 export const SfDecisionsDecisionCondition = {operationId:"decisions.decision-condition",input:decisionCondition,output:portResult(Schema.Struct({registered:Schema.Literal(true)})),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-condition"}} as const
 
+/** Original decision-compare: selected case alternatives resolve to authorized C08 results. */
+export const SfDecisionsDecisionCompare = {operationId:"decisions.decision-compare",input:Schema.Struct({caseRef:SfDecisionCaseRef,baselineAlternativeId:text,alternativeId:text,criteria:Schema.Array(text).check(Schema.isMinLength(1)).check(Schema.isMaxLength(512))}),output:portResult(Schema.Struct({request:SfSourceInput_sf_scenario_compare,comparison:SfSourceScenarioComparison})),method:"POST",pathTemplate:"{mount}/dashboard",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-compare"},maxRequestBytes:262144} as const
+
 /** actions[decision-choose];valid(mode,payload);withCase;producer dispatch; catalog portfolio */
 export const SfDecisionsDecisionChoose = {operationId:"decisions.decision-choose",input:Schema.Struct({caseRef:SfDecisionCaseRef,alternativeId:text,alternativeVersion:version,comparison:SfSourceInput_sf_scenario_compare,criteria:Schema.Array(text),reason:text}),output:portResult(receipt),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-choose"}} as const
 
@@ -216,6 +219,7 @@ export const SfDecisions = {operations:{
   "decisions.decision-criteria":SfDecisionsDecisionCriteria,
   "decisions.decision-select-portfolio":SfDecisionsDecisionSelectPortfolio,
   "decisions.decision-condition":SfDecisionsDecisionCondition,
+  "decisions.decision-compare":SfDecisionsDecisionCompare,
   "decisions.decision-choose":SfDecisionsDecisionChoose,
   "decisions.decision-add-question":SfDecisionsDecisionAddQuestion,
   "decisions.decision-answer-question":SfDecisionsDecisionAnswerQuestion,

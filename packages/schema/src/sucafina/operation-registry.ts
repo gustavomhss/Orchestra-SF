@@ -54,6 +54,7 @@ export const SfOperationExtensions = Object.freeze({
   "collaboration.work-destination": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-work-destination"}},
   "collaboration.work-list": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-work-list"}},
   // Original Workbench/current-choice/domain/portfolio adapters admit the closed Decisions envelopes.
+  "decisions.decision-compare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-compare"},"maxRequestBytes":262144},
   "decisions.decision-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-promote"}},
   "decisions.decision-choose": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-choose"}},
   "decisions.decision-edit": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-edit"},"maxRequestBytes":262144},
