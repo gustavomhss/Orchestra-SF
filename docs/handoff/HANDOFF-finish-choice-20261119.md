@@ -1,6 +1,6 @@
 # Handoff — finish-choice-20261119
 
-SHA: 07862279c8de45199ab20f0295a257e84a5e9805 (código; este documento é um checkpoint posterior)
+SHA: c8a941331e8a4748f1f037d7b34804f504d727eb (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
@@ -16,9 +16,14 @@ Estado: partial
 - Compare verifica cases READ e preferences READ; choose verifica cases WRITE e preferences READ; criteria verifica cases WRITE e preferences WRITE. result-store.ts lê resultados em cases; criterion-rules.ts:35–43 lê cases/preferences e :99 registra em preferences com namespace cases adicional. A qualificação de execução dessa saúde ainda está pendente.
 - O callback do host usa as instâncias reais decisionDomain.compare, portfolioServices.mutations.recordChoice e decisionDomain.criteria.register, com seus adapters, armazenamento e withCase. Não publica readiness pelo catálogo sozinho.
 
+- Folha UI38 em c8a941331e8a4748f1f037d7b34804f504d727eb: novo choice/record.tsx, ligação mínima em choice/index.tsx e textos EN/BR em sf-u18.ts. Exige par explícito de alternativas originais, conserva todos os critérios obrigatórios, exibe a comparação original e permite registrar regra numérica sobre a métrica original planner:known-subtotal-difference com evidência publicada por controls.read.
+- O registro da escolha mantém body/chave/owner/geração/stamp/case version em memória, desabilita edição durante o comando e oferece apenas retry humano da mesma intenção quando o resultado fica desconhecido. Após sucesso, exige caseRef original avançado em uma versão e relê a projeção; o histórico renderiza os fatos armazenados da escolha, inclusive coverage parcial, total indisponível e ausência real de operações.
+- Os builders de comparação, regra e escolha usam structuredClone(unwrap(...)) para enviar os mesmos dados revisados sem proxies de Solid Store; nenhuma mudança ao codec ou às exigências do produtor.
+- A folha existente A04 de current-choice/read/prepare/promote foi preservada. Não há autoridade, resultado de cenário ou receipt criado pelo renderer.
+
 ## Pendente
 
-- packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx:35 — UI38 existente apresenta o trio A04 current-choice/read/prepare/promote; falta autoria da escolha C10 com comparison original e critério numérico humano. Nenhuma UI antiga foi recriada.
+- packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/record.tsx:91, :163 e :193 — comparação, registro de regra e escolha nativos implementados, ainda sem typecheck ou gate de navegador nesta fatia. A leitura do produtor fundamenta os campos; não substitui qualificação de execução.
 - packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts:15, :198 e :221 — controles e URL legados ainda ativos. Devem ser migrados preservando os componentes mensais 100/200, subtotais 1200/2400, coverage pendente com 9 categorias, par explícito e perda/retry do mesmo Promote.
 - packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts:43–78 — a prova exige perda de resposta, reload, mesmo body/key, dois POSTs e uma escolha. O F02 atual só retém memória do transporte; recuperação após reload ainda precisa de ligação explícita à intenção original não confiável e à reautorização C08. Não remover reload/contagem nem contornar o transporte.
 - modules/sucafina/Sucafinav1/product/ui/decision-choice.ts:9–25, :73 e :292–319 — consumidor original persiste intenção fechada por scope em sessionStorage, conserva body/key antes do POST e restaura estado desconhecido após reload. Isso não é autoridade nem receipt. O port nativo dessa política ainda não está implementado.
@@ -30,15 +35,15 @@ Estado: partial
 - Nenhuma asserção foi removida, pulada, esvaziada ou teve timeout aumentado. Os testes legados pendentes continuam executáveis.
 - A operação de comparação é um POST read do produtor atual, com grant humano de leitura de portfolio; não cria approval, total completo, receipt ou key de mutação.
 - Adicionar um ID ao registry não autoriza IO nem assegura a existência da instância. Os demais fences e o codec original continuam obrigatórios.
-- F02 permanece sem edição nesta branch. A recuperação de escolha após reload não foi liberada por hipótese.
+- F02 permanece sem edição nesta branch. A recuperação de escolha após reload ainda não foi implementada. choice/record.tsx:17 e :193 retém apenas a intenção em memória; o passo seguinte precisa conferir a escolha/histórico original antes de oferecer retomada humana após reload, sem tratar sessionStorage como lease, grant ou receipt.
 - modules/sucafina/Sucafinav1/runtime/application.ts permanece sem edição. Nenhum novo sf-ci foi disparado e não há declaração de GO.
 - O UI35 separado em finish-decisions@14464dbf7ddb85e4018154985c17de493b9a49cd copia os inputs originais via structuredClone(unwrap(...)); esse delta não pertence a esta branch nem ao core UI33/34 já qualificado.
 
 ## Como retomar
 
-1. Continuar em finish-choice-20261119 no código 07862279c8de45199ab20f0295a257e84a5e9805. Transplantar somente os deltas desta branch sobre a composição atual; preservar os demais callbacks do host.
-2. Aguardar o gate estreito do codec 44620658522. Não interpretar esse resultado como sucesso do renderer/health.
-3. Criar a folha nativa de comparação/registro com os campos publicados por projection.case, controls.read e decision-compare. Mostrar o resultado original e exigir ação humana explícita; não calcular diferenças nem criar coverage.
+1. Continuar em finish-choice-20261119 no código c8a941331e8a4748f1f037d7b34804f504d727eb. Transplantar somente os deltas desta branch sobre a composição atual; preservar os demais callbacks do host.
+2. O gate estreito do codec 44620658522 terminou SUCCESS (3/0/14 expect). Não interpretar esse resultado como sucesso do renderer/health; compor a fatia nativa e executar os typechecks canônicos antes do gate humano.
+3. Revisar a folha nativa c8a9413 e portar os helpers de comparação/regra para os controles reais. Preservar todos os valores e fatos de provenance publicados, sem recriar os seletores do console.
 4. Implementar o port de intenção retida de choice-history depois de conservar o contrato original body/key/scope e revalidação do produtor. Persistência de entrada do browser nunca substitui autoridade.
 5. Portar os helpers para controles nativos e qualificar o spec mais estreito que exercita a mudança. Atualizar este documento com o resultado terminal e as pendências exatas.
 
@@ -46,5 +51,5 @@ Estado: partial
 
 - Nenhum shell, filesystem ou teste local utilizado. Todas as alterações e verificações são pelo GitHub.
 - [44620658522](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44620658522) SUCCESS, job 135901100420, cleanup 135902269670 SUCCESS; 3 pass / 0 fail / 14 expect, 251 ms. Prova de codec/rota/contrato, sem qualificar C08 ou o renderer. Snapshot 55561a8f878e83fe2a22a4a119f2620ad60f803c, código 5da8d863a1f865b1c44bbc5cd782b996c3d7bf5f. Requisição: {"package":"client","runner":"bun","args":["test/sucafina/decision-compare.test.ts"]}.
-- CLI/app/E2E typecheck desta nova fatia health/renderer: ainda não executado. Guards/full sf-ci: não executados por este WP.
+- CLI/app/E2E typecheck desta nova fatia health/renderer c8a9413: ainda não executado. Guards/full sf-ci: não executados por este WP.
 - Prova independente Operations: [44618682048](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44618682048) SUCCESS 2/2 para PR/Supplier nativos com reload; não qualifica Decisions. O gate completo Operations6 [44619924653](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44619924653) terminou FAILURE, 1 passed / 4 failed, na composição Assembly30 + 2 blobs de 877f8d, separado desta branch. Aprovação/arquivos/observação de resposta estão sendo corrigidos em branches próprias; nenhum desses resultados qualifica UI38.
