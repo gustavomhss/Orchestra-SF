@@ -1,10 +1,10 @@
 import { createEffect, For, on, onCleanup, Show } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
-import type { Schema } from "effect"
+import { Option, Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
-import type { SfTransport } from "@orchestra/client/sucafina/transport"
+import { SfRecordedChoiceIntent, type SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { useSfCase, sfOperationReady } from "../cases/model"
 
@@ -15,7 +15,7 @@ type Choice = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.deci
 type RuleEvidence = NonNullable<Controls["selected"]>["evidence"]
 type Scope = { transport: SfTransport; owner: string; generation: number; stamp: string; case: string }
 type Intent = { scope: Scope; body: Choice; key: string }
-type Phase = "editing" | "comparing" | "loading-rule" | "saving-rule" | "choosing" | "unknown" | "reconcile"
+type Phase = "editing" | "inspecting" | "comparing" | "loading-rule" | "saving-rule" | "choosing" | "unknown" | "reconcile"
 
 /** Human choices preserve the original C10 comparison and C08 result.
  * The renderer selects references and displays producer facts; it calculates
@@ -34,6 +34,8 @@ export function SfRecordChoice(props: { caseRef: string }) {
     criterion: "", operator: "", limit: "", evidence: [] })
   let pending: AbortController | undefined
   let intention: Intent | undefined
+  let retainedKey: string | undefined
+  let retainedStamp: string | undefined
   const ownerKey = () => {
     const owner = source.owner.state()
     return owner.status === "ready" ? owner.ownerKey : undefined
@@ -80,11 +82,83 @@ export function SfRecordChoice(props: { caseRef: string }) {
     pending = abort
     return { snapshot, abort }
   }
-  createEffect(on(() => [source.owner.generation(), ownerKey(), props.caseRef, caseVersion()] as const, () => {
+  const forgetRetained = () => {
+    if (!retainedKey) return
+    try { sessionStorage.removeItem(retainedKey) } catch { /* No new command is authorized by cleanup. */ }
+    retainedKey = undefined
+    retainedStamp = undefined
+  }
+  const storageKey = () => {
+    const ready = source.owner.ready()
+    return ready ? JSON.stringify(["sf-native-choice-intent/1", ready.context.stamp.hostId,
+      ready.context.stamp.installationId, ready.context.stamp.projectId,
+      ready.context.stamp.principalRef, props.caseRef]) : undefined
+  }
+  const retain = (original: Intent) => {
+    const key = storageKey(), ready = source.owner.ready()
+    if (!key || !ready || JSON.stringify(ready.context.stamp) !== original.scope.stamp) return false
+    const claim: Schema.Schema.Type<typeof SfRecordedChoiceIntent> = structuredClone(unwrap({
+      schema: "sf-recorded-choice-intent/1" as const, caseRef: props.caseRef, owner: ready.context.stamp,
+      key: original.key, body: original.body,
+    }))
+    try {
+      sessionStorage.setItem(key, JSON.stringify(claim))
+      retainedKey = key
+      retainedStamp = original.scope.stamp
+      return true
+    } catch { return false }
+  }
+  const inspectRetained = () => {
+    const key = storageKey(), ready = source.owner.ready(), selected = record()
+    if (!key || !ready || !selected) return
+    let raw: string | null
+    try { raw = sessionStorage.getItem(key) }
+    catch { setUi({ phase: "reconcile", message: "retentionUnavailable" }); return }
+    if (!raw) return
+    retainedKey = key
+    let candidate: unknown
+    try { candidate = JSON.parse(raw) }
+    catch { setUi({ phase: "reconcile", message: "recoveryUnavailable" }); return }
+    const decoded = Schema.decodeUnknownOption(Schema.toType(SfRecordedChoiceIntent), { onExcessProperty: "error" })(candidate)
+    if (Option.isNone(decoded) || decoded.value.caseRef !== props.caseRef ||
+        decoded.value.body.caseRef.id !== selected.id || decoded.value.body.caseRef.incarnation !== selected.incarnation ||
+        !(["hostId", "installationId", "projectId", "principalRef", "policyVersion", "accessRevision"] as const)
+          .every((field) => decoded.value.owner[field] === ready.context.stamp[field])) {
+      forgetRetained()
+      setUi({ phase: "reconcile", message: "recoveryUnavailable" })
+      return
+    }
+    const claim = decoded.value, inspect = ready.transport.inspectRecordedChoice
+    retainedStamp = JSON.stringify(ready.context.stamp)
+    setUi({ phase: "inspecting", reason: claim.body.reason, alternative: claim.body.alternativeId,
+      criteria: claim.body.criteria, message: "inspecting" })
+    if (!inspect) { setUi({ phase: "reconcile", message: "recoveryUnavailable" }); return }
+    const context = begin()
+    if (!context) return
+    void inspect(claim, { signal: context.abort.signal }).then((reply) => {
+      if (!current(context.snapshot, context.abort)) return
+      const choices = record()?.choices.filter((choice) => reply.status === "ready" && choice.id === reply.choiceId) ?? []
+      if (reply.status !== "ready" || choices.length !== 1) {
+        setUi({ phase: "reconcile", message: "recoveryUnavailable" })
+        return
+      }
+      intention = { scope: context.snapshot, body: structuredClone(claim.body), key: claim.key }
+      setUi({ phase: "unknown", message: "recordedRetained",
+        comparison: { request: claim.body.comparison, comparison: choices[0]!.comparison } })
+    }).catch(() => {
+      if (current(context.snapshot, context.abort)) setUi({ phase: "reconcile", message: "recoveryUnavailable" })
+    })
+  }
+  createEffect(on(() => [source.owner.generation(), ownerKey(), props.caseRef, caseVersion(),
+    source.owner.state().status, JSON.stringify(source.owner.ready()?.context.stamp)] as const, () => {
     pending?.abort()
     intention = undefined
+    const owner = source.owner.state(), ready = source.owner.ready()
+    if (["denied", "unauthenticated", "context-mismatch"].includes(owner.status) ||
+        ready && retainedStamp && JSON.stringify(ready.context.stamp) !== retainedStamp) forgetRetained()
     setUi({ phase: "editing", baseline: "", alternative: "", criteria: record()?.criteria.map((item) => item.id) ?? [],
       reason: "", message: "", comparison: undefined, rule: undefined, criterion: "", operator: "", limit: "", evidence: [] })
+    inspectRetained()
   }))
   onCleanup(() => pending?.abort())
 
@@ -200,6 +274,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
       const body: Choice = structuredClone(unwrap({ caseRef: ref, alternativeId: selected.id,
         alternativeVersion: selected.version, comparison: compared.request, criteria: compared.request.criteria, reason: ui.reason.trim() }))
       intention = { scope: context.snapshot, body, key: crypto.randomUUID() }
+      if (!retain(intention)) { intention = undefined; setUi("message", "retentionUnavailable"); return }
     }
     const original = intention
     if (!original || !current(original.scope, context.abort)) return
@@ -210,7 +285,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
       if (!current(original.scope, context.abort)) return
       if (reply.kind !== "response") { setUi({ phase: "unknown", message: "choiceUnknown" }); return }
       if (reply.status !== 200 || reply.body.status !== "ok") {
-        intention = undefined; setUi({ phase: "reconcile", message: "refused" }); return
+        intention = undefined; forgetRetained(); setUi({ phase: "reconcile", message: "refused" }); return
       }
       const committed = reply.body.value.caseRef
       if (committed.id !== original.body.caseRef.id || committed.incarnation !== original.body.caseRef.incarnation ||
@@ -218,6 +293,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
         setUi({ phase: "unknown", message: "choiceUnknown" }); return
       }
       intention = undefined
+      forgetRetained()
       source.reload()
     } catch { if (current(original.scope, context.abort)) setUi({ phase: "unknown", message: "choiceUnknown" }) }
   }
@@ -303,7 +379,7 @@ export function SfRecordChoice(props: { caseRef: string }) {
               <dt>{t("coverage")}</dt><dd>{choice.costCoverage.coverageState}</dd></dl>
             <p>{choice.result.horizon.start} – {choice.result.horizon.end}</p>
             <ul><For each={choice.result.unresolvedConditions}>{(condition) => <li>{condition}</li>}</For></ul>
-            <ul><For each={choice.costCoverage.entries}>{(entry) => <li>{entry.categoryId} · {entry.status}
+            <ul aria-label={t("pendingCategories")}><For each={choice.costCoverage.entries}>{(entry) => <li>{entry.categoryId} · {entry.status}
               {entry.status === "pending" ? " · " + entry.reason : ""}</li>}</For></ul>
             <Show when={choice.scenario.operations.length === 0}><p>{t("noOperations")}</p></Show>
           </article>}</For>
