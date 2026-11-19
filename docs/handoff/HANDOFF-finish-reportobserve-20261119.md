@@ -4,7 +4,7 @@
 partial
 
 ## SHA
-Base de observação: c8637979739823935d6a086c40df156ce3a17d6a (Reports14). O SHA de código deste checkpoint será registrado antes do gate.
+Base de observação: c8637979739823935d6a086c40df156ce3a17d6a (Reports14). Código: b748bcc01d8029b0f99a059fd2d9fc1ceff76e1a.
 
 ## Feito
 - Reports14 [44627932614](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627932614): FAILURE, 4fail/0pass, três typechecks SUCCESS; test135926597538 failure e cleanup135935951765 success. Snapshot35550600242133e68d87c8f3cccab2fe84daa40d.
