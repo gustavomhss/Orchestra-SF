@@ -5,9 +5,13 @@ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "De
 
 /** Build the financial source records through the installed Planner controls. */
 export async function createPlannerSources(page: Page, origin: string, actorId: string, observations: Record<string, unknown>[]) {
-  const planner = (name: string, version?: string) => `${origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
+  const planner = (name: string, version?: string) => {
+    const path = name === "OPEX" ? "/orchestra/sf-planner/opex" : "/orchestra/sf-planner/versions"
+    if (!version) return path
+    return `${path}?${new URLSearchParams({ version })}`
+  }
   const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
-  const installed = await page.goto(planner("Versions"))
+  const installed = await page.goto("/orchestra/sf-planner/versions/new")
   expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
   await expect(page.locator("body")).toHaveAttribute("data-surface", "planner")
   await expect(page.getByRole("heading", { name: "Versions", exact: true })).toBeVisible()
@@ -83,7 +87,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
 
 /** A real source revision, independent of the saved ChoiceRecord. */
 export async function changePlannerSource(page: Page, origin: string, versionId: string, annualBudget: number, observations: Record<string, unknown>[]) {
-  await page.goto(`${origin}/sucafina/planner?${new URLSearchParams({ page: "OPEX", version: versionId })}`)
+  await page.goto(`/orchestra/sf-planner/opex?${new URLSearchParams({ version: versionId })}`)
   const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
   await expect(row).toHaveCount(1)
   await row.getByRole("button", { name: "Manage", exact: true }).click()

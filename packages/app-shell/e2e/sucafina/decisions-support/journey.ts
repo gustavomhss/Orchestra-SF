@@ -77,7 +77,7 @@ function receiptDiagnostic(value: string) {
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
-  await page.goto(`${origin}/sucafina/dashboard`)
+  await page.goto("/orchestra/sf-decisions")
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
   const link = page.getByRole("link", { name: "Workbench", exact: true })
   await expect(link).toHaveCount(1)

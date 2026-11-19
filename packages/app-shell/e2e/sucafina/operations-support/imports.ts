@@ -38,7 +38,7 @@ async function exported(page: Page, account: Account, version: string) {
 }
 
 async function tokens(page: Page, account: Account, version: string, ids: string[]) {
-  expect((await page.goto(account.baseURL + "/planner?page=OPEX&mode=compare&version=" + encodeURIComponent(version)))?.status()).toBe(200)
+  expect((await page.goto(`/orchestra/sf-planner/opex?${new URLSearchParams({ version })}`))?.status()).toBe(200)
   const result: Record<string, number> = {}
   for (const id of ids) {
     const form = page.locator(`form[data-page="OPEX"][data-command="save"][data-record="${id}"]`)
@@ -66,7 +66,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     void response.catch(() => undefined)
     return response
   }
-  expect((await page.goto(account.baseURL + "/planner?page=Versions"))?.status()).toBe(200)
+  expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
   const first = page.locator('form[data-page="Versions"][data-command="save"][data-record=""]')
   await expect(first).toHaveCount(1)
   const created = page.waitForResponse((response) => response.url() === page.url() && response.request().method() === "POST")
@@ -101,7 +101,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   workbook.addWorksheet("OPEX").addRows([["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"], [renewal, "Licenses", "Renewal", "USD", "Forecast", 84000]])
   const bytes = Buffer.from(await workbook.xlsx.writeBuffer())
   const sourceDigest = createHash("sha256").update(bytes).digest("hex")
-  expect((await page.goto(modeURL(account, "planner", "imports").href))?.status()).toBe(200)
+  expect((await page.goto("/orchestra/sf-imports"))?.status()).toBe(200)
   const root = page.locator("[data-import-workbench]")
   await expect(root).toHaveCount(1)
   const status = root.locator(":scope > [role='status']")
@@ -200,7 +200,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await root.getByRole("button", { name: "Refresh receipt", exact: true }).click()
   expect(await valueOf<Reference>(await refreshed)).toEqual(recovered)
   const reloaded = waiting("import-reference")
-  expect((await page.goto(modeURL(account, "planner", "imports", { importPreviewRef: preview.id }).href))?.status()).toBe(200)
+  expect((await page.goto("/orchestra/sf-imports"))?.status()).toBe(200)
   expect(await valueOf<Reference>(await reloaded)).toEqual(recovered)
   await expect(root.getByRole("button", { name: "Apply reviewed import", exact: true })).toBeDisabled()
   expect(applies).toEqual([JSON.stringify({ manifestId: preview.id, version: preview.version })])

@@ -181,7 +181,7 @@ async function openCase(page: Page, origin: string, reference: string, objective
 
 async function openRequest(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  await page.goto(`${origin}/sucafina/procurement?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
+  await page.goto("/orchestra/sf-procurement/requests")
   const detail = page.locator("details").filter({ has: page.locator(`section[id="${id}-pr"]`) })
   await expect(detail).toHaveCount(1)
   await expect(detail).toHaveAttribute("open", "")
