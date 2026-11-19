@@ -162,6 +162,7 @@ test("BI62 installed Planner first save exposes its real HTTP outcome before BI 
     // Preserve transport/UI observations while the live page and host still
     // exist. The unchanged shared fixture then emits its redacted CLI log.
     try {
+      if (commandCount !== 1 || problem) console.info("SF_PLANNER_INGRESS", JSON.stringify({ commandCount, observations }))
       await info.attach("bi62-first-save-http.json", { body: JSON.stringify({ snapshot: process.env.GITHUB_SHA ?? null,
         commandCount, observations, boundary: "Real CLI/factory/enrollment/Planner UI; one save attempt; subsequent requests only read current state. No route, body, authority or domain result is replaced." }, null, 2), contentType: "application/json" })
       await info.attach("bi62-first-save.png", { body: await page.screenshot(), contentType: "image/png" })

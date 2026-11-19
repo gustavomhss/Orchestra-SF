@@ -19,7 +19,7 @@ import { pathKey } from "@/utils/path-key"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
-import { createSfAuthActions, createSfTransport, type SfTransport } from "@orchestra/client/sucafina/transport"
+import { createSfAuthActions, createSfTransport, type SfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
@@ -152,7 +152,7 @@ function explicitSelection(query: string): { kind: "none" } | { kind: "invalid" 
 /** Only the selected registered Orchestra connection may discover its installed SF. */
 export function createSfInstalledOwnerSource231(
   server: ServerConnection.Any,
-  fetcher: typeof globalThis.fetch,
+  fetcher: SfTransportFetch,
 ) {
   const key = ServerConnection.key(server)
   const endpoint = (() => {
@@ -239,8 +239,10 @@ function MountedSurface(props: Readonly<{
         handle.invalidate("logout")
         await handle.reload()
       }
-    } catch { setAuthFailed(true) }
-    finally { setAuthBusy(false) }
+    } catch (error) {
+      console.warn("Sucafina sign-out failed", error instanceof Error ? error.name : "unknown")
+      setAuthFailed(true)
+    } finally { setAuthBusy(false) }
   }
   const message = () => {
     const state = handle.state().status
@@ -297,7 +299,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const platform = usePlatform()
   // A native browser fetch must retain its Window receiver when the transport
   // invokes the injected function through its options object.
-  const fetcher: typeof globalThis.fetch = (input, init) =>
+  const fetcher: SfTransportFetch = (input, init) =>
     platform.fetch ? platform.fetch(input, init) : globalThis.fetch(input, init)
   const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
