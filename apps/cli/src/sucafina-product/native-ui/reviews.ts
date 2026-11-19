@@ -10,6 +10,7 @@ import { Option, Schema } from "effect"
 import { SfProjectionReview } from "@orchestra/schema/sucafina/reviews"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { isSfPeriod } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+import { reviewAgendaItemLabel } from "../../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
 import type { createSfProductAuthority } from "../../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { SfScopedSourcePort } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { createSfBusinessServices } from "../business-services.ts"
@@ -157,8 +158,9 @@ export function createSfReviewsProjectionHandlers(input: Input) {
           return fail(discovered.status, discovered.reason, codeFor(discovered.status))
         if (!discovered.value.agenda)
           return fail("unavailable", "review-source-selection-unavailable", 503)
-        const item = sfDashboardReviewAgendaItem(discovered.value.agenda.section)
-        data = { items: [item], period }
+        const source = discovered.value.agenda.section
+        const item = sfDashboardReviewAgendaItem({ ...source, id: source.selectionRef })
+        data = { items: [{ ...item, title: reviewAgendaItemLabel(item) }], period }
         // Preserve the same live scoped source. A new discovery would mint a
         // different selectionRef, so validate the original issued reference.
         check = async () => {

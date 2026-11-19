@@ -32,6 +32,14 @@ function stateOf(result: { kind: "transport-error"; reason: string } | { kind: "
 
 /** UI47: the producer is the sole source for section identity, count and period. */
 export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
+  return <SfAgendaEditor year={props.route.query.year} />
+}
+
+export function SfAgendaEditor(props: {
+  year?: number
+  initial?: readonly Section[]
+  previousReviewRef?: string
+}) {
   const owner = useSfContext()
   const language = useLanguage()
   const uid = createUniqueId()
@@ -82,7 +90,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     const generation = owner.generation(), ownerKey = state.ownerKey
     setStore("status", "loading")
     try {
-      const year = props.route.query.year
+      const year = props.year
       const period = year ? { start: String(year) + "-01-01", end: String(year) + "-12-31" } : {}
       const result = await createSfReviewsClient(access.transport)["projection.review"](
         { page: page.trim(), ...period }, { signal: controller.signal },
@@ -123,7 +131,8 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
+      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [...props.initial ?? []], available: [],
+        preview: undefined, preserved: undefined, phase: "selecting", status: props.initial?.length ? "ready" : "loading" })
       return
     }
     const source = untrack(() => store.sourcePage)
@@ -161,7 +170,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     if (!access || state.status !== "ready" || !mayPreview() || store.selected.length === 0 || store.selected.length > 30 ||
       store.phase === "submitting" || store.phase === "outcome-unknown") return
     const sections = store.selected.map((item) => ({
-      id: item.id, title: item.topic, topic: item.topic, selectionRef: item.selectionRef,
+      id: item.id, title: item.title ?? item.topic, topic: item.topic, selectionRef: item.selectionRef,
       period: { start: item.period.start, end: item.period.end },
       ...(item.recordRefs === undefined ? {} : { recordRefs: [...item.recordRefs] }),
     }))
@@ -213,7 +222,8 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     setStore({ phase: "submitting", message: "" })
     try {
       const result = await createSfReviewsClient(access.transport)["dashboard.dashboard-review-preserve"](
-        { selectionRef: prepared.selectionRef, sectionRefs: prepared.sections.map((section) => section.id) },
+        { selectionRef: prepared.selectionRef, sectionRefs: prepared.sections.map((section) => section.id),
+          ...(props.previousReviewRef ? { previousReviewRef: props.previousReviewRef } : {}) },
         { signal: controller.signal, idempotencyKey },
       )
       if (!current(generation, ownerKey)) return
@@ -309,6 +319,21 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
                     onClick={() => { setStore("selected", (items) => items.filter((selected) => selected.id !== item.id)); invalidatePreview() }}>
                     {t("sf.u25.remove")}</button>
                 </div>
+                <Show when={item.recordRefs !== undefined}>
+                  <ul aria-label={item.title ?? item.topic}>
+                    <For each={item.recordRefs}>{(reference) => <li>
+                      <span>{reference}</span>
+                      <button type="button" class="mx-btn" aria-label={"Remove record " + reference}
+                        disabled={store.phase === "submitting" || store.phase === "outcome-unknown" || store.phase === "previewing" || store.phase === "confirmed"}
+                        onClick={() => {
+                          setStore("selected", (items) => items.map((selected) => selected.id === item.id
+                            ? { ...selected, recordRefs: selected.recordRefs?.filter((ref) => ref !== reference) }
+                            : selected))
+                          invalidatePreview()
+                        }}>{t("sf.u25.remove")}</button>
+                    </li>}</For>
+                  </ul>
+                </Show>
               </li>}</For>
             </ol>
           </section>

@@ -3,6 +3,9 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
+import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
+import type { Schema } from "effect"
+import { SfAgendaEditor } from "../agenda"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -28,12 +31,8 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     topic: 0,
     sourceLinks: [] as readonly { label: string; url: string }[],
     updateStatus: "ready" as SfUiState,
-    successor: undefined as Readonly<{
-      available: boolean
-      previousReviewRef: string
-      confirmations: readonly { sectionId: string; label: string }[]
-      unavailableSections: readonly { sectionId: string; title: string; reason: string }[]
-    }> | undefined,
+    preparing: false,
+    successor: undefined as Schema.Schema.Type<typeof SfReviewUpdate> | undefined,
   })
   const ref = () => props.route.kind === "entry" || props.route.kind === "present"
     ? props.route.params.reviewRef : undefined
@@ -49,7 +48,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     const reviewRef = ref()
     store.retry
     setStore({
-      review: undefined, successor: undefined, topic: 0, sourceLinks: [], updateStatus: "ready",
+      review: undefined, successor: undefined, preparing: false, topic: 0, sourceLinks: [], updateStatus: "ready",
       presenting: props.route.kind === "present",
       status: state.status === "denied" ? "denied"
         : state.status === "unauthenticated" ? "session-expired"
@@ -124,7 +123,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     successorAbort?.abort()
     const controller = new AbortController()
     successorAbort = controller
-    setStore({ updateStatus: "loading", successor: undefined })
+    setStore({ updateStatus: "loading", successor: undefined, preparing: false })
     try {
       const result = await createSfReviewsClient(active.transport)["reviews.review-update"](
         { reviewRef: review.id }, { signal: controller.signal },
@@ -251,6 +250,15 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <ul><For each={next().confirmations}>{(item) => <li>{item.label}</li>}</For></ul>
                   <h3>{t("sf.u32.unavailableSections")}</h3>
                   <ul><For each={next().unavailableSections}>{(item) => <li><strong>{item.title}</strong>: <StatusText value={item.reason} /></li>}</For></ul>
+                  <Show when={next().available && next().items.length > 0 && next().unavailableSections.length === 0}>
+                    <button type="button" class="mx-btn" disabled={store.preparing}
+                      onClick={() => setStore("preparing", true)}>Prepare current data as a new revision</button>
+                    <Show when={store.preparing}>
+                      <SfAgendaEditor previousReviewRef={review().id} initial={next().items.map((item) => ({
+                        ...item, title: review().sections.find((section) => section.id === item.id)?.title ?? item.topic,
+                      }))} />
+                    </Show>
+                  </Show>
                 </section>}
               </Show>
               <Show when={store.updateStatus !== "ready" && store.updateStatus !== "loading"}>

@@ -234,7 +234,7 @@ export function createSfDashboardServices(input: {
           return { status: "stale" as const, reason: "dashboard-discovery-source-changed" }
       }
       if (!await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
-      return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: agendaRequest, recordCount: selectedAgenda.value.recordCount } } : {}),
+      return { status: "ok" as const, value: { period, ...(agendaRequest && selectedAgenda?.status === "ok" ? { agenda: { section: { ...agendaRequest, recordRefs: selectedAgenda.value.recordRefs }, recordCount: selectedAgenda.value.recordCount } } : {}),
         records, recordLimit: 100, history: historyOptions, permissions: {
           preserve: actions.includes("reviews.preserve") && (savedReviews.status === "ok" || savedReviews.status === "unavailable" && savedReviews.reason === "product-state-uninitialized"),
           capture: actions.includes("reviews.preserve") && (preferences.status === "ok" || preferences.status === "unavailable" && preferences.reason === "product-state-uninitialized"),
