@@ -1028,6 +1028,10 @@ function amount(request: Record<string, unknown>) {
 function requestStatusLabel(status: string) {
   return ({ draft: "Requisition draft", pr_pending: "Requisition approval", pr_rejected: "Requisition rejected", sourcing: "Sourcing", src_pending: "Sourcing approval", src_rejected: "Sourcing rejected", po_draft: "Purchase order draft", po_pending: "Purchase order approval", po_rejected: "Purchase order rejected", po_approved: "Purchase order approved", po_issued: "Issued internally", cancelled: "Cancelled" } as Record<string, string>)[status] ?? status
 }
+function supplierUpload(page: string, id: string, name: string, version: number, actor: Actor): string {
+  if (!id || !actor.canWrite || !actor.roles.some((role) => role === "admin" || role === "supplier admin")) return ""
+  return `<form data-private-upload="supplier" data-page="${esc(page)}" data-record="${esc(id)}" data-version="${version}"><label>${esc(name)}<input type="file" name="file" required></label><button type="submit">Upload document</button></form>`
+}
 function queueRequestLink(row: ProcurementQueueRow, href: string) {
   return `<a href="${esc(href)}" data-source-ref="${esc(row.evidence.refId)}" data-source-digest="${esc(row.evidence.refDigest)}" data-source-version="${row.version}">${esc(row.id)}</a>`
 }
@@ -1450,7 +1454,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           )}<h3>Audit</h3>${table(
             ["Field"],
             rows(supplier.history).map((line) => [esc(text(line.field))]),
-          )}</details>`
+          )}${supplierUpload(page, id, text(supplier.legalName), version(`suppliers:${id}`), context.actor)}</details>`
         })
         .join("")
     )
