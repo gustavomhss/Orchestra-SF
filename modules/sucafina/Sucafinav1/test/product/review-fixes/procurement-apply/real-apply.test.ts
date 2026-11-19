@@ -9,7 +9,7 @@ for (const stage of ["draft", "pr_rejected"] as const) test(`OPS-REV-02 real HTT
   try {
     const before = await fixture.material()
     const prepared = await prepare(fixture)
-    expect(prepared.change.operation.command).toEqual({ page: "Requests", action: "save", id: "PR-1", version: before.version.version, values: { pr: { estAmount: 150 } } })
+    expect(prepared.change.operation.command).toEqual({ page: "Requests", action: "save", id: "PR-1", version: before.version.version, confirmed: false, values: { pr: { estAmount: 150 } } })
     expect(prepared.change.target).toMatchObject({ incarnation: fixture.evidence.target.incarnation, version: fixture.evidence.target.version, fields: fixture.evidence.target.fields })
     expect(fixture.evidence.refDigest).toBe(digestSfEvidenceRef(fixture.evidence))
     expect(prepared.change.operation.preview.context.currency).toBe("USD")
