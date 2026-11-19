@@ -38,13 +38,15 @@ Os cinco handoffs individuais estão no candidato integrado em docs/handoff/HAND
 Caminhos E2E abaixo partem de packages/app-shell/e2e/sucafina/. O inventário completo está em cada handoff individual.
 
 - WP1 reports-support/review-flow.ts:21 — Reports and backup ausente no gate antes dos helpers alterados; :27,110 remoção individual; :154 sucessor; :429,430 destino nativo autorizado de fonte; :446 total anual. reports.spec.ts:49,56,86 ainda assume review-read/ordem Projects-first, enquanto UI48 usa dashboard-review/ordem salva.
+- Regressão introduzida no WP1 — reports-support/review-flow.ts:105:126: TS2367 em `removeOne: options.removeOne === true`, pois o guard anterior já estreitou o valor para false|undefined. O typecheck E2E do sf-ci real apontou esse diagnóstico. Pendente corrigir a serialização do booleano (por exemplo `options.removeOne ?? false`) sem remover o guard nem as asserções. Correção não aplicada ao SHA congelado e não verificada; não atribuir esse erro à base.
+- Erros herdados fora dos WPs — decisions-support/planner-sources.ts:21,39 duplica `name`; operations-support/imports.ts:106,182 duplica `detail`, com efeitos de tipo em :193,194,195,220. Bloqueiam a coleta de DECISIONS/OPERATIONS. Blobs iguais na basef590 e no mergeaece: 7b1441822f3e3d305e4c2a2a4eb06e47758242c8 e 46515f500616b327ad3de082cf56e4d08ccadd84, respectivamente.
 - WP2 dashboard-installed/records-signals-history.spec.ts:27 — Sign out ausente; confirmation-access.spec.ts:10 — timeout existente durante primeiro passo. support.ts:117,166,173 ainda tem confirmação/disclosure mensal legados; history/conflict/risk/signals têm a lista completa no handoff. Correções 7e448802e5f89e8aed59ed77c3d2b61c00e66be5 e d8139cfcc8a0881ca3244ab8221a241293165a71 posteriores ao gate não foram executadas. A contagem por pathname/page/action não prova equivalência de origem.
 - WP3 bi-installed/installed-fixture.ts:217,337 — Create first version ausente; installed-planner-ingress.spec.ts:81 — Versions ausente. installed-fixture.ts:279 monthly bulk ainda legado; :49,51,53 preparação Decisions guardada antes de :4110.
 - WP4 wp03/planner-mounted.spec.ts:27 — CAP23 ausente; :29 Sign out não vinculado; :48,84,175 bulk/saved-grid; :98,127,137 gerenciamento/official. wp10/composition.spec.ts:368 falha por cookie de enrollment ausente antes de extended-flows. extended-flows.ts:17,19,24,64,68 BI/review legados; :131,133 sucessor; :10,153,155 sectionId explicitamente unbound. first-agenda.ts:22,47,92,155 picker multi-domain e preservação não vinculados; consumidor nominal não coberto pelo gate.
 - WP5 wp04/procurement.spec.ts:27 — Requests ausente nos oito testes; :30 proveniência C02; :125,140,181,202,217 controles de formulário/CAS; :245,257,279,291,313 aprovação/stale/race; :328,347,366,445,460,473 recorrência/sourcing/PO/FX; :111,512,513,541,543,579,580,599,605,619 banking/redaction/settings. sourcing-controller.spec.ts:5,31,32,71,85 continua prova legada isolada.
 - Binding compartilhado: wp03/installation-fixture.ts:14,53,108 e reports-support/production-installation.ts:124,134,201,229 não demonstram a associação autorizada da instalação ao shell nativo. Os logs mostram ausência de superfícies; não isolam toda a causa. Não inventar cookies, grants, CORS ou descriptors.
 - Rota de retomada observada: native/journeys/reports-issuer.spec.ts:90–94 navega por target.chapterHref/shellOrigin de contexto já selecionado. native/fixture/installed-browser.ts:24,53,64,71 exige endpoint CDP privado, contextos pré-autenticados e Microsoft; não é bootstrap da fixture local. native/fixture/readiness.ts:154–177 observeNativeBinding confere discovery/instalação/contexto reais e admite Microsoft ou local-operator. A existência desse spec não é prova de run aprovado.
-- WP6 — resultado do pacote ainda em acompanhamento na seção de runs.
+- WP6 — complete para a qualificação do pacote: run de push44551853461 success com receipt e upload verificados. Isso não resolve os E2E nem autoriza GO.
 - WP7 — SHA exato unbound em .github/workflows/sf-ci.yml:27–37: checkout default de pull_request usa merge sintético e EXPECTED_SHA=github.sha. O run automático não testa o SHA exato de sf-join-four. SHA candidato4372b98d8e4db09a56f8ad589fb298c8779c84bf / tree723f1f1781ac951c048c91a71336b79070bfcae0; checkoutsf-ci aece7640562fe9830c54ee4e73836e830cc48e0c / treed370d005810a2d4e8d01fef79befc66eae0cfe2a. Há cinco arquivos de produto adicionais nesse merge, vindos da base close-final-candidate, não dos WPs.
 - Guards finais do SHA exato também permanecem unbound. Não transferir resultado do merge sintético ao candidato.
 
@@ -63,7 +65,7 @@ Caminhos E2E abaixo partem de packages/app-shell/e2e/sucafina/. O inventário co
 ## Como retomar
 
 1. Partir de sf-join-four @ 4372b98d8e4db09a56f8ad589fb298c8779c84bf e dos cinco handoffs individuais. Conferir head antes de novas edições.
-2. Resolver primeiro enrollment e binding da instalação real ao shell; então os specs poderão alcançar os contratos nativos alterados. Usar discovery/contexto/identidade reais.
+2. Corrigir primeiro o TS2367 introduzido em review-flow.ts:105, preservando o bloqueio de removeOne; eliminar as redeclarações herdadas de name/detail sem mudar as asserções. Depois resolver enrollment e binding da instalação real ao shell; então os specs poderão alcançar os contratos nativos alterados. Usar discovery/contexto/identidade reais.
 3. Concluir somente os bindings e fatos pendentes que tenham contrato do produtor conferido; preservar identidades, CAS, períodos, fontes, cálculos, persistência e bloqueios de autorização.
 4. Reexecutar na retomada o spec estreito que alcance cada mudança; não repetir suites inteiras para procurar seletor.
 5. Para o gate exato, numa nova retomada autorizada, acionar workflow420530405 por workflow_dispatch com refsf-join-four: `gh workflow run 420530405 --ref sf-join-four -R gustavomhss/Orchestra-SF`. Esse comando não foi executado nesta sessão. Conferir github.sha/checkout e não aceitar apenas head_sha da API.
@@ -85,15 +87,25 @@ Caminhos E2E abaixo partem de packages/app-shell/e2e/sucafina/. O inventário co
 
 WP5 bootstrap [44547735238](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44547735238): failure em Read request, ENOENT .ci-run.json, sem testes. Nenhum desses runs demonstra sucesso dos fluxos nativos ainda não alcançados. Cleanup dos cinco snapshots nominais concluiu success.
 
-### WP6 — pacote
+### WP6 — pacote: complete
 
-- Run principal push [44551853461](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551853461), attempt1, source4372b98d8e4db09a56f8ad589fb298c8779c84bf: em acompanhamento; não há afirmação de sucesso ou digest final neste checkpoint.
-- Run automático PR [44551871303](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871303), mesmo source: em acompanhamento; registrado separadamente.
-- Exigir SF_FACTORY_PACKAGE_QUALIFIED, SF_FACTORY_RECEIPT_VERIFIED, identidade de SHA, conclusão success e upload success antes de qualificar pacote.
+- Evidência primária: push [44551853461](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551853461), attempt1, job135657398119: success. Auditoria independente e upload: success.
+- SF_FACTORY_PACKAGE_QUALIFIED e SF_FACTORY_RECEIPT_VERIFIED foram lidos dos logs reais e concordam: sourceSHA=checkoutSHA=expectedSourceSHA=workflowSHA=4372b98d8e4db09a56f8ad589fb298c8779c84bf; runID44551853461; runAttempt1.
+- TAR: orchestra-sf-factory-linux-x64-baseline.tar.gz; archiveSha256=`ec193665f86d85e8cf0a49383b620874591f40791589cddcdaf6dcbe188339ec`.
+- manifestSha256=`ce2e4461b6fee4f8fadc61cda109664616d178667959206af72c8ea5bdb00011`; bundleSha256=`b5bcf386c5f4d27bab70b2f2ab4cfb660a1cf0c32b9bcb0e80e04f2171d55a5a`.
+- [Artifact14543542729](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551853461/artifacts/14543542729), nome sf-factory-package-44551853461-1-4372b98d8e4db09a56f8ad589fb298c8779c84bf, 91517380 bytes, expires2026-11-26T15:14:30Z. Digest do ZIP de evidência=`sha256:1972878fd7337f248f7880392129c82ee036ac0c5f87f7888d0c8dbf574e992b`; não é o digest do TAR.
+- Receipt atesta extração fora do checkout, 1413 arquivos totais, 1310 arquivos web publicados e nenhum sourcemap web publicado. GET de dashboard legado autenticado permaneceu404; current-choice autenticado retornou200/ok.
+- Run secundário automático PR [44551871303](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871303), job135657461315: success, auditoria e upload success. Source/checkout4372b98..., workflowSHAaece764...; artifact14543537787. TAR desse outro run tem digest`2118ba58c6dbefd4381322878676a4c7f31908eb19262a398a9c11c4d8f140c8`. Não intercambiar receipt/digest/artefato entre os runs; push permanece referência principal.
+- Nenhum digest foi calculado localmente, inferido do ZIP ou copiado do pacote antigo.
 
-### WP7 — sf-ci único e guards
+### WP7 — sf-ci único e guards: partial / SHA exato unbound
 
-- Run automático [44551871355](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871355), attempt1, eventpull_request, PR257: em acompanhamento.
-- head_sha da API4372b98d8e4db09a56f8ad589fb298c8779c84bf; checkout real aece7640562fe9830c54ee4e73836e830cc48e0c comprovado pelo job135657462853 e artifactsf-omni-linux-aece7640562fe9830c54ee4e73836e830cc48e0c.
-- Resultado desse run será registrado como evidência do merge sintético, sem afirmar validação de4372b98.
-- Nenhum workflow_dispatch, rerun, segundo sf-ci ou teste local foi executado.
+- Run automático [44551871355](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871355), attempt1, eventpull_request, PR257: em acompanhamento para resultado agregado; os resultados abaixo já são terminais.
+- head_sha da API4372b98d8e4db09a56f8ad589fb298c8779c84bf; checkout real aece7640562fe9830c54ee4e73836e830cc48e0c comprovado pelo job135657462853 e artifactsf-omni-linux-aece7640562fe9830c54ee4e73836e830cc48e0c. O merge tem cinco arquivos de produto adicionais; não equivale à tree do candidato.
+- sf/static-and-contracts, job135657462411: failure. Geração e typecheck do produto success; typecheck E2E FAIL, 147 inputs declarados, 3776 arquivos do compilador, 10 diagnósticos, exit2. Nove diagnósticos provêm das duas redeclarações herdadas e seus efeitos; um novo é TS2367 em review-flow.ts:105. Build web skipped.
+- [Artifact E2E14543802969](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871355/artifacts/14543802969): sf-e2e-inclusion-aece7640562fe9830c54ee4e73836e830cc48e0c-1.
+- Guards/spawn no mergeaece terminaram com exit0: canonicaldev=a1d37698a7bb097c1578f827eba6a19b9917ef07; PRbase=52d2c24f4f8cb776889b97894131df6ada43ce98; spawn0, guard-dev0, guard-pr-base0. [Artifact guards14542948268](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871355/artifacts/14542948268). PR257 tem label guardrail-approved; log mostra GUARDRAIL_APPROVED=protected-paths. Portanto este run de PR não reproduz os dois findings esperados de workflow_dispatch sem label.
+- CI-UI-OPERATIONS, job135658029464: failure na coleta, SyntaxError imports.ts:182 (detail redeclarado), seguido de No tests found; zero testes iniciados. Sem artifact de UI porque não houve arquivos produzidos.
+- CI-UI-DECISIONS, job135658029387: failure na coleta, SyntaxError planner-sources.ts:39 (name redeclarado); zero testes iniciados. Sem artifact de UI pela mesma razão.
+- CI-UI-REPORTS, job135658029420: failure; 4 selecionados, 2 failed / 2 did not run / 0 passed por limite existente max-failures2. RPT-01/RPT-02 falham em review-flow.ts:21, link Reports and backup ausente; timeout original10000ms. [Artifact14542677834](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44551871355/artifacts/14542677834), sf-ui-failure-CI-UI-REPORTS.
+- Nenhum workflow_dispatch, rerun, segundo sf-ci ou teste local foi executado. Falha estática não é atribuída genericamente aos dois protected-paths esperados: há um erro novo concreto e erros de coleta herdados.
