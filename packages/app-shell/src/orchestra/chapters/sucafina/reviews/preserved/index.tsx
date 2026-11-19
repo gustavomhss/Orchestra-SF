@@ -1,13 +1,14 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
+import { preservedMeetingLine, readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
 import { SfPreservedAnswer } from "./answer"
 import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "./preserved.css"
@@ -24,6 +25,8 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     review: undefined as PreservedReview | undefined,
     presenting: props.route.kind === "present",
     retry: 0,
+    topic: 0,
+    sourceLinks: [] as readonly { label: string; url: string }[],
     updateStatus: "ready" as SfUiState,
     successor: undefined as Readonly<{
       available: boolean
@@ -46,7 +49,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     const reviewRef = ref()
     store.retry
     setStore({
-      review: undefined, successor: undefined, updateStatus: "ready",
+      review: undefined, successor: undefined, topic: 0, sourceLinks: [], updateStatus: "ready",
       presenting: props.route.kind === "present",
       status: state.status === "denied" ? "denied"
         : state.status === "unauthenticated" ? "session-expired"
@@ -93,6 +96,26 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     if (status === "not-found") return "sf.common.removed"
     if (status === "partial") return "sf.common.needsInput"
     return "sf.common.unavailable"
+  }
+  const openSource = async (referenceId: string) => {
+    const active = owner.ready(), state = owner.state(), review = store.review
+    if (!active || state.status !== "ready" || !review) return
+    const generation = owner.generation()
+    const controller = new AbortController()
+    successorAbort = controller
+    const client = createSfReviewsClient(active.transport)
+    const read = await client["dashboard.dashboard-review"]({ id: review.id }, { signal: controller.signal })
+    if (controller.signal.aborted || !current(generation, state.ownerKey)) return
+    if (read.kind !== "response" || read.body.status !== "ok" || read.body.value.id !== review.id) return
+    const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })
+    if (controller.signal.aborted || !current(generation, state.ownerKey)) return
+    if (resolved.kind === "response" && "links" in resolved.body && typeof location !== "undefined")
+      setStore("sourceLinks", resolved.body.links.filter((link) => {
+        try {
+          const destination = new URL(link.url, location.href)
+          return destination.origin === location.origin
+        } catch { return false }
+      }))
   }
   const update = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review
@@ -192,6 +215,19 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   </For>
                 </ol>
               </section>
+              <SfPreservedMeeting
+                review={review()}
+                topic={store.topic}
+                onTopic={(topic) => setStore("topic", topic)}
+                onSource={(referenceId) => { void openSource(referenceId) }}
+                onUpdate={() => { void update() }}
+                updateBusy={store.updateStatus === "loading"}
+              />
+              <Show when={store.sourceLinks.length}>
+                <nav aria-label={SF_U32_COPY["sf.u32.authorizedSources"]}>
+                  <For each={store.sourceLinks}>{(link) => <a href={link.url}>{link.label}</a>}</For>
+                </nav>
+              </Show>
               <SfPreservedAnswer review={review()} />
               <section class="sf-n28-section" aria-label={t("sf.u32.comments")}>
                 <h2>{t("sf.u32.comments")}</h2>
@@ -225,5 +261,51 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         </SfStatePanel>
       </div>
     </SfPageFrame>
+  )
+}
+
+function SfPreservedMeeting(props: {
+  review: PreservedReview
+  topic: number
+  onTopic: (topic: number) => void
+  onSource: (referenceId: string) => void
+  onUpdate: () => void
+  updateBusy: boolean
+}) {
+  const section = () => props.review.sections[Math.max(0, Math.min(props.topic, props.review.sections.length - 1))]
+  const projection = () => {
+    const current = section()
+    return current ? readPreservedProjection(current.content) : undefined
+  }
+  const sources = () => {
+    const current = projection()
+    if (!current) return []
+    return [...new Map(current.values.flatMap((value) => value.sourceRefs).map((ref) => [ref.refId, ref])).values()]
+  }
+  return (
+    <section class="sf-n28-section" aria-label={SF_U32_COPY["sf.u32.meeting"]}>
+      <p role="status">{`Preserved review ${props.review.id} v${props.review.version} · ${props.review.createdAt}`}</p>
+      <Show when={section()}>
+        {(current) => <>
+          <h2>{current().title}</h2>
+          <p>{current().period.start} – {current().period.end} · {current().count} records</p>
+          <Show when={projection()} fallback={<p>{SF_U32_COPY["sf.u32.materialUnavailable"]}</p>}>
+            {(shown) => <ul>
+              <For each={shown().values}>{(value) => <li>{preservedMeetingLine(value)}</li>}</For>
+            </ul>}
+          </Show>
+          <Show when={sources().length}>
+            <ul aria-label={SF_U32_COPY["sf.u32.sourceNav"]}>
+              <For each={sources()}>{(source) => <li>
+                <button type="button" onClick={() => props.onSource(source.refId)}>{`Open source ${source.refId}`}</button>
+              </li>}</For>
+            </ul>
+          </Show>
+        </>}
+      </Show>
+      <button type="button" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{SF_U32_COPY["sf.u32.previousTopic"]}</button>
+      <button type="button" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{SF_U32_COPY["sf.u32.nextTopic"]}</button>
+      <button type="button" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{SF_U32_COPY["sf.u32.checkUpdates"]}</button>
+    </section>
   )
 }
