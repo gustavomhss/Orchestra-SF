@@ -20,7 +20,7 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   await loginNative(page, account, scenario)
   if (account === "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toHaveCount(0)
   if (account !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
-  const entry = await page.goto("/orchestra/sf-procurement/requests")
+  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
   // The native CAP25 entry mounts the real C02 queue and its producer provenance.

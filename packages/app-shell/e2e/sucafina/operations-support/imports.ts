@@ -246,7 +246,10 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(applies).toEqual([JSON.stringify({ manifestId: preview.id, version: preview.version })])
   expect(await exported(reader, account, version)).toEqual(after)
   expect(await tokens(reader, account, version, [renewal, fixed])).toEqual(afterTokens)
-  const viewerPage = await page.context().newPage()
+  const browser = page.context().browser()
+  if (!browser) throw new Error("Operations requires an isolated viewer browser context")
+  const viewerContext = await browser.newContext({ baseURL: account.origin })
+  const viewerPage = await viewerContext.newPage()
   const viewer = await login(viewerPage, "viewer", "journey")
   // Sign out in the same operator's reader tab while the workbench retains the previously valid reference.
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
@@ -265,5 +268,5 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(visibleAfterRevocation.OPEX).toEqual(after.OPEX)
   await observation(info, "operations-import-real-receipt", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: "real Apply response delivery lost; automatic GET, Refresh receipt, reload", revocation: "same credential logged out; cached reference denied" })
   await reader.close()
-  await viewerPage.close()
+  await viewerContext.close()
 }

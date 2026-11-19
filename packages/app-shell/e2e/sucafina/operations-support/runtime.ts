@@ -84,7 +84,7 @@ export async function login(page: Page, key: "first" | "second" | "viewer", scen
   await folders.getByPlaceholder("Search folders", { exact: true }).fill(manifest.directory)
   await folders.locator(`[data-directory-path=${JSON.stringify(manifest.directory)}]`).click()
   await expect(project.locator("small")).toHaveAttribute("title", manifest.directory)
-  const response = await page.goto("/orchestra/sf-procurement/requests/new")
+  const response = await page.goto(new URL("/orchestra/sf-procurement/requests/new", account.origin).href)
   expect(response?.status(), "The authenticated Procurement application must be mounted").toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toHaveCount(1)
   await expect(page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })).toHaveCount(key === "viewer" ? 0 : 1)
