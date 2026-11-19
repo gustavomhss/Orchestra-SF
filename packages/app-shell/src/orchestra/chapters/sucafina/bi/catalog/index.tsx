@@ -405,6 +405,18 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     })
   }
 
+  const sourcePageHref = (link: Options["links"][number]) => {
+    const state = context.state()
+    if (state.status !== "ready" || link.surface !== "planner" || link.page !== "Versions") return
+    const url = new URL("/orchestra/sf-planner/versions", state.binding.publicOrigin)
+    if (selectionValid() && store.start.slice(0, 4) === store.end.slice(0, 4))
+      url.searchParams.set("year", store.start.slice(0, 4))
+    url.searchParams.set("server", state.binding.publicOrigin)
+    url.searchParams.set("project", state.binding.projectId)
+    url.searchParams.set("installation", state.binding.installationId)
+    return url.href
+  }
+
   const choice = () => BI_CATALOG.find((entry) => entry.id === store.viewId)
   const safePreview = () => store.data && ownerState() === "ready" &&
     context.ready()?.context.stamp.accessRevision === store.data.projection.context.accessRevision
@@ -455,7 +467,9 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
             </section>}
           </Show>
           <SfStatePanel state={store.readState}
-            messageKey={sfBiKey(store.readState === "filtered-empty" ? "sf.u21.noChoices" : "sf.u21.readStatus")}
+            messageKey={store.readState === "session-expired" ? sfCommonKey("sf.common.loginAgain") :
+              store.readState === "denied" ? sfCommonKey("sf.common.noAccess") :
+              sfBiKey(store.readState === "filtered-empty" ? "sf.u21.noChoices" : "sf.u21.readStatus")}
             onRetryRead={store.readState === "unavailable" ? () => { void chooseContext() } : undefined}>
             <Show when={store.options}>
               {(options) => <>
@@ -509,7 +523,9 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                 <Show when={options().links.length}>
                   <section><h2>{t(sfBiKey("sf.u21.producerPages"))}</h2>
                     <ul><For each={options().links}>
-                      {(link) => <li>{link.label} — {link.surface}: {link.page}</li>}
+                      {(link) => <li><Show when={sourcePageHref(link)} fallback={<>{link.label} — {link.surface}: {link.page}</>}>
+                        {(href) => <a href={href()}>{link.label}</a>}
+                      </Show></li>}
                     </For></ul>
                   </section>
                 </Show>

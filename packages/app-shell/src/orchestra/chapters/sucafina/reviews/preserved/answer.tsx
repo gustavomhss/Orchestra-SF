@@ -25,6 +25,7 @@ type Intent = {
   threadId?: string
   reconciled: boolean
   payload: CreateInput | ReplyInput | EditInput | ConfirmInput
+  prepared?: Prepared
 }
 
 function asThread(value: unknown): Thread | undefined {
@@ -58,6 +59,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     reconciled: false,
     thread: undefined as Thread | undefined,
     prepared: undefined as Prepared | undefined,
+    inspectSource: false,
     confirmed: undefined as Confirmed | undefined,
     historyText: "",
     history: reviewLocationBinding(),
@@ -239,7 +241,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       setUi("status", copy["sf.u32.answerEdited"])
       return
     }
-    const prepared = ui.prepared
+    const prepared = current.prepared
     const receipt = value as { answerRef?: string; observedVersion?: number }
     if (!prepared || receipt.answerRef !== prepared.answerRef || receipt.observedVersion !== prepared.observedSourceVersion)
       throw new Error("Answer confirmation unavailable")
@@ -365,7 +367,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     if (abort.signal.aborted) return
     if (result.kind !== "response" || result.body.status !== "ok" || !result.body.value.reviewContext || result.body.value.answer !== message.body)
       throw new Error("Preparation did not return this answer's issued pin.")
-    setUi({ prepared: result.body.value, status: "Inspect the captured source and answer before confirming." })
+    setUi({ prepared: result.body.value, inspectSource: false, status: "Inspect the captured source and answer before confirming." })
     remember(message, thread.id)
   }
 
@@ -389,7 +391,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
         expectedScopeFingerprint: prepared.expectedScopeFingerprint,
       },
     }
-    markIntent({ kind: "confirm", key, text: prepared.answer, threadId: thread.id, reconciled: false, payload })
+    markIntent({ kind: "confirm", key, text: prepared.answer, threadId: thread.id, reconciled: false, payload, prepared })
     await submitIntent()
   }
 
@@ -508,11 +510,11 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
         {(prepared) => <section aria-label={copy["sf.u32.confirmation"]}>
           <h3>{copy["sf.u32.confirmation"]}</h3>
           <p>{prepared().answer}</p>
-          <details>
-            <summary>{copy["sf.u32.inspectSource"]}</summary>
+          <button type="button" aria-expanded={ui.inspectSource} onClick={() => setUi("inspectSource", !ui.inspectSource)}>{copy["sf.u32.inspectSource"]}</button>
+          <Show when={ui.inspectSource}>
             <pre aria-label={copy["sf.u32.observedProjection"]}>{JSON.stringify(prepared().projection, null, 2)}</pre>
             <pre aria-label={copy["sf.u32.reviewContext"]}>{JSON.stringify(prepared().reviewContext, null, 2)}</pre>
-          </details>
+          </Show>
           <button type="button" class="mx-btn primary" disabled={locked()} onClick={() => void run(false, confirm)}>{copy["sf.u32.confirmAnswer"]}</button>
         </section>}
       </Show>

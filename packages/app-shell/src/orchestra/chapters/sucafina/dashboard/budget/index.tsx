@@ -38,6 +38,17 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
     const snapshot = read.snapshot()
     return snapshot && (year() === undefined || snapshot.selection.year === year()) ? snapshot.data.totals : undefined
   }
+  const monthly = () => {
+    const series = periodTotals() ? data()?.budgetSeries : undefined
+    return series?.effective.length === 12 && series.flatReference.length === 12 ? series : undefined
+  }
+  // Coordinates scale the producer series for display; no business values are recomputed.
+  const graphY = (amount: number) => {
+    const source = monthly()
+    if (!source) return 160
+    const minimum = Math.min(0, ...source.effective), maximum = Math.max(0, ...source.effective)
+    return 160 - (maximum === minimum ? 0 : (amount - minimum) / (maximum - minimum) * 110)
+  }
   const admitted = (action: "save-month" | "save-revenue") =>
     read.canAction(action, "domain.command.CAP03." + action)
   const stat = (id: string, label: Key, value: number | null | undefined) =>
@@ -93,6 +104,38 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
             </table></div>}
           </Show>
           <Show when={!periodTotals()}><p>{t(key("sf.u02.sourceWarning"))}</p></Show>
+        </section>
+        <section class="sf-u02-section" aria-label={t(key("sf.u02.effectiveMonthly"))}>
+          <Show when={monthly()} fallback={<p role="status">{t(key("sf.u02.monthlySeries"))}</p>}>
+            {(series) => <>
+              <figure>
+                <svg role="img" aria-label={t(key("sf.u02.effectiveMonthly"))} viewBox="0 0 700 200"
+                    style={{ display: "block", width: "100%", height: "auto" }}>
+                  <title>{t(key("sf.u02.effectiveMonthly"))}</title>
+                  <line x1="45" y1={graphY(0)} x2="665" y2={graphY(0)} stroke="currentColor" />
+                  <polyline data-budget-series="effective"
+                    points={series().effective.map((amount, index) => (45 + index * 55) + "," + graphY(amount)).join(" ")}
+                    fill="none" stroke="currentColor" stroke-width="3" />
+                  <For each={series().effective}>{(amount, index) => <>
+                    <circle cx={45 + index() * 55} cy={graphY(amount)} r="4" fill="currentColor">
+                      <title>{String(index() + 1) + ": " + money(amount)}</title>
+                    </circle>
+                    <text x={45 + index() * 55} y="185" text-anchor="middle" fill="currentColor">{index() + 1}</text>
+                  </>}</For>
+                </svg>
+                <figcaption>{t(key("sf.u02.effectiveCaption"))}</figcaption>
+              </figure>
+              <div class="sf-u02-table-scroll"><table data-sf-budget-months>
+                <caption>{t(key("sf.u02.effectiveMonthly"))}</caption>
+                <thead><tr><th scope="col">{t(key("sf.u02.month"))}</th>
+                  <th scope="col">{t(key("sf.u02.effectiveBudget"))}</th>
+                  <th scope="col">{t(key("sf.u02.flatReference"))}</th></tr></thead>
+                <tbody><For each={series().effective}>{(amount, index) => <tr>
+                  <th scope="row">{index() + 1}</th><td>{money(amount)}</td><td>{money(series().flatReference[index()])}</td>
+                </tr>}</For></tbody>
+              </table></div>
+            </>}
+          </Show>
         </section>
         <Show when={year() !== undefined ? read.owner() : undefined}>
           {(ready) => <section class="sf-u02-section" aria-labelledby="sf-u02-budget-maintenance">

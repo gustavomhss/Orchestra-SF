@@ -1,4 +1,4 @@
-import { computeBudgetTotals } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
+import { computeBudgetTotals, effectiveBudgetSeries, budgetChartSeries, sumOwnerBudget } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
 import type { BudgetData } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
 import { rows } from "../../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 
@@ -90,7 +90,13 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
   const data: Record<string, unknown> = {}
   if (cap === "CAP01" || cap === "CAP03") {
     const budget = sanitizedFinance(source)
-    if (budget) data.totals = computeBudgetTotals(budget, year)
+    if (budget) {
+      data.totals = computeBudgetTotals(budget, year)
+      if (cap === "CAP03") data.budgetSeries = {
+        effective: effectiveBudgetSeries(budget, year),
+        flatReference: budgetChartSeries(sumOwnerBudget(budget)),
+      }
+    }
   }
   if (cap === "CAP01") {
     if (has(source, "executive")) data.executive = pick(requiredRecord(source.executive), executiveFields)

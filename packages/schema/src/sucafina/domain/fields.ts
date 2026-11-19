@@ -212,6 +212,7 @@ export const SfDomainPageData = {
   }),
   CAP03: Schema.Struct({
     totals: optional(SfDomainBudgetTotals),
+    budgetSeries: optional(Schema.Struct({ effective: Schema.Array(Schema.Finite), flatReference: Schema.Array(Schema.Finite) })),
     budgetCurrentMonth: optional(Schema.Record(Schema.String, Schema.Int )),
     revenueByYear: optional(Schema.Record(Schema.String, Schema.Finite )),
   }),

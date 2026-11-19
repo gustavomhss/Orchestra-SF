@@ -36,16 +36,31 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   })
   const ref = () => props.route.kind === "entry" || props.route.kind === "present"
     ? props.route.params.reviewRef : undefined
+  const selectedSection = () => props.route.query.sectionRef
+  const sectionHref = (sectionId: string) => {
+    const [path, rawQuery = ""] = props.route.href.split("?")
+    const query = new URLSearchParams(rawQuery)
+    query.set("sectionRef", sectionId)
+    return path + "?" + query.toString()
+  }
   let successorAbort: AbortController | undefined
   const current = (generation: number, ownerKey: string) => {
     const state = owner.state()
     return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
   }
+  const clearReview = (status: "denied" | "session-expired") => {
+    successorAbort?.abort()
+    successorAbort = undefined
+    setStore({ status, review: undefined, sourceLinks: [], successor: undefined, preparing: false })
+  }
+  const actionCurrent = (generation: number, ownerKey: string, reviewId: string) =>
+    current(generation, ownerKey) && store.status === "ready" && store.review?.id === reviewId
   createEffect(() => {
     const generation = owner.generation()
     const active = owner.ready()
     const state = owner.state()
     const reviewRef = ref()
+    const sectionRef = selectedSection()
     store.retry
     setStore({
       review: undefined, successor: undefined, preparing: false, topic: 0, sourceLinks: [], updateStatus: "ready",
@@ -57,6 +72,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         : state.status === "resolving" ? "loading" : "unavailable",
     })
     const controller = new AbortController()
+    let readPending = true
     successorAbort?.abort()
     if (state.status === "ready" && active && reviewRef) {
       void (async () => {
@@ -65,12 +81,19 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
             { reviewRef }, { signal: controller.signal },
           )
           if (controller.signal.aborted || !current(generation, state.ownerKey)) return
+          readPending = false
           if (result.kind === "response" && result.body.status === "ok") {
             if (result.body.value.id !== reviewRef) {
               setStore("status", "invalid")
               return
             }
-            setStore({ review: result.body.value, status: "ready" })
+            const topic = sectionRef === undefined ? 0 :
+              result.body.value.sections.findIndex((section) => section.id === sectionRef)
+            if (topic < 0) {
+              setStore({ status: "not-found", review: undefined })
+              return
+            }
+            setStore({ review: result.body.value, status: "ready", topic })
           } else {
             setStore({ status: reviewReadState(result), review: undefined })
           }
@@ -83,7 +106,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     } else if (state.status === "ready" && !reviewRef) {
       setStore("status", "unavailable")
     }
-    onCleanup(() => { controller.abort(); successorAbort?.abort() })
+    onCleanup(() => { if (readPending) controller.abort(); successorAbort?.abort() })
   })
   const successorMessage = (status: string) => {
     if (status === "denied") return "sf.common.noAccess"
@@ -98,27 +121,45 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   }
   const openSource = async (referenceId: string) => {
     const active = owner.ready(), state = owner.state(), review = store.review
-    if (!active || state.status !== "ready" || !review) return
+    if (!active || state.status !== "ready" || !review || store.status !== "ready") return
     const generation = owner.generation()
+    successorAbort?.abort()
     const controller = new AbortController()
     successorAbort = controller
-    const client = createSfReviewsClient(active.transport)
-    const read = await client["reviews.review-read"]({ reviewRef: review.id }, { signal: controller.signal })
-    if (controller.signal.aborted || !current(generation, state.ownerKey)) return
-    if (read.kind !== "response" || read.body.status !== "ok" || read.body.value.id !== review.id) return
-    const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })
-    if (controller.signal.aborted || !current(generation, state.ownerKey)) return
-    if (resolved.kind === "response" && "links" in resolved.body && typeof location !== "undefined")
-      setStore("sourceLinks", resolved.body.links.filter((link) => {
-        try {
-          const destination = new URL(link.url, location.href)
-          return destination.origin === location.origin
-        } catch { return false }
-      }))
+    try {
+      const client = createSfReviewsClient(active.transport)
+      const read = await client["reviews.review-read"]({ reviewRef: review.id }, { signal: controller.signal })
+      if (controller.signal.aborted || !actionCurrent(generation, state.ownerKey, review.id)) return
+      if (read.kind !== "response" || read.body.status !== "ok" || read.body.value.id !== review.id) {
+        const status = reviewReadState(read)
+        if (status === "denied" || status === "session-expired") clearReview(status)
+        return
+      }
+      const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })
+      if (controller.signal.aborted || !actionCurrent(generation, state.ownerKey, review.id)) return
+      if (successorAbort === controller) successorAbort = undefined
+      if (resolved.kind === "response" && (resolved.status === 401 || resolved.status === 403)) {
+        clearReview(resolved.status === 401 ? "session-expired" : "denied")
+        return
+      }
+      if (resolved.kind === "response" && "links" in resolved.body && typeof location !== "undefined")
+        setStore("sourceLinks", resolved.body.links.filter((link) => {
+          try {
+            const destination = new URL(link.url, location.href)
+            return destination.origin === location.origin
+          } catch { return false }
+        }))
+    } catch (error) {
+      if (controller.signal.aborted || !actionCurrent(generation, state.ownerKey, review.id)) return
+      console.error("Sucafina preserved source read failed", error instanceof Error ? error.name : "unknown")
+      setStore("sourceLinks", [])
+    } finally {
+      if (successorAbort === controller) successorAbort = undefined
+    }
   }
   const update = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review
-    if (!active || state.status !== "ready" || !review || store.updateStatus === "loading") return
+    if (!active || state.status !== "ready" || !review || store.status !== "ready" || store.updateStatus === "loading") return
     const generation = owner.generation()
     successorAbort?.abort()
     const controller = new AbortController()
@@ -128,19 +169,22 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       const result = await createSfReviewsClient(active.transport)["reviews.review-update"](
         { reviewRef: review.id }, { signal: controller.signal },
       )
-      if (controller.signal.aborted || !current(generation, state.ownerKey)) return
+      if (controller.signal.aborted || !actionCurrent(generation, state.ownerKey, review.id)) return
+      if (successorAbort === controller) successorAbort = undefined
       if (result.kind === "response" && result.body.status === "ok" &&
           result.body.value.previousReviewRef === review.id) {
         setStore({ updateStatus: "ready", successor: result.body.value })
       } else {
         const status = reviewReadState(result)
-        if (status === "denied") setStore({ status: "denied", review: undefined })
+        if (status === "denied" || status === "session-expired") clearReview(status)
         setStore("updateStatus", status)
       }
     } catch (error) {
-      if (controller.signal.aborted || !current(generation, state.ownerKey)) return
+      if (controller.signal.aborted || !actionCurrent(generation, state.ownerKey, review.id)) return
       console.error("Sucafina preserved review successor read failed", error instanceof Error ? error.name : "unknown")
       setStore("updateStatus", "unavailable")
+    } finally {
+      if (successorAbort === controller) successorAbort = undefined
     }
   }
   onCleanup(() => successorAbort?.abort())
@@ -156,7 +200,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         onInvoke: () => setStore("presenting", (value) => !value),
       } : undefined}
     >
-      <div class="sf-n28 sf-n28-preserved" data-sf-surface="UI48" data-sf-presentation={store.presenting}>
+      <div class="sf-n28 sf-n28-preserved" data-sf-surface="UI48" data-sf-review-state={store.status} data-sf-presentation={store.presenting}>
         <SfStatePanel
           state={store.status}
           messageKey={key(!ref() ? "sf.u32.listUnavailable" : "sf.u32.reviewUnavailable")}
@@ -177,6 +221,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <For each={review().sections}>
                     {(section) => <li class="mx-card" data-section-id={section.id}>
                       <h3>{section.title}</h3>
+                      <a href={sectionHref(section.id)}>{t("sf.u32.sectionLink")}</a>
                       <p>{t("sf.u32.period")}: <PeriodText start={section.period.start} end={section.period.end} /></p>
                       <p>{t("sf.u32.records")}: {section.count}</p>
                       <Show when={readPreservedProjection(section.content)}
@@ -291,7 +336,8 @@ function SfPreservedMeeting(props: {
     return [...new Map(current.values.flatMap((value) => value.sourceRefs).map((ref) => [ref.refId, ref])).values()]
   }
   return (
-    <section class="sf-n28-section" aria-label={SF_U32_COPY["sf.u32.meeting"]}>
+    <section class="sf-n28-section" aria-label={SF_U32_COPY["sf.u32.meeting"]}
+      data-sf-review-selected-section data-section-id={section()?.id}>
       <p role="status">{`Preserved review ${props.review.id} v${props.review.version} · ${props.review.createdAt}`}</p>
       <Show when={section()}>
         {(current) => <>
