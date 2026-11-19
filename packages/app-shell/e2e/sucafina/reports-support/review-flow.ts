@@ -8,10 +8,10 @@ import { agendaResult, object, projection, readReview, responseFor, review, text
 import { inspectReport } from "./ooxml.ts"
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
-  await page.goto(app.workbenchURL)
+  await page.goto("/orchestra/sf-dashboard/opex")
   await expect(page.locator("#content").getByRole("heading", { name: "Decisions", exact: true }),
     "The real installation must enter Workbench before Reports").toBeVisible()
-  await page.goto(`${app.dashboardURL}?page=Budget%20Overview&year=${corpus.year}`)
+  await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
   await page.getByText("Reports and backup", { exact: true }).click()
   const form = page.locator("form.report-form")
   await expect(form).toHaveCount(1)
@@ -166,7 +166,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
 export async function changeForecast(page: Page, app: ReportsInstallation, corpus: ReportsCorpus) {
   const source = await page.context().newPage()
   try {
-    await source.goto(`${app.dashboardURL}?page=OPEX%20Detail&year=${corpus.year}`)
+    await source.goto(`/orchestra/sf-dashboard/opex?${new URLSearchParams({ year: String(corpus.year) })}`)
     const form = source.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
     await expect(form).toHaveCount(1)
     const row = source.getByRole("row").filter({ has: form })

@@ -72,7 +72,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
 }
 
 async function setEurRate(page: Page, account: Account, value: string) {
-  await page.goto(account.baseURL + "/procurement?page=Settings")
+  await page.goto("/orchestra/sf-procurement/settings")
   const settings = page.locator('form[data-command="save"][data-page="Settings"]')
   await expect(settings).toHaveCount(1)
   await expect(settings.locator('[name="fxRates.1.code"]')).toHaveValue("EUR")

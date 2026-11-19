@@ -15,7 +15,7 @@ export function commandResponse(page: Page, action: string, id?: string) {
 
 export async function openRequest(page: Page, account: Account, id: string) {
   expect(id).toMatch(/^PR-2026-\d+$/)
-  await page.goto(account.baseURL + "/procurement?" + new URLSearchParams({ page: "Requests", request: id, q: id }))
+  await page.goto("/orchestra/sf-procurement/requests")
   const detail = page.locator('details[id="' + id + '"]')
   await expect(detail).toHaveCount(1)
   await expect(detail).toHaveAttribute("open", "")
@@ -24,7 +24,7 @@ export async function openRequest(page: Page, account: Account, id: string) {
 }
 
 export async function createDraft(page: Page, account: Account, title: string) {
-  await page.goto(account.baseURL + "/procurement?page=Requests")
+  await page.goto("/orchestra/sf-procurement/requests/new")
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
