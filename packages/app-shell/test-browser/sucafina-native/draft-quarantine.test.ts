@@ -208,7 +208,19 @@ describe("provider quarantine publication", () => {
       expect(handle.state()).toMatchObject({ status: "unavailable", reason: "host-unavailable" })
       expect(draft.snapshot().availability).toBe("quarantined")
       expect(notices).toBe(0)
-      fresh = { ...source, destinations: [] }
+      // Explicit source-side action denial (read remains admitted) is a
+      // revocation. Removing an entire destination can also mean temporary
+      // discovery loss; that cannot be used as proof to destroy a private draft.
+      fresh = {
+        ...source,
+        destinations: source.destinations.map((entry) => ({ ...entry, allowedActionIds: [] })),
+        availability: source.availability.map((resource) => ({
+          ...resource,
+          operations: resource.operations.map((operation) => operation.operationId === "domain.command.CAP08.save"
+            ? { ...operation, state: "denied" as const, operational: false, reason: "action-revoked" }
+            : operation),
+        })),
+      }
       await handle.reload()
       expect(handle.state().status).toBe("ready")
       expect(draft.snapshot().availability).toBe("revoked")
