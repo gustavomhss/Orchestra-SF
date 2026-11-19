@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: 44be0f18917d71476c575660a29e571f19a47f92 (checkpoint harness C12; documento posterior; ingresso qualificado em15388053117883174329454207e60e2a878f5426)
+SHA: 4d778b822ddf8f72a379c62228fb0c354a0df708 (checkpoint Dashboard CAP04/CAP05; C12 harness44be0f18917d71476c575660a29e571f19a47f92; ingresso qualificado15388053117883174329454207e60e2a878f5426)
 Data: 2026-11-19
 Estado: partial
 
@@ -128,3 +128,12 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - records-signals-history.spec.ts:88 passa a afirmar a única origem de página exata, o valor .action do ID selecionado e ausência de qualquer valor do ID unrelated. As provas originais de recordOptions, recordRefs do POST, count1, textos, conteúdo integral da preservação e exclusão do texto unrelated permanecem. Asserções removidas: nenhuma prova de negócio; as duas expectativas incompatíveis com o produtor foram remapeadas para a identidade que ele fornece.
 - Pendente: gate Playwright do spec no candidato integrado; este delta ainda não tem resultado. confirmation-access.spec.ts:34 continua unbound por timeout180s do mesmo run; aguardando diagnóstico dos artifacts, sem aumento de timeout.
 - Retomar: integrar apenas o blob de records-signals-history.spec.ts deste commit e validar com a correção do cancelamento fiscal; não misturar o gate C12 que o integrador já iniciou.
+
+## Dashboard4 — leitura CAP04 descartada pelo wrapper de apresentação
+
+- Diagnóstico somente por Actions: [44605305001](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44605305001) success, branch audit-dashboard-counters-20261119. Extraiu o attachment sanitizado incorporado em test-ci-evidence/playwright-runtime.json do artifact14569076992, sem repetir o teste. Documento: docs/handoff/observed-dashboard-counters-20261119.md naquele branch. O cenário fiscal fez2GETcontext200 e1GETCAP04200, zeroPOST e nenhum abort; a tela original continuou Loading.
+- Causa confirmada: context/index.tsx:326–330 retorna um wrapper novo de ready() em cada acesso, preservando o transport opaco. surface.tsx:241 comparava a identidade desse wrapper ao recebido antes do await e descartava toda leitura autorizada. As mesmas comparações em confirmReview impediam salvar ou reconhecer a resposta no mesmo dono.
+- Código4d778b822ddf8f72a379c62228fb0c354a0df708: somente dashboard/opex/surface.tsx. A leitura conserva AbortSignal e geração e compara o transport opaco original. O comando captura a geração e compara geração+transport em todos os pontos assíncronos; conserva ainda editor, activeSubmissionRef, CAS, verificação de acesso, confirmação humana e releitura original. Nenhuma mudança no F01 qualificado ou no produtor. A superfície compartilhada cobre CAP04 e CAP05 usados por Dashboard e BI.
+- Asserções removidas: nenhuma. confirmation-access continua com comparação dos3valores, cancelamento semwrite, perda de resposta, exatamente1efeito e purga após revogação real. A mudança de identidade da agenda está em b941b0e1aaeb5b609a90bc05c08f580bfa8d5438, com prova positiva do registro e exclusão completa do unrelated.
+- Pendente/unbound: confirmation-access.spec.ts:34 e records-signals-history.spec.ts:40 aguardam o gate do candidato integrado; BI installed-planner-ingress.spec.ts depende da mesma superfície e ainda requer resultado real. O run44601709564 permanece failure2; o success44605305001 qualifica só a extração de diagnóstico, nunca a UI.
+- Retomar: integrar o blob surface.tsx deste SHA e records-signals-history.spec.ts de b941b0; executar o narrow Dashboard uma vez e usar o gate BI coordenado pelo integrador. C12 é gate separado run44604748251, iniciado pelo integrador; não duplicar. Root qualificou extensão fechada do selector original para preferences/receipts em22a11d693269b870a1f049bd87a465833607af22, run44604756705 success, sem substituir prova C12/SQLite.
