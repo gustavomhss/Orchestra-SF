@@ -39,7 +39,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
             .map((node) => node.getAttribute("data-sf-surface")).filter((value) => /^(CAP|UI)\d+$/.test(value ?? "")),
           states: Array.from(document.querySelectorAll("[data-sf-state]")).filter(visible).slice(0, 12)
             .map((node) => node.getAttribute("data-sf-state"))
-            .filter((value) => ["loading", "ready", "partial", "stale", "conflict", "empty", "filtered-empty", "unavailable", "denied", "unauthenticated", "invalid"].includes(value ?? "")),
+            .filter((value) => ["loading", "ready", "partial", "stale", "conflict", "empty", "filtered-empty", "unavailable", "denied", "unauthenticated", "invalid", "not-found", "session-expired", "outcome-unknown"].includes(value ?? "")),
         }
       })
       const evidence = { ...observed, reportsEntryCount: await reportsEntry.count() }
