@@ -13,7 +13,7 @@ jobs:
       - name: Read the original completed job log
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api repos/gustavomhss/Orchestra-SF/actions/jobs/135778309143/logs > "$RUNNER_TEMP/original-job.log"
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/jobs/135778309143/logs > "$RUNNER_TEMP/original-job.log"
       - name: Extract bounded failure locations
         run: |
           python3 - <<'PY'

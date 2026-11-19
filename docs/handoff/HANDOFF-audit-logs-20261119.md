@@ -21,4 +21,5 @@ Ler docs/handoff/audit-logs-135778309143.txt nesta branch após o job; abrir som
 
 ## Comandos e resultados
 - github.fetch_workflow_job_logs: Transport closed, duas tentativas.
-- gh api actions/jobs/135778309143/logs no workflow desta branch: pendente.
+- Run [44587634664](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44587634664): falhou na leitura porque gh recusou as sequências ANSI presentes no log original; nenhum teste foi executado.
+- Habilitada a leitura explícita de ANSI somente para o arquivo temporário, mantendo a remoção dessas sequências e o filtro de credenciais antes da publicação. Nova leitura pendente.
