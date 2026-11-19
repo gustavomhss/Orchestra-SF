@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA: d6bbaa6f7a9b0e8fd5998d2d62d95242fdda38ec (último código antes deste documento).
+SHA: código base 4f753c53b62dcbec079225ec9efca1c0e09d7f56; este commit acrescenta somente observação da resposta original.
 Data: 2026-11-19
 Estado: partial
 
@@ -50,6 +50,10 @@ Estado: partial
 4. Corrigir apenas as falhas observadas, integrar os arquivos qualificados e atualizar este handoff.
 
 ## Comandos e resultados
+
+- Reports 3: [44578568944](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44578568944), snapshot0c35116694f17d38b83d8ba3b2034bc6c0fc9736, Reports4f753c53b62dcbec079225ec9efca1c0e09d7f56 + ingresso0b0cf311a3b2813f2bc9fa9871b3fbe53ee2b345 + integração57aafbd892e5f3425f97ab53d6bb3b59345b69aa. FAILURE4/4 após compilações app/SF E2E e ingresso. UI47 e respostas200 observadas, mas Playwright response.json falhou com Network.getResponseBody: No data found. Locais: first-agenda.ts42 (catálogo Planner), review-flow.ts37 (descoberta), review-flow.ts117 (prévia após retirada). Job135752662286 failure; cleanup135757843297 success.
+- Adicionada observação de finished/failure/status/tamanho e fase de UI nas respostas afetadas. Ela relança o erro original e não repete/substitui requests, especialmente POSTs. A causa do corpo indisponível ainda está em investigação.
+
 
 - Toda execução foi em GitHub Actions; nenhum shell local.
 - Reports: [44567280032](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44567280032), snapshot 259fb8b7b1c7a41ec895f11b83140751b6bee0ad, composto do código Reports316b0fb8517b9bdd62af2fee5fa1ced73c0f640f e ingressoa6c4c09b9bf2303d7457b7d08872104276403704. Typecheck app e SF E2E success; resultado final FAILURE, quatro cenários interrompidos no helper de ingresso anterior à correção de ConnectionRecovery. Job 135712365559 failure; cleanup 135724059688 success. Não qualifica as mudanças posteriores.

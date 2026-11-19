@@ -34,7 +34,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
     await agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click()
     const discovery = await found
     expect(discovery.status()).toBe(200)
-    const discovered = object(await discovery.json())
+    const discovered = object(await readNativeReportResponse(discovery))
     expect(discovered.status).toBe("ok")
     const items = object(discovered.value).items
     expect(Array.isArray(items)).toBe(true)
@@ -114,7 +114,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
 
 async function readNativeAgenda(response: Response) {
   expect(response.status(), "The installed dashboard agenda must succeed").toBe(200)
-  const body = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.output)(await response.json())
+  const body = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.output)(await readNativeReportResponse(response))
   expect(body.status).toBe("ok")
   if (body.status !== "ok") throw new Error("The authorized agenda was not available")
   const request = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.input)(response.request().postDataJSON())
@@ -575,5 +575,28 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
         elapsedMs: Date.now() - started, entries, dropped, cli: app.diagnostics?.() ?? "diagnostics-unavailable",
       }, null, 2) }).catch(() => undefined)
     },
+  }
+}
+
+/** Observe the original browser response; never retry or substitute a producer request. */
+export async function readNativeReportResponse(response: Response): Promise<unknown> {
+  const request = response.request(), url = new URL(response.url())
+  const finished = await response.finished()
+  const metadata = {
+    method: request.method(), path: url.pathname, operation: url.searchParams.get("sf"),
+    status: response.status(), resourceType: request.resourceType(),
+    contentLength: response.headers()["content-length"] ?? null,
+    finished: finished?.message ?? null, failure: request.failure()?.errorText ?? null,
+  }
+  try {
+    const value: unknown = await response.json()
+    console.info("SF_REPORTS_RESPONSE", JSON.stringify({ ...metadata, chars: JSON.stringify(value)?.length ?? 0 }))
+    return value
+  } catch (error) {
+    const surfaces = await request.frame().page().locator("[data-sf-surface]").evaluateAll((items) =>
+      items.map((item) => ({ surface: item.getAttribute("data-sf-surface"), phase: item.getAttribute("data-phase") })),
+    ).catch(() => [])
+    console.info("SF_REPORTS_RESPONSE_BODY_FAILED", JSON.stringify({ ...metadata, surfaces }))
+    throw error
   }
 }

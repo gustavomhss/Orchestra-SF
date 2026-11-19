@@ -6,7 +6,7 @@ import type { ReviewAgendaPreview } from "../../../../../modules/sucafina/Sucafi
 import type { ReportsInstallation } from "../reports-support/production-installation.ts"
 import type { ReportsCorpus } from "../reports-support/corpus.ts"
 import { agendaResult, object, projection, readReview, responseFor, review } from "../reports-support/model.ts"
-import { readSourceData } from "../reports-support/review-flow.ts"
+import { readSourceData, readNativeReportResponse } from "../reports-support/review-flow.ts"
 import { firstAgendaCorpus } from "./source-corpus.ts"
 
 /** Extends the existing RPT-01 journey; there is no new test or nominal CI selection. */
@@ -39,7 +39,7 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
     expect(response.headers()["cache-control"]).toContain("no-store")
     const query = new URL(response.url()).searchParams
     expect({ domain: query.get("domain"), start: query.get("start"), end: query.get("end") }).toEqual({ domain, ...period })
-    const result = object(await response.json())
+    const result = object(await readNativeReportResponse(response))
     expect(result.status).toBe("ok")
     const value = object(result.value)
     expect(Array.isArray(value.options)).toBe(true)
