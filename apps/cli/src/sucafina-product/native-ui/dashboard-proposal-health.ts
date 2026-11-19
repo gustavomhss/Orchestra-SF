@@ -6,6 +6,7 @@ import { selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafin
 import { sfHasOperationalResource } from "./live-context.ts"
 
 type Operation = "dashboard.dashboard-workbench" | "dashboard.dashboard-draft-read" |
+  "dashboard.dashboard-capture" | "dashboard.dashboard-history" |
   "dashboard.dashboard-hot-topic-draft" | "dashboard.dashboard-hot-topic-draft-outcome" |
   "dashboard.dashboard-hot-topic-prepare" | "dashboard.dashboard-hot-topic-review" | "dashboard.dashboard-hot-topic-apply"
 
@@ -20,6 +21,8 @@ export async function observeSfDashboardProposalHealth(input: {
   if (!input.binding || request.signal.aborted) return []
   const bindingFor = input.binding, sourceFor = input.source, ui = input.ui, state = input.state
   const candidates = [
+    { id: "dashboard.dashboard-capture", query: "dashboard-capture", human: "reviews.preserve", namespaces: [["preferences", "write"]] },
+    { id: "dashboard.dashboard-history", query: "dashboard-history", human: null, namespaces: [["preferences", "read"]] },
     // Review history is optional in discover(); its absence cannot remove the private proposal reader.
     { id: "dashboard.dashboard-workbench", query: "dashboard-workbench", human: null, namespaces: [["cases", "read"], ["preferences", "read"], ["receipts", "read"]] },
     { id: "dashboard.dashboard-draft-read", query: "dashboard-draft-read", human: null, namespaces: [["cases", "read"], ["preferences", "read"]] },
@@ -31,7 +34,7 @@ export async function observeSfDashboardProposalHealth(input: {
   ] as const
   const results = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
-    if (!sfHasOperationalResource(candidate.id) || metadata.method !== "POST" ||
+    if (!sfHasOperationalResource(candidate.id) || metadata.method !== (candidate.id === "dashboard.dashboard-history" ? "GET" : "POST") ||
       metadata.pathTemplate !== "{mount}/dashboard" || metadata.fixedQuery.sf !== candidate.query ||
       metadata.responseMode !== "json") return []
     const source = sourceFor(candidate.id)
