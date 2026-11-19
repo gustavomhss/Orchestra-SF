@@ -6,6 +6,7 @@ import { SfDomainPageCap03 } from "@orchestra/schema/sucafina/domain"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { SfBiBiDataOutput, SfBiBiOptionsOutput } from "@orchestra/schema/sucafina/bi"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { sfNativeChapterEntry } from "../../../src/orchestra/chapters/sucafina/host/native-chapter-entry"
 import { createHash } from "node:crypto"
 import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { release, tmpdir } from "node:os"
@@ -146,12 +147,14 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         await page.setViewportSize({ width: 1440, height: 900 })
         await connectInstalledShell(page, { root: directory, origin, mount: "/sucafina",
           actorId: `macos:${profile.localOperator.installationId}:${profile.localOperator.uid}` })
-        // Let the shell publish its selected owner through the actual chapter
-        // ingress before full-document links exercise that admitted installation.
-        const navigation = page.locator('aside[data-component="orchestra-sidebar"]')
-        const advanced = navigation.locator('button[aria-controls="orchestra-advanced-navigation"]')
-        if (await advanced.getAttribute("aria-expanded") !== "true") await advanced.click()
-        await navigation.locator('button[data-nav-id="sf-dashboard"]').click()
+        // The canonical entry mounts the initial owner before owner-bound
+        // sidebar navigation and full-document links use that installation.
+        const entry = sfNativeChapterEntry("sf-dashboard")
+        if (!entry) throw new Error("Canonical Dashboard entry is unavailable")
+        const executive = page.waitForResponse((response) => response.request().method() === "GET" &&
+          new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP01")
+        expect((await page.goto(origin + entry))?.status()).toBe(200)
+        expect((await executive).status()).toBe(200)
         await expect(page.locator('[data-sf-surface="CAP01"]')).toBeVisible()
         await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
         const corpus = state.corpus
