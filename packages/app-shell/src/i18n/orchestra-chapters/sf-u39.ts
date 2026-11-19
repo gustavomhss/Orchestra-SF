@@ -38,11 +38,6 @@ export const SF_U39_COPY = {
   "sf.u39.saveLabel": "Save",
   "sf.u39.filter": "Name",
   "sf.u39.cancel": "Cancel",
-  "sf.u39.reportFormat": "Format",
-  "sf.u39.reportTitle": "Title",
-  "sf.u39.generateReport": "Generate Report",
-  "sf.u39.prepareReview": "Prepare review",
-  "sf.u39.loadSelection": "Load selection",
 } as const
 
 export const SF_U39_COPY_BR: Record<keyof typeof SF_U39_COPY, string> = {
@@ -83,9 +78,4 @@ export const SF_U39_COPY_BR: Record<keyof typeof SF_U39_COPY, string> = {
   "sf.u39.saveLabel": "Save",
   "sf.u39.filter": "Name",
   "sf.u39.cancel": "Cancel",
-  "sf.u39.reportFormat": "Format",
-  "sf.u39.reportTitle": "Title",
-  "sf.u39.generateReport": "Generate Report",
-  "sf.u39.prepareReview": "Prepare review",
-  "sf.u39.loadSelection": "Load selection",
 }

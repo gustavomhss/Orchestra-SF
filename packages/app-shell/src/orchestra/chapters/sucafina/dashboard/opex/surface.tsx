@@ -26,7 +26,6 @@ import {
   type BudgetCapability, type BudgetCommand, type BudgetCommandName,
   type BudgetEntry, type BudgetForm, type BudgetOwner, type BudgetPage,
 } from "./model"
-import { SfOpexReportEntry } from "./report-entry"
 import "./surface.css"
 
 /** U39 + U40 share presentation, never producer logic or a new dispatcher. */
@@ -783,9 +782,6 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         density="comfortable" layout="split"
         onLayoutMode={(mode) => setLayoutMode(mode)}
       >
-        <Show when={props.capability === "CAP04" && props.route.kind === "entry"}>
-          <SfOpexReportEntry year={year()} />
-        </Show>
         <SfContextBar
           state={pageState()}
           selection={[{ control: "year", optionId: String(year()) }]}
