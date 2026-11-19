@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, type Request, type Response } from "@playwright/test"
 import { randomUUID } from "node:crypto"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { asRecord, caseIdentity, clickCommand, enterWorkbench, fillDecision } from "../decisions-support/journey"
 
 export const horizon = { start: "2027-01-01", end: "2027-12-31" }
@@ -47,6 +48,8 @@ export async function prepareInstalledBi(page: Page, installation: { origin: str
 
 async function preparePair(page: Page, installation: { origin: string; actorId: string }, plans: { baseline: Plan; candidate: Plan }, trainingState: "missing" | "resolved", observations: Record<string, unknown>[]) {
   const caseObjective = `${objective} · ${trainingState}`
+  if (new URL(installation.origin).port === "4110")
+    throw new Error("UNBOUND: decisions-support/enterWorkbench still navigates to the retired installed console; bind the native Decisions chapter before preparing BI cases.")
   await enterWorkbench(page, installation.origin)
   const create = await fillDecision(page, caseObjective)
   await create.getByLabel("Criteria, one per line", { exact: true }).fill(criterion)
@@ -204,53 +207,66 @@ async function evaluatePair(page: Page, origin: string, caseRef: CaseRef, base: 
 }
 
 async function preparePlanner(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
-  const url = (name: string, version?: string) => `${installation.origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
-  const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
-  const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
-  await page.goto(url("Versions"))
-  await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }), "save", observations)
-  const first = page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])')
-  await expect(first).toHaveCount(1)
-  const baseline: Plan = { id: (await first.getAttribute("data-record"))!, name: names.baseline, lines: {} }
-  await versionRow(baseline.id).getByRole("button", { name: "Manage", exact: true }).click()
-  await manager.getByLabel("Name", { exact: true }).fill(baseline.name)
-  await manager.getByLabel("Year", { exact: true }).fill("2027")
-  await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  const url = (name: "Versions" | "OPEX", version?: string) => "/orchestra/sf-planner/" +
+    (name === "Versions" ? "versions" : "opex") + "?" + new URLSearchParams({ year: "2027", ...(version ? { version } : {}) })
+  const versionRow = (id: string) => page.locator('tr[data-sf-row="' + id + '"]')
+  const manager = page.getByRole("region", { name: "Manage record", exact: true })
+  // The installation fixture still owns its real producer origin; only the
+  // browser uses the native :3000 chapter. No cookie or transport is synthesized.
+  await page.goto("/orchestra/sf-planner/versions/new")
+  const created = await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }),
+    "save", observations, installation.origin)
+  expect(typeof created.value).toBe("string")
+  expect(String(created.value)).toMatch(/\S+/)
+  const baseline: Plan = { id: String(created.value), name: names.baseline, lines: {} }
+  await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(baseline.id))
+  await expect(page.locator("#sf-u46-name")).toBeEnabled()
+  await page.locator("#sf-u46-name").fill(baseline.name)
+  await page.locator("#sf-u46-year").fill("2027")
+  await plannerCommand(page, page.getByRole("button", { name: "Save", exact: true }),
+    "save", observations, installation.origin, baseline.id)
   await page.goto(url("OPEX", baseline.id))
-  baseline.lines.renewal = await addLine(page, lineNames.renewal, 240000, installation.actorId, observations)
-  baseline.lines.zero = await addLine(page, lineNames.zero, 0, installation.actorId, observations)
-  await explicitForecast(page, installation.origin, { [lineNames.renewal]: 240000, [lineNames.zero]: 0 })
+  baseline.lines.renewal = await addLine(page, lineNames.renewal, 240000, installation.actorId, observations, installation.origin)
+  baseline.lines.zero = await addLine(page, lineNames.zero, 0, installation.actorId, observations, installation.origin)
+  await explicitForecast(page, { [lineNames.renewal]: 240000, [lineNames.zero]: 0 })
 
   const copy = async (source: Plan, name: string): Promise<Plan> => {
     await page.goto(url("Versions"))
-    await versionRow(source.id).getByRole("button", { name: "Manage", exact: true }).click()
-    await plannerCommand(page, manager.getByRole("button", { name: "copy", exact: true }), "copy", observations)
-    const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `${source.name} — Copy`, exact: true }) })
+    const row = versionRow(source.id)
     await expect(row).toHaveCount(1)
-    const id = (await row.locator('form[data-page="Versions"][data-command="save"]').getAttribute("data-record"))!
+    const copied = await plannerCommand(page, row.getByRole("button", { name: "copy", exact: true }),
+      "copy", observations, installation.origin, source.id)
+    expect(typeof copied.value).toBe("string")
+    const id = String(copied.value)
+    expect(id).toMatch(/\S+/)
     expect(id).not.toBe(source.id)
-    await row.getByRole("button", { name: "Manage", exact: true }).click()
-    await manager.getByLabel("Name", { exact: true }).fill(name)
-    await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+    await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(id))
+    await expect(page.locator("#sf-u46-name")).toHaveValue(source.name + " — Copy")
+    await page.locator("#sf-u46-name").fill(name)
+    await plannerCommand(page, page.getByRole("button", { name: "Save", exact: true }),
+      "save", observations, installation.origin, id)
     await page.goto(url("OPEX", id))
     return { id, name, lines: {} }
   }
   const missing = await copy(baseline, names.missing)
-  const renewal = page.getByRole("row").filter({ has: page.getByRole("cell", { name: lineNames.renewal, exact: true }) })
+  const renewalId = await lineId(page, lineNames.renewal)
+  const renewal = page.locator('tr[data-sf-row="' + renewalId + '"]')
   await renewal.getByRole("button", { name: "Manage", exact: true }).click()
+  await expect(manager).toHaveCount(1)
   await manager.getByLabel("Name", { exact: true }).fill(lineNames.bridge)
   await manager.getByLabel("Annual budget", { exact: true }).fill("60000")
-  await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }),
+    "save", observations, installation.origin, renewalId)
   missing.lines.bridge = await lineId(page, lineNames.bridge)
   missing.lines.zero = await lineId(page, lineNames.zero)
-  missing.lines.implementation = await addLine(page, lineNames.implementation, 45000, installation.actorId, observations)
-  missing.lines.service = await addLine(page, lineNames.service, 105000, installation.actorId, observations)
-  await explicitForecast(page, installation.origin, { [lineNames.bridge]: 60000, [lineNames.implementation]: 45000, [lineNames.service]: 105000, [lineNames.zero]: 0 })
+  missing.lines.implementation = await addLine(page, lineNames.implementation, 45000, installation.actorId, observations, installation.origin)
+  missing.lines.service = await addLine(page, lineNames.service, 105000, installation.actorId, observations, installation.origin)
+  await explicitForecast(page, { [lineNames.bridge]: 60000, [lineNames.implementation]: 45000, [lineNames.service]: 105000, [lineNames.zero]: 0 })
 
   const resolved = await copy(missing, names.resolved)
   for (const key of ["bridge", "zero", "implementation", "service"] as const) resolved.lines[key] = await lineId(page, lineNames[key])
-  resolved.lines.training = await addLine(page, lineNames.training, 0, installation.actorId, observations)
-  await explicitForecast(page, installation.origin, { [lineNames.bridge]: 60000, [lineNames.implementation]: 45000, [lineNames.service]: 105000, [lineNames.zero]: 0, [lineNames.training]: 40000 })
+  resolved.lines.training = await addLine(page, lineNames.training, 0, installation.actorId, observations, installation.origin)
+  await explicitForecast(page, { [lineNames.bridge]: 60000, [lineNames.implementation]: 45000, [lineNames.service]: 105000, [lineNames.zero]: 0, [lineNames.training]: 40000 })
   observations.push({ stage: "planner-inputs-saved-through-ui", horizon, currency: "USD", plans: { baseline, missing, resolved },
     declaredAmounts: { renewal: 240000, bridge: 60000, implementationIncludingMigration: 45000, newService: 105000, trainingNovember: 40000, otherQuotedCharges: 0 } })
   return { baseline, missing, resolved }
@@ -260,14 +276,15 @@ async function preparePlanner(page: Page, installation: { origin: string; actorI
  * a null forecast is estimated and cannot establish complete cost coverage.
  * Clipboard paste is the existing human bulk-edit interaction, not DOM mutation.
  */
-async function explicitForecast(page: Page, origin: string, amounts: Record<string, number>) {
+async function explicitForecast(page: Page, amounts: Record<string, number>) {
+  // UNBOUND: the legacy bulk editor is not bound to the native grid; retain all twelve-month assertions.
   const monthly = page.locator("section").filter({ has: page.getByRole("heading", { name: "Edit monthly values together", exact: true }) })
   await expect(monthly).toHaveCount(1)
   await monthly.getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
   const labels = (await monthly.getByRole("rowheader").allTextContents()).map((label) => label.trim())
   expect(labels.slice().sort()).toEqual(Object.keys(amounts).map((name) => `licenses · ${name}`).sort())
   const matrix = labels.map((label) => Array.from({ length: 12 }, (_, month) => month === 10 ? amounts[label.slice("licenses · ".length)] : 0))
-  await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin })
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: new URL(page.url()).origin })
   await page.evaluate((text) => navigator.clipboard.writeText(text), matrix.map((row) => row.join("\t")).join("\n"))
   await monthly.getByRole("textbox", { name: `${labels[0]} forecast month 1`, exact: true }).focus()
   await page.keyboard.press("Control+V")
@@ -298,49 +315,65 @@ async function explicitForecast(page: Page, origin: string, amounts: Record<stri
 }
 
 async function lineId(page: Page, name: string) {
-  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name, exact: true }) })
+  const row = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name, exact: true }) })
   await expect(row).toHaveCount(1)
-  const form = row.locator('form[data-page="OPEX"][data-command="save"]').filter({ has: page.getByLabel("Name", { exact: true }) })
-  await expect(form).toHaveCount(1)
-  await expect(form).toHaveAttribute("data-record", /\S+/)
-  return (await form.getAttribute("data-record"))!
+  await expect(row).toHaveAttribute("data-sf-row", /\S+/)
+  return (await row.getAttribute("data-sf-row"))!
 }
 
-async function addLine(page: Page, name: string, amount: number, actorId: string, observations: Record<string, unknown>[]) {
-  const form = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
+async function addLine(page: Page, name: string, amount: number, actorId: string, observations: Record<string, unknown>[], origin: string) {
+  const form = page.locator('[data-sf-surface="CAP18"] form[data-page="OPEX"][data-command="save"][data-record=""]')
   await expect(form).toHaveCount(1)
   await form.getByLabel("Name", { exact: true }).fill(name)
   await form.getByLabel("Owner", { exact: true }).selectOption(actorId)
   await form.getByLabel("Element", { exact: true }).selectOption("licenses")
   await expect(form.getByLabel("Currency", { exact: true })).toHaveValue("USD")
   await form.getByLabel("Annual budget", { exact: true }).fill(String(amount))
-  await plannerCommand(page, form.getByRole("button", { name: "Save", exact: true }), "save", observations)
+  await plannerCommand(page, form.getByRole("button", { name: "Save", exact: true }), "save", observations, origin)
   return lineId(page, name)
 }
 
-async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
+async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[], origin: string, record = "") {
   await expect(button).toBeEnabled()
-  const intent = await button.evaluate((element) => {
-    const form = element.closest<HTMLFormElement>("form[data-command]")
-    if (!form) throw new Error("Planner command form is unavailable")
-    return { page: form.dataset.page, action: form.dataset.command, record: form.dataset.record ?? "", version: form.dataset.version }
-  })
-  expect(intent.action).toBe(action)
-  // runtime/ui.form always supplies data-version; screen-shell serializes its
-  // numeric value. An absent token is not an equivalent command or safe replay.
-  expect(intent.version, "Planner command form must expose its canonical version token").toMatch(/^(0|[1-9]\d*)$/)
-  expect(Number.isSafeInteger(Number(intent.version))).toBe(true)
-  const observed: { response?: Response; failure?: string; unknown: boolean } = { unknown: false }
+  const capability = await button.evaluate((element) => element.closest("[data-sf-surface]")?.getAttribute("data-sf-surface"))
+  expect(capability === "CAP23" || capability === "CAP18").toBe(true)
+  const current = new URL(page.url())
+  const query = new URLSearchParams()
+  for (const key of ["year", "version"]) {
+    const value = current.searchParams.get(key)
+    if (value !== null && (key === "year" || capability === "CAP18")) query.set(key, value)
+  }
+  const read = await page.request.get(origin + "/sucafina/api/ui/pages/" + capability + (query.size ? "?" + query : ""))
+  expect(read.status()).toBe(200)
+  const source = asRecord(await read.json())
+  expect(source.status).toBe("ok")
+  const projected = asRecord(source.value)
+  const data = asRecord(projected.data)
+  const versions = asRecord(projected.versions)
+  const key = capability === "CAP23" ? "versions:" + (record || "first") :
+    String(asRecord(data.selectedVersion).id) + ":lines:" + record
+  const version = record || capability === "CAP23" ? asRecord(versions[key] ?? {}).version ?? 0 : 0
+  expect(typeof version, "The native Planner command requires the producer's numeric CAS token").toBe("number")
+  expect(Number.isSafeInteger(version) && Number(version) >= 0).toBe(true)
+  if (record) {
+    const entries = records(capability === "CAP23" ? data.versions : data.lines)
+    expect(entries.filter((entry) => entry.id === record)).toHaveLength(1)
+  }
+  const intent = { page: capability === "CAP23" ? "Versions" : "OPEX", action, record, version: String(version) }
+  const observed: { response?: Response; failure?: string; unknown: boolean; count: number } = { unknown: false, count: 0 }
   const matches = (request: Request) => {
-    if (request.method() !== "POST" || new URL(request.url()).pathname !== "/sucafina/planner") return false
+    const url = new URL(request.url())
+    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/planner" ||
+        url.searchParams.get("page") !== intent.page || url.searchParams.has("sf")) return false
     try {
       const payload: unknown = request.postDataJSON()
       if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false
       const body = payload as Record<string, unknown>
       return body.action === action && body.page === intent.page && (body.id ?? "") === intent.record &&
-        typeof body.version === "number" && String(body.version) === intent.version
+        typeof body.version === "number" && String(body.version) === intent.version && body.confirmed === true
     } catch { return false }
   }
+  const onRequest = (request: Request) => { if (matches(request)) observed.count++ }
   const onResponse = (response: Response) => {
     if (!matches(response.request())) return
     observed.response = response
@@ -351,33 +384,41 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
     observed.failure = request.failure()?.errorText ?? "request-failed"
     observations.push({ stage: "planner-command-request-failed", ...intent, failure: observed.failure })
   }
+  page.on("request", onRequest)
   page.on("response", onResponse)
   page.on("requestfailed", onFailed)
   try {
     await button.click()
-    // R4 proved that the shell can abort this request at 10s without receiving
-    // headers. A response-only wait would then consume the entire 180s test.
-    // Observe the real terminal network/UI state; never retry this mutation.
+    const review = page.locator('[data-component="sf-change-review"]')
+    await expect(review).toHaveCount(1)
+    await expect(review).toHaveAttribute("data-state", "ready")
+    await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+    expect(observed.count, "Opening a native review must not submit the command").toBe(0)
+    const confirm = review.getByRole("button", { name: "Confirm", exact: true })
+    await expect(confirm).toBeEnabled()
+    await confirm.click()
+    // Observe terminal transport or native uncertainty; never resend a mutation.
     await expect.poll(async () => {
       if (observed.failure) return "request-failed"
       if (observed.response) return "response"
-      observed.unknown = await page.locator("form[data-command]").evaluateAll((forms, expected) => forms.some((element) => {
-        const form = element as HTMLFormElement
-        return form.dataset.page === expected.page && form.dataset.command === expected.action &&
-          (form.dataset.record ?? "") === expected.record && form.dataset.version === expected.version && form.dataset.resultUncertain === "true"
-      }), intent)
+      observed.unknown = await review.evaluateAll((reviews) => reviews.some((element) => element.getAttribute("data-state") === "outcome-unknown"))
       return observed.unknown ? "outcome-unknown" : "pending"
     }, { message: `Planner ${intent.page}/${action} must produce a response or an explicit transport/UI outcome`, timeout: 15_000 }).not.toBe("pending")
     if (observed.failure || observed.unknown) {
       observations.push({ stage: "planner-command-unconfirmed", ...intent, outcome: observed.failure ? "request-failed" : "outcome-unknown", retried: false })
       throw new Error(`Planner ${intent.page}/${action} was not confirmed (${observed.failure ?? "UI outcome unknown"}); the command was not resent.`)
     }
+    expect(observed.count, "One native confirmation must submit exactly once").toBe(1)
     const response = observed.response!
     expect(response.status()).toBe(200)
     expect(response.headers()["content-type"]).toContain("application/json")
-    expect(asRecord(await response.json()).ok).toBe(true)
+    const body = asRecord(await response.json())
+    expect(body.ok).toBe(true)
+    await expect(review).toHaveCount(0)
     observations.push({ stage: "planner-command", action, httpStatus: response.status() })
+    return body
   } finally {
+    page.off("request", onRequest)
     page.off("response", onResponse)
     page.off("requestfailed", onFailed)
   }
