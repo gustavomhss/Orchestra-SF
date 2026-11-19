@@ -9,7 +9,6 @@ import type { SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfRelations, type SfRelationTarget, type SfRelation } from "../../collaboration"
-import { operationGranted } from "../../reviews/labels"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import "./relations.css"
@@ -184,16 +183,15 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
       reviewPair(decoded)
     } catch { setError("sf.u44.evidenceMismatch"); setPreparedPair(undefined) }
   }
-  const granted = (operationId: string) => operationGranted(owner.ready()?.context, operationId)
   const prepareKnown = (request: { sourceRef: SfRef; targetRef: SfRef; kind: string }) => {
     const found = relations().find((item) =>
-      item.fromRef === request.sourceRef && item.toRef === request.targetRef && item.kind === request.kind)
+      item.fromRef === request.sourceRef && item.toRef === request.targetRef)
     if (!found || !found.evidenceRefs.length) { setError("sf.u44.evidenceMismatch"); return }
-    reviewPair({ fromRef: found.fromRef, toRef: found.toRef, kind: found.kind, evidenceRefs: found.evidenceRefs })
+    reviewPair({ fromRef: found.fromRef, toRef: found.toRef, kind: request.kind, evidenceRefs: found.evidenceRefs })
   }
   const submitCreate = async () => {
     const s = snapshot(), pair = preparedPair(), version = storageVersion()
-    if (!s || !pair || version === undefined || pending() || !granted("collaboration.relation-create")) return
+    if (!s || !pair || version === undefined || pending()) return
     if (source() !== pair.fromRef) { setPreparedPair(undefined); setState("stale"); return }
     const idempotencyKey = crypto.randomUUID()
     const abort = new AbortController()
@@ -216,7 +214,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
   }
   const confirmRemove = async () => {
     const s = snapshot(), removal = removeDraft(), version = storageVersion()
-    if (!s || !removal || version === undefined || pending() || !granted("collaboration.relation-remove") || removal.version !== version) {
+    if (!s || !removal || version === undefined || pending() || removal.version !== version) {
       setState("conflict"); return
     }
     const found = relations().find((r) => r.id === removal.id && r.fromRef === source())
@@ -318,9 +316,8 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
             <h3>{t("sf.u44.reviewLink")}</h3>
             <dl><div><dt>{t("sf.u44.sourceRef")}</dt><dd>{pair().fromRef}</dd></div>
               <div><dt>{t("sf.u44.targetRef")}</dt><dd>{pair().toRef}</dd></div>
-              <div><dt>{t("sf.u44.kind")}</dt><dd>{pair().kind}</dd></div>
-              <div><dt>{t("sf.u44.evidence")}</dt><dd><ul>{pair().evidenceRefs.map((item) => <li><code>{item.refId}</code></li>)}</ul></dd></div></dl>
-            <button class="mx-btn primary" data-sf-relations-confirm type="button" disabled={busy() || !!pending() || !granted("collaboration.relation-create")}
+              <div><dt>{t("sf.u44.kind")}</dt><dd>{pair().kind}</dd></div></dl>
+            <button class="mx-btn primary" data-sf-relations-confirm type="button" disabled={busy() || !!pending()}
               onClick={() => void submitCreate()}>{t("sf.u44.confirmLink")}</button>
             <button class="mx-btn" type="button" onClick={() => setPreparedPair(undefined)}>{t("sf.u44.keepEditing")}</button>
           </section>}
@@ -329,7 +326,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
           {(value) => <section class="sf-u44-review" data-sf-relation-remove-review>
             <h3>{t("sf.u44.reviewRemove")}</h3><p><code>{value().id}</code></p>
             <button class="mx-btn" type="button" onClick={() => setRemoveDraft(undefined)}>{t("sf.u44.keepEditing")}</button>
-            <button class="mx-btn danger" type="button" disabled={busy() || !granted("collaboration.relation-remove")} onClick={() => void confirmRemove()}>{t("sf.u44.confirmRemove")}</button>
+            <button class="mx-btn danger" type="button" disabled={busy()} onClick={() => void confirmRemove()}>{t("sf.u44.confirmRemove")}</button>
           </section>}
         </Show>
         <Show when={pending()}>{(value) => <p role="status">{t("sf.u44.pendingIdentity")}: <code>{value().key}</code></p>}</Show>

@@ -10,7 +10,6 @@ import type { SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfConfirmation, type SfCoverage } from "../../collaboration"
-import { AmountText, operationGranted, PeriodText, StatusText } from "../../reviews/labels"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import { encodeSfRouteRef } from "../../navigation-state"
@@ -83,10 +82,9 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     setConfirmationId(""); setBusy(false); setPendingKey(undefined); setError(undefined); setState("ready")
   }))
   onCleanup(() => { readAbort?.abort(); writeAbort?.abort() })
-  const granted = (operationId: string) => operationGranted(owner.ready()?.context, operationId)
   const prepareManual = async () => {
     const s = snapshot()
-    if (!s || busy() || pendingKey() || !granted("collaboration.confirmation-prepare")) return
+    if (!s || busy() || pendingKey()) return
     const parsed = Schema.decodeUnknownOption(Schema.toType(SfConfirmationScope), { onExcessProperty: "error" })(
       (() => { try { return JSON.parse(manualScope()) as unknown } catch { return undefined } })(),
     )
@@ -187,7 +185,6 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
   const confirm = async (request: { selectionRef: SfRef; materialVersion: SfVersion }) => {
     const s = snapshot(), selected = scope(), material = prepared(), version = storageVersion()
     if (!s || !selected || !material || version === undefined || busy() || pendingKey() ||
-        !granted("collaboration.confirmation-confirm") || material.projection.missing.length > 0 ||
         request.selectionRef !== selectedRef() || request.materialVersion !== material.sourceVersion ||
         preparedFence() !== JSON.stringify([selected, material.sourceVersion, material.scopeFingerprint]) || state() !== "ready") return
     const abort = new AbortController()
@@ -219,18 +216,13 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     setState(outcome)
     if (outcome !== "outcome-unknown") setPendingKey(undefined)
   }
-  const coverage = (): SfCoverage => {
-    const material = prepared()
-    const missing = material?.projection.missing ?? []
-    const complete = !!material && storageVersion() !== undefined && missing.length === 0 && granted("collaboration.confirmation-confirm")
-    return {
-      state: complete ? "complete" : missing.length ? "partial" : "unavailable",
-      summary: { key: (!material ? "sf.u44.scopeRequired" : missing.length ? "sf.u32.declaredGaps" : "sf.u44.materialScopeReady") as SfCoverage["summary"]["key"] },
-      reasons: missing.map((gap) => ({ key: (gap.reason === "missing" ? "sf.u32.missing" : gap.reason === "unavailable" || gap.reason === "restricted" ? "sf.common.noAccess" : "sf.common.unknown") as SfCoverage["reasons"][number]["key"] })),
-      knownCount: material?.projection.values.length ?? null,
-      expectedCount: missing.length ? (material?.projection.values.length ?? 0) + missing.length : material?.projection.values.length ?? null,
-    }
-  }
+  const coverage = (): SfCoverage => ({
+    state: prepared() && storageVersion() !== undefined ? "complete" : "unavailable",
+    summary: { key: (prepared() ? "sf.u44.materialScopeReady" : "sf.u44.scopeRequired") as SfCoverage["summary"]["key"] },
+    reasons: [],
+    knownCount: prepared()?.projection.values.length ?? null,
+    expectedCount: null,
+  })
   const effectiveState = (): SfUiState => {
     const status = owner.state().status
     return status === "ready" ? state() : status === "denied" ? "denied" :
@@ -254,10 +246,15 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
             <form class="sf-u44-scope-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
               <label>{t("sf.u44.scopeJson")}<textarea data-sf-confirm-scope rows={9} required value={manualScope()}
                 disabled={busy() || !!pendingKey()} onInput={(event) => setManualScope(event.currentTarget.value)} /></label>
-              <button type="submit" class="mx-btn" disabled={busy() || !!pendingKey() || !granted("collaboration.confirmation-prepare")}>{t("sf.u44.prepareMaterial")}</button>
+              <button type="submit" class="mx-btn" disabled={busy() || !!pendingKey()}>{t("sf.u44.prepareMaterial")}</button>
             </form>
           </details>
-
+          <details><summary>{t("sf.u44.revalidateMaterial")}</summary>
+            <form class="sf-u44-project-form" onSubmit={(event) => { event.preventDefault(); void project(confirmationId()) }}>
+              <label>{t("sf.u44.confirmationId")}<input data-sf-confirm-lookup required value={confirmationId()} onInput={(event) => setConfirmationId(event.currentTarget.value)} /></label>
+              <button type="submit" class="mx-btn" disabled={busy()}>{t("sf.u44.revalidateMaterial")}</button>
+            </form>
+          </details>
         </Show>
         <Show when={error()}>{(message) => <p role="alert">{t(message())}</p>}</Show>
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}
@@ -273,20 +270,20 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               <dl>
                 <div><dt>{t("sf.u44.sourceRef")}</dt><dd><code>{scope()!.sourceRef.id}</code></dd></div>
                 <div><dt>{t("sf.u44.incarnation")}</dt><dd><code>{scope()!.sourceRef.incarnation}</code></dd></div>
-                <div><dt>{t("sf.u44.period")}</dt><dd><PeriodText start={scope()!.period.start} end={scope()!.period.end} /></dd></div>
+                <div><dt>{t("sf.u44.period")}</dt><dd>{scope()!.period.start} – {scope()!.period.end}</dd></div>
                 <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{prepared()!.sourceVersion}</dd></div>
                 <div><dt>{t("sf.u44.fields")}</dt><dd>{scope()!.fields.join(", ")}</dd></div>
                 <div><dt>{t("sf.u44.dependencies")}</dt><dd>{scope()!.materialDependencies.length}</dd></div>
               </dl>
               <h3>{t("sf.u44.materialValues")}</h3>
               <ul><For each={prepared()!.projection.values}>
-                {(entry) => <li><strong>{entry.id}</strong> — {entry.value === null ? t("sf.u44.missing") : <AmountText value={entry.value} currency={entry.currency} />}
-                  <small> (<StatusText value={entry.evidenceState} />, <PeriodText start={entry.period.start} end={entry.period.end} />)</small>
+                {(entry) => <li><strong>{entry.id}</strong> — {entry.value === null ? t("sf.u44.missing") : String(entry.value)}
+                  <small> ({entry.evidenceState}, {entry.period.start} – {entry.period.end})</small>
                 </li>}
               </For></ul>
               <Show when={prepared()!.projection.missing.length}>
                 <ul><For each={prepared()!.projection.missing}>
-                  {(value) => <li><bdi>{value.field}</bdi>: <StatusText value={value.reason} /></li>}
+                  {(value) => <li>{value.field}: {value.reason}</li>}
                 </For></ul>
               </Show>
               <SfConfirmation
@@ -305,7 +302,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               <h2>{t("sf.u44.revalidateMaterial")}</h2>
               <dl>
                 <div><dt>{t("sf.u44.confirmationId")}</dt><dd><code>{projection()!.confirmationId}</code></dd></div>
-                <div><dt>{t("sf.u44.status")}</dt><dd><StatusText value={projection()!.state} /></dd></div>
+                <div><dt>{t("sf.u44.status")}</dt><dd>{projection()!.state}</dd></div>
                 <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{projection()!.evaluatedSourceVersion}</dd></div>
               </dl>
             </section>
@@ -318,7 +315,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                   <div><dt>{t("sf.u44.confirmationId")}</dt><dd><code>{record().id}</code></dd></div>
                   <div><dt>{t("sf.u44.auditRef")}</dt><dd><code>{record().auditRef}</code></dd></div>
                   <div><dt>{t("sf.u44.observedVersion")}</dt><dd>{record().observedSourceVersion}</dd></div>
-                  <div><dt>{t("sf.u44.status")}</dt><dd>{projection()?.confirmationId === record().id ? <StatusText value={projection()!.state} /> : t("sf.u44.checking")}</dd></div>
+                  <div><dt>{t("sf.u44.status")}</dt><dd>{projection()?.state ?? t("sf.u44.checking")}</dd></div>
                 </dl>
                 <button type="button" class="mx-btn" disabled={busy()} onClick={() => void project(record().id)}>
                   {t("sf.u44.revalidateMaterial")}
@@ -326,8 +323,8 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
               </section>
             )}
           </Show>
-          <Show when={!confirmed() && recordedRoute() && projection()?.confirmationId === selectedRef() ? projection() : undefined}>
-            {(observed) => <p role="status">{t("sf.u44.status")}: <StatusText value={observed().state} /> (<StatusText value={observed().reason} />)</p>}
+          <Show when={(!confirmed()) ? projection() : undefined}>
+            {(observed) => <p role="status">{t("sf.u44.status")}: {observed().state} ({observed().reason})</p>}
           </Show>
         </SfStatePanel>
         <Show when={pendingKey()}>

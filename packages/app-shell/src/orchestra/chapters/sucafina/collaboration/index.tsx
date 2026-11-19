@@ -3,7 +3,6 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_S05_COPY } from "@/i18n/orchestra-chapters/sf-s05"
 import type { SfMessage, SfText, SfUiState, SfRelationsProps, SfThreadProps, SfQuestionProps, SfConfirmationProps } from "./types"
-import { WhenText } from "../reviews/labels"
 import "./collaboration.css"
 import "../../kit.css"
 
@@ -272,7 +271,7 @@ export function SfThread(props: SfThreadProps) {
     return !!fence && fence.threadRef === props.threadRef &&
       fence.incarnation === props.incarnation && fence.version === props.version
   }
-  const canPost = () => props.canSubmit !== false && mayEdit(props.state) && props.draft.trim().length > 0 && !locked() &&
+  const canPost = () => mayEdit(props.state) && props.draft.trim().length > 0 && !locked() &&
     props.incarnation.length > 0 && Number.isSafeInteger(props.version) && props.version >= 0
   const post = () => {
     if (!canPost()) return
@@ -312,7 +311,7 @@ export function SfThread(props: SfThreadProps) {
                   <li class="sf-collab-item sf-collab-message">
                     <header class="sf-collab-message-meta">
                       <strong>{copy.text(entry.author)}</strong>
-                      <WhenText iso={entry.createdAt} />
+                      <time datetime={entry.createdAt}>{entry.createdAt}</time>
                     </header>
                     <p class="sf-collab-message-body">{entry.text}</p>
                     <Show when={entry.sourceRefs.length > 0}>
