@@ -10,6 +10,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import { SfRecordDetail } from "../../shared/detail"
 import { SfChangeReview } from "../../shared/change-review"
+import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import {
   createSfProcurementClient, exportSfSupplierCsv, sfSupplierCsvBindingInstalled,
 } from "@orchestra/client/sucafina/procurement"
@@ -778,6 +779,14 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
                   onClick={() => setUi("mode","bank")}>{t("sf.u14.changeBank")}</button>
               </Show>
             </div>},
+          {id:"attachments",titleKey:k("sf.u14.attachments"),state:"ready",
+            content:<Show when={version() !== null}>
+              <SfBoundAssets surface="procurement" page="Suppliers"
+                uploadKind={can("save") ? "supplier" : undefined}
+                recordRef={id} recordVersion={version()!} assets={selected.attachments ?? []}
+                disabled={active(ui.phase) || !can("save")}
+                onReconcile={() => { const token = authority(); if (token) void refresh(token, id) }} />
+            </Show>},
           {id:"linked",titleKey:k("sf.u14.linked"),state:"ready",
             content:<Show when={linked.length} fallback={<p>{t("sf.u14.noLinked")}</p>}>
               <ul><For each={linked}>{(request) => <li>{request.number ?? t("sf.u14.missing")} · {request.pr?.title ?? ""}</li>}</For></ul>
