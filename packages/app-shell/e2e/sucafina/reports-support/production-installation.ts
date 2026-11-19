@@ -229,6 +229,9 @@ async function redeemOperatorEnrollment(page: Page, installation: Omit<ReportsIn
   await page.context().addCookies([{
     ...cookie, domain: new URL(installation.origin).hostname,
     expires: Math.floor(Date.now() / 1000) + 28_800,
+  }, {
+    ...cookie, path: "/", domain: new URL(installation.origin).hostname,
+    expires: Math.floor(Date.now() / 1000) + 28_800,
   }])
   signal.throwIfAborted()
   await rm(artifact)

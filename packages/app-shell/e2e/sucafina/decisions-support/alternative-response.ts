@@ -13,7 +13,7 @@ export async function loseAlternativeResponse(page: Page, origin: string) {
   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
   session.once("Fetch.requestPaused", async (event: PausedResponse) => {
     try {
-      expect(event.request.url).toBe(`${origin}/sucafina/dashboard?sf=decision-promote`)
+      expect(event.request.url).toBe(`${origin}/?sf=decision-promote`)
       expect(event.request.method).toBe("POST")
       const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
       const contentType = event.responseHeaders?.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
@@ -24,6 +24,6 @@ export async function loseAlternativeResponse(page: Page, origin: string) {
       completed.resolve({ httpStatus: event.responseStatusCode ?? 0, contentType, body, payload })
     } catch (error) { completed.reject(error) }
   })
-  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=decision-promote`, requestStage: "Response" }] })
+  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/?sf=decision-promote`, requestStage: "Response" }] })
   return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
 }

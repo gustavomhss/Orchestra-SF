@@ -25,10 +25,10 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const endpoint = (mode: string, query: Record<string, string> = {}) => modeURL(account, "procurement", mode, query).href
   const isMode = (url: string, mode: string) => {
     const candidate = new URL(url)
-    return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
+    return candidate.origin === account.origin && (candidate.pathname === "/" || candidate.pathname === new URL(account.baseURL).pathname + "/procurement") && candidate.searchParams.get("sf") === mode
   }
   const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
-  expect((await page.goto(account.baseURL + "/procurement?page=Suppliers"))?.status()).toBe(200)
+  expect((await page.goto(account.origin + "/?page=Suppliers"))?.status()).toBe(200)
   const create = page.locator('form[data-page="Suppliers"][data-command="create"]')
   await expect(create).toHaveCount(1)
   for (const [label, value] of [
@@ -50,7 +50,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
     page: "Suppliers", action: "create", version: 0,
     values: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" },
   })
-  const suppliersURL = account.baseURL + "/procurement?page=Suppliers&q=" + encodeURIComponent(name)
+  const suppliersURL = account.origin + "/?page=Suppliers&q=" + encodeURIComponent(name)
   expect((await page.goto(suppliersURL))?.status()).toBe(200)
   const supplierLink = page.getByRole("link", { name, exact: true })
   await expect(supplierLink).toHaveCount(1)
@@ -66,7 +66,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await upload.getByLabel(name, { exact: true }).setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const uploaded = page.waitForResponse((response) => {
     const url = new URL(response.url())
-    return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
+    return url.origin === account.origin && url.pathname === "/" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
   })
   await upload.getByRole("button", { name: "Upload document", exact: true }).click()
   const uploadResponse = await uploaded
@@ -107,7 +107,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
     if (request.method() === "POST" && mode && ["document-admit", "document-schema", "document-extract", "document-confirm"].includes(mode) && isMode(request.url(), mode)) requests.push(mode)
   })
   const discovered = waiting("document-sources")
-  expect((await page.goto(endpoint("documents")))?.status()).toBe(200)
+  expect((await page.goto(account.origin + "/?sf=documents"))?.status()).toBe(200)
   const root = page.locator("[data-document-workbench]")
   await expect(root).toHaveCount(1)
   const sources = await valueOf<Source[]>(await discovered)
@@ -173,7 +173,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await readCandidates()).toEqual([confirmed])
   // Keep the confirmed card open in the first page to verify removal of an actual cached value.
   const reader = await page.context().newPage()
-  expect((await reader.goto(endpoint("documents")))?.status()).toBe(200)
+  expect((await reader.goto(account.origin + "/?sf=documents"))?.status()).toBe(200)
   await expect(reader.locator("[data-document-workbench]")).toHaveCount(1)
   await expect(reader.getByLabel("Document", { exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
   const reloadSources = reader.waitForResponse((response) => isMode(response.url(), "document-sources") && response.request().method() === "GET")
@@ -182,7 +182,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await readCandidates()).toEqual([confirmed])
   expect(await readSchemas()).toEqual([schema])
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
-  expect((await reader.goto(account.baseURL + "/procurement?page=Suppliers&supplier=" + encodeURIComponent(supplier)))?.status()).toBe(200)
+  expect((await reader.goto(account.origin + "/?page=Suppliers&supplier=" + encodeURIComponent(supplier)))?.status()).toBe(200)
   const remove = reader.locator(`details[id="supplier-${supplier}"] form[data-command="delete"][data-record="${supplier}"]`)
   await expect(remove).toHaveCount(1)
   await expect(remove).toHaveAttribute("data-version", String(beforeVersion + 1))

@@ -65,7 +65,7 @@ export function responseFor(mount: string, mode: string, method: string) {
   const expected = productURL(mount, mode)
   return (response: Response) => {
     const actual = new URL(response.url())
-    return actual.origin === expected.origin && actual.pathname === expected.pathname &&
+    return actual.origin === expected.origin && (actual.pathname === "/" || actual.pathname === expected.pathname) &&
       actual.searchParams.get("sf") === mode && response.request().method() === method
   }
 }

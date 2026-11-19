@@ -3,6 +3,7 @@ import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule, contributions, type ModuleServices } from "../index.ts"
+import { serveRootShell } from "../runtime/root-shell.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
@@ -276,6 +277,12 @@ export async function createConfiguredInstallation(
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+      if (url.pathname === "/") return await serveRootShell(request, {
+        origin: config.origin,
+        mount: config.mount,
+        application: { ...applicationServices, domains: contributions },
+        dispatch: business,
+      }) ?? new Response("Not found", { status: 404 })
       if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
       const readiness = status(request)
       if (readiness) return readiness

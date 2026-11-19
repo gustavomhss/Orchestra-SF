@@ -169,7 +169,8 @@ export async function composeSfInstallation(value: unknown, origin: string) {
   }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", connection: "close" } }))))
   // The listener must install privacy before HttpRouter.serve, outside the request route.
   // Effect registers a trailing wildcard at both the subtree and its base path.
-  return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+  const root = Layer.merge(HttpRouter.add("GET", "/", route), Layer.merge(HttpRouter.add("HEAD", "/", route), HttpRouter.add("POST", "/", route)))
+  return { ...installation, ...(transport ? { transport } : {}), privacy, layer: Layer.merge(root, HttpRouter.add("*", `${installation.mount}/*`, route)) }
 }
 
 function bodyFailure(status: 400 | 413) {

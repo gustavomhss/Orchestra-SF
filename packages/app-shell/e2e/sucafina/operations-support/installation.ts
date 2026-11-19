@@ -175,18 +175,20 @@ export function createOperationsInstallation(input: {
     origin: input.origin, mount: input.mount,
     runtime: () => ({ ui: authority.ui, human: authority.human, ...documents }),
   })
+  const services: Application = {
+    persistence: input.persistence,
+    authenticate: input.authenticate,
+    environment: input.environment,
+    assets,
+    product: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface),
+    productView: business.procurementQueueView,
+    domains: { procurement: [ProcurementModule], dashboard: [], planner: [PlannerModule] },
+    maxJsonBytes: 100_000,
+  }
   return {
     admissionDiagnostics: () => structuredClone(admissionDiagnostics),
-    application: createApplication(input.mount, {
-      persistence: input.persistence,
-      authenticate: input.authenticate,
-      environment: input.environment,
-      assets,
-      product: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface),
-      productView: business.procurementQueueView,
-      domains: { procurement: [ProcurementModule], dashboard: [], planner: [PlannerModule] },
-      maxJsonBytes: 100_000,
-    }),
+    services,
+    application: createApplication(input.mount, services),
     dispose: () => {
       // Source39 owns an in-memory selection cache; the composed service does not.
       // Keep lifecycle cleanup compatible with both committed factory contracts.

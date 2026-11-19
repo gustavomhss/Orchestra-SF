@@ -196,7 +196,7 @@ async function selectSource(select: Locator, name: string, id: string) {
 }
 
 async function currentCase(page: Page, reference: string, objective: string, version: number, state: "draft" | "comparing") {
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
+  await expect(page).toHaveURL((url) => url.pathname === "/" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
   const decision = page.getByRole("region", { name: "Decision", exact: true })
   await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
   await expect(decision.locator("header > p")).toHaveText(`${state} · Version ${version} · ${draft.horizon.start} – ${draft.horizon.end} · USD`)

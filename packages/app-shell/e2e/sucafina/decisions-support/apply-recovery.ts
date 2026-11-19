@@ -167,7 +167,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
 
 function procurementCommand(request: Request, origin: string, action: string) {
   const url = new URL(request.url())
-  return request.method() === "POST" && url.origin === origin && url.pathname === "/sucafina/procurement" && url.searchParams.get("sf") === action
+  return request.method() === "POST" && url.origin === origin && url.pathname === "/" && url.searchParams.get("sf") === action
 }
 
 async function openCase(page: Page, origin: string, reference: string, objective: string) {
@@ -181,7 +181,7 @@ async function openCase(page: Page, origin: string, reference: string, objective
 
 async function openRequest(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  await page.goto(`${origin}/sucafina/procurement?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
+  await page.goto(`${origin}/?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
   const detail = page.locator("details").filter({ has: page.locator(`section[id="${id}-pr"]`) })
   await expect(detail).toHaveCount(1)
   await expect(detail).toHaveAttribute("open", "")

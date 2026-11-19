@@ -2,7 +2,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test"
 import { asRecord } from "./journey"
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  const entry = await page.goto(`${origin}/sucafina/procurement?page=Requests`)
+  const entry = await page.goto(`${origin}/?page=Requests`)
   // Regression: a fresh installation must serve a functional Requests form,
   // not the previously observed 503 swallowed as a missing form.
   expect(entry?.status()).toBe(200)
@@ -74,7 +74,7 @@ export async function approveExactRequisition(page: Page, origin: string, review
 
 export async function openRequisition(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  await page.goto(`${origin}/sucafina/procurement?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
+  await page.goto(`${origin}/?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
   const detail = page.locator(`details[id="${id}"]`)
   await expect(detail).toHaveCount(1)
   await expect(detail).toHaveAttribute("open", "")
@@ -89,7 +89,7 @@ async function domainCommand(page: Page, origin: string, form: Locator, label: s
   expect(action).not.toBeNull()
   const pending = page.waitForResponse((response) => {
     const request = response.request(); const url = new URL(request.url())
-    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/procurement" || url.searchParams.has("sf")) return false
+    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/" || url.searchParams.has("sf")) return false
     const body = request.postDataJSON()
     return body.page === "Requests" && body.action === action && (!recordId || body.id === recordId)
   })

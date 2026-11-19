@@ -134,7 +134,7 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
 }
 
 async function currentChoice(page: Page, reference: string, objective: string) {
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
+  await expect(page).toHaveURL((url) => url.pathname === "/" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
   const decision = page.getByRole("region", { name: "Decision", exact: true })
   await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
   await expect(decision.locator("header > p")).toHaveText(`chosen · Version 5 · ${draft.horizon.start} – ${draft.horizon.end} · USD`)

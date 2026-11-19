@@ -11,7 +11,7 @@ export const draft = {
 
 export function isCommand(request: Request, mode: string, method = "POST") {
   const url = new URL(request.url())
-  return request.method() === method && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
+  return request.method() === method && url.pathname === "/" && url.searchParams.get("sf") === mode
 }
 
 export function asRecord(value: unknown): Record<string, unknown> {
@@ -51,7 +51,7 @@ export async function withInstallation(page: Page, info: TestInfo,
   page.on("pageerror", onPageError)
   page.on("framenavigated", onNavigated)
   try {
-    await page.context().addCookies([installation.cookie])
+    await page.context().addCookies([installation.cookie, { ...installation.cookie, path: "/" }])
     await action(installation, observations)
     body.completed = true
   } finally {
@@ -77,12 +77,12 @@ function receiptDiagnostic(value: string) {
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
-  await page.goto(`${origin}/sucafina/dashboard`)
+  await page.goto(`${origin}/`)
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
   const link = page.getByRole("link", { name: "Workbench", exact: true })
   await expect(link).toHaveCount(1)
   await link.click()
-  await expect(page).toHaveURL(`${origin}/sucafina/dashboard?sf=workbench`)
+  await expect(page).toHaveURL(`${origin}/?sf=workbench`)
   await expect(page.getByRole("heading", { name: "Decisions", exact: true })).toBeVisible()
   await expect(page.locator("form[data-decision-create]")).toHaveAttribute("data-sf-create-ready", "true")
 }
@@ -120,7 +120,7 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
     try {
       const url = new URL(event.request.url)
       expect(url.origin).toBe(origin)
-      expect(url.pathname).toBe("/sucafina/dashboard")
+      expect(url.pathname).toBe("/")
       expect(url.searchParams.get("sf")).toBe(mode)
       expect(event.request.method).toBe(method)
       const status = event.responseStatusCode
@@ -138,7 +138,7 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
       captured.reject(error)
     }
   })
-  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
+  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/?sf=${mode}*`, requestStage: "Response" }] })
   try {
     await button.click()
     const reply = await captured.promise
@@ -169,7 +169,7 @@ async function checkedReply(record: { mode: string | null; httpStatus: number; c
 
 export async function assertCase(page: Page, reference: string, objective: string, version: number) {
   const identity = caseIdentity(reference)
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
+  await expect(page).toHaveURL((url) => url.pathname === "/" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
   const decision = page.getByRole("region", { name: "Decision", exact: true })
   await expect(decision, "WP10 must provide the real case-port verifier before the saved case can be read").toBeVisible()
   await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()

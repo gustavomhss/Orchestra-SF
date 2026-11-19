@@ -2,7 +2,8 @@ import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { writeFile } from "node:fs/promises"
 import path from "node:path"
-import { createModule } from "../index.ts"
+import { contributions, createModule } from "../index.ts"
+import { serveRootShell } from "../runtime/root-shell.ts"
 import type { Application } from "../runtime/application.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
@@ -62,17 +63,27 @@ test("first configured Microsoft member reaches all three HTML surfaces without 
     expect(cookie).toContain("__Secure-sucafina_")
 
     for (const surface of ["dashboard", "planner", "procurement"]) {
-      const page = await request(`/${surface}`, cookie)
-      expect(page.status).toBe(200)
-      expect(page.headers.get("content-type")).toContain("text/html")
-      expect(await page.text()).toContain("<html")
+      const page = await serveRootShell(new Request(`${publicOrigin}/?surface=${surface}`, { headers: { cookie } }), {
+        origin: publicOrigin,
+        mount: disk.config.mount,
+        application: { persistence: store, authenticate: identity.authenticate, environment, maxJsonBytes: 2 * 1024 * 1024, domains: contributions },
+        dispatch: app,
+      })
+      expect(page?.status).toBe(200)
+      expect(page?.headers.get("content-type")).toContain("text/html")
+      expect(await page!.text()).toContain("<html")
     }
     // Live Graph membership is still rechecked, including for an already issued cookie.
     provider.account.groups.splice(0)
     for (const surface of ["dashboard", "planner", "procurement"]) {
-      const denied = await request(`/${surface}`, cookie)
-      expect(denied.status).toBe(401)
-      expect(await denied.text()).toBe("Authentication required")
+      const denied = await serveRootShell(new Request(`${publicOrigin}/?surface=${surface}`, { headers: { cookie } }), {
+        origin: publicOrigin,
+        mount: disk.config.mount,
+        application: { persistence: store, authenticate: identity.authenticate, environment, maxJsonBytes: 2 * 1024 * 1024, domains: contributions },
+        dispatch: app,
+      })
+      expect(denied?.status).toBe(401)
+      expect(await denied?.text()).toBe("Authentication required")
     }
   } finally {
     if (store) await store.dispose()

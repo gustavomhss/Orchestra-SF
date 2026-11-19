@@ -8,10 +8,10 @@ import { agendaResult, object, projection, readReview, responseFor, review, text
 import { inspectReport } from "./ooxml.ts"
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
-  await page.goto(app.workbenchURL)
+  await page.goto(`${app.origin}/?sf=workbench`)
   await expect(page.locator("#content").getByRole("heading", { name: "Decisions", exact: true }),
     "The real installation must enter Workbench before Reports").toBeVisible()
-  await page.goto(`${app.dashboardURL}?page=Budget%20Overview&year=${corpus.year}`)
+  await page.goto(`${app.origin}/?page=Budget%20Overview&year=${corpus.year}`)
   await page.getByText("Reports and backup", { exact: true }).click()
   const form = page.locator("form.report-form")
   await expect(form).toHaveCount(1)
@@ -166,7 +166,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
 export async function changeForecast(page: Page, app: ReportsInstallation, corpus: ReportsCorpus) {
   const source = await page.context().newPage()
   try {
-    await source.goto(`${app.dashboardURL}?page=OPEX%20Detail&year=${corpus.year}`)
+    await source.goto(`${app.origin}/?page=OPEX%20Detail&year=${corpus.year}`)
     const form = source.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
     await expect(form).toHaveCount(1)
     const row = source.getByRole("row").filter({ has: form })
@@ -247,14 +247,14 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
   const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
   await expect(link).toHaveCount(1)
-  const expectedDownload = new URL(app.dashboardURL)
+  const expectedDownload = new URL(app.origin + "/")
   expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
   // A previous format remains visible while this response is processed. Wait
   // for this artifact, not merely the already existing download link.
   await expect(link).toHaveAttribute("href", expectedDownload.toString())
   const href = new URL(text(await link.getAttribute("href")), page.url())
   expect(href.origin).toBe(app.origin)
-  expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
+  expect(href.pathname).toBe("/")
   expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
   const downloaded = page.waitForEvent("download")
   await link.click()
@@ -328,7 +328,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const authorized = object((links as unknown[])[0])
   const destination = new URL(text(authorized.url), app.dashboardURL)
   expect(destination.origin).toBe(app.origin)
-  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
+  expect(destination.pathname).toBe("/")
   expect(destination.searchParams.get("page")).toBe("Budget Overview")
   expect(destination.searchParams.get("year")).toBe(String(corpus.year))
   // The host offers the producer-authorized destination for an explicit choice.
@@ -342,7 +342,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
   const target = new URL(page.url())
   expect(target.origin).toBe(app.origin)
-  expect(target.pathname).toBe(new URL(app.dashboardURL).pathname)
+  expect(target.pathname).toBe("/")
   expect(target.searchParams.get("page")).toBe("Budget Overview")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
   await expect(page.locator("article.metric").filter({ has: page.getByText("Known forecast — 12 months", { exact: true }) }).locator("strong"))

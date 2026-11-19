@@ -13,6 +13,7 @@ import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucaf
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import { createOperationsInstallation } from "../operations-support/installation.ts"
+import { serveRootShell } from "../../../../../modules/sucafina/Sucafinav1/runtime/root-shell.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
 // The fixture serves the real authenticated application, C02 queue, Planner, import/document services, renderer and shell.
@@ -118,11 +119,35 @@ const records = await store.transaction("procurement", async (snapshot) => {
   return { commit: true, value: { supplier: supplierId, comparison } }
 })
 active.handle = async (request) => {
-  const pathname = new URL(request.url).pathname
-  const account = accounts.find((item) => pathname === item.mount || pathname.startsWith(item.mount + "/"))
+  const url = new URL(request.url)
+  if (url.pathname === "/") {
+    const account = await accounts.reduce<Promise<(typeof accounts)[number] | undefined>>(async (found, item) => {
+      const current = await found
+      if (current) return current
+      return await item.identity.person(request) ? item : undefined
+    }, Promise.resolve(undefined))
+    if (!account) return new Response("Authentication required", { status: 401, headers: { "Cache-Control": "no-store" } })
+    return await serveRootShell(request, {
+      origin,
+      mount: account.mount,
+      application: account.installation.services,
+      dispatch: account.application,
+    }) ?? new Response("Not found", { status: 404 })
+  }
+  const account = accounts.find((item) => url.pathname === item.mount || url.pathname.startsWith(item.mount + "/"))
   if (!account) return new Response("Not found", { status: 404 })
   await account.identity.prepare(request)
-  return await account.identity.handle(request) ?? await account.application(request) ?? new Response("Not found", { status: 404 })
+  const handled = await account.identity.handle(request) ?? await account.application(request) ?? new Response("Not found", { status: 404 })
+  return widenSessionCookie(handled)
+}
+
+function widenSessionCookie(response: Response) {
+  const cookies = response.headers.getSetCookie()
+  if (!cookies.some((cookie) => /Path=(?!\/(?:;|$))/.test(cookie))) return response
+  const headers = new Headers(response.headers)
+  headers.delete("set-cookie")
+  for (const cookie of cookies) headers.append("set-cookie", cookie.replace(/Path=[^;]*/, "Path=/"))
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers })
 }
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
 for (const [index, account] of accounts.entries()) {

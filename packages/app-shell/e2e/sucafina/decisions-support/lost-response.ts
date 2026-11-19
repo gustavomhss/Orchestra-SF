@@ -14,7 +14,7 @@ export async function loseCreationResponse(page: Page, origin: string) {
   const listener = async (event: PausedResponse) => {
     try {
       const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
-      expect(event.request.url).toBe(`${origin}/sucafina/dashboard?sf=workbench-command`)
+      expect(event.request.url).toBe(`${origin}/?sf=workbench-command`)
       expect(event.request.method).toBe("POST")
       expect(payload).toMatchObject({ operation: "sf_case_draft" })
       const contentType = event.responseHeaders?.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
@@ -28,6 +28,6 @@ export async function loseCreationResponse(page: Page, origin: string) {
     }
   }
   session.once("Fetch.requestPaused", listener)
-  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=workbench-command`, requestStage: "Response" }] })
+  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/?sf=workbench-command`, requestStage: "Response" }] })
   return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
 }

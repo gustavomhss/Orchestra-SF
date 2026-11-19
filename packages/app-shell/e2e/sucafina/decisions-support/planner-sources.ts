@@ -5,7 +5,7 @@ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "De
 
 /** Build the financial source records through the installed Planner controls. */
 export async function createPlannerSources(page: Page, origin: string, actorId: string, observations: Record<string, unknown>[]) {
-  const planner = (name: string, version?: string) => `${origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
+  const planner = (name: string, version?: string) => `${origin}/?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
   const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
   const installed = await page.goto(planner("Versions"))
   expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
@@ -83,7 +83,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
 
 /** A real source revision, independent of the saved ChoiceRecord. */
 export async function changePlannerSource(page: Page, origin: string, versionId: string, annualBudget: number, observations: Record<string, unknown>[]) {
-  await page.goto(`${origin}/sucafina/planner?${new URLSearchParams({ page: "OPEX", version: versionId })}`)
+  await page.goto(`${origin}/?${new URLSearchParams({ page: "OPEX", version: versionId })}`)
   const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
   await expect(row).toHaveCount(1)
   await row.getByRole("button", { name: "Manage", exact: true }).click()
@@ -104,7 +104,7 @@ function receiptUrl(value: string) {
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
+  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/" && response.request().postDataJSON()?.action === action)
   await button.click()
   const response = await pending
   expect(response.status()).toBe(200)
