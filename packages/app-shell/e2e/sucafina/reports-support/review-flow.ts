@@ -1,5 +1,6 @@
+import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
-import type { APIRequestContext, Page, TestInfo, Request, Response, ConsoleMessage } from "@playwright/test"
+import type { APIRequestContext, Locator, Page, TestInfo, Request, Response, ConsoleMessage } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ReviewAgendaPreview } from "../../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
@@ -227,48 +228,84 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
 }
 
 export async function exportReview(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, format: "docx" | "pptx", info: TestInfo) {
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
-  await expect(button).toBeEnabled()
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
-  await button.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
-  const body = object(await response.json())
-  expect(body.status).toBe("ok")
-  const material = object(body.result)
-  expect(material.reviewSelectionRef).toBe(saved.id)
-  expect(Array.isArray(material.orderedResultRefs)).toBe(true)
-  const refs = material.orderedResultRefs as string[]
-  expect(refs).toHaveLength(1)
-  const artifact = text(refs[0])
-  expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
-  const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
-  await expect(link).toHaveCount(1)
-  const expectedDownload = new URL(app.dashboardURL)
-  expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
-  // A previous format remains visible while this response is processed. Wait
-  // for this artifact, not merely the already existing download link.
-  await expect(link).toHaveAttribute("href", expectedDownload.toString())
-  const href = new URL(text(await link.getAttribute("href")), page.url())
-  expect(href.origin).toBe(app.origin)
-  expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
-  expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
-  const downloaded = page.waitForEvent("download")
-  await link.click()
-  const download = await downloaded
-  expect(download.url()).toBe(href.href)
-  expect(download.suggestedFilename()).toMatch(new RegExp(`\\.${format}$`))
-  expect(await download.failure()).toBeNull()
-  const file = info.outputPath(`preserved-${format}.${format}`)
-  await download.saveAs(file)
-  await info.attach(`preserved-${format}`, { path: file, contentType: format === "docx"
-    ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    : "application/vnd.openxmlformats-officedocument.presentationml.presentation" })
-  const semantics = await inspectReport(file, format, saved, corpus, info)
-  return { artifact, href: href.href, ...semantics }
+  const reportPage = await page.context().newPage()
+  try {
+    const reviewRef = "r_" + Buffer.from(saved.id, "utf8").toString("base64url")
+    expect((await reportPage.goto(`/orchestra/sf-reviews/reports/${reviewRef}`))?.status()).toBe(200)
+    const report = reportPage.locator('[data-sf-surface="UI50"]')
+    await expect(report).toBeVisible()
+    await expect(reportPage.getByRole("heading", { level: 1, name: "Report", exact: true })).toBeVisible()
+    await expect(report.locator("[data-preserved-review]")).toHaveAttribute("data-preserved-review", saved.id)
+    const reviewFact = report.locator("div").filter({ has: reportPage.getByRole("term", { name: "Preserved review", exact: true }) })
+    await expect(reviewFact.locator("dd")).toHaveText(saved.id)
+    const rows = report.locator("li[data-section-id]")
+    await expect(rows).toHaveCount(saved.sections.length)
+    for (const section of saved.sections) {
+      const row = await renderedSection(rows, section.id)
+      await expect(row.locator("strong")).toHaveText(section.title)
+      await expect(row.locator("input[type=checkbox]")).toBeChecked()
+    }
+    const formatSelect = report.getByLabel("Office format", { exact: true })
+    const button = reportPage.getByRole("button", { name: "Generate report", exact: true })
+    await expect(formatSelect).toBeEnabled()
+    await formatSelect.selectOption(format)
+    await expect(formatSelect).toHaveValue(format)
+    await expect(button).toBeEnabled()
+    const prepared = reportPage.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
+    const fetched = reportPage.waitForResponse(responseFor(app.dashboardURL, "review-download", "GET"))
+    const downloaded = reportPage.waitForEvent("download")
+    await button.click()
+    const response = await prepared
+    expect(response.status()).toBe(200)
+    expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
+    const body = object(await response.json())
+    expect(body.status).toBe("ok")
+    const material = object(body.result)
+    expect(material.reviewSelectionRef).toBe(saved.id)
+    expect(Array.isArray(material.orderedResultRefs)).toBe(true)
+    const refs = material.orderedResultRefs as string[]
+    expect(refs).toHaveLength(1)
+    const artifact = text(refs[0])
+    expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
+    const fileResponse = await fetched
+    expect(fileResponse.status()).toBe(200)
+    const href = new URL(fileResponse.url())
+    expect(href.origin).toBe(app.origin)
+    expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
+    expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
+    const mime = format === "docx"
+      ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      : "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    expect(fileResponse.headers()["content-type"]?.split(";")[0]?.trim().toLowerCase()).toBe(mime)
+    const disposition = fileResponse.headers()["content-disposition"] ?? ""
+    expect(disposition.toLowerCase()).toContain("attachment")
+    expect(disposition.toLowerCase()).toContain("." + format)
+    const producerBytes = Buffer.from(await fileResponse.body())
+    const download = await downloaded
+    expect(download.suggestedFilename()).toMatch(new RegExp(`\\.${format}$`))
+    expect(await download.failure()).toBeNull()
+    const file = info.outputPath(`preserved-${format}.${format}`)
+    await download.saveAs(file)
+    expect(Buffer.from(await readFile(file)).equals(producerBytes)).toBe(true)
+    await info.attach(`preserved-${format}`, { path: file, contentType: mime })
+    await expect(button).toBeEnabled()
+    await expect(report.locator("[data-sf-file-unavailable]")).toHaveCount(0)
+    const semantics = await inspectReport(file, format, saved, corpus, info)
+    return { artifact, href: href.href, ...semantics }
+  } finally {
+    await reportPage.close()
+  }
+}
+
+async function renderedSection(rows: Locator, id: string) {
+  const count = await rows.count()
+  const matches = []
+  for (let index = 0; index < count; index++) {
+    const row = rows.nth(index)
+    if (await row.getAttribute("data-section-id") === id) matches.push(row)
+  }
+  expect(matches).toHaveLength(1)
+  return matches[0]!
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
