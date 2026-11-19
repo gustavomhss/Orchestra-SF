@@ -8,6 +8,7 @@ import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { comparableReviewSections, preservedComponentRows, preservedSectionHasChanges, preservedValueRows, readPreservedProjection, reviewReadState, sameSourceMaterial, type PreservedComponent, type PreservedReview, type PreservedSourceRef, type PreservedValue, type ReviewProjection } from "../preserved/model"
+import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "../preserved/preserved.css"
 
 const key = (value: string) => value as SfCopyKey
@@ -22,8 +23,8 @@ function SourceRefList(props: { sources: readonly PreservedSourceRef[]; t: Trans
         <span>{source.surface} / {source.type} / {source.id}</span>
         <span> · {props.t("sf.u32.incarnation")}: {source.incarnation}</span>
         <span> · {props.t("sf.u32.sourceVersion")}: {source.version}</span>
-        <span> · {props.t("sf.u32.observed")}: <time dateTime={source.observedAt}>{source.observedAt}</time></span>
-        <span> · {props.t("sf.u32.period")}: {source.period.start} – {source.period.end}</span>
+        <span> · {props.t("sf.u32.observed")}: <WhenText iso={source.observedAt} /></span>
+        <span> · {props.t("sf.u32.period")}: <PeriodText start={source.period.start} end={source.period.end} /></span>
         <Show when={source.fields.length > 0}>
           <span> · {props.t("sf.u32.fields")}: {source.fields.join(", ")}</span>
         </Show>
@@ -72,10 +73,10 @@ function ChangeKinds(props: {
 function ValueCell(props: { entry: PreservedValue | undefined; projection: ReviewProjection; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : String(entry().value)}</strong>
+      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().value} currency={entry().currency} />}</strong>
       <span>{props.t("sf.u32.currency")}: {entry().currency ?? props.t("sf.u32.notProvided")}</span>
       <span>{props.t("sf.u32.unit")}: {entry().unit ?? props.t("sf.u32.notProvided")}</span>
-      <span>{props.t("sf.u32.evidence")}: {entry().evidenceState}</span>
+      <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
       <span>{props.t("sf.u32.completeness")}: {props.projection.missing.length > 0
         ? props.t("sf.u32.declaredGaps") : props.t("sf.u32.noDeclaredGaps")}</span>
       <Show when={entry().sourceRefs.length > 0 || entry().drilldown !== null}>
@@ -92,9 +93,9 @@ function ValueCell(props: { entry: PreservedValue | undefined; projection: Revie
 function ComponentCell(props: { entry: PreservedComponent | undefined; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().amount === null ? props.t("sf.u32.explicitNull") : String(entry().amount)}</strong>
+      <strong>{entry().amount === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().amount} currency={entry().currency} />}</strong>
       <span>{props.t("sf.u32.currency")}: {entry().currency}</span>
-      <span>{props.t("sf.u32.evidence")}: {entry().evidenceState}</span>
+      <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
       <span>{props.t("sf.u32.sources")}:</span>
       <SourceRefList sources={entry().sourceRefs} t={props.t} />
     </div>}
@@ -238,12 +239,12 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                 <div class="mx-card">
                   <dt>{t("sf.u32.previous")}</dt><dd>{store.previous?.id}</dd>
                   <dt>{t("sf.u32.version")}</dt><dd>{store.previous?.version}</dd>
-                  <dt>{t("sf.u32.created")}</dt><dd>{store.previous?.createdAt}</dd>
+                  <dt>{t("sf.u32.created")}</dt><dd>{store.previous?.createdAt ? <WhenText iso={store.previous.createdAt} /> : null}</dd>
                 </div>
                 <div class="mx-card">
                   <dt>{t("sf.u32.current")}</dt><dd>{store.current?.id}</dd>
                   <dt>{t("sf.u32.version")}</dt><dd>{store.current?.version}</dd>
-                  <dt>{t("sf.u32.created")}</dt><dd>{store.current?.createdAt}</dd>
+                  <dt>{t("sf.u32.created")}</dt><dd>{store.current?.createdAt ? <WhenText iso={store.current.createdAt} /> : null}</dd>
                 </div>
               </dl>
               <Show when={compatible()}>
