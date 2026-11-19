@@ -1,10 +1,14 @@
 # Handoff — finish-operations-20261119
 
-SHA: 12c58666b107a7b2cf11d85f2e61d93d486192db (código; este documento é um checkpoint posterior)
+SHA: e9d9b65c99c59db988d411149eb7ba797eef617c (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- A identidade CAP25 agora usa a referência C02 original selada já preparada para o mesmo ator, em vez de procurar globalmente um scope individual que a coleção não emite. O lookup exige correspondência de incarnation/version, principal/accessRevision/policy, período, campos, projeção e registro; preserva inputDigest, refDigest e projectionDigest como conceitos distintos. Clones sem o selo original e referências ambíguas são recusados. Código e9d9b65c99c59db988d411149eb7ba797eef617c.
+- O gate C02 44602731257 passou com 4 testes, 114 asserções e atores requester/buyer autorizados sobre o mesmo PR. O teste mantém SQLite, autoridade e projeção originais; não qualifica sozinho o browser CAP25.
+- O filtro da linha pending-approval usa um locator relativo à linha com origem na página, corrigindo o encadeamento ancestral anterior. O assert do estado exato permanece. O login WP04 lê o CAP25 pelo APIRequestContext autenticado após a navegação real, evitando o erro DevTools NoData do corpo de uma resposta consumida. Mantém schema, principal, fonte/digest/versão e igualdade com a UI. Código 3f4c94ab071275c28f1c24b794f7a5b78b4aba62.
 
 - Procurement draft leaf qualificado pelo run 44589603579 SUCCESS, job 135791702956, snapshot 9695d83949882cbcd5d1736ad231f4c9e61435c8. Wrapper 1 pass/1 expect, filho exit0; não se inferem contadores internos não impressos.
 - Matrículas locais originais agora são emitidas por spec + cenário. Operations e WP04 podem compartilhar o host sem reutilizar o mesmo token de uso único; a exigência HTTP303 permanece.
@@ -36,15 +40,15 @@ Estado: partial
 
 ## Pendente
 
-- packages/app-shell/e2e/sucafina/operations-support/runtime.ts:48 e :90: qualificar o ingresso completo até CAP25. O último run Operations chegou ao owner-runtime231/resolving; o defeito comum de receiver de fetch foi corrigido no WP de ingresso, mas ainda não está nesta branch.
-- packages/app-shell/e2e/sucafina/wp04/native-ingress.spec.ts:6: repetir o gate estreito com o transporte compartilhado qualificado; OP-PROC-01 ainda não tem um run SUCCESS.
-- packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:146, :214, :315, :401, :461, :627, :708, :799: a migração está commitada; os oito fluxos ainda precisam da verificação runtime no novo host/transporte. Não equivalem a cobertura executada.
-- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx:935: proveniência histórica de campo permanece unbound. O schema PurchaseOrder em packages/schema/src/sucafina/procurement.ts:126–150 não a transmite. O capítulo informa somente a comparação de valores atuais.
-- packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts:11: conserva dois testes isolados do controlador/shell legado com respostas controladas. O run 44561871689 passou nesses testes, mas isso não prova o controlador nativo nem execução de análise. Não foram recriados ou usados como evidência de produto. O capítulo nativo decisions/analyses/index.tsx:144–145 admite preparação somente para sf-enquadrar-decisao; não há nesse controle equivalência do start/status/cancel sourcing legado. Não substituir por runs ou receipts sintéticos.
-- packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:135, procurement-refusal.ts:156 e documents.ts:14 — run44589439780 aguardou POST até o timeout original; é necessário diagnóstico da revisão nativa, sem inferir erro de produtor. imports.ts:130 não montou o detalhe CAP23 após clique; requalificar com o fix comum F01 do integrador.
-- apps/cli/src/sucafina-product/native-ui/procurement.ts:227 e modules/sucafina/Sucafinav1/product/procurement/sources.ts:267–274 — o lookup de sourceRef exige exatamente um scope vivo global. A ausência de a[data-source-ref] no run ainda não distingue campos null de loop de montagem. O novo assert lê o produtor original antes do DOM; nenhum digest é fabricado.
-- packages/app-shell/e2e/sucafina/operations.spec.ts:13, :18, :23, :28, :33 e wp04/procurement.spec.ts — repetir somente após composição da infraestrutura F01 corrigida e os fixes deste checkpoint. Inclui ClamD real.
-- apps/web/vite.config.ts e packages/app-shell/e2e/playwright.production.config.ts: infraestrutura pertence ao WP de ingresso. Os quatro gates abaixo usaram exatamente os dois arquivos de 88c06fcee93719f8d4758db35a46328112c38bda em snapshots; não são alterações próprias desta branch.
+- packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts:48 — a correção do locator preserva pending-approval, mas ainda requer o gate nativo composto; o run Ops4 falhou antes deste patch.
+- packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:135, procurement-refusal.ts:156 e documents.ts:14 — Ops4 44594105701 esgotou a espera original pelo primeiro POST de criação. Os contextos publicados em docs/handoff/observed-native-screens-44594105701-v2.md na branch audit-logs-20261119 mostram revisão enviada seguida de outcome desconhecido. O extrato mínimo publicado pelo integrador em docs/handoff/observed-native-transport-20261119.md confirma zero POST nos três traces, somente GET200 de contexto/CAP25/CAP27; o mesmo parser capturou o POST Planner200 no trace de importação, como controle positivo. A causa está antes da rede; falta identificar codec/stamp/key/F02 exato. Não foram alterados matchers, timeouts ou fences por hipótese.
+- packages/app-shell/e2e/sucafina/operations-support/imports.ts:136 — nome do CAP23 estava desabilitado no Ops4; o integrador é dono do fix comum de reatividade CAP23 e da próxima composição. Esta branch não modifica esse arquivo neste checkpoint.
+- packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:27 e apps/cli/src/sucafina-product/native-ui/procurement.ts:223–267 — o readback autenticado substitui o consumo DevTools e a origem C02 está qualificada por unidade, mas os oito cenários nativos ainda precisam de execução após a composição. Pontos de entrada: :159, :227, :328, :414, :474, :640, :721 e :812.
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx:935 — proveniência histórica de campo permanece unbound. O schema PurchaseOrder em packages/schema/src/sucafina/procurement.ts:126–150 não a transmite. O capítulo informa somente a comparação de valores atuais.
+- packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts:11 — conserva dois testes isolados do controlador/shell legado com respostas controladas. Os passes não provam o controlador nativo nem execução de análise. O capítulo nativo decisions/analyses/index.tsx:144–145 admite preparação somente para sf-enquadrar-decisao; não há equivalência confirmada do start/status/cancel sourcing legado. Não substituir por runs ou receipts sintéticos.
+- packages/app-shell/e2e/sucafina/operations.spec.ts:13, :18, :23, :28 e :33 — o conjunto continua não qualificado. Ops4 terminou com 13 falhas e somente os dois testes isolados de sourcing-controller passando. Próximo gate pertence ao integrador, com infraestrutura compartilhada e ClamD real.
+- packages/app-shell/e2e/sucafina/operations-support/installation.ts — a extensão test-only para grants explícitos originais e runtime.services está sob posse do WP C12 (wp2_resume), preservando os defaults. Não sobrescrever esse delta ao transplantar os arquivos desta branch.
+- apps/web/vite.config.ts e packages/app-shell/e2e/playwright.production.config.ts — infraestrutura compartilhada pertence ao WP de ingresso. O histórico abaixo conserva quais snapshots foram usados; não são arquivos próprios desta branch.
 
 ## Decisões e justificativas
 
@@ -64,12 +68,12 @@ Estado: partial
 
 ## Como retomar
 
-1. Continuar em finish-operations-20261119, código 12c58666b107a7b2cf11d85f2e61d93d486192db.
-2. Obter do WP de ingresso o SHA qualificado para GET e POST/revogação. O run 44573615311 passou 1/1 para leitura CAP23/reload/year com receiver corrigido; a escrita ainda era um gate separado neste checkpoint.
-3. Compor um snapshot com este código e a infraestrutura compartilhada qualificada, preservando a origem de cada arquivo. Executar .ci-run.json com package app, runner playwright, config e2e/playwright.production.config.ts e args [e2e/sucafina/wp04/native-ingress.spec.ts].
-4. Depois do ingresso, executar os specs estreitos necessários. O host já emite códigos de enrollment separados por spec/cenário; ambos continuam de uso único e nunca são repetidos após303.
-5. Corrigir somente causas observadas nos logs Actions, mantendo as autoridades e as asserções. Tratar o controlador de análise nativo sem usar respostas sintéticas como prova de execução.
-6. Atualizar este documento com SHA, resultados terminais e pendências file:line antes de entregar ao integrador. Este WP não faz merge nem dispara sf-ci.
+1. Continuar em finish-operations-20261119, código e9d9b65c99c59db988d411149eb7ba797eef617c. O integrador transpõe somente os deltas próprios, preservando a factory C12 e infraestrutura de ingresso mais recentes.
+2. Usar o run 44602731257 e o teste product/wp04/queue-view.test.ts como prova da identidade C02, sem reinterpretá-los como sucesso do browser ou de Operations.
+3. Ler docs/handoff/observed-native-transport-20261119.md na branch audit-logs-20261119: os três fluxos com outcome desconhecido não emitiram POST. Localizar o campo/codec/stamp/key/F02 que recusou antes da rede, preservando os fences.
+4. Compor os fixes confirmados com o candidato atual e executar o spec nativo estreito que cobre a próxima causa. Não repetir gates sobre a branch antiga sem a infraestrutura compartilhada.
+5. Preservar matrículas de uso único, atores reais, revisão humana, CAS, scanner e asserções de efeito. Não sintetizar fonte, recibo ou proveniência ausente.
+6. Atualizar este documento com SHA, resultado terminal e pendências file:line antes de entregar ao integrador. Este WP não faz merge nem dispara sf-ci.
 
 ## Comandos e resultados
 
@@ -89,3 +93,6 @@ Estado: partial
 
 - [44589603579](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589603579) SUCCESS, job 135791702956: procurement-draft-leaves, wrapper1 pass/1 expect, child exit0. Snapshot 9695d83949882cbcd5d1736ad231f4c9e61435c8.
 - [44589439780](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589439780) FAILURE, job 135791126209: três typechecks PASS; 13 failed / 2 passed em6,1min. Primeiro OP-PROC-01 falhou por lookup de nome ARIA; OP-PROC-02/03 e OP-DOC-01 aguardaram POST; OP-IMPORT-01 não montou o detalhe CAP23. WP04 teve cinco matrículas404 por reutilização dos tokens consumidos em Operations e três esperas por source-ref. Os dois passes são testes isolados de sourcing-controller, não prova nativa.
+
+- [44594105701](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44594105701) FAILURE, job 135807645498: os três typechecks e ClamD real passaram; 13 failed / 2 passed em 5,9 min. OP-PROC-01 falhou no filtro pending-approval; OP-PROC-02/03 e OP-DOC-01 mostraram outcome desconhecido e aguardaram o primeiro POST; OP-IMPORT-01 encontrou o input desabilitado. WP04 teve quatro erros DevTools NoData e quatro fontes null. Os dois passes pertencem a sourcing-controller. O artifact 14565396740 é evidência do teste, não digest de pacote. A extração read-only publicada pelo integrador não constitui novo teste.
+- [44602731257](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44602731257) SUCCESS, job 135838170460, cleanup 135839259625 SUCCESS. Código e9d9b65c99c59db988d411149eb7ba797eef617c, snapshot 3cdebb38b87e9a9f66b26259338066ee29b264b3. Requisição: {"package":"sucafina","runner":"bun","args":["Sucafinav1/test/product/wp04/queue-view.test.ts"]}. Resultado: 4 pass / 0 fail / 114 expect, 1,25 s. Nenhum gate E2E nativo foi executado sobre e9d9 neste checkpoint.
