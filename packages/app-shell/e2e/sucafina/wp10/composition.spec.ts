@@ -480,6 +480,7 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
 
 type PausedNativeResponse = {
   requestId: string
+  networkId?: string
   request: { url: string; method: string; postData?: string }
   responseStatusCode?: number
   responseHeaders?: { name: string; value: string }[]
@@ -500,7 +501,10 @@ async function nativeBody(page: Page, target: {
   const completed = Promise.withResolvers<void>()
   const paused = new Set<string>()
   let original: Request | undefined
+  let networkOriginal: { requestId: string; request: PausedNativeResponse["request"] } | undefined
   let requestCount = 0
+  let networkCount = 0
+  let armed = false
   let capturing = false
   const matches = (url: string, method: string) => {
     const value = new URL(url)
@@ -508,13 +512,22 @@ async function nativeBody(page: Page, target: {
       Object.entries(target.query ?? {}).every(([key, value]) => new URL(url).searchParams.get(key) === value)
   }
   const requested = (request: Request) => {
-    if (!matches(request.url(), request.method())) return
+    if (!armed || !matches(request.url(), request.method())) return
     requestCount++
     if (original) {
       completed.reject(new Error("Ambiguous original WP10 response: more than one matching browser request"))
       return
     }
     original = request
+  }
+  const requestStarted = (event: { requestId: string; request: PausedNativeResponse["request"] }) => {
+    if (!armed || !matches(event.request.url, event.request.method)) return
+    networkCount++
+    if (networkOriginal) {
+      completed.reject(new Error("Ambiguous original WP10 response: more than one matching CDP request start"))
+      return
+    }
+    networkOriginal = event
   }
   const finished = (request: Request) => { if (request === original) completed.resolve() }
   const failed = (request: Request) => {
@@ -523,16 +536,24 @@ async function nativeBody(page: Page, target: {
   page.on("request", requested)
   page.on("requestfinished", finished)
   page.on("requestfailed", failed)
+  session.on("Network.requestWillBeSent", requestStarted)
   session.on("Fetch.requestPaused", async (event: PausedNativeResponse) => {
     paused.add(event.requestId)
     try {
-      if (!matches(event.request.url, event.request.method) || capturing) {
+      if (!armed || !matches(event.request.url, event.request.method) || capturing) {
         await session.send("Fetch.continueRequest", { requestId: event.requestId })
         paused.delete(event.requestId)
         return
       }
       capturing = true
-      if (!original) throw new Error("Original WP10 browser Request was not observed")
+      if (!original || !networkOriginal) throw new Error("Original WP10 request start was not observed")
+      // Fetch.networkId is the protocol's exact link to Network.requestWillBeSent.
+      // An older in-flight response cannot be attributed to this action by URL.
+      expect(event.networkId).toBe(networkOriginal.requestId)
+      expect(networkCount).toBe(1)
+      expect(networkOriginal.request.url).toBe(original.url())
+      expect(networkOriginal.request.method).toBe(original.method())
+      expect(networkOriginal.request.postData ?? null).toBe(original.postData())
       expect(requestCount).toBe(1)
       expect(event.request.url).toBe(original.url())
       expect(event.request.method).toBe(original.method())
@@ -560,9 +581,12 @@ async function nativeBody(page: Page, target: {
   ])
   void observed.catch(() => undefined) // The same rejection is awaited after the action.
   try {
+    await session.send("Network.enable")
     await session.send("Fetch.enable", { patterns: [{ urlPattern: origin + target.path + "*", requestStage: "Response" }] })
+    armed = true
     await action()
     const [response, reply] = await observed
+    expect(networkCount).toBe(1)
     expect(requestCount).toBe(1)
     expect(response.request()).toBe(original)
     expect(response.status()).toBe(reply.status)
@@ -572,6 +596,8 @@ async function nativeBody(page: Page, target: {
     expect(response.request().failure()).toBeNull()
     return { response, body: JSON.parse(reply.json) as unknown }
   } finally {
+    armed = false
+    session.off("Network.requestWillBeSent", requestStarted)
     page.off("request", requested)
     page.off("requestfinished", finished)
     page.off("requestfailed", failed)
@@ -580,6 +606,7 @@ async function nativeBody(page: Page, target: {
       catch { /* The same request may already have completed during teardown. */ }
     }
     await session.send("Fetch.disable")
+    await session.send("Network.disable")
     await session.detach()
   }
 }
