@@ -1,6 +1,7 @@
 import { isDeepStrictEqual } from "node:util"
 import { Context, Effect, Option, Schedule, Schema } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
+import { ExecutionHost } from "@orchestra/core/session/runner"
 import type { SessionV2 } from "@orchestra/core/session"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { ToolSafety } from "@orchestra/core/tool-safety"
@@ -41,7 +42,9 @@ export type PlanningLease = Readonly<{
 }>
 export class BridgeError extends Schema.TaggedErrorClass<BridgeError>()("SfNativePhaseBridge.Error", {
   reason: Schema.String,
-}) {}
+}) {
+  get message() { return this.reason }
+}
 export interface NativePhaseBridge {
   withPlanning<A, E>(source: Source, use: (lease: PlanningLease) => Effect.Effect<A, E>): Effect.Effect<A, E | BridgeError>
   run(source: Source, approved: ApprovedRun): Effect.Effect<"settled" | "busy", BridgeError>
@@ -361,6 +364,12 @@ export function createSfRoutineNativePhaseBridge(input: Input) {
           Effect.tap((valid) => valid ? Effect.void : Effect.sync(state.close)),
           Effect.catch(() => Effect.sync(state.close)), Effect.repeat(Schedule.spaced("1 second")),
         ))
+        // A Claude parent has no genuine governed-load observer. Report that before any prompt, provider, or admission work.
+        const parent = yield* state.resources.store.get(sessionID)
+        if (parent?.agent === AgentV2.defaultID) {
+          const engine = yield* ExecutionHost.engineOf(state.resources.agents, state.resources.store)(parent).pipe(Effect.mapError(() => unavailable()))
+          if (engine === "claude-code") return yield* new BridgeError({ reason: "SF_NATIVE_PHASE_GOVERNED_HOST_RECEIPT_API_REQUIRED" })
+        }
         // Scaffold has a durable denial-only parent marker before any input. It contains no prompt/model data.
         if (!state.proof) yield* provenance.reserve(state.resources, state.sessions, state.context, sessionID, state.current)
           .pipe(Effect.mapError(() => unavailable()))

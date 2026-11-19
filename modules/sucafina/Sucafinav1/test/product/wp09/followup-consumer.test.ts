@@ -11,7 +11,7 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import type { DomainPortHost, PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { bindCreatedSourceIdentity, createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
@@ -75,7 +75,7 @@ async function fixture() {
   const mutationFence = createCollaborationMutationFence(host)
   const active = new WeakMap<TrustedDomainContext, unknown>()
   const permit = Symbol("routine-followup")
-  const nativeHotTopics = createHotTopicPort(createCollaborationHotTopicHost({ host, state, evidence, creationTarget, mutationFence, authorizeMutation: async (context) => active.has(context) && human.authorize(context, "collaboration.handoff.confirm", active.get(context)) }))
+  const nativeHotTopics = createHotTopicPort(createCollaborationHotTopicHost({ host, state, evidence, creationTarget, mutationFence, bindCreatedIdentity: (snapshot, recordId) => bindCreatedSourceIdentity(snapshot, "hotTopics", recordId), authorizeMutation: async (context) => active.has(context) && human.authorize(context, "collaboration.handoff.confirm", active.get(context)) }))
   const hotTopics = { ...nativeHotTopics, create: async (...args: Parameters<typeof nativeHotTopics.create>) => {
     const result = await nativeHotTopics.create(...args)
     if (gate.loseAcknowledgement && result.status === "ok") {
