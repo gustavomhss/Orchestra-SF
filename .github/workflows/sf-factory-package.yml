@@ -44,6 +44,9 @@ jobs:
           # Pin the actual PR head so the checkout and source receipt are identical.
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+          # Pointers left by the default skip-smudge checkout show up as tracked
+          # modifications once git-lfs clean runs in `git status`.
+          lfs: true
       - name: Setup Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -54,6 +57,8 @@ jobs:
           bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
           no-cache: true
       - name: Install pinned dependencies
+        env:
+          HUSKY: "0"
         run: bun install --frozen-lockfile
       - name: Build real native Omni companions
         working-directory: native/omni

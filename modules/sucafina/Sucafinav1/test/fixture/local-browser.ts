@@ -62,7 +62,11 @@ export async function localBrowser() {
     console.info("browser fixture: installation")
     const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, configFile, environment)
     cleanup.push(() => installation.dispose())
-    const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+    const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => {
+      const url = new URL(request.url)
+      if (url.pathname === "/") return new Response(null, { status: 303, headers: { location: "/sucafina/dashboard", "Cache-Control": "no-store" } })
+      return await installation.handler(request) ?? new Response(null, { status: 404 })
+    } })
     const stopServer = () => server.stop(true)
     cleanup.push(stopServer)
     const { chromium } = await import("@playwright/test")

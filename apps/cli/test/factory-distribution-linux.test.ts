@@ -77,7 +77,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     cwd: root, stdout: "pipe", stderr: "pipe",
   })
   if (tracked.exitCode !== 0 || tracked.stdout.toString().trim())
-    throw new Error("SF_FACTORY_TRACKED_CHECKOUT_DIRTY")
+    throw new Error("SF_FACTORY_TRACKED_CHECKOUT_DIRTY\n" + tracked.stdout.toString())
   const workspace = await realpath(root)
   const external = await mkdtemp(path.join(await realpath(tmpdir()), `sf-factory-package-${initialIdentity.runID}-${initialIdentity.runAttempt}-`))
   if (external === workspace || external.startsWith(workspace + path.sep))
@@ -310,12 +310,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const authenticatedDashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
-    // The compiled/extracted distribution must NOT resurrect the retired HTML
-    // console. Authentication still works: the authenticated C08 command and
-    // read below independently prove the real installed product's JSON paths.
-    expect(authenticatedDashboard.status).toBe(404)
-    expect(authenticatedDashboard.headers.get("content-type")).toContain("text/plain")
-    expect(await authenticatedDashboard.text()).toBe("legacy console decommissioned — use /")
+    expect(authenticatedDashboard.status).toBe(200)
+    expect(authenticatedDashboard.headers.get("content-type")).toContain("text/html")
+    expect(await authenticatedDashboard.text()).toContain("data-page=")
     // A virgin installation has no C08 decision state. Author the first case
     // using the compiled installation's real authenticated human command,
     // never by writing raw SQLite, bypassing authorization, or forging a fence.

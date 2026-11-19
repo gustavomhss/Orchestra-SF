@@ -90,9 +90,6 @@ describe("permission defaults", () => {
     ).toEqual([rule("bash", "*", "ask"), rule("*", "*", "deny")])
     expect(permissionRules(undefined)).toEqual([])
     expect(permissionRules({ bash: "maybe", read: 1 })).toEqual([])
-  })
-
-  test("the object form is rules, so a tool set to ask shows ask", () => {
     expect(permissionRules({ bash: "ask" })).toEqual([rule("bash", "*", "ask")])
     expect(permissionAction(permissionRules({ bash: "ask" }), "bash")).toBe("ask")
     expect(permissionAction(permissionRules({ bash: "ask" }), "read")).toBe("allow")
@@ -130,9 +127,6 @@ describe("permission writes", () => {
   test("refuses a tool whose rules are all patterns", () => {
     expect(permissionWrite([rule("read", "*.env", "deny")], "read", "allow")).toEqual({ locked: "patterns" })
     expect(permissionLock([rule("read", "*.env", "deny")], "read")).toBe("patterns")
-  })
-
-  test("writes the object form, keeping a tool's patterns beside its default", () => {
     expect(permissionObject([rule("bash", "*", "ask"), rule("read", "*", "allow"), rule("read", "*.env", "deny")])).toEqual({
       bash: "ask",
       read: { "*": "allow", "*.env": "deny" },
