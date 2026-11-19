@@ -152,14 +152,20 @@ const layer = Layer.effect(
       const agent = yield* agents.resolve(agentID ?? session.agent)
       const agentRules = agent?.permissions ?? missingAgentPermissions
       const sessionRules = yield* sessions.permissions(sessionID)
-      // Session-persisted deny rules must beat an agent's allow. evaluate() is
-      // last-match on a flat ruleset, but denied() inspects the configured list
-      // uniformly, so a deny anywhere still prevails over saved grants.
+      // denied() is any-deny, not last-match: a later session allow cannot erase an earlier agent deny.
       return [...agentRules, ...sessionRules]
     })
 
     function denied(input: AssertInput, rules: Permission.Ruleset) {
-      return input.resources.some((resource) => evaluate(input.action, resource, rules).effect === "deny")
+      if (input.resources.length === 0) return true
+      return input.resources.some((resource) =>
+        rules.some(
+          (rule) =>
+            rule.effect === "deny" &&
+            Wildcard.match(input.action, rule.action) &&
+            Wildcard.match(resource, rule.resource),
+        ),
+      )
     }
 
     function relevant(input: AssertInput, rules: Permission.Ruleset) {
@@ -168,10 +174,11 @@ const layer = Layer.effect(
 
     const evaluateInput = EffectRuntime.fnUntraced(function* (input: AssertInput) {
       const rules = yield* configured(input.sessionID, input.agent)
-      if (denied(input, rules)) return { effect: "deny" as const, rules }
+      if (input.resources.length === 0 || denied(input, rules)) return { effect: "deny" as const, rules }
       const all = [...rules, ...(yield* savedRules())]
       const effects = input.resources.map((resource) => evaluate(input.action, resource, all).effect)
-      const effect: Permission.Effect = effects.includes("deny") ? "deny" : effects.includes("ask") ? "ask" : "allow"
+      const effect: Permission.Effect =
+        effects.length === 0 || effects.includes("deny") ? "deny" : effects.includes("ask") ? "ask" : "allow"
       return { effect, rules: all }
     })
 
@@ -325,6 +332,7 @@ const layer = Layer.effect(
             if (denied(input, rules)) continue
             const effective = [...rules, ...rememberedRules]
             if (
+              item.request.resources.length === 0 ||
               !item.request.resources.every(
                 (resource) => evaluate(item.request.action, resource, effective).effect === "allow",
               )
