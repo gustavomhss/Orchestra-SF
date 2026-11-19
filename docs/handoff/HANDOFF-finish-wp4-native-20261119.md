@@ -1,6 +1,6 @@
 # Handoff — finish-wp4-native-20261119
 
-SHA do código: 2e787aa21ccee91f04c3a6d048a04c1cc078a8b4
+SHA do código: d992d1064b7da595bca0cb04457f3e347a8d6616
 Data: 2026-11-19
 Estado: partial
 
@@ -48,3 +48,12 @@ Estado: partial
 - [44609084639](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44609084639): SUCCESS somente da extração compacta do estado final do Planner. Documento no mesmo branch, docs/handoff/observed-wp4-planner-tail-20261119.md.
 - [44609354099](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44609354099): SUCCESS somente da retenção dos screenshots sintéticos originais de Budget e Requests; disponíveis em audit-wp4-screens-20261119/docs/handoff/evidence/wp4-{budget,requests}-original-20261119.png. Nenhum resultado de UI é inferido dessas auditorias.
 - Typecheck, Playwright e guards deste checkpoint: pendentes do gate composto pela raiz.
+
+## Observação do GET BI05 em extended-ui
+
+- Código d992d1064b7da595bca0cb04457f3e347a8d6616, somente packages/app-shell/e2e/sucafina/wp10/extended-flows.ts:73–99. O original run44602654358 recebeu HTTP200 para o terceiro bi-data, BI05, e o observador registrou net::ERR_ABORTED nesse GET; o fluxo terminou em responseBody/Target closed sob o escopo de instalação. Evidência original preservada em audit-wp4-observations-20261119/docs/handoff/observed-wp4-original-20261119.md, audit44608770375 SUCCESS apenas extração.
+- O fixture captura somente GET /sucafina/dashboard?sf=bi-data&viewId=BI05 por route.fetch({maxRetries:0,maxRedirects:0}), retém a mesma APIResponse original e faz route.fulfill({response:original}). Nenhum status, header, byte, campo, seleção ou corpo é reescrito; nenhum GET adicional, redirect, retry ou POST é executado.
+- A leitura do teste usa o buffer original já existente em reports-support/model.ts, que prova identidade da Request e igualdade de status. Mantidos explicitamente status200, response.finished()===null, request.failure()===null, decode do schema, selectionRef igual ao catálogo e tabela original visível. Nenhuma asserção removida ou timeout alterado.
+- Dependência de composição: exports retainReportResponse/observedReportResponse de reports-support/model.ts já presentes em assembly28 a7286859312e8a27bd47367fc30333577ae929ae; não foram duplicados nem editados neste branch.
+- Pendente/unbound: extended-flows.ts:97 precisa comprovar o término no próximo gate; se o aborto persistir, reter o diagnóstico original e não omitir a asserção. composition.spec.ts:305 continua aguardando causa de admissão CAP25, em paralelo ao diagnóstico original UI48 da raiz. O restante de WP4 não foi ampliado neste checkpoint.
+- Como retomar: compor somente o novo extended-flows.ts sobre assembly28, preservando os quatro blobs anteriores2e787. Integrador decide o único próximo gate WP4 após resolver a admissão; este delta ainda não tem run de qualificação. Não declarar PASS/GO a partir da auditoria.

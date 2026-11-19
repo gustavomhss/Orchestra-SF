@@ -5,7 +5,7 @@ import { SfBiBiDataOutput, SfBiBiOptionsOutput } from "@orchestra/schema/sucafin
 import { SfProjectionReview, SfDashboardDashboardAgenda, SfDashboardDashboardReviewPreserve,
   SfReviewsReviewRead, SfReviewsReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { object, text } from "../reports-support/model"
+import { object, observedReportResponse, retainReportResponse, text } from "../reports-support/model"
 
 /** Called by the real WP10 installation after original operator enrollment. */
 export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string; testInfo: TestInfo }) {
@@ -68,6 +68,15 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   facts.plannerResult = "authorized-projection"
   await testInfo.attach("wp10-bi-explicit-versions.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
 
+  // Retain the one original BI05 GET before Chromium can evict its consumed body.
+  // Preserve status, headers and bytes; no redirect, retry, second GET or mutation.
+  await page.route((url) => url.origin === origin && url.pathname === "/sucafina/dashboard" &&
+    url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI05", async (route) => {
+    if (route.request().method() !== "GET") { await route.continue(); return }
+    const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+    await retainReportResponse(route.request(), original)
+    await route.fulfill({ response: original })
+  })
   await page.goto(href("/orchestra/sf-bi/" + encodeSfRouteRef("BI05")))
   await bi.locator('[data-sf-field="start"]').fill("2027-01-01")
   await bi.locator('[data-sf-field="end"]').fill("2027-12-31")
@@ -83,7 +92,10 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   const pendingRequests = page.waitForResponse(operation("bi-data"))
   await view.click()
   const requests = await pendingRequests
-  const requestData = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(await responseBody(requests))
+  expect(requests.status()).toBe(200)
+  expect(await requests.finished()).toBeNull()
+  expect(requests.request().failure()).toBeNull()
+  const requestData = Schema.decodeUnknownSync(Schema.toType(SfBiBiDataOutput))(observedReportResponse(requests))
   if (!("request" in requestData)) throw new Error("The original Procurement projection was unavailable")
   expect(requestData.request.selectionRef).toBe(collections.value.choices[0]!.selectionRef)
   expect(requestData.request.viewId).toBe("BI05")

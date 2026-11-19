@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA de código: c716d9a5aa528fa7e7c11253c8835e8b940106eb; snapshot do builder completo neste commit (handoff atualizado após qualificação).
+SHA de código: ef081b983ab9258f99d266611afb8a8204ce3600.
 Data: 2026-11-19
 Estado: partial
 
@@ -140,3 +140,12 @@ Estado: partial
 - SfMultiDomainAgenda usa a mesma fronteira: itens escolhidos estão no createStore e eram passados diretamente. O builder agora usa structuredClone(unwrap(option.item)), padrão já existente em procurement/settings/index.tsx248. A cópia preserva todos os campos/undefined e remove apenas a representação reativa; não usa JSON roundtrip e não relaxa schema, idempotência, owner ou seleção original.
 - Código inicial unwrapc716d9a5aa528fa7e7c11253c8835e8b940106eb; snapshot completo neste commit. Reports10 run44613459367 está em andamento no snapshot4768b0958d63eb489378d86c44559e4153c3cd9d e NÃO inclui este builder. Vai medir a retenção dos bytes9b066, colunaEvidence e os diagnósticos de admission.
 - Pendente: reviews/agenda/multi-domain.tsx87 e reports.spec.ts27 — gate posterior precisa verificar os mesmos7itens,8seções de preview, exclusão/reordenação e preservação original. Não foi removida nenhuma asserção nem alterado timeout.
+
+## Gate Reports10 e sincronização da leitura original
+
+- [Run 44613459367](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44613459367): **failure**, quatro jornadas; CLI/app/E2E typechecks passaram; cleanup 135882384984 success. Snapshot 4768b0958d63eb489378d86c44559e4153c3cd9d.
+- RPT01 confirmou contract-mismatch antes do POST. O snapshot completo structuredClone(unwrap) já registrado em 7ba91ff corrige o builder sem ampliar schema.
+- RPT02–04 preservaram no produtor (HTTP200 e valor original), mas a asserção da nova superfície iniciou antes de concluir a descoberta/leitura nativa. Artefato original 14573848222: RPT03/04 ainda exibiam Loading; RPT02 Currently unavailable. Extração [44615565757](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44615565757) success, documento em audit-reports10-20261119/docs/handoff/observed-reports-read-44613459367.md.
+- prepareReview e exportReview agora aguardam o GET original review-read da navegação e comparam o corpo inteiro com a revisão salva antes das mesmas asserções de UI48/UI50. É a mesma sincronização já usada por openAndReopenMeeting; nenhum timeout aumentado.
+- Removido apenas o interceptador diagnóstico de /api/ui/context: a descoberta mantém seu caminho nativo e cancelamento original. O buffer conserva somente respostas de Reports necessárias às asserções. Reabertura, reload, update e source usam os mesmos bytes retidos, sem GET substituto.
+- Nenhuma asserção removida. Unbound: review-flow.ts:101 (primeiro ingresso UI48), :314 (UI50/export), first-agenda.ts:160 (equivalência integral do produtor) até gate Reports11.
