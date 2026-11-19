@@ -1,5 +1,5 @@
 import { For, Show, createEffect, createSignal, createUniqueId, onCleanup } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -53,8 +53,24 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     if (intent || typeof store.marker === "string") return "outcome-unknown"
     return store.marker === undefined ? "unavailable" : "idle"
   }
+  let lastCoverageObservation = ""
   const coverageOwned = (review: PreservedReview) => {
     const stamp = owner.ready()?.context.stamp
+    try {
+      const observation = JSON.stringify({ ready: !!stamp, sections: review.sections.map((section) => {
+        const reactive = readPreservedProjection(section.content)
+        const plain = readPreservedProjection(unwrap(section.content))
+        return { reactiveValid: !!reactive, plainValid: !!plain,
+          matchesCurrentStamp: Object.fromEntries(
+            (["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"] as const)
+              .map((field) => [field, !!stamp && !!plain && plain.context[field] === stamp[field]])),
+        }
+      }) })
+      if (observation !== lastCoverageObservation) {
+        lastCoverageObservation = observation
+        console.info("SF_REPORTS_NATIVE_OWNER " + observation)
+      }
+    } catch { /* A diagnostic never changes the source admission. */ }
     return !!stamp && review.sections.length > 0 && review.sections.every((section) => {
       const projection = readPreservedProjection(section.content)
       return !!projection && projection.context.installationId === stamp.installationId &&

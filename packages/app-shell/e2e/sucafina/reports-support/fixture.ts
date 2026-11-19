@@ -48,7 +48,7 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
       // deliver its unchanged status, headers and bytes to both client and test.
       // Office downloads and authentication keep their original browser path.
       const diagnostic = (message: import("@playwright/test").ConsoleMessage) => {
-        if (message.text().startsWith("SF_REPORTS_AGENDA_RESULT ")) console.info(message.text())
+        if (/^SF_REPORTS_(?:AGENDA_RESULT|NATIVE_OWNER) /.test(message.text())) console.info(message.text())
       }
       page.on("console", diagnostic)
       const dashboardPath = new URL(app.dashboardURL).pathname
