@@ -19,6 +19,8 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   await page.getByRole("textbox", { name: "Evaluator", exact: true }).fill("Synthetic Operations evaluator")
   await page.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("Isolated single-quote snapshot regression; comparison remains limited")
   await page.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Review the EUR quotation with the current holder")
+  const quotations = page.locator("fieldset.sf-u12-quote")
+  if (await quotations.count() === 0) await page.getByRole("button", { name: "Add quotation", exact: true }).click()
   const quote = page.locator("fieldset.sf-u12-quote").first()
   await quote.getByRole("textbox", { name: "Supplier", exact: true }).fill("Journey registered supplier")
   await quote.getByRole("combobox", { name: "Registered supplier", exact: true }).selectOption(supplier)
@@ -43,8 +45,8 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   await expect(order.getByRole("button", { name: "Submit purchase order", exact: true })).toBeDisabled()
   await page.getByRole("button", { name: "Sourcing", exact: true }).click()
   await confirmCommand(page, account, "submit_sourcing", id, page.getByRole("button", { name: "Submit sourcing", exact: true }), "Confirm once")
-  await expect(page.locator(".sf-u12-heading p")).toHaveText(/^Stage: src_pending · Source version: [1-9]\d*$/)
-  const pendingVersion = (await page.locator(".sf-u12-heading p").innerText()).replace("Stage: src_pending · Source version: ", "")
+  await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText(/^Stage: src_pending · Source version: [1-9]\d*$/)
+  const pendingVersion = (await page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ }).innerText()).replace("Stage: src_pending · Source version: ", "")
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
   await expect(detail.locator("p").filter({ hasText: /^Status:/ })).toHaveText("Status: src_pending")
   await expect(detail.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
@@ -58,7 +60,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   try {
     expect(original).toBe("1.08")
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-    await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
+    await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("30240 USD")
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText("Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).")
@@ -69,7 +71,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
     await expect(page.locator("section.sf-u12-comparison").getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
     await page.reload()
-    await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
+    await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText("Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).")
     await expect(page.locator("section.sf-u12-comparison").getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
     await observation(info, "operations-sourcing-frozen-fx", { recordId: id, domainVersion: pendingVersion, pendingSourcing: { original: 28000, currency: "EUR", rate: 1.08, baseAmount: 30240, state: "src_pending" }, futurePo: { baseAmount: 56000, rate: 2, submitted: false }, c06MaterialConfirmation: "BLOCKED_DEPENDENCY" })
@@ -96,7 +98,7 @@ async function createRequest(page: Page, account: Account, title: string) {
   return id
 }
 
-async function approveRequest(page: Page, account: Account, id: string) {
+export async function approveRequest(page: Page, account: Account, id: string) {
   const encoded = encodeSfRouteRef(id)
   await page.goto(`/orchestra/sf-procurement/approvals/${encoded}`)
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
@@ -110,9 +112,10 @@ async function approveRequest(page: Page, account: Account, id: string) {
   expect(response.status()).toBe(200)
   expect(await response.json()).toMatchObject({ ok: true })
   expect(response.request().postDataJSON()).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations snapshot approval" } })
+  await expect(page.getByText("The producer acknowledged the command. No receipt was returned.", { exact: true })).toBeVisible()
 }
 
-async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {
+export async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {
   await expect(openReview).toBeEnabled()
   await openReview.click()
   const review = page.locator('[data-component="sf-change-review"]')
@@ -138,7 +141,7 @@ function commandResponse(page: Page, origin: string, action: string, id?: string
   })
 }
 
-async function fillEnabledScores(quote: Locator) {
+export async function fillEnabledScores(quote: Locator) {
   for (const name of ["Technical scores", "Commercial scores"]) {
     const section = quote.locator("section").filter({ has: quote.page().getByRole("heading", { name, exact: true }) })
     const scores = section.getByRole("spinbutton")
@@ -150,7 +153,7 @@ async function fillEnabledScores(quote: Locator) {
   }
 }
 
-async function setEurRate(page: Page, account: Account, value: string) {
+export async function setEurRate(page: Page, account: Account, value: string) {
   await page.goto("/orchestra/sf-procurement/settings")
   const settings = page.locator("form.sf-n21-settings-form")
   await expect(settings).toHaveCount(1)

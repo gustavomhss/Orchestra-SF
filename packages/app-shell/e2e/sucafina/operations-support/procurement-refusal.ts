@@ -19,6 +19,8 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await page.getByRole("textbox", { name: "Evaluator", exact: true }).fill("Synthetic Operations evaluator")
   await page.getByRole("textbox", { name: "Fewer quotations justification", exact: true }).fill("Isolated quotation for an unavailable FX refusal")
   await page.getByRole("textbox", { name: "Selection justification", exact: true }).fill("Selected quotation still requires a configured FX rate")
+  const quotations = page.locator("fieldset.sf-u12-quote")
+  if (await quotations.count() === 0) await page.getByRole("button", { name: "Add quotation", exact: true }).click()
   const quote = page.locator("fieldset.sf-u12-quote").first()
   await quote.getByRole("textbox", { name: "Supplier", exact: true }).fill("Journey registered supplier")
   await quote.getByRole("combobox", { name: "Registered supplier", exact: true }).selectOption(supplier)
@@ -45,7 +47,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(cells.nth(6)).toHaveText("Unavailable")
   await expect(cells.nth(7)).toHaveText("Unavailable")
   await expect(cells.nth(8)).toHaveText("Unavailable")
-  await expect(cells.nth(9)).toHaveText("")
+  await expect(cells.nth(9)).toHaveText("Unavailable")
   await expect(cells.nth(10)).toHaveText("Monetary issue: fx-missing")
   await expect(comparison.getByRole("status", { name: "Comparison is limited: fewer than two proposals are eligible.", exact: true })).toBeVisible()
   const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
@@ -79,7 +81,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(currency).toHaveAttribute("aria-describedby", "sf-u12-currency-0")
   await expect(page.locator("#sf-u12-currency-0")).toHaveText(producer)
   await expect(currency).toHaveAccessibleDescription(producer)
-  await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: sourcing · Source version: " + version)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
   await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText(summary)
   await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText("Status: sourcing")
@@ -92,7 +94,7 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/approvals/${encoded}/review`)
   await expect(page.getByRole("button", { name: "Approve current step", exact: true })).toHaveCount(0)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-  await expect(page.locator(".sf-u12-heading p")).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })).toHaveText("Stage: sourcing · Source version: " + version)
   await expect(page.locator("fieldset.sf-u12-quote legend").first()).toContainText(quoteId)
   await expect(page.locator("fieldset.sf-u12-quote").first().getByRole("combobox", { name: "Registered supplier", exact: true })).toHaveValue(supplier)
   await page.getByRole("button", { name: "Compare quotations", exact: true }).click()
@@ -132,6 +134,7 @@ async function approveRequest(page: Page, account: Account, id: string) {
   expect(response.status()).toBe(200)
   expect(await response.json()).toMatchObject({ ok: true })
   expect(response.request().postDataJSON()).toMatchObject({ page: "My approvals", action: "approve", id, values: { comment: "Operations missing FX approval" } })
+  await expect(page.getByText("The producer acknowledged the command. No receipt was returned.", { exact: true })).toBeVisible()
 }
 
 async function confirmCommand(page: Page, account: Account, action: string, id: string | undefined, openReview: Locator, confirmName: string) {
@@ -172,7 +175,7 @@ async function fillEnabledScores(quote: Locator) {
 }
 
 async function sourceVersion(page: Page) {
-  const line = page.locator(".sf-u12-heading p")
+  const line = page.locator(".sf-u12-heading p").filter({ hasText: /^Stage:/ })
   await expect(line).toHaveText(/^Stage: \S+ · Source version: [1-9]\d*$/)
   return (await line.innerText()).replace(/^Stage: \S+ · Source version: /, "")
 }

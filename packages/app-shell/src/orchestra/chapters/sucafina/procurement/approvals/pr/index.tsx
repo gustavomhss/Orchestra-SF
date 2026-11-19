@@ -13,7 +13,7 @@ import { SfListDetail, SfRecordDetail } from "../../../shared/detail"
 import { SfChangeReview } from "../../../shared/change-review"
 import { SfReceiptView } from "../../../shared/receipt"
 import type { SfU13CopyKey } from "./copy"
-import { acquirePrDecisionDraft, receivePrSourceVersion, PR_EDIT_SCOPE } from "./draft"
+import { acquirePrDecisionDraft, receivePrSourceVersion, PR_EDIT_SCOPE, type PrDecisionDraft } from "./draft"
 import {
   findSubmittedPr, samePrReview, sourceChangedAfterIntent,
   type Cap26PageOk, type Cap26Request, type PrDecision, type PrGroup, type PrProjection,
@@ -80,16 +80,19 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     review: Readonly<{ source: PrProjection; decision: PrDecision; intentRef: SfIntentRef }> | null
     phase: Phase
     pending: Pending | null
+    failedReview: Readonly<{ requestRef: string; decision: PrDecision; currentVersion: number | undefined; reviewed: boolean; unavailable: boolean }> | null
+    conflictReading: boolean
     failure: "denied" | "not-found" | "stale" | "unavailable" | "invalid" | null
   }>({
     authority: null, page: null, state: "loading", selected: null,
     group: "all", search: "", layoutMode: "single", detailPage: false,
-    review: null, phase: "idle", pending: null, failure: null,
+    review: null, phase: "idle", pending: null, failedReview: null, conflictReading: false, failure: null,
   })
   let readController: AbortController | undefined
   let actionController: AbortController | undefined
   let readSequence = 0
   let actionBusy = false
+  let conflictHeading: HTMLHeadingElement | undefined
 
   // F01, not the URL, supplies the admitted authenticated owner. A resolver
   // route cannot confer grants. Never compare principalRef to holderId:
@@ -174,7 +177,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     setUi({
       authority: token, page: null, state: token ? "loading" : "session-expired",
       selected: directRef ?? null, group: "all", search: "", detailPage: false,
-      review: null, pending: null, phase: "idle", failure: null,
+      review: null, pending: null, failedReview: null, conflictReading: false, phase: "idle", failure: null,
     })
     if (token) {
       void refresh(token, directRef).then((page) => {
@@ -194,8 +197,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
 
   const decisionDraft = createMemo(() => {
     const active = host.ready()
-    const source = selectedPr()
-    if (!active || !source || !authority()) return null
+    const source = selectedPr(), ref = routeRef()
+    if (!active || !ref || !authority()) return null
+    const retained = active.drafts.peek<PrDecisionDraft>({
+      surfaceId: "CAP26", identity: { kind: "record", recordRef: ref as SfRef }, editScopeKey: PR_EDIT_SCOPE,
+    })
+    if (retained) return retained
+    if (!source) return null
     try { return acquirePrDecisionDraft(active.drafts, source) }
     catch { return null } // Missing/revoked draft admission must fail closed.
   })
@@ -279,8 +287,34 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     }
   }
 
+  const retainConflict = (intent: NonNullable<typeof ui.review>, currentVersion?: number) => {
+    setUi({
+      review: null, phase: "conflict",
+      failedReview: { requestRef: intent.source.requestRef, decision: intent.decision,
+        currentVersion, reviewed: false, unavailable: false },
+    })
+    queueMicrotask(() => { if (ui.phase === "conflict" && conflictHeading?.isConnected) conflictHeading.focus() })
+  }
+  const readConflict = async () => {
+    const token = authority(), failed = ui.failedReview
+    if (!token || !failed || actionBusy || ui.pending || ui.conflictReading) return
+    setUi("conflictReading", true)
+    try {
+      const page = await refresh(token, failed.requestRef)
+      if (!page || authority() !== token || ui.failedReview !== failed) return
+      const current = findSubmittedPr(page, failed.requestRef)
+      const version = page.value.versions["requests:" + failed.requestRef]?.version
+      setUi("failedReview", {
+        ...failed, currentVersion: version, reviewed: true,
+        unavailable: current.kind !== "submitted-pr" || !current.actions.includes(failed.decision),
+      })
+    } finally {
+      if (authority() === token) setUi("conflictReading", false)
+    }
+  }
+
   const beginReview = (decision: PrDecision) => {
-    if (ui.pending || actionBusy || ui.phase === "outcome-unknown" || ui.phase === "source-changed") return
+    if (ui.pending || actionBusy || ui.phase === "outcome-unknown" || ui.phase === "source-changed" || ui.phase === "conflict") return
     const candidate = selectedPr()
     const edit = decisionDraft()
     const editState = edit?.snapshot()
@@ -317,15 +351,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     if (!ready || controller.signal.aborted || authority() !== token) { actionBusy = false; return }
     if (!before || before.kind !== "ok" ||
         !samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef))) {
-      setUi("review", null)
-      setUi("phase", "conflict")
+      retainConflict(intent)
       actionBusy = false
       return
     }
     const after = findSubmittedPr(before.page, intent.source.requestRef)
     if (after.kind !== "submitted-pr" || !after.actions.includes(intent.decision)) {
-      setUi("review", null)
-      setUi("phase", "conflict")
+      retainConflict(intent)
       actionBusy = false
       return
     }
@@ -342,8 +374,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         snapshotBefore.pendingOperation || snapshotBefore.conflict ||
         snapshotBefore.value.commandStarted ||
         snapshotBefore.baseVersion !== intent.source.version) {
-      setUi("review", null)
-      setUi("phase", "conflict")
+      retainConflict(intent)
       actionBusy = false
       return
     }
@@ -397,8 +428,8 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
           draft.setPhase("failed")
         }
         setUi("pending", null)
-        setUi("review", null)
-        setUi("phase", status === 409 ? "conflict" : "failed")
+        if (status === 409) retainConflict(intent, result.body.ok ? undefined : result.body.currentVersionCAS)
+        else { setUi("review", null); setUi("phase", "failed") }
         setUi("failure", status === 401 || status === 403 ? "denied" :
           status === 404 ? "not-found" : status === 409 ? "stale" :
           status === 422 ? "invalid" : "unavailable")
@@ -537,12 +568,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         ]}
         primaryAction={review.actions.includes("approve") && !ui.pending ? {
           id: "approve", labelKey: key("sf.u13.review"), tone: "primary",
-          disabled: !review.actions.includes("approve") || ui.phase === "submitting", busy: actionBusy,
+          disabled: !review.actions.includes("approve") || ui.phase === "submitting" || ui.phase === "conflict", busy: actionBusy,
           onInvoke: () => beginReview("approve"),
         } : undefined}
         secondaryActions={review.actions.includes("reject") && !ui.pending ? [{
           id: "reject", labelKey: key("sf.u13.reject"), tone: "danger",
-          disabled: !review.actions.includes("reject") || ui.phase === "submitting",
+          disabled: !review.actions.includes("reject") || ui.phase === "submitting" || ui.phase === "conflict",
           busy: actionBusy, onInvoke: () => beginReview("reject"),
         }] : []}
         sourceActions={[]}
@@ -569,6 +600,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         onRetryRead={() => {
           if (ui.pending) { void reconcile(); return }
           if (orphanPending()) { void reconcileAbandoned(); return }
+          if (ui.failedReview) { void readConflict(); return }
           const token = authority()
           if (token) void refresh(token, routeRef() ?? undefined)
         }}
@@ -705,6 +737,24 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                   </section>
                 )
               }}
+            </Show>
+            <Show when={ui.failedReview && decisionValue()}>
+              <section role="region" aria-labelledby="sf-pr-approval-conflict-title" data-sf-pr-approval-conflict
+                class="rounded-lg border border-border p-3">
+                <h3 ref={conflictHeading} id="sf-pr-approval-conflict-title" tabindex="-1">{t("sf.u13.conflictTitle")}</h3>
+                <Show when={ui.failedReview!.currentVersion !== undefined}>
+                  <p data-current-version-cas>{t("sf.u13.currentVersion")}: {ui.failedReview!.currentVersion}.</p>
+                </Show>
+                <label class="flex flex-col gap-1 text-sm">
+                  <span>{t(ui.failedReview!.decision === "approve" ? "sf.u13.comment" : "sf.u13.reason")}</span>
+                  <textarea readOnly value={ui.failedReview!.decision === "approve" ? decisionValue()!.comment : decisionValue()!.reason} />
+                </label>
+                <button type="button" class="mx-btn" disabled={ui.conflictReading || actionBusy || !!ui.pending}
+                  onClick={() => { void readConflict() }}>{t("sf.u13.reviewCurrent")}</button>
+                <Show when={ui.failedReview!.reviewed}>
+                  <p role="status">{t(ui.failedReview!.unavailable ? "sf.u13.conflictUnavailable" : "sf.u13.stale")}</p>
+                </Show>
+              </section>
             </Show>
             <Show when={orphanPending()}>
               <section class="rounded-lg border border-border p-3" role="status">

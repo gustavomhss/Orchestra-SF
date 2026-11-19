@@ -52,7 +52,7 @@ const orderKeys = [
 ] as const
 const quoteKeys = [
   "id", "supplierId", "supplier", "currency", "total", "description", "notes",
-  "attachments", "scores", "cscores", "techPass",
+  "attachments", "scores", "cscores", "techPass", "qty", "unitPrice",
 ] as const
 const supplierKeys = [
   "id", "number", "status", "createdBy", "legalName", "tradingName", "type", "country",
@@ -173,6 +173,8 @@ function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
     safe.commercial = pick(source.commercial, ["notes"])
   if (Object.hasOwn(source, "compliance"))
     safe.compliance = pick(source.compliance, ["notes"])
+  if (Object.hasOwn(source, "attachments"))
+    safe.attachments = rows(source.attachments).map((asset) => pick(asset, ["id", "name", "type", "bytes", "size"]))
   return safe
 }
 function versionsFor(view: View, keys: readonly string[]) {

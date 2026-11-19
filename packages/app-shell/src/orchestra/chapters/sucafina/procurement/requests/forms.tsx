@@ -1,4 +1,4 @@
-import { For, Show } from "solid-js"
+import { createEffect, createUniqueId, For, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
 import { postedPoLine, type SfPoEdit, type SfPoLine, type SfPrEdit } from "./model"
@@ -24,11 +24,13 @@ type PrProps = Readonly<{
   value: SfPrEdit
   creating: boolean
   disabled: boolean
+  errors?: readonly { field: string; message: string }[]
   onEdit: (updated: SfPrEdit) => void
 }>
 type PoProps = Readonly<{
   value: SfPoEdit
   disabled: boolean
+  errors?: readonly { field: string; message: string }[]
   onEdit: (updated: SfPoEdit) => void
 }>
 function useCopy() {
@@ -38,40 +40,59 @@ function useCopy() {
 
 export function SfRequisitionForm(props: PrProps) {
   const copy = useCopy()
+  const errorPrefix = createUniqueId()
+  let fields: HTMLFieldSetElement | undefined
+  createEffect(() => {
+    const error = props.errors?.find((item) => prFields.some((field) => item.field === "pr." + field))
+    if (!error || props.disabled) return
+    queueMicrotask(() => {
+      const control = fields?.querySelector(`[name=${JSON.stringify(error.field)}]`)
+      if (control instanceof HTMLElement && control.isConnected && !props.disabled && props.errors?.includes(error)) control.focus()
+    })
+  })
   const edit = (key: PrField, value: SfPrEdit[PrField]) =>
     !props.disabled && props.onEdit({ ...props.value, [key]: value })
-  return <fieldset class="sf-u11-fieldset" disabled={props.disabled} data-sf-pr-fields>
+  return <fieldset ref={fields} class="sf-u11-fieldset" disabled={props.disabled} data-sf-pr-fields>
     <legend>{copy("sf.u11.remaining.pr")}</legend>
     <div class="sf-u11-fields">
       <For each={prFields.filter((field) => props.creating || field !== "title")}>{(field) => {
         const label = () => copy(tKey("sf.u11.remaining.field." + field))
         const value = () => props.value[field]
+        const error = () => props.errors?.find((item) => item.field === "pr." + field)
+        const errorId = errorPrefix + "-" + field
         return <label class="sf-u11-field" data-field={field}>
           <span>{label()}</span>
           <Show when={field === "recurring"} fallback={
             <Show when={field === "type" && props.creating} fallback={
               <Show when={field === "description" || field === "justification"} fallback={
-                <input name={`pr.${field}`} type={field === "needBy" ? "date" :
+                <input name={`pr.${field}`} aria-label={label()} aria-invalid={error() ? "true" : undefined}
+                  aria-describedby={error() ? errorId : undefined} type={field === "needBy" ? "date" :
                   field === "estAmount" || field === "estAnnual" ? "number" : "text"}
                   step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
                   required={props.creating && field === "title"}
                   value={textValue(value())}
                   onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
               }>
-                <textarea name={`pr.${field}`} rows={3} value={textValue(value())}
+                <textarea name={`pr.${field}`} aria-label={label()} aria-invalid={error() ? "true" : undefined}
+                  aria-describedby={error() ? errorId : undefined} rows={3} value={textValue(value())}
                   onInput={(event) => edit(field, event.currentTarget.value)} />
               </Show>
             }>
-              <select name="pr.type" value={textValue(value())} onChange={(event) => edit("type", event.currentTarget.value)}>
+              <select name="pr.type" aria-label={label()} aria-invalid={error() ? "true" : undefined}
+                aria-describedby={error() ? errorId : undefined} value={textValue(value())} onChange={(event) => edit("type", event.currentTarget.value)}>
                 <option value="">Choose…</option>
                 <option value="product">product</option>
                 <option value="service">service</option>
               </select>
             </Show>
           }>
-            <input type="checkbox" checked={value() === true || value() === "true" || value() === "on"}
+            <input name="pr.recurring" type="checkbox" aria-label={label()} aria-invalid={error() ? "true" : undefined}
+              aria-describedby={error() ? errorId : undefined} checked={value() === true || value() === "true" || value() === "on"}
               onChange={(event) => edit("recurring", event.currentTarget.checked)} />
           </Show>
+          <Show when={error()}>{(current) =>
+            <span id={errorId} data-field-error={"pr." + field}>{current().message}</span>
+          }</Show>
         </label>
       }}</For>
     </div>
@@ -84,6 +105,17 @@ export function SfRequisitionForm(props: PrProps) {
 
 export function SfPurchaseOrderForm(props: PoProps) {
   const copy = useCopy()
+  const errorPrefix = createUniqueId()
+  let fields: HTMLFieldSetElement | undefined
+  const errorFor = (field: string) => props.errors?.find((item) => item.field === field)
+  createEffect(() => {
+    const error = props.errors?.find((item) => item.field.startsWith("po."))
+    if (!error || props.disabled) return
+    queueMicrotask(() => {
+      const control = fields?.querySelector(`[name=${JSON.stringify(error.field)}]`)
+      if (control instanceof HTMLElement && control.isConnected && !props.disabled && props.errors?.includes(error)) control.focus()
+    })
+  })
   const edit = (key: PoField, value: SfPoEdit[PoField]) =>
     !props.disabled && props.onEdit({ ...props.value, [key]: value })
   const updateLine = (lineIndex: number, field: (typeof lineFields)[number], value: string | null) => {
@@ -104,24 +136,32 @@ export function SfPurchaseOrderForm(props: PoProps) {
     if (props.disabled || !props.value.lines) return
     props.onEdit({ ...props.value, lines: props.value.lines.filter((_, at) => at !== index).map(postedPoLine) })
   }
-  return <fieldset class="sf-u11-fieldset" disabled={props.disabled} data-sf-po-fields>
+  return <fieldset ref={fields} class="sf-u11-fieldset" disabled={props.disabled} data-sf-po-fields>
     <legend>{copy("sf.u11.remaining.po")}</legend>
     <div class="sf-u11-fields">
-      <For each={poFields}>{(field) =>
-        <label class="sf-u11-field" data-field={field}>
+      <For each={poFields}>{(field) => {
+        const name = "po." + field
+        const error = () => errorFor(name)
+        const id = errorPrefix + "-" + field
+        return <label class="sf-u11-field" data-field={field}>
           <span>{copy(tKey("sf.u11.remaining.field." + field))}</span>
           <Show when={field === "description" || field === "deliveryConditions" ||
             field === "acceptance" || field === "warranty" || field === "notes" ||
             field === "billingAddress" || field === "deliveryAddress"} fallback={
-            <input type={field === "deliveryDate" ? "date" : "text"}
+            <input name={name} type={field === "deliveryDate" ? "date" : "text"}
+              aria-invalid={error() ? "true" : undefined} aria-describedby={error() ? id : undefined}
+              aria-label={copy(tKey("sf.u11.remaining.field." + field))}
               value={textValue(props.value[field])}
               onInput={(event) => edit(field, event.currentTarget.value)} />
           }>
-            <textarea rows={3} value={textValue(props.value[field])}
+            <textarea name={name} rows={3} value={textValue(props.value[field])}
+              aria-invalid={error() ? "true" : undefined} aria-describedby={error() ? id : undefined}
+              aria-label={copy(tKey("sf.u11.remaining.field." + field))}
               onInput={(event) => edit(field, event.currentTarget.value)} />
           </Show>
+          <Show when={error()}>{(current) => <span id={id} data-field-error={name}>{current().message}</span>}</Show>
         </label>
-      }</For>
+      }}</For>
     </div>
     <section aria-label={copy("sf.u11.remaining.field.lines")} data-sf-po-lines>
       <h3>{copy("sf.u11.remaining.field.lines")}</h3>
@@ -135,6 +175,7 @@ export function SfPurchaseOrderForm(props: PoProps) {
                 <label class="sf-u11-field" data-field={field}>
                   <span>{copy(tKey("sf.u11.remaining.field." + field))}</span>
                   <input
+                    name={"po.lines." + index() + "." + field}
                     type={field === "qty" || field === "unitPrice" ? "number" : "text"}
                     step={field === "qty" || field === "unitPrice" ? "any" : undefined}
                     value={textValue(line[field])}
