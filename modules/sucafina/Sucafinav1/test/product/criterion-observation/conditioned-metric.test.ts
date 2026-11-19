@@ -118,6 +118,24 @@ for (const fault of ["headers", "request-provider", "method", "borrowed-state"] 
   }, 120000)
 }
 
+
+test("a borrowed unsupported flag cannot turn observed drift into a full-producer fallback", async () => {
+  const f = await criterionFixture()
+  try {
+    let changed = false
+    f.controls.afterState = async (namespace, found) => {
+      if (changed || !f.controls.metricDepth || namespace !== "cases" || f.controls.metricCaseReads !== 1) return
+      const result = found as { status: string; value?: { supported: boolean } }
+      if (result.status !== "ok" || !result.value) throw new Error("Actual initial C08 observation missing")
+      expect(result.value.supported).toBe(true)
+      result.value.supported = false
+      changed = true
+    }
+    expect((await f.compare()).status).not.toBe("ok")
+    expect(changed).toBe(true)
+  } finally { await f.dispose() }
+}, 120000)
+
 for (const fault of ["reversed-pair", "wrong-criterion"] as const) {
   test("conditioned observation cannot attest " + fault, async () => {
     const f = await criterionFixture()

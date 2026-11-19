@@ -105,7 +105,7 @@ export function createPlannerCriterionObservationReader(compare: PlannerPort["co
       const expectedRequest = digestSfValue(request)
       const borrowed = structuredClone(frame.observation)
       const expectedObservation = digestSfValue(borrowed)
-      const pinned = () => unchanged() && digestSfValue(request) === expectedRequest && digestSfValue(borrowed) === expectedObservation
+      const pinned = () => unchanged() && digestSfValue(request) === expectedRequest && digestSfValue(borrowed) === expectedObservation && unchanged()
       const verified = await verify(borrowed, pinned)
       if (!pinned() || verified !== true && verified !== "unsupported") {
         frame.invalid = true

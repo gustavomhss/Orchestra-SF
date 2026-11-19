@@ -49,13 +49,14 @@ export function createSfConditionedCriterionMetric(input: {
     const result = await observe(request, call, async (observation, ownerCurrent) => {
       const transport = host.requestFor(call)
       const unchanged = () => current() && ownerCurrent() && !!transport && host.requestFor(call) === transport && !transport.signal.aborted &&
-        digestSfValue(request) === digestSfValue(captured) && digestSfValue(stored) === storedDigest
+        digestSfValue(request) === digestSfValue(captured) && digestSfValue(stored) === storedDigest && current() && ownerCurrent()
       if (!transport || !unchanged()) return false
       const sample = async () => {
         if (!unchanged() || !await host.revalidate(call) || !unchanged()) return undefined
         const selected = await business.selectedCase(call)
         if (selected.status !== "ok" || !same(selected.value, captured.caseRef) || !unchanged()) return undefined
         let expected: string | undefined
+        let expectedSupported: boolean | undefined
         let borrowed: unknown
         const found = await state.read(transport, "cases", async (snapshot, actor) => {
           if (!sameAuthority(actor, call) || !unchanged()) return undefined
@@ -73,6 +74,7 @@ export function createSfConditionedCriterionMetric(input: {
             results: observation.scenarioRefs.map((reference) => snapshot.decisionResults?.[reference]), rule: rule.value }
           const proof = inspect(selection, captured, observation, storedDigest, call)
           if (!proof) return undefined
+          expectedSupported = proof.supported
           const caseCopy = structuredClone(selection.decision!)
           const caseDigest = digestSfValue(caseCopy)
           if (!await business.authorizeCase(caseCopy, call) || digestSfValue(caseCopy) !== caseDigest || !unchanged()) return undefined
@@ -86,7 +88,7 @@ export function createSfConditionedCriterionMetric(input: {
           return allowed && unchanged() && expected === digestSfValue(borrowed) && same(fences, business.lockedSourceFences())
             ? { digest: expected, supported: proof.supported } : undefined
         })
-        return found.status === "ok" && found.value && expected === found.value.digest && expected === digestSfValue(borrowed) && unchanged()
+        return found.status === "ok" && found.value && expected === found.value.digest && expectedSupported === found.value.supported && expected === digestSfValue(borrowed) && unchanged()
           ? { ...found.value, unchanged: () => expected === digestSfValue(borrowed) } : undefined
       }
       const before = await sample()
