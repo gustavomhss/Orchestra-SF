@@ -580,6 +580,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           : await client["domain.command.CAP27.delete"]({ ...record, action:"delete", values:{} }, options)
       if (controller.signal.aborted || token !== authority()) return
       if (response.kind === "transport-error") {
+        console.warn("SF_PROCUREMENT_COMMAND_BOUNDARY " + JSON.stringify({ capabilityId: "CAP27", action: intent.action, kind: response.kind, reason: response.reason }))
         controllerDraft?.setPhase("outcome-unknown")
         setUi("phase", "outcome-unknown")
         setUi("unknownOperation", opRef)
@@ -631,8 +632,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           operationRef:opRef,resultVersion:confirmedVersion})
       }
       setUi("phase", "producer-confirmed")
-    } catch {
+    } catch (error) {
       if (!controller.signal.aborted && token === authority()) {
+        console.warn("SF_PROCUREMENT_COMMAND_BOUNDARY " + JSON.stringify({ capabilityId: "CAP27", action: intent.action, kind: "exception",
+          name: error instanceof Error && ["Error", "TypeError", "SyntaxError", "RangeError", "AbortError", "DataCloneError"].includes(error.name) ? error.name : "Unclassified" }))
         controllerDraft?.setPhase("outcome-unknown")
         setUi("phase", "outcome-unknown")
         setUi("unknownOperation", opRef)
