@@ -1,5 +1,5 @@
 import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import type { Schema } from "effect"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { SfReviewsReviewAgenda, SfReviewsReviewAgendaOptions, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
@@ -84,10 +84,14 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
     commandAbort?.abort()
     const abort = new AbortController(); commandAbort = abort
     const generation = owner.generation(), ownerKey = state.ownerKey
-    const items = store.selected.map((option) => option.item)
+    const items = store.selected.map((option) => structuredClone(unwrap(option.item)))
     setStore({ phase: "loading", preview: undefined, sectionRefs: [], message: "" })
     try {
       const result = await createSfReviewsClient(access.transport)["reviews.review-agenda"]({ items }, { signal: abort.signal })
+      if (result.kind !== "response" || result.body.status !== "ok")
+        console.info("SF_REPORTS_AGENDA_RESULT " + JSON.stringify(result.kind === "response"
+          ? { kind: result.kind, status: result.status, producerStatus: result.body.status }
+          : { kind: result.kind, reason: result.reason }))
       if (abort.signal.aborted || !current(generation, ownerKey)) return
       if (commandAbort === abort) commandAbort = undefined
       if (result.kind !== "response" || result.body.status !== "ok") {
@@ -201,9 +205,10 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
               <h3>{section.title}</h3>
               <p>{t("sf.u25.sectionRef")}: {section.id}</p>
               <p>{section.period.start} – {section.period.end} · {section.recordCount} {t("sf.u25.selectedRecords")}</p>
-              <For each={section.projection.context.sourceRefs}>{(source) =>
+              <For each={section.projection.context.sourceRefs}>{(source) => <>
                 <p>{t("sf.u25.sourceRef")}: {source.surface} · {source.type} · {source.id} · {t("sf.u25.sourceVersion")} {source.version} · {t("sf.u25.incarnation")} {source.incarnation}</p>
-              }</For>
+                <p>{t("sf.u25.observedAt")}: <time dateTime={source.observedAt}>{source.observedAt}</time></p>
+              </>}</For>
               <Show when={section.recordCount === 0}><p>{t("sf.u25.noRecords")}</p></Show>
               <table aria-label={section.title + " · " + t("sf.u25.values")}>
                 <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th><th>{t("sf.u25.evidence")}</th></tr></thead>
