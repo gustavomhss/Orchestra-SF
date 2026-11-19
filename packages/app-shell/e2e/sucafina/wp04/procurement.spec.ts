@@ -20,15 +20,13 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
   const response = await page.request.get(enrollment, { maxRedirects: 0 })
   expect(response.status()).toBe(303)
-  const nativeOrigin = new URL(selected.baseURL)
-  nativeOrigin.port = "3000"
-  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", nativeOrigin).href)
+  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
-  // UNBOUND: the Requests chapter does not expose the C02 provenance anchors.
-  // Keep the source-ref/digest/version assertions until a native route owns them.
-  const source = page.locator("a[data-source-ref]").first()
+  const source = page.locator('tr[data-sf-row="' + manifest.records.comparison + '"]').locator("a[data-source-ref]")
+  await expect(source).toHaveCount(1)
   await expect(source).toBeVisible()
+  await expect(source).toHaveAttribute("href", "?request=" + encodeURIComponent(manifest.records.comparison) + "#" + encodeURIComponent(manifest.records.comparison))
   await expect(source).toHaveAttribute("data-source-ref", /.+/)
   await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
   await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
@@ -47,9 +45,7 @@ function responseFor(page: Page, action: string, id?: string) {
 }
 
 async function createDraft(page: Page, account: Account, title: string) {
-  const nativeOrigin = new URL(account.baseURL)
-  nativeOrigin.port = "3000"
-  await page.goto(new URL("/orchestra/sf-procurement/requests/new", nativeOrigin).href)
+  await page.goto(new URL("/orchestra/sf-procurement/requests/new", account.baseURL).href)
   const form = page.locator("article.sf-u11-detail").locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
@@ -76,7 +72,12 @@ async function createDraft(page: Page, account: Account, title: string) {
   const id = (await row.getAttribute("data-sf-row")) ?? ""
   expect(id).toMatch(/^PR-2026-\d+$/)
   await expect(row.getByRole("cell").first()).toContainText(id)
-  await expect(row.getByRole("link")).toHaveCount(0)
+  const source = row.getByRole("link", { name: id, exact: true })
+  await expect(source).toHaveCount(1)
+  await expect(source).toHaveAttribute("href", "?request=" + encodeURIComponent(id) + "#" + encodeURIComponent(id))
+  await expect(source).toHaveAttribute("data-source-ref", /.+/)
+  await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
+  await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
   await openRecord(page, account, id)
   await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition draft")
   return id
@@ -86,7 +87,6 @@ async function openRecord(page: Page, account: Account, id: string) {
   expect(id).toMatch(/^PR-2026-\d+$/)
   const encoded = encodeSfRouteRef(id)
   const nativeOrigin = new URL(account.baseURL)
-  nativeOrigin.port = "3000"
   await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, nativeOrigin).href)
   await expect(page).toHaveURL((url) => url.origin === nativeOrigin.origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const row = page.locator(`tr[data-sf-row="${id}"]`)
