@@ -2,13 +2,17 @@ import { expect, test } from "bun:test"
 import { object, rows } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
-import { dashboardRecordObservationReader } from "../../../product/dashboard/sources.ts"
+import { createDashboardRecordEvidenceHost, dashboardRecordObservationReader } from "../../../product/dashboard/sources.ts"
+import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { createSfDashboardRecordSourceAccess } from "../../../product/decision-memory/source-access.ts"
 import { available, createRelationsFixture } from "./relations-fixture.ts"
 
 async function recordFixture() {
   const fixture = await createRelationsFixture()
-  const ref = available(await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+  const owners = { host: fixture.host, scopedSources: fixture.persistence,
+    issueRecord: createDashboardRecordSourceIssuer({ host: fixture.host, scopedSources: fixture.persistence }) }
+  const records = createDashboardRecordEvidenceHost(owners)
+  const ref = available(await records.issue({ page: "Portfolio Dashboard", recordType: "projects",
     recordId: "project", fields: ["name", "status"], period: fixture.period }, fixture.read))
   const resolve = fixture.persistence.resolveScopedSource
   const observations: NonNullable<Awaited<ReturnType<typeof resolve>>>[] = []
@@ -19,9 +23,9 @@ async function recordFixture() {
     if (value) observations.push(value)
     return value
   }
-  const input = { host: fixture.host, records: fixture.records }
+  const input = { host: fixture.host, records }
   const access = createSfDashboardRecordSourceAccess(input)
-  return { ...fixture, ref, input, access, observations, counts,
+  return { ...fixture, records, owners, ref, input, access, observations, counts,
     reset: () => { observations.length = 0; counts.reads = 0 } }
 }
 
@@ -39,14 +43,17 @@ test("record BCS composes two real observations and keeps the complete legacy pa
     expect(composed.currentRef).toEqual(f.ref)
     expect(projectName(composed.authorizedProjection)).toBe("Shared project")
     expect(f.counts.reads).toBe(2)
-    expect(Object.isFrozen(composed.authorizedProjection)).toBe(true)
-    expect(Object.isFrozen((composed.authorizedProjection as DomainProjection).values)).toBe(true)
+    const expected = structuredClone(composed)
+    expect(Object.isFrozen(composed.authorizedProjection)).toBe(false)
+    expect(Reflect.set((composed.authorizedProjection as DomainProjection).values[0]!, "value", "Caller edit")).toBe(true)
+    expect(Reflect.set(object(object(composed.currentRef).target), "recordId", "caller-record")).toBe(true)
+    expect(f.ref.target.recordId).toBe("project")
     expect(dashboardRecordObservationReader({ ...f.records }, f.host)).toBeUndefined()
     expect(dashboardRecordObservationReader(f.records, { ...f.host })).toBeUndefined()
 
     // A repeat in the same call still reopens both source observations.
     f.reset()
-    expect(await f.access(f.ref, f.read)).toEqual(composed)
+    expect(await f.access(f.ref, f.read)).toEqual(expected)
     expect(f.counts.reads).toBe(2)
 
     const resolve = f.records.resolve, read = f.records.read
@@ -58,14 +65,14 @@ test("record BCS composes two real observations and keeps the complete legacy pa
     for (const records of wrappers) {
       f.reset()
       f.input.records = records
-      expect(await f.access(f.ref, f.read)).toEqual(composed)
+      expect(await f.access(f.ref, f.read)).toEqual(expected)
       expect(f.counts.reads).toBe(6)
     }
 
     f.input.records = f.records
     Object.defineProperty(f.records, "read", { configurable: true, enumerable: true, get: () => read })
     f.reset()
-    expect(await f.access(f.ref, f.read)).toEqual(composed)
+    expect(await f.access(f.ref, f.read)).toEqual(expected)
     expect(f.counts.reads).toBe(6)
   } finally { await f.dispose() }
 })
@@ -208,8 +215,9 @@ for (const phase of ["before", "after"] as const)
 test("record observation discards a throwing " + phase + " consumer and opens fresh reads next time", async () => {
   const f = await recordFixture()
   try {
-    const observe = dashboardRecordObservationReader(f.records, f.host)
-    if (!observe) throw new Error("Factory observation unavailable")
+    const reader = dashboardRecordObservationReader(f.records, f.host)
+    if (!reader) throw new Error("Factory observation unavailable")
+    const observe = reader.read
     const failure = async () => { throw new Error("consumer interrupted") }
     await expect(observe(f.ref.refId, f.read, {
       current: () => true,
@@ -228,8 +236,9 @@ test("record observation discards a throwing " + phase + " consumer and opens fr
 test("record observation callbacks receive frozen independent values and never the source witnesses", async () => {
   const f = await recordFixture()
   try {
-    const observe = dashboardRecordObservationReader(f.records, f.host)
-    if (!observe) throw new Error("Factory observation unavailable")
+    const reader = dashboardRecordObservationReader(f.records, f.host)
+    if (!reader) throw new Error("Factory observation unavailable")
+    const observe = reader.read
     let first: unknown, projected: unknown
     const result = await observe(f.ref.refId, f.read, {
       current: () => true,
@@ -278,5 +287,141 @@ test("record BCS observes cancellation and does not reuse an observation for ano
     f.reset()
     expect((await f.access(f.ref, f.read)).state).toBe("fresh")
     expect(f.counts.reads).toBe(2)
+  } finally { await f.dispose() }
+})
+
+for (const fault of ["revalidate", "environment", "authenticate", "requestFor", "resolveScopedSource",
+  "owner-host", "owner-sources", "consumer-host", "consumer-records"] as const)
+test("record BCS refuses " + fault + " replacement during final authorization", async () => {
+  const f = await recordFixture()
+  try {
+    const revalidate = f.host.revalidate, environment = f.host.environment
+    const authenticate = f.host.authenticate, requestFor = f.host.requestFor
+    const resolve = f.persistence.resolveScopedSource
+    let finalChecks = 0, substitutedCalls = 0
+    f.host.revalidate = async (context) => {
+      const allowed = await revalidate(context)
+      if (f.observations.length === 2 && ++finalChecks === 2) {
+        if (fault === "revalidate") f.host.revalidate = async (...args) => { substitutedCalls++; return revalidate(...args) }
+        if (fault === "environment") f.host.environment = async (...args) => { substitutedCalls++; return environment(...args) }
+        if (fault === "authenticate") f.host.authenticate = async (...args) => { substitutedCalls++; return authenticate(...args) }
+        if (fault === "requestFor") f.host.requestFor = (...args) => { substitutedCalls++; return requestFor(...args) }
+        if (fault === "resolveScopedSource") f.persistence.resolveScopedSource = async (...args) => { substitutedCalls++; return resolve(...args) }
+        if (fault === "owner-host") f.owners.host = { ...f.host }
+        if (fault === "owner-sources") f.owners.scopedSources = { ...f.persistence }
+        if (fault === "consumer-host") f.input.host = { ...f.host }
+        if (fault === "consumer-records") f.input.records = { ...f.records }
+      }
+      return allowed
+    }
+    const result = await f.access(f.ref, f.read)
+    expect(f.counts.reads).toBe(2)
+    expect(finalChecks).toBe(2)
+    expect(substitutedCalls).toBe(0)
+    expect(result.state).toBe("unavailable")
+    expect(result).not.toHaveProperty("authorizedProjection")
+  } finally { await f.dispose() }
+})
+
+for (const phase of ["authority", "environment"] as const)
+test("record BCS pins its initial " + phase + " await and admits changed hooks only on a later call", async () => {
+  const f = await recordFixture()
+  try {
+    const revalidate = f.host.revalidate, environment = f.host.environment, authenticate = f.host.authenticate
+    let changed = false, substitutedCalls = 0
+    if (phase === "authority") f.host.revalidate = async (context) => {
+      const allowed = await revalidate(context)
+      if (!changed) {
+        changed = true
+        f.host.environment = async (...args) => { substitutedCalls++; return environment(...args) }
+      }
+      return allowed
+    }
+    if (phase === "environment") f.host.environment = async (request) => {
+      const value = await environment(request)
+      if (!changed) {
+        changed = true
+        f.host.authenticate = async (...args) => { substitutedCalls++; return authenticate(...args) }
+      }
+      return value
+    }
+    const result = await f.access(f.ref, f.read)
+    expect(changed).toBe(true)
+    expect(f.counts.reads).toBe(0)
+    expect(substitutedCalls).toBe(0)
+    expect(result.state).toBe("unavailable")
+    expect(result).not.toHaveProperty("authorizedProjection")
+
+    f.reset()
+    expect((await f.access(f.ref, f.read)).state).toBe("fresh")
+    expect(f.counts.reads).toBe(2)
+    expect(substitutedCalls).toBeGreaterThan(0)
+  } finally { await f.dispose() }
+})
+
+test("record BCS refuses a new accessor hook at publication without invoking it", async () => {
+  const f = await recordFixture()
+  try {
+    const revalidate = f.host.revalidate, requestFor = f.host.requestFor
+    let finalChecks = 0, getterCalls = 0
+    f.host.revalidate = async (context) => {
+      const allowed = await revalidate(context)
+      if (f.observations.length === 2 && ++finalChecks === 2)
+        Object.defineProperty(f.host, "requestFor", { configurable: true, enumerable: true,
+          get: () => { getterCalls++; return requestFor } })
+      return allowed
+    }
+    const result = await f.access(f.ref, f.read)
+    expect(finalChecks).toBe(2)
+    expect(getterCalls).toBe(0)
+    expect(result.state).toBe("unavailable")
+    expect(result).not.toHaveProperty("authorizedProjection")
+  } finally { await f.dispose() }
+})
+
+for (const placement of ["accessor", "prototype"] as const)
+test("record BCS retains the legacy reader when a host hook is an " + placement, async () => {
+  const f = await recordFixture()
+  try {
+    const expected = await f.access(f.ref, f.read)
+    expect(expected.state).toBe("fresh")
+    const requestFor = f.host.requestFor
+    if (placement === "accessor") Object.defineProperty(f.host, "requestFor", {
+      configurable: true, enumerable: true, get: () => requestFor })
+    else {
+      Reflect.deleteProperty(f.host, "requestFor")
+      Object.setPrototypeOf(f.host, { requestFor })
+    }
+    expect(dashboardRecordObservationReader(f.records, f.host)).toBeUndefined()
+    f.reset()
+    expect(await f.access(f.ref, f.read)).toEqual(expected)
+    expect(f.counts.reads).toBe(6)
+  } finally { await f.dispose() }
+})
+
+for (const owner of ["host", "sources"] as const)
+test("record issuance still rejects a replaced " + owner + " factory input during its await", async () => {
+  const f = await recordFixture()
+  try {
+    const environment = f.host.environment
+    let changed = false
+    f.host.environment = async (request) => {
+      const value = await environment(request)
+      if (!changed) {
+        changed = true
+        if (owner === "host") f.owners.host = { ...f.host }
+        else f.owners.scopedSources = { ...f.persistence }
+      }
+      return value
+    }
+    const selection = { page: "Portfolio Dashboard", recordType: "projects", recordId: "project",
+      fields: ["name", "status"], period: f.period }
+    const result = await f.records.issue(selection, f.read)
+    expect(changed).toBe(true)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+    f.owners.host = f.host
+    f.owners.scopedSources = f.persistence
+    expect((await f.records.issue(selection, f.read)).status).toBe("ok")
   } finally { await f.dispose() }
 })

@@ -69,14 +69,15 @@ export function createSfDashboardRecordSourceAccess(input: { host: DomainPortHos
     try {
       if (ref.kind !== "record" || ref.target.surface !== "dashboard" || ref.target.recordType === "dashboard-page" || !ref.target.period || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
       const host = input.host, records = input.records
-      const observe = dashboardRecordObservationReader(records, host)
-      if (observe) {
+      const reader = dashboardRecordObservationReader(records, host)
+      if (reader) {
+        const observe = reader.read
         const selected = structuredClone(ref), expected = digestSfValue(selected)
         const request = host.requestFor(call), lease = call.lease, bindingObject = call.binding
         const binding = digestSfValue([call.kind, call.binding])
         const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
-        const current = () => !!request && !request.signal.aborted && input.host === host && input.records === records &&
-          dashboardRecordObservationReader(records, host) === observe && host.requestFor(call) === request && call.lease === lease &&
+        const current = () => reader.current() && !!request && !request.signal.aborted && input.host === host && input.records === records &&
+          host.requestFor(call) === request && call.lease === lease &&
           call.binding === bindingObject && digestSfValue([call.kind, call.binding]) === binding && digestSfValue(ref) === expected &&
           digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
         if (!request || !current() || !await host.revalidate(call) || !current()) return unavailable()
@@ -98,8 +99,8 @@ export function createSfDashboardRecordSourceAccess(input: { host: DomainPortHos
               digestSfValue(sources[0]!.period) !== digestSfValue(selected.target.period) ||
               projection.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== expected || digestSfValue(value.drilldown) !== expected))
               return { status: "unavailable", reason: "source-projection-unavailable" }
-            return { status: "ok", value: { state: "fresh", ref: selected, currentRef: evidence,
-              authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: at } }
+            return { status: "ok", value: { state: "fresh", ref: selected, currentRef: structuredClone(evidence),
+              authorizedProjection: structuredClone(projection), accessRevision: call.binding.accessRevision, checkedAt: at } }
           },
           // This remains the consumer's independent authorization. The producer
           // checks both borrowed source bodies synchronously after it completes.

@@ -79,15 +79,30 @@ type DashboardRecordObservationReader = <Value>(reference: string, context: Trus
   after: () => Promise<boolean>
 }) => Promise<PortResult<Value>>
 const recordObservationReaders = new WeakMap<object, {
-  host: DomainPortHost; resolve: object; read: object; observe: DashboardRecordObservationReader
+  host: DomainPortHost; sources: SfScopedSourcePort; owners: () => boolean
+  resolve: object; read: object; observe: DashboardRecordObservationReader
 }>()
+
+const recordHostMethods = ["requestFor", "revalidate", "authenticate", "environment"] as const
+function recordObservationMethods(host: DomainPortHost, sources: SfScopedSourcePort) {
+  const entries = [...recordHostMethods.map((name) => [host, name] as const), [sources, "resolveScopedSource"] as const]
+    .map(([owner, name]) => ({ owner, name, value: Object.getOwnPropertyDescriptor(owner, name)?.value }))
+  if (entries.some((entry) => typeof entry.value !== "function")) return undefined
+  return () => entries.every((entry) => Object.getOwnPropertyDescriptor(entry.owner, entry.name)?.value === entry.value)
+}
 
 /** Composition belongs only to the original factory and its unchanged methods.
  * The registry retains capabilities, never a source observation or authorization. */
-export function dashboardRecordObservationReader(records: object, host: DomainPortHost): DashboardRecordObservationReader | undefined {
+export function dashboardRecordObservationReader(records: object, host: DomainPortHost): Readonly<{
+  read: DashboardRecordObservationReader; current: () => boolean
+}> | undefined {
   const owned = recordObservationReaders.get(records)
-  return owned?.host === host && Object.getOwnPropertyDescriptor(records, "resolve")?.value === owned.resolve &&
-    Object.getOwnPropertyDescriptor(records, "read")?.value === owned.read ? owned.observe : undefined
+  if (!owned || owned.host !== host) return undefined
+  const methods = recordObservationMethods(host, owned.sources)
+  const current = () => !!methods && methods() && owned.owners() && recordObservationReaders.get(records) === owned &&
+    Object.getOwnPropertyDescriptor(records, "resolve")?.value === owned.resolve &&
+    Object.getOwnPropertyDescriptor(records, "read")?.value === owned.read
+  return current() ? Object.freeze({ read: owned.observe, current }) : undefined
 }
 
 /** Scoped record references are opaque selectors; each resolution reauthenticates the caller. */
@@ -97,6 +112,7 @@ export function createDashboardRecordEvidenceHost(input: {
   issueRecord: (selection: { page: string; recordType: string; recordId: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext) => Promise<{ scope: SfSourceScope; source: SourceRef } | undefined>
 }) {
   const host = input.host, scopedSources = input.scopedSources
+  const owners = () => input.host === host && input.scopedSources === scopedSources
   type RecordObservation = { evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; projection: Record<string, unknown> }
   const resolveCurrent = async <T>(reference: string, context: TrustedDomainContext,
     project: (value: RecordObservation, request: Request) => PortResult<T> | Promise<PortResult<T>>,
@@ -107,21 +123,23 @@ export function createDashboardRecordEvidenceHost(input: {
     const request = host.requestFor(context), lease = context.lease
     const binding = digestSfValue([context.kind, context.binding])
     const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
-    const currentAuthority = () => !!request && !request.signal.aborted && host.requestFor(context) === request && context.lease === lease &&
+    const currentAuthority = () => owners() && (!complete || complete.current()) && !!request && !request.signal.aborted &&
+      host.requestFor(context) === request && context.lease === lease &&
       digestSfValue([context.kind, context.binding]) === binding &&
       digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
     if (!request || !currentAuthority() || !await host.revalidate(context) || !currentAuthority()) return { status: "denied", reason: "source-authority-unavailable" }
-    const read = () => scopedSources.resolveScopedSource("dashboard", incarnation, async (snapshot, scope) => {
-      if (request.signal.aborted || scope.principalRef !== context.binding.principalRef || scope.accessRevision !== context.binding.accessRevision || scope.policyVersion !== context.binding.policyVersion || scope.recordType === "dashboard-page") return false
+    const read = () => complete && !complete.current() ? Promise.resolve(undefined) :
+      scopedSources.resolveScopedSource("dashboard", incarnation, async (snapshot, scope) => {
+      if (complete && !complete.current() || request.signal.aborted || scope.principalRef !== context.binding.principalRef || scope.accessRevision !== context.binding.accessRevision || scope.policyVersion !== context.binding.policyVersion || scope.recordType === "dashboard-page") return false
       const principal = await host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
-      if (!principal || principal.id !== scope.principalRef || principal.id.startsWith("local:")) return false
+      if (!principal || principal.id !== scope.principalRef || principal.id.startsWith("local:") || complete && !complete.current()) return false
       const access = object(object(snapshot.data.access)[principal.id])
       const roles = principal.roles.filter((entry) => entry.surface === "dashboard").map((entry) => entry.role)
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
       return digestSfValue(object(scope.selector).actor) === digestSfValue(actor)
     })
     const observed = await read().catch(() => undefined)
-    if (!observed || !await host.revalidate(context)) return { status: "denied", reason: "source-unavailable" }
+    if (!observed || complete && !complete.current() || !await host.revalidate(context)) return { status: "denied", reason: "source-unavailable" }
     const current = structuredClone(observed)
     const sourceDigest = digestSfValue(current)
     if (current.version !== Number(parts[2])) return { status: "stale", reason: "source-replaced-or-changed" }
@@ -136,7 +154,7 @@ export function createDashboardRecordEvidenceHost(input: {
     // Projection work belongs between the source producer's independent
     // observations. Reopening that entire producer twice repeats the same proof.
     const again = await read().catch(() => undefined)
-    if (!again || digestSfValue(again) !== sourceDigest || !await host.revalidate(context) ||
+    if (!again || digestSfValue(again) !== sourceDigest || complete && !complete.current() || !await host.revalidate(context) ||
       digestSfValue(again) !== sourceDigest || !currentAuthority())
       return { status: "stale", reason: "source-or-authority-changed" }
     if (!complete) return projected
@@ -177,8 +195,8 @@ export function createDashboardRecordEvidenceHost(input: {
     issue: async (selection: { page: string; recordType: string; recordId: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
       if (!selection || typeof selection.page !== "string" || !selection.page || typeof selection.recordType !== "string" || !selection.recordType || typeof selection.recordId !== "string" || !selection.recordId || !Array.isArray(selection.fields) || !selection.fields.length || selection.fields.some((field) => typeof field !== "string" || !field) || new Set(selection.fields).size !== selection.fields.length || !isSfPeriod(selection.period)) return { status: "needs-input", reason: "invalid-source-selection" }
       const issueRecord = input.issueRecord
-      const read = dashboardRecordIssuanceReader(issueRecord, host, scopedSources)
-      const request = read && host.requestFor(context), lease = context.lease
+      const read = dashboardRecordIssuanceReader(issueRecord, input.host, input.scopedSources)
+      const request = read && input.host.requestFor(context), lease = context.lease
       const binding = digestSfValue([context.kind, context.binding]), selectionDigest = digestSfValue(selection)
       const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
       const completed = read && await read(selection, context).catch(() => undefined)
@@ -186,8 +204,8 @@ export function createDashboardRecordEvidenceHost(input: {
       if (!issued || issued.source.surface !== "dashboard" || issued.source.type !== selection.recordType || issued.source.id !== selection.recordId || digestSfValue([...issued.source.fields].sort()) !== digestSfValue([...selection.fields].sort()) || digestSfValue(issued.source.period) !== digestSfValue(selection.period) || object(issued.scope.selector).page !== selection.page) return { status: "denied", reason: "source-unavailable" }
       // Only the original factory and its exact host/source pair can complete
       // this path. A substituted issuer still goes through resolveCurrent.
-      if (read && (!completed || !request || request.signal.aborted || host.requestFor(context) !== request || context.lease !== lease ||
-        input.issueRecord !== issueRecord || dashboardRecordIssuanceReader(issueRecord, host, scopedSources) !== read ||
+      if (read && (!completed || !request || request.signal.aborted || input.host.requestFor(context) !== request || context.lease !== lease ||
+        input.issueRecord !== issueRecord || dashboardRecordIssuanceReader(issueRecord, input.host, input.scopedSources) !== read ||
         digestSfValue([context.kind, context.binding]) !== binding || digestSfValue(selection) !== selectionDigest ||
         digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) !== requestDigest))
         return { status: "stale", reason: "source-or-authority-changed" }
@@ -201,7 +219,9 @@ export function createDashboardRecordEvidenceHost(input: {
   }
   const observe: DashboardRecordObservationReader = async (reference, context, consumer) => {
     const { current: consumerCurrent, before, project, after } = consumer
-    const current = () => consumerCurrent() && dashboardRecordObservationReader(records, host) === observe
+    // Hooks may be replaced between invocations, but never within one proof.
+    const reader = dashboardRecordObservationReader(records, host)
+    const current = () => !!reader && reader.read === observe && reader.current() && consumerCurrent() && reader.current()
     const denied = (): PortResult<never> => ({ status: "denied", reason: "source-authority-unavailable" })
     if (!current()) return denied()
     return resolveCurrent(reference, context, async (observation, request) => {
@@ -219,7 +239,7 @@ export function createDashboardRecordEvidenceHost(input: {
       return result
     } })
   }
-  recordObservationReaders.set(records, { host, resolve, read, observe })
+  recordObservationReaders.set(records, { host, sources: scopedSources, owners, resolve, read, observe })
   return records
 }
 
