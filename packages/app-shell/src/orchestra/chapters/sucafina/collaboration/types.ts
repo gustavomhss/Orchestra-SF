@@ -41,6 +41,7 @@ export type SfRelationsProps = Readonly<{
   relations: readonly SfRelation[]
   candidates: readonly SfRelationTarget[]
   state: SfUiState
+  canWrite?: boolean
   onSearchTargets: (query: string) => void
   onCreate: (request: Readonly<{ sourceRef: SfRef; targetRef: SfRef; kind: string; caseRef?: SfRef }>) => void
   onRemove: (request: Readonly<{ relationRef: SfRef; expectedVersion: SfVersion }>) => void
@@ -63,6 +64,7 @@ export type SfThreadProps = Readonly<{
   messages: readonly SfThreadMessage[]
   draft: string
   state: SfUiState
+  canWrite?: boolean
   onEditDraft: (text: string) => void
   onPost: (request: Readonly<{ threadRef: SfRef; incarnation: string; expectedVersion: number; text: string }>) => void
   onReconcileRead: (threadRef: SfRef) => void
@@ -90,6 +92,7 @@ export type SfConfirmationProps = Readonly<{
   status: "current" | "stale" | "revoked" | "not-found" | "unavailable"
   coverage: SfCoverage
   state: SfUiState
+  canWrite?: boolean
   onConfirm: (request: Readonly<{ selectionRef: SfRef; materialVersion: SfVersion }>) => void
   onRevalidate: (selectionRef: SfRef) => void
 }>
