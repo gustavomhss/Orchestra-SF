@@ -8,6 +8,7 @@ import { Cause, Deferred, Effect, Exit, Fiber } from "effect"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfRoutinePhaseOrigin } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-origin.ts"
 import { SF_ROUTINE_PHASE_SCOPE } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-scope.ts"
+import { BridgeError } from "../../../../../../apps/cli/src/sucafina-product/routine-native-phase-bridge.ts"
 import { withPhaseFixture } from "./fixture.ts"
 
 const posix = test.skipIf(process.platform === "win32")
@@ -73,15 +74,19 @@ posix("component: Request revoke interrupts only its owned original runner and T
   const exit = yield* Fiber.join(running)
   expect(Exit.isFailure(exit)).toBe(true)
   if (Exit.isFailure(exit)) expect(Cause.hasInterrupts(exit.cause)).toBe(true)
+  // exclusive publishes its interrupted result before the coordinator settles ownership.
+  // Let that same owner finish; do not interrupt a Session by ID or erase its active entry.
+  yield* Effect.yieldNow
   expect(yield* f.execution.active).toEqual(new Set())
 })), 30_000)
 
 posix("component: scoped Claude parent reports the missing genuine governed-load observer BEFORE business prompt/provider work", () => withPhaseFixture((f) => Effect.gen(function* () {
   yield* f.resources.agents.transform((editor) => editor.update(AgentV2.defaultID, (agent) => { agent.engine = "claude-code" }))
   const source = yield* f.bridge.issue(f.state.context!, { operation: "catalog", purpose: "blocked engine" })
-  const exit = yield* f.bridge.withPlanning(source, () => Effect.void).pipe(Effect.exit)
-  expect(Exit.isFailure(exit)).toBe(true)
-  if (Exit.isFailure(exit)) expect(Cause.pretty(exit.cause)).toContain("SF_NATIVE_PHASE_GOVERNED_HOST_RECEIPT_API_REQUIRED")
+  const failure = yield* f.bridge.withPlanning(source, () => Effect.succeed(undefined))
+    .pipe(Effect.catch((error) => Effect.succeed(error)))
+  expect(failure).toBeInstanceOf(BridgeError)
+  expect(failure?.reason).toBe("SF_NATIVE_PHASE_GOVERNED_HOST_RECEIPT_API_REQUIRED")
   expect(f.trace.requests).toEqual([])
   expect((yield* f.sessions.list()).filter((session) => session.id.startsWith("ses_sfphase_")).length).toBe(1)
   const root = (yield* f.sessions.list()).find((session) => session.id.startsWith("ses_sfphase_"))!
