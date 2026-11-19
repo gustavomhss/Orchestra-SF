@@ -1,4 +1,5 @@
-import { expect, test, type Page, type Request } from "@playwright/test"
+import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { asRecord, caseIdentity, clickCommand, enterWorkbench, isCommand, readReply } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 
@@ -77,7 +78,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
     reviewed = afterApproval
     expect(commands).toEqual([])
     const domain = await openRequest(audit, origin, requestId)
-    const domainVersion = Number(await domain.getAttribute("data-version"))
+    const domainVersion = await sourceVersion(domain)
     expect(Number.isSafeInteger(domainVersion) && domainVersion > 0).toBe(true)
     const lost = await test.step("confirm one financial change and lose the response after the domain commit", async () => {
       await entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true }).check()
@@ -151,7 +152,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
       await history.getByText("History and sources", { exact: true }).click()
       await expect(history.locator(":scope > p")).toHaveText(/^\d+ source references · 1 receipts$/)
       const unchangedDomain = await openRequest(audit, origin, requestId)
-      await expect(unchangedDomain).toHaveAttribute("data-version", String(domainVersion + 1))
+      expect(await sourceVersion(unchangedDomain)).toBe(domainVersion + 1)
       await expect(unchangedDomain.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(operation.amount))
       observations.push({ stage: "c12-fresh-admission-recovered", originalCaseRef: change.caseRef, editedCaseRef: editedRef,
         currentCaseRef: currentCase.caseRef, choiceId: selection.choiceId, changeId: change.changeId, receipt: recovered.value,
@@ -181,12 +182,23 @@ async function openCase(page: Page, origin: string, reference: string, objective
 
 async function openRequest(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
-  await page.goto("/orchestra/sf-procurement/requests")
-  const detail = page.locator("details").filter({ has: page.locator(`section[id="${id}-pr"]`) })
+  const encoded = encodeSfRouteRef(id)
+  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
+  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   await expect(detail).toHaveCount(1)
-  await expect(detail).toHaveAttribute("open", "")
-  const form = detail.locator(`section[id="${id}-pr"] form[data-command="save"]`)
-  await expect(form).toHaveCount(1)
-  await expect(form).toHaveAttribute("data-version", /^[1-9]\d*$/)
-  return form
+  await expect(detail.locator("p").filter({ hasText: /^Request identity:/ })).toHaveText(`Request identity: ${id}`)
+  await expect(versionLine(detail)).toHaveText(/^Current source version: [1-9]\d*$/)
+  await expect(detail.getByLabel("Estimated amount", { exact: true })).toHaveCount(1)
+  return detail
+}
+
+function versionLine(detail: Locator) {
+  return detail.locator("p").filter({ hasText: /^Current source version:/ })
+}
+
+async function sourceVersion(detail: Locator) {
+  const line = versionLine(detail)
+  await expect(line).toHaveText(/^Current source version: [1-9]\d*$/)
+  return Number((await line.innerText()).replace("Current source version: ", ""))
 }
