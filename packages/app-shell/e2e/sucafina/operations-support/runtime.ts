@@ -86,9 +86,26 @@ export async function login(page: Page, key: "first" | "second" | "viewer", scen
   await expect(project.locator("small")).toHaveAttribute("title", manifest.directory)
   const response = await page.goto(new URL("/orchestra/sf-procurement/requests/new", account.origin).href)
   expect(response?.status(), "The authenticated Procurement application must be mounted").toBe(200)
-  await expect(page.getByRole("heading", { name: "Requests", exact: true })).toHaveCount(1)
-  await expect(page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })).toHaveCount(key === "viewer" ? 0 : 1)
-  if (key !== "viewer") await expect(page.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
+  try {
+    await expect(page.locator('[data-component="sf-requests-pr-po"]').getByRole("heading", { name: "Requests", exact: true })).toHaveCount(1)
+  } catch (error) {
+    // Bounded rendered state only: no enrollment URL, credential, cookie or response body.
+    const [headings, statuses, alerts, requests] = await Promise.all([
+      page.getByRole("heading").allTextContents(),
+      page.getByRole("status").allTextContents(),
+      page.getByRole("alert").allTextContents(),
+      page.locator('[data-component="sf-requests-pr-po"]').count(),
+    ])
+    const bounded = (values: string[]) => values.slice(0, 12).map((value) => value.slice(0, 240))
+    console.info("OPERATIONS_NATIVE_RENDER " + JSON.stringify({
+      path: new URL(page.url()).pathname, requests,
+      headings: bounded(headings), statuses: bounded(statuses), alerts: bounded(alerts),
+    }))
+    throw error
+  }
+  const create = page.locator("form[data-command='create'][data-page='Requests']").getByRole("button", { name: "Create request", exact: true })
+  await expect(create).toHaveCount(key === "viewer" ? 0 : 1)
+  if (key !== "viewer") await expect(create).toBeEnabled()
   return account
 }
 
