@@ -1,6 +1,6 @@
 # Handoff — finish-importhealth-20261119
 
-SHA de código: dfbc0ce6c61226a17bf3042c7587944a33f6c57b
+SHA de código: ccc45d4ecedaae152ad5bbcb49c409f7ee4add1e
 Data: 2026-11-19
 Estado: partial
 
@@ -35,3 +35,5 @@ Estado: partial
 - Auditoria de DOM [44621812706](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44621812706): SUCCESS; apenas artifact original14577090913. UI55 ausente, status route not admitted.
 - Auditoria de trace [44622222711](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44622222711): SUCCESS; últimos contexts originais200/ok marcam files.import-targets e outras files.* unavailable/operationalfalse. Doc em audit-opscontext-20261119/docs/handoff/observed-opscontext-44619924653.md.
 - `bun run typecheck`, `bun run check:guards --base origin/dev` e gate deste checkpoint: não executados.
+
+- Cold review independente do ci_resume emdfbc0ce: não encontrou defeito no binding/grants/C08/fences. A lacuna de scanner foi fechada neste checkpoint: só files.import-admit observa scan original com bytesvazios antes de readiness. runtime/local-scanner.ts:4–6 não rejeita vazio; :35–49 envia INSTREAM completo e :9/22–31 aceita somente stream: OK\\0. Nenhum asset/recibo é criado; bytes reais continuam escaneados separadamente em staged-files.ts:56. Falha/ausência do scanner mantém admissão unavailable; leituras e Apply de arquivo já admitido não dependem desse probe.
