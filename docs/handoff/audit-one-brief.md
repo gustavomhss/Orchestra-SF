@@ -107,3 +107,17 @@ Rode **um** `sf-ci` só no fim e leia os cinco.
 Ao terminar — concluído ou não — commite `docs/handoff/HANDOFF-audit-one.md` pelo template
 (`docs/handoff/HANDOFF-TEMPLATE.md`), com SHA, feito, pendente, decisões, como retomar e gates
 (ids de run + resultado). Nunca diga "verde" sem citar o run.
+
+## 8. Decisão do dono — C12 (2026-11-19)
+
+Opção **(b)**: o teste passa a seguir a ordem que o produto suporta. Não implementar capacidade nova.
+
+- Em `packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts`, aplicar primeiro a
+  mudança revisada do rascunho e **depois** submeter/aprovar a requisição no Procurement.
+- Em `decisions-support/procurement-source.ts`, `approveExactRequisition` continua existindo, mas
+  roda **após** o Apply, não antes.
+- A garantia continua: o valor aprovado tem que ser exatamente o valor revisado
+  (`Estimated amount` igual a `operation.amount`) e a versão tem que avançar uma unidade.
+  Não afrouxar essa igualdade.
+- Continuam proibidos: fabricar aprovação, mexer em CAS, remover asserção, ou ressuscitar o
+  console no GET nu.
