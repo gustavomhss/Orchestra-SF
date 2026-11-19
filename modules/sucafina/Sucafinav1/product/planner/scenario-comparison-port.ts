@@ -138,12 +138,16 @@ function criterionInvocation(owner: ComparisonOwner | undefined, input: Comparis
     input.host.requestFor(call) === transport && !transport.signal.aborted && transportDigest() === originalTransport }
 }
 
-function conditionedObservation(request: ScenarioCompareRequest, values: readonly ResolvedScenario[], comparison: ScenarioComparison): PlannerCriterionObservation | undefined {
+function conditionedObservation(request: ScenarioCompareRequest, values: readonly ResolvedScenario[], comparison: ScenarioComparison, call: TrustedDomainContext): PlannerCriterionObservation | undefined {
   if (comparison.comparisonStatus !== "conditioned" || comparison.completeDifference !== null ||
     comparison.knownDifference === null || !Number.isFinite(comparison.knownDifference) || values.length !== 2 ||
     values.some((value) => value.result.comparisonStatus !== "conditioned" || value.result.total !== null ||
       value.projection.context.surface !== "planner" || value.source.target.surface !== "planner" || value.source.target.recordType !== "planner-version" ||
-      !value.projection.engineVersion.trim() || value.result.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version"))) return undefined
+      value.projection.engineVersion !== "planner-runtime-v1" || value.projection.context.currency !== value.result.currency ||
+      digestSfValue(value.projection.context.period) !== digestSfValue(value.result.horizon) ||
+      value.projection.context.installationId !== call.binding.installationId || value.projection.context.projectId !== call.binding.projectId ||
+      value.projection.context.principalRef !== call.binding.principalRef || value.projection.context.policyVersion !== call.binding.policyVersion ||
+      value.projection.context.accessRevision !== call.binding.accessRevision || value.result.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version"))) return undefined
   const sources = values.map((value) => value.source)
   const evidenceRefs = values.flatMap((value) => value.result.sourceRefs)
     .filter((ref, index, all) => all.findIndex((entry) => entry.refDigest === ref.refDigest) === index)
@@ -219,7 +223,7 @@ async function compareScenariosObserved(input: ComparisonInput, incoming: Scenar
   if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
   if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
   const criteria = input.criteria
-  const observation = invocation ? conditionedObservation(request, values, comparison) : undefined
+  const observation = invocation ? conditionedObservation(request, values, comparison, binding) : undefined
   const evaluate = async () => {
     const results: Awaited<ReturnType<PlannerCriteriaHost["evaluate"]>>[] = []
     // A host may reuse a cached result object; retain this observation before its next call.

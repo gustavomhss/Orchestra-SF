@@ -24,14 +24,15 @@ export function createSfConditionedCriterionMetric(input: {
 }) {
   const { authority, business } = input
   const host = authority.host, state = authority.state, planner = business.planner, sources = business.plannerSources
-  const product = business.plannerProduct, scenarios = product.scenarios, results = business.results, cases = business.cases
+  const product = business.plannerProduct, results = business.results, cases = business.cases, persistence = host.persistence
   const compare = planner.compareScenarios
   const methods = [
-    [host, "requestFor"], [host, "revalidate"], [state, "read"], [business, "selectedCase"], [business, "lockedSourceFences"],
+    [host, "requestFor"], [host, "revalidate"], [host, "authenticate"], [host, "environment"],
+    [persistence, "transaction"], [persistence, "currentSnapshots"], [state, "read"], [business, "selectedCase"], [business, "lockedSourceFences"],
     [business, "authorizeCase"], [cases, "read"], [planner, "compareScenarios"],
     [results, "readHistoricalScenario"], [sources, "resolveForecastSource"], [sources, "resolveForecastCoverage"],
   ] as const
-  const fields = [[authority, "host"], [authority, "state"], [business, "planner"], [business, "plannerSources"],
+  const fields = [[authority, "host"], [authority, "state"], [host, "persistence"], [business, "planner"], [business, "plannerSources"],
     [business, "plannerProduct"], [product, "scenarios"], [business, "results"], [business, "cases"]] as const
   const own = (object: object, key: string) => {
     const descriptor = Object.getOwnPropertyDescriptor(object, key)
