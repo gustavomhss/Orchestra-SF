@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { createSfContextClient } from "../../src/sucafina/context"
 import { createSfCollaborationClient } from "../../src/sucafina/collaboration"
 import { createSfDecisionsClient } from "../../src/sucafina/decisions"
+import { createSfReviewsClient } from "../../src/sucafina/reviews"
 import { SfNativeOperationBindings } from "../../src/sucafina/bindings"
 import {
   createSfTransport, type SfCallOptions, type SfDesktopCapability,
@@ -231,11 +232,11 @@ test("a terminal original response settles the retry without replacing its obser
 test("the human retry option does not admit other mutations or reads", async () => {
   const fixture = boundary()
   await fixture.refresh()
-  const client = createSfCollaborationClient(fixture.transport)
-  const payload = { id: "thread", mutation }
-  expect(await client["collaboration.thread-resolve"](payload, call())).toEqual(unknown)
-  expect(await client["collaboration.thread-resolve"](payload, retry())).toEqual(mismatch)
-  expect(await client["collaboration.thread-read"]({ id: "thread" }, { signal: signal(), retry: "same-intent" })).toEqual(mismatch)
+  const client = createSfReviewsClient(fixture.transport)
+  const payload = { reviewRef: "review", sectionRefs: ["section"], format: "docx" as const }
+  expect(await client["reviews.report.prepare"](payload, call())).toEqual(unknown)
+  expect(await client["reviews.report.prepare"](payload, retry())).toEqual(mismatch)
+  expect(await createSfDecisionsClient(fixture.transport)["projection.cases"]({}, { signal: signal(), retry: "same-intent" })).toEqual(mismatch)
   expect(fixture.requests).toHaveLength(1)
 })
 
@@ -249,7 +250,7 @@ test("a known original receipt can be retried explicitly after a failed follow-u
   const first = await client["collaboration.answer-confirm"](confirmed, call())
   expect(first.kind).toBe("response")
   fixture.state.reply = async () => ({ kind: "transport-error", reason: "network" })
-  expect(await client["collaboration.thread-read"]({ id: "thread" }, { signal: signal() }))
+  expect(await createSfDecisionsClient(fixture.transport)["projection.cases"]({}, { signal: signal() }))
     .toEqual({ kind: "transport-error", reason: "network" })
   fixture.state.reply = async () => ({ kind: "json-response", status: 200,
     headers: { "content-type": "application/json" },
@@ -284,4 +285,56 @@ test("a newer intent and a terminal refusal each remove the older retry opportun
     body: { status: "conflict", reason: "original-observation-expired" } })
   expect(await client["collaboration.thread-reply"](next, { ...nextCall, retry: "same-intent" })).toEqual(mismatch)
   expect(fixture.requests).toHaveLength(3)
+})
+
+test("the six native JSON commands use the verified dashboard adapter and exact original body", async () => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis, "window")
+  Object.defineProperty(globalThis, "window", {
+    configurable: true, value: { location: { origin: descriptor.publicOrigin } },
+  })
+  try {
+    for (const probe of probes) {
+      const calls: Array<{ url: string; init: RequestInit | undefined }> = []
+      const transport = createSfTransport({
+        binding: descriptor, generation: 1, currentGeneration: () => 1,
+        operations: SfNativeOperationBindings,
+        fetch: async (url, init) => {
+          if (new URL(String(url)).pathname === "/sucafina/api/ui/context")
+            return Response.json({ status: "ok", value: {
+              stamp: originalStamp, contractRevision: "sf-native-ui/1",
+              authMode: "microsoft", destinations: [], availability: [],
+            } })
+          calls.push({ url: String(url), init })
+          throw new Error("Synthetic lost response after original dispatch")
+        },
+      })
+      const admitted = await createSfContextClient(transport)["ctx.context"]({
+        installationId: descriptor.installationId, projectId: descriptor.projectId, hostId: descriptor.hostId,
+      }, { signal: signal() })
+      expect(admitted.kind).toBe("response")
+      expect(await probe.invoke(transport, call())).toEqual(unknown)
+      expect(await probe.invoke(transport, retry())).toEqual(unknown)
+      expect(calls).toHaveLength(2)
+      const mode = probe.name.startsWith("collaboration.")
+        ? "collaboration-" + probe.name.slice("collaboration.".length)
+        : probe.name.slice("decisions.".length)
+      for (const request of calls) {
+        expect(request.url).toBe(descriptor.publicOrigin + "/sucafina/dashboard?sf=" + mode)
+        expect(request.init?.method).toBe("POST")
+        expect(request.init?.credentials).toBe("same-origin")
+        expect(request.init?.cache).toBe("no-store")
+        expect(request.init?.redirect).toBe("error")
+        const headers = new Headers(request.init?.headers)
+        expect(headers.get("Idempotency-Key")).toBe(key)
+        expect(headers.get("X-SF-Native-Owner")).toMatch(/^[A-Za-z0-9_-]+$/)
+        expect(headers.get("Content-Type")).toBe("application/json")
+        if (typeof request.init?.body !== "string") throw new Error("Original JSON body required")
+        expect(Object.hasOwn(JSON.parse(request.init.body), "surface")).toBe(false)
+      }
+      expect(calls[1]?.init?.body).toBe(calls[0]?.init?.body)
+    }
+  } finally {
+    if (previous) Object.defineProperty(globalThis, "window", previous)
+    else Reflect.deleteProperty(globalThis, "window")
+  }
 })

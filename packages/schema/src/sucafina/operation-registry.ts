@@ -20,6 +20,14 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Original portfolio-http and collaboration adapters are mounted on dashboard.
+  // These closed inputs have no surface selector; never invent one in their body.
+  "decisions.decision-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-promote"}},
+  "decisions.decision-choose": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-choose"}},
+  "collaboration.thread-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-create"}},
+  "collaboration.thread-reply": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-reply"}},
+  "collaboration.thread-edit": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-edit"}},
+  "collaboration.answer-confirm": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-confirm"}},
   // Original human case edit; CAS/evidence/idempotency stay with decision-domain-http.
   "decisions.decision-edit": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-edit"},"maxRequestBytes":262144},
   // Original review read accepts all preserved domain sources under current C08/ACL fences.
