@@ -95,6 +95,7 @@ import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
+import { observeSfDashboardProposalHealth } from "./native-ui/dashboard-proposal-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
@@ -993,6 +994,20 @@ export const createSfHostRuntimeWithRoutineNative = async (
             return { producer: productHttp, dependencies: [extended.productHttp, extended.bi, extended.bi.descriptor,
               extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
               business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
+          } }, request, stamp),
+        observeSfDashboardProposalHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: (operationId) => {
+            if (services.productHttp !== productHttp || !identity()) return undefined
+            const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
+            const dependencies = operationId === "dashboard.dashboard-workbench" ? [dashboard.discover, decisions.discover] :
+              operationId === "dashboard.dashboard-draft-read" ? [decisions.revalidateDraftRead, dashboard.observer.preparePrivateDraftRead] :
+              operationId === "dashboard.dashboard-hot-topic-draft" ? [decisions.drafts, decisions.drafts.register] :
+              operationId === "dashboard.dashboard-hot-topic-draft-outcome" ? [decisions.drafts, decisions.drafts.lookupFirstSave] :
+              operationId === "dashboard.dashboard-hot-topic-prepare" ? [decisions.prepare] :
+              operationId === "dashboard.dashboard-hot-topic-review" ? [decisions.review] : [decisions.apply]
+            if (dependencies.some((dependency) => !dependency)) return undefined
+            return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
+              dashboard, decisions, ...dependencies, input.persistence, input.persistence.resolveScopedSource] }
           } }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
