@@ -32,6 +32,16 @@ export type SfScopedSourcePort = {
   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
+type CanonicalScopedSourceCheck = NonNullable<SfScopedSourcePort["checkScopedSource"]>
+// Register only factory-owned code. No snapshot, observation or result is retained.
+const canonicalSourceChecks = new WeakMap<object, CanonicalScopedSourceCheck>()
+
+/** A wrapped/replaced method must keep its wrapper's existing authority path. */
+export function canonicalScopedSourceCheck(port: SfScopedSourcePort): CanonicalScopedSourceCheck | undefined {
+  const check = canonicalSourceChecks.get(port)
+  return check && Object.getOwnPropertyDescriptor(port, "checkScopedSource")?.value === check ? check : undefined
+}
+
 export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
@@ -163,6 +173,7 @@ export function createSfSourcePersistence(input: {
         return result
       }, options) } : {}),
   }
+  if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
   return persistence
 }
 
