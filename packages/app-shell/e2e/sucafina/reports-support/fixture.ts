@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { retainReportResponse } from "./model.ts"
 import { reportsCorpus } from "./corpus.ts"
 import type { ReportsCorpus } from "./corpus.ts"
 import { withReportsInstallation } from "./production-installation.ts"
@@ -44,20 +45,42 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
       // evicts their CDP bodies. Buffer the one original HTTP response, then
       // deliver its unchanged status, headers and bytes to both client and test.
       // Office downloads and authentication keep their original browser path.
+      const contextHealth: unknown[] = []
+      const diagnostic = (message: import("@playwright/test").ConsoleMessage) => {
+        if (message.text().startsWith("SF_REPORTS_AGENDA_RESULT ")) console.info(message.text())
+      }
+      page.on("console", diagnostic)
       const dashboardPath = new URL(app.dashboardURL).pathname
       const reportJson = (url: URL) => url.origin === new URL(page.url()).origin &&
-        (url.pathname.endsWith("/api/ui/projections/review") ||
+        (url.pathname.endsWith("/api/ui/context") || url.pathname.endsWith("/api/ui/projections/review") ||
           url.pathname === dashboardPath && url.searchParams.has("sf") &&
             url.searchParams.get("sf") !== "review-download")
       await page.route(reportJson, async (route) => {
         const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+        await retainReportResponse(route.request(), original)
+        if (route.request().url().includes("/api/ui/context")) {
+          const body = await original.json().catch(() => undefined) as { status?: string; value?: {
+            availability?: Array<{ family: string; resource: string; operations: Array<{
+              operationId: string; state: string; operational: boolean; reason: string | null
+            }> }>
+          } } | undefined
+          if (body?.status === "ok" && Array.isArray(body.value?.availability)) {
+            contextHealth.push(body.value.availability.filter((resource) => resource.family === "reviews")
+              .map((resource) => ({ resource: resource.resource, operations: resource.operations.filter((operation) =>
+                ["reviews.review-read", "reviews.review-agenda", "reviews.review-source", "projection.review"].includes(operation.operationId))
+                .map(({ operationId, state, operational, reason }) => ({ operationId, state, operational, reason })) })))
+            if (contextHealth.length > 4) contextHealth.shift()
+          }
+        }
         await route.fulfill({ response: original })
       })
       try { await use({ app, corpus }) }
       finally {
         await page.unroute(reportJson)
+        page.off("console", diagnostic)
         page.off("request", begin); page.off("requestfinished", finish); page.off("requestfailed", finish)
         if (info.status !== info.expectedStatus) {
+          console.info("SF_REPORTS_CONTEXT_HEALTH", JSON.stringify(contextHealth))
           console.info("SF_REPORTS_FAILED_SURFACE", JSON.stringify(await page.locator("body").evaluate((body) => ({
             path: location.pathname, queryKeys: [...new URLSearchParams(location.search).keys()],
             surfaces: Array.from(body.querySelectorAll("[data-sf-surface]")).map((item) => ({

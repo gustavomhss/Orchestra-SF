@@ -1,4 +1,4 @@
-import { expect, type Page, type TestInfo } from "@playwright/test"
+import { expect, type APIResponse, type Page, type Request as PlaywrightRequest, type Response, type Route, type TestInfo } from "@playwright/test"
 import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { createServer } from "node:net"
@@ -12,6 +12,19 @@ import { installedShellOrigin } from "../installed-shell"
 import type { ProposalConfiguration, ProposalObservation, ProposalReady, ProposalControlOperation } from "./protocol"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
+
+// Keep only the bytes/status of this request's original APIResponse. The browser
+// still receives that response unchanged; assertions never fetch it again.
+const originalResponses = new WeakMap<PlaywrightRequest, { status: number; text: string }>()
+export async function retainProposalResponse(route: Route, response: APIResponse) {
+  originalResponses.set(route.request(), { status: response.status(), text: await response.text() })
+}
+export function proposalResponseBody(response: Response): unknown {
+  const original = originalResponses.get(response.request())
+  if (!original) throw new Error("PROPOSAL_ORIGINAL_RESPONSE_NOT_RETAINED")
+  expect(response.status()).toBe(original.status)
+  return JSON.parse(original.text) as unknown
+}
 
 export async function createProposalInstallation() {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-proposal-native-"))
@@ -89,6 +102,18 @@ export async function withProposalHost<T>(
 }
 
 export async function enterProposalShell(page: Page, installation: Awaited<ReturnType<typeof createProposalInstallation>>, host: ProposalReady) {
+  // Buffer each one original JSON response before Chromium's CDP body eviction.
+  // Preserve its actual status, headers and bytes; authentication is not intercepted.
+  const modes = new Set(["dashboard-workbench", "dashboard-draft-read", "dashboard-hot-topic-draft",
+    "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review",
+    "dashboard-hot-topic-apply", "dashboard-agenda", "dashboard-review-preserve", "dashboard-capture", "dashboard-history"])
+  await page.context().route((url) => url.origin === installation.origin &&
+    (url.pathname === "/sucafina/dashboard" && modes.has(url.searchParams.get("sf") ?? "") ||
+      url.pathname === "/sucafina/api/ui/projections/review"), async (route) => {
+    const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+    await retainProposalResponse(route, original)
+    await route.fulfill({ response: original })
+  })
   const cookie = readOperatorSessionCookie(new Headers({ "set-cookie": host.cookie }), installation.origin)
   await page.context().addCookies([cookie])
   const discoveryURL = new URL("/api/sucafina/installations", installation.origin)

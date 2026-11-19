@@ -1,0 +1,50 @@
+# Handoff — finish-wp4-native-20261119
+
+SHA do código: 2e787aa21ccee91f04c3a6d048a04c1cc078a8b4
+Data: 2026-11-19
+Estado: partial
+
+## Feito
+
+- Branch a partir do sf-join-four 8eb6c37106e12ac9e79644872e70c717df3db875, após o merge da foundation qualificada. Os quatro arquivos partem do conteúdo da composição 24 (d2e9f9e09f5aca36d1b7be02dd12336b8676fb3a); este checkpoint acrescenta somente as correções observadas abaixo.
+- Planner WP03: usa o campo nativo “Paste tab-separated values” e “Review pasted values”, que chama o mesmo preparePaste original de S02. A navegação por teclado continua exigida antes da colagem. A prévia original A02, zero efeitos antes de Apply, exclusão da linha inválida, texto bruto preservado, exatamente duas aplicações e leitura após reload continuam.
+- CAP03: o select de ano ganha aria-label com a mesma tradução Year já exibida. O label anterior envolve o próprio select e todas as opções; o screenshot original mostrou Year2026 e os dados, enquanto getByLabel exact não encontrava o controle. Não muda seleção, cálculo ou requisição.
+- WP10 Decisions: entra pelo helper enterWorkbench já qualificado e aciona New case. O formulário é section.sf-n24-create form, como no journey original; conserva a criação única, payload, critérios, leitura persistida e reabertura.
+- BI01: o produtor dashboard/port.ts:272–277 publica 12 fatos categóricos budget:YYYY-MM:basis além das 36 medidas das séries. A tabela nativa agora mostra esses 12 textos, seus períodos, granularidade, evidência e referência originais. O gráfico, cálculos e coverage permanecem do produtor e das séries existentes. Não inventa moeda para basis.
+- Asserção de BI conserva 48 valores e 49 linhas, exige os 36 itens das séries e os 12 IDs basis exatos, e compara cada texto basis recebido com o renderizado.
+
+### Arquivos
+
+- packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts
+- packages/app-shell/e2e/sucafina/wp10/composition.spec.ts
+- packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/model.ts
+
+## Pendente
+
+- packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:305 — screenshot original mostra “Sucafina route not admitted”. O sufixo /requests/<ref>/sourcing/compare é o mesmo que passou no OP-PROC-01; a identidade synthetic-po-1 e a admissão original ainda precisam ser conferidas. Não há ID ou rota substituídos por hipótese.
+- packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:391 — o run original encerrou em extended-ui com “Target page, context or browser has been closed”; Effect mascarou a origem como “All fibers interrupted without error”. Ainda falta localizar a etapa concreta antes de corrigir.
+- packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts:307 — o novo caminho de entrada TSV aguarda gate. O snapshot original confirma as duas linhas gravadas, sem prévia nem alerta; não prova ainda que o clique nativo completa A02.
+- Gate do checkpoint e integração: coordenados pela raiz; nenhum gate WP4 novo foi disparado por este agente.
+
+## Decisões e justificativas
+
+- Asserções removidas: nenhuma prova de negócio. Não foram alterados timeout, retries, zero/one/two-effect checks, revisão humana, exclusão da linha inválida, reload, requisições anônimas nem redaction.
+- A expectativa incompatível de 48 IDs em presentation.series foi remapeada para 36 IDs de séries e 12 fatos basis autorizados. O produtor dashboard/bi.ts:6 contém exatamente três séries numéricas; os textos basis já existiam em projection.values e estavam omitidos do renderer.
+- O uso de clipboard da automação foi trocado pelo textarea nativo de S02. O payload continua sendo o mesmo TSV original e as provas de navegação de grade por teclado continuam no spec.
+- Nenhuma mudança em F01, runtime/application.ts, host-context, UI54 ou arquivos de Operations. O WP5 confirmou que o renderer UI12 já tem requestSummary/sourceVersion e que o OP-PROC-01 passou; o caso sintético WP10 ainda precisa de diagnóstico próprio.
+
+## Como retomar
+
+1. Compor os quatro arquivos deste branch sobre o candidato atual da raiz; preservar os demais deltas qualificados.
+2. Resolver os dois unbound de composição acima com o contrato e evidência originais.
+3. Executar uma vez o narrow WP03 planner-mounted.spec.ts + WP10 composition.spec.ts via ci-run-linux-* e registrar o run terminal.
+4. Integrar pelo coordenador apenas após o resultado. Este checkpoint não declara GO.
+
+## Comandos e resultados
+
+- Run original [44602654358](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44602654358): FAILURE, dois testes; snapshot 9f766ac329f50589dc348ae1a75fdb169a894a10, código 15388053117883174329454207e60e2a878f5426, job 135837894807.
+- [44608770375](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44608770375): SUCCESS somente da extração do artifact original 14569559143; nenhum teste repetido. Documento em audit-wp4-observations-20261119/docs/handoff/observed-wp4-original-20261119.md.
+- [44609084639](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44609084639): SUCCESS somente da extração compacta do estado final do Planner. Documento no mesmo branch, docs/handoff/observed-wp4-planner-tail-20261119.md.
+- [44609354099](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44609354099): SUCCESS somente da retenção dos screenshots sintéticos originais de Budget e Requests; disponíveis em audit-wp4-screens-20261119/docs/handoff/evidence/wp4-{budget,requests}-original-20261119.png. Nenhum resultado de UI é inferido dessas auditorias.
+- Typecheck, Playwright e guards deste checkpoint: pendentes do gate composto pela raiz.

@@ -11,7 +11,8 @@ import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/p
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections"
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
-import type { DecisionCase } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
+import { createChoiceSnapshot } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/choice"
+import type { DecisionCase, ScenarioResult } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import type { HotTopicDraft } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft"
 import { initialCaseRef, type ProposalConfiguration, type ProposalReady } from "./protocol"
 
@@ -103,6 +104,27 @@ const seeded = await authority.state.transaction(request(), {
   return { commit: true, value: true }
 })
 if (seeded.status !== "ok") throw new Error("PROPOSAL_REAL_CASE_SEED_FAILED")
+const period = { start: "2026-01-01", end: "2026-12-31" }
+// The existing WP02 conditioned choice fixture, preserved without inventing a financial result.
+const storeExistingChoice = async (draft: HotTopicDraft) => {
+  const result: ScenarioResult = { id: "scenario", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [draft.targetEvidence],
+    unresolvedConditions: ["Financial impact of the Hot Topic change is not assessed."], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: null, total: null,
+    costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [draft.targetEvidence],
+      coverageState: "pending", entries: [{ status: "pending", categoryId: "other_relevant_costs", reason: "Financial impact is not assessed" }], derivedMissingCategoryIds: ["other_relevant_costs"] } }
+  const current = await authority.state.read(request(), "cases", (state) => state.cases[initialCaseRef.id])
+  if (current.status !== "ok" || !current.value) throw new Error("Case unavailable")
+  const value: DecisionCase = { ...current.value, sourceRefs: [draft.targetEvidence],
+    costCoverageBases: [{ id: "basis", version: 1, decisionType: "operational", categoryIds: ["other_relevant_costs"], additionalCategoryIds: [], sourceRefs: [draft.targetEvidence] }],
+    alternatives: [{ id: "alternative", version: 1, title: "Update action", scenario: { baseRef: "case-base", operations: [{ kind: "replace", targetRef: draft.targetEvidence.refId, replacementRef: draft.draftRef }], assumptions: [] }, result }] }
+  const selected = createChoiceSnapshot({ case: value, alternativeId: "alternative", alternativeVersion: 1, id: "choice", principalRef: actorId, reason: "Proceed with operational action; no financial claim", at: at,
+    criteria: ["operational"], values: [], evidenceRefs: [draft.targetEvidence], comparison: { baselineResultRef: "baseline", alternativeResultRef: result.id, costCoverageRefs: ["basis"], criterionResults: [], unresolvedConditions: result.unresolvedConditions, comparisonStatus: "conditioned", knownDifference: null, completeDifference: null } })
+  if (selected.status !== "ok") throw new Error(`Choice fixture invalid: ${selected.reason}`)
+  const saved = await authority.state.transaction(request(), { namespace: "cases", expectedStorageVersion: current.storageVersion,
+    targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: "existing-choice", commandDigest: digestSfValue(selected.choice) }, async (state) => {
+      state.cases[value.id] = { ...value, version: 2, state: "chosen", choices: [selected.choice] }; return { commit: true, value: true }
+    })
+  if (saved.status !== "ok") throw new Error("PROPOSAL_EXISTING_CHOICE_NOT_SAVED")
+}
 const traffic: { mode: string | null; status: number; result: Record<string, unknown> }[] = []
 const observe = async () => ({
   preferences: await authority.state.read(request(), "preferences", (state) => ({
@@ -110,6 +132,7 @@ const observe = async () => ({
     drafts: Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:proposal-coverage:hot-topic:active:"))
       .map(([, value]) => value as HotTopicDraft),
   })),
+  receipts: await authority.state.read(request(), "receipts", (state) => Object.values(state.receipts)),
   decision: await authority.state.read(request(), "cases", (state) => state.cases[initialCaseRef.id]),
   record: await store.transaction("dashboard", async (snapshot) => ({ commit: false,
     value: structuredClone(rows(snapshot.data.hotTopics)[0]!) })),
@@ -122,8 +145,14 @@ const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (inco
       incoming.headers.get("x-proposal-control") !== configuration.controlKey || incoming.headers.has("origin"))
       return new Response("Denied", { status: 403 })
     const control = object(await incoming.json())
-    if (Object.keys(control).length !== 1 || !["observe", "withdraw-write", "withdraw-read"].includes(String(control.operation)))
+    if (Object.keys(control).length !== 1 || !["observe", "withdraw-write", "withdraw-read", "seed-choice"].includes(String(control.operation)))
       return new Response("Invalid control", { status: 400 })
+    if (control.operation === "seed-choice") {
+      const before = await observe()
+      if (before.preferences.status !== "ok" || before.preferences.value.drafts.length !== 1)
+        throw new Error("PROPOSAL_SINGLE_CURRENT_DRAFT_REQUIRED")
+      await storeExistingChoice(before.preferences.value.drafts[0]!)
+    }
     if (control.operation === "withdraw-write") policy.writable = false
     if (control.operation === "withdraw-read") policy.readable = false
     return Response.json(await observe(), { headers: { "Cache-Control": "no-store" } })
@@ -135,7 +164,7 @@ const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (inco
   if (authentication) return authentication
   const response = await installation.application(incoming) ?? new Response("Not found", { status: 404 })
   const mode = url.searchParams.get("sf")
-  if (incoming.method === "POST" && ["dashboard-workbench", "dashboard-draft-read", "dashboard-hot-topic-draft"].includes(mode ?? ""))
+  if (incoming.method === "POST" && ["dashboard-workbench", "dashboard-draft-read", "dashboard-hot-topic-draft", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"].includes(mode ?? ""))
     traffic.push({ mode, status: response.status, result: object(await response.clone().json()) })
   return response
 } })

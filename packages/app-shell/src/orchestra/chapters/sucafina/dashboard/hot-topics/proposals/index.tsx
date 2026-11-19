@@ -178,10 +178,12 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore({ state: "unavailable", workbench: null, review: null, reason: "contract-unavailable" });return
     }
     const abort = new AbortController()
+    let completed = false
     setStore({ state: "loading", workbench: null, review: null, discovery: null, reason: null })
     void createSfDomainClient(ready.transport)["dashboard.dashboard-workbench"](
       { page: "Hot Topics & Actions" }, { signal: abort.signal })
       .then((response) => {
+        completed = true
         if (abort.signal.aborted || context.generation() !== generation ||
           context.ready()?.transport !== ready.transport) return
         if (response.kind !== "response") {
@@ -198,10 +200,11 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
         setStore({ state: verified ? "ready" : "unavailable", workbench: verified ?? null, discovery: verified ? response.body.value : null,
           reason: verified ? null : "discovery-contract-mismatch" })
       }).catch((error: unknown) => {
+        completed = true
         if (!abort.signal.aborted) setStore({ state: "unavailable", workbench: null,
           reason: error instanceof Error ? error.message : "workbench-read-failed" })
       })
-    onCleanup(() => abort.abort())
+    onCleanup(() => { if (!completed) abort.abort() })
   })
 
   createEffect(() => {
@@ -212,10 +215,12 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore("review", null);return
     }
     const abort = new AbortController()
+    let completed = false
     setStore("review", null)
     void createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-review"]({
       caseRef: currentChange.caseRef, choiceId: currentChange.choiceId, changeId: currentChange.changeId,
     }, { signal: abort.signal }).then((response) => {
+      completed = true
       if (abort.signal.aborted || context.generation() !== generation ||
         context.ready()?.transport !== ready.transport) return
       if (response.kind !== "response" || response.body.status !== "ok") {
@@ -227,9 +232,10 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore("review", review ?? null)
       if (!review) setStore("reason", "review-contract-mismatch")
     }).catch(() => {
+      completed = true
       if (!abort.signal.aborted) setStore("reason", "review-read-failed")
     })
-    onCleanup(() => abort.abort())
+    onCleanup(() => { if (!completed) abort.abort() })
   })
 
   async function prepare() {
@@ -251,6 +257,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       if (!result || !string(result.changeId) || !caseRef(result.caseRef) ||
         result.choiceId !== pending.choiceId) {setStore("outcome", "unknown");return}
       navigate(proposalRoute(props, result.changeId))
+      bump((count) => count + 1)
     } catch {setStore("outcome", "unknown")}
     finally {setStore("preparationBusy", false)}
   }
@@ -371,9 +378,9 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
                   reviewRef: chosenChange()!.changeId as SfRef,
                   reviewDigest: store.review!.reviewDigest,
                   baseVersion: store.review!.expectedVersion } }}
-              state="ready" onConfirm={() => {void apply()}}
-              onRevise={() => bump((count) => count + 1)}
-              onCancel={() => bump((count) => count + 1)} />
+              state={store.applyBusy ? "loading" : store.outcome === "unknown" ? "outcome-unknown" : "ready"} onConfirm={() => {void apply()}}
+              onRevise={() => { if (!store.applyBusy) bump((count) => count + 1) }}
+              onCancel={() => { if (!store.applyBusy) bump((count) => count + 1) }} />
           </Show>
         </section>
         <section class="sf-u38-section">

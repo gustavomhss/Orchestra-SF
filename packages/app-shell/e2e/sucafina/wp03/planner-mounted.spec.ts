@@ -95,7 +95,6 @@ test("real mounted Planner preserves monthly edits, filters and official-version
         const initialB = original.data.grid!.rows.find((row) => row.id === secondId)!
         expect(initialA).toBeDefined()
         expect(initialB).toBeDefined()
-        await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: installation.origin })
         const invalid = await pasteMonthly(page, "0\t125\n75\tbad")
         expect(invalid.value.rows).toHaveLength(2)
         expect(invalid.value.rows[0]!.draft.rowId).toBe(firstId)
@@ -306,11 +305,10 @@ function monthlyRequest(request: Request, action: "preview" | "apply") {
     request.postDataJSON()?.action === action
 }
 async function pasteMonthly(page: Page, text: string) {
-  const grid = monthlyEditor(page).getByRole("grid", { name: "Monthly values", exact: true })
-  await page.evaluate((value) => navigator.clipboard.writeText(value), text)
+  const editor = monthlyEditor(page)
+  await editor.getByRole("textbox", { name: "Paste tab-separated values", exact: true }).fill(text)
   const pending = page.waitForResponse((response) => monthlyRequest(response.request(), "preview"))
-  await grid.focus()
-  await page.keyboard.press("Control+V")
+  await editor.getByRole("button", { name: "Review pasted values", exact: true }).click()
   const body = Schema.decodeUnknownSync(Schema.toType(SfPlannerMonthlyPreview.output))(await responseBody(await pending))
   if (body.status !== "ok") throw new Error("The original monthly preview was unavailable")
   return body

@@ -15,6 +15,7 @@ import { qualifyWp10ExtendedUi } from "./extended-flows.ts"
 import { prepareWp10ReviewRevocation } from "./review-revocation.ts"
 import { connectInstalledShell, installedShellOrigin } from "../installed-shell"
 import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
+import { enterWorkbench } from "../decisions-support/journey"
 
 const origin = installedShellOrigin()
 const flowNames = ["dashboard-budget", "workbench-create-reopen", "procurement-requests", "bi-table", "extended-ui", "bi-revocation"] as const
@@ -209,8 +210,9 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
         })
 
         await observe("workbench-create-reopen", async (record) => {
-          expect((await page.goto(origin + "/orchestra/sf-decisions/new"))?.status()).toBe(200)
-          const create = page.locator(".sf-n24-create")
+          await enterWorkbench(page, origin)
+          await page.getByRole("button", { name: "New case", exact: true }).click()
+          const create = page.locator("section.sf-n24-create form")
           await expect(create).toHaveCount(1)
           const objective = "WP10 persisted composition decision"
           const criteria = ["Budget transparency", "Source traceability"]
@@ -343,16 +345,27 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           await expect(table.getByRole("columnheader")).toHaveText(["Measure", "Value", "Unit", "Period", "Granularity", "Evidence", "Source reference", "Show details"])
           await expect(table.getByRole("row")).toHaveCount(49)
           const values = new Map(result.projection.values.map((value) => [value.id, value]))
-          const rows = result.presentation.series.flatMap((series) => series.valueIds.map((id) => {
+          const seriesRows = result.presentation.series.flatMap((series) => series.valueIds.map((id) => {
             const value = values.get(id)
             if (!value) throw new Error("The original presentation referenced an absent value")
             return { measure: series.label + " · " + value.id, granularity: value.granularity }
           }))
+          expect(seriesRows).toHaveLength(36)
+          const presentedIds = new Set(result.presentation.series.flatMap((series) => [...series.valueIds]))
+          const basis = result.projection.values.filter((value) => !presentedIds.has(value.id))
+          expect(basis.map((value) => value.id)).toEqual(Array.from({ length: 12 }, (_, index) =>
+            "budget:2027-" + String(index + 1).padStart(2, "0") + ":basis"))
+          const rows = [...seriesRows, ...basis.map((value) => ({ measure: value.id, granularity: value.granularity }))]
           expect(rows).toHaveLength(48)
           for (const [index, expected] of rows.entries()) {
             const cells = table.locator("tbody tr").nth(index).locator("td, th")
             await expect(cells.nth(0)).toHaveText(expected.measure)
             await expect(cells.nth(4)).toHaveText(expected.granularity)
+          }
+          for (const [index, value] of basis.entries()) {
+            expect(typeof value.value).toBe("string")
+            await expect(table.locator("tbody tr").nth(seriesRows.length + index).locator("td, th").nth(1))
+              .toHaveText(String(value.value))
           }
           await expect(table.getByRole("cell").filter({ hasText: "budget:2027-01:effective" })).toHaveCount(1)
           const limitations = panel.locator(".sf-bi-limitations").getByRole("listitem")

@@ -212,6 +212,30 @@ export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, pref
       semanticToken: series.role, points: plotPoints })
   }
 
+  // BI01 also publishes one categorical budget basis per month. Those source
+  // facts are not numeric plot series; retain them in the authorized value table.
+  if (viewId === "BI01") {
+    for (const value of source.values) {
+      if (!/^budget:\d{4}-\d{2}:basis$/.test(value.id) || selectedIds.includes(value.id)) continue
+      if (typeof value.value !== "string" || value.period.start > value.period.end ||
+          value.granularity !== "month") return unavailable()
+      const reference = sfBiEvidenceRef(value)
+      tableRows.push({
+        id: "basis:" + value.id,
+        ...(reference ? { selectionRef: reference } : {}),
+        cells: {
+          series: dataCell(value.id),
+          value: dataCell(value.value),
+          unit: value.unit ? dataCell(value.unit) : absent(prefix + ".unit.raw"),
+          period: dataCell(sfBiPeriodLabel(value.period.start, value.period.end, locale)),
+          granularity: dataCell(value.granularity),
+          evidence: { kind: "text", text: { kind: "message", message: message(prefix + ".evidence." + value.evidenceState) } },
+          source: reference ? dataCell(reference) : absent(prefix + ".noSource"),
+        },
+      })
+    }
+  }
+
   return {
     state, coverage, series: plot,
     table: { ...emptyTable, rows: tableRows },

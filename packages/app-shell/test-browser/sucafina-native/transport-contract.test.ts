@@ -83,6 +83,10 @@ describe("Q01 integrated transport contract / original producer", () => {
   test("Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension", () => {
     expect(Object.keys(catalog.operations)).toHaveLength(305)
     const expectedExtensions = {
+      "dashboard.dashboard-draft-read": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "dashboard-draft-read" } },
+      "dashboard.dashboard-hot-topic-draft-outcome": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
+        responseMode: "json", fixedQuery: { sf: "dashboard-hot-topic-draft-outcome" } },
       "decisions.decision-edit": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "mutation",
         responseMode: "json", fixedQuery: { sf: "decision-edit" }, maxRequestBytes: 262144 },
       "reviews.review-read": { method: "GET", pathTemplate: "{mount}/dashboard", effect: "read",
@@ -119,7 +123,7 @@ describe("Q01 integrated transport contract / original producer", () => {
     }
     // Explicit original producers added after I00; do not rewrite its pinned 305 IDs.
     // decision-domain-http.ts owns edit CAS; product/reviews/http.ts owns read/agenda/preserve.
-    for (const id of ["decisions.decision-edit", "reviews.review-read", "reviews.review-agenda-options", "reviews.review-agenda", "reviews.review-preserve"] as const)
+    for (const id of ["dashboard.dashboard-draft-read", "dashboard.dashboard-hot-topic-draft-outcome", "decisions.decision-edit", "reviews.review-read", "reviews.review-agenda-options", "reviews.review-agenda", "reviews.review-preserve"] as const)
       expect(Object.hasOwn(catalog.operations, id)).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.po")).toBe(false)
