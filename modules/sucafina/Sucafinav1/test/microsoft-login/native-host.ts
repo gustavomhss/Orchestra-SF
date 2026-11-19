@@ -19,8 +19,13 @@ import type { privateFixture } from "./private-fixture.ts"
  * role resolution, product grants and native producers are never substituted.
  */
 export async function microsoftNativeHost(
-  disk: Pick<Awaited<ReturnType<typeof privateFixture>>, "root" | "directory" | "environment">,
-  installation: SfInstallation,
+  disk: {
+    root: string
+    directory: string
+    environment: Pick<Awaited<ReturnType<typeof privateFixture>>["environment"],
+      "ORCHESTRA_DB" | "ORCHESTRA_INHERIT_CREDENTIALS" | "ORCHESTRA_CONFIG_DIR" | "ORCHESTRA_CREDENTIAL_KEY_FILE">
+  },
+  installation: Omit<SfInstallation, "mount"> & { mount: string },
 ) {
   const data = path.join(disk.directory, "host-data")
   const locations = {
