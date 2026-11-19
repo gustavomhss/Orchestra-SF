@@ -1,10 +1,15 @@
 # Handoff — finish-retry-20261119
 
-SHA (código): 1b74d2db07c6097b2ca95b013aec6d28f2f51a24
+SHA (código): 36398450fc4d0445cf5a88affda1c3292cc14794
+SHA UI54/F02 qualificado: f5760ad992f59d258406aa52679e469c512294e5
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- Os dois contratos originais UI54 dashboard-draft-read e dashboard-hot-topic-draft-outcome foram compostos de 071f99fbf0e0005ad4127051b307d23f37ee1e1f. Os quatro blobs schema/domain/client são idênticos; common/registry recebem somente esses dois IDs, preservando os adapters e o catálogo congelado.
+- O outcome permanece POST read, com o corpo fechado original {caseRef}. Somente esse ID aceita a chave original do primeiro save, exige stamp atual e não gera nova chave. Outros POST reads continuam recusando chaves fornecidas; isso não é uma mutação, retry ou nova observação.
+- O probe de criação de Procurement confirma que os dois corpos dos formulários são admitidos pelo codec e chegam ao adapter HTTP original no boundary. Como Ops4 não emitiu POST, o motivo real do browser continua exigindo diagnóstico; o probe não cria autoridade ou prova de persistência.
 
 - F02 aceita `retry: "same-intent"` somente por chamada humana explícita para decisions.decision-promote, decisions.decision-choose, decisions.decision-apply, collaboration.thread-create, collaboration.thread-reply, collaboration.thread-edit e collaboration.answer-confirm.
 - A memória do transporte retém somente a última intenção de cada uma dessas operações: chave, digest do conteúdo/rota, stamp completo e indicação de recibo original confirmado. Nenhum payload, recibo, permissão ou dado de autoridade é persistido.
@@ -18,6 +23,9 @@ Estado: partial
 
 ## Pendente
 
+- packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx: o WP UI54 precisa qualificar draft-read/outcome no produtor instalado; os testes deste checkpoint usam somente respostas de fronteira, não receipts C08.
+- packages/client/test/sucafina/procurement-create.test.ts:1: probe passou, mas não explica por si o zero POST real de Ops4. A branch Operations registra apenas reason/classe de exceção; o próximo gate composto discriminará esse retorno.
+
 - packages/client/src/sucafina/transport.ts:28: falta qualificar o consumo da opção pelos controles humanos C05 na composição instalada de Reports do engenheiro principal. Os testes desta fatia provam a fronteira cliente/codec/transporte, não C08 instalado.
 - packages/client/src/sucafina/transport.ts:131: falta qualificar os controles nativos de promoção/escolha que consumirão a lista fechada conservando a revisão original e a perda real de resposta.
 - packages/client/src/sucafina/transport.ts:131: requalificar decisions.decision-apply no host C12/SQLite original do WP de ingresso. O gate F02 sintético comprova apenas retenção/dispatch/recusa.
@@ -25,6 +33,8 @@ Estado: partial
 - Não houve typecheck separado de CLI/app/E2E neste gate Bun nem execução do sf-ci completo.
 
 ## Decisões e justificativas
+
+- UI54: apps/cli/src/sucafina-product/dashboard-http.ts:33–41 e :88–89 valida a chave original, admite decisions.edit e chama lookupFirstSave. hot-topic-draft.ts:133–145 deriva a mesma transactionKey original. Uma chave nova leria outra identidade; a exceção F02 conserva efeito read, body, contexto e geração e não concede acesso por conhecer uma chave.
 
 - Nenhuma asserção, cenário ou timeout foi removido, pulado ou afrouxado. A asserção de header existente permanece igual; a fixture passou a declarar o MIME que afirma representar.
 - O retry é uma exceção fechada, não uma permissão geral para reenviar comandos. Case creation, C12 recover e operações fora da lista continuam recusando essa opção. O apply foi incluído somente após conferir o produtor original.
@@ -37,7 +47,7 @@ Estado: partial
 
 ## Como retomar
 
-1. Usar o código 1b74d2db07c6097b2ca95b013aec6d28f2f51a24 da branch finish-retry-20261119; esta branch parte de uma composição de trabalho, portanto integrar somente o delta da fatia: transport.ts, operation-registry.ts, human-retry.test.ts, collaboration-routes.test.ts, decision-routes.test.ts, decision-edit.test.ts, f02-transport.test.ts e este handoff.
+1. Usar o código 36398450fc4d0445cf5a88affda1c3292cc14794 da branch finish-retry-20261119; esta branch parte de uma composição de trabalho, portanto integrar somente o delta da fatia: transport.ts, operation-registry.ts, human-retry.test.ts, collaboration-routes.test.ts, decision-routes.test.ts, decision-edit.test.ts, f02-transport.test.ts e este handoff.
 2. Compor o adaptador com o controle C05 que conserva a intenção/revisão original e dispara retry somente por clique humano.
 3. Qualificar os cenários instalados preservando dois POSTs idênticos e uma escrita C08 onde essa é a prova original.
 4. Qualificar UI35/38 e C12 sobre as rotas verificadas; qualquer nova operação exige contrato produtor e teste de fronteira. Não adicionar surface ao payload.
@@ -62,3 +72,6 @@ Gate C05/Decisions inicial: package client, runner bun, args test/sucafina/human
 Gate C12: {"package":"client","runner":"bun","args":["test/sucafina/human-retry.test.ts"]}.
 
 Typecheck: os gates Bun não o executam. As falhas compostas de TS2783 foram corrigidas em19aa; o narrowing em transport foi corrigido em b470. A validação instalada pertence ao snapshot composto do integrador. Guards: não executados nesta fatia. sf-ci: não executado. Não há declaração de GO.
+
+- [44604361124](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604361124) SUCCESS, job135843955037, cleanup135845556147 SUCCESS. Snapshot9a541ff36821c6952aa2f5b7d0a26fef260f3ccd, códigof5760ad. 19 pass / 0 fail / 380 expect,255ms. Args: test/sucafina/dashboard-draft-read.test.ts e test/sucafina/human-retry.test.ts. Confere URL/corpo/chave originais, contexto ausente, key ausente/inválida, retry indevido, outros reads, revogação e geração antiga.
+- [44605110108](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44605110108) SUCCESS, job135846593795, cleanup135847589675 SUCCESS. Snapshot5c2c1add30fa239e4cc28cdff2e1a57377eb115a, código36398450. 2 pass / 0 fail / 20 expect,227ms. Args: test/sucafina/procurement-create.test.ts. Somente boundary codec/F02; nenhuma execução nativa ou gravação Procurement é inferida.
