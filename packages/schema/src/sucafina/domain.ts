@@ -50,6 +50,8 @@ export {
   SfDomainCommandCap16SaveSub,
   SfDomainCommandCap16DeleteSub,
   SfProjectionLocalAdmin,
+  SfDashboardDashboardDraftRead,
+  SfDashboardDashboardHotTopicDraftOutcome,
   SfDashboardDashboardWorkbench,
   SfDashboardDashboardHotTopicSource,
   SfDashboardDashboardHotTopicDraft,

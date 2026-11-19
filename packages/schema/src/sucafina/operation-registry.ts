@@ -20,6 +20,10 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Original Dashboard C08 reads; outcome uses the first save's original command identity.
+  "dashboard.dashboard-draft-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-draft-read"}},
+  "dashboard.dashboard-hot-topic-draft-outcome": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-hot-topic-draft-outcome"}},
+
   "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
   // Original procurement download(kind="po") requires one authorized request selector.
   "files.export.po": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"po"}},
