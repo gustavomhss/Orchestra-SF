@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: e0793cbb683c97352e8f3d1d4a52e2035032da1b (inclui digest Node69711218 e confirmação Applyfc5c0d; correções após gate7, ainda sem gate8)
+SHA de código: e0793cbb683c97352e8f3d1d4a52e2035032da1b (inclui digest Node69711218 e confirmação Applyfc5c0d; gate8 parcial4/5 no composto3cfe8242)
 Data: 2026-11-19
 Estado: partial
 
@@ -22,8 +22,8 @@ Estado: partial
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
-- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:135,530`: casos1/5 ainda sem conclusão de sucesso. Gate7 passou integralmente casos2/3/4; caso1 chegou a saves/CAS e falhou no cálculo esperado executado em Node, corrigido69711218; caso5 confirmou Apply/recibo original antes do timeout, corrigida apresentaçãofc5c0d e navegação repetidae0793c.
-- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:412`: confirmação real durante releitura aguarda gate8 no snapshot composto; owner/generation/transport precisam continuar atuais para exibi-la.
+- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:689`: casos1/2/3/4 passaram integralmente no gate8; caso5 confirmou Apply e alerta visível, mas a leitura final independente de C08 aguardou enquanto a redescoberta automática pós-Apply estava pendente até o limite original60s.
+- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:291`: redescoberta automática após Apply ainda pendente na falha do caso5. O alerta real em:412 passou. Nenhuma causa de deadlock foi comprovada; a cadeia histórica específica está sendo avaliada.
 - `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: captura/histórico/imutabilidade e source render passaram suas etapas no caso5, mas a jornada completa ainda aguarda o próximo gate. Save desconhecido não é repetido.
 - `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241,461` e `.../dashboard-installed-closure/consumer-read.test.ts:53,168`: ainda mantidos até equivalência nativa passar; root coordena o remapeamento canônico. Os 2 units puros host-workbench :406/:430 permanecem.
 - Parent root compõe F02, health e registros; nunca copiar common/registry antigos desta branch sobre os adapters compostos.
@@ -117,3 +117,13 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - `e0793cbb683c97352e8f3d1d4a52e2035032da1b` muda somente a navegação do caso5: após atualizar o registro externamente, usa Refresh access original na UI54/new já aberta. A primeira travessia CAP02→New private proposal continua verificada; evita repetir esse desvio completo. Observa a resposta original de workbench e verifica HTTP200/ok, painel visível e ausência do caso confidencial antes da seleção da fonte atual.
 - Todas as **211 chamadas expect originais permanecem**; quatro checks da releitura foram acrescentados (215 atuais). Nenhuma asserção de dado/negação/CAS/recibo foi removida ou enfraquecida. Timeouts10/15/60s permanecem; nenhuma repetição de mutação, alteração de health/produtor ou workaround global.
 - Os cinco testes legados ainda não foram removidos/remapeados. Root revisa os dois commits separáveis antes de compor e executar o único gate8.
+
+## Gate8 — quatro jornadas completas, estado final da quinta ainda pendente
+- Run [44626779891](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44626779891): FAILURE, **4 passed / 1 failed**. Todos os três typechecks SUCCESS; job135922599575, cleanup135927274250 SUCCESS.
+- Código composto `3cfe8242dde39aa5e5fefa3629b6c3acf900275c`, snapshot `a2099c01c33fedebd2c8fe64c15a6af0a435ac6e`, parent assembly33 `f9ade6c8bf9b872400dbb1a49c70e867b2e4d701`. Somente os dois blobs e handoff revisados foram sobrepostos.
+- Caso1 passou integralmente após o digest compatível com Node. Casos2/3/4 permaneceram aprovados sem alteração.
+- Auditoria [44628411378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44628411378), SUCCESS, extraiu somente a timeline original do artifact14579967771. Documento `audit-proposal-screens-20261119:docs/handoff/observed-proposal-timeline-44626779891.md`; nenhum reteste.
+- Caso5: prepare/review/revise e Apply200/ok, bloqueio enquanto pendente, um comando e um recibo C08 passaram; o alerta Applied passou em7ms aos52.8s. A seguir `host.control()` de:689 não retornou antes60s; a requisição automática dashboard-workbench iniciada aos52.79s permaneceu pendente.
+- O erro route.fetch disposed é consequência do encerramento pelo timeout. Não foi atribuído a erro de autorização, deadlock ou corrupção; não se alteraram withCase, caches, transações, timeouts ou asserções para ocultá-lo.
+- Contrato lido para a próxima decisão: `product/decisions/apply.ts:25,138-162` devolve CommandReceipt original após fences, releitura do recibo e reconciliaçãoC08. A UI ainda não consome esse recibo diretamente. Proposta de correção enviada ao root; nenhuma alteração adicional de UI/produtor ou gate9 neste checkpoint.
+- Legado continua presente até5/5; 215expect atuais e todas as expectativas de estado final/recibo são mantidas.
