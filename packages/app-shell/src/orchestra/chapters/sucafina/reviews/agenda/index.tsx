@@ -98,6 +98,7 @@ export function SfAgendaEditor(props: {
         { page: page.trim(), ...period }, { signal: controller.signal },
       )
       if (controller.signal.aborted || !current(generation, ownerKey)) return
+      if (sourceAbort === controller) sourceAbort = undefined
       if (result.kind === "response" && result.body.status === "ok") {
         if (!("items" in result.body.value)) {
           issue("unavailable", "sf.u25.error")
@@ -186,6 +187,7 @@ export function SfAgendaEditor(props: {
         { sections }, { signal: controller.signal },
       )
       if (!current(generation, ownerKey) || controller.signal.aborted) return
+      if (commandAbort === controller) commandAbort = undefined
       if (result.kind === "response" && result.body.status === "ok") {
         const expected = sections.map((section) => section.id)
         const actual = result.body.value.sections.map((section) => section.id)
@@ -224,6 +226,7 @@ export function SfAgendaEditor(props: {
         { signal: controller.signal, idempotencyKey },
       )
       if (!current(generation, ownerKey)) return
+      if (commandAbort === controller) commandAbort = undefined
       if (result.kind === "response" && result.body.status === "ok") {
         const requested = prepared.sections.map((section) => section.id)
         const returned = result.body.value.sections.map((section) => section.id)

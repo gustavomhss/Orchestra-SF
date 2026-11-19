@@ -45,7 +45,7 @@ function admittedReviewBinding(params: URLSearchParams) {
 }
 export function reviewsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
-  const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["dashboard.dashboard-review"].operationId
+  const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["reviews.review-read"].operationId
   if (!context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))) return false
   if (candidate.surfaceId !== "UI50") return true
   const prepare = "reviews.report.prepare"
