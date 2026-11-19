@@ -319,59 +319,104 @@ test("two authenticated actors review an actual CAS conflict and submit only aft
 test("a stale approval preserves the typed comment and refuses to revive an action after cancellation", async ({ page, browser }, info) => {
   const second = await login(page, "second", "comment")
   const id = await createDraft(page, second, "Approval comment conflict")
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
+  await detail.getByRole("button", { name: "Submit requisition", exact: true }).click()
   const submitted = responseFor(page, "submit_pr", id)
-  await page.locator('section[id="' + id + '-pr"]').getByRole("button", { name: "Submit requisition", exact: true }).click()
+  await detail.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm action", exact: true }).click()
   expect((await submitted).status()).toBe(200)
-  await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition approval")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Requisition approval")
   const holderContext = await browser.newContext()
+  let releaseApproval: (() => void) | undefined
   try {
     const holderPage = await holderContext.newPage()
     const first = await login(holderPage, "first", "comment")
-    const detail = await openRecord(holderPage, first, id)
-    const approval = detail.locator('form[data-command="approve"]')
-    const comment = approval.getByRole("textbox", { name: "Comment", exact: true })
-    await expect(approval.getByRole("button", { name: "Approve", exact: true })).toBeEnabled()
+    const encoded = encodeSfRouteRef(id)
+    await holderPage.goto(new URL(`/orchestra/sf-procurement/approvals/${encoded}`, first.baseURL).href)
+    await expect(holderPage).toHaveURL((url) => url.pathname === `/orchestra/sf-procurement/approvals/${encoded}`)
+    const approval = holderPage.locator('[data-sf-cap26="submitted-pr"]')
+    const opener = approval.getByRole("button", { name: "Review decision", exact: true })
+    await expect(opener).toBeEnabled()
+    await opener.click()
+    const comment = approval.getByRole("textbox", { name: "Approval comment (optional)", exact: true })
     await comment.fill("My approval rationale must remain unsent")
-    const cancel = page.locator('details[id="' + id + '"] form[data-command="cancel"]')
-    await cancel.getByRole("textbox", { name: "Reason", exact: true }).fill("Requester no longer needs this purchase")
-    const cancelled = responseFor(page, "cancel", id)
-    await cancel.getByRole("button", { name: "Cancel", exact: true }).click()
-    expect((await cancelled).status()).toBe(200)
-    await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Cancelled")
     const writes: string[] = []
     holderPage.on("request", (request) => {
       if (request.method() === "POST" && new URL(request.url()).pathname.endsWith("/procurement")) writes.push(request.postData() ?? "")
     })
+    let observeApproval: ((payload: unknown) => void) | undefined
+    const observed = new Promise<unknown>((resolve) => { observeApproval = resolve })
+    const release = new Promise<void>((resolve) => { releaseApproval = resolve })
+    let held = false
+    await holderPage.route((url) => url.pathname.endsWith("/procurement"), async (route) => {
+      const request = route.request()
+      if (request.method() === "POST") {
+        const payload = request.postDataJSON() as { action?: string; id?: string }
+        if (!held && payload.action === "approve" && payload.id === id) {
+          held = true
+          observeApproval?.(payload)
+          await release
+        }
+      }
+      await route.continue()
+    })
     const conflict = responseFor(holderPage, "approve", id)
-    await approval.getByRole("button", { name: "Approve", exact: true }).press("Enter")
+    await approval.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Approve PR", exact: true }).press("Enter")
+    expect(await observed).toMatchObject({ page: "My approvals", action: "approve", id, version: 2,
+      values: { comment: "My approval rationale must remain unsent" } })
+
+    await detail.getByRole("textbox", { name: "Cancellation reason", exact: true }).fill("Requester no longer needs this purchase")
+    await detail.getByRole("button", { name: "Cancel request", exact: true }).click()
+    const cancelled = responseFor(page, "cancel", id)
+    await detail.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm action", exact: true }).click()
+    const cancellation = await cancelled
+    expect(cancellation.status()).toBe(200)
+    expect(cancellation.request().postDataJSON()).toMatchObject({ page: "Requests", action: "cancel", id, version: 2,
+      values: { reason: "Requester no longer needs this purchase" } })
+    await expect(detail.locator("[data-request-summary]")).toContainText("Cancelled")
+    releaseApproval?.()
     const rejected = await conflict
     expect(rejected.status()).toBe(409)
     expect(await rejected.json()).toMatchObject({ currentVersionCAS: 3, stored: { status: "cancelled" } })
     await expect(comment).toHaveValue("My approval rationale must remain unsent")
-    const review = approval.getByRole("region", { name: "Review conflicting changes", exact: true })
+    const review = approval.getByRole("region", { name: "Review the changed record", exact: true })
+    await expect(review.getByRole("heading", { name: "Review the changed record", exact: true })).toBeFocused()
+    await expect(review.locator("[data-current-version-cas]")).toHaveText("Current version: 3.")
+    await expect(opener).toBeDisabled()
+    await opener.press("Enter")
+    expect(writes).toHaveLength(1)
     await review.getByRole("button", { name: "Review current record", exact: true }).click()
     await expect(review.getByRole("status")).toHaveText("This action is no longer available for the current record. Your unsaved entries remain here; reopen the record to continue.")
     await expect(review.getByRole("button", { name: "Use reviewed version and keep my entries", exact: true })).toHaveCount(0)
     await expect(comment).toHaveValue("My approval rationale must remain unsent")
-    await approval.getByRole("button", { name: "Approve", exact: true }).click()
-    await expect(holderPage.locator("#notice")).toHaveText("Review the current record before submitting your preserved entries.")
+    await expect(comment).toHaveAttribute("readonly", "")
+    await expect(approval.getByRole("button", { name: "Approve PR", exact: true })).toHaveCount(0)
+    await expect(opener).toHaveCount(0)
     expect(writes).toHaveLength(1)
     await proof(holderPage, info, "approval-comment-preserved", { id, status: 409, currentVersionCAS: 3, postCount: writes.length, unavailableAction: "approve" })
     await openRecord(page, second, id)
-    await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Cancelled")
-    await expect(page.locator('details[id="' + id + '"] form[data-command="approve"]')).toHaveCount(0)
-  } finally { await holderContext.close() }
+    await expect(detail.locator("[data-request-summary]")).toContainText("Cancelled")
+    await expect(detail.getByRole("button", { name: "Approve PR", exact: true })).toHaveCount(0)
+  } finally {
+    releaseApproval?.()
+    await holderContext.close()
+  }
 })
 
-test("a real committed save cannot clear edits typed before its response arrives", async ({ page, browser }, info) => {
+test("a native save locks its pending entries and preserves later local edits without another POST", async ({ page, browser }, info) => {
   const first = await login(page, "first", "late-edit")
   const id = await createDraft(page, first, "Edits during save response")
-  const section = page.locator('section[id="' + id + '-pr"]')
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
+  const section = detail.locator('section[data-stage="pr"]')
   const description = section.getByRole("textbox", { name: "Description", exact: true })
+  const save = section.getByRole("button", { name: "Save requisition draft", exact: true })
   const committed: { release?: () => void; signal?: (status: number) => void } = {}
   const observed = new Promise<number>((resolve) => { committed.signal = resolve })
   const release = new Promise<void>((resolve) => { committed.release = resolve })
-  await page.route("**/procurement?*", async (route) => {
+  const writes: string[] = []
+  page.on("request", (request) => {
+    if (request.method() === "POST" && new URL(request.url()).pathname.endsWith("/procurement")) writes.push(request.postData() ?? "")
+  })
+  await page.route((url) => url.pathname.endsWith("/procurement"), async (route) => {
     const request = route.request()
     if (request.method() !== "POST" || request.postDataJSON().action !== "save") { await route.continue(); return }
     const response = await route.fetch()
@@ -383,19 +428,37 @@ test("a real committed save cannot clear edits typed before its response arrives
   try {
     await description.fill("The value sent to the real host")
     const saved = responseFor(page, "save", id)
-    await section.getByRole("button", { name: "Save requisition", exact: true }).click()
+    await save.click()
+    await detail.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm action", exact: true }).click()
     expect(await observed).toBe(200)
-    await description.fill("Later edits remain unsaved")
+    // Native S03 forbids editing a pending operation; this is an observable
+    // product fence, rather than a test writing into a disabled field.
+    await expect(description).toBeDisabled()
+    await expect(description).toHaveValue("The value sent to the real host")
+    await expect(save).toBeDisabled()
+    await expect(page.locator('[data-component="sf-requests-pr-po"]')).toHaveAttribute("aria-busy", "true")
+    expect(writes).toHaveLength(1)
     committed.release?.()
-    expect((await saved).status()).toBe(200)
-    await expect(page.locator("#notice")).toHaveText("The submitted changes were saved. Later edits remain unsaved; review them before continuing.")
+    const response = await saved
+    expect(response.status()).toBe(200)
+    expect(response.request().postDataJSON()).toMatchObject({ page: "Requests", action: "save", id, version: 1,
+      values: { pr: { description: "The value sent to the real host" } } })
+    await expect(page.locator(".sf-u11-notice")).toContainText("The current source version was verified after saving.")
+    await expect(section).toHaveAttribute("data-draft-version", "2")
+    await expect(description).toBeEnabled()
+    await description.fill("Later edits remain unsaved")
     await expect(description).toHaveValue("Later edits remain unsaved")
-    await expect(section.locator('form[data-command="save"]')).toHaveAttribute("data-dirty", "true")
+    await expect(section).toHaveAttribute("data-draft-dirty", "true")
+    expect(writes).toHaveLength(1)
     const observer = await observerContext.newPage()
     const second = await login(observer, "second", "late-edit")
-    await openRecord(observer, second, id)
-    await expect(observer.locator('section[id="' + id + '-pr"]').getByRole("textbox", { name: "Description", exact: true })).toHaveValue("The value sent to the real host")
-    await proof(page, info, "later-edits-preserved", { id, status: 200, committedValue: "The value sent to the real host", unsavedValue: "Later edits remain unsaved" })
+    const observedDetail = await openRecord(observer, second, id)
+    await expect(observedDetail.locator('section[data-stage="pr"]').getByRole("textbox", { name: "Description", exact: true })).toHaveValue("The value sent to the real host")
+    await expect(observedDetail.locator("p").filter({ hasText: /^Current source version:/ })).toHaveText("Current source version: 2")
+    await expect(description).toHaveValue("Later edits remain unsaved")
+    expect(writes).toHaveLength(1)
+    await proof(page, info, "later-edits-preserved", { id, status: 200, pendingInputDisabled: true,
+      committedValue: "The value sent to the real host", unsavedValue: "Later edits remain unsaved", postCount: writes.length })
   } finally { committed.release?.(); await observerContext.close() }
 })
 

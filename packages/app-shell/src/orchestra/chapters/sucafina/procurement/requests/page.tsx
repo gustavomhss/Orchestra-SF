@@ -859,7 +859,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         </section>
       </Show>
       <Show when={retainedPr() && (creating() || isPrWritable(current!))}>
-        <section class="sf-u11-stage" data-stage="pr" data-draft-version={retainedPr()?.baseVersion ?? undefined}>
+        <section class="sf-u11-stage" data-stage="pr" data-draft-version={retainedPr()?.baseVersion ?? undefined} data-draft-dirty={retainedPr()?.dirty}>
           <Dynamic component={creating() ? "form" : "div"}
             {...(creating() ? { "data-command": "create", "data-page": "Requests", "data-record": "", "data-version": "0" } : {})}>
           <Show when={current && !creating()}>
