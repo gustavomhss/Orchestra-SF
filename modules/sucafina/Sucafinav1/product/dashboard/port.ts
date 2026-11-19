@@ -150,6 +150,9 @@ export function dashboardPageObservationReader(port: DashboardPort, host: Domain
     entries.every((entry) => pageOwnValue(entry.owner, entry.name, entry.value)) && source.current() && issuer()
   if (!current()) return undefined
   const observe: DashboardPageObservationReader = async (incoming, context, consumer) => {
+    // Signals have their own record-evidence callbacks after the page checks.
+    // Their established protocol remains on the ordinary port path.
+    if (incoming.fields.includes("signals")) return { status: "unavailable", reason: "signal-observation-not-composed" }
     const selection = structuredClone(incoming), selectionDigest = digestSfValue(selection)
     const request = host.requestFor(context), lease = context.lease, bindingObject = context.binding
     const binding = digestSfValue([context.kind, context.binding])

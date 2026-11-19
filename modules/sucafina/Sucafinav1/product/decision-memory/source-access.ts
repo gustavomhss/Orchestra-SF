@@ -26,20 +26,20 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
       const host = input.host, issue = input.issue, dashboard = input.dashboard
       const owned = Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
         Object.getOwnPropertyDescriptor(input, "issue")?.value === issue && Object.getOwnPropertyDescriptor(input, "dashboard")?.value === dashboard
-      const reader = owned ? dashboardPageObservationReader(dashboard, host, issue) : undefined
+      const reader = owned && !ref.target.fields.includes("signals") ? dashboardPageObservationReader(dashboard, host, issue) : undefined
       const selected = reader ? structuredClone(ref) : ref, expected = reader ? digestSfValue(selected) : ""
       const target = selected.target
       const request = input.host.requestFor(call), lease = call.lease, bindingObject = call.binding
       const binding = reader ? digestSfValue([call.kind, call.binding]) : ""
       const requestDigest = reader && request ? digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) : ""
-      const current = () => !!reader && reader.current() && Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
+      const currentObservation = () => !!reader && reader.current() && Object.getOwnPropertyDescriptor(input, "host")?.value === host &&
         Object.getOwnPropertyDescriptor(input, "issue")?.value === issue && Object.getOwnPropertyDescriptor(input, "dashboard")?.value === dashboard &&
         !!request && !request.signal.aborted && host.requestFor(call) === request && call.lease === lease && call.binding === bindingObject &&
         digestSfValue([call.kind, call.binding]) === binding && digestSfValue(ref) === expected &&
         digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest && reader.current()
-      if (!request || request.signal.aborted || reader && !current() || !await input.host.revalidate(call) || reader && !current()) return unavailable()
+      if (!request || request.signal.aborted || reader && !currentObservation() || !await input.host.revalidate(call) || reader && !currentObservation()) return unavailable()
       const now = await input.host.environment(request)
-      if (!Number.isFinite(Date.parse(now.at)) || reader && !current()) return unavailable()
+      if (!Number.isFinite(Date.parse(now.at)) || reader && !currentObservation()) return unavailable()
       const period = target.period
       if (!period) return unavailable(now.at)
       const fields = [...target.fields].sort()
@@ -47,13 +47,13 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
       // A current reference already has a scope issued for this exact actor.
       // Another actor/revision and old historical references keep reissuance.
       if (reader) {
-        const scope = () => currentDashboardPageScope(host, selected, fields, period, call, request, current)
+        const scope = () => currentDashboardPageScope(host, selected, fields, period, call, request, currentObservation)
         const eligible = await scope()
-        if (!current()) return unavailable(now.at)
+        if (!currentObservation()) return unavailable(now.at)
         if (eligible) {
           const resolved = await reader.read<BusinessEvidenceResolution>({ selectionRef: selected.refId, fields, period }, call, {
-            current,
-            before: async (evidence) => digestSfValue(evidence) === expected && current() && await host.revalidate(call) && current(),
+            current: currentObservation,
+            before: async (evidence) => digestSfValue(evidence) === expected && currentObservation() && await host.revalidate(call) && currentObservation(),
             project: ({ evidence, projection }) => {
               if (digestSfValue(evidence) !== expected || projection.context.installationId !== call.binding.installationId ||
                 projection.context.projectId !== call.binding.projectId || projection.context.principalRef !== call.binding.principalRef ||
@@ -63,9 +63,9 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
               return { status: "ok", value: { state: "fresh", ref: structuredClone(selected), currentRef: structuredClone(evidence),
                 authorizedProjection: structuredClone(projection), accessRevision: call.binding.accessRevision, checkedAt: now.at } }
             },
-            after: async () => current() && await scope() && current() && await host.revalidate(call) && current(),
+            after: async () => currentObservation() && await scope() && currentObservation() && await host.revalidate(call) && currentObservation(),
           })
-          return resolved.status === "ok" && current() ? resolved.value : unavailable(now.at)
+          return resolved.status === "ok" && currentObservation() ? resolved.value : unavailable(now.at)
         }
       }
       const issued = await input.issue({ page: target.recordId, fields, period }, call)
