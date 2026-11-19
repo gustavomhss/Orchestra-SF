@@ -1,10 +1,13 @@
 # Handoff — finish-operations-20261119
 
-SHA: 9865ba7d31f660a4f534bedf54e12d6396ae3ca0 (código; este documento é um checkpoint posterior)
+SHA: dc38e037ec4232cab9bf25de38e97a096445861d (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- dc38e037ec4232cab9bf25de38e97a096445861d retém o corpo ORIGINAL da resposta Procurement no estágio Response do CDP, antes de a releitura nativa remover o recurso DevTools. O helper é usado pelas três chamadas existentes (confirmação, aprovação e recusa); envia apenas o POST já iniciado pelo browser, captura status/headers/bytes/request originais e devolve esses mesmos bytes ao browser. As asserções 200/422, corpo JSON, payload/CAS, fieldErrors, valores históricos e ausência de efeitos permanecem. Não há route.fetch, retry nem resposta fabricada. Ainda sem gate.
+- No mesmo helper, dois lookups por nome ARIA foram ligados ao texto literal ancorado de p role=status/alert, que o renderer Sourcing publica sem aria-label (index.tsx:756/806). A exigência de visibilidade e o texto completo permanecem.
 
 - 9865ba7d31f660a4f534bedf54e12d6396ae3ca0 admite somente o seletor request já declarado no schema CAP26 e enviado pelos dois renderers de aprovação. native-ui/procurement.ts:29 antes aceitava apenas year/month e devolvia 400 needs-input antes da autoridade. A correção preserva a fila C02 original, os gates de ator, a versão e todas as asserções. Ainda não foi executada em Actions.
 - Operations6 (44619924653) chegou às cinco jornadas reais com três typechecks e ClamD aprovados: OP-PROC-01 passou; os quatro bloqueios seguintes estão discriminados abaixo. Nenhum resultado foi generalizado para toda a suíte.
@@ -56,9 +59,9 @@ Estado: partial
 ### Bloqueios atuais observados em Operations6
 
 - packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:106 — aprovação não chegou a Review decision: o handler CAP26 respondeu 400 needs-input por rejeitar request. Correção de seletor 9865ba7d preparada, aguardando gate.
-- packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:150 — POST submit_pr original retornou HTTP200, mas response.json() perdeu o recurso DevTools (No data found). Preservar os bytes originais antes da navegação/releitura, sem repetir POST nem retirar a asserção do corpo.
+- packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:162 — captura original dc38e037 preparada após o POST submit_pr HTTP200 perder seu corpo no DevTools em Operations6. Precisa qualificar os caminhos de sucesso e recusa com o mesmo número de comandos e todas as asserções originais.
 - packages/app-shell/e2e/sucafina/operations-support/imports.ts:167 — F01 mostrou Sucafina route not admitted; contexto original anunciou files.import-targets indisponível. O integrador cuida do probe original de Imports.
-- packages/app-shell/e2e/sucafina/operations-support/documents.ts:103 — Supplier novo e detalhe CAP27 montaram, porém anexos ficaram desabilitados porque o contexto original declarou files.asset.upload/link/download e documents indisponíveis. Readiness precisa observar os serviços/armazenamento/admissão reais; não liberar o controle à força.
+- packages/app-shell/e2e/sucafina/operations-support/documents.ts:103 — Supplier novo e detalhe CAP27 montaram, porém anexos ficaram desabilitados porque o contexto original declarou files.asset.upload/link/download e documents indisponíveis. Readiness agora está preparada separadamente em finish-filehealth-20261119 (código 2439074bb503c49a80a77299ecaab84000bd0a54, head ed7bad3990f030450207ce01b51d025a59b9083f), observando serviços/armazenamento/admissão originais; aguarda composição e gate, sem liberar o controle à força.
 
 - packages/app-shell/e2e/sucafina/operations.spec.ts:18, :23 e :33 — os pré-requisitos PR/Supplier passaram no run 44618682048, mas os fluxos completos de snapshot, recusa e documentos ainda precisam do gate combinado com o importador. A recusa pré-rede dos creates foi resolvida pelo snapshot completo; a recusa PR403 foi resolvida pela conversão numérica original. Não ampliar permissões nem remover os asserts posteriores.
 - packages/app-shell/e2e/sucafina/operations-support/imports.ts:167 — Ops5 avançou após CAP23 e falhou em [data-import-workbench] ausente. O integrador é dono da ligação do importador nativo original e da próxima composição. Esta branch não modifica esse arquivo neste checkpoint.
