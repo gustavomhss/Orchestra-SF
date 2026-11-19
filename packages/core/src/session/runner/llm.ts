@@ -326,8 +326,6 @@ const layer = Layer.effect(
             const decision = yield* store.charge(session.id, { type: "tool", name: input.safety?.tool ?? input.action })
             if (!decision.admitted) return yield* new PermissionV2.CorrectedError({ feedback: decision.deviation.detail })
           }
-          if (input.resources.length === 0)
-            return yield* new PermissionV2.BlockedError({ rules: [] })
           yield* permissions
             .authorize({
               sessionID: session.id,
