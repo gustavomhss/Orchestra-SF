@@ -37,31 +37,43 @@ export async function createRequisition(page: Page, origin: string, observations
   return id
 }
 
-/** Approval uses Procurement's actual transition, never the Decisions choice or Apply checkbox. */
+/** After Apply and recovery, submit and approve the exact saved amount through Procurement's real transitions. */
 export async function approveExactRequisition(page: Page, origin: string, review: Record<string, unknown>, operation: Record<string, unknown>, observations: Record<string, unknown>[]) {
-  return test.step("require a compatible explicit Procurement approval for the exact reviewed amount before Apply", async () => {
+  return test.step("submit and approve the exact reviewed amount after Apply and receipt recovery", async () => {
     const requestId = String(asRecord(review.target).id)
     const detail = await openRequisition(page, origin, requestId)
     const pr = detail.locator(`section[id="${requestId}-pr"] form[data-command="save"]`)
     const fields = (review.fields as unknown[]).map(asRecord).filter((field) => field.after === operation.amount)
     expect(fields, "The domain preview must identify the same finite amount selected by the human").toHaveLength(1)
     expect(operation.currency).toBe("USD")
+    const reviewedVersion = Number(review.expectedVersion)
+    expect(Number.isSafeInteger(reviewedVersion) && reviewedVersion > 0).toBe(true)
+    const appliedVersion = reviewedVersion + 1
+    await expect(pr).toHaveAttribute("data-version", String(appliedVersion))
+    await expect(pr.getByLabel("Estimated amount", { exact: true }), "Apply must save exactly the reviewed proposal before submission").toHaveValue(String(operation.amount))
+    await expect(detail.locator("[data-request-summary]")).toContainText("Requisition draft")
     const summary = await detail.locator("[data-request-summary]").innerText()
     observations.push({ stage: "financial-approval-gate-entered", requestId, proposedAmount: operation.amount,
       currentEstimatedAmount: await pr.getByLabel("Estimated amount", { exact: true }).inputValue(), currentSummary: summary,
-      dependency: "The domain must provide an approvable proposal compatible with the prepared change. C3 only prepares draft requisition saves, which cannot run after formal approval." })
-    // A draft amount change is not a submitted financial proposal. Do not submit or
-    // approve the old amount just to manufacture an approval unrelated to the preview.
-    await expect(detail.locator("[data-request-summary]"), "A legitimate pending approval for this exact proposal must exist before Apply").toContainText("Requisition approval")
+      reviewedVersion, appliedVersion, financialApproval: false, decisionsApply: true,
+      dependency: "Submit and approve only the exact saved amount after the reviewed draft Apply and receipt recovery." })
+    const submission = detail.locator('form[data-command="submit_pr"]')
+    await expect(submission).toHaveCount(1)
+    await expect(submission).toHaveAttribute("data-version", String(appliedVersion))
+    await domainCommand(page, origin, submission, "Submit requisition", observations)
+    await expect(detail.locator("[data-request-summary]"), "The applied proposal must enter real requisition approval before Approve").toContainText("Requisition approval")
+    await expect(pr).toHaveAttribute("data-version", String(appliedVersion + 1))
     await expect(pr.getByLabel("Estimated amount", { exact: true }), "Never approve a different amount from the reviewed proposal").toHaveValue(String(operation.amount))
     const approval = detail.locator('form[data-command="approve"]')
     await expect(approval).toHaveCount(1)
     const version = Number(await approval.getAttribute("data-version"))
+    expect(version).toBe(appliedVersion + 1)
     const comment = `I explicitly approve this requisition for ${operation.amount} USD after reviewing the recorded choice and proposal.`
     await approval.getByLabel("Comment", { exact: true }).fill(comment)
     await domainCommand(page, origin, approval, "Approve", observations)
     await expect(detail.locator("[data-request-summary]")).toContainText("Sourcing")
     await expect(pr).toHaveAttribute("data-version", String(version + 1))
+    await expect(pr.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(operation.amount))
     const history = detail.locator(`section[id="${requestId}-history"]`)
     const receipt = history.getByRole("row").filter({ has: page.getByRole("cell", { name: comment, exact: true }) })
     await expect(receipt).toHaveCount(1)
