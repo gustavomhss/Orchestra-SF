@@ -132,3 +132,9 @@ Estado: partial
 - Run [44629509547](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44629509547), snapshotf6d7761c59969976aa78e48655099b37c806c6b2, composiçãoefe1f0dc7bc3a3f8281d59d55fed1fc473cc75f7, job135932086089: FAILURE antes do browser. CLI e app-shell typechecks passaram; SF-E2E falhou com titlebar.tsx637/639 (channel possivelmente undefined) e server-sync.tsx778 (Window.api). Cleanup135934187163 passou.
 - A nova importação de host/native-chapter-entry trouxe tipos transitivos da árvore da aplicação para o projeto E2E. Código 0cea3b2a5cfae50dc6b8dd4cc95655e5dd30da9f remove somente esse import e usa o literal /orchestra/sf-dashboard/executive, previamente conferido no mapa canônico native-chapter-entry.ts7. Preserva GET CAP01 original antes do mesmo marcador e Sign out. Nenhuma alteração em titlebar, server-sync, tsconfig, owner/F01 ou runtime.
 - Estado partial; nenhuma asserção removida nem timeout alterado. Pendente/unbound: composition.spec.ts151–158 (qualificar o ingresso); :486–620 (capturador e todas as jornadas ainda não executados por este gate). Como retomar: compor somente composition.spec.ts e este handoff sobre Assembly32 e executar o mesmo spec estreito. A falha de tipos não é prova de UI nem autoriza portar a captura para BI/WP03.
+
+
+## Gate aberto — WP10 native6
+
+- Run [44630493615](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44630493615); composição0438cb2347cf0402ace19a053b58c89f133dc09d; snapshot9810ad09c17c0de0833cd48d9244180c5fc62bd1; branch efêmeraci-run-linux-wp10-native6-20261119. Specs: `e2e/sucafina/wp10/composition.spec.ts`.
+- Última consulta: in_progress, resultado terminal ainda não observado. Estado permanece partial e os itens unbound acima continuam abertos. Este registro não declara sucesso de UI; aguardar o resultado deste run, sem duplicá-lo.
