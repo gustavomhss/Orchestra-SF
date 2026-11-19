@@ -81,10 +81,10 @@ test("The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, C
           expect(legacy.status).toBe(404)
           expect(await legacy.text()).toBe("legacy console decommissioned — use /")
         }
-        // The retained supplier export authenticates inside the current role-map transaction without a native host fixture.
-        const authorizedDownload = "/sucafina/procurement?download=suppliers"
+        // This fixture grants Dashboard viewer and Procurement requester, but no Planner role.
+        const authorizedDownload = "/sucafina/planner?download=xlsx"
         const authenticated = await request(authorizedDownload, { headers: { cookie } })
-        expect(authenticated.status).toBe(401) // Authenticated guest, with no initialized product role map.
+        expect(authenticated.status).toBe(401) // The authenticated guest has no configured Planner role.
         await authenticated.arrayBuffer()
 
         const rejectedLogout = await request("/sucafina/auth/logout", { method: "POST", headers: { cookie, origin: "https://forged.example" } })
