@@ -293,8 +293,9 @@ export function projectSourcingComparison(record: Record<string, unknown>, formS
   const assessed = quoteAssessment({ sourcing: assessmentSourcing(sourcing, snapshotRequired, settings.currency) }, settings)
   const presentation = quoteComparisonPresentation({ sourcing: sourcing as Parameters<typeof quoteComparisonPresentation>[0]["sourcing"] }, settings, { submitted: snapshotRequired, submittedBaseCurrency: text(sourcing.approvalBaseCurrency) })
   const money = quotes.map((quote) => quoteMonetary(record, quote, snapshotRequired, settings.currency, formSettings))
-  const eligibleCount = assessed.filter((item) => item.eligible).length
-  const available = rankingAvailable(sourcing, settings, quotes, presentation, assessed, sameBase)
+  const facts = rankingFacts(sourcing, settings, quotes, presentation, assessed, sameBase)
+  const eligibleCount = facts.eligibleCount
+  const available = facts.available
   const eligibleBases = assessed.flatMap((item, index) => {
     const amount = money[index]?.baseAmount
     return item.eligible && typeof amount === "number" && Number.isFinite(amount) && amount > 0 ? [amount] : []
@@ -310,7 +311,8 @@ export function projectSourcingComparison(record: Record<string, unknown>, formS
     eligibleCount,
     rankLine: leader && typeof leader.rank === "number" ? `Rank ${leader.rank}: ${supplier || "Supplier unavailable"}` : null,
     premiumLine: premium != null && lowest != null && lowest > 0 && /^[A-Z]{3}$/.test(settings.currency) ? `${Number(premium.toPrecision(15))} ${settings.currency} (${(premium / lowest * 100).toFixed(2)}%) above the lowest eligible proposal` : null,
-    quotes: quotes.map((quote, index) => quoteProjection(quote, index, assessed[index], presentation[index], money[index], available, lowest, settings.currency)),
+    rankingUnavailable: rankingUnavailableReason(facts, quotes.length),
+    quotes: quotes.map((quote, index) => quoteProjection(quote, index, assessed[index], presentation[index], money[index], facts, lowest, settings.currency)),
   }
 }
 
@@ -327,7 +329,7 @@ function quoteMonetary(record: Record<string, unknown>, quote: Record<string, un
   return procurementMonetaryFacts({ status: viewStatus, createdBy: text(record.createdBy) || "projection", sourcing: { ...object(record.sourcing), selectedId: id }, po: null }, baseCurrency, formSettings)
 }
 
-function rankingAvailable(sourcing: Record<string, unknown>, settings: FormSettings, quotes: readonly Record<string, unknown>[], presentation: ReturnType<typeof quoteComparisonPresentation>, assessed: ReturnType<typeof quoteAssessment>, sameBase: boolean) {
+function rankingFacts(sourcing: Record<string, unknown>, settings: FormSettings, quotes: readonly Record<string, unknown>[], presentation: ReturnType<typeof quoteComparisonPresentation>, assessed: ReturnType<typeof quoteAssessment>, sameBase: boolean) {
   const weights = object(sourcing.weights)
   const technical = rows(sourcing.weights == null ? settings.criteria : weights.criteria)
   const commercial = rows(sourcing.weights == null ? settings.commCriteria : weights.commCriteria)
@@ -347,16 +349,36 @@ function rankingAvailable(sourcing: Record<string, unknown>, settings: FormSetti
     const issues = shown?.monetary ?? ["monetary-data-unavailable"]
     return issues.length > 0 || shown?.total != null && shown.fxRate != null && !Number.isFinite(shown.total * shown.fxRate)
   }) || statedDiffer
-  return !monetaryProblem && sameBase && configured && !assessed.some((item) => item.eligible && !item.complete) && assessed.filter((item) => item.eligible).length >= 2
+  const incompleteScores = assessed.some((item) => item.eligible && !item.complete)
+  const eligibleCount = assessed.filter((item) => item.eligible).length
+  return { available: !monetaryProblem && sameBase && configured && !incompleteScores && eligibleCount >= 2, monetaryProblem, statedDiffer, configured, sameBase, incompleteScores, eligibleCount }
 }
 
-function quoteProjection(quote: Record<string, unknown>, index: number, item: ReturnType<typeof quoteAssessment>[number] | undefined, shown: ReturnType<typeof quoteComparisonPresentation>[number] | undefined, money: ReturnType<typeof procurementMonetaryFacts> | null, available: boolean, lowest: number | null, baseCurrency: string) {
+function rankingUnavailableReason(facts: ReturnType<typeof rankingFacts>, quoteCount: number) {
+  if (facts.available) return null
+  if (quoteCount === 0) return "Comparison unavailable: no proposals are recorded."
+  if (facts.eligibleCount < 2) return "Comparison is limited: fewer than two proposals are eligible."
+  if (facts.monetaryProblem) return `Comparison ranking unavailable: at least one proposal has missing, invalid or inconsistent monetary data. Resolve every proposal's currency, positive total, applicable FX${facts.statedDiffer ? " and stated total versus quantity × unit price discrepancy" : ""} before comparing rankings.`
+  if (!facts.sameBase) return "Comparison unavailable: the submitted base currency is missing or differs from the current base."
+  if (facts.incompleteScores) return "Comparison is incomplete: one or more eligible proposals have missing required human assessments; ranking is withheld so a provisional score is not presented as a recommendation."
+  if (!facts.configured) return "Ranking unavailable: configured comparison criteria or weights are incomplete."
+  return null
+}
+
+function quoteProjection(quote: Record<string, unknown>, index: number, item: ReturnType<typeof quoteAssessment>[number] | undefined, shown: ReturnType<typeof quoteComparisonPresentation>[number] | undefined, money: ReturnType<typeof procurementMonetaryFacts> | null, facts: ReturnType<typeof rankingFacts>, lowest: number | null, baseCurrency: string) {
   const basis = money?.fxSource === "base" ? "base" as const : money?.fxSource === "submitted" ? "submitted FX" as const : money?.fxSource === "current" ? "current FX" as const : null
   const amount = money?.baseAmount
   const rate = money?.validRate
   const knownAmount = typeof amount === "number" && Number.isFinite(amount) ? amount : null
   const knownRate = typeof rate === "number" && Number.isFinite(rate) ? rate : null
+  const available = facts.available
   const eligible = item?.eligible === true
+  const criteriaAvailable = facts.sameBase && facts.configured
+  const componentShown = !facts.monetaryProblem && criteriaAvailable && item?.complete === true && item.eligible === true
+  const technical = presentedScore(item?.technical, componentShown)
+  const price = presentedScore(item?.price, componentShown)
+  const commercial = presentedScore(item?.commercial, componentShown)
+  const overall = presentedScore(item?.overall, available && criteriaAvailable && item?.complete === true && item.eligible === true)
   const rawPremium = available && eligible && knownAmount != null && lowest != null && lowest > 0 ? knownAmount - lowest : null
   const premiumAmount = rawPremium == null ? null : Number(rawPremium.toPrecision(15))
   const reasons = [...(quote.techPass === false ? ["Technically ineligible"] : []), ...(shown?.monetary ?? []).map((issue) => `Monetary issue: ${issue}`)]
@@ -372,7 +394,21 @@ function quoteProjection(quote: Record<string, unknown>, index: number, item: Re
     premiumAmount,
     premiumPercent: rawPremium != null && lowest != null && lowest > 0 ? Number((rawPremium / lowest * 100).toFixed(2)) : null,
     excludedReason: eligible ? null : reasons.length ? reasons.join(", ") : null,
+    eligibility: quote.techPass === false ? "Not compliant" : facts.monetaryProblem && (shown?.monetary.length ?? 0) > 0 ? "Unavailable: monetary data" : item?.eligible === true ? "Eligible" : "Ineligible: price/FX",
+    technical: technical.value,
+    price: price.value,
+    commercial: commercial.value,
+    overall: overall.value,
+    technicalText: technical.text,
+    priceText: price.text,
+    commercialText: commercial.text,
+    overallText: overall.text,
   }
+}
+
+function presentedScore(value: number | undefined, shown: boolean) {
+  if (!shown || typeof value !== "number" || !Number.isFinite(value)) return { value: null, text: "Unavailable" }
+  return { value, text: value.toFixed(1) }
 }
 
 function select(record: Record<string, unknown>, fields: readonly string[]) {
