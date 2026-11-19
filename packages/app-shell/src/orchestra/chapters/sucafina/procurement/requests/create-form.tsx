@@ -20,28 +20,18 @@ export function SfRequestsCreateForm() {
       if (!input.name || input.disabled) continue
       assign(input.name, input instanceof HTMLInputElement && input.type === "checkbox" ? input.checked : input.type === "number" ? (input.value === "" ? null : Number(input.value)) : input.value)
     }
-    const command = {
-      page: form.dataset.page,
-      action: form.dataset.command,
-      id: form.dataset.record || undefined,
-      version: Number(form.dataset.version || "0"),
-      values,
-    }
-    const targets = [location.pathname, "/sucafina/procurement"]
-    let ok = false
-    for (const target of targets) {
-      const response = await fetch(target, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify(command),
-      })
-      const type = response.headers.get("content-type") || ""
-      if (!response.ok || !type.includes("json")) continue
-      const body = await response.json() as { ok?: boolean }
-      if (body.ok === true) { ok = true; break }
-    }
-    if (ok) location.reload()
+    await fetch(location.pathname, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({
+        page: form.dataset.page,
+        action: form.dataset.command,
+        id: form.dataset.record || undefined,
+        version: Number(form.dataset.version || "0"),
+        values,
+      }),
+    })
   }
   return (
     <section>
