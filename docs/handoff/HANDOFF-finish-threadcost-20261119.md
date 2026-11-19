@@ -18,9 +18,9 @@ Estado: partial
 
 ## Pendente
 
-- `modules/sucafina/Sucafinav1/test/product/wp08/thread-period-continuity.test.ts:17`: os dois cenários de virada de período excederam o limite original de 5 segundos no snapshot anterior; o gate do código atual está em execução.
-- `modules/sucafina/Sucafinav1/test/product/wp08/thread-actors.test.ts:10`: o cenário de homônimos, escopos e revogação excedeu o mesmo limite no snapshot anterior.
-- `modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts:38`: o consumidor real de respostas confirmadas demorou 5,24 segundos no snapshot anterior, excedendo o limite original.
+- `modules/sucafina/Sucafinav1/test/product/wp08/thread-period-continuity.test.ts:17`: os dois cenários de virada de período excederam o limite original de 5 segundos no gate estrito do predecessor restaurado; falta o gate agregado canônico.
+- `modules/sucafina/Sucafinav1/test/product/wp08/thread-actors.test.ts:10`: o cenário de homônimos, escopos e revogação excedeu o mesmo limite no gate estrito do predecessor restaurado.
+- `modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts:38`: o consumidor real de respostas confirmadas demorou 6,35 segundos no snapshot anterior, excedendo o limite original.
 - A fatia não está qualificada enquanto esses cenários não passarem por GitHub Actions. Nenhum timeout foi aumentado e nenhum cenário foi dividido para ocultar esse limite.
 
 ## Decisões e justificativas
