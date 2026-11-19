@@ -30,7 +30,7 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: 8352f935663cc17de63a44fa269ce81c14fe618b
+          ref: 8a279c2e011954b3fa27e9f69f7b1fb78b4d3104
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
       - name: Match canonical Playwright Node
