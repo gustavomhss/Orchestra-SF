@@ -757,7 +757,8 @@ export function createSfRecordHistory(input: {
       if (original.target.surface === "dashboard" && (!page || !same(selector.fields, [...original.target.fields].sort()) || !same(selector.period, original.target.period))) return { commit: false, value: undefined }
       // Scope versions advance on material edits. The original payload itself is
       // authenticated by its protected producer, while this record proves physical lineage.
-      if (old.version === original.target.version && original.target.surface === "dashboard" && old.inputDigest !== original.target.projectionDigest) return { commit: false, value: undefined }
+      // A changed Dashboard page fingerprint is not that continuation: its memory read stops.
+      if (original.target.surface === "dashboard" && old.inputDigest !== original.target.projectionDigest && (original.target.recordType === "dashboard-page" || old.version === original.target.version)) return { commit: false, value: undefined }
       if (!current) return { commit: false, value: { physical: physical.incarnation, page } }
       const activeMatches = scopes.filter((entry) => entry.alive && entry.incarnation === current.target.incarnation && entry.scope.recordType === current.target.recordType && entry.scope.recordId === current.target.recordId &&
         entry.scope.principalRef === principal.id && entry.scope.accessRevision === call.binding.accessRevision && entry.scope.policyVersion === call.binding.policyVersion)
