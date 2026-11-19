@@ -122,7 +122,13 @@ export async function interruptedC12Recovery(browser: Browser, info: TestInfo) {
         expect(applications).toHaveLength(2)
         expect(applications[1]).toMatchObject({ body: first.body, key: first.key })
         expect(afterRetry.observation).toEqual(committed)
+        const reloadedCase = page.waitForResponse((response) => {
+          const url = new URL(response.url())
+          return response.request().method() === "GET" && url.pathname === "/sucafina/api/ui/projections/case" &&
+            url.searchParams.get("caseRef") === host.caseRef
+        })
         expect((await page.reload())?.status()).toBe(200)
+        expect((await reloadedCase).status()).toBe(200)
         await expect(page.getByRole("button", { name: "Recover recorded receipt", exact: true })).toBeEnabled()
         const beforeClose = await host.control()
         expect(beforeClose.traffic.filter((item) => item.mode === "decision-apply")).toHaveLength(2)
@@ -139,7 +145,13 @@ export async function interruptedC12Recovery(browser: Browser, info: TestInfo) {
         const page = await fresh.newPage()
         page.on("pageerror", (error) => errors.push(error.message))
         await enterC12Shell(page, installation, host)
+        const reopenedCase = page.waitForResponse((response) => {
+          const url = new URL(response.url())
+          return response.request().method() === "GET" && url.pathname === "/sucafina/api/ui/projections/case" &&
+            url.searchParams.get("caseRef") === host.caseRef
+        })
         expect((await page.goto(changeURL(installation.origin, host)))?.status()).toBe(200)
+        expect((await reopenedCase).status()).toBe(200)
         await expect(page.getByRole("button", { name: "Recover recorded receipt", exact: true })).toBeEnabled()
         // Normal shell server/project preferences are allowed. No original
         // C12 receipt, review digest or command body may be rehydrated from them.
