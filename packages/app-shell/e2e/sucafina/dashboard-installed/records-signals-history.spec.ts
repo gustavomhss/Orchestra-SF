@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test"
+import { Schema } from "effect"
+import { SfProjectionReview, SfReviewDomainProjection, SfDashboardDashboardAgenda, SfReviewsReviewRead, SfDashboardDashboardReviewPreserve } from "@orchestra/schema/sucafina/reviews"
+import { responseFor } from "../reports-support/model"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
-import { addTopic, command, confirmDialog, dashboardUrl, hostCommand, observeDashboardRequests, openTopic, topicRow, topicsPage } from "./support"
+import { addTopic, command, dashboardUrl, observeDashboardRequests, openTopic, topicRow, topicsPage } from "./support"
 
 // The existing production fixture enrolls an operator, runs the installed CLI and
 // owns an isolated durable store. Never retain the session cookie in a trace.
@@ -20,9 +23,11 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
   const competing = "M67 Installed competing action"
   const survivor = "M67 Installed unrelated action"
   let topic = "", unrelated = ""
+  const dashboard = installation.origin + "/sucafina/dashboard"
+  let preserved: Extract<typeof SfReviewsReviewRead.output.Type, { status: "ok" }>["value"] | undefined
   try {
     await test.step("create durable Hot Topics through the mounted Dashboard", async () => {
-      await page.context().addCookies([installation.cookie])
+      await installation.signIn(page)
       await page.goto(topics)
       await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
       topic = await addTopic(page, original, "2000-01-01")
@@ -32,16 +37,98 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await expect(topicRow(page, unrelated).getByRole("rowheader", { name: survivor, exact: true })).toBeVisible()
     })
 
-    await test.step("preserve a real record and preview a real agenda", async () => {
-      await page.locator("[data-dashboard-workbench-panel] > summary").click()
-      const workbench = page.getByRole("region", { name: "Revisão e ações do Dashboard", exact: true })
-      await hostCommand(page, workbench.getByRole("button", { name: "Carregar opções", exact: true }), "dashboard-workbench")
-      await expect(workbench.locator("[data-dashboard-status]")).toContainText("Opções carregadas.")
-      await hostCommand(page, workbench.getByRole("button", { name: "Pré-visualizar pauta", exact: true }), "dashboard-agenda")
-      await expect(workbench.locator("[data-dashboard-agenda-view]")).toContainText(original)
-      await workbench.getByRole("combobox", { name: "Registro para preservar", exact: true }).selectOption({ label: original })
-      await hostCommand(page, workbench.getByRole("button", { name: "Preservar retrato", exact: true }), "dashboard-capture")
-      await expect(workbench.locator("[data-dashboard-status]")).toHaveText("Retrato do registro preservado.")
+    await test.step("preserve exactly the authorized record through a real native agenda", async () => {
+      await page.goto("/orchestra/sf-reviews/agenda?year=2026")
+      const agenda = page.locator('[data-sf-surface="UI47"]')
+      await expect(agenda).toBeVisible()
+      await agenda.getByLabel(/Source dashboard page|Página de origem do dashboard/).fill(topicsPage)
+      const found = page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return response.request().method() === "GET" && url.pathname.endsWith("/api/ui/projections/review") &&
+          url.searchParams.get("page") === topicsPage
+      })
+      await agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click()
+      const discovery = await found
+      expect(discovery.status()).toBe(200)
+      const discovered = Schema.decodeUnknownSync(SfProjectionReview.output)(await discovery.json())
+      if (discovered.status !== "ok" || !("items" in discovered.value)) throw new Error("Authorized review records were not provided")
+      expect(discovered.value.items).toHaveLength(1)
+      const item = discovered.value.items[0]!
+      expect(item.topic).toBe("hot-topics")
+      expect(item.recordOptions).toHaveLength(2)
+      const choices = item.recordOptions?.filter((record) => record.recordId === topic) ?? []
+      expect(choices).toHaveLength(1)
+      const selected = choices[0]!
+      expect(selected.label).toBe(original)
+      expect(item.recordRefs).toContain(selected.recordRef)
+      await agenda.getByRole("button", { name: /Add to agenda|Adicionar à pauta/ }).click()
+      const section = agenda.locator("[data-sf-agenda-order] > li")
+      await expect(section).toHaveCount(1)
+      await expect(section).toHaveAttribute("data-section-id", item.id)
+      for (const record of item.recordOptions ?? []) {
+        if (record.recordId !== topic)
+          await section.getByRole("button", { name: "Remove record " + record.recordRef, exact: true }).click()
+      }
+      await expect(section.locator("[data-sf-record-ref]")).toHaveCount(1)
+      await expect(section.locator("[data-sf-record-ref]")).toHaveAttribute("data-sf-record-id", topic)
+      await expect(section.locator("[data-sf-record-ref]")).toContainText(original)
+      const pendingAgenda = page.waitForResponse(responseFor(dashboard, "dashboard-agenda", "POST"))
+      await page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
+      const previewResponse = await pendingAgenda
+      expect(previewResponse.status()).toBe(200)
+      const request = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.input)(previewResponse.request().postDataJSON())
+      expect(request.sections).toHaveLength(1)
+      expect(request.sections[0]!.recordRefs).toEqual([selected.recordRef])
+      const preview = Schema.decodeUnknownSync(SfDashboardDashboardAgenda.output)(await previewResponse.json())
+      if (preview.status !== "ok") throw new Error("The original agenda was not admitted")
+      expect(preview.value.sections).toHaveLength(1)
+      const captured = preview.value.sections[0]!
+      expect(captured.id).toBe(item.id)
+      expect(captured.recordCount).toBe(1)
+      // The producer identifies the page in context and the selected record in value IDs.
+      expect(captured.projection.context.sourceRefs.map(({ surface, type, id }) => ({ surface, type, id }))).toEqual([
+        { surface: "dashboard", type: "dashboard-page", id: topicsPage },
+      ])
+      expect(captured.projection.values.filter((value) => value.id === `hotTopics[id:${encodeURIComponent(topic)}].action`)).toMatchObject([{ value: original }])
+      expect(captured.projection.values.some((value) => value.id.startsWith(`hotTopics[id:${encodeURIComponent(unrelated)}].`))).toBe(false)
+      expect(captured.projection.values.some((value) => value.value === original)).toBe(true)
+      expect(captured.projection.values.some((value) => value.value === survivor)).toBe(false)
+      const shown = agenda.locator("[data-sf-agenda-preview]")
+      await expect(shown).toContainText(original)
+      await expect(shown.getByRole("table").getByRole("cell")).toHaveText(captured.projection.values.flatMap((value) => [
+        value.id, `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim(),
+        `${value.period.start} – ${value.period.end}`,
+      ]))
+      const saving = page.waitForResponse(responseFor(dashboard, "dashboard-review-preserve", "POST"))
+      const preserveStartedAt = Date.now()
+      await agenda.getByRole("button", { name: /Confirm preservation|Confirmar preservação/ }).click()
+      const savedResponse = await saving
+      expect(savedResponse.status()).toBe(200)
+      expect(savedResponse.request().postDataJSON()).toEqual({ selectionRef: preview.value.selectionRef, sectionRefs: [item.id] })
+      const saved = Schema.decodeUnknownSync(SfDashboardDashboardReviewPreserve.output)(await savedResponse.json())
+      const preserveFinishedAt = Date.now()
+      if (saved.status !== "ok") throw new Error("The original producer did not preserve the selected record")
+      preserved = saved.value
+      expect(preserved.sections).toHaveLength(1)
+      const sectionContent = Schema.decodeUnknownSync(SfReviewDomainProjection)(preserved.sections[0]!.content)
+      const currentSources = sectionContent.context.sourceRefs
+      expect(currentSources).toHaveLength(captured.projection.context.sourceRefs.length)
+      // Preserve invokes the original selector again; only the fresh observation time may advance.
+      for (const [index, source] of currentSources.entries()) {
+        const previewSource = captured.projection.context.sourceRefs[index]!
+        const observedAt = Date.parse(source.observedAt)
+        expect(Number.isFinite(observedAt)).toBe(true)
+        expect(new Date(observedAt).toISOString()).toBe(source.observedAt)
+        expect(observedAt).toBeGreaterThanOrEqual(preserveStartedAt)
+        expect(observedAt).toBeLessThanOrEqual(preserveFinishedAt)
+        expect(observedAt).toBeGreaterThanOrEqual(Date.parse(previewSource.observedAt))
+        expect(source).toEqual({ ...previewSource, observedAt: source.observedAt })
+      }
+      expect(preserved.sections[0]).toMatchObject({ id: item.id, count: 1, content: {
+        ...captured.projection,
+        context: { ...captured.projection.context, sourceRefs: currentSources },
+      } })
+      await expect(agenda.locator("[data-sf-preserved-confirmed]").locator("dd").first()).toHaveText(preserved.id)
       await page.goto(topics)
     })
 
@@ -53,17 +140,21 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       const competingEditor = await openTopic(other, topic)
       await competingEditor.getByLabel("Action", { exact: true }).fill(competing)
       await competingEditor.getByLabel("Notes", { exact: true }).fill("Committed in the other page")
-      await command(other, competingEditor.getByRole("button", { name: "Save", exact: true }), "save")
+      await competingEditor.getByRole("button", { name: "Review save", exact: true }).click()
+      await command(other, competingEditor.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm save", exact: true }), "save")
       await expect(topicRow(other, topic).getByRole("rowheader", { name: competing, exact: true })).toBeVisible()
-      await command(page, editor.getByRole("button", { name: "Save", exact: true }), "save", 409)
-      await expect(editor.getByRole("status")).toContainText("This record changed since you opened it.")
+      await editor.getByRole("button", { name: "Review save", exact: true }).click()
+      await command(page, editor.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm save", exact: true }), "save", 409)
+      await expect(editor.locator("[data-topic-feedback]")).toHaveAttribute("data-topic-feedback", "conflict")
+      await expect(editor.locator("[data-current-revision]")).toContainText("This topic changed. Review the current version before saving.")
       await expect(editor.getByLabel("Action", { exact: true })).toHaveValue(edited)
       await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue("Local edits survive the conflict")
       await editor.getByRole("button", { name: "Load current version and keep my edits", exact: true }).click()
       await expect(editor.locator("[data-current-revision]")).toContainText(competing)
       await expect(editor.locator("[data-current-revision]")).toContainText("Committed in the other page")
       await expect(editor.getByLabel("Action", { exact: true })).toHaveValue(edited)
-      await command(page, editor.getByRole("button", { name: "Save", exact: true }), "save")
+      await editor.getByRole("button", { name: "Review save", exact: true }).click()
+      await command(page, editor.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm save", exact: true }), "save")
       await expect(editor).toBeHidden()
       await page.reload()
       await expect(topicRow(page, topic).getByRole("rowheader", { name: edited, exact: true })).toBeVisible()
@@ -77,90 +168,112 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
         if (request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/dashboard" && request.postDataJSON()?.action === "delete") deletes++
       }
       page.on("request", countDelete)
-      await confirmDialog(page, topicRow(page, topic).getByRole("button", { name: "Delete", exact: true }), "Confirm this change?", false)
+      await topicRow(page, topic).getByRole("button", { name: "View details", exact: true }).click()
+      const detail = page.locator("[data-sf-topic-detail]")
+      await detail.getByRole("button", { name: "Delete topic", exact: true }).click()
+      const review = detail.locator('[data-component="sf-change-review"]')
+      await expect(review).toContainText(edited)
+      await review.getByRole("button", { name: "Cancel review", exact: true }).click()
+      await expect(review).toBeHidden()
+      await page.goto(topics)
       await other.reload()
       await expect(topicRow(other, topic).getByRole("rowheader", { name: edited, exact: true })).toBeVisible()
       expect(deletes).toBe(0)
       page.off("request", countDelete)
       const editor = await openTopic(page, topic)
       await editor.getByLabel("Notes", { exact: true }).fill("This unsaved note must be discarded")
-      await confirmDialog(page, editor.getByRole("button", { name: "Close editor", exact: true }), "Discard unsaved changes?", false)
+      await editor.getByRole("button", { name: "Back to topics", exact: true }).click()
+      const discard = editor.getByRole("group", { name: "Discard these unsaved edits?", exact: true })
+      await expect(discard).toBeVisible()
+      await discard.getByRole("button", { name: "Cancel", exact: true }).click()
       await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue("This unsaved note must be discarded")
-      await confirmDialog(page, editor.getByRole("button", { name: "Close editor", exact: true }), "Discard unsaved changes?", true)
+      await editor.getByRole("button", { name: "Back to topics", exact: true }).click()
+      await expect(discard).toBeVisible()
+      await discard.getByRole("button", { name: "Discard draft", exact: true }).click()
       await expect(editor).toBeHidden()
       await page.reload()
       const reopened = await openTopic(page, topic)
       await expect(reopened.getByLabel("Notes", { exact: true })).toHaveValue("Local edits survive the conflict")
-      await reopened.getByRole("button", { name: "Close editor", exact: true }).click()
+      await reopened.getByRole("button", { name: "Back to topics", exact: true }).click()
     })
 
     await test.step("reopen the preserved values after the source changes and a full reload", async () => {
+      if (!preserved) throw new Error("The record was not preserved by its original producer")
+      const reopened = page.waitForResponse(responseFor(dashboard, "review-read", "GET"))
+      await page.goto("/orchestra/sf-reviews/reviews/r_" + Buffer.from(preserved.id).toString("base64url"))
+      const response = await reopened
+      expect(response.status()).toBe(200)
+      const read = Schema.decodeUnknownSync(SfReviewsReviewRead.output)(await response.json())
+      expect(read).toEqual({ status: "ok", value: preserved })
+      const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + preserved.id + '"]')
+      await expect(article).toHaveAttribute("data-review-version", String(preserved.version))
+      await expect(article).toContainText(original)
+      await expect(article).not.toContainText(edited)
+      const pendingReload = page.waitForResponse(responseFor(dashboard, "review-read", "GET"))
       await page.reload()
-      await page.locator("[data-dashboard-workbench-panel] > summary").click()
-      const workbench = page.getByRole("region", { name: "Revisão e ações do Dashboard", exact: true })
-      await hostCommand(page, workbench.getByRole("button", { name: "Carregar opções", exact: true }), "dashboard-workbench")
-      await expect(workbench.locator("[data-dashboard-status]")).toContainText("Opções carregadas.")
-      const history = workbench.getByRole("combobox", { name: "Reunião ou retrato preservado", exact: true })
-      const option = history.locator("option").filter({ hasText: original })
-      await expect(option).toHaveCount(1)
-      const value = await option.getAttribute("value")
-      if (!value) throw new Error("The preserved record is absent from authorized history")
-      await history.selectOption(value)
-      await hostCommand(page, workbench.getByRole("button", { name: "Abrir histórico", exact: true }), "dashboard-history")
-      await expect(workbench.locator("[data-dashboard-history-view]")).toContainText(original)
-      await expect(workbench.locator("[data-dashboard-history-view]")).not.toContainText(edited)
-      await expect(workbench.locator("[data-dashboard-status]")).toHaveText("Histórico aberto com seu acesso atual.")
+      const reloaded = await pendingReload
+      expect(reloaded.status()).toBe(200)
+      expect(Schema.decodeUnknownSync(SfReviewsReviewRead.output)(await reloaded.json()))
+        .toEqual({ status: "ok", value: preserved })
+      await expect(article).toHaveAttribute("data-review-version", String(preserved.version))
+      await expect(article).toContainText(original)
+      await expect(article).not.toContainText(edited)
       await info.attach("dashboard-installed-history.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
     })
 
     await test.step("prioritize real signals and follow record and application links", async () => {
       await page.goto(dashboardUrl(installation.origin, "IT Risks"))
-      await page.getByText("Add risk", { exact: true }).click()
-      const risk = page.locator('form[data-page="IT Risks"][data-command="save"][data-record=""]')
+      await page.getByRole("button", { name: "New risk", exact: true }).click()
+      const risk = page.locator('[data-sf-surface="CAP13"] form.sf-u30-editor')
       await risk.getByLabel("Risk title", { exact: true }).fill("M67 Installed high risk")
       await risk.getByLabel("Risk description", { exact: true }).fill("Installed operational risk")
       await risk.getByRole("combobox", { name: "Impact", exact: true }).selectOption("4")
       await risk.getByRole("combobox", { name: "Probability", exact: true }).selectOption("4")
       await risk.getByRole("combobox", { name: "Status", exact: true }).selectOption("open")
-      await command(page, risk.getByRole("button", { name: "Add record", exact: true }), "save")
+      await risk.getByRole("button", { name: "Review changes", exact: true }).click()
+      const riskReview = page.locator('[data-sf-surface="CAP13"] [data-component="sf-change-review"]')
+      await expect(riskReview).toContainText("M67 Installed high risk")
+      await command(page, riskReview.getByRole("button", { name: "Save", exact: true }), "save")
       await expect(page.getByRole("cell", { name: "M67 Installed high risk", exact: true })).toBeVisible()
       const executive = dashboardUrl(installation.origin, "Executive Dashboard", { execYear: "2026", executiveMonth: "11" })
       await page.goto(executive)
       const signals = page.locator("[data-dashboard-signals]")
-      const signalRow = signals.getByRole("row").filter({ has: signals.getByRole("cell", { name: edited, exact: true }) })
+      const signalRow = signals.getByRole("row").filter({ has: signals.getByRole("rowheader", { name: edited, exact: true }) })
       await expect(signalRow).toBeVisible()
-      await expect(signals.getByRole("cell", { name: "M67 Installed high risk", exact: true })).toBeVisible()
-      await signalRow.getByRole("button", { name: `Prioritize ${edited}`, exact: true }).click()
+      await expect(signals.getByRole("rowheader", { name: "M67 Installed high risk", exact: true })).toBeVisible()
+      await signalRow.getByRole("button", { name: "Prioritize", exact: true }).click()
       expect(new URL(page.url()).searchParams.getAll("signalPriority")).toEqual([`hotTopics:${topic}`])
       await page.reload()
-      await expect(signalRow.getByRole("button", { name: `Remove priority for ${edited}`, exact: true })).toHaveAttribute("aria-pressed", "true")
-      await signalRow.getByRole("link", { name: "Open record", exact: true }).click()
-      await expect(topicRow(page, topic)).toBeVisible()
+      await expect(signalRow.getByRole("button", { name: "Remove priority", exact: true })).toHaveAttribute("aria-pressed", "true")
+      await signalRow.getByRole("button", { name: "Open record", exact: true }).click()
+      await expect(page.locator("[data-sf-topic-detail]").getByRole("heading", { name: edited, exact: true })).toBeVisible()
       const linked = new URL(page.url())
-      expect(linked.searchParams.get("page")).toBe(topicsPage)
+      expect(linked.pathname).toBe("/orchestra/sf-dashboard/hot-topics/r_" + Buffer.from(topic).toString("base64url"))
       expect(linked.searchParams.get("year")).toBe("2026")
-      expect(linked.searchParams.get("execYear")).toBe("2026")
-      expect(linked.searchParams.get("executiveMonth")).toBe("11")
-      expect(linked.hash).toBe(`#record-${topic}`)
-      const applications = page.getByRole("navigation", { name: "Applications", exact: true })
-      await applications.getByRole("link", { name: "Budget Planner", exact: true }).click()
-      await expect(page.locator("body")).toHaveAttribute("data-surface", "planner")
-      expect(new URL(page.url()).pathname).toBe("/sucafina/planner")
-      await applications.getByRole("link", { name: "Procurement", exact: true }).click()
-      await expect(page.locator("body")).toHaveAttribute("data-surface", "procurement")
-      expect(new URL(page.url()).pathname).toBe("/sucafina/procurement")
-      await applications.getByRole("link", { name: "Dashboard", exact: true }).click()
-      await expect(page.locator("body")).toHaveAttribute("data-surface", "dashboard")
+      expect(linked.searchParams.get("month")).toBe("11")
+      const navigation = page.locator('aside[data-component="orchestra-sidebar"]')
+      const advanced = navigation.locator('button[aria-controls="orchestra-advanced-navigation"]')
+      if (await advanced.getAttribute("aria-expanded") !== "true") await advanced.click()
+      await navigation.locator('button[data-nav-id="sf-planner"]').click()
+      await expect(page.locator('[data-sf-surface="CAP17"]')).toBeVisible()
+      expect(new URL(page.url()).pathname).toBe("/orchestra/sf-planner/overview")
+      await navigation.locator('button[data-nav-id="sf-procurement"]').click()
+      await expect(page.locator('[data-sf-surface="CAP25"]')).toBeVisible()
+      expect(new URL(page.url()).pathname).toBe("/orchestra/sf-procurement/requests")
+      await navigation.locator('button[data-nav-id="sf-dashboard"]').click()
+      await expect(page.locator('[data-sf-surface="CAP01"]')).toBeVisible()
+      expect(new URL(page.url()).pathname).toBe("/orchestra/sf-dashboard/executive")
     })
 
     await test.step("withdraw the confirmed record and preserve unrelated records after reload", async () => {
       await page.goto(topics)
-      const pending = page.waitForResponse((response) => response.request().method() === "POST" &&
-        new URL(response.url()).pathname === "/sucafina/dashboard" && response.request().postDataJSON()?.action === "delete", { timeout: 15_000 })
-      await confirmDialog(page, topicRow(page, topic).getByRole("button", { name: "Delete", exact: true }), "Confirm this change?", true)
-      const response = await pending
-      expect(response.status()).toBe(200)
-      expect(await response.json()).toMatchObject({ ok: true })
+      await topicRow(page, topic).getByRole("button", { name: "View details", exact: true }).click()
+      const detail = page.locator("[data-sf-topic-detail]")
+      await detail.getByRole("button", { name: "Delete topic", exact: true }).click()
+      const review = detail.locator('[data-component="sf-change-review"]')
+      await expect(review).toContainText(edited)
+      await command(page, review.getByRole("button", { name: "Confirm deletion", exact: true }), "delete")
+      await page.goto(topics)
       await expect(topicRow(page, topic)).toHaveCount(0)
       await page.reload()
       await expect(topicRow(page, topic)).toHaveCount(0)

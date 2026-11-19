@@ -238,7 +238,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     setView("state", "loading")
     void readBudgetPage(ready.transport, props.capability, targetYear, ready.context.stamp, signal.signal)
       .then((result) => {
-        if (signal.signal.aborted || context.generation() !== generation || context.ready() !== ready) return
+        if (signal.signal.aborted || context.generation() !== generation || context.ready()?.transport !== ready.transport) return
         if (result.state === "ready") {
           setView("page", result.page)
           setView("state", result.page.owners === undefined || result.page.entries === undefined ? "partial" : "ready")
@@ -482,6 +482,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const snapshot = editor?.draft.snapshot()
     if (!editor || !ready || !page || !snapshot || snapshot.availability !== "active" || validate(editor) || view.busy) return
     if (context.state().status !== "ready" || page.context.accessRevision !== ready.context.stamp.accessRevision) return
+    const generation = context.generation()
+    // ready() creates a presentation wrapper; the generation and opaque transport identify its owner.
+    const isCurrentOwner = () => context.generation() === generation && context.ready()?.transport === ready.transport
     const input: BudgetCommand = {
       action: editor.action,
       recordId: editor.action === "save-entry" ? editor.recordId : editor.recordId,
@@ -491,12 +494,14 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       versions: page.versions,
       form: snapshot.value,
     }
+    const ownersBefore = page.owners && new Set(page.owners.map((owner) => String(owner.id)))
+    const entriesBefore = page.entries && new Set(page.entries.map((entry) => String(entry.id)))
     const abort = new AbortController()
     const operationRef = editor.operationRef
     const idempotencyKey = crypto.randomUUID()
     const bytes = new TextEncoder().encode(JSON.stringify(input))
     const fingerprint = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
-    if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor)) return
+    if (!fingerprint || !isCurrentOwner() || editing() !== editor || validate(editor)) return
     const payloadDigest = Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
     const pendingSnapshot = editor.draft.snapshot()
@@ -510,7 +515,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         signal: abort.signal,
         idempotencyKey,
       } satisfies SfCallOptions & { idempotencyKey: string })
-      if (context.ready() !== ready || editing() !== editor) return
+      if (!isCurrentOwner() || editing() !== editor) return
       if (result.kind !== "response") {
         // A transport loss after dispatch is outcome-unknown, not failure/retry.
         editor.draft.setPhase("outcome-unknown")
@@ -532,8 +537,46 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       // The legacy producer returns {ok:true} without a record projection.
       // Refetch is mandatory before exposing new values or claiming a clean base.
       const postRead = await readBudgetPage(ready.transport, props.capability, year(), ready.context.stamp, abort.signal)
-      if (context.ready() !== ready || editing() !== editor) return
-      editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      if (!isCurrentOwner() || editing() !== editor) return
+      let projected: { version: number; value: BudgetForm } | undefined
+      if (postRead.state === "ready") {
+        const current = postRead.page
+        if (editor.action === "save" && ownersBefore) {
+          const matches = current.owners?.filter((owner) =>
+            (editor.recordId ? String(owner.id) === editor.recordId : !ownersBefore.has(String(owner.id))) &&
+            owner.name === input.form.name && owner.budget === Number(input.form.budget),
+          )
+          const owner = matches?.length === 1 ? matches[0] : undefined
+          const version = owner && current.versions[ownerCollection(props.capability) + ":" + owner.id]
+          if (owner && typeof version === "number" && Number.isSafeInteger(version) && version > editor.version)
+            projected = { version, value: formFor(owner, undefined, editor.month) }
+        }
+        if (editor.action === "save-entry" && entriesBefore) {
+          const owner = current.owners?.find((item) => String(item.id) === editor.parentId)
+          const matches = current.entries?.filter((entry) =>
+            (editor.recordId ? String(entry.id) === editor.recordId : !entriesBefore.has(String(entry.id))) &&
+            String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === editor.parentId &&
+            entry.year === input.year && entry.month === input.form.month &&
+            entry.budget === Number(input.form.budget) && entry.actual === Number(input.form.actual) &&
+            entry.forecast === Number(input.form.forecast),
+          )
+          const entry = matches?.length === 1 ? matches[0] : undefined
+          const version = entry && current.versions[entryCollection(props.capability) + ":" + entry.id]
+          if (owner && entry && typeof version === "number" && Number.isSafeInteger(version) && version > editor.version)
+            projected = { version, value: formFor(owner, entry, input.form.month) }
+        }
+      }
+      if (projected) {
+        editor.draft.confirmSave({ kind: "projected", operationRef, baseVersion: projected.version, value: projected.value })
+        // Retire only a confirmed, reread creation intent. Unknown submissions stay protected by F03.
+        if (!editor.recordId) ready.drafts.discard({
+          surfaceId: props.capability,
+          identity: { kind: "new", newIntentRef: (props.capability + ":" + input.year + ":" + editor.action + ":" + (editor.parentId ?? "new") + ":" + editor.month) as SfIntentRef },
+          editScopeKey: (input.year + ":" + editor.action + ":" + (editor.parentId ?? "new") + ":" + editor.month) as SfEditScopeKey,
+        })
+      } else {
+        editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      }
       setView("message", sfCommonKey("sf.common.saved"))
       setEditing(undefined)
       if (postRead.state === "ready") {
@@ -546,7 +589,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       if (editor.action === "delete" || props.route.kind === "new") navigate(listHref("entry"))
       else if (props.route.kind === "edit" && editor.parentId) navigate(listHref("detail", editor.parentId))
     } catch {
-      if (context.ready() === ready && editing() === editor) {
+      if (isCurrentOwner() && editing() === editor) {
         editor.draft.setPhase("outcome-unknown")
         setView("error", t(sfCommonKey("sf.common.operationUnknown")))
       }
@@ -556,7 +599,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       // cannot clear the successor command's busy state.
       if (activeSubmissionRef === operationRef) {
         activeSubmissionRef = undefined
-        if (context.ready() === ready) setView("busy", false)
+        if (isCurrentOwner()) setView("busy", false)
       }
     }
   }
@@ -778,7 +821,12 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         context={[{ id: "year", label: { key: key("year") }, value: { kind: "data", text: String(year()) } }]}
         tabs={[]} activeTab={null}
         primaryAction={pageAction()}
-        secondaryActions={[]}
+        secondaryActions={[{
+          id: "refresh-data", labelKey: sfCommonKey("sf.common.refreshData"), tone: "secondary",
+          disabled: view.busy || view.state === "loading" || context.state().status !== "ready",
+          busy: view.state === "loading",
+          onInvoke: () => setView("reload", (value) => value + 1),
+        }]}
         density="comfortable" layout="split"
         onLayoutMode={(mode) => setLayoutMode(mode)}
       >
@@ -848,6 +896,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
               {(owner) => <section class="sf-budget-detail" aria-label={t(key("record"))}>{detail(owner())}</section>}
             </Show>
           </div>
+          <Show when={props.capability === "CAP04"}>
+            <p><a href={"/orchestra/sf-reviews/agenda?" + new URLSearchParams({ sourcePage: "OPEX Detail", year: String(year()) }).toString()}>
+              {t(sfCommonKey("sf.common.reportsBackup"))}</a></p>
+          </Show>
         </SfStatePanel>
         <Show when={context.state().status === "ready" && view.page && editing() ? editing() : undefined} keyed>
           {(editor) => <section class="sf-budget-editor" data-sf-action={editor.action} data-sf-draft-phase={editPhase(editor)}>{editorView(editor)}</section>}
