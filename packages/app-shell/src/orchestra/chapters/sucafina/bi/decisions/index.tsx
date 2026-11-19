@@ -6,7 +6,7 @@
  * neither this renderer nor F03 performs financial math, FX, or interpolation.
  * U21 owns the BI page's authorized load/reload and shared route composition.
  */
-import { createMemo, For, Show, type JSX } from "solid-js"
+import { createEffect, createMemo, createSignal, For, Show, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import type { SfBiBiDataOutput } from "@orchestra/schema/sucafina/bi"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
@@ -26,6 +26,7 @@ export type SfDecisionFigureProps = Readonly<{
   selection: SfRef | null
   onSelect: (selectionRef: SfRef) => void
   onOpenSource: (sourceRef: SfRef) => void
+  onOpenValueSource?: (valueId: string, referenceDigest: string) => void
 }>
 
 const key = (name: string) => name as SfCopyKey
@@ -56,6 +57,80 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
   const scenario = () => { const current = decision(); return current?.kind === "scenario" ? current : undefined }
   const isView = () => packet().request.viewId === props.viewId && presentation().viewId === props.viewId
   const exactValue = (valueId: string) => projection().values.find((value) => value.id === valueId)
+
+  type RecordedValue = SfDecisionBiProjection["projection"]["values"][number]
+  const numeric = (value: RecordedValue | undefined) => value?.evidenceState !== "absent" &&
+    typeof value?.value === "number" ? value.value : null
+  const literal = (value: RecordedValue | undefined) => !value || value.value === null ||
+    value.evidenceState === "absent" ? t("sf.u22.chart.missing") : String(value.value)
+  const origins = (value: RecordedValue) => {
+    const sources = value.drilldown ? [value.drilldown] : value.sourceRefs
+    return sources.filter((source, index) => sources.findIndex((other) => other.refDigest === source.refDigest) === index)
+  }
+  const [sourceChoice, setSourceChoice] = createSignal<{ value: RecordedValue; label: string }>()
+  createEffect(() => { props.projection; setSourceChoice(undefined) })
+  const openValueSource = (value: RecordedValue, referenceDigest: string) => {
+    const source = origins(value).find((entry) => entry.refDigest === referenceDigest)
+    if (!source) return
+    setSourceChoice(undefined)
+    if (props.onOpenValueSource) props.onOpenValueSource(value.id, source.refDigest)
+    else { const token = tokenFor(source.refDigest); if (token) props.onOpenSource(token) }
+  }
+  const chooseValueSource = (value: RecordedValue, label: string) => {
+    const choices = origins(value)
+    if (choices.length === 1) openValueSource(value, choices[0]!.refDigest)
+    else if (choices.length > 1) setSourceChoice({ value, label })
+  }
+  const sourceButtons = (value: RecordedValue | undefined) => <Show when={value}>
+    {(recorded) => <Show when={origins(recorded()).length} fallback={<span>{t("sf.u22.chart.noSource")}</span>}>
+      <For each={origins(recorded())}>{(source) =>
+        <button class="mx-btn" type="button" data-bi-origin={source.refDigest}
+          onClick={() => openValueSource(recorded(), source.refDigest)}>{source.refId}</button>
+      }</For>
+    </Show>}
+  </Show>
+  const waterfallRows = createMemo(() => {
+    const plan = presentation().waterfall
+    if (!plan) return []
+    const first = exactValue(plan.segments[0]?.startValueId ?? "")
+    const last = exactValue(plan.finalValueId)
+    return [
+      { label: t("sf.u22.waterfall.initial"), id: first?.id ?? "", source: first, total: true,
+        start: 0, end: numeric(first), amount: numeric(first) },
+      ...plan.segments.map((segment) => {
+        const source = exactValue(segment.componentValueId)
+        return { label: segment.label, id: segment.componentValueId, source, total: false,
+          start: numeric(exactValue(segment.startValueId)), end: numeric(exactValue(segment.endValueId)),
+          amount: numeric(source) }
+      }),
+      { label: t("sf.u22.waterfall.final"), id: plan.finalValueId, source: last, total: true,
+        start: 0, end: numeric(last), amount: numeric(last) },
+    ]
+  })
+  // Coordinates only. Every endpoint and contribution above is a producer value.
+  const waterfallAxis = createMemo(() => {
+    const numbers = waterfallRows().flatMap((row) => [row.start, row.end].filter((value): value is number => value !== null))
+    const low = Math.min(0, ...numbers), high = Math.max(0, ...numbers)
+    const span = high - low || 1
+    return (value: number) => 155 - (value - low) / span * 140
+  })
+  const advantage = createMemo(() => {
+    const comparison = projection().comparison
+    const decision = scenario()
+    if (!comparison || !decision || comparison.metricRef !== "planner:known-subtotal-difference" ||
+        comparison.comparisonRef === decision.comparisonRef || comparison.version !== projection().version ||
+        comparison.engineVersion !== projection().engineVersion ||
+        JSON.stringify(comparison.context) !== JSON.stringify(projection().context) ||
+        new Set(comparison.values.map((value) => value.id)).size !== comparison.values.length) return
+    const amount = comparison.values.find((value) => value.id === "scenario:advantage-known-difference")
+    const state = comparison.values.find((value) => value.id === "scenario:advantage-comparison-status")
+    if (!amount || !state || (amount.value !== null && typeof amount.value !== "number") ||
+        amount.currency !== decision.scenario.currency ||
+        amount.period.start !== decision.scenario.horizon.start || amount.period.end !== decision.scenario.horizon.end ||
+        state.period.start !== decision.scenario.horizon.start || state.period.end !== decision.scenario.horizon.end ||
+        (state.value !== "complete" && state.value !== "conditioned" && state.value !== "incompatible" && state.value !== "unavailable")) return
+    return { comparison, amount, state: state.value }
+  })
   const navigation = () => packet().navigation
   const tokenFor = (origin: string) => {
     const entry = navigation()?.entries.find((item) => item.key === origin)
@@ -178,31 +253,103 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
         onSelect={props.onSelect} onOpenSource={props.onOpenSource}
       >
         <Show when={isView()} fallback={<p role="alert">{t("sf.u22.chart.noResult")}</p>}>
+          <Show when={advantage()}>{(recorded) => {
+            const amount = () => literal(recorded().amount)
+            const state = () => t(("sf.u22.advantage." + recorded().state) as keyof typeof SF_U22_COPY)
+            const description = () => t("sf.u22.advantage.chart", {
+              amount: amount(), currency: projection().context.currency, state: state(),
+            })
+            return <section class="sf-u22-detail">
+              <h3>{t("sf.u22.advantage.title")}</h3>
+              <p>{t("sf.u22.advantage.orientation")}</p>
+              <svg viewBox="0 0 320 160" width="100%" style={{ "max-width": "24rem" }} role="img" aria-label={description()}>
+                <title>{description()}</title>
+                <line x1="25" x2="295" y1="80" y2="80" stroke="currentColor" />
+                <Show when={numeric(recorded().amount) !== null}>
+                  <rect x="135" y={numeric(recorded().amount)! >= 0 ? 20 : 80} width="50"
+                    height={numeric(recorded().amount) === 0 ? 2 : 60} fill="currentColor" />
+                </Show>
+              </svg>
+              <div class="sf-u22-table-scroll"><table>
+                <caption>{t("sf.u22.advantage.caption")}</caption>
+                <thead><tr>
+                  <th scope="col">{t("sf.u22.chart.measure")}</th><th scope="col">{t("sf.u22.chart.value")}</th>
+                  <th scope="col">{t("sf.u22.chart.unit")}</th><th scope="col">{t("sf.u22.chart.period")}</th>
+                  <th scope="col">{t("sf.u22.chart.evidenceState")}</th><th scope="col">{t("sf.u22.chart.source")}</th>
+                </tr></thead>
+                <tbody><tr><td>{t("sf.u22.advantage.title")}</td><td>{amount()}</td>
+                  <td>{projection().context.currency}</td>
+                  <td>{recorded().amount.period.start} – {recorded().amount.period.end}</td>
+                  <td>{state()}</td><td>{recorded().comparison.comparisonRef}</td>
+                </tr></tbody>
+              </table></div>
+            </section>
+          }}</Show>
+          <section class="sf-u22-detail">
+            <div class="sf-u22-table-scroll"><table>
+              <caption>{t("sf.u22.values.caption")}</caption>
+              <thead><tr>
+                <th scope="col">{t("sf.u22.values.id")}</th><th scope="col">{t("sf.u22.chart.value")}</th>
+                <th scope="col">{t("sf.u22.chart.unit")}</th><th scope="col">{t("sf.u22.chart.period")}</th>
+                <th scope="col">{t("sf.u22.chart.evidenceState")}</th><th scope="col">{t("sf.u22.chart.source")}</th>
+                <th scope="col">{t("sf.u22.chart.drilldown")}</th>
+              </tr></thead>
+              <tbody><For each={projection().values}>{(value) => <tr data-sf-bi-value={value.id}>
+                <td>{value.id}</td><td>{literal(value)}</td><td>{value.currency ?? value.unit ?? t("sf.u22.chart.missing")}</td>
+                <td>{value.period.start} – {value.period.end}</td><td>{value.evidenceState}</td>
+                <td>{origins(value).map((source) => source.refId).join(", ") || t("sf.u22.chart.noSource")}</td>
+                <td>{sourceButtons(value)}</td>
+              </tr>}</For></tbody>
+            </table></div>
+          </section>
+          <Show when={sourceChoice()}>{(choice) => <section class="sf-u22-detail" data-bi-source-chooser>
+            <h3>{t("sf.u22.values.chooseSource")}: {choice().label}</h3>
+            {sourceButtons(choice().value)}
+          </section>}</Show>
           <Show when={props.viewId === "BI09"}>
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.components")}>
               <h3>{t("sf.u22.chart.components")}</h3>
               <Show when={presentation().waterfall}>
                 {(waterfall) => <>
                   <p>{t("sf.u22.chart.reconciliation")}: {waterfall().reconciliation}</p>
+                  <svg viewBox="0 0 620 180" width="100%" role="group" aria-label={t("sf.u22.waterfall.chart")}>
+                    <For each={waterfallRows()}>{(row, index) => <Show when={row.start !== null && row.end !== null && row.amount !== null}>
+                      <g data-bi-value={row.id} data-bi-kind={row.total ? "total" : "contribution"}
+                        role={row.source && origins(row.source).length ? "button" : undefined}
+                        tabindex={row.source && origins(row.source).length ? 0 : undefined}
+                        aria-label={row.label + ": " + (row.amount! > 0 && !row.total ? "+" : "") + row.amount + " " + projection().context.currency}
+                        onClick={() => { if (row.source) chooseValueSource(row.source, row.label) }}
+                        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault(); if (row.source) chooseValueSource(row.source, row.label)
+                        } }}>
+                        <title>{row.label}: {row.amount! > 0 && !row.total ? "+" : ""}{row.amount} {projection().context.currency}</title>
+                        <line x1={30 + index() * 560 / Math.max(1, waterfallRows().length - 1)}
+                          x2={30 + index() * 560 / Math.max(1, waterfallRows().length - 1)}
+                          y1={waterfallAxis()(row.start!)} y2={waterfallAxis()(row.end!)}
+                          stroke="currentColor" stroke-width={row.total ? 14 : 8} />
+                        <circle cx={30 + index() * 560 / Math.max(1, waterfallRows().length - 1)}
+                          cy={waterfallAxis()(row.end!)} r="4" fill="currentColor" />
+                      </g>
+                    </Show>}</For>
+                  </svg>
                   <div class="sf-u22-table-scroll">
                     <table>
-                      <caption>{t("sf.u22.bi09.question")}</caption>
+                      <caption>{t("sf.u22.waterfall.caption")}</caption>
                       <thead><tr>
-                        <th scope="col">{t("sf.u22.chart.measure")}</th>
-                        <th scope="col">{t("sf.u22.chart.parameter")}</th>
-                        <th scope="col">{t("sf.u22.chart.result")}</th>
-                        <th scope="col">{t("sf.u22.chart.components")}</th>
+                        <th scope="col">{t("sf.u22.waterfall.component")}</th>
+                        <th scope="col">{t("sf.u22.waterfall.start")}</th>
+                        <th scope="col">{t("sf.u22.waterfall.contribution")}</th>
+                        <th scope="col">{t("sf.u22.waterfall.end")}</th>
+                        <th scope="col">{t("sf.u22.chart.source")}</th>
                       </tr></thead>
-                      <tbody>
-                        <For each={waterfall().segments}>
-                          {(segment) => <tr>
-                            <th scope="row">{segment.label}</th>
-                            <td>{readValue(segment.startValueId)}</td>
-                            <td>{readValue(segment.endValueId)}</td>
-                            <td>{readValue(segment.componentValueId)}</td>
-                          </tr>}
-                        </For>
-                      </tbody>
+                      <tbody><For each={waterfallRows()}>{(row) => <tr>
+                        <td>{row.label}</td>
+                        <td>{row.total ? "—" : row.start === null ? t("sf.u22.chart.missing") : String(row.start)}</td>
+                        <td>{row.total ? "—" : row.amount === null ? t("sf.u22.chart.missing") :
+                          (row.amount > 0 ? "+" : "") + String(row.amount)}</td>
+                        <td>{row.end === null ? t("sf.u22.chart.missing") : String(row.end)}</td>
+                        <td>{sourceButtons(row.source)}</td>
+                      </tr>}</For></tbody>
                     </table>
                   </div>
                   <Show when={waterfall().reconciliation !== "reconciled"}>

@@ -221,13 +221,14 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     }
   }
 
-  const openSource = async (reference: SfRef) => {
+  const openSource = async (reference: SfRef, selected?: { valueId: string; referenceDigest: string }) => {
     // A value's source is resolved only via its original valueId/digest and the
     // installed C08 bi-source producer. This cannot produce arbitrary URLs.
     const result = store.data
     if (!result || !allowedData()) return
-    const matched = result.projection.values.flatMap((value) =>
-      [value.drilldown, ...value.sourceRefs].filter((source) => source?.refId === reference)
+    const matched = result.projection.values.filter((value) => !selected || value.id === selected.valueId).flatMap((value) =>
+      [value.drilldown, ...value.sourceRefs].filter((source) => source?.refId === reference &&
+        (!selected || source.refDigest === selected.referenceDigest))
         .filter((source, index, all) => source && all.findIndex((item) => item?.refDigest === source.refDigest) === index)
         .map((source) => ({ value, source: source! })))
     if (matched.length !== 1) {
@@ -419,7 +420,12 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                   <SfDecisionFigure viewId={store.viewId as "BI09" | "BI10" | "BI11"}
                     projection={data()} selection={store.selectedSource}
                     onSelect={(ref) => { void openDecision(ref) }}
-                    onOpenSource={(ref) => { void openDecision(ref) }} />
+                    onOpenSource={(ref) => { void openDecision(ref) }}
+                    onOpenValueSource={(valueId, referenceDigest) => {
+                      const value = data().projection.values.find((entry) => entry.id === valueId)
+                      const source = value && [value.drilldown, ...value.sourceRefs].find((entry) => entry?.refDigest === referenceDigest)
+                      if (source) void openSource(source.refId as SfRef, { valueId, referenceDigest })
+                    }} />
                 </Show>
                 <Show when={store.detail}>
                   {(detail) => <section><h2>{detail().title}</h2><p>{detail().reference}</p>
