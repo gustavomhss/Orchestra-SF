@@ -92,3 +92,9 @@ Estado: partial
 - O controle de inspeção usa botão explícito + Show, preservando os dois JSON originais e os mesmos rótulos. Retirado o details/summary preexistente para respeitar a restrição do console descomissionado.
 - Asserções removidas: nenhuma. Sem alteração de retries, idempotência, timeout, permissões ou produtor.
 - Gate Reports6 usa snapshot ac233ca04fcc609301673c7ce27667d53bd0ec0d anterior a esta correção; serve para revelar os próximos bloqueios reais. A confirmação C05 deste commit ainda exige sua prova no mesmo reports.spec.ts.
+
+### Compatibilidade do descritor original de agenda — 2026-11-19
+
+- A auditoria44585817131 revelou cinco falhas C05 em meeting-fixture.ts:28: a descoberta emitia recordOptions dentro de agenda.section e o consumidor original devolvia essa section ao dashboard-agenda, cujo contrato fechado rejeita metadados extras com400.
+- Correção na origem: recordOptions fica em agenda, separado de section. A section conserva exatamente os campos originais de seleção; o adaptador native-ui/reviews.ts continua publicando os mesmos recordOptions nos itens somente de leitura usados por UI47. Nenhuma mudança no schema de comando, grants ou asserções.
+- Pendente: gate estreito dos dois specs ui-review/review-context e review-context-history; native Reports/Dashboard continuam exigindo seus gates completos.

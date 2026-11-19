@@ -18,15 +18,16 @@ describe("review routes", () => {
   })
   test("requires the original review operation with CAP-only destinations", () => {
     const candidate = matchSfNativeRoutePath("/orchestra/sf-reviews/compare")!
-    const context = { destinations: sourceDestinations, availability: [{ family: "reviews", resource: "preserved", operations: [{ operationId: "dashboard.dashboard-review", state: "ready", operational: true }] }] } as unknown as SfContext
+    const context = { destinations: sourceDestinations, availability: [{ family: "reviews", resource: "preserved", operations: [{ operationId: "reviews.review-read", state: "ready", operational: true }] }] } as unknown as SfContext
     expect(reviewsRouteAvailable(context, candidate)).toBe(true)
+    expect(reviewsRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operationId: "dashboard.dashboard-review" }] }] }, candidate)).toBe(false)
     expect(reviewsRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
     expect(reviewsRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, candidate)).toBe(false)
   })
   test("report admission uses source-backed prepare and download, not legacy Office codecs", () => {
     const candidate = matchSfNativeRoutePath(`/orchestra/sf-reviews/reports/${encodeSfRouteRef("review")}`)!
     const context = { destinations: sourceDestinations, availability: [
-      { family: "reviews", resource: "preserved", state: "ready", operations: [{ operationId: "dashboard.dashboard-review", state: "ready", operational: true }] },
+      { family: "reviews", resource: "preserved", state: "ready", operations: [{ operationId: "reviews.review-read", state: "ready", operational: true }] },
       { family: "reviews", resource: "report-export", state: "unavailable", operations: [
         { operationId: "reviews.export.docx", state: "unavailable", operational: false },
         { operationId: "reviews.report.prepare", state: "ready", operational: true },

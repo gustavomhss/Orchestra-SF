@@ -134,6 +134,8 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   const initialUpdate = Schema.decodeUnknownSync(Schema.toType(SfReviewsReviewUpdate.output))(await responseBody(await pendingInitialUpdate))
   if (initialUpdate.status !== "ok") throw new Error("The original successor admission was unavailable")
   expect(initialUpdate.value.previousReviewRef).toBe(original.id)
+  expect(initialUpdate.value.available).toBe(false)
+  await expect(page.locator("[data-sf-successor-availability]")).toHaveAttribute("data-sf-successor-availability", "false")
   // Availability is not a changed/unchanged flag. The immutable read and the
   // next preview prove content continuity without inventing such a flag.
   const beforeEdit = await page.request.get(origin + "/sucafina/dashboard?" + new URLSearchParams({ sf: "review-read", reviewRef: original.id }))

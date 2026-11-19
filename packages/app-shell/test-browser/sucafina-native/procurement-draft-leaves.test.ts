@@ -160,9 +160,18 @@ if (process.env.SF_PROCUREMENT_DRAFT_DOM !== "1") {
       await waitFor(() => view.node.querySelector('[data-component="sf-change-review"]'))
       view.node.querySelector<HTMLButtonElement>('.sf-s03-actions button.primary')!.click()
       await waitFor(() => view.node.querySelector('[data-draft-conflict="pr"]'))
-      expect(view.node.querySelector('[data-sf-pr-fields]')).toBeNull()
+      // The native conflict review preserves the local values, visibly locked,
+      // until the operator explicitly discards or reviews the current record.
+      const fields = view.node.querySelector<HTMLFieldSetElement>('[data-stage="pr"] [data-sf-pr-fields]')
+      expect(fields?.disabled).toBe(true)
+      expect(fields?.querySelector<HTMLTextAreaElement>('[data-field="description"] textarea')?.value).toBe("private request edit")
+      expect(view.node.querySelector('[data-component="sf-change-review"]') === null).toBe(true)
+      expect(writes).toBe(1)
       expect(view.captured.handle?.ready()?.drafts.peek(selected("pr.details"))?.snapshot()).toMatchObject({ phase: "conflict", pendingOperation: null, baseVersion: 1 })
-      view.node.querySelector<HTMLButtonElement>('[data-draft-conflict="pr"] button')!.click()
+      const conflict = view.node.querySelector<HTMLElement>('[data-draft-conflict="pr"]')!
+      const discard = button(conflict, "Discard local draft changes")
+      expect(discard?.disabled).toBe(false)
+      discard!.click()
       await waitFor(() => view.node.querySelector('[data-field="description"] textarea'))
       expect(view.node.querySelector<HTMLTextAreaElement>('[data-field="description"] textarea')?.value).toBe("source")
       expect(writes).toBe(1)
@@ -188,8 +197,14 @@ if (process.env.SF_PROCUREMENT_DRAFT_DOM !== "1") {
         item.textContent?.trim() === "Create request" || item.textContent?.trim() === "sf.u11.remaining.new")
       expect(newButton).toBeDefined(); newButton!.click()
       view.node.querySelector<HTMLButtonElement>('.sf-s03-actions button.primary')!.click()
-      await waitFor(() => view.node.querySelector<HTMLButtonElement>('[data-draft-conflict="pr"] button')?.disabled === false)
-      view.node.querySelector<HTMLButtonElement>('[data-draft-conflict="pr"] button')!.click()
+      await waitFor(() => {
+        const conflict = view.node.querySelector<HTMLElement>('[data-draft-conflict="pr"]')
+        return conflict && button(conflict, "Discard local draft changes")?.disabled === false
+      })
+      const conflict = view.node.querySelector<HTMLElement>('[data-draft-conflict="pr"]')!
+      const discard = button(conflict, "Discard local draft changes")
+      expect(discard?.disabled).toBe(false)
+      discard!.click()
       await waitFor(() => view.node.querySelector<HTMLInputElement>('[data-field="title"] input')?.value === "")
       expect(view.captured.handle?.ready()?.drafts.peek(selected("pr.details"))).toBe(record)
       expect(record?.snapshot()).toMatchObject({ value: { description: "retained record edit" }, dirty: true })

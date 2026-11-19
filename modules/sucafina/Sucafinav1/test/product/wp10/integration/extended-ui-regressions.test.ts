@@ -1,4 +1,7 @@
 import { expect, test } from "bun:test"
+import { Schema } from "effect"
+import { SfProjectionReview } from "@orchestra/schema/sucafina/reviews"
+import { createSfReviewsProjectionHandlers } from "../../../../../../../apps/cli/src/sucafina-product/native-ui/reviews.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { createSfBiServices } from "../../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
 import { createSfReviewServices } from "../../../../../../../apps/cli/src/sucafina-product/review-services.ts"
@@ -20,19 +23,38 @@ test("a non-Budget review update preserves topic, period, notes and predecessor 
     const source = await business.dashboardServices.discover({ page: "OPEX Detail", period }, call)
     if (source.status !== "ok" || !source.value.agenda) throw new Error("OPEX agenda unavailable")
     expect(source.value.agenda.section.title).toBe("OPEX Detail")
-    const http = createSfExtendedHttp({ authority, business, bi, reviews, persistence, origin: "https://example.test",
-      assets: { bi: async () => "void 0", reviews: async () => "void 0" } })
-    const response = await http(new Request(`https://example.test/dashboard?sf=review&page=OPEX+Detail&start=${period.start}&end=${period.end}`), "dashboard")
-    expect(response?.status).toBe(200)
-    const bootstrap = /<script type="application\/json" data-sf-review-bootstrap>([\s\S]*?)<\/script>/.exec(await response!.text())?.[1]
-    expect(bootstrap).toBeDefined()
-    const payload = JSON.parse(bootstrap!) as { items: ReviewAgendaItem[] }
-    expect(payload.items).toHaveLength(1)
-    expect(Object.keys(payload.items[0]!).sort()).toEqual(["id", "kind", "period", "selectionRef", "topic"])
-    expect(payload.items[0]).toMatchObject({ kind: "dashboard", topic: "opex-detail", period })
-    const selected = payload.items[0]!
-    if (selected.kind !== "dashboard") throw new Error("HTTP bootstrap must retain the Dashboard agenda kind")
-    const item = { ...selected, id: "selected-opex", agendaNote: "Preserve this human note" }
+    const projection = createSfReviewsProjectionHandlers({ authority, business, reviews, persistence,
+      origin: "https://example.test", mount: "" })
+    const response = await projection.handle(new Request(
+      "https://example.test/api/ui/projections/review?" + new URLSearchParams({
+        page: "OPEX Detail", start: period.start, end: period.end,
+      }),
+    ))
+    expect(response.status).toBe(200)
+    expect(response.headers.get("content-type")).toContain("application/json")
+    expect(response.headers.get("cache-control")).toBe("no-store")
+    const body = await response.json()
+    const payload = Schema.decodeUnknownSync(Schema.toType(SfProjectionReview.output))(body)
+    if (payload.status !== "ok" || !("items" in payload.value) || "available" in payload.value)
+      throw new Error("The original native review catalog was unavailable")
+    expect(payload.value.period).toEqual(period)
+    expect(payload.value.items).toHaveLength(1)
+    const selected = payload.value.items[0]!
+    expect(Object.keys(body.value.items[0]).sort()).toEqual([
+      "id", "kind", "period", "recordOptions", "recordRefs", "selectionRef", "title", "topic",
+    ])
+    expect(selected).toMatchObject({ kind: "dashboard", title: "OPEX Detail", topic: "opex-detail", period })
+    expect(selected.id).toBe(selected.selectionRef)
+    expect(selected.recordRefs).toHaveLength(1)
+    expect(selected.recordOptions).toHaveLength(1)
+    expect(selected.recordOptions?.[0]).toMatchObject({ recordId: "owner", label: "Operations" })
+    expect(selected.recordOptions?.[0]?.recordRef).toBe(selected.recordRefs?.[0])
+    if (!selected.recordRefs) throw new Error("The producer did not issue its original record selection")
+    // Display metadata does not become command authority. Preserve exactly the
+    // original selection/record references and the explicit human note.
+    const item: ReviewAgendaItem = { kind: selected.kind, id: "selected-opex", topic: selected.topic,
+      period: selected.period, selectionRef: selected.selectionRef, recordRefs: selected.recordRefs,
+      agendaNote: "Preserve this human note" }
     const agenda = await reviews.agenda!.create([item], call)
     if (agenda.status !== "ok") throw new Error(agenda.reason)
     const preserved = await reviews.human.preserve(fixture.request("review-previous"), { selectionRef: agenda.value.selectionRef, sectionRefs: agenda.value.sectionRefs })

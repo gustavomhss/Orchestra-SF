@@ -65,8 +65,8 @@ test("real mounted Planner preserves monthly edits, filters and official-version
     await page.locator("#sf-u46-name").fill("WP03 Browser Plan")
     await page.locator("#sf-u46-year").fill("2027")
     await command(page, page.getByRole("button", { name: "Save", exact: true }), "save")
-    await page.goto(planner("Versions"))
-    await expect(versionRow(versionId).getByRole("cell", { name: "WP03 Browser Plan", exact: true })).toBeVisible()
+    await page.goto(planner("Versions") + "?year=2027")
+    await expect(versionRow(versionId).locator(".sf-s01-cell-value")).toHaveText("WP03 Browser Plan")
 
     await test.step("keep invalid pasted text, exclude that row from partial apply, correct both rows and reload", async () => {
       await page.goto(planner("OPEX", versionId))
@@ -216,7 +216,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
     })
 
     await test.step("copy persisted forecast and protect the official plan", async () => {
-      await page.goto(planner("Versions"))
+      await page.goto(planner("Versions") + "?year=2027")
       const before = (await readVersions()).data.versions
       await command(page, versionRow(versionId).getByRole("button", { name: "copy", exact: true }), "copy")
       const added = (await readVersions()).data.versions.filter((record) => !before.some((old) => old.id === record.id))
@@ -230,7 +230,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
       await page.goto(planner("OPEX", copy.id))
       await expect(monthlyCell(page, "WP03 License A", 1, "Forecast").locator(".sf-s02-cell-amount")).toHaveText("0.00")
       await expect(monthlyCell(page, "WP03 License B", 2, "Forecast").locator(".sf-s02-cell-amount")).toHaveText("150.00")
-      await page.goto(planner("Versions"))
+      await page.goto(planner("Versions") + "?year=2027")
       await command(page, versionRow(versionId).getByRole("button", { name: "official", exact: true }), "official")
       await page.reload()
       await expect(versionRow(versionId).getByRole("cell", { name: "Official", exact: true })).toBeVisible()
@@ -263,7 +263,7 @@ test("real mounted Planner preserves monthly edits, filters and official-version
         })
         expect(write.status()).toBe(403)
       } finally { await anonymous.close() }
-      await page.goto(planner("Versions"))
+      await page.goto(planner("Versions") + "?year=2027")
       await expect(versionRow(versionId).getByRole("cell", { name: "Official", exact: true })).toBeVisible()
     })
     expect(pageErrors).toEqual([])

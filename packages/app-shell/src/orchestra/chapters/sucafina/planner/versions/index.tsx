@@ -308,7 +308,8 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     if ((verified.action === "copy" || !verified.versionId) && !verified.createdRef) {
       // Do not attribute another writer's record to this command. The original
       // POST confirmed its effect; select a record from the fresh authorized list.
-      const selectedYear = verified.action === "copy" ? screen.review?.version?.year : undefined
+      const selectedYear = verified.action === "copy" ? screen.review?.version?.year
+        : current.data.versions.length === 1 ? current.data.versions[0]!.year : undefined
       setScreen({ verified: undefined, review: undefined, outcome: "idle", error: undefined, copyName: "", busy: false })
       go("versions", selectedYear === undefined ? {} : { year: selectedYear })
       return

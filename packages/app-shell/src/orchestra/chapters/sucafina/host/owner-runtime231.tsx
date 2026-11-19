@@ -495,7 +495,12 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       }
       if (!sameSelection(named.selection, selected)) return
       explicitOwner = named.selection
-      setDiscovery({ status: "ready", selection: named.selection })
+      // Committing a route within the same owner must not replace the selection
+      // object: the provider observes that identity and would fence/reload on
+      // every successful admission, immediately starting another transition.
+      const selectedOwner = selection()
+      if (!selectedOwner || !sameSelection(selectedOwner, named.selection))
+        setDiscovery({ status: "ready", selection: named.selection })
       setView({ status: "ready", route })
       const target = String(route.href)
       if (currentHref() !== target) navigate(target, { replace })

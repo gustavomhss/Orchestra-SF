@@ -1,135 +1,61 @@
 import { expect, test } from "bun:test"
-import { mkdir } from "node:fs/promises"
-import path from "node:path"
-import { localBrowser } from "./fixture/local-browser.ts"
+import { Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../src/nav.ts"
+import { localNative } from "./fixture/local-native.ts"
 
-test("All editor screens keep readable field widths and ordered configuration sections", async () => {
-  // The all-module CI-SF suite does not own a WP01 shared-pool lifecycle.
-  // Use the existing real authenticated Chrome fixture and verified OS cleanup.
-  const fixture = await localBrowser()
-  const failures: string[] = []
+// The original HTML editor producer is retired. Its metric/sidebar/details
+// geometry is not a native chapter contract; see HANDOFF-finish-layout-20261119.
+test("retired editor URLs stay unavailable while the authenticated native Planner preserves its real record", async () => {
+  const native = await localNative()
   try {
-    const page = fixture.page
-    page.on("pageerror", (error) => { failures.push(error.message) })
-    await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
-    // Exercise populated planner layouts through the same durable command path as the UI.
-    // This is isolated test data, never a write to the owner's installation.
-    const plan = await page.request.post("http://localhost:4110/sucafina/planner", {
-      headers: { Origin: "http://localhost:4110" },
-      data: { page: "Versions", action: "save", version: 0, values: {} },
-    })
-    expect(plan.ok()).toBe(true)
-    expect(await plan.json()).toMatchObject({ ok: true })
-    const topic = await page.request.post("http://localhost:4110/sucafina/dashboard", {
-      headers: { Origin: "http://localhost:4110" },
-      data: { page: "Hot Topics & Actions", action: "save", version: 0, values: { action: "Browser layout acceptance", owner: "", due: "2026-12-01", status: "open", priority: "normal", notes: "Temporary browser fixture" } },
-    })
-    expect(topic.ok()).toBe(true)
-    expect(await topic.json()).toMatchObject({ ok: true })
-    await page.goto("http://localhost:4110/sucafina/dashboard?page=Executive+Dashboard")
-    await page.screenshot({ path: path.join(import.meta.dir, "artifacts", "forms-dashboard-desktop.png"), fullPage: true })
-    const metrics = page.locator(".metric")
-    const first = await metrics.nth(0).boundingBox()
-    const third = await metrics.nth(2).boundingBox()
-    const content = await page.locator("#content").boundingBox()
-    expect(first).not.toBeNull()
-    expect(third).not.toBeNull()
-    expect(content).not.toBeNull()
-    expect(third!.x + third!.width - first!.x).toBeGreaterThan(content!.width * 0.85)
-    const people = await Promise.all(["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"].map(async (label) => {
-      const card = metrics.filter({ has: page.locator("span", { hasText: label }).filter({ hasText: new RegExp("^" + label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$") }) })
-      return await card.boundingBox()
-    }))
-    expect(people.every(Boolean)).toBe(true)
-    expect(Math.max(...people.map((box) => box!.y)) - Math.min(...people.map((box) => box!.y))).toBeLessThanOrEqual(2)
-    expect(Math.max(...people.map((box) => box!.width)) - Math.min(...people.map((box) => box!.width))).toBeLessThanOrEqual(2)
-    expect(Math.max(...people.map((box) => box!.height)) - Math.min(...people.map((box) => box!.height))).toBeLessThanOrEqual(2)
-    for (const width of [1440, 1024, 390]) {
-      await page.setViewportSize({ width, height: 1000 })
-      for (const surface of ["dashboard", "planner", "procurement"]) {
-        await page.goto(`http://localhost:4110/sucafina/${surface}`)
-        const hrefs = await page.locator("aside.sidebar > nav > a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
-        expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
-        expect(new Set(hrefs).size).toBe(hrefs.length)
-        if (surface === "dashboard") {
-          const cards = await Promise.all(["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"].map(async (label) => await page.locator(".metric").filter({ has: page.getByText(label, { exact: true }) }).boundingBox()))
-          expect(cards.every(Boolean)).toBe(true)
-          expect(new Set(cards.map((box) => Math.round(box!.x))).size).toBe(width === 1440 ? 4 : 2)
-          expect(new Set(cards.map((box) => Math.round(box!.y))).size).toBe(width === 1440 ? 1 : 2)
-          expect(Math.max(...cards.map((box) => box!.width)) - Math.min(...cards.map((box) => box!.width))).toBeLessThanOrEqual(2)
-          expect(Math.max(...cards.map((box) => box!.height)) - Math.min(...cards.map((box) => box!.height))).toBeLessThanOrEqual(2)
-          expect(Math.min(...cards.map((box) => box!.height))).toBeGreaterThanOrEqual(100)
-        }
-        await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${width}.png`), fullPage: true })
-        for (const href of hrefs) {
-          const response = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
-          expect(response?.status()).toBe(200)
-          for (const summary of await page.locator('details.editor-panel > summary').all()) {
-            if (await summary.locator('..').getAttribute('open') === null) await summary.click()
-          }
-          const expectedPage = new URL(href, page.url()).searchParams.get("page")!
-          expect(await page.locator("main").getAttribute("data-page")).toBe(expectedPage)
-          expect(await page.locator("h1").innerText()).toBe(expectedPage)
-          expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
-          if (width === 1440) {
-            const editors = await page.locator('form[data-command]').evaluateAll((forms) => forms.flatMap((form) => {
-              if (form.closest('table, .compact-forms')) return []
-              const fields = Array.from(form.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea'))
-                .filter((field) => !field.closest("table") && field.getBoundingClientRect().width > 0)
-              return fields.length < 3 ? [] : fields.map((field) => ({ page: new URL(location.href).searchParams.get("page"), name: field.getAttribute('name'), width: field.getBoundingClientRect().width }))
-            }))
-            expect(editors.filter((field) => field.width < 170)).toEqual([])
-            if (surface === 'procurement' && expectedPage === 'Settings') {
-              const approval = await page.getByText('Approval matrix', { exact: true }).boundingBox()
-              const currencies = await page.getByText('Currencies', { exact: true }).boundingBox()
-              expect(currencies!.y).toBeGreaterThan(approval!.y + approval!.height)
-            }
-          }
-          if (surface === "dashboard" && expectedPage === "Hot Topics & Actions") {
-            await page.getByRole("button", { name: "Edit", exact: true }).click()
-            const editor = page.getByRole("dialog", { name: "Edit record", exact: true })
-            expect(await editor.isVisible()).toBe(true)
-            await editor.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-row-editor-${width}.png`) })
-            const dialog = await editor.boundingBox()
-            expect(dialog!.width).toBeLessThanOrEqual(width - 20)
-            expect(await editor.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true)
-            for (let index = 0; index < 12; index++) {
-              await page.keyboard.press("Tab")
-              expect(await editor.evaluate((node) => node.contains(document.activeElement))).toBe(true)
-            }
-            await page.keyboard.press("Escape")
-            expect(await editor.isVisible()).toBe(false)
-            expect(await page.getByRole("button", { name: "Edit", exact: true }).evaluate((node) => node === document.activeElement)).toBe(true)
-            await page.getByRole("button", { name: "Edit", exact: true }).click()
-            await editor.locator('[name="action"]').fill(" ")
-            await editor.getByRole("button", { name: "Save", exact: true }).click()
-            await editor.getByRole("status").waitFor({ state: "visible" })
-            expect(await editor.getByRole("status").innerText()).not.toBe("")
-            expect(await editor.isVisible()).toBe(true)
-            await editor.locator('[name="action"]').fill("Browser layout acceptance")
-            await editor.getByRole("button", { name: "Save", exact: true }).click()
-            await editor.waitFor({ state: "hidden" })
-            await page.getByRole("button", { name: "Edit", exact: true }).waitFor()
-            expect(await page.getByRole("button", { name: "Edit", exact: true }).evaluate((node) => node === document.activeElement)).toBe(true)
-            await page.getByRole("button", { name: "Edit", exact: true }).click()
-            await page.getByRole("button", { name: "Close editor" }).click()
-            expect(await editor.isVisible()).toBe(false)
-          }
-          const charts = await page.locator("figure svg").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height))
-          expect(charts.every((height) => height <= 241)).toBe(true)
-          const active = page.locator('aside.sidebar > nav > a[aria-current="page"]')
-          expect(await active.count()).toBe(1)
-          if (width === 1440) {
-            const name = new URL(page.url()).searchParams.get("page")!.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
-            await page.evaluate(() => scrollTo(0, 0))
-            await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${name}.png`), fullPage: true })
-          }
-        }
+    for (const [surface, pages, count] of [
+      ["dashboard", DASHBOARD_PAGES, 16],
+      ["planner", PLANNER_TABS, 7],
+      ["procurement", PROCUREMENT_NAV, 5],
+    ] as const) {
+      expect(pages).toHaveLength(count)
+      expect(new Set(pages).size).toBe(count)
+      const paths = [`/sucafina/${surface}`, ...pages.map((page) => `/sucafina/${surface}?page=${encodeURIComponent(page)}`)]
+      expect(new Set(paths).size).toBe(count + 1)
+      for (const pathname of paths) {
+        const response = await native.read(pathname)
+        expect(response?.status, pathname).toBe(404)
+        expect(response?.headers.get("content-type")).toBe("text/plain; charset=utf-8")
+        expect(await response!.text()).toBe("legacy console decommissioned — use /")
       }
     }
-    expect(failures).toEqual([])
+
+    const initial = await native.read("/sucafina/api/ui/pages/CAP23")
+    expect(initial?.status).toBe(200)
+    expect(initial?.headers.get("content-type")).toContain("application/json")
+    const before = Schema.decodeUnknownSync(Schema.toType(SfPlanner.operations["domain.page.CAP23"].output))(await initial!.json())
+    if (before.status !== "ok") throw new Error("The original Planner collection is unavailable")
+    expect(before.value.data.versions).toEqual([])
+    const version = before.value.versions["versions:first"]?.version ?? 0
+    expect(Number.isSafeInteger(version) && version >= 0).toBe(true)
+
+    const saved = await native.post("/sucafina/planner?page=Versions", {
+      page: "Versions", action: "save", version, values: {}, confirmed: true,
+    })
+    expect(saved?.status).toBe(200)
+    expect(await saved!.json()).toMatchObject({ ok: true })
+    const current = await native.read("/sucafina/api/ui/pages/CAP23")
+    expect(current?.status).toBe(200)
+    const after = Schema.decodeUnknownSync(Schema.toType(SfPlanner.operations["domain.page.CAP23"].output))(await current!.json())
+    if (after.status !== "ok") throw new Error("The committed Planner record is unavailable")
+    expect(after.value.data.versions).toHaveLength(1)
+    const record = after.value.data.versions[0]!
+    expect(record.id).toMatch(/\S+/)
+    expect(record.name).toMatch(/\S+/)
+    expect(Number.isInteger(record.year) && record.year > 2000 && record.year < 2100).toBe(true)
+
+    const reopened = await native.read("/sucafina/api/ui/pages/CAP23")
+    expect(reopened?.status).toBe(200)
+    const reread = Schema.decodeUnknownSync(Schema.toType(SfPlanner.operations["domain.page.CAP23"].output))(await reopened!.json())
+    if (reread.status !== "ok") throw new Error("The original Planner reread is unavailable")
+    expect(reread.value.data.versions).toEqual([record])
   } finally {
-    // Includes isolated server/installation teardown and Chrome process group verification.
-    await fixture.dispose()
+    await native.dispose()
   }
 }, 60000)

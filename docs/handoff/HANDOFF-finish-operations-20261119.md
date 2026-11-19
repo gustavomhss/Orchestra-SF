@@ -1,10 +1,19 @@
 # Handoff — finish-operations-20261119
 
-SHA: e53b49cd23c3af5d72a761d2a46f9658940847a0 (código; este documento é um checkpoint posterior)
+SHA: 12c58666b107a7b2cf11d85f2e61d93d486192db (código; este documento é um checkpoint posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- Procurement draft leaf qualificado pelo run 44589603579 SUCCESS, job 135791702956, snapshot 9695d83949882cbcd5d1736ad231f4c9e61435c8. Wrapper 1 pass/1 expect, filho exit0; não se inferem contadores internos não impressos.
+- Matrículas locais originais agora são emitidas por spec + cenário. Operations e WP04 podem compartilhar o host sem reutilizar o mesmo token de uso único; a exigência HTTP303 permanece.
+- OP-PROC-01 verifica o texto exato do status nativo, cujo role=status não tem nome ARIA.
+- O login WP04 decodifica o GET CAP25 original, exige fonte/digest/versão da comparação conhecida e compara exatamente esses três campos ao link renderizado. Isso distingue ausência na projeção de falha de montagem, mantendo a prova de proveniência.
+
+- O snapshot de conflito de PR conserva o tipo público SfPublicDraftController; não usa quarantine/restoreSameAuthority/revoke internos. Correção 89f5097b54b5cfd05f9e2165bfe59250d7552b08.
+- O teste procurement-draft-leaves agora verifica a revisão nativa de conflito: fieldset presente e disabled, descrição local exata preservada, revisão anterior removida e somente um POST. O descarte é selecionado pelo nome explícito, pois a primeira ação agora é Review current record. Timeout, casos e prova de conflito continuam intactos (4620b9fb93a2ec996c411e467aa02b841fe34366).
+- Supplier edit omite somente propriedades opcionais undefined, como os demais builders, sem normalização global do codec (a910756151609a539f0fa3c76de062615e911490).
 
 - Preservado o histórico da branch e integrado o ancestral sf-join-four@0a3c05fbc4175f9514a12036d43ff1e5cca51d56 por merge com dois parents, sem force.
 - A redeclaração de detail em operations-support/imports.ts foi corrigida com versionDetail; todos os usos/asserts foram mantidos. Essa correção já está na integração.
@@ -32,10 +41,14 @@ Estado: partial
 - packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:146, :214, :315, :401, :461, :627, :708, :799: a migração está commitada; os oito fluxos ainda precisam da verificação runtime no novo host/transporte. Não equivalem a cobertura executada.
 - packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx:935: proveniência histórica de campo permanece unbound. O schema PurchaseOrder em packages/schema/src/sucafina/procurement.ts:126–150 não a transmite. O capítulo informa somente a comparação de valores atuais.
 - packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts:11: conserva dois testes isolados do controlador/shell legado com respostas controladas. O run 44561871689 passou nesses testes, mas isso não prova o controlador nativo nem execução de análise. Não foram recriados ou usados como evidência de produto. O capítulo nativo decisions/analyses/index.tsx:144–145 admite preparação somente para sf-enquadrar-decisao; não há nesse controle equivalência do start/status/cancel sourcing legado. Não substituir por runs ou receipts sintéticos.
-- packages/app-shell/e2e/sucafina/operations.spec.ts:13, :18, :23, :28, :33: executar o full Operations só depois do ingresso alcançável. Inclui importação/documentos e ClamD real, preparado pela infraestrutura integrada.
+- packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:135, procurement-refusal.ts:156 e documents.ts:14 — run44589439780 aguardou POST até o timeout original; é necessário diagnóstico da revisão nativa, sem inferir erro de produtor. imports.ts:130 não montou o detalhe CAP23 após clique; requalificar com o fix comum F01 do integrador.
+- apps/cli/src/sucafina-product/native-ui/procurement.ts:227 e modules/sucafina/Sucafinav1/product/procurement/sources.ts:267–274 — o lookup de sourceRef exige exatamente um scope vivo global. A ausência de a[data-source-ref] no run ainda não distingue campos null de loop de montagem. O novo assert lê o produtor original antes do DOM; nenhum digest é fabricado.
+- packages/app-shell/e2e/sucafina/operations.spec.ts:13, :18, :23, :28, :33 e wp04/procurement.spec.ts — repetir somente após composição da infraestrutura F01 corrigida e os fixes deste checkpoint. Inclui ClamD real.
 - apps/web/vite.config.ts e packages/app-shell/e2e/playwright.production.config.ts: infraestrutura pertence ao WP de ingresso. Os quatro gates abaixo usaram exatamente os dois arquivos de 88c06fcee93719f8d4758db35a46328112c38bda em snapshots; não são alterações próprias desta branch.
 
 ## Decisões e justificativas
+
+- No teste de conflito, a asserção de ausência do fieldset foi substituída por bloqueio explícito e conteúdo local exato, com revisão removida e contagem de gravações mantida. Isso conserva a proibição de edição/envio com CAS antigo e permite ao operador comparar a cópia local com o registro atual. O descarte continua obrigatório para abandonar essa cópia.
 
 - Nenhum teste foi excluído/pulado; nenhum timeout foi aumentado. As observações antigas substituídas estão explicitadas abaixo.
 - O título existente é salvo pelo W19 e pelo comando real Requests/save com values.pr.title; não foi misturado no payload residual de PR.
@@ -51,10 +64,10 @@ Estado: partial
 
 ## Como retomar
 
-1. Continuar em finish-operations-20261119, código e53b49cd23c3af5d72a761d2a46f9658940847a0.
+1. Continuar em finish-operations-20261119, código 12c58666b107a7b2cf11d85f2e61d93d486192db.
 2. Obter do WP de ingresso o SHA qualificado para GET e POST/revogação. O run 44573615311 passou 1/1 para leitura CAP23/reload/year com receiver corrigido; a escrita ainda era um gate separado neste checkpoint.
 3. Compor um snapshot com este código e a infraestrutura compartilhada qualificada, preservando a origem de cada arquivo. Executar .ci-run.json com package app, runner playwright, config e2e/playwright.production.config.ts e args [e2e/sucafina/wp04/native-ingress.spec.ts].
-4. Depois do ingresso, executar procurement.spec.ts e operations.spec.ts em gates separados: o fixture usa códigos de enrollment de cenário de uso único; não misturar as suites no mesmo host.
+4. Depois do ingresso, executar os specs estreitos necessários. O host já emite códigos de enrollment separados por spec/cenário; ambos continuam de uso único e nunca são repetidos após303.
 5. Corrigir somente causas observadas nos logs Actions, mantendo as autoridades e as asserções. Tratar o controlador de análise nativo sem usar respostas sintéticas como prova de execução.
 6. Atualizar este documento com SHA, resultados terminais e pendências file:line antes de entregar ao integrador. Este WP não faz merge nem dispara sf-ci.
 
@@ -70,3 +83,9 @@ Estado: partial
 - e53b49cd23c3af5d72a761d2a46f9658940847a0: ainda sem gate próprio neste checkpoint.
 - Dependência compartilhada, sem qualificar Operations: ingresso [44573615311](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44573615311) SUCCESS 1/1 para CAP23/reload/year; ingresso [44575467126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44575467126) FAILURE 2/2, com primeiro POST bloqueado pelo codec opcional undefined e waiter de logout a corrigir. O ingresso9 [44579042477](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44579042477) confirmou POST real200/ok, mas falhou em um assert body.value inexistente e no logout por perda do transporte original. O ingresso10 [44580949588](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44580949588) ainda estava em andamento neste checkpoint; nenhum gate Operations foi disparado sobre uma dependência sabidamente falha.
 - guards: não executados nesta branch. sf-ci: nenhum novo dispatch, rerun ou cancelamento por este WP.
+
+- Audit APP-BROWSER [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131), job 135778309143: 110 pass / 4 fail / 895 expect, 114 testes em 32 arquivos. Procurement wrapper terminou com exit137 após180s; primeira falha interna era a expectativa fieldset=null recebendo HTMLFieldSetElement. O dump enorme encobriu o restante. Não se aumentou timeout; corrigiu-se o contrato de UI e o seletor de descarte.
+- Ingresso composto [44585650902](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585650902): falhou no typecheck app, incluindo o tipo interno de draft em requests/page.tsx. [44587034870](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44587034870): CLI e app passaram, E2E typecheck falhou em decoder BI separado. Nenhum desses resultados qualifica execução de Operations no browser.
+
+- [44589603579](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589603579) SUCCESS, job 135791702956: procurement-draft-leaves, wrapper1 pass/1 expect, child exit0. Snapshot 9695d83949882cbcd5d1736ad231f4c9e61435c8.
+- [44589439780](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589439780) FAILURE, job 135791126209: três typechecks PASS; 13 failed / 2 passed em6,1min. Primeiro OP-PROC-01 falhou por lookup de nome ARIA; OP-PROC-02/03 e OP-DOC-01 aguardaram POST; OP-IMPORT-01 não montou o detalhe CAP23. WP04 teve cinco matrículas404 por reutilização dos tokens consumidos em Operations e três esperas por source-ref. Os dois passes são testes isolados de sourcing-controller, não prova nativa.
