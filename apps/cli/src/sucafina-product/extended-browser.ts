@@ -149,6 +149,7 @@ if (root && bootstrap) {
     dispose = () => { view.dispose(); discussion?.dispose() }
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
+    const preparationUrl = location.href
     const client = createReviewPreparationBrowser()
     const discover = createReviewAgendaDiscoveryBrowser()
     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
@@ -170,7 +171,8 @@ if (root && bootstrap) {
       // without remounting the view or replacing the operator's current draft.
       onPreserved: (reference) => { if (!closed) history.replaceState(history.state, "", reviewUrl(reference)) },
       onPrepared: (previousReviewRef) => {
-        if (!closed && previousReviewRef) history.replaceState(history.state, "", sfReviewNavigationUrl(location.href, { previousReviewRef }))
+        if (!closed) history.replaceState(history.state, "", previousReviewRef
+          ? sfReviewNavigationUrl(location.href, { previousReviewRef }) : preparationUrl)
       },
       openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
