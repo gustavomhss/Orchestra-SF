@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity } from "../decisions-support/journey"
+import { asRecord, caseIdentity, enterWorkbench } from "../decisions-support/journey"
 
 export const horizon = { start: "2027-01-01", end: "2027-12-31" }
 export const objective = "BI62 · renewal versus transition with separately quoted training"
@@ -50,10 +50,10 @@ export async function prepareInstalledBi(page: Page, installation: { origin: str
 
 async function preparePair(page: Page, installation: { origin: string; actorId: string }, plans: { baseline: Plan; candidate: Plan }, trainingState: "missing" | "resolved", observations: Record<string, unknown>[]) {
   const caseObjective = `${objective} · ${trainingState}`
-  if (new URL(installation.origin).port !== "3000")
-    throw new Error("The native Decisions chapter requires the configured public shell origin")
-  await page.goto("/orchestra/sf-decisions/new")
-  const create = page.locator(".sf-n24-create")
+  await enterWorkbench(page, installation.origin)
+  await page.getByRole("button", { name: "New case", exact: true }).click()
+  const create = page.locator("section.sf-n24-create form")
+  await expect(create).toHaveCount(1)
   await expect(create).toBeVisible()
   await create.getByLabel("Decision objective", { exact: true }).fill(caseObjective)
   await create.getByLabel("Start", { exact: true }).fill(horizon.start)
@@ -320,10 +320,11 @@ async function preparePlanner(page: Page, installation: { origin: string; actorI
 
 /** Declare every monthly forecast, including zeros. A budget inherited through
  * a null forecast is estimated and cannot establish complete cost coverage.
- * Clipboard paste is the existing human bulk-edit interaction, not DOM mutation.
+ * The native TSV review controls send the human input to the original producer.
  */
 async function explicitForecast(page: Page, amounts: Record<string, number>) {
-  const monthly = page.locator('[data-sf-surface="CAP18"] section.sf-s02')
+  await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/opex")
+  const monthly = page.locator("section.sf-s02")
   await expect(monthly).toHaveCount(1)
   const grid = monthly.getByRole("grid", { name: "Monthly values", exact: true })
   const rows = grid.locator(".sf-s02-row")
@@ -339,12 +340,10 @@ async function explicitForecast(page: Page, amounts: Record<string, number>) {
     .locator(".sf-s02-measure").filter({ has: page.getByText("Forecast", { exact: true }) })
   await expect(firstForecast).toHaveCount(1)
   await firstForecast.click()
-  await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin: new URL(page.url()).origin })
-  await page.evaluate((text) => navigator.clipboard.writeText(text), tsv)
+  await monthly.getByRole("textbox", { name: "Paste tab-separated values", exact: true }).fill(tsv)
   const previewPending = page.waitForResponse((response) => response.request().method() === "POST" &&
     new URL(response.url()).searchParams.get("sf") === "workbench-planner" && response.request().postDataJSON()?.action === "preview")
-  await grid.focus()
-  await page.keyboard.press("Control+V")
+  await monthly.getByRole("button", { name: "Review pasted values", exact: true }).click()
   const previewResponse = await previewPending
   expect(previewResponse.status()).toBe(200)
   const preview = asRecord(await previewResponse.json())
@@ -395,7 +394,8 @@ async function lineId(page: Page, name: string) {
 }
 
 async function addLine(page: Page, name: string, amount: number, actorId: string, observations: Record<string, unknown>[], origin: string) {
-  const form = page.locator('[data-sf-surface="CAP18"] form[data-page="OPEX"][data-command="save"][data-record=""]')
+  await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/opex")
+  const form = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]')
   await expect(form).toHaveCount(1)
   await form.getByLabel("Name", { exact: true }).fill(name)
   await form.getByLabel("Owner", { exact: true }).selectOption(actorId)
@@ -408,9 +408,10 @@ async function addLine(page: Page, name: string, amount: number, actorId: string
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[], origin: string, record = "") {
   await expect(button).toBeEnabled()
-  const capability = await button.evaluate((element) => element.closest("[data-sf-surface]")?.getAttribute("data-sf-surface"))
-  expect(capability === "CAP23" || capability === "CAP18").toBe(true)
   const current = new URL(page.url())
+  const capability = current.pathname === "/orchestra/sf-planner/opex" ? "CAP18" :
+    /^\/orchestra\/sf-planner\/versions(?:\/|$)/.test(current.pathname) ? "CAP23" : undefined
+  if (!capability) throw new Error("Planner commands require the native CAP18 or CAP23 route")
   const query = new URLSearchParams()
   for (const key of ["year", "version"]) {
     const value = current.searchParams.get(key)
@@ -421,6 +422,7 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
   const source = asRecord(await read.json())
   expect(source.status).toBe("ok")
   const projected = asRecord(source.value)
+  expect(projected.capabilityId).toBe(capability)
   const data = asRecord(projected.data)
   const versions = asRecord(projected.versions)
   const key = capability === "CAP23" ? "versions:" + (record || "first") :

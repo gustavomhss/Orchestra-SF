@@ -494,6 +494,8 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       versions: page.versions,
       form: snapshot.value,
     }
+    const ownersBefore = page.owners && new Set(page.owners.map((owner) => String(owner.id)))
+    const entriesBefore = page.entries && new Set(page.entries.map((entry) => String(entry.id)))
     const abort = new AbortController()
     const operationRef = editor.operationRef
     const idempotencyKey = crypto.randomUUID()
@@ -536,7 +538,45 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       // Refetch is mandatory before exposing new values or claiming a clean base.
       const postRead = await readBudgetPage(ready.transport, props.capability, year(), ready.context.stamp, abort.signal)
       if (!isCurrentOwner() || editing() !== editor) return
-      editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      let projected: { version: number; value: BudgetForm } | undefined
+      if (postRead.state === "ready") {
+        const current = postRead.page
+        if (editor.action === "save" && ownersBefore) {
+          const matches = current.owners?.filter((owner) =>
+            (editor.recordId ? String(owner.id) === editor.recordId : !ownersBefore.has(String(owner.id))) &&
+            owner.name === input.form.name && owner.budget === Number(input.form.budget),
+          )
+          const owner = matches?.length === 1 ? matches[0] : undefined
+          const version = owner && current.versions[ownerCollection(props.capability) + ":" + owner.id]
+          if (owner && typeof version === "number" && Number.isSafeInteger(version) && version > editor.version)
+            projected = { version, value: formFor(owner, undefined, editor.month) }
+        }
+        if (editor.action === "save-entry" && entriesBefore) {
+          const owner = current.owners?.find((item) => String(item.id) === editor.parentId)
+          const matches = current.entries?.filter((entry) =>
+            (editor.recordId ? String(entry.id) === editor.recordId : !entriesBefore.has(String(entry.id))) &&
+            String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === editor.parentId &&
+            entry.year === input.year && entry.month === input.form.month &&
+            entry.budget === Number(input.form.budget) && entry.actual === Number(input.form.actual) &&
+            entry.forecast === Number(input.form.forecast),
+          )
+          const entry = matches?.length === 1 ? matches[0] : undefined
+          const version = entry && current.versions[entryCollection(props.capability) + ":" + entry.id]
+          if (owner && entry && typeof version === "number" && Number.isSafeInteger(version) && version > editor.version)
+            projected = { version, value: formFor(owner, entry, input.form.month) }
+        }
+      }
+      if (projected) {
+        editor.draft.confirmSave({ kind: "projected", operationRef, baseVersion: projected.version, value: projected.value })
+        // Retire only a confirmed, reread creation intent. Unknown submissions stay protected by F03.
+        if (!editor.recordId) ready.drafts.discard({
+          surfaceId: props.capability,
+          identity: { kind: "new", newIntentRef: (props.capability + ":" + input.year + ":" + editor.action + ":" + (editor.parentId ?? "new") + ":" + editor.month) as SfIntentRef },
+          editScopeKey: (input.year + ":" + editor.action + ":" + (editor.parentId ?? "new") + ":" + editor.month) as SfEditScopeKey,
+        })
+      } else {
+        editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
+      }
       setView("message", sfCommonKey("sf.common.saved"))
       setEditing(undefined)
       if (postRead.state === "ready") {

@@ -1,5 +1,5 @@
 import { For, Show, createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { Schema } from "effect"
 import type { JSX } from "solid-js"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
@@ -50,7 +50,7 @@ export function SfHotTopicPrivateDraft(props: {
   const admitted = (operationId: string) => ready()?.context.availability.some((resource) =>
     resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
     resource.operations.some((operation) => operation.operationId === operationId && operation.state === "ready" && operation.operational)) === true
-  const [discovery, setDiscovery] = createSignal<unknown>(props.discovery)
+  const [discovery, setDiscovery] = createSignal<unknown>(structuredClone(unwrap(props.discovery)))
   const [selectedCase, setSelectedCase] = createSignal("")
   const [selectedRecord, setSelectedRecord] = createSignal("")
   const [selection, setSelection] = createSignal<Draft>()
@@ -90,7 +90,7 @@ export function SfHotTopicPrivateDraft(props: {
   const deny = () => { reset(true); setDiscovery(undefined); props.onDenied() }
   createEffect(() => {
     const value = props.discovery
-    if (value !== null && value !== undefined) setDiscovery(value)
+    if (value !== null && value !== undefined) setDiscovery(structuredClone(unwrap(value)))
   })
   createEffect(() => {
     const current = ready(), status = context.state().status, generation = context.generation()

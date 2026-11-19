@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 import { Schema } from "effect"
-import { SfProjectionReview, SfDashboardDashboardAgenda, SfReviewsReviewRead, SfDashboardDashboardReviewPreserve } from "@orchestra/schema/sucafina/reviews"
+import { SfProjectionReview, SfReviewDomainProjection, SfDashboardDashboardAgenda, SfReviewsReviewRead, SfDashboardDashboardReviewPreserve } from "@orchestra/schema/sucafina/reviews"
 import { responseFor } from "../reports-support/model"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 import { addTopic, command, dashboardUrl, observeDashboardRequests, openTopic, topicRow, topicsPage } from "./support"
@@ -100,15 +100,34 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
         `${value.period.start} – ${value.period.end}`,
       ]))
       const saving = page.waitForResponse(responseFor(dashboard, "dashboard-review-preserve", "POST"))
+      const preserveStartedAt = Date.now()
       await agenda.getByRole("button", { name: /Confirm preservation|Confirmar preservação/ }).click()
       const savedResponse = await saving
       expect(savedResponse.status()).toBe(200)
       expect(savedResponse.request().postDataJSON()).toEqual({ selectionRef: preview.value.selectionRef, sectionRefs: [item.id] })
       const saved = Schema.decodeUnknownSync(SfDashboardDashboardReviewPreserve.output)(await savedResponse.json())
+      const preserveFinishedAt = Date.now()
       if (saved.status !== "ok") throw new Error("The original producer did not preserve the selected record")
       preserved = saved.value
       expect(preserved.sections).toHaveLength(1)
-      expect(preserved.sections[0]).toMatchObject({ id: item.id, count: 1, content: captured.projection })
+      const sectionContent = Schema.decodeUnknownSync(SfReviewDomainProjection)(preserved.sections[0]!.content)
+      const currentSources = sectionContent.context.sourceRefs
+      expect(currentSources).toHaveLength(captured.projection.context.sourceRefs.length)
+      // Preserve invokes the original selector again; only the fresh observation time may advance.
+      for (const [index, source] of currentSources.entries()) {
+        const previewSource = captured.projection.context.sourceRefs[index]!
+        const observedAt = Date.parse(source.observedAt)
+        expect(Number.isFinite(observedAt)).toBe(true)
+        expect(new Date(observedAt).toISOString()).toBe(source.observedAt)
+        expect(observedAt).toBeGreaterThanOrEqual(preserveStartedAt)
+        expect(observedAt).toBeLessThanOrEqual(preserveFinishedAt)
+        expect(observedAt).toBeGreaterThanOrEqual(Date.parse(previewSource.observedAt))
+        expect(source).toEqual({ ...previewSource, observedAt: source.observedAt })
+      }
+      expect(preserved.sections[0]).toMatchObject({ id: item.id, count: 1, content: {
+        ...captured.projection,
+        context: { ...captured.projection.context, sourceRefs: currentSources },
+      } })
       await expect(agenda.locator("[data-sf-preserved-confirmed]").locator("dd").first()).toHaveText(preserved.id)
       await page.goto(topics)
     })

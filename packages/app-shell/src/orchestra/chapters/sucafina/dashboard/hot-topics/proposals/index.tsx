@@ -1,5 +1,5 @@
 import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
@@ -218,7 +218,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     let completed = false
     setStore("review", null)
     void createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-review"]({
-      caseRef: currentChange.caseRef, choiceId: currentChange.choiceId, changeId: currentChange.changeId,
+      caseRef: structuredClone(unwrap(currentChange.caseRef)), choiceId: currentChange.choiceId, changeId: currentChange.changeId,
     }, { signal: abort.signal }).then((response) => {
       completed = true
       if (abort.signal.aborted || context.generation() !== generation ||
@@ -246,7 +246,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     setStore("preparationBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-prepare"]({
-        caseRef: pending.caseRef, choiceId: pending.choiceId, draftRef: pending.draftRef,
+        caseRef: structuredClone(unwrap(pending.caseRef)), choiceId: pending.choiceId, draftRef: pending.draftRef,
       }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
       if (context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind !== "response" || response.body.status !== "ok") {
@@ -271,7 +271,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     setStore("applyBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-apply"]({
-        caseRef: change.caseRef, choiceId: change.choiceId, changeId: change.changeId,
+        caseRef: structuredClone(unwrap(change.caseRef)), choiceId: change.choiceId, changeId: change.changeId,
         reviewDigest: currentReview.reviewDigest,
       }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
       if (context.generation() !== generation || current()?.transport !== ready.transport) return

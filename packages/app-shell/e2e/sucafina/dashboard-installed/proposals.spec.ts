@@ -520,11 +520,21 @@ test("Dashboard contextual controls preserve a real agenda and record, then revi
         await expect(shown).toContainText("2026-11-13")
         const table = shown.getByRole("table")
         await expect(table.locator("th")).toHaveText(["Field", "Value", "Authorized period", "Evidence"])
-        const sections = preview.sections as { projection: { values: { id: string; value: unknown;
+        const sections = preview.sections as { projection: { context: { sourceRefs: {
+          surface: string; type: string; id: string; version: number; incarnation: string }[] };
+          values: { id: string; value: unknown;
           currency?: string; unit?: string; period: { start: string; end: string };
           evidenceState: "confirmed" | "estimated" | "hypothetical" | "absent" }[] } }[]
         const evidence = { confirmed: "Confirmed", estimated: "Estimated", hypothetical: "Hypothetical", absent: "Absent" }
         expect(sections).toHaveLength(1)
+        const sourceRefs = sections[0]!.projection.context.sourceRefs
+        expect(sourceRefs).toHaveLength(1)
+        for (const source of sourceRefs) {
+          const reference = shown.getByText(source.surface + " · " + source.type + " · " + source.id, { exact: false })
+          await expect(reference).toBeVisible()
+          await expect(reference).toContainText(" " + source.version + " · ")
+          await expect(reference).toContainText(source.incarnation)
+        }
         await expect(table.getByRole("cell")).toHaveText(sections[0]!.projection.values.flatMap((value) => [
           value.id, ((value.value === null ? "Unavailable" : String(value.value)) + " " + (value.currency ?? value.unit ?? "")).trim(),
           value.period.start + " – " + value.period.end, evidence[value.evidenceState],

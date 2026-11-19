@@ -33,7 +33,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   await expect(page.getByRole("textbox", { name: "Selection justification", exact: true })).toHaveValue("Review the EUR quotation with the current holder")
   await page.getByRole("button", { name: "Compare quotations", exact: true }).click()
   const comparison = page.locator("section.sf-u12-comparison")
-  await expect(comparison.getByRole("status", { name: "Comparison is limited: fewer than two proposals are eligible.", exact: true })).toBeVisible()
+  await expect(comparison.getByRole("status").filter({ hasText: /^Comparison is limited: fewer than two proposals are eligible\.$/ })).toBeVisible()
   const winning = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
   await winning.selectOption({ label: "Journey registered supplier · EUR 28000" })
   await confirmCommand(page, account, "select_quote", id, comparison.getByRole("button", { name: "Select winning quote", exact: true }), "Confirm once")
@@ -55,7 +55,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
   const frozen = page.locator("section.sf-u12-comparison")
   await expect(frozen.getByRole("row").filter({ hasText: "Journey registered supplier" }).getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
-  await expect(frozen.getByRole("status", { name: "Comparison is limited: fewer than two proposals are eligible.", exact: true })).toBeVisible()
+  await expect(frozen.getByRole("status").filter({ hasText: /^Comparison is limited: fewer than two proposals are eligible\.$/ })).toBeVisible()
   const original = await setEurRate(page, account, "2")
   try {
     expect(original).toBe("1.08")
@@ -64,9 +64,9 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("30240 USD")
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText("Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).")
-    await expect(page.getByRole("status", { name: "Estimate value: 28000 EUR; base value: 56000 USD; FX: 2 (current).", exact: true })).toBeVisible()
-    await expect(page.getByRole("status", { name: "Order value 56000 USD; approved sourcing value 30240 USD. Review the difference.", exact: true })).toBeVisible()
-    await expect(page.getByRole("status", { name: "Sourcing is not editable in the current request stage.", exact: true })).toBeVisible()
+    await expect(page.getByRole("status").filter({ hasText: /^Estimate value: 28000 EUR; base value: 56000 USD; FX: 2 \(current\)\.$/ })).toBeVisible()
+    await expect(page.getByRole("status").filter({ hasText: /^Order value 56000 USD; approved sourcing value 30240 USD\. Review the difference\.$/ })).toBeVisible()
+    await expect(page.getByRole("status").filter({ hasText: /^Sourcing is not editable in the current request stage\.$/ })).toBeVisible()
     await expect(page.getByRole("button", { name: "Submit sourcing", exact: true })).toHaveCount(0)
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
     await expect(page.locator("section.sf-u12-comparison").getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
@@ -80,7 +80,7 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   }
 }
 
-async function createRequest(page: Page, account: Account, title: string) {
+export async function createRequest(page: Page, account: Account, title: string) {
   const form = page.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
