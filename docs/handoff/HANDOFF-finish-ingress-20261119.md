@@ -1,6 +1,6 @@
 # Handoff — finish-ingress-20261119
 
-SHA: 4d778b822ddf8f72a379c62228fb0c354a0df708 (checkpoint Dashboard CAP04/CAP05; C12 harness44be0f18917d71476c575660a29e571f19a47f92; ingresso qualificado15388053117883174329454207e60e2a878f5426)
+SHA: 642c94e483b1bfdea24ee1d118e6d1e18e5597da (checkpoint seed C12 original; Dashboard4d778b822ddf8f72a379c62228fb0c354a0df708; harness44be0f18917d71476c575660a29e571f19a47f92; ingresso qualificado15388053117883174329454207e60e2a878f5426)
 Data: 2026-11-19
 Estado: partial
 
@@ -137,3 +137,12 @@ Toda verificação foi executada em GitHub Actions. Nenhum resultado foi fabrica
 - Asserções removidas: nenhuma. confirmation-access continua com comparação dos3valores, cancelamento semwrite, perda de resposta, exatamente1efeito e purga após revogação real. A mudança de identidade da agenda está em b941b0e1aaeb5b609a90bc05c08f580bfa8d5438, com prova positiva do registro e exclusão completa do unrelated.
 - Pendente/unbound: confirmation-access.spec.ts:34 e records-signals-history.spec.ts:40 aguardam o gate do candidato integrado; BI installed-planner-ingress.spec.ts depende da mesma superfície e ainda requer resultado real. O run44601709564 permanece failure2; o success44605305001 qualifica só a extração de diagnóstico, nunca a UI.
 - Retomar: integrar o blob surface.tsx deste SHA e records-signals-history.spec.ts de b941b0; executar o narrow Dashboard uma vez e usar o gate BI coordenado pelo integrador. C12 é gate separado run44604748251, iniciado pelo integrador; não duplicar. Root qualificou extensão fechada do selector original para preferences/receipts em22a11d693269b870a1f049bd87a465833607af22, run44604756705 success, sem substituir prova C12/SQLite.
+
+## C12native1 — seed pelo produtor original de comando
+
+- Run [44604748251](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604748251), job135845332961: failure1/1didnotrun. O host obteve a projeção original C02 e RecordEvidence; parou antes do browser em c12-host.ts:157, no seed sf_case_draft. Nenhuma prova de Apply/Recover foi executada nesse run. Artifact14569888264 contém o log sanitizado.
+- Causa conferida no código: operations-support/installation.ts:83 compõe apenas runtime.services.productHttp. O POST workbench-command é implementado pelo produtor original createSfWorkbenchHttp em product/interface/http.ts:71–95; a instalação de produção local/entry.ts o monta como fallback separado após productHttp. A fixture Operations não usava esse endpoint.
+- Correção642c94e483b1bfdea24ee1d118e6d1e18e5597da, somente decisions-support/c12-host.ts: o seed chama createSfWorkbenchHttp original com installation.services e a mesma Request autenticada, passando pelos decode, ui.admit, dispatch e ui.revalidate originais. Não cria autoridade paralela, não altera grants, não muda o factory Operations e não monta HTML. UI39 review/apply/recover continuam no application original da instalação. O erro de seed registra apenas HTTPstatus e outcome, sem bodies/headers/credenciais.
+- Asserções removidas: nenhuma. A preparação C08, falha após commit, exactly2POST/1efeito, CAS, reload, processo novo/SQLite, recuperação repetível e purga de storage continuam integrais.
+- Pendente/unbound: decisions-native-recovery.spec.ts:7/:12 aguardam C12native2 no candidato integrado. recovery-ui.test.ts:72/:197 legado continua intacto até qualificar equivalente nativo e remapeamento explícito do integrador; nenhuma allowlist ou teste foi omitido para obter resultado.
+- Retomar: aplicar somente o blob c12-host.ts deste SHA no candidato que já contém a expansão original receipts/preferences22a11d; integrador executa o mesmo narrow spec. Não reutilizar o run F02 como prova C08/SQLite.
