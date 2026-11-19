@@ -22,6 +22,7 @@ import {
 
 // Keep the Client public type identical to the canonical, browser-safe wire union.
 export type { SfTransportResult } from "@orchestra/schema/sucafina/common"
+export { SfRecordedChoiceIntent } from "./transport/choice-replay"
 
 export type SfCallOptions = Readonly<{
   signal: AbortSignal
@@ -545,8 +546,9 @@ export function createSfTransport(options: Readonly<{
       if (decoded.status !== "ok") return unavailable
       const route = operationUrl(options.binding, metadata, decoded.value, "decisions.decision-choose")
       const body = operationBody(metadata, decoded.value)
-      if (!route || body === undefined || metadata.maxRequestBytes === undefined ||
-          new TextEncoder().encode(JSON.stringify(body)).byteLength > metadata.maxRequestBytes) return unavailable
+      if (!route || body === undefined || metadata.maxRequestBytes !== undefined &&
+          (!Number.isSafeInteger(metadata.maxRequestBytes) || metadata.maxRequestBytes < 0 ||
+           new TextEncoder().encode(JSON.stringify(body)).byteLength > metadata.maxRequestBytes)) return unavailable
       choiceInspection = true
       try {
         // No mutation is sent here. The original reader uses the current
