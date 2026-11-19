@@ -157,9 +157,13 @@ function sameAuthority(projection: DomainProjection, call: TrustedDomainContext)
     projection.context.principalRef === call.binding.principalRef && projection.context.accessRevision === call.binding.accessRevision && projection.context.policyVersion === call.binding.policyVersion
 }
 function matchesRecord(source: SourceRef, ref: Extract<BusinessEvidenceRef, { kind: "record" }>) {
+  // Planner issues the full year; the preserved section records the selected window inside it.
+  // Requiring the window to cover the year drops that historical body after the year source changes.
+  const period = !ref.target.period || (source.surface === "planner"
+    ? ref.target.period.start <= source.period.start && ref.target.period.end >= source.period.end
+    : source.period.start <= ref.target.period.start && source.period.end >= ref.target.period.end)
   return source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation &&
-    source.version === ref.target.version && ref.target.fields.every((field) => source.fields.includes(field)) &&
-    (!ref.target.period || source.period.start <= ref.target.period.start && source.period.end >= ref.target.period.end)
+    source.version === ref.target.version && ref.target.fields.every((field) => source.fields.includes(field)) && period
 }
 function containsRef(value: unknown, ref: BusinessEvidenceRef, depth = 0, remaining = { value: 20_000 }): boolean {
   if (depth > 24 || --remaining.value < 0 || !value || typeof value !== "object") return false
