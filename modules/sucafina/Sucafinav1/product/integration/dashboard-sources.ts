@@ -81,12 +81,15 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
     const sourceDigest = digestSfValue(original)
     if (!await host.revalidate(context) || !currentAuthority()) return undefined
     const environment = await host.environment(request)
-    if (!Number.isFinite(Date.parse(environment.at)) || !await host.revalidate(context) || !currentAuthority()) return undefined
-    const observed = await host.persistence.transaction("dashboard", async (snapshot) => {
-      if (digestSfValue(await authenticate(snapshot)) !== digestSfValue(selector)) return { commit: false, value: undefined }
-      return { commit: false, value: projectSfSourceScope("dashboard", snapshot, scope, environment.at) }
-    }, { signal: request.signal }).catch(() => undefined)
-    if (observed === undefined || digestSfValue(observed) !== original.inputDigest) return undefined
+    const observedAt = environment.at
+    if (!Number.isFinite(Date.parse(observedAt)) || !await host.revalidate(context) || !currentAuthority()) return undefined
+    if (!canonicalCheck) {
+      const observed = await host.persistence.transaction("dashboard", async (snapshot) => {
+        if (digestSfValue(await authenticate(snapshot)) !== digestSfValue(selector)) return { commit: false, value: undefined }
+        return { commit: false, value: projectSfSourceScope("dashboard", snapshot, scope, observedAt) }
+      }, { signal: request.signal }).catch(() => undefined)
+      if (observed === undefined || digestSfValue(observed) !== original.inputDigest) return undefined
+    }
     const again = await scopedSources.readScopedSource("dashboard", scope, async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector)).catch(() => undefined)
     const sameObservation = () => !!again && digestSfValue(current) === sourceDigest && digestSfValue(again) === sourceDigest && digestSfValue(scope) === scopeDigest && currentAuthority()
     if (!sameObservation() || !await host.revalidate(context) || !sameObservation()) return undefined
@@ -100,14 +103,19 @@ export function createDashboardRecordSourceIssuer(input: { host: DomainPortHost;
         version: original.version, fields: wanted.fields, period: wanted.period, projectionDigest: original.inputDigest } }
     const completed = freezeRecordIssuance<CompletedRecordIssuance>(structuredClone({
       issued: { scope, source: { surface: "dashboard", type: scope.recordType, id: scope.recordId, incarnation: original.incarnation,
-        version: original.version, fields: wanted.fields, period: wanted.period, observedAt: new Date(environment.at).toISOString() } },
+        version: original.version, fields: wanted.fields, period: wanted.period, observedAt: new Date(observedAt).toISOString() } },
       evidence: { ...evidence, refDigest: digestSfEvidenceRef(evidence) },
     }))
     // Two returned bodies can agree about fabricated metadata. Reopen the real
     // registry through its factory-owned checker before accepting their identity.
     if (canonicalCheck && (!await canonicalCheck("dashboard", scope,
-      async (snapshot) => !request.signal.aborted && digestSfValue(await authenticate(snapshot)) === digestSfValue(selector),
-      { incarnation: original.incarnation, version: original.version, inputDigest: original.inputDigest }) || !sameObservation())) return undefined
+      async (snapshot) => {
+        if (!currentAuthority() || digestSfValue(await authenticate(snapshot)) !== digestSfValue(selector) || !currentAuthority()) return false
+        // Validate the captured observation time inside the checker's authorized
+        // snapshot. Its before/after mutation guard also encloses this projection.
+        const observed = projectSfSourceScope("dashboard", snapshot, scope, observedAt)
+        return observed !== undefined && digestSfValue(observed) === original.inputDigest
+      }, { incarnation: original.incarnation, version: original.version, inputDigest: original.inputDigest }) || !sameObservation())) return undefined
     // The record consumer's final authority check remains independent. Borrowed
     // source bodies and request pins are checked again after that callback.
     if (!await host.revalidate(context) || !sameObservation()) return undefined
