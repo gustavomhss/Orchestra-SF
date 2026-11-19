@@ -22,12 +22,9 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   const create = page.locator('form[data-command="create"][data-page="Requests"]').getByRole("button", { name: "Create request", exact: true })
   if (account === "viewer") await expect(create).toHaveCount(0)
   if (account !== "viewer") await expect(create).toBeEnabled()
-  const nativeRead = page.waitForResponse((response) =>
-    response.request().method() === "GET" &&
-    new URL(response.url()).pathname === new URL(selected.baseURL).pathname + "/api/ui/pages/CAP25")
   const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
   expect(entry?.status()).toBe(200)
-  const original = await nativeRead
+  const original = await page.request.get(selected.baseURL + "/api/ui/pages/CAP25")
   expect(original.status()).toBe(200)
   const projection = Schema.decodeUnknownSync(Schema.toType(SfDomainPageCap25.output), { onExcessProperty: "error" })(await original.json())
   if (projection.status !== "ok") throw new Error("The native Procurement projection was not admitted")

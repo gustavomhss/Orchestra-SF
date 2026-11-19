@@ -238,7 +238,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     setView("state", "loading")
     void readBudgetPage(ready.transport, props.capability, targetYear, ready.context.stamp, signal.signal)
       .then((result) => {
-        if (signal.signal.aborted || context.generation() !== generation || context.ready() !== ready) return
+        if (signal.signal.aborted || context.generation() !== generation || context.ready()?.transport !== ready.transport) return
         if (result.state === "ready") {
           setView("page", result.page)
           setView("state", result.page.owners === undefined || result.page.entries === undefined ? "partial" : "ready")
@@ -482,6 +482,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const snapshot = editor?.draft.snapshot()
     if (!editor || !ready || !page || !snapshot || snapshot.availability !== "active" || validate(editor) || view.busy) return
     if (context.state().status !== "ready" || page.context.accessRevision !== ready.context.stamp.accessRevision) return
+    const generation = context.generation()
+    // ready() creates a presentation wrapper; the generation and opaque transport identify its owner.
+    const isCurrentOwner = () => context.generation() === generation && context.ready()?.transport === ready.transport
     const input: BudgetCommand = {
       action: editor.action,
       recordId: editor.action === "save-entry" ? editor.recordId : editor.recordId,
@@ -496,7 +499,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const idempotencyKey = crypto.randomUUID()
     const bytes = new TextEncoder().encode(JSON.stringify(input))
     const fingerprint = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
-    if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor)) return
+    if (!fingerprint || !isCurrentOwner() || editing() !== editor || validate(editor)) return
     const payloadDigest = Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
     const pendingSnapshot = editor.draft.snapshot()
@@ -510,7 +513,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         signal: abort.signal,
         idempotencyKey,
       } satisfies SfCallOptions & { idempotencyKey: string })
-      if (context.ready() !== ready || editing() !== editor) return
+      if (!isCurrentOwner() || editing() !== editor) return
       if (result.kind !== "response") {
         // A transport loss after dispatch is outcome-unknown, not failure/retry.
         editor.draft.setPhase("outcome-unknown")
@@ -532,7 +535,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       // The legacy producer returns {ok:true} without a record projection.
       // Refetch is mandatory before exposing new values or claiming a clean base.
       const postRead = await readBudgetPage(ready.transport, props.capability, year(), ready.context.stamp, abort.signal)
-      if (context.ready() !== ready || editing() !== editor) return
+      if (!isCurrentOwner() || editing() !== editor) return
       editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
       setView("message", sfCommonKey("sf.common.saved"))
       setEditing(undefined)
@@ -546,7 +549,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       if (editor.action === "delete" || props.route.kind === "new") navigate(listHref("entry"))
       else if (props.route.kind === "edit" && editor.parentId) navigate(listHref("detail", editor.parentId))
     } catch {
-      if (context.ready() === ready && editing() === editor) {
+      if (isCurrentOwner() && editing() === editor) {
         editor.draft.setPhase("outcome-unknown")
         setView("error", t(sfCommonKey("sf.common.operationUnknown")))
       }
@@ -556,7 +559,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       // cannot clear the successor command's busy state.
       if (activeSubmissionRef === operationRef) {
         activeSubmissionRef = undefined
-        if (context.ready() === ready) setView("busy", false)
+        if (isCurrentOwner()) setView("busy", false)
       }
     }
   }

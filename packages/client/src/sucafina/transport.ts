@@ -236,14 +236,19 @@ export function createSfTransport(options: Readonly<{
       const route = operationUrl(options.binding, metadata, wireInput, operation.operationId)
       if (!route) return failure("contract-mismatch")
       const postRead = metadata.method === "POST" && (metadata.effect === "read" || metadata.effect === "preview")
+      // This original C08 lookup is read-only, but addresses the first save by
+      // its original command identity. A fresh key would read a different outcome.
+      const draftOutcomeRead = operation.operationId === "dashboard.dashboard-hot-topic-draft-outcome"
+      if (draftOutcomeRead && (!postRead || metadata.effect !== "read" || !stamp))
+        return failure("contract-unavailable")
       const mutating = metadata.method === "POST" && !postRead
       const humanRetry = call.retry === "same-intent"
       if (call.retry !== undefined &&
           (call.retry !== "same-intent" || !mutating || !HUMAN_RETRY_OPERATIONS.has(operation.operationId)))
         return failure("contract-mismatch")
-      if (postRead && call.idempotencyKey !== undefined) return failure("contract-mismatch")
+      if (postRead && !draftOutcomeRead && call.idempotencyKey !== undefined) return failure("contract-mismatch")
       const key = metadata.method === "POST"
-        ? postRead
+        ? postRead && !draftOutcomeRead
           ? typeof crypto !== "undefined" && typeof crypto.randomUUID === "function" ? crypto.randomUUID() : undefined
           : call.idempotencyKey
         : undefined

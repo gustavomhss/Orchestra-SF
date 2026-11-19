@@ -15,6 +15,7 @@ import { procurementMonetaryFacts } from "./monetary.ts"
 import { quoteAssessment, quoteComparisonPresentation } from "../../src/form.ts"
 import type { FormSettings } from "../../src/form.ts"
 import { procurementKeys } from "../../src/nav.ts"
+import { readProcurementQueueView } from "./queue-view.ts"
 
 /** Individual selectors identify persisted scopes; they never confer authority. */
 export function createProcurementSourceResolver(input: { host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>> }) {
@@ -264,9 +265,39 @@ export function createProcurementCollectionRegistry(input: { host: DomainPortHos
 }
 
 /** sourceRef and sourceDigest are the scoped identity, not a browser hash of the row. */
-export function procurementRowSourceIdentity(snapshot: Snapshot, recordId: string) {
+export function procurementRowSourceIdentity(snapshot: Snapshot, recordId: string, queue?: unknown) {
   const scopes = snapshot.sfSources?.scopes
   if (!scopes || !recordId.trim()) return undefined
+  if (queue !== undefined) {
+    // The page already revalidated this producer-held C02 selection. Its row
+    // identifies the exact collection scope; another actor's row is not a fallback.
+    const presentation = readProcurementQueueView(queue)
+    const selected = presentation?.rows.filter((row) => row.id === recordId)
+    if (!selected || selected.length !== 1) return undefined
+    const { evidence, projection } = selected[0]!
+    const context = projection.context
+    if (!evidence.refId || evidence.refDigest !== digestSfEvidenceRef(evidence) ||
+        evidence.evidenceLevel !== "observed" || evidence.target.surface !== "procurement" ||
+        evidence.target.recordType !== "procurement-request" || evidence.target.recordId !== recordId ||
+        evidence.installationId !== context.installationId || evidence.projectId !== context.projectId ||
+        digestSfValue(evidence.target.period) !== digestSfValue(context.period) ||
+        digestSfValue(evidence.target.fields) !== digestSfValue(procurementRequestFields)) return undefined
+    const matches = Object.values(scopes).filter((entry) => entry.alive &&
+      entry.incarnation === evidence.target.incarnation && entry.version === evidence.target.version &&
+      entry.scope.recordType === "procurement-request-selection" && entry.scope.recordId === "all" &&
+      entry.scope.principalRef === context.principalRef &&
+      entry.scope.accessRevision === context.accessRevision && entry.scope.policyVersion === context.policyVersion &&
+      object(entry.scope.selector).kind === "procurement-selection-v1")
+    if (matches.length !== 1) return undefined
+    const scope = matches[0]!.scope
+    const identity = sfScopedSourceIdentity(snapshot, scope)
+    const current = projectProcurementScope("procurement", snapshot, scope)
+    const records = rows(object(current).records).filter((record) => record.id === recordId)
+    if (!identity || identity.incarnation !== evidence.target.incarnation ||
+        identity.version !== evidence.target.version || identity.inputDigest !== digestSfValue(current) ||
+        records.length !== 1 || records[0]!.privateDependencyDigest !== evidence.target.projectionDigest) return undefined
+    return { sourceRef: identity.incarnation, sourceDigest: identity.inputDigest, sourceVersion: identity.version }
+  }
   const matches = Object.values(scopes).filter((entry) => entry.alive && entry.scope.recordType === "procurement-request" && entry.scope.recordId === recordId)
   if (matches.length !== 1) return undefined
   const identity = sfScopedSourceIdentity(snapshot, matches[0]!.scope)

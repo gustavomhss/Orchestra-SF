@@ -573,6 +573,19 @@ export const SfProjectionLocalAdmin = {
   output: localAdminOutput,
 } as const
 
+
+export const SfDashboardDashboardDraftRead = {
+  operationId: "dashboard.dashboard-draft-read",
+  input: SfDomainDashboardInputs.draftRead,
+  output: SfDomainDashboardOutput,
+} as const
+
+export const SfDashboardDashboardHotTopicDraftOutcome = {
+  operationId: "dashboard.dashboard-hot-topic-draft-outcome",
+  input: SfDomainDashboardInputs.draftOutcome,
+  output: SfDomainDashboardOutput,
+} as const
+
 export const SfDashboardDashboardWorkbench = {
   operationId: "dashboard.dashboard-workbench",
   input: SfDomainDashboardInputs.workbench,
@@ -673,6 +686,8 @@ export const SfDomain = {
     "domain.command.CAP16.save-sub": SfDomainCommandCap16SaveSub,
     "domain.command.CAP16.delete-sub": SfDomainCommandCap16DeleteSub,
     "projection.local-admin": SfProjectionLocalAdmin,
+    "dashboard.dashboard-draft-read": SfDashboardDashboardDraftRead,
+    "dashboard.dashboard-hot-topic-draft-outcome": SfDashboardDashboardHotTopicDraftOutcome,
     "dashboard.dashboard-workbench": SfDashboardDashboardWorkbench,
     "dashboard.dashboard-hot-topic-source": SfDashboardDashboardHotTopicSource,
     "dashboard.dashboard-hot-topic-draft": SfDashboardDashboardHotTopicDraft,
