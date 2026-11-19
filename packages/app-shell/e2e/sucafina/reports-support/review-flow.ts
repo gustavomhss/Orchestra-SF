@@ -261,9 +261,14 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(href.origin).toBe(app.origin)
   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
   expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
+  const downloadTransport = observeReviewTransport(page, app, "review-download", "GET")
   const downloaded = page.waitForEvent("download")
-  await link.click()
-  const download = await downloaded
+  const download = await (async () => {
+    try {
+      await link.click()
+      return await downloaded
+    } finally { await downloadTransport.finish(info) }
+  })()
   expect(download.url()).toBe(href.href)
   expect(download.suggestedFilename()).toMatch(new RegExp(`\\.${format}$`))
   expect(await download.failure()).toBeNull()
@@ -276,28 +281,31 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   return { artifact, href: href.href, ...semantics }
 }
 
-export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
-  const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
-  await expect(open).toBeVisible()
-  await expect(open).toBeEnabled()
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await open.click()
-  expect(object(await (await pending).json()).value).toEqual(saved)
-  const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
-  await expect(meeting).toHaveCount(1)
-  await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
-  const url = page.url()
-  const reload = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await page.reload()
-  expect(object(await (await reload).json()).value).toEqual(saved)
-  await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
-  expect(page.url()).toBe(url)
-  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
-  await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
-  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
-  return { meeting, url }
+export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview, info: TestInfo) {
+  const transport = observeReviewTransport(page, app, "review-read", "GET")
+  try {
+    const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+    await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+    const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
+    await expect(open).toBeVisible()
+    await expect(open).toBeEnabled()
+    const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+    await open.click()
+    expect(object(await (await Promise.race([pending, transport.failed])).json()).value).toEqual(saved)
+    const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
+    await expect(meeting).toHaveCount(1)
+    await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
+    const url = page.url()
+    const reload = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+    await page.reload()
+    expect(object(await (await Promise.race([reload, transport.failed])).json()).value).toEqual(saved)
+    await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
+    expect(page.url()).toBe(url)
+    await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
+    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
+    return { meeting, url }
+  } finally { await transport.finish(info) }
 }
 
 export async function expectCapturedBudget(page: Page, corpus: ReportsCorpus, amount = corpus.before) {
@@ -356,7 +364,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
 }
 
 /** Observe transport only: never serialize headers, bodies, cookies or query values. */
-function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" = "review-agenda") {
+function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" | "review-read" | "review-download" = "review-agenda", method: "GET" | "POST" = "POST") {
   const expected = new URL(app.dashboardURL)
   const started = Date.now()
   const entries: Record<string, unknown>[] = []
@@ -380,7 +388,7 @@ function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "rev
   }
   const matching = (request: Request) => {
     const route = destination(request.url())
-    return route.sameOrigin && route.samePath && route.mode === mode && request.method() === "POST"
+    return route.sameOrigin && route.samePath && route.mode === mode && request.method() === method
   }
   const relevant = (request: Request) => request.method() === "POST" || destination(request.url()).mode.startsWith("review")
   const causes = (value: string) => ({
@@ -408,7 +416,7 @@ function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "rev
   const requestfailed = (value: Request) => {
     const failure = causes(value.failure()?.errorText ?? "")
     if (relevant(value)) add("requestfailed", { ...destination(value.url()), method: value.method(), ...failure })
-    if (matching(value)) rejectFailure(new Error("Actual " + mode + " POST transport failed: " +
+    if (matching(value)) rejectFailure(new Error("Actual " + mode + " " + method + " transport failed: " +
       [...failure.codes, ...failure.categories].join(", ")))
   }
   const pageerror = (value: Error) => add("pageerror", {
@@ -426,7 +434,7 @@ function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "rev
       page.off("request", request); page.off("response", response); page.off("requestfailed", requestfailed)
       page.off("pageerror", pageerror); page.off("console", consoleEvent)
       const observation = {
-        before, after: destination(page.url()), expected: { method: "POST", mode },
+        before, after: destination(page.url()), expected: { method, mode },
         elapsedMs: Date.now() - started, entries, dropped, cli: app.diagnostics?.() ?? "diagnostics-unavailable",
       }
       if (entries.some((entry) => entry.kind === "requestfailed"))
