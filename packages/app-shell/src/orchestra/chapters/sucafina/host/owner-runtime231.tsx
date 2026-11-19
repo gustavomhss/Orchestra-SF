@@ -23,7 +23,7 @@ import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfDraft } from "../shared/draft"
 import { createSfNavigationState, type SfNativeNavigationState } from "../navigation-state"
-import { matchSfNativeRoutePath } from "../route-registry"
+import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
 import { useSfContext } from "../context"
 import type { SfContextDependencies, SfContextHandle, SfSurfaceProps } from "../context/contracts"
 import { SfTodayView } from "../home"
@@ -86,6 +86,42 @@ const sameServerKey = (selected: string, connected: string) => selected === conn
 
 function isSfServerKey(value: string): value is SfServerKey {
   return value.length > 0
+}
+
+const ownerKeys = ["server", "project", "installation"] as const
+
+function namedOwner(url: URL): { kind: "absent" } | { kind: "invalid" } | { kind: "named"; selection: SfOwnerSelection } {
+  const values = ownerKeys.map((key) => url.searchParams.getAll(key))
+  if (values.every((items) => items.length === 0)) return { kind: "absent" }
+  if (values.some((items) => items.length !== 1 || !items[0])) return { kind: "invalid" }
+  return { kind: "named", selection: {
+    serverKey: values[0]![0]! as SfServerKey,
+    projectId: values[1]![0]! as SfRef,
+    installationId: values[2]![0]! as SfRef,
+  } }
+}
+
+function publishedHref(url: URL, keepOwner: boolean): string {
+  const params = new URLSearchParams(url.search)
+  if (!keepOwner) for (const key of ownerKeys) params.delete(key)
+  const search = params.toString()
+  return url.pathname + (search ? "?" + search : "")
+}
+
+function isCoreEntry(candidate: SfNativeRouteCandidate): boolean {
+  return candidate.kind === "entry" && (
+    candidate.surfaceId === "UI29" || candidate.surfaceId === "UI33" || candidate.surfaceId === "UI34"
+  )
+}
+
+/** Syntax gate used by the mounted runtime. Source availability is a later check. */
+export function sfMountedPathAdmitted(pathname: string, params: URLSearchParams): boolean {
+  const candidate = matchSfNativeRoutePath(pathname)
+  if (!candidate) return false
+  if (isCoreEntry(candidate))
+    return ![...params.keys()].some((key) => !ownerKeys.includes(key as typeof ownerKeys[number]))
+  if (!isExtendedSurface(candidate.surfaceId)) return false
+  return parseExtendedRouteQuery(params, candidate) !== undefined
 }
 
 function explicitSelection(query: string): { kind: "none" } | { kind: "invalid" } |
@@ -172,6 +208,7 @@ function ownerKeyFromVerifiedContext(
 
 function MountedSurface(props: Readonly<{
   view: () => View
+  gate: () => boolean
   bind: (handle: SfContextHandle | undefined) => void
   status: (status: string, generation: number) => void
 }>): JSX.Element {
@@ -179,22 +216,24 @@ function MountedSurface(props: Readonly<{
   props.bind(handle)
   createEffect(() => props.status(handle.state().status, handle.generation()))
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
-  const current = () => props.view().route
+  const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
-    <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
-      <Match when={props.view().status === "ready" && current()?.surfaceId === "UI29"}>
-        <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
-      </Match>
-      <Match when={props.view().status === "ready" && current()?.surfaceId === "UI33"}>
-        <SfCasesView surfaceId="UI33" route={current() as SfSurfaceProps<"UI33">["route"]} />
-      </Match>
-      <Match when={props.view().status === "ready" && current()?.surfaceId === "UI34"}>
-        <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
-      </Match>
-      <Match when={props.view().status === "ready" && current() && isExtendedSurface(current()!.surfaceId)}>
-        <SfExtendedPages route={current()!} />
-      </Match>
-    </Switch>
+    <Show when={props.gate()} fallback={<p role="status" data-sf-f01="resolving">Resolving installed Sucafina</p>}>
+      <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+        <Match when={current()?.surfaceId === "UI29"}>
+          <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
+        </Match>
+        <Match when={current()?.surfaceId === "UI33"}>
+          <SfCasesView surfaceId="UI33" route={current() as SfSurfaceProps<"UI33">["route"]} />
+        </Match>
+        <Match when={current()?.surfaceId === "UI34"}>
+          <SfIntentView surfaceId="UI34" route={current() as SfSurfaceProps<"UI34">["route"]} />
+        </Match>
+        <Match when={current() && isExtendedSurface(current()!.surfaceId)}>
+          <SfExtendedPages route={current()!} />
+        </Match>
+      </Switch>
+    </Show>
   )
 }
 
@@ -212,6 +251,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const [view, setView] = createStore<View>({ status: "resolving" })
   const [provider, setProvider] = createStore({ status: "unmounted", generation: -1 })
   let mounted: SfContextHandle | undefined
+  let explicitOwner: SfOwnerSelection | undefined
   let ownerEpoch = 0
   let disposed = false
   let lastEditorFocus: HTMLElement | undefined
@@ -307,17 +347,18 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
         if (url.origin !== window.location.origin || url.hash || url.username || url.password)
           return { status: "invalid-link" }
       } catch { return { status: "invalid-link" } }
-      const candidate = matchSfNativeRoutePath(url.pathname)
-      const core = !!candidate && (
-        candidate.surfaceId === "UI29" && candidate.kind === "entry" ||
-        candidate.surfaceId === "UI33" && candidate.kind === "entry" ||
-        candidate.surfaceId === "UI34" && candidate.kind === "entry"
-      )
-      const extended = !!candidate && !core && isExtendedSurface(candidate.surfaceId)
-      if (!candidate || (!core && !extended)) return { status: "invalid-link" }
-      if (core && [...url.searchParams.keys()].some((key) => !["server", "project", "installation"].includes(key)))
-        return { status: "invalid-link" }
-      const parsed = extended ? parseExtendedRouteQuery(url.searchParams, candidate) : {}
+      if (!sfMountedPathAdmitted(url.pathname, url.searchParams)) return { status: "invalid-link" }
+      const candidate = matchSfNativeRoutePath(url.pathname)!
+      const named = namedOwner(url)
+      if (named.kind === "invalid") return { status: "invalid-link" }
+      if (named.kind === "named" && !sameSelection(named.selection, selected)) return { status: "invalid-link" }
+      if (named.kind === "absent") {
+        const shell = selection()
+        if (shell && !sameSelection(shell, selected)) return { status: "invalid-link" }
+        if (explicitOwner && sameSelection(explicitOwner, selected)) return { status: "invalid-link" }
+      }
+      const core = isCoreEntry(candidate)
+      const parsed = core ? {} : parseExtendedRouteQuery(url.searchParams, candidate)
       if (!parsed) return { status: "invalid-link" }
       const found = await source.listByIds(selected, signal)
       if (signal.aborted || !found) return { status: "unavailable" }
@@ -353,18 +394,33 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
       // the 227 Today resume port separately performs two original reads.
       const route = {
         surfaceId: candidate.surfaceId, kind: candidate.kind,
-        params: candidate.parameters, ownerSelection: selected,
-        pathname: url.pathname, href: (url.pathname + url.search) as SfHref, query: parsed,
+        params: candidate.parameters,
+        ownerSelection: named.kind === "named" ? named.selection : selected,
+        pathname: url.pathname, href: publishedHref(url, named.kind === "named") as SfHref, query: parsed,
       } as SfResolvedRoute
       return { status: "authorized", route, ownerKey }
     },
     commit: ({ route, selection: selected, cause }) => {
       if (disposed) return
-      setDiscovery({ status: "ready", selection: selected })
+      let url: URL
+      try { url = new URL(String(route.href), window.location.origin) } catch { return }
+      const named = namedOwner(url)
+      if (named.kind === "invalid") return
+      const replace = cause === "deep-link" || cause === "history" || cause === "reload"
+      if (named.kind === "absent") {
+        const shell = selection()
+        if (!shell || !sameSelection(shell, selected) || (explicitOwner && sameSelection(explicitOwner, selected))) return
+        const published = publishedHref(url, false)
+        setView({ status: "ready", route: { ...route, href: published as SfHref, ownerSelection: shell } })
+        if (currentHref() !== published) navigate(published, { replace })
+        return
+      }
+      if (!sameSelection(named.selection, selected)) return
+      explicitOwner = named.selection
+      setDiscovery({ status: "ready", selection: named.selection })
       setView({ status: "ready", route })
       const target = String(route.href)
-      if (currentHref() !== target)
-        navigate(target, { replace: cause === "deep-link" || cause === "history" || cause === "reload" })
+      if (currentHref() !== target) navigate(target, { replace })
     },
   })
   // The exact 227 resume adapter receives this single navigation instance.
@@ -387,21 +443,28 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
     const parsed = explicitSelection(query)
     const epoch = ++discoveryAttempt
     if (parsed.kind === "invalid") {
+      explicitOwner = undefined
       setDiscovery({ status: "invalid-link", selection: undefined })
       setView({ status: "invalid-link", route: undefined })
       return
     }
     if (parsed.kind === "selected") {
       if (!sameServerKey(parsed.selection.serverKey, actualServerKey)) {
+        explicitOwner = undefined
         setDiscovery({ status: "denied", selection: undefined })
         setView({ status: "denied", route: undefined })
         return
       }
+      explicitOwner = parsed.selection
       if (selection() && sameSelection(selection()!, parsed.selection)) return
       setDiscovery({ status: "ready", selection: parsed.selection })
       return
     }
-    if (selection()) return // already admitted by original location discovery
+    if (explicitOwner) {
+      explicitOwner = undefined
+      setDiscovery({ status: "resolving", selection: undefined })
+      setView({ status: "resolving", route: undefined })
+    } else if (selection()) return
     setDiscovery({ status: "resolving", selection: undefined })
     const abort = new AbortController()
     void source.listByLocation(directory, abort.signal).then((found) => {
@@ -436,9 +499,12 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   createEffect(() => {
     const selected = selection()
     const href = currentHref()
-    const providerStatus = provider.status
-    const providerGeneration = provider.generation
-    if (!selected || disposed || providerStatus !== "ready" || providerGeneration < 0) return
+    const gateReady = provider.status === "ready" && provider.generation >= 0
+    if (!gateReady) {
+      setView({ status: "resolving", route: undefined })
+      return
+    }
+    if (!selected || disposed) return
     if (untrack(() => view.status === "ready" && view.route?.href === href &&
       sameSelection(view.route.ownerSelection, selected))) return
     const epoch = ++routeEpoch
@@ -479,7 +545,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
           dependencies={boundDependencies}
           ownerNavigation={navigation}
         >
-          <MountedSurface view={() => view} bind={(handle) => { mounted = handle }}
+          <MountedSurface view={() => view} gate={() => provider.status === "ready" && provider.generation >= 0}
+            bind={(handle) => { mounted = handle }}
             status={(status, generation) => setProvider({ status, generation })} />
         </SfTodayBoundOwnerProvider>
       </Show>
