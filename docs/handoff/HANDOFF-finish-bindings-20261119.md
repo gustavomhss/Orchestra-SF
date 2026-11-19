@@ -36,3 +36,10 @@ Estado: partial
 - [44580136464](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44580136464): SUCCESS3/0/13expect, snapshot56a5407ab724dd3630d247614bc9a2b50a764e7d, código9f3bcf615d19613521432f6e9b9e21e7c9309e15. Test135758238396 e cleanup135759354951 success.
 - GitHub Actions exclusivamente; nenhum shell local.
 - Nenhum resultado de navegador ou GO declarado.
+
+## Atualização — binding original fixo das três operações Decisions
+
+- O registry vincula os envelopes fechados de criação/edição/controles ao adaptador original dashboard. decision-intent-health.ts:22–24 conserva os mesmos três IDs/métodos/queries/discriminadores e usa o path literal correspondente.
+- Sem alterar checks de recurso operacional, dependências, nativeReadBinding, admissão, Request original, actor/stamp, ação humana, dupla leitura C08 ou revalidação de saída. Nenhuma asserção removida.
+- Ingress19 [44597044228](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44597044228): FAILURE no typecheck CLI, TS2367/2339; o path antigo eliminava todas as alternativas Decisions antes dos checks. Não executou navegador e não mede o conserto reativo CAP23.
+- Próximo gate composto de tipos/ingresso e criação/edição nativas: pendente.

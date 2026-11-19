@@ -29,6 +29,8 @@ export function SfCaseSourcesEditor(props: Readonly<{
   const language = useLanguage()
   const t = (key: string) => language.t(key as Parameters<typeof language.t>[0])
   const [draft, setDraft] = createStore({
+    objective: "", start: "", end: "", currency: "",
+    criteria: [] as EditInput["criteria"],
     sources: [] as Sources,
     options: [] as Options,
     selected: "",
@@ -43,7 +45,9 @@ export function SfCaseSourcesEditor(props: Readonly<{
     const record = props.projection.case
     owner.generation()
     pending?.abort()
-    setDraft({ sources: record.sourceRefs, options: [], selected: "", inspected: undefined,
+    setDraft({ objective: record.objective, start: record.horizon.start, end: record.horizon.end,
+      currency: record.currency, criteria: record.criteria.map(({ id, description, required }) => ({ id, description, required })),
+      sources: record.sourceRefs, options: [], selected: "", inspected: undefined,
       busy: false, phase: "editing", message: "" })
   })
   const permitted = (operation: string) => {
@@ -58,9 +62,9 @@ export function SfCaseSourcesEditor(props: Readonly<{
   const payload = (record: SfCaseRecord, sources: Sources | readonly unknown[]) =>
     Schema.decodeUnknownOption(Schema.toType(SfDecisions.operations["decisions.decision-edit"].input), { onExcessProperty: "error" })({
       caseRef: { id: record.id, incarnation: record.incarnation, version: record.version },
-      objective: record.objective,
-      criteria: record.criteria.map(({ id, description, required }) => ({ id, description, required })),
-      horizon: record.horizon, currency: record.currency, sourceRefs: sources,
+      objective: draft.objective.trim(),
+      criteria: draft.criteria.map(({ id, description, required }) => ({ id, description: description.trim(), required })),
+      horizon: { start: draft.start, end: draft.end }, currency: draft.currency, sourceRefs: sources,
     })
   const discover = async () => {
     const ready = owner.ready(), record = props.projection.case
@@ -129,9 +133,15 @@ export function SfCaseSourcesEditor(props: Readonly<{
     if (!source || !editing() || draft.sources.some((current) => current.refDigest === source.refDigest)) return
     setDraft({ sources: [...draft.sources, source], inspected: undefined, message: "" })
   }
+  const changed = () => {
+    const record = props.projection.case
+    return draft.objective.trim() !== record.objective || draft.start !== record.horizon.start ||
+      draft.end !== record.horizon.end || draft.currency !== record.currency ||
+      draft.criteria.some((criterion, index) => criterion.description.trim() !== record.criteria[index]?.description) ||
+      draft.sources.length !== record.sourceRefs.length
+  }
   const review = () => {
-    if (!editing() || !permitted("decisions.decision-edit") ||
-      draft.sources.length <= props.projection.case.sourceRefs.length) return
+    if (!editing() || !permitted("decisions.decision-edit") || !changed()) return
     const input = payload(props.projection.case, draft.sources)
     if (Option.isNone(input)) { setDraft("message", "sf.ui34.sourcesUnavailable"); return }
     setDraft({ phase: "reviewing", message: "" })
@@ -171,9 +181,26 @@ export function SfCaseSourcesEditor(props: Readonly<{
   }
   return <section class="mx-card sf-n24-section" data-sf-decision-editor aria-labelledby="sf-case-edit-sources">
     <h2 id="sf-case-edit-sources">{t("sf.ui34.edit")}</h2>
-    <p><bdi>{props.projection.case.objective}</bdi></p>
-    <p>{props.projection.case.horizon.start} – {props.projection.case.horizon.end} · {props.projection.case.currency}</p>
-    <ol><For each={props.projection.case.criteria}>{(criterion) => <li>{criterion.description}</li>}</For></ol>
+    <div class="sf-n24-form-grid">
+      <label class="sf-n24-field"><span>{t("sf.ui33.objective")}</span>
+        <input value={draft.objective} disabled={!editing()} onInput={(event) => setDraft("objective", event.currentTarget.value)} />
+      </label>
+      <label class="sf-n24-field"><span>{t("sf.ui33.start")}</span>
+        <input type="date" value={draft.start} disabled={!editing()} onInput={(event) => setDraft("start", event.currentTarget.value)} />
+      </label>
+      <label class="sf-n24-field"><span>{t("sf.ui33.end")}</span>
+        <input type="date" value={draft.end} disabled={!editing()} onInput={(event) => setDraft("end", event.currentTarget.value)} />
+      </label>
+      <label class="sf-n24-field"><span>{t("sf.ui33.currency")}</span>
+        <input value={draft.currency} disabled={!editing()} maxLength={3}
+          onInput={(event) => setDraft("currency", event.currentTarget.value.toUpperCase())} />
+      </label>
+      <For each={draft.criteria}>{(criterion, index) => <label class="sf-n24-field">
+        <span>{t("sf.ui34.criteria")} {index() + 1}</span>
+        <input value={criterion.description} disabled={!editing()}
+          onInput={(event) => setDraft("criteria", index(), "description", event.currentTarget.value)} />
+      </label>}</For>
+    </div>
     <p>{t("sf.ui34.attachScope")}</p>
     <ul data-sf-decision-sources><For each={draft.sources}>{(source) =>
       <li>{source.kind === "record" ? source.target.recordType + " · " + source.target.recordId : source.kind} · {source.refId}</li>
@@ -203,6 +230,9 @@ export function SfCaseSourcesEditor(props: Readonly<{
       <section role="group" aria-label={t("sf.ui34.reviewEdit")}>
         <p>{t("sf.ui34.attachScope")}</p>
         <p>{t("sf.ui34.current")}: {props.projection.case.version}</p>
+        <p>{draft.objective.trim()}</p>
+        <p>{draft.start} – {draft.end} · {draft.currency}</p>
+        <ol><For each={draft.criteria}>{(criterion) => <li>{criterion.description.trim()}</li>}</For></ol>
         <ul><For each={draft.sources}>{(source) => <li>{source.refId}</li>}</For></ul>
         <button class="mx-btn primary" type="button" disabled={draft.busy} onClick={() => void save()}>{t("sf.ui34.confirmEdit")}</button>
         <button class="mx-btn" type="button" onClick={() => setDraft("phase", "editing")}>{t("sf.ui33.cancel")}</button>
@@ -210,7 +240,7 @@ export function SfCaseSourcesEditor(props: Readonly<{
     </Show>
     <Show when={draft.phase !== "reviewing"}>
       <button class="mx-btn primary" type="button"
-        disabled={!editing() || !permitted("decisions.decision-edit") || draft.sources.length <= props.projection.case.sourceRefs.length}
+        disabled={!editing() || !permitted("decisions.decision-edit") || !changed()}
         onClick={review}>{t("sf.ui34.reviewEdit")}</button>
     </Show>
     <Show when={draft.message}><p role="status">{t(draft.message)}</p></Show>
