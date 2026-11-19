@@ -316,7 +316,8 @@ export function createSfMemoryCaseReadScope(input: {
       if (proof.fence !== before.digest || proof.inputDigest !== inputDigest || digestSfValue(incoming) !== argumentDigest) {
         scope.invalid = true; return { status: "unavailable" }
       }
-      return cloneSfAtlasRecallResult(proof.value)
+      // Rank consumes Atlas observations once. Keep the fence, then obtain a new
+      // canonical observation for this recall instead of replaying its consumed records.
     }
     scope.memoryBusy.add(key)
     try {
