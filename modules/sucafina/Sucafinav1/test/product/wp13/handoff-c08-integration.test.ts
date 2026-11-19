@@ -58,7 +58,8 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     const state = createSfProductState({ persistence: store, createId: () => "product-state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => targetRef === decision.id ? { incarnation: decision.incarnation } : targetRef === "forecast-a" ? { incarnation: "target-inc-0" } : targetRef === "contract-b" ? { incarnation: "target-inc-1" } : undefined, authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "a".repeat(64), targetRef: decision.id, targetIncarnation: decision.incarnation }, async (productState) => { productState.cases[decision.id] = decision; return { commit: true, value: true } })
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh", accessRevision: "access", checkedAt: "2027-01-01" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
-    const host: DomainPortHost = { persistence: store, authenticate: async () => ({ id: "principal", roles: [{ surface: "planner", role: "finance" }, { surface: "procurement", role: "buyer" }], canWrite: true }), environment: async () => ({ at: "2027-01-01T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => new Request("https://example.test"), revalidate: async (context) => context.kind === "ui" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" }
+    const admittedRequest = new Request("https://example.test")
+    const host: DomainPortHost = { persistence: store, authenticate: async () => ({ id: "principal", roles: [{ surface: "planner", role: "finance" }, { surface: "procurement", role: "buyer" }], canWrite: true }), environment: async () => ({ at: "2027-01-01T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => admittedRequest, revalidate: async (context) => context.kind === "ui" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" }
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "install:cases", incarnation: "install-inc" }, operationIdentity: () => "case-operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "case-event", now: () => "2027-01-01T00:00:00Z" })
     const domain = { procurementFails: true, plannerCalls: 0, procurementCalls: 0, receiptSequence: 0 }
     for (const [index, surface] of (["planner", "procurement"] as const).entries()) {
@@ -230,7 +231,8 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     expect(domain.procurementCalls).toBe(0)
     expect(await amounts()).toEqual([40, 50])
     domain.procurementFails = false
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
+    expect(await execution(firstRequest, binding)).toEqual(firstExecution)
     const beforeResume = await cases.read({ caseRef: caseSelector }, binding)
     if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
     const secondRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }
