@@ -8,6 +8,7 @@ import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
 import { object, observedReportResponse, projection, readReview, responseFor, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
+import { connectInstalledShell } from "../installed-shell"
 
 const reportPages = ["Portfolio Dashboard", "Budget Overview", "Hot Topics & Actions"] as const
 const reportPageTopics = {
@@ -17,7 +18,17 @@ const reportPageTopics = {
 } as const
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
+  const budgetRead = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === app.origin &&
+      url.pathname === app.mount + "/api/ui/pages/CAP03" && url.searchParams.get("year") === String(corpus.year)
+  })
   await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
+  const budgetResponse = await budgetRead
+  expect(budgetResponse.status()).toBe(200)
+  const budgetBody = object(await readNativeReportResponse(budgetResponse))
+  expect(budgetBody.status).toBe("ok")
+  expect(object(budgetBody.value)).toMatchObject({ capabilityId: "CAP03", selection: { year: corpus.year } })
   const reportsEntry = page.getByRole("link", { name: "Reports and backup", exact: true })
   await expect(reportsEntry).toBeVisible()
   await expect(reportsEntry).toHaveAttribute("href", `/orchestra/sf-reviews/agenda?year=${corpus.year}`)
@@ -238,6 +249,8 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
   }
   source.on("request", recordMutation)
   try {
+    // The new tab selects the real installed server/project using the existing operator session.
+    await connectInstalledShell(source, app)
     const loaded = source.waitForResponse(pageRead)
     await source.goto("/orchestra/sf-dashboard/opex/" + encodeReviewRef("reports-opex") +
       "?" + new URLSearchParams({ year: String(corpus.year) }))
@@ -304,6 +317,14 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await expect(month.getByRole("button", { name: "Save month", exact: true })).toBeEnabled()
     await month.getByRole("button", { name: "Save month", exact: true }).click()
     await expect(form.getByLabel("forecast", { exact: true })).toHaveValue("190")
+  } catch (error) {
+    console.info("SF_REPORTS_SOURCE_STATE", JSON.stringify(await source.locator("body").evaluate((body) => ({
+      path: location.pathname, queryKeys: [...new URLSearchParams(location.search).keys()],
+      context: Array.from(body.querySelectorAll("[data-sf-f01]")).map((node) => node.getAttribute("data-sf-f01")),
+      surfaces: Array.from(body.querySelectorAll("[data-sf-surface]")).map((node) => node.getAttribute("data-sf-surface")),
+      headings: Array.from(body.querySelectorAll("h1,h2,[role=alert]")).map((node) => node.textContent?.slice(0, 180)),
+    })).catch(() => ({ closed: true }))))
+    throw error
   } finally {
     source.off("request", recordMutation)
     await source.close()

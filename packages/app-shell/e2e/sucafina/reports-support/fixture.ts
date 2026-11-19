@@ -52,6 +52,7 @@ export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; co
       const dashboardPath = new URL(app.dashboardURL).pathname
       const reportJson = (url: URL) => url.origin === new URL(page.url()).origin &&
         (url.pathname.endsWith("/api/ui/projections/review") ||
+          url.pathname === app.mount + "/api/ui/pages/CAP03" && url.searchParams.get("year") === String(corpus.year) ||
           url.pathname === dashboardPath && url.searchParams.has("sf") &&
             url.searchParams.get("sf") !== "review-download")
       await page.route(reportJson, async (route) => {
