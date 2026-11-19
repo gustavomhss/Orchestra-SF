@@ -16,6 +16,9 @@ test("human answer evidence is a stable claim and disappears when access is revo
   const store = await openLocalStore(directory)
   const binding = (principalRef: string) => ({ kind: "ui", binding: { installationId: "install", projectId: "project", principalRef, requestId: principalRef, policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} }) as unknown as TrustedUiContext
   const access = { allowed: true }
+  const requests = new Map(["A", "B"].map((principalRef) => [
+    principalRef, new Request("https://example.test/", { headers: { "x-test-principal": principalRef } }),
+  ]))
   const ids = { n: 0 }
   const threadHistoryWrites = new WeakSet<object>()
   const source = { schema: "sf-evidence-v1", refId: "source", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "line", recordId: "line-A", incarnation: "inc-A", version: 1, fields: ["amount"], period: { start: "2027-01-01", end: "2027-01-31" }, projectionDigest: "b".repeat(64) } } as const
@@ -25,7 +28,7 @@ test("human answer evidence is a stable claim and disappears when access is revo
       const principalRef = request.headers.get("x-test-principal")
       return access.allowed && (principalRef === "A" || principalRef === "B") ? { principalRef, policyVersion: "policy", accessRevision: "access" } : undefined
     } })
-    const threads = createThreadPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => true }, checkRecipientAtCommit: (id) => access.allowed && id === "B", state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, host: { requestFor: (context) => new Request("https://example.test/", { headers: { "x-test-principal": context.binding.principalRef } }), revalidate: async () => access.allowed }, authorize: async (thread, context) => access.allowed && (thread.recipientRef === context.binding.principalRef || !("messages" in thread) || thread.messages.some((message) => message.authorRef === context.binding.principalRef)), createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const threads = createThreadPort({ mutationFence: createCollaborationMutationFence({ persistence: store }), human: { authorize: async () => true }, checkRecipientAtCommit: (id) => access.allowed && id === "B", state, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, host: { requestFor: (context) => requests.get(context.binding.principalRef), revalidate: async () => access.allowed }, authorize: async (thread, context) => access.allowed && (thread.recipientRef === context.binding.principalRef || !("messages" in thread) || thread.messages.some((message) => message.authorRef === context.binding.principalRef)), createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     const opened = await threads.create({ kind: "clarification", sourceRef: "source", sourceIncarnation: "inc-A", observedVersion: 1, period: { start: "2027-01-01", end: "2027-01-31" }, recipientRef: "B", body: "Why?", evidenceRefs: [source] }, { expectedStorageVersion: 0, idempotencyKey: "open" }, binding("A"))
     if (opened.status !== "ok") throw new Error("thread creation failed")
     const replied = await threads.reply(opened.value.id, "Because", { expectedStorageVersion: 1, idempotencyKey: "answer" }, binding("B"))
@@ -49,7 +52,7 @@ test("human answer evidence is a stable claim and disappears when access is revo
     expect(await evidence.belongsToQuestion(opened.value.id, issued.value.refId, binding("A"))).toBe(true)
     expect(await evidence.belongsToQuestion("another-question", issued.value.refId, binding("A"))).toBe(false)
     expect((await evidence.issue(opened.value.id, opened.value.messages[0]!.id, binding("A"))).status).toBe("unavailable")
-    const history = createThreadHistory({ state, host: { requestFor: (context) => new Request("https://example.test/", { headers: { "x-test-principal": context.binding.principalRef } }), revalidate: async () => access.allowed }, read: threads.read, human: { authorize: async () => true }, fence: createCollaborationMutationFence({ persistence: store }), target: { ref: "workspace", incarnation: "workspace-inc" }, threadHistoryWrites })
+    const history = createThreadHistory({ state, host: { requestFor: (context) => requests.get(context.binding.principalRef), revalidate: async () => access.allowed }, read: threads.read, human: { authorize: async () => true }, fence: createCollaborationMutationFence({ persistence: store }), target: { ref: "workspace", incarnation: "workspace-inc" }, threadHistoryWrites })
     expect(await history.edit(opened.value.id, message.id, 1, "Second", { expectedStorageVersion: 3, idempotencyKey: "edit-1" }, binding("B"))).toMatchObject({ status: "ok", value: { version: 2 } })
     expect(await history.edit(opened.value.id, message.id, 2, "Third", { expectedStorageVersion: 4, idempotencyKey: "edit-2" }, binding("B"))).toMatchObject({ status: "ok", value: { version: 3 } })
     expect(await history.edit(opened.value.id, message.id, 3, "Fourth", { expectedStorageVersion: 5, idempotencyKey: "edit-3" }, binding("B"))).toMatchObject({ status: "ok", value: { version: 4 } })

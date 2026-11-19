@@ -157,7 +157,8 @@ const setup = Effect.fn("PhaseFixture.setup")(function* (directory: string, prep
   const sessions = yield* SessionV2.Service, execution = yield* SessionExecution.Service
   const database = yield* Database.Service, events = yield* EventV2.Service, store = yield* SessionStore.Service
   const locations = yield* LocationServiceMap.Service
-  const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
+  // Match SessionInfo.fromRow: absent and explicit undefined keys are distinct LayerMap keys.
+  const location = Location.Ref.make({ directory: AbsolutePath.make(directory), workspaceID: undefined })
   const opened = yield* locations.contextEffect(location)
   const nativeLocation = Context.get(opened, Location.Service), registry = Context.get(opened, ToolRegistry.Service)
   // Nonexecuting names are NOT native governance evidence. The deterministic provider calls only real core Task.
