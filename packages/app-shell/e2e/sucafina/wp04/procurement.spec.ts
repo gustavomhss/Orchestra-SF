@@ -130,108 +130,190 @@ async function requestAction(page: Page, id: string, form: Locator, label: strin
   return response
 }
 
+async function saveTitle(page: Page, id: string, title: string, version: number) {
+  const editor = page.locator('[data-component="sf-request-title-save"]')
+  await expect(editor).toHaveCount(1)
+  await editor.getByRole("textbox", { name: "Title", exact: true }).fill(title)
+  await editor.getByRole("button", { name: "Review save", exact: true }).click()
+  const review = editor.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  const pending = responseFor(page, "save", id)
+  await review.getByRole("button", { name: "Confirm save", exact: true }).click()
+  const response = await pending
+  expect(response.status()).toBe(200)
+  expect(await response.json()).toMatchObject({ ok: true })
+  expect(response.request().postDataJSON()).toEqual({ page: "Requests", action: "save", id, version, values: { pr: { title } } })
+  await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Current source version:/ }))
+    .toHaveText("Current source version: " + String(version + 1))
+}
+
 test("keyboard submission uses current entries and focuses the real 422 field without clearing the draft", async ({ page }, info) => {
   const account = await login(page, "first", "validation")
   const id = await createDraft(page, account, "Keyboard validation request")
-  const section = page.locator('section[id="' + id + '-pr"]')
-  const title = section.getByRole("textbox", { name: "Title", exact: true })
-  const justification = section.getByRole("textbox", { name: /^Justification/ })
-  await title.fill("Unsent title retained through validation")
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
+  const section = detail.locator('section[data-stage="pr"]')
+  const title = detail.locator('[data-component="sf-request-title-save"]').getByRole("textbox", { name: "Title", exact: true })
+  const description = section.getByRole("textbox", { name: "Description", exact: true })
+  const justification = section.getByRole("textbox", { name: "Justification", exact: true })
+  const changedTitle = "Unsent title retained through validation"
+  const changedDescription = "Unsent scope retained through validation"
+  await title.fill(changedTitle)
+  await description.fill(changedDescription)
   await justification.fill("")
   const invalid = responseFor(page, "submit_pr", id)
   await section.getByRole("button", { name: "Submit requisition", exact: true }).focus()
   await page.keyboard.press("Enter")
+  const review = detail.locator('[data-component="sf-change-review"]')
+  await expect(review).toHaveCount(1)
+  await review.getByRole("button", { name: "Confirm action", exact: true }).focus()
+  await page.keyboard.press("Enter")
   const rejected = await invalid
   expect(rejected.status()).toBe(422)
-  expect(rejected.request().postDataJSON().values.pr).toMatchObject({ title: "Unsent title retained through validation", justification: "" })
+  expect(rejected.request().postDataJSON().values.pr).toMatchObject({ description: changedDescription, justification: "" })
+  // W19 owns title mutation. A residual PR submit must not silently absorb its draft.
+  expect(rejected.request().postDataJSON().values.pr).not.toHaveProperty("title")
   expect((await rejected.json()).fieldErrors).toContainEqual({ field: "pr.justification", message: "Business justification is required" })
   await expect(justification).toBeFocused()
   await expect(justification).toHaveAttribute("aria-invalid", "true")
   await expect(justification).toHaveAccessibleName("Justification")
   await expect(justification).toHaveAccessibleDescription("Business justification is required")
   await expect(section.locator('[data-field-error="pr.justification"]')).toHaveText("Business justification is required")
-  await expect(title).toHaveValue("Unsent title retained through validation")
-  await expect(section.locator('form[data-command="save"]')).toHaveAttribute("data-version", "1")
+  await expect(title).toHaveValue(changedTitle)
+  await expect(description).toHaveValue(changedDescription)
+  await expect(section).toHaveAttribute("data-draft-version", "1")
+  await expect(detail.locator("p").filter({ hasText: /^Current source version:/ })).toHaveText("Current source version: 1")
   await proof(page, info, "keyboard-422", { id, status: 422, focusedField: "pr.justification", draftPreserved: true })
 
+  // Commit the separate title intent through its original W19 command, then
+  // explicitly review the newer source before retaining this PR draft.
+  await saveTitle(page, id, changedTitle, 1)
+  const conflict = detail.locator('[data-draft-conflict="pr"]')
+  await expect(conflict).toBeVisible()
+  await conflict.getByRole("button", { name: "Review current record", exact: true }).click()
+  await expect(conflict.locator("[data-current-version-cas]")).toHaveText("Current version: 2.")
+  await conflict.getByRole("button", { name: "Use reviewed version and keep my entries", exact: true }).click()
+  await expect(section).toHaveAttribute("data-draft-version", "2")
+  await expect(description).toHaveValue(changedDescription)
   await justification.fill("Corrected explanation remains part of this submission")
   const accepted = responseFor(page, "submit_pr", id)
   await section.getByRole("button", { name: "Submit requisition", exact: true }).focus()
   await page.keyboard.press("Enter")
-  expect((await accepted).status()).toBe(200)
-  await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition approval")
-  await expect(section.getByRole("button", { name: "Submit requisition", exact: true })).toBeDisabled()
-  await expect(title).toHaveValue("Unsent title retained through validation")
-  await expect(justification).toHaveValue("Corrected explanation remains part of this submission")
-  await expect(section.locator("[data-field-error]")).toHaveCount(0)
+  await expect(review).toHaveCount(1)
+  await review.getByRole("button", { name: "Confirm action", exact: true }).press("Enter")
+  const submitted = await accepted
+  expect(submitted.status()).toBe(200)
+  expect(submitted.request().postDataJSON()).toMatchObject({ page: "Requests", action: "submit_pr", id, version: 2,
+    values: { pr: { description: changedDescription, justification: "Corrected explanation remains part of this submission" } } })
+  expect(submitted.request().postDataJSON().values.pr).not.toHaveProperty("title")
+  await expect(detail.locator("[data-request-summary]")).toContainText("Requisition approval")
+  await expect(detail.getByRole("button", { name: "Submit requisition", exact: true })).toHaveCount(0)
+  await expect(detail.getByRole("heading", { name: changedTitle, exact: true })).toBeVisible()
+  const readonly = detail.locator('section[data-stage="pr-readonly"]')
+  await expect(readonly.getByRole("textbox", { name: "Description", exact: true })).toHaveValue(changedDescription)
+  await expect(readonly.getByRole("textbox", { name: "Justification", exact: true })).toHaveValue("Corrected explanation remains part of this submission")
+  await expect(readonly.getByRole("textbox", { name: "Justification", exact: true })).toBeDisabled()
+  await expect(detail.locator("[data-field-error]")).toHaveCount(0)
 })
 
 test("two authenticated actors review an actual CAS conflict and submit only after an explicit version choice", async ({ page, browser }, info) => {
   const first = await login(page, "first", "conflict")
   const id = await createDraft(page, first, "Concurrent procurement request")
   const secondContext = await browser.newContext()
+  let releaseStale: (() => void) | undefined
   try {
     const secondPage = await secondContext.newPage()
     const second = await login(secondPage, "second", "conflict")
-    await openRecord(secondPage, second, id)
-    const firstSection = page.locator('section[id="' + id + '-pr"]')
-    const secondSection = secondPage.locator('section[id="' + id + '-pr"]')
-    const secondForm = secondSection.locator('form[data-command="save"]')
-    const secondTitle = secondSection.getByRole("textbox", { name: "Title", exact: true })
+    const firstDetail = page.locator(`article[data-sf-request-ref="${id}"]`)
+    const firstSection = firstDetail.locator('section[data-stage="pr"]')
+    const secondDetail = await openRecord(secondPage, second, id)
+    const secondSection = secondDetail.locator('section[data-stage="pr"]')
     const secondDescription = secondSection.getByRole("textbox", { name: "Description", exact: true })
+    const save = secondSection.getByRole("button", { name: "Save requisition draft", exact: true })
     const posts: string[] = []
     secondPage.on("request", (request) => {
       if (request.method() === "POST" && new URL(request.url()).pathname.endsWith("/procurement")) posts.push(request.postData() ?? "")
     })
     await secondDescription.fill("Second actor's unsent scope")
-    await firstSection.getByRole("textbox", { name: "Title", exact: true }).fill("First actor's saved title")
-    const firstSaved = responseFor(page, "save", id)
-    await firstSection.getByRole("button", { name: "Save requisition", exact: true }).click()
-    expect((await firstSaved).status()).toBe(200)
-    await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Version 2")
+
+    // Let the real native preflight finish, then delay this unchanged outgoing
+    // command while the other authenticated actor advances the producer CAS.
+    // No response, cookie, command body or authority is replaced.
+    let observedStale: ((payload: unknown) => void) | undefined
+    const observed = new Promise<unknown>((resolve) => { observedStale = resolve })
+    const release = new Promise<void>((resolve) => { releaseStale = resolve })
+    let held = false
+    await secondPage.route((url) => url.pathname.endsWith("/procurement"), async (route) => {
+      const request = route.request()
+      if (request.method() === "POST") {
+        const payload = request.postDataJSON() as { action?: string; id?: string }
+        if (!held && payload.action === "save" && payload.id === id) {
+          held = true
+          observedStale?.(payload)
+          await release
+        }
+      }
+      await route.continue()
+    })
     const conflict = responseFor(secondPage, "save", id)
-    await secondSection.getByRole("button", { name: "Save requisition", exact: true }).focus()
-    await secondPage.keyboard.press("Enter")
+    await save.press("Enter")
+    const confirmation = secondDetail.locator('[data-component="sf-change-review"]')
+    await expect(confirmation).toHaveCount(1)
+    await confirmation.getByRole("button", { name: "Confirm action", exact: true }).press("Enter")
+    expect(await observed).toMatchObject({ page: "Requests", action: "save", id, version: 1,
+      values: { pr: { description: "Second actor's unsent scope" } } })
+    await saveTitle(page, id, "First actor's saved title", 1)
+    releaseStale?.()
     const stale = await conflict
     expect(stale.status()).toBe(409)
     expect(await stale.json()).toMatchObject({ ok: false, currentVersionCAS: 2, stored: { pr: { title: "First actor's saved title" } } })
-    const review = secondForm.getByRole("region", { name: "Review conflicting changes", exact: true })
+    expect(stale.request().postDataJSON().values.pr).not.toHaveProperty("title")
+    const review = secondDetail.getByRole("region", { name: "Review the changed record", exact: true })
     await expect(review.getByRole("heading", { name: "Review the changed record", exact: true })).toBeFocused()
     await expect(review.locator("[data-current-version-cas]")).toHaveText("Current version: 2.")
     await expect(secondDescription).toHaveValue("Second actor's unsent scope")
-    await expect(secondForm).toHaveAttribute("data-version", "1")
-    expect(posts).toHaveLength(1)
-    await secondSection.getByRole("button", { name: "Save requisition", exact: true }).click()
-    await expect(secondPage.locator("#notice")).toHaveText("Review the current record before submitting your preserved entries.")
+    await expect(secondSection).toHaveAttribute("data-draft-version", "1")
+    await expect(save).toBeDisabled()
+    await save.press("Enter")
     expect(posts).toHaveLength(1)
     await openRecord(page, first, id)
-    await expect(firstSection.getByRole("textbox", { name: "Title", exact: true })).toHaveValue("First actor's saved title")
+    await expect(firstDetail.getByRole("heading", { name: "First actor's saved title", exact: true })).toBeVisible()
     await expect(firstSection.getByRole("textbox", { name: "Description", exact: true })).toHaveValue("Recorded service scope")
 
-    // The operator keeps the current title while retaining their separate unsaved change.
-    await secondTitle.fill("First actor's saved title")
-    await expect(secondPage.locator('details[id="' + id + '"] form[data-command="save"]')).toHaveCount(3)
+    // W19 owns the current title. The explicit choice retains only this PR
+    // editor's unsent fields; it never copies title into the residual command.
     await review.getByRole("button", { name: "Review current record", exact: true }).click()
     await expect(review.getByRole("button", { name: "Use reviewed version and keep my entries", exact: true })).toBeFocused()
     await expect(review.getByRole("table")).toContainText("Second actor's unsent scope")
-    await expect(secondForm).toHaveAttribute("data-version", "1")
+    await expect(review.getByRole("table")).toContainText("Recorded service scope")
+    await expect(review).toContainText("First actor's saved title")
+    await expect(secondSection).toHaveAttribute("data-draft-version", "1")
     expect(posts).toHaveLength(1)
     await proof(secondPage, info, "cas-explicit-review-step", { id, status: 409, currentVersionCAS: 2, postCountBeforeChoice: posts.length })
     await review.getByRole("button", { name: "Use reviewed version and keep my entries", exact: true }).press("Enter")
-    await expect(secondForm).toHaveAttribute("data-version", "2")
-    await expect(secondTitle).toBeFocused()
+    await expect(secondSection).toHaveAttribute("data-draft-version", "2")
+    await expect(secondDescription).toBeFocused()
     await expect(secondDescription).toHaveValue("Second actor's unsent scope")
     expect(posts).toHaveLength(1)
     const reviewedSave = responseFor(secondPage, "save", id)
-    await secondSection.getByRole("button", { name: "Save requisition", exact: true }).click()
-    expect((await reviewedSave).status()).toBe(200)
-    await expect(secondPage.locator('[data-request-summary="' + id + '"]')).toContainText("Version 3")
-    await expect(secondSection.getByRole("button", { name: "Save requisition", exact: true })).toBeFocused()
+    await save.click()
+    await expect(confirmation).toHaveCount(1)
+    await confirmation.getByRole("button", { name: "Confirm action", exact: true }).click()
+    const accepted = await reviewedSave
+    expect(accepted.status()).toBe(200)
+    expect(accepted.request().postDataJSON()).toMatchObject({ page: "Requests", action: "save", id, version: 2,
+      values: { pr: { description: "Second actor's unsent scope" } } })
+    expect(accepted.request().postDataJSON().values.pr).not.toHaveProperty("title")
+    await expect(secondDetail.locator("[data-request-summary]")).toContainText("Version 3")
+    await expect(save).toBeEnabled()
+    await expect(save).toBeFocused()
     expect(posts).toHaveLength(2)
     await openRecord(page, first, id)
-    await expect(firstSection.getByRole("textbox", { name: "Title", exact: true })).toHaveValue("First actor's saved title")
+    await expect(firstDetail.getByRole("heading", { name: "First actor's saved title", exact: true })).toBeVisible()
     await expect(firstSection.getByRole("textbox", { name: "Description", exact: true })).toHaveValue("Second actor's unsent scope")
-  } finally { await secondContext.close() }
+  } finally {
+    releaseStale?.()
+    await secondContext.close()
+  }
 })
 
 test("a stale approval preserves the typed comment and refuses to revive an action after cancellation", async ({ page, browser }, info) => {
