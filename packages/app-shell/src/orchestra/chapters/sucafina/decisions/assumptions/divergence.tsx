@@ -1,5 +1,6 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
+import { useLanguage } from "@/context/language"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
 import type { SfContextHandle } from "../../context/contracts"
 import { sfFailureUiState, sfOperationReady, type SfCaseRecord } from "../cases/model"
@@ -16,6 +17,7 @@ export function SfAssumptionDivergence(props: {
   owner: SfContextHandle
   record: SfCaseRecord
 }) {
+  const language = useLanguage()
   const [ui, setUi] = createStore<{
     sourceId: string; text: string; phase: Phase; error: string
     receipt?: { threadId: string; sourceId: string; correlation: string; messageId: string }
@@ -88,7 +90,7 @@ export function SfAssumptionDivergence(props: {
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || props.owner.generation() !== generation) return
       if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "denied")) {
-        setUi({ phase: "failed", error: result.status === 401 ? "Sessão expirada." : "Sem permissão para registrar a divergência." })
+        setUi({ phase: "failed", error: language.t(result.status === 401 ? "sf.common.loginAgain" : "sf.common.noAccess") })
       } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Resultado desconhecido; não repetir a mutation. Correlação: ${key}.` })
       } else if (result.kind !== "response") {

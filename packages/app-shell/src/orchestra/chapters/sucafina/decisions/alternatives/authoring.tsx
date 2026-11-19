@@ -1,4 +1,5 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
+import { useLanguage } from "@/context/language"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -53,6 +54,7 @@ export function SfAlternativeAuthoring(props: {
   onReload: () => void
   assumptionsOnly?: boolean
 }) {
+  const language = useLanguage()
   const [form, setForm] = createStore<{
     mode: "new" | "edit"; selectedId: string; slot: "A" | "B" | "C"
     sourceCaseVersion?: number; sourceAlternativeVersion?: number
@@ -175,7 +177,7 @@ export function SfAlternativeAuthoring(props: {
       )
       if (controller.signal.aborted || props.owner.generation() !== generation) return
       if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
-        setForm({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para gravar.", prepared: undefined })
+        setForm({ phase: "failed", error: language.t(result.status === 401 ? "sf.common.loginAgain" : "sf.common.noAccess"), prepared: undefined })
       } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setForm({ phase: "unknown", error: `Resultado desconhecido; não reenviar. Correlação: ${correlation}` })
       } else if (result.kind !== "response") {
