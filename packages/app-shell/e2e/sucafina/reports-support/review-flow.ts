@@ -63,6 +63,18 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   expect(selected.preview.sections[reportPages.indexOf("Hot Topics & Actions")]!.recordCount).toBe(0)
   const shown = agenda.locator("[data-sf-agenda-preview]")
   await expect(shown).toBeVisible()
+  for (const section of selected.preview.sections) {
+    const row = shown.getByRole("listitem").filter({ has: page.getByRole("heading", { name: section.title, exact: true }) })
+    await expect(row).toHaveCount(1)
+    await expect(row.getByText("Section reference: " + section.id, { exact: true })).toBeVisible()
+    for (const source of section.projection.context.sourceRefs) {
+      await expect(row.getByText(`Source: ${source.surface} · ${source.type} · ${source.id} · version ${source.version} · incarnation ${source.incarnation}`, { exact: true })).toBeVisible()
+    }
+    await expect(row.getByRole("table").getByRole("cell")).toHaveText(section.projection.values.flatMap((value) => [
+      value.id, `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim(),
+      `${value.period.start} – ${value.period.end}`,
+    ]))
+  }
   await expect(shown.locator("li").nth(reportPages.indexOf("Portfolio Dashboard"))).toContainText(/Authorized records: 25|Registros autorizados: 25/)
   await expect(shown.locator("li").nth(reportPages.indexOf("Hot Topics & Actions"))).toContainText(/Authorized records: 0|Registros autorizados: 0/)
   if (options.removeOne) selected = await removeOneProject(page, app, selected)
