@@ -211,3 +211,18 @@ export async function reopenCase(page: Page, reference: string, objective: strin
   expect(target.searchParams.get("caseRef")).toBe(reference)
   await link.click()
 }
+
+/** Wait for the application's real read recovery before revisiting the stable catalog. */
+export async function reconcileCreationByRead(page: Page, reference: string) {
+  const origin = new URL(page.url()).origin
+  const [response] = await Promise.all([
+    page.waitForResponse((response) => isCommand(response.request(), "workbench-create-recover", "GET") &&
+      new URL(response.url()).origin === origin),
+    page.getByRole("link", { name: "Workbench", exact: true }).click(),
+  ])
+  expect(response.status(), "The installed recovery reader must confirm the original committed creation").toBe(200)
+  expect(response.headers()["content-type"]).toContain("application/json")
+  expect(await response.json()).toMatchObject({ status: "ok", state: "committed", outputRef: reference })
+  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/sucafina/dashboard" &&
+    url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
+}

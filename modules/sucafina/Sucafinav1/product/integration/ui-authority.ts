@@ -28,7 +28,12 @@ export function createSfUiAuthority(input: {
   const current = (context: TrustedUiContext) => {
     const admission = held(context)
     if (!admission) return undefined
-    if (input.now() < admission.expiresAt) return admission
+    const at = input.now()
+    if (!Number.isFinite(at)) {
+      admissions.delete(context)
+      return undefined
+    }
+    if (at < admission.expiresAt) return admission
     // An unused lease expires. A consumed command keeps its identity so a still-valid grant
     // can be rechecked instead of being reported as a changed authority.
     if (!admission.consumed) {
@@ -41,14 +46,15 @@ export function createSfUiAuthority(input: {
     const admission = current(context)
     if (!admission) return false
     const identity = await input.authorize(admission.request, admission.operation, admission.inputDigest)
+    const at = input.now()
     const still = held(context)
-    const valid = still === admission && !!identity && Object.keys(identity).length === identityFields.length &&
+    const valid = Number.isFinite(at) && still === admission && !!identity && Object.keys(identity).length === identityFields.length &&
       identityFields.every((key) => context.binding[key] === identity[key])
     if (!valid) {
       admissions.delete(context)
       return false
     }
-    if (input.now() >= admission.expiresAt) admission.expiresAt = input.now() + 5 * 60 * 1000
+    if (at >= admission.expiresAt) admission.expiresAt = at + 5 * 60 * 1000
     return true
   }
   return {

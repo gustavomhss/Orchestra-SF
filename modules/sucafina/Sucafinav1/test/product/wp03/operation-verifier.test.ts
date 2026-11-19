@@ -82,6 +82,36 @@ test("operation proof uses the same domain admission for closed, include, duplic
       }
     }
 
+    // A wrapper may clone the callback result, but it must not substitute or
+    // mutate that borrowed result between the callback and its caller.
+    let clonedObservations = 0
+    const cloningHost: DomainPortHost = { ...host, persistence: { ...persistence, transaction: async (surface, work, options) => {
+      const result = await persistence.transaction(surface, work, options)
+      if (surface === "planner") clonedObservations++
+      return structuredClone(result)
+    } } }
+    expect(await createPlannerOperationVerifier({ ...input, host: cloningHost })({ baseRef: source.value.evidence.refId, operations: [valid], assumptions: [] }, context)).toBe(true)
+    expect(clonedObservations).toBe(3)
+    for (const boundary of [1, 3]) for (const fault of ["fields", "content"]) {
+      let observations = 0, injected = false
+      const mutatingHost: DomainPortHost = { ...host, persistence: { ...persistence, transaction: async (surface, work, options) => {
+        const result = await persistence.transaction(surface, work, options)
+        if (surface === "planner" && ++observations === boundary && result && typeof result === "object") {
+          if (fault === "fields") Object.assign(result, { untrusted: true })
+          else {
+            const returned = result as { summary?: { lines?: { f?: number[] }[] } }
+            const forecast = returned.summary?.lines?.[0]?.f
+            if (!forecast) throw new Error("Expected the real Planner source body")
+            forecast[10] = 31
+          }
+          injected = true
+        }
+        return result
+      } } }
+      expect(await createPlannerOperationVerifier({ ...input, host: mutatingHost })({ baseRef: source.value.evidence.refId, operations: [valid], assumptions: [] }, context)).toBe(false)
+      expect(injected).toBe(true)
+    }
+
     // Mutate the actual persisted source after simulation. The independent
     // final raw observation must refuse the previously admitted selector.
     let observations = 0, sourceChanged = false

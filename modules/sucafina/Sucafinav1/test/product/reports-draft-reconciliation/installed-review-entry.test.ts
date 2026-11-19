@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { object } from "../../../runtime/contract.ts"
 import { refreshDashboardReviewAgenda } from "../../../product/reviews/agenda-refresh.ts"
-import type { ReviewAgendaDiscovery } from "../../../product/reviews/agenda-picker.ts"
+import type { ReviewAgendaCatalog, ReviewAgendaDiscovery } from "../../../product/reviews/agenda-picker.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
 import { createSfExtendedAssets } from "../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
 import { sfReviewNavigationUrl } from "../../../../../../apps/cli/src/sucafina-product/extended-review-navigation.ts"
@@ -316,10 +316,13 @@ test("explicit Reports refresh retains the exact selected records and preserves 
       return { commit: true, value: undefined }
     })
     expect((await post("review-agenda", { items: selected })).status).toBe(409)
+    let catalog: ReviewAgendaCatalog | undefined
     const discover: ReviewAgendaDiscovery = async (query) => {
       const response = await f.send(new URLSearchParams({ sf: "review-agenda", domain: "dashboard",
         start: query.period.start, end: query.period.end }))
-      return response.json()
+      const result: Awaited<ReturnType<ReviewAgendaDiscovery>> = await response.json()
+      if (result.status === "ok") catalog = structuredClone(result.value)
+      return result
     }
     const refreshed = await refreshDashboardReviewAgenda(selected, discover)
     expect(refreshed.status).toBe("ok")
@@ -340,11 +343,14 @@ test("explicit Reports refresh retains the exact selected records and preserves 
     expect(successor.id).not.toBe(saved.id)
     expect(await read()).toEqual(prior)
 
+    const capturedCatalog = catalog
+    if (!capturedCatalog) throw new Error("The positive refresh did not obtain a real authorized catalog")
     for (const fault of ["missing", "ambiguous"] as const) {
-      const uncertain = await refreshDashboardReviewAgenda(selected, async (query) => {
-        const found = await discover(query)
-        if (found.status !== "ok") return found
-        return { status: "ok", value: { options: fault === "missing" ? [] : [...found.value.options, ...found.value.options] } }
+      const uncertain = await refreshDashboardReviewAgenda(selected, async () => {
+        // Only malformed cardinality is under test here. The positive and revoked
+        // paths both use the actual HTTP producer, including fresh authority.
+        const found = structuredClone(capturedCatalog)
+        return { status: "ok", value: { options: fault === "missing" ? [] : [...found.options, ...found.options] } }
       })
       expect(uncertain).toEqual({ status: "needs-input", reason: "agenda-refresh-selection-unavailable" })
     }

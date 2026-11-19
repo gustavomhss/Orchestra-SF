@@ -72,3 +72,56 @@ test("a transport readmission has a new call identity and preserves the host com
   expect(await f.ui.validate(retried.value, "sf_forecast_compare", "a".repeat(64))).toBe(true)
   expect(f.ui.operationIdentity(retried.value)).toBe("command-1")
 })
+
+
+for (const invalid of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])
+for (const boundary of ["before", "during"] as const)
+test("non-finite clock " + invalid + " " + boundary + " authorization permanently discards a consumed UI lease", async () => {
+  const initial = Date.parse("2026-11-13T04:01:10Z")
+  const clock = { at: initial, afterAuthorization: undefined as number | undefined }
+  let serial = 0
+  const request = new Request("https://example.test/action", { method: "POST" })
+  const ui = createSfUiAuthority({
+    authorize: async () => {
+      await Promise.resolve()
+      if (clock.afterAuthorization !== undefined) {
+        clock.at = clock.afterAuthorization
+        clock.afterAuthorization = undefined
+      }
+      return { installationId: "installation", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }
+    },
+    commandIdentity: async () => "command",
+    createId: () => "request-" + ++serial,
+    now: () => clock.at,
+  })
+  const admitted = await ui.admit(request, "sf_forecast_compare", "a".repeat(64))
+  if (admitted.status !== "ok") throw new Error("initial UI admission unavailable")
+  expect(await ui.validate(admitted.value, "sf_forecast_compare", "a".repeat(64))).toBe(true)
+  if (boundary === "before") {
+    clock.at = invalid
+    expect(ui.requestFor(admitted.value)).toBeUndefined()
+  } else clock.afterAuthorization = invalid
+  expect(await ui.revalidate(admitted.value)).toBe(false)
+  clock.at = initial
+  expect(ui.requestFor(admitted.value)).toBeUndefined()
+  expect(ui.receiptFor(admitted.value, "sf_forecast_compare", "a".repeat(64))).toBeUndefined()
+  expect(ui.operationIdentity(admitted.value)).toBeUndefined()
+  expect(await ui.revalidate(admitted.value)).toBe(false)
+  const fresh = await ui.admit(request, "sf_forecast_compare", "a".repeat(64))
+  if (fresh.status !== "ok") throw new Error("fresh UI admission unavailable")
+  expect(fresh.value.binding.requestId).not.toBe(admitted.value.binding.requestId)
+  expect(await ui.validate(fresh.value, "sf_forecast_compare", "a".repeat(64))).toBe(true)
+  expect(ui.operationIdentity(fresh.value)).toBe("command")
+})
+
+test("finite expiry preserves a consumed command identity for current reauthorization", async () => {
+  const f = await fixture()
+  expect(await f.ui.validate(f.context, "sf_forecast_compare", "a".repeat(64))).toBe(true)
+  f.state.at += 5 * 60 * 1000
+  expect(f.ui.requestFor(f.context)).toBe(f.request)
+  expect(await f.ui.revalidate(f.context)).toBe(true)
+  expect(f.ui.operationIdentity(f.context)).toBe("command-1")
+  expect(f.ui.receiptFor(f.context, "sf_forecast_compare", "a".repeat(64))).toMatchObject({
+    callId: f.context.binding.requestId, principalRef: f.context.binding.principalRef,
+  })
+})

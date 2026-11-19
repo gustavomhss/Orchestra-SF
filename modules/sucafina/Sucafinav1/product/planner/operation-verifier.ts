@@ -3,7 +3,6 @@ import type { ScenarioRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
-import { projectionDigest } from "./scenario-comparison-port.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import { roleMap } from "../../runtime/admin.ts"
@@ -56,26 +55,40 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
       Number(end[3]) !== new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate()) return false
     const environment = await input.host.environment(request!)
     if (!current()) return false
+    const at = environment.at, fields = digestSfValue([...ref.target.fields].sort())
+    const matches = (projection: Record<string, unknown> | undefined): projection is Record<string, unknown> =>
+      !!projection && digestSfValue(Object.keys(projection).sort()) === fields &&
+      digestSfValue({ versionId: source.value.versionId, projection }) === ref.target.projectionDigest && projection.year === Number(start[1])
     const observe = async (snapshot: Snapshot) => {
       const principal = await input.host.authenticate(request!, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
       const actor = plannerSourceActor(snapshot, principal, context.binding.principalRef)
       if (!actor || !current()) return undefined
       const projection = projectPlannerSource(snapshot, actor, source.value.versionId)
-      if (!projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...ref.target.fields].sort()) ||
-        digestSfValue({ versionId: source.value.versionId, projection }) !== ref.target.projectionDigest || projection.year !== Number(start[1])) return undefined
+      if (!matches(projection)) return undefined
       return { actor, projection }
     }
     // Selector admission needs the real actor-filtered domain body, not a
     // self-comparison that recursively reopens case coverage. These observations
     // remain independent on either side of the actual domain simulation below.
-    const read = () => input.host.persistence.transaction<DomainProjection | undefined>("planner", async (snapshot) => {
+    const read = () => input.host.persistence.transaction<Record<string, unknown> | undefined>("planner", async (snapshot) => {
       const observed = await observe(snapshot)
-      if (!observed) return { commit: false, value: undefined }
-      const value = buildPlannerFinancialProjection({ projection: observed.projection, ref, period, binding: context, at: environment.at })
-      return { commit: false, value: new Set(value.values.map((entry) => entry.id)).size === value.values.length ? value : undefined }
-    }, { signal: request!.signal }).catch(() => undefined)
-    const values = await read()
-    if (!values || !current()) return false
+      return { commit: false, value: observed?.projection }
+    }, { signal: request!.signal }).then((borrowed) => {
+      // The persistence wrapper can retain or alter its callback's return.
+      // Detach and validate that boundary before using the raw domain body.
+      const captured = structuredClone(borrowed)
+      return matches(captured) ? captured : undefined
+    }).catch(() => undefined)
+    const projection = await read()
+    if (!projection || !current()) return false
+    // The derived graph stays private. Equal authenticated raw bodies, the
+    // pinned source/period and current binding determine this projection; the
+    // observation clock only annotates sourceRefs.
+    let values: DomainProjection
+    try {
+      values = buildPlannerFinancialProjection({ projection, ref, period, binding: context, at })
+      if (new Set(values.values.map((entry) => entry.id)).size !== values.values.length) return false
+    } catch { return false }
     const references = scenario.operations.flatMap((operation) => operation.replacementRef ? [operation.replacementRef] : [])
     const resolve = () => Promise.all(references.map((reference) => input.scenarioInputs.resolveAmount(reference, context)))
     const resolved = structuredClone(await resolve())
@@ -116,7 +129,7 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
     const sourceAgain = structuredClone(await input.sources.resolveForecastSource(scenario.baseRef, context))
     const resolvedAgain = structuredClone(await resolve())
     const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
-    if (!current() || projectionDigest(again) !== projectionDigest(values) || sourceAgain.status !== "ok" ||
+    if (!current() || sourceAgain.status !== "ok" ||
       digestSfValue(sourceAgain.value) !== digestSfValue(source.value) || resolvedAgain.length !== resolved.length ||
       resolvedAgain.some((entry, index) => stable(entry) !== stable(resolved[index]!)) || !await input.host.revalidate(context)) return false
     return current()
