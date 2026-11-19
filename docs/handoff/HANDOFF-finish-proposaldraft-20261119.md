@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: 08b2d086e0ee93198036480ab8334653db6eb41f (captura/histórico e os 5 cenários originais migrados; este checkpoint acrescenta a retenção da resposta original no fixture)
+SHA de código: 769d1d630d5f34a5176789c5cc819403a4120fe9 (5 jornadas + retenção original; este checkpoint corrige apenas refinamento de tipo no seed-choice)
 Data: 2026-11-19
 Estado: partial
 
@@ -49,5 +49,5 @@ Estado: partial
 - Primeiro pedido de navegador [44606254001](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606254001): FAILURE antes de executar produto, TEST_PACKAGE_NOT_FOUND:app-shell. O pacote atual é `app`, config `e2e/playwright.production.config.ts`; briefing estava desatualizado nesse campo. Cleanup SUCCESS. Nenhuma evidência de navegador nessa tentativa.
 - [44606767134](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606767134): FAILURE, 3 testes falharam; CLI/host/app-shell/SF E2E typechecks SUCCESS; cleanup SUCCESS. Casos1/3 aguardaram Select case; caso2 perdeu corpo CDP após HTTP200. Diagnóstico original arquivado por run [44608463854](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44608463854), SUCCESS. Fixes de nomes acessíveis/cleanup/pass-through estão neste checkpoint; novo gate ainda pendente. Auditoria original [44585817131](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44585817131) falhou nos redirects do console descomissionado; essa evidência não é um gate da alteração atual.
 
-- Gate3 [44610326842](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44610326842): em execução no checkpoint; snapshot `dd34c4e175ef04084ce636955aab5736e88eb99f`, código `26ad8f21f5bd4d377bb5c85b3a3d95e6b3c8b107` sobre composição25. Não inclui a retenção adicional deste commit e não está qualificado.
+- Gate3 [44610326842](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44610326842): FAILURE no typecheck SF E2E, host.ts:114/122 TS18048 authority possibly undefined. CLI/host e app-shell SUCCESS; nenhum navegador executado; cleanup135867029936 SUCCESS. Snapshot `dd34c4e175ef04084ce636955aab5736e88eb99f`, código `26ad8f21f5bd4d377bb5c85b3a3d95e6b3c8b107` sobre composição25. Function declaration virou const async após o guard original, sem cast ou alteração de autoridade. Esse snapshot não inclui retenção769d nem esse ajuste e não está qualificado.
 - Reports9 [44606978085](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606978085): root observou FAILURE com NoData CDP mesmo após pass-through. Esse defeito compartilhado justifica reter o corpo original por Request no fixture; não é evidência de aprovação das propostas.

@@ -106,7 +106,7 @@ const seeded = await authority.state.transaction(request(), {
 if (seeded.status !== "ok") throw new Error("PROPOSAL_REAL_CASE_SEED_FAILED")
 const period = { start: "2026-01-01", end: "2026-12-31" }
 // The existing WP02 conditioned choice fixture, preserved without inventing a financial result.
-async function storeExistingChoice(draft: HotTopicDraft) {
+const storeExistingChoice = async (draft: HotTopicDraft) => {
   const result: ScenarioResult = { id: "scenario", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [draft.targetEvidence],
     unresolvedConditions: ["Financial impact of the Hot Topic change is not assessed."], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: null, total: null,
     costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [draft.targetEvidence],
