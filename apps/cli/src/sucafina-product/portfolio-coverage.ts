@@ -135,7 +135,19 @@ export function createSfPortfolioCoverage(input: {
     return { status: "ok", value: entries }
   }
   const evidence: Evidence = {
-    entries: (scenario, baseline, call) => captureEntries(scenario, baseline, call),
+    entries: async (scenario, baseline, call) => {
+      const held = selections.get(call)
+      if (!held) return unavailable()
+      if (!held.value.scenario.operations.length && !held.value.scenario.assumptions.length) {
+        const proof = proofs.get(call), run = execution.getStore()
+        if (!proof || !run || proof.run !== run || run.call !== call || proof.source !== held.source ||
+          proof.binding !== held.binding || !same(proof.selection, held.value) || !same(proof.expected, scenario)) return unavailable()
+        // prepareNoop proved this exact source result. Reopen every reader and
+        // fence again, retaining only its authenticated evidence order.
+        return captureEntries(scenario, baseline, call, structuredClone(proof.expected.costCoverage.evaluatedSourceRefs))
+      }
+      return captureEntries(scenario, baseline, call)
+    },
     resolve: async (refs, call) => {
       const proof = proofs.get(call)
       if (!active || !proof || proof.source !== host.requestFor(call) || proof.source.signal.aborted || proof.binding !== binding(call) ||
