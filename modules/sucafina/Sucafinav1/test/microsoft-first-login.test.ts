@@ -47,8 +47,8 @@ test("first configured Microsoft member reaches all three HTML surfaces without 
       return await app(trusted) ?? new Response("Not found", { status: 404 })
     }
     const anonymous = await request("/dashboard")
-    expect(anonymous.status).toBe(404)
-    expect(await anonymous.text()).toBe("legacy console decommissioned — use /")
+    expect(anonymous.status).toBe(401)
+    expect(await anonymous.text()).toBe("Authentication required")
 
     const login = await request("/auth/login")
     expect(login.status).toBe(303)

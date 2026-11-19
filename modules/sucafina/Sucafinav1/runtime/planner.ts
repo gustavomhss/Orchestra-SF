@@ -2076,9 +2076,16 @@ function plannerPageData(data: Record<string, unknown>, context: RenderContext) 
     context.actor,
     { at: context.at, id: () => "planner-page", directory: [{ id: context.actor.id, name: context.actor.id }] },
   )
+  const supplied = new Map(rows(data.versions).map((row) => [idOf(row.id), row]))
+  const versions = rows(view.data.versions).map((version) => {
+    const original = supplied.get(idOf(version.id))
+    if (!original || !Object.hasOwn(original, "summary")) return version
+    return { ...version, summary: original.summary }
+  })
   return {
     data: {
       ...view.data,
+      versions,
       ...(Object.hasOwn(data, "version") ? { version: data.version } : {}),
       ...(Object.hasOwn(data, "owner") ? { owner: data.owner } : {}),
       ...(Object.hasOwn(data, "class") ? { class: data.class } : {}),
