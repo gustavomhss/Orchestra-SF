@@ -1,8 +1,8 @@
 # Handoff — finish-browser-20261119
 
-SHA: código deste commit; base de integração 2b37f0aabe61be42fc0bab34a33464303f968efa; composição exercitada na auditoria 03d2a11f3b8ffe51888601c5ad50ae0b16058dea.
+SHA: código bcc011b24da954f55a6d00fd5e5800044da44a6e; snapshot CI 01c0db6abce360462210409206cb93450ec657c0; composição ede80eb16eabf621019c111cc723b8d23251932e.
 Data: 2026-11-19
-Estado: partial
+Estado: complete
 
 ## Feito
 - Atualizado o contrato exato do registry para as cinco extensões originais de edição de decisão e agenda/preservação/leitura de review. O catálogo I00 permanece nos mesmos 305 IDs e blob 31dbec1726fd8147156b01dc545726650ffd49e1.
@@ -11,7 +11,7 @@ Estado: partial
 
 ## Pendente
 - Integração dos dois testes aguarda os branches de produto correspondentes; nenhuma falha restante nestes dois arquivos no gate abaixo.
-- packages/app-shell/test-browser/sucafina-native/procurement-draft-leaves.test.ts:15: falha independente com fieldset presente; correção a cargo de finish-operations-20261119.
+- Procurement independente foi qualificado por finish-operations-20261119 no run44589603579; não está no escopo dos dois arquivos deste branch.
 - Integrar somente após a composição e o gate correspondente; este branch isolado depende das mudanças de produto de Reports/Bindings ainda em revisão.
 
 ## Decisões e justificativas
@@ -30,4 +30,6 @@ Compor estes dois arquivos de teste com os SHAs atuais de Reports/Bindings; exec
 
 - As 48 operações já existentes no catálogo I00 com input fechado sem surface têm binding literal verificado: 29 Collaboration e 15 Decisions em dashboard; quatro C12 em procurement. A extensão posterior decisions.decision-edit também usa dashboard. Queries, métodos, efeitos, discriminadores e limites continuam comparados com a origem congelada.
 - Os IDs atuais são uma união sem duplicação entre catálogo e extensões. O teste continua exigindo o conjunto exato de extensões e o hash original31dbec1726fd8147156b01dc545726650ffd49e1; nenhuma linha do catálogo305 foi modificada.
-- Asserções removidas: nenhuma. O path antigo parametrizado continua provado no catálogo; o binding atual é comparado com o mapa explícito do adaptador original. Gate anterior44589103071 não qualifica este delta; nova execução estreita pendente.
+- Asserções removidas: nenhuma. O path antigo parametrizado continua provado no catálogo; o binding atual é comparado com o mapa explícito do adaptador original. Gate anterior44589103071 não qualifica este delta. A nova execução44596486889 abaixo o qualifica.
+
+- [44596486889](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44596486889): SUCCESS; 5 pass, 0 fail, 2288 expect,2arquivos,401ms. Jobs135816033730 e135817508969 SUCCESS. Catálogo305 intacto, lista exata e48bindings originais comprovados; nenhum claim de instalação por esse teste puro.
