@@ -20,12 +20,13 @@ jobs:
           import base64, json, os, pathlib, re
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
           lines = (root / "original-job.log").read_text(errors="replace").splitlines()
-          keep = re.compile(r"\(fail\)|error:|Expected:|Received:| at .*\.[cm]?[jt]sx?:\d+|\b\d+ pass$|\b\d+ fail$|expect\(\) calls|Ran \d+ tests|timed out|TimeoutError")
+          keep = re.compile(r"^(?:\(fail\)|error:|Expected:|Received:|\s+at .*\.[cm]?[jt]sx?:\d+|\s*\d+ pass$|\s*\d+ fail$|\s*\d+ expect\(\) calls|Ran \d+ tests|.*timed out|TimeoutError)")
           sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|access.token", re.I)
           selected = []
           for line in lines:
               line = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", line)
-              if keep.search(line) and not sensitive.search(line):
+              body = re.sub(r"^\d{4}-\d\d-\d\dT\S+\s", "", line)
+              if keep.search(body) and not sensitive.search(line):
                   selected.append(line[:1000])
           text = "Original run: 44585817131\nOriginal job: 135778309143\nSnapshot: 2dcbd93a41608e171dfde8896e0721a42fbede6d\nThis is a bounded log excerpt, not a rerun or a passing receipt.\n\n" + "\n".join(selected[:500]) + "\n"
           payload = {"message": "docs(sf): retain original app browser failure locations", "branch": "audit-logs-20261119", "content": base64.b64encode(text.encode()).decode()}
@@ -35,4 +36,4 @@ jobs:
       - name: Persist the observed excerpt on this audit branch
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/audit-logs-135778309143.txt --input "$RUNNER_TEMP/log-payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/audit-logs-135778309143-v2.txt --input "$RUNNER_TEMP/log-payload.json" > /dev/null
