@@ -36,8 +36,8 @@ export function selectSfCaseHealth(context: Pick<SfStateAuthority, "principalRef
 }
 
 /** Trusted metadata-only selector for the original C08 namespace. */
-export function selectSfNamespaceHealth(namespace: "cases" | "reviews" | "documents" | "atlas" | "outbox", context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">, mode: "read" | "write" = "read") {
-  if (!["cases", "reviews", "documents", "atlas", "outbox"].includes(namespace) || !["read", "write"].includes(mode)) throw new Error("SF_STATE_HEALTH_SELECTOR_INVALID")
+export function selectSfNamespaceHealth(namespace: "cases" | "reviews" | "documents" | "atlas" | "outbox" | "preferences" | "receipts", context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">, mode: "read" | "write" = "read") {
+  if (!["cases", "reviews", "documents", "atlas", "outbox", "preferences", "receipts"].includes(namespace) || !["read", "write"].includes(mode)) throw new Error("SF_STATE_HEALTH_SELECTOR_INVALID")
   const expected = Object.freeze({ principalRef: context.principalRef, policyVersion: context.policyVersion, accessRevision: context.accessRevision })
   const select = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
     if (!sameAuthority(expected, authority)) return undefined
