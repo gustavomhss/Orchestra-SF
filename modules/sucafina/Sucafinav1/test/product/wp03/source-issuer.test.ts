@@ -9,6 +9,7 @@ import { resolve } from "../../../src/identity.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
+import { sfPlannerSourceSelector } from "../../../product/integration/planner-sources.ts"
 import { sfPlannerProjectionSelector, createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { plannerPreparedRevision, preparePlannerMutation } from "../../../product/planner/prepared.ts"
 import { createPlannerPreparedReview } from "../../../product/planner/prepared-review.ts"
@@ -142,5 +143,29 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "denied" })
     expect(await product.readSourceProjection(first.value.evidence.refId, binding)).toMatchObject({ status: "denied" })
     expect(await completed(first.value.evidence, binding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
+    // The storage fixture can hold an actor-scoped selector even though the
+    // public issuer refuses local principals. Neither projection path may use it.
+    const localPrincipal = "local:finance"
+    const localRequest = new Request("https://example.test", { headers: { authorization: localPrincipal } })
+    const localBinding = { ...binding, binding: { ...binding.binding, principalRef: localPrincipal } } as TrustedDomainContext
+    const localHost: DomainPortHost = { ...host, requestFor: () => localRequest, revalidate: async () => true,
+      authenticate: async (_request, context) => resolve(localPrincipal, [...context!.roleMap], (group) => group === "finance-group") }
+    const localSelector = await persistence.transaction("planner", async (snapshot) => ({ commit: false,
+      value: sfPlannerProjectionSelector(snapshot, { ...actor, id: localPrincipal }) }))
+    const localScoped = await persistence.readScopedSource("planner", { principalRef: localPrincipal, accessRevision: "1", policyVersion: "1",
+      recordType: "planner-version", recordId: "v0", selector: localSelector }, async () => true)
+    if (!localScoped) throw new Error("The real local scoped source fixture was not observed")
+    const localProduct = createPlannerProduct({ host: localHost, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "missing" }) })
+    const localRef = sfPlannerSourceSelector("v0", localScoped.incarnation, localScoped.version)
+    const localSource = await localProduct.sources.resolveForecastSource(localRef, localBinding)
+    expect(localSource.status).toBe("ok")
+    if (localSource.status !== "ok") throw new Error("The local refusal counterexample lacks its real source selector")
+    expect(await localProduct.issueSource("v0", localBinding)).toMatchObject({ status: "denied" })
+    expect(await localProduct.readSourceProjection(localRef, localBinding)).toMatchObject({ status: "denied" })
+    const localLegacy = createSfPlannerEvidence({ host: localHost, sources: localProduct.sources })
+    const localCompleted = createSfPlannerEvidence({ host: localHost, sources: localProduct.sources, readSourceProjection: localProduct.readSourceProjection })
+    expect(await localLegacy(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
+    expect(await localCompleted(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
+
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

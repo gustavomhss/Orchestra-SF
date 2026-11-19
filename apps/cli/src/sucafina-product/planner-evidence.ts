@@ -23,7 +23,7 @@ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: 
     const current = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
       digestSfValue([call.kind, call.binding]) === binding && digestSfValue({ reference, selected, expected }) === capturedDigest &&
       digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
-    if (!current() || !input.readSourceProjection) return { status: "denied", reason: "planner-source-authority-unavailable" }
+    if (!current() || call.binding.principalRef.startsWith("local:") || !input.readSourceProjection) return { status: "denied", reason: "planner-source-authority-unavailable" }
     // This is the real source producer's final body after its independent
     // source/actor observations, never a caller supplied or retained projection.
     const environment = await input.host.environment(request!)

@@ -105,7 +105,7 @@ export function createSfPlannerSourceHost(input: {
     const current = () => !!request && !request.signal.aborted && input.host.requestFor(context) === request && context.lease === lease &&
       digestSfValue([context.kind, context.binding]) === binding &&
       digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === requestDigest
-    if (!current()) return { status: "denied", reason: "source-authority-unavailable" }
+    if (!current() || context.binding.principalRef.startsWith("local:")) return { status: "denied", reason: "source-authority-unavailable" }
     const result = await observe(reference, context)
     if (!current()) return { status: "stale", reason: "source-or-authority-changed" }
     if (result.status !== "ok") return result
