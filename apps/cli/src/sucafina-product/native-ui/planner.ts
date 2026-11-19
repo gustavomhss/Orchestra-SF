@@ -173,9 +173,22 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
         ...(string(original.alloc) !== undefined ? { alloc: original.alloc } : {}),
         ...(string(original.proj) !== undefined ? { proj: original.proj } : {}),
         ...(money(original.annual) !== null ? { annual: money(original.annual) } : {}),
+        // These are the same producer-side FY derivations used by runtime/planner.ts.
+        // The chapter receives facts, never annualizes monthly cells itself.
+        budgetFY: money(original.total),
+        outlookFY: Array.isArray(original.outlook) && original.outlook.length === 12 &&
+          original.outlook.every((value) => typeof value === "number" && Number.isFinite(value))
+          ? original.outlook.reduce((total: number, value: number) => total + value, 0) : null,
         synthetic: row.synthetic,
       }
     })
+    const directory = rows(view.data.directory).flatMap((person) => {
+      const personId = id(person.id)
+      if (!personId) return []
+      return [{ id: personId, name: text(person.name) || personId }]
+    })
+    const currencies = ["USD", ...rows(current?.fx).map((rate) => text(rate.cur).trim().toUpperCase())]
+      .filter((code, index, all) => /^[A-Z]{3}$/.test(code) && all.indexOf(code) === index)
     if (cap === "CAP19") {
       const projects = rows(current?.projects).map((p) => ({
         id: id(p.id), name: text(p.name), revision: revision(view, versionId + ":projects:" + id(p.id)),
@@ -183,7 +196,7 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
         ...(string(p.desc) !== undefined ? { desc: p.desc } : {}),
         ...(owner(p) ? { owner: owner(p) } : {}),
       })).filter((p) => p.id !== "")
-      return { ...base, ...(grid ? { grid } : {}), lines, projects }
+      return { ...base, ...(grid ? { grid } : {}), lines, projects, directory, currencies }
     }
     const lists = object(current?.lists)
     const split = OPEX_ELEMENTS.filter((el) => el !== "hr").map((el) => ({
@@ -192,13 +205,6 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
         ? object(lists[el]).split === true : ["licenses", "services", "hwo", "te"].includes(el),
       revision: revision(view, versionId + ":lists:" + el),
     }))
-    const directory = rows(view.data.directory).flatMap((person) => {
-      const personId = id(person.id)
-      if (!personId) return []
-      return [{ id: personId, name: text(person.name) || personId }]
-    })
-    const currencies = ["USD", ...rows(current?.fx).map((rate) => text(rate.cur).trim().toUpperCase())]
-      .filter((code, index, all) => /^[A-Z]{3}$/.test(code) && all.indexOf(code) === index)
     return { ...base, ...(grid ? { grid } : {}), lines, split, directory, currencies }
   }
   if (cap === "CAP20") {

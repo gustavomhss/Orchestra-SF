@@ -48,12 +48,13 @@ type Edit = Readonly<{
   approvalState: string; investmentStart: string; investmentEnd: string;
   annual: string;
 }>
-type LineDraft = Readonly<{ name: string; owner: string; el: string; cur: string; annual: string }>
+type LineDraft = Readonly<{ name: string; owner: string; el: string; cur: string; annual: string; proj: string; cls: "capex" | "opex" }>
+type ProjectDraft = Readonly<{ name: string }>
 type ReviewKind = "line-save" | "line-create" | "project-save" | "line-delete" | "project-delete" |
-  "spread" | "reset" | "closed" | "split"
+  "spread" | "reset" | "closed" | "split" | "project-create"
 type Review = Readonly<{
   kind: ReviewKind; id: string; revision: number; operationRef: SfOperationRef;
-  target?: string; through?: number; nextSplit?: boolean; draft?: LineDraft;
+  target?: string; through?: number; nextSplit?: boolean; draft?: LineDraft; projectDraft?: ProjectDraft;
 }>
 const key = (s: string) => s as SfCopyKey
 const msg = (s: string): SfMessage => ({ key: key(s) })
@@ -75,7 +76,7 @@ const initialEdit = (row: PlanLine | PlanProject): Edit => ({
 })
 const cellKey = (coord: SfCellCoordinate) =>
   JSON.stringify([coord.measure, coord.month])
-const blankLine = (): LineDraft => ({ name: "", owner: "", el: "licenses", cur: "USD", annual: "" })
+const blankLine = (): LineDraft => ({ name: "", owner: "", el: "licenses", cur: "USD", annual: "", proj: "", cls: "capex" })
 const finiteAnnual = (value: string) => /^-?\d+(\.\d+)?$/.test(value.trim())
 const fullCoverage = () => ({
   state: "complete" as const, summary: msg("sf.u07.source"), reasons: [],
@@ -108,6 +109,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     closedChoice: 0,
     draftRevision: 0,
     create: blankLine(),
+    createProject: { name: "" } as ProjectDraft,
+    filters: { owner: "", classification: "" as "" | "capex" | "opex", search: "" },
+    appliedFilters: { owner: "", classification: "" as "" | "capex" | "opex", search: "" },
+    comparison: false,
   })
   const editors = new Map<string, SfPublicDraftController<Edit>>()
   const monthlyDrafts = new Map<string, SfPublicDraftController<Readonly<Record<string,string>>>>()
@@ -147,7 +152,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   const pageQuery = () => ({
     ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
     ...((state.chosenVersion || props.route.query.version) ? { version: state.chosenVersion || props.route.query.version } : {}),
-    ...(props.route.query.filter === undefined ? {} : { q: props.route.query.filter }),
+    ...((state.appliedFilters.search || props.route.query.filter) ? { q: state.appliedFilters.search || props.route.query.filter } : {}),
+    ...(state.appliedFilters.owner ? { owner: state.appliedFilters.owner } : {}),
+    ...(state.appliedFilters.classification ? { class: state.appliedFilters.classification } : {}),
+    ...(state.comparison ? { mode: "compare" as const } : {}),
   })
   const reload = () => setState("refresh", (n) => n + 1)
   const directory = () => {
@@ -174,13 +182,16 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const ready = owner.ready()
     const route = props.route.href
     const chosenVersion = state.chosenVersion
+    const query = pageQuery()
     state.refresh
     const identity = ready ? JSON.stringify([generation, ready.context.stamp, route]) : ""
     if (lastIdentity !== identity) {
       editors.clear()
       monthlyDrafts.clear()
       setState({ selected: "", chosenVersion: "", paste: { phase: "idle" }, pasteInput: null, review: null,
-        uncertainty: false, create: blankLine() })
+        uncertainty: false, create: blankLine(), createProject: { name: "" },
+        filters: { owner: "", classification: "", search: "" },
+        appliedFilters: { owner: "", classification: "", search: "" }, comparison: false })
       lastIdentity = identity
     }
     if (!ready || !contextDest()?.canRead) {
@@ -194,8 +205,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       try {
         const client = createSfPlannerClient(ready.transport)
         const response = isOpex()
-          ? await client["domain.page.CAP18"](pageQuery(), { signal: controller.signal })
-          : await client["domain.page.CAP19"](pageQuery(), { signal: controller.signal })
+          ? await client["domain.page.CAP18"](query, { signal: controller.signal })
+          : await client["domain.page.CAP19"](query, { signal: controller.signal })
         if (controller.signal.aborted || owner.generation() !== generation) return
         if (response.kind === "transport-error") {
           setState("phase", "unavailable")
@@ -228,7 +239,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           projectRef && !projectRows.some(row => row.id === projectRef)
         setState({ page: projection, phase: refMissing ? "not-found" :
           (projection.data.lines.length || projectRows.length) ? "ready" :
-          (props.route.query.filter || props.route.query.element ? "filtered-empty" : "empty"),
+          (query.q || query.owner || query.class || props.route.query.element ? "filtered-empty" : "empty"),
           closedChoice: projection.data.selectedVersion?.closed ?? 0, error: "" })
       } catch (error) {
         if (!controller.signal.aborted) {
@@ -505,9 +516,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   }
 
   const beginCreate = () => {
-    if (!isOpex() || !versionId() || !allowed("save")) return
+    if (!versionId() || !allowed("save")) return
     const draft = state.create
-    if (!draft.name.trim() || !finiteAnnual(draft.annual) || !draft.el || !draft.cur) {
+    if (!draft.name.trim() || !finiteAnnual(draft.annual) || !draft.el || !draft.cur ||
+        (!isOpex() && !projectRows().some((project) => project.id === draft.proj))) {
       setState("error", t("sf.common.fieldErrorSummary"))
       return
     }
@@ -515,6 +527,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       kind: "line-create", id: "", revision: 0,
       operationRef: crypto.randomUUID() as SfOperationRef, draft,
     })
+  }
+  const beginCreateProject = () => {
+    if (isOpex() || !versionId() || !allowed("save") || !state.createProject.name.trim()) return
+    setState("review", { kind: "project-create", id: "", revision: 0,
+      operationRef: crypto.randomUUID() as SfOperationRef, projectDraft: { ...state.createProject } })
   }
   const openReview = (kind:ReviewKind, id:string, revision:number|undefined,
     extras?:Partial<Pick<Review,"target"|"through"|"nextSplit">>) => {
@@ -533,14 +550,14 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   }
   const fields = (values: object) =>
     Object.entries(values).map(([path,value]):SfReviewField => ({
-      path, label: msg("sf.u07." + path), value: textual(String(value)),
+      path, label: msg("sf.u07." + (({ proj: "project", cls: "classification", el: "element", cur: "currency" } as Record<string, string>)[path] ?? path)), value: textual(String(value)),
     }))
   const reviewFields = () => {
     const r=state.review
     if (!r) return [] as SfReviewField[]
     if (r.kind === "closed") return fields({period:version()?.closed ?? 0})
     if (r.kind === "split") return fields({element:r.target ?? "", split:!r.nextSplit})
-    if (r.kind === "line-create") return []
+    if (r.kind === "line-create" || r.kind === "project-create") return []
     const rec = record()
     if (!rec) return []
     return fields(initialEdit(rec))
@@ -551,6 +568,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (r.kind === "closed") return fields({period:r.through ?? 0})
     if (r.kind === "split") return fields({element:r.target ?? "", split:r.nextSplit ?? false})
     if (r.kind === "line-create") return fields(r.draft ?? state.create)
+    if (r.kind === "project-create") return fields(r.projectDraft ?? state.createProject)
     if (r.kind === "line-save" || r.kind === "project-save") {
       const rec=record();const snap=rec && getEditor(rec)?.snapshot()
       if (snap?.availability === "active") return fields(snap.value)
@@ -592,21 +610,32 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     setState({busy:true,error:""})
     try {
       let reply: {kind:string;status?:number;body?:{ok:boolean;errors?:readonly string[]}} | undefined
-      if (r.kind==="line-create" && isOpex()) {
-        const draft = r.draft
-        if (!draft || !draft.name.trim() || !finiteAnnual(draft.annual) || r.revision !== 0) {
+      if (r.kind==="project-create" && !isOpex()) {
+        const draft = r.projectDraft
+        if (!draft?.name.trim() || r.revision !== 0) {
           setState({ phase: "invalid", error: t("sf.common.fieldErrorSummary") })
           return
         }
-        reply = await client["domain.command.CAP18.save"]({
-          ...base, page: "OPEX", action: "save",
-          values: {
-            versionId: versionId(), collection: "lines",
-            name: draft.name.trim(),
-            ...(draft.owner ? { owner: draft.owner } : {}),
-            el: draft.el, cur: draft.cur, annual: draft.annual.trim(),
-          },
+        reply = await client["domain.command.CAP19.save"]({
+          ...base, page: "CAPEX", action: "save",
+          values: { versionId: versionId(), collection: "projects", name: draft.name.trim() },
         }, { signal, idempotencyKey: idem })
+      } else if (r.kind==="line-create") {
+        const draft = r.draft
+        if (!draft || !draft.name.trim() || !finiteAnnual(draft.annual) || r.revision !== 0 ||
+            (!isOpex() && !projectRows().some((project) => project.id === draft.proj))) {
+          setState({ phase: "invalid", error: t("sf.common.fieldErrorSummary") })
+          return
+        }
+        const values = {
+          versionId: versionId(), collection: "lines" as const,
+          name: draft.name.trim(), ...(draft.owner ? { owner: draft.owner } : {}),
+          el: draft.el, cur: draft.cur, annual: draft.annual.trim(),
+          ...(!isOpex() ? { proj: draft.proj, cls: draft.cls } : {}),
+        }
+        reply = isOpex()
+          ? await client["domain.command.CAP18.save"]({ ...base, page: "OPEX", action: "save", values }, { signal, idempotencyKey: idem })
+          : await client["domain.command.CAP19.save"]({ ...base, page: "CAPEX", action: "save", values }, { signal, idempotencyKey: idem })
       } else if (r.kind==="line-save" && sourceRecord) {
         if (lineCas(r.id) !== r.revision) {
           setState({ phase: "conflict", error: t("sf.common.conflict") })
@@ -673,7 +702,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           error:reply.status===409 ? t("sf.common.conflict") : reply.body?.errors?.join("; ")??t("sf.common.failed")})
       } else {
         if (sourceRecord) getEditor(sourceRecord)?.discard()
-        setState({review:null,phase:"loading",error:t("sf.u07.saved"),create:blankLine()})
+        setState({review:null,phase:"loading",error:t("sf.u07.saved"),create:blankLine(),createProject:{name:""}})
         reload()
       }
     } catch(error) {
@@ -743,7 +772,50 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                     {through:state.closedChoice})}>{t("sf.common.review")}</button>
               </Show>
             </section>
-            <Show when={grid()} fallback={<p role="status">{t("sf.u07.noData")}</p>}>
+            <Show when={!isOpex()}>
+              <form data-sf-planner-filters onSubmit={(event) => {
+                event.preventDefault()
+                setState({ appliedFilters: { ...state.filters }, selected: "", review: null,
+                  paste: { phase: "idle" }, pasteInput: null, refresh: state.refresh + 1 })
+              }}>
+                <label>{t("sf.u07.owner")}
+                  <select value={state.filters.owner} disabled={state.busy || state.uncertainty}
+                    onChange={(event) => setState("filters", "owner", event.currentTarget.value)}>
+                    <option value="">{t("sf.u07.all")}</option>
+                    <For each={directory()}>{(person) => <option value={person.id}>{person.name}</option>}</For>
+                  </select>
+                </label>
+                <label>{t("sf.u07.classification")}
+                  <select value={state.filters.classification} disabled={state.busy || state.uncertainty}
+                    onChange={(event) => {
+                      const value = event.currentTarget.value
+                      if (value === "" || value === "capex" || value === "opex") setState("filters", "classification", value)
+                    }}>
+                    <option value="">{t("sf.u07.all")}</option><option value="capex">capex</option><option value="opex">opex</option>
+                  </select>
+                </label>
+                <label>{t("sf.u07.search")}
+                  <input value={state.filters.search} disabled={state.busy || state.uncertainty}
+                    onInput={(event) => setState("filters", "search", event.currentTarget.value)} />
+                </label>
+                <button type="submit" disabled={state.busy || state.uncertainty}>{t("sf.u07.filter")}</button>
+                <label>{t("sf.u07.compare")}
+                  <input type="checkbox" checked={state.comparison} disabled={state.busy || state.uncertainty}
+                    onChange={(event) => setState("comparison", event.currentTarget.checked)} />
+                </label>
+              </form>
+            </Show>
+            <Show when={state.comparison}>
+              <table data-sf-planner-comparison><caption>{t("sf.u07.compare")}</caption>
+                <thead><tr><th>{t("sf.u07.name")}</th><th>{t("sf.u07.budgetFY")}</th><th>{t("sf.u07.outlookFY")}</th></tr></thead>
+                <tbody><For each={page().data.lines}>{(line) => <tr data-sf-comparison-row={line.id}>
+                  <th scope="row">{line.name}</th>
+                  <td>{line.budgetFY == null ? t("sf.common.unavailable") : String(line.budgetFY)}</td>
+                  <td>{line.outlookFY == null ? t("sf.common.unavailable") : String(line.outlookFY)}</td>
+                </tr>}</For></tbody>
+              </table>
+            </Show>
+            <Show when={grid()?.rows.length ? grid() : undefined} fallback={<p role="status">{t("sf.u07.noData")}</p>}>
               {(monthly)=><section aria-labelledby="sf-u07-months">
                 <h2 id="sf-u07-months">{t("sf.u07.months")}</h2>
                 <SfMonthlyGrid
@@ -791,8 +863,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                 </tbody></table>
               </div>
             </section>
-            <Show when={isOpex() && versionId()}>
-              <form data-page="OPEX" data-command="save" data-record="" onSubmit={(event) => {
+            <Show when={versionId()}>
+              <form data-page={pageName()} data-command="save" data-record="" onSubmit={(event) => {
                 event.preventDefault()
                 beginCreate()
               }}>
@@ -824,14 +896,41 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                     disabled={!allowed("save")}
                     onInput={(event) => setState({ create: { ...state.create, annual: event.currentTarget.value } })} />
                 </label>
+                <Show when={!isOpex()}>
+                  <label>{t("sf.u07.project")}
+                    <select name="proj" value={state.create.proj} disabled={!allowed("save")}
+                      onChange={(event) => setState("create", "proj", event.currentTarget.value)}>
+                      <option value=""></option>
+                      <For each={projectRows()}>{(project) => <option value={project.id}>{project.name}</option>}</For>
+                    </select>
+                  </label>
+                  <label>{t("sf.u07.classification")}
+                    <select name="cls" value={state.create.cls} disabled={!allowed("save")}
+                      onChange={(event) => {
+                        const value = event.currentTarget.value
+                        if (value === "capex" || value === "opex") setState("create", "cls", value)
+                      }}>
+                      <option value="capex">capex</option><option value="opex">opex</option>
+                    </select>
+                  </label>
+                </Show>
                 <button type="submit" class="mx-btn primary" disabled={!allowed("save")}>{t("sf.common.save")}</button>
               </form>
             </Show>
             <Show when={!isOpex() && "projects" in page().data}>
               <section><h2>{t("sf.u07.projects")}</h2>
+                <form data-sf-create-project onSubmit={(event) => { event.preventDefault(); beginCreateProject() }}>
+                  <label>{t("sf.u07.projectName")}
+                    <input value={state.createProject.name} disabled={!allowed("save")}
+                      onInput={(event) => setState("createProject", "name", event.currentTarget.value)} />
+                  </label>
+                  <button type="submit" class="mx-btn" disabled={!allowed("save") || !state.createProject.name.trim()}>
+                    {t("sf.u07.addProject")}
+                  </button>
+                </form>
                 <div class="sf-u07-project-list">
                   <For each={projectRows()}>{(p)=>
-                    <button type="button" class="mx-btn" onClick={()=>setState("selected",p.id)}>
+                    <button type="button" class="mx-btn" data-sf-project={p.id} onClick={()=>setState("selected",p.id)}>
                       {p.name} · {p.code??p.id} · {p.approvalState || "draft"}
                        {p.investmentStart && p.investmentEnd ? ` · ${p.investmentStart} → ${p.investmentEnd}` : ""}
                     </button>}
@@ -931,7 +1030,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
               </section>}
             </Show>
             <Show when={isOpex() && line() ? undefined : record()}>
-              {(rec)=><section class="sf-u07-detail">
+              {(rec)=><section class="sf-u07-detail" data-sf-record-detail>
                 <h2>{rec().name}</h2>
                 <p><code>{rec().id}</code> · {t("sf.u07.currentVersion")}: {rec().revision}</p>
                 <Show when={activeRecord()}>
@@ -1011,11 +1110,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             coverage={fullCoverage()}
             blockingReasons={allowed(reviewAction())?[]:[msg("sf.u07.readDenied")]}
             confirmation={allowed(reviewAction())?{kind:"admitted",
-              labelKey:key(r().kind==="line-create"||r().kind==="line-save"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
-              purpose:r().kind==="line-create"?"create":reviewAction(),
+              labelKey:key(r().kind==="line-create"||r().kind==="line-save"||r().kind==="project-create"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
+              purpose:r().kind==="line-create"||r().kind==="project-create"?"create":reviewAction(),
               binding:{kind:"catalog-command",operationId:reviewOperationId(),
                 version:{kind:"record",expectedVersion:r().revision},confirmation:"presentation-only"}}:
-              {kind:"blocked",labelKey:key(r().kind==="line-create"||r().kind==="line-save"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
+              {kind:"blocked",labelKey:key(r().kind==="line-create"||r().kind==="line-save"||r().kind==="project-create"?"sf.u07.confirm":isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
                 reasons:[msg("sf.u07.readDenied")]}}
             state={reviewState()}
             onConfirm={()=>void submitReview()}

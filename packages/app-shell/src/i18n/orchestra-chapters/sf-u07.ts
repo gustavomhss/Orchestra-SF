@@ -1,5 +1,13 @@
 /** U07. Producer English labels intentionally retained as exact legacy source copy. */
 export const SF_U07_COPY = {
+  "sf.u07.projectName": "Project name",
+  "sf.u07.addProject": "Add project",
+  "sf.u07.all": "All",
+  "sf.u07.search": "Search",
+  "sf.u07.filter": "Filter",
+  "sf.u07.compare": "Compare annual values",
+  "sf.u07.budgetFY": "Budget FY (USD)",
+  "sf.u07.outlookFY": "Outlook FY (USD)",
   "sf.cap18.title": "OPEX",
   "sf.cap18.primary": "Review changes",
   "sf.cap19.title": "CAPEX",
@@ -83,6 +91,14 @@ export const SF_U07_COPY = {
 } as const
 
 export const SF_U07_COPY_BR: Readonly<Record<keyof typeof SF_U07_COPY,string>> = {
+  "sf.u07.projectName": "Nome do projeto",
+  "sf.u07.addProject": "Adicionar projeto",
+  "sf.u07.all": "Todos",
+  "sf.u07.search": "Buscar",
+  "sf.u07.filter": "Filtrar",
+  "sf.u07.compare": "Comparar valores anuais",
+  "sf.u07.budgetFY": "Orçamento anual (USD)",
+  "sf.u07.outlookFY": "Previsão anual (USD)",
   "sf.cap18.title": "OPEX",
   "sf.cap18.primary": "Revisar alterações",
   "sf.cap19.title": "CAPEX",

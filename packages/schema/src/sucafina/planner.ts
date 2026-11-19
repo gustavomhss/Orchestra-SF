@@ -72,7 +72,7 @@ const RecordMeta = Schema.Struct({
   owner: Optional(Schema.String), entity: Optional(Schema.String),
   alloc: Optional(Schema.String), cur: Optional(Schema.String),
   proj: Optional(Schema.String), synthetic: Optional(Schema.Boolean),
-  annual: Optional(NullableAmount),
+  annual: Optional(NullableAmount), budgetFY: Optional(NullableAmount), outlookFY: Optional(NullableAmount),
 })
 const PlanProject = Schema.Struct({
   id: NonEmpty, name: Schema.String, revision: NonNegativeInt,
@@ -107,7 +107,7 @@ const FxEntry = Schema.Struct({
 const PageData = {
   CAP17: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), summary: Optional(MoneySummary), comparisons: Schema.Array(Schema.Struct({ id: NonEmpty, name: Schema.String, year: Schema.Finite, total: NullableAmount, fte: NullableAmount })) }),
   CAP18: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), grid: Optional(MonthlyGrid), lines: Schema.Array(RecordMeta), split: Schema.Array(Schema.Struct({ element: NonEmpty, split: Schema.Boolean, revision: NonNegativeInt })), directory: Optional(Schema.Array(Schema.Struct({ id: NonEmpty, name: Schema.String }))), currencies: Optional(Schema.Array(NonEmpty)) }),
-  CAP19: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), grid: Optional(MonthlyGrid), lines: Schema.Array(RecordMeta), projects: Schema.Array(PlanProject) }),
+  CAP19: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), grid: Optional(MonthlyGrid), lines: Schema.Array(RecordMeta), projects: Schema.Array(PlanProject), directory: Optional(Schema.Array(Schema.Struct({ id: NonEmpty, name: Schema.String }))), currencies: Optional(Schema.Array(NonEmpty)) }),
   CAP20: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), positions: Schema.Array(HeadcountPosition), rates: Optional(Schema.Array(Rate)), leaderDomains: Optional(Schema.Record(Schema.String, Schema.String)), increase: Optional(Schema.Struct({ inc: Schema.Finite, incMonth: Month })), metrics: Optional(Schema.Struct({ fte: NullableAmount, hrTotal: NullableAmount })) }),
   CAP21: Schema.Struct({ entities: Schema.Array(CatalogEntry), allocations: Schema.Array(CatalogEntry) }),
   CAP22: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), rates: Schema.Array(FxEntry), warnings: Schema.Array(Schema.String) }),
