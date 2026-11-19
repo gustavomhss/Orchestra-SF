@@ -85,8 +85,12 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       const captured = preview.value.sections[0]!
       expect(captured.id).toBe(item.id)
       expect(captured.recordCount).toBe(1)
-      expect(captured.projection.context.sourceRefs.filter((source) => source.id === topic)).toHaveLength(1)
-      expect(captured.projection.context.sourceRefs.some((source) => source.id === unrelated)).toBe(false)
+      // The producer identifies the page in context and the selected record in value IDs.
+      expect(captured.projection.context.sourceRefs.map(({ surface, type, id }) => ({ surface, type, id }))).toEqual([
+        { surface: "dashboard", type: "dashboard-page", id: topicsPage },
+      ])
+      expect(captured.projection.values.filter((value) => value.id === `hotTopics[id:${encodeURIComponent(topic)}].action`)).toMatchObject([{ value: original }])
+      expect(captured.projection.values.some((value) => value.id.startsWith(`hotTopics[id:${encodeURIComponent(unrelated)}].`))).toBe(false)
       expect(captured.projection.values.some((value) => value.value === original)).toBe(true)
       expect(captured.projection.values.some((value) => value.value === survivor)).toBe(false)
       const shown = agenda.locator("[data-sf-agenda-preview]")
