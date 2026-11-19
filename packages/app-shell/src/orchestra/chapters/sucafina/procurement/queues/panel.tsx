@@ -105,6 +105,13 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
   const visible = createMemo(() =>
     sfQueueVisible(props.phase, props.rows, props.filters, props.selectedRef),
   )
+  const countedPage = createMemo((): TableProps["page"] => {
+    const count = visible().rows.length
+    const page = props.page
+    if (page.kind === "cursor")
+      return { ...page, total: count, from: count === 0 ? null : 1, to: count === 0 ? null : count }
+    return { ...page, total: count }
+  })
   const authorized = createMemo(() =>
     visible().state === "ready" || visible().state === "empty" ||
     visible().state === "filtered-empty" || visible().state === "partial",
@@ -181,7 +188,7 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       columns={columns}
       selectedKey={visible().selected?.id}
       sort={props.sort}
-      page={props.page}
+      page={countedPage()}
       onSort={props.onSort}
       onPage={props.onPage}
       onSelect={(ref) => { if (authorized() && props.rows.some((row) => row.id === ref)) props.onSelect(ref) }}
