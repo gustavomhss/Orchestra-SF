@@ -77,3 +77,9 @@ Estado: partial
 - Asserção removida/substituída: somente typeof source.versions.budgetYtd === number, porque a instalação ainda não escreveu esse singleton. confirmation-access.spec.ts154–156 exige agora ausência explícita tanto no dado original quanto no mapa de versões e valor undefined. Nenhuma asserção financeira, de conflito, status409, CAS, zero POST antes da confirmação, efeito único, logout, purge ou resposta tardia foi removida; nenhum timeout aumentado.
 - Estado partial. Pendente/unbound: records-signals-history.spec.ts163–176 (qualificar feedback retido, manter edições e nova confirmação); confirmation-access.spec.ts157–219 (qualificar revisão/Revise do777 e revogação real com projeção tardia). Este spec revisa/revoga o valor anual e não qualifica aplicação anual persistida; não declarar essa aplicação provada.
 - Como retomar: compor os três helpers Dashboard atuais mais surface.tsx, hot-topics/edit.tsx e este handoff sobre Assembly32; executar apenas records-signals-history.spec.ts e confirmation-access.spec.ts, registrar run e resultado terminal. Nenhum sf-ci por este WP.
+
+
+## Gate aberto — Dashboard11
+
+- Run [44630303725](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44630303725); composiçãoa580c5c83e30433433ee64ac4aade30f762699f3; snapshotc4e481ccd78bd99551a8aa13d1e801d522592cfd; branch efêmeraci-run-linux-dashboard11-20261119. Specs: `e2e/sucafina/dashboard-installed/records-signals-history.spec.ts`, `e2e/sucafina/dashboard-installed/confirmation-access.spec.ts`.
+- Última consulta: in_progress, resultado terminal ainda não observado. Estado permanece partial e os itens unbound acima continuam abertos. Este registro não declara sucesso de UI; aguardar o resultado deste run, sem duplicá-lo.
