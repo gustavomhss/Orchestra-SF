@@ -598,6 +598,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       })()
       if (!ownerMatches(ownerKey, epoch)) return
       if (result.kind !== "response") {
+        console.warn("SF_PROCUREMENT_COMMAND_BOUNDARY " + JSON.stringify({ capabilityId: "CAP25", action: review.action, kind: result.kind, reason: result.reason }))
         prController?.setPhase("outcome-unknown")
         poController?.setPhase("outcome-unknown")
         setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })
@@ -678,7 +679,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       })
     } catch (error) {
       if (ownerMatches(ownerKey, epoch)) {
-        console.error("CAP25 unknown command result", error)
+        console.warn("SF_PROCUREMENT_COMMAND_BOUNDARY " + JSON.stringify({ capabilityId: "CAP25", action: review.action, kind: "exception",
+          name: error instanceof Error && ["Error", "TypeError", "SyntaxError", "RangeError", "AbortError", "DataCloneError"].includes(error.name) ? error.name : "Unclassified" }))
         prController?.setPhase("outcome-unknown")
         poController?.setPhase("outcome-unknown")
         setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u11.remaining.unknown" })

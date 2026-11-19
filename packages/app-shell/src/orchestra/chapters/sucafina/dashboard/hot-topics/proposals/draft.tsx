@@ -14,6 +14,7 @@ const key = (value: Key): SfCopyKey => value as SfCopyKey
 const draftInput = SfDomain.operations["dashboard.dashboard-hot-topic-draft"].input
 type Draft = typeof draftInput.Type
 type Fields = Draft["fields"]
+type EditableFields = { -readonly [Field in keyof Fields]: Fields[Field] }
 type CaseRef = Draft["caseRef"]
 const names = ["action", "owner", "due", "priority", "notes"] as const
 const empty: Fields = { action: "", owner: "", due: "", priority: "normal", notes: "" }
@@ -41,6 +42,7 @@ export function SfHotTopicPrivateDraft(props: {
   reference: string
   denied: boolean
   onSaved: (reference: string) => void
+  onDenied: () => void
 }): JSX.Element {
   const { t } = useSfPresentation()
   const context = useSfContext()
@@ -55,13 +57,13 @@ export function SfHotTopicPrivateDraft(props: {
   const [base, setBase] = createSignal<Fields>()
   const [currentDraft, setCurrentDraft] = createSignal<Draft>()
   const [sourceFields, setSourceFields] = createSignal<Fields>()
-  const [values, setValues] = createStore<Fields>({ ...empty })
+  const [values, setValues] = createStore<EditableFields>({ ...empty })
   const [dirty, setDirty] = createSignal(false)
   const [reviewed, setReviewed] = createSignal(false)
   const [needsCurrent, setNeedsCurrent] = createSignal(false)
   const [canWrite, setCanWrite] = createSignal(false)
   const [busy, setBusy] = createSignal(false)
-  const [state, setState] = createSignal<"editing" | "current" | "unavailable" | "denied" | "conflict" | "unknown" | "saved">("editing")
+  const [state, setState] = createSignal<"editing" | "current" | "unavailable" | "denied" | "write-denied" | "conflict" | "unknown" | "saved">("editing")
   let controller: AbortController | undefined
   let sequence = 0
   let owner: string | undefined
@@ -85,6 +87,7 @@ export function SfHotTopicPrivateDraft(props: {
     setSelectedCase(""); setSelectedRecord(""); setBusy(false); firstSave = undefined; opened = undefined
     setState(denied ? "denied" : "editing")
   }
+  const deny = () => { reset(true); setDiscovery(undefined); props.onDenied() }
   createEffect(() => {
     const value = props.discovery
     if (value !== null && value !== undefined) setDiscovery(value)
@@ -151,7 +154,7 @@ export function SfHotTopicPrivateDraft(props: {
       const client = createSfDomainClient(current.transport)
       const discovered = await client["dashboard.dashboard-workbench"]({ page: "Hot Topics & Actions" }, { signal })
       if (!live()) return
-      if (discovered.kind === "response" && discovered.body.status === "denied") { reset(true); setDiscovery(undefined); return }
+      if (discovered.kind === "response" && discovered.body.status === "denied") { deny(); return }
       if (discovered.kind === "response" && discovered.body.status === "ok") setDiscovery(discovered.body.value)
       const read = await client["dashboard.dashboard-draft-read"]({
         caseRef: retained.caseRef, targetEvidence: retained.targetEvidence,
@@ -159,7 +162,7 @@ export function SfHotTopicPrivateDraft(props: {
       }, { signal })
       if (!live()) return
       if (read.kind !== "response") { setState("unavailable"); return }
-      if (read.body.status === "denied") { reset(true); setDiscovery(undefined); return }
+      if (read.body.status === "denied") { deny(); return }
       if (read.body.status !== "ok") { setState("unavailable"); return }
       const value = object(read.body.value), source = object(object(value?.source)?.draft), active = object(value?.draft)
       const original = object(value?.originalSource)
@@ -202,7 +205,9 @@ export function SfHotTopicPrivateDraft(props: {
       const result = await createSfDomainClient(current.transport)["dashboard.dashboard-hot-topic-draft"](input, { signal, idempotencyKey: key })
       if (!live()) return
       if (result.kind !== "response") { setState("unknown"); setCanWrite(false); return }
-      if (result.body.status === "denied") { reset(true); setDiscovery(undefined); return }
+      if (result.body.status === "denied") {
+        firstSave = undefined; setCanWrite(false); setNeedsCurrent(true); setReviewed(false); setState("write-denied"); return
+      }
       if (result.body.status !== "ok") {
         firstSave = undefined; setNeedsCurrent(true); setReviewed(false); setState("conflict"); return
       }
@@ -226,7 +231,7 @@ export function SfHotTopicPrivateDraft(props: {
       const outcome = await createSfDomainClient(current.transport)["dashboard.dashboard-hot-topic-draft-outcome"](
         { caseRef: retained.input.caseRef }, { signal, idempotencyKey: retained.key })
       if (signal.aborted || sequence !== ticket || context.generation() !== generation || ready()?.transport !== current.transport) return
-      if (outcome.kind === "response" && outcome.body.status === "denied") { reset(true); setDiscovery(undefined); return }
+      if (outcome.kind === "response" && outcome.body.status === "denied") return
       if (outcome.kind !== "response" || outcome.body.status !== "ok") return
       const saved = object(outcome.body.value)
       if (typeof saved?.draftRef !== "string" || saved.version !== 1) return
@@ -287,7 +292,7 @@ export function SfHotTopicPrivateDraft(props: {
           </div>
         </Show>
         <Show when={state() === "current"}><p role="status">{t(key(needsCurrent() ? "sf.u38.proposalCurrentLoaded" : "sf.u38.proposalEditsRetained"))}</p></Show>
-        <Show when={!canWrite() && state() === "current"}><p role="status">{t(key("sf.u38.privateWriteUnavailable"))}</p></Show>
+        <Show when={state() === "write-denied" || !canWrite() && state() === "current"}><p role="status">{t(key("sf.u38.privateWriteUnavailable"))}</p></Show>
         <Show when={state() === "unavailable"}><p role="status">{t(key("sf.u38.privateReadUnavailable"))}</p></Show>
         <Show when={state() === "conflict"}><p role="alert">{t(key("sf.u38.sourceChanged"))}</p></Show>
         <Show when={state() === "unknown"}><p role="alert">{t(key("sf.u38.savePending"))}</p></Show>

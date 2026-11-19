@@ -297,7 +297,8 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     <div class="sf-u38-page" data-sf-surface="UI54">
       <Show when={!chosenChange()}>
         <SfHotTopicPrivateDraft discovery={store.discovery} reference={reference()} denied={store.state === "denied" || store.state === "session-expired"}
-          onSaved={(ref) => { navigate(proposalRoute(props, ref)); bump((count) => count + 1) }} />
+          onSaved={(ref) => { navigate(proposalRoute(props, ref)); bump((count) => count + 1) }}
+          onDenied={() => setStore({ state: "denied", workbench: null, review: null, discovery: null, reason: null })} />
       </Show>
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
