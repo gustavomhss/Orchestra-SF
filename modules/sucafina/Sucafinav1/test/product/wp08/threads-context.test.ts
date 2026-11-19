@@ -20,13 +20,14 @@ test("contextual questions retain separate periods, exact recipients, and commun
     const currentSnapshots = store.currentSnapshots
     if (!currentSnapshots) throw new Error("Fixture requires currentSnapshots to detect nested source reads")
     const access = new Set(["author", "recipient-B"])
+    const deniedEvidence = new Set<string>()
     await store.transaction("dashboard", async (snapshot) => { snapshot.data.access = { author: {}, "recipient-B": {}, "recipient-C": {} }; return { commit: true, value: undefined } })
     const context = { kind: "ui", binding: { installationId: "installation", projectId: "project", principalRef: "author", requestId: "request", accessRevision: "access", policyVersion: "policy", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
     const request = new Request("https://example.test/")
     const host: DomainPortHost = { persistence: store, requestFor: () => request, revalidate: async () => access.has("author"), authenticate: async () => access.has("author") ? { id: "author", canWrite: true, roles: [{ surface: "dashboard", role: "admin" }] } : null, environment: async () => ({ at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [{ id: "author", name: "Author" }, { id: "recipient-B", name: "Same Name" }, { id: "recipient-C", name: "Same Name" }] }) }
     const resolve: BusinessContextService["resolve"] = async (ref, call) => {
       if (currentSnapshots()) throw new Error("Cross-surface source reads cannot run inside the mutation transaction")
-      return { state: access.has(call.binding.principalRef) ? "fresh" : "revoked", ref, accessRevision: call.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
+      return { state: access.has(call.binding.principalRef) && !deniedEvidence.has(ref.refDigest) ? "fresh" : "revoked", ref, accessRevision: call.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
     }
     const evidence: BusinessContextService = { resolve, context: async ({ refs }, call) => Promise.all(refs.map((ref) => resolve(ref, call))), recall: async () => [], emitFromLedger: async () => { throw new Error("Memory is outside this fixture") } }
     const authority = createCollaborationAuthority({ host, evidence, recipientAuthority: { authorize: async (id) => access.has(id), checkAtCommit: (id) => access.has(id) } })
@@ -56,6 +57,35 @@ test("contextual questions retain separate periods, exact recipients, and commun
     expect(await threads.resolve(january.value.id, { expectedStorageVersion: 3, idempotencyKey: "resolve" }, context)).toMatchObject({ status: "ok", value: { state: "resolved", observedVersion: 7, period: draft.period, messages: [{ body: "January question" }, { body: "January explanation" }] } })
     expect(await threads.read(february.value.id, context)).toMatchObject({ status: "ok", value: { state: "open" } })
     expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: { hotTopics: snapshot.data.hotTopics, procurement: snapshot.data.store } }))).toEqual({ hotTopics: undefined, procurement: undefined })
+    const sameSource = {
+      ...january.value,
+      messages: january.value.messages.map((message) => ({ ...message, sourceContext: {
+        sourceRef: ref.refId, sourceIncarnation: ref.target.incarnation, observedVersion: ref.target.version,
+        period: draft.period, evidenceRefs: [ref],
+      } })),
+    }
+    expect(await authority.authorizeThread(sameSource, context, "read")).toBe(true)
+    // A shared textual ID cannot suppress a different source body in a message.
+    for (const changed of [
+      { ...ref, target: { ...ref.target, version: ref.target.version + 1 } },
+      { ...ref, target: { ...ref.target, fields: ["privateAmount"] } },
+      { ...ref, target: { ...ref.target, period: { start: "2028-01-01", end: "2028-12-31" } } },
+      { ...ref, installationId: "other-installation" },
+      { ...ref, projectId: "other-project" },
+    ]) {
+      const different = { ...changed, refDigest: "" }
+      different.refDigest = digestSfEvidenceRef(different)
+      deniedEvidence.add(different.refDigest)
+      const selected = { ...sameSource, messages: sameSource.messages.map((message) =>
+        ({ ...message, sourceContext: { ...message.sourceContext, evidenceRefs: [different, ref] } })) }
+      expect(await authority.authorizeThread(selected, context, "read")).toBe(false)
+      deniedEvidence.clear()
+    }
+    // Every later call must reopen source authority even for an identical body.
+    deniedEvidence.add(ref.refDigest)
+    expect(await authority.authorizeThread(sameSource, context, "read")).toBe(false)
+    deniedEvidence.clear()
+    expect(await authority.authorizeThread(sameSource, context, "read")).toBe(true)
     access.delete("author")
     expect(await threads.read(january.value.id, context)).toEqual({ status: "denied", reason: "thread-access-unavailable" })
   } finally {
