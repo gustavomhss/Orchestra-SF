@@ -1,5 +1,6 @@
 import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
 import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
 import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
 import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -87,12 +88,17 @@ if (root && bootstrap) {
       }
       status.textContent = "Escolha a origem autorizada para abri-la."
     }
+    let discussion: ReturnType<typeof createReviewCollaborationView> | undefined
     const view = createMeetingViewFromReads({ reviewRef: value.reviewRef,
       read: async (reference): Promise<PortResult<PreservedReview>> => {
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-read", reviewRef: reference }).toString()
         const found = await privateRead(url), body = found?.body
         if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
           return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
+        if (reference === value.reviewRef && !discussion && typeof value.principalRef === "string" && value.principalRef.trim()) {
+          discussion = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef })
+          root.append(discussion.element)
+        }
         return { status: "ok", value: body.value }
       },
       readComparison: async (reference): Promise<PortResult<ReviewComparisonRead>> => {
@@ -140,7 +146,7 @@ if (root && bootstrap) {
     const selected = value.selectedSection as PreservedReview["sections"][number] | undefined
     const selectedView = selected ? selectedSection(selected, openSource) : undefined
     root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, status, sources)
-    dispose = view.dispose
+    dispose = () => { view.dispose(); discussion?.dispose() }
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
     const client = createReviewPreparationBrowser()
