@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA: 350dfc1bf332fcf1806813231c4aec8a3a45440f (base; este commit contém o primeiro checkpoint de contratos)
+SHA: 071f99fbf0e0005ad4127051b307d23f37ee1e1f (contratos; este commit acrescenta o editor nativo)
 Data: 2026-11-19
 Estado: partial
 
@@ -8,14 +8,18 @@ Estado: partial
 - Expostos os dois leitores originais de proposta privada: `dashboard.dashboard-draft-read` e `dashboard.dashboard-hot-topic-draft-outcome`.
 - Inputs fechados correspondem a `dashboard-http.ts:133-139` e `:88-89`; respostas conservam o envelope original SfDomainDashboardOutput.
 - Ambos são POST de leitura em /dashboard; os IDs são extensões, sem alteração do catálogo congelado de 305 operações.
+- UI54 agora tem editor da proposta privada: seleção humana de caso/fonte reais, save via C08 original, revalidação histórica e comparação base/current/local mais origem atual. A confirmação da nova base começa desmarcada; valores locais continuam intactos até revisão explícita.
+- Falha transitória pausa a escrita e preserva valores; negação real apaga valores. Alteração de identidade do dono limpa o estado; mudança da geração exige nova leitura.
+- A recuperação do primeiro save usa somente seu idempotencyKey original e a rota original de outcome, sem replay. O botão permanece dependente da ligação F02 estrita e da disponibilidade real.
+- CAP02 oferece entrada para uma nova proposta privada; esse botão navega para UI54 e não escreve o registro CAP02.
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
-- UI54: `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:127` precisa ligar a criação/edição privada, revalidação atual e comparação base/current/local; em andamento.
+- UI54: `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/draft.tsx:1` implementado, ainda sem typecheck/gate; revisar tipos e comportamento no composto com o health original.
 - F02: `packages/client/src/sucafina/transport.ts:238` ainda recusa chave em POST de leitura. A recuperação de primeiro save requer somente no novo ID a chave original; WP5 prepara a exceção estrita com negativos. Até lá, resultado desconhecido permanece bloqueado.
 - Disponibilidade: `apps/cli/src/sucafina-product/native-ui/live-context.ts:54` precisa indexar os leitores e observar o handler/C08 original; root cuida do health e nativeReadBinding, sem readiness inventada.
 - Fixture/browser: `test/product/wp02/host-workbench.test.ts:147` e `test/product/dashboard-installed-closure/consumer-read.test.ts:64` ainda navegam no console404. Migrar para instalação nativa3000 conservando todos os fatos e negativos.
-- Contratos ainda sem gate. Não há qualificação de UI ou integração afirmada.
+- Contratos e UI ainda sem gate. Não há qualificação de UI ou integração afirmada.
 
 ## Decisões e justificativas
 - Asserções removidas: nenhuma. Os testes legados não foram apagados ou enfraquecidos.

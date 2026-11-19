@@ -13,6 +13,7 @@ import { SfChangeReview } from "../../../shared/change-review"
 import { SF_STATE_FALLBACK_KEY, sfCommonKey, useSfPresentation } from "../../../shared/frame/presentation"
 import type { SfCopyKey, SfUiState } from "../../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
+import { SfHotTopicPrivateDraft } from "./draft"
 import "../u38.css"
 
 type Key = keyof typeof SF_U38_COPY
@@ -138,10 +139,10 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   const previewIntent = crypto.randomUUID() as SfIntentRef
   const [revision, bump] = createSignal(0)
   const [store, setStore] = createStore<{
-    state: SfUiState; workbench: Workbench | null; review: Review | null
+    state: SfUiState; workbench: Workbench | null; review: Review | null; discovery: unknown
     reason: string | null; preparationBusy: boolean; applyBusy: boolean
     outcome: "none" | "unknown" | "applied" | "rejected"
-  }>({ state: "loading", workbench: null, review: null, reason: null,
+  }>({ state: "loading", workbench: null, review: null, discovery: null, reason: null,
     preparationBusy: false, applyBusy: false, outcome: "none" })
   const reference = () => props.route.params.proposalRef
   const current = () => context.state().status === "ready" ? context.ready() : undefined
@@ -158,7 +159,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     item.changeId === reference()))
   const suggestedPreparation = createMemo(() =>
     store.workbench?.preparations.find((item) => item.draftRef === chosenDraft()?.draftRef))
-  const readState = () => store.state === "ready" && !chosenChange() && !chosenDraft()
+  const readState = () => store.state === "ready" && reference() !== "new" && !chosenChange() && !chosenDraft()
     ? "not-found" as const : store.state
 
   createEffect(() => {
@@ -171,13 +172,13 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       setStore({ state: state.status === "unauthenticated" ? "session-expired" :
         state.status === "denied" || state.status === "context-mismatch" ? "denied" :
         state.status === "unavailable" ? "unavailable" : "loading",
-        workbench: null, review: null, reason: null });return
+        workbench: null, review: null, discovery: null, reason: null });return
     }
     if (!isAdmitted("dashboard.dashboard-workbench")) {
       setStore({ state: "unavailable", workbench: null, review: null, reason: "contract-unavailable" });return
     }
     const abort = new AbortController()
-    setStore({ state: "loading", workbench: null, review: null, reason: null })
+    setStore({ state: "loading", workbench: null, review: null, discovery: null, reason: null })
     void createSfDomainClient(ready.transport)["dashboard.dashboard-workbench"](
       { page: "Hot Topics & Actions" }, { signal: abort.signal })
       .then((response) => {
@@ -194,7 +195,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             workbench: null, reason: "reason" in response.body ? response.body.reason ?? null : null });return
         }
         const verified = decodeWorkbench(response.body.value)
-        setStore({ state: verified ? "ready" : "unavailable", workbench: verified ?? null,
+        setStore({ state: verified ? "ready" : "unavailable", workbench: verified ?? null, discovery: verified ? response.body.value : null,
           reason: verified ? null : "discovery-contract-mismatch" })
       }).catch((error: unknown) => {
         if (!abort.signal.aborted) setStore({ state: "unavailable", workbench: null,
@@ -294,6 +295,10 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u38-page" data-sf-surface="UI54">
+      <Show when={!chosenChange()}>
+        <SfHotTopicPrivateDraft discovery={store.discovery} reference={reference()} denied={store.state === "denied" || store.state === "session-expired"}
+          onSaved={(ref) => { navigate(proposalRoute(props, ref)); bump((count) => count + 1) }} />
+      </Show>
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
         <section class="sf-u38-section">
