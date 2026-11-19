@@ -537,11 +537,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         ]}
         primaryAction={review.actions.includes("approve") && !ui.pending ? {
           id: "approve", labelKey: key("sf.u13.review"), tone: "primary",
-          disabled: ui.phase === "submitting", busy: actionBusy,
+          disabled: !review.actions.includes("approve") || ui.phase === "submitting", busy: actionBusy,
           onInvoke: () => beginReview("approve"),
         } : undefined}
         secondaryActions={review.actions.includes("reject") && !ui.pending ? [{
-          id: "reject", labelKey: key("sf.u13.reject"), tone: "danger", disabled: false,
+          id: "reject", labelKey: key("sf.u13.reject"), tone: "danger",
+          disabled: !review.actions.includes("reject") || ui.phase === "submitting",
           busy: actionBusy, onInvoke: () => beginReview("reject"),
         }] : []}
         sourceActions={[]}

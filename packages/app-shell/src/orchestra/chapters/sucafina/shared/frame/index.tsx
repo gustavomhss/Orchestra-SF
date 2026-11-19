@@ -1,8 +1,17 @@
-import { A } from "@solidjs/router"
+import { getFilename } from "@orchestra/core/util/path"
+import { A, useLocation } from "@solidjs/router"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, onMount, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
+import { chapterPageTitleKey } from "@/context/layout-route"
+import { useGlobal } from "@/context/global"
+import { useLanguage } from "@/context/language"
+import { useLayout } from "@/context/layout"
+import { ServerConnection, serverName, useServer } from "@/context/server"
 import { MxPage } from "@/orchestra/chapters/kit"
+import { navigation } from "@/orchestra/navigation"
+import { displayName } from "@/pages/layout/helpers"
+import { pathKey } from "@/utils/path-key"
 import {
   SfActionButton,
   SfCoverageView,
@@ -29,9 +38,26 @@ export type {
   SfDensity, SfDisplayValue, SfLayoutMode, SfMessage, SfPageFrameProps,
   SfPlotSeries, SfRunStateProps, SfSource, SfStatePanelProps, SfText, SfUiState, SfUnit,
 } from "./types"
+export { SfDisplayValueText } from "./presentation"
 
 // W is the observed *usable content width* after the shell sidebar and page insets.
 // Do not decide from window.innerWidth, device type, or CSS viewport alone.
+function routeLocation() {
+  try {
+    return useLocation()
+  } catch {
+    return undefined
+  }
+}
+
+function shellContext<T>(read: () => T) {
+  try {
+    return read()
+  } catch {
+    return undefined
+  }
+}
+
 export function resolveSfLayoutMode(
   width: number,
   layout: SfPageFrameProps["layout"],
@@ -44,6 +70,45 @@ export function resolveSfLayoutMode(
 export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
   const id = createUniqueId()
   const { t } = useSfPresentation()
+  const language = useLanguage()
+  const location = routeLocation()
+  const layout = shellContext(useLayout)
+  const global = shellContext(useGlobal)
+  const server = shellContext(useServer)
+  const profileName = () => {
+    if (!layout || !global) return ""
+    const selection = layout.home.selection()
+    const conn = global.servers.list().find((item) => ServerConnection.key(item) === selection.server)
+    const directory = selection.directory
+    if (conn && directory) {
+      const key = pathKey(directory)
+      const project = global.ensureServerCtx(conn).projects.list().find((item) =>
+        pathKey(item.worktree) === key || item.sandboxes?.some((sandbox) => pathKey(sandbox) === key))
+      if (project) return displayName(project)
+      return getFilename(directory) || directory
+    }
+    return server ? serverName(conn ?? server.current) : ""
+  }
+  const area = () => {
+    const page = location ? chapterPageTitleKey(location.pathname) : undefined
+    if (page) {
+      const text = language.t(page as Parameters<typeof language.t>[0])
+      if (text !== page) return text
+    }
+    if (!layout) return t(props.titleKey)
+    const route = layout.route()
+    if (route.type === "chapter") {
+      const label = navigation.find((item) => item.id === route.chapter)?.label
+      if (label) return language.t(label)
+    }
+    return t(props.titleKey)
+  }
+  const eyebrow = () => {
+    if (props.eyebrow) {
+      return props.eyebrow.kind === "data" ? props.eyebrow.text : t(props.eyebrow.message.key, props.eyebrow.message.params)
+    }
+    return `\u2068${profileName()}\u2069 · ${area()}`
+  }
   let root: HTMLDivElement | undefined
   const [state, setState] = createStore({ width: 0, mode: "single" as SfLayoutMode })
   let lastNotified: SfLayoutMode | undefined
@@ -127,13 +192,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
         id={`sf-page-${id}`}
         title={t(props.titleKey)}
         description={props.subtitleKey ? t(props.subtitleKey) : ""}
-        eyebrow={
-          props.eyebrow
-            ? props.eyebrow.kind === "data"
-              ? props.eyebrow.text
-              : t(props.eyebrow.message.key, props.eyebrow.message.params)
-            : undefined
-        }
+        eyebrow={eyebrow()}
         action={
           <Show when={props.primaryAction}>
             {(action) => <SfActionButton action={action()} variant="primary" />}

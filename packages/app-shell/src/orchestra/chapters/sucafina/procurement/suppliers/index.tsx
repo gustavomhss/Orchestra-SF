@@ -269,7 +269,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     const query = ui.search.trim().toLocaleLowerCase()
     const filtered = current.value.data.suppliers.filter((item) =>
       (ui.filter === "All" || item.status === ui.filter) &&
-      (!query || [item.number, item.legalName, item.taxId]
+      (!query || [item.number, item.legalName]
         .some((v) => display(v).toLocaleLowerCase().includes(query))),
     )
     if (ui.sort.kind !== "field") return filtered

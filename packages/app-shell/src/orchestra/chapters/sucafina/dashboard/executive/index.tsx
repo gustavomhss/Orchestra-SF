@@ -38,11 +38,27 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value!)
   const monetary = (value: number | undefined | null) => numeric(value)
   const entries = () => data()?.signals ?? []
-  const signals = createMemo(() => [...entries()].sort((a, b) =>
-    Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
-    (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id)))
+  const shownDate = (value: string) => {
+    const iso = value.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return value
+    const date = new Date(iso + "T00:00:00Z")
+    if (!Number.isFinite(date.getTime())) return value
+    return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
+  }
+  const signals = createMemo(() => {
+    const selectedYear = year()
+    const selectedMonth = month()
+    const prefix = selectedYear !== undefined && selectedMonth !== undefined
+      ? String(selectedYear) + "-" + String(selectedMonth).padStart(2, "0")
+      : selectedYear !== undefined ? String(selectedYear) : undefined
+    return [...entries()].filter((signal) => prefix === undefined || signal.date.startsWith(prefix)).sort((a, b) =>
+      Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
+      (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id))
+  })
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
-  const executive = () => byYear() ?? data()?.executive
+  const executive = () => byYear()
+  const unscoped = () => t(key("sf.u02.sourceWarning"))
+  const periodTotals = () => year() === undefined ? data()?.totals : undefined
   const operations = () => {
     const period = year() !== undefined && selected().opsMonth !== undefined ?
       String(year()) + ":" + String(selected().opsMonth) :
@@ -60,8 +76,11 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
   const canEdit = (action: string) => reader.canAction(action, "domain.command.CAP01." + action)
   const stat = (id: string, label: Key, value: number | null | undefined) =>
     <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{numeric(value)}</dd></div>
+  const unscopedStat = (id: string, label: Key) =>
+    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped"><dt>{t(key(label))}</dt><dd>{unscoped()}</dd></div>
   const metricTable = () => {
-    const totals = data()?.totals
+    if (year() !== undefined) return <p role="status">{unscoped()}</p>
+    const totals = periodTotals()
     if (!totals) return <p role="status">{t(key("sf.u02.sourceMissing"))}</p>
     return <div class="sf-u02-table-scroll">
       <table><caption>{t(key("sf.u02.budgetByLine"))}</caption>
@@ -119,10 +138,11 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-financial">
           <h2 id="sf-u02-financial">{t(key("sf.u02.financial"))}</h2>
+          <p role="status">{unscoped()}</p>
           <dl class="sf-u02-stats sf-u02-four">
-            {stat("budget", "sf.u02.budget", data()?.totals?.totalBudget)}
-            {stat("actual", "sf.u02.actual", data()?.totals?.totalActual)}
-            {stat("forecast", "sf.u02.forecast", data()?.totals?.totalForecast)}
+            {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
+            {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
+            {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
             {stat("active", "sf.u02.active", executive()?.active)}
           </dl>
           <p>{t(key("sf.u02.noCurrency"))}</p>
@@ -132,9 +152,9 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
           <h2 id="sf-u02-variance">{t(key("sf.u02.variance"))}</h2>
           <p>{t(key("sf.u02.sourceWarning"))}</p>
           <dl class="sf-u02-stats">
-            {stat("opex-budget", "sf.u02.opex", data()?.totals?.opexBudget)}
-            {stat("capex-budget", "sf.u02.capex", data()?.totals?.capexBudget)}
-            {stat("total-forecast", "sf.u02.forecast", data()?.totals?.totalForecast)}
+            {year() === undefined ? stat("opex-budget", "sf.u02.opex", periodTotals()?.opexBudget) : unscopedStat("opex-budget", "sf.u02.opex")}
+            {year() === undefined ? stat("capex-budget", "sf.u02.capex", periodTotals()?.capexBudget) : unscopedStat("capex-budget", "sf.u02.capex")}
+            {year() === undefined ? stat("total-forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("total-forecast", "sf.u02.forecast")}
           </dl>
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-delivery">
@@ -180,7 +200,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 <th scope="col">{t(key("sf.u02.origin"))}</th><th scope="col">{t(key("sf.u02.priority"))}</th></tr></thead>
               <tbody><For each={signals()}>{(signal) =>
                 <tr><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
-                  <td>{signal.date || missing()}</td><td><bdi>{signal.page + " / " + signal.recordId}</bdi></td>
+                  <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td><td><bdi>{signal.page + " / " + signal.recordId}</bdi></td>
                   <td><button type="button" class="mx-btn" aria-pressed={pinned().has(signal.id)}
                     onClick={() => { const next = new Set(pinned());
                       if (next.has(signal.id)) next.delete(signal.id); else next.add(signal.id);

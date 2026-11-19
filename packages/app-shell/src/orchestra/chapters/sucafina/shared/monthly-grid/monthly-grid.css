@@ -29,7 +29,20 @@
   overscroll-behavior: contain;
   border: 1px solid var(--mx-line);
   border-radius: var(--orchestra-radius-md);
-  background: var(--mx-raised);
+  background-color: var(--mx-raised);
+  background-image:
+    linear-gradient(to right, var(--mx-raised, Canvas), transparent),
+    linear-gradient(to left, var(--mx-raised, Canvas), transparent),
+    linear-gradient(to bottom, var(--mx-raised, Canvas), transparent),
+    linear-gradient(to top, var(--mx-raised, Canvas), transparent),
+    radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent),
+    radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent),
+    radial-gradient(farthest-side at 50% 0, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent),
+    radial-gradient(farthest-side at 50% 100%, color-mix(in srgb, var(--mx-strong, CanvasText) 18%, transparent), transparent);
+  background-position: left, right, top, bottom, left, right, top, bottom;
+  background-size: 20px 100%, 20px 100%, 100% 20px, 100% 20px, 12px 100%, 12px 100%, 100% 12px, 100% 12px;
+  background-repeat: no-repeat;
+  background-attachment: local, local, local, local, scroll, scroll, scroll, scroll;
 }
 .sf-s02-grid {
   display: table;

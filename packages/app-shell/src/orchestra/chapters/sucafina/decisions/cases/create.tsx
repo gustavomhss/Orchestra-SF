@@ -157,7 +157,12 @@ export function SfCreateCase(props: Readonly<{
         setForm({ phase: "unknown", message: "sf.ui33.createDenied" })
         return
       }
-      if (result.kind === "response" && result.body.status === "ok"
+      if (result.kind === "response" && (result.status === 401 || result.status === 403 ||
+        result.body.status === "denied" || result.body.status === "unauthenticated")) {
+        setForm({ phase: "unknown", hasPending: true, message: "sf.ui33.createDenied" })
+        return
+      }
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok"
         && result.body.outputRef && /^case:[^:]+:[^:]+$/.test(result.body.outputRef)) {
         // Only source returned outputRef is authoritative for a new case.
         try { localStorage.removeItem(slot) } catch (error) {
@@ -210,9 +215,10 @@ export function SfCreateCase(props: Readonly<{
         </div>
         <Show when={form.phase === "reviewing"}>
           <div class="sf-n24-review" role="group" aria-label={t("sf.ui33.createReview")}>
-            <p><strong>{t("sf.ui33.objective")}:</strong> <bdi>{form.objective}</bdi></p>
-            <p>{form.start} – {form.end} · <bdi>{form.currency}</bdi></p>
+            <p><strong>{t("sf.ui33.objective")}:</strong> <bdi>{form.objective.trim()}</bdi></p>
+            <p>{form.start} – {form.end} · <bdi>{form.currency.trim()}</bdi></p>
             <ol>{form.criteria.split("\n").map((part) => part.trim()).filter(Boolean).map((criterion) => <li><bdi>{criterion}</bdi></li>)}</ol>
+            <p>sourceRefs: []</p>
           </div>
         </Show>
         <Show when={form.message}><p role="status" aria-live="polite">{t(form.message)}</p></Show>

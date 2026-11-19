@@ -41,6 +41,8 @@ const INITIAL: ViewState = {
   result: null, resultState: "idle", resultFilter: "",
   selectedDetail: null, detail: null, detailState: "idle",
 }
+const UNREADABLE_SOURCE = new Set(["revoked", "missing", "unavailable", "invalid"])
+const SOURCE_STATES = ["fresh", "historical", "stale", "revoked", "replaced", "missing", "invalid", "unavailable"] as const
 const positive = (n: number) => Number.isSafeInteger(n) && n > 0
 const equivalent = (a: CaseRef, b: CaseRef) =>
   a.id === b.id && a.incarnation === b.incarnation && a.version === b.version
@@ -83,7 +85,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   const t = (key: keyof typeof SF_SIMILARITY217_COPY | "sf.u26.version" |
     "sf.u26.period" | "sf.u26.limitations" | "sf.u26.source" |
     "sf.common.loading" | "sf.common.noAccess" | "sf.common.unavailable" |
-    "sf.common.empty" | "sf.common.stale" | "sf.common.invalidLink" |
+    "sf.common.empty" | "sf.common.stale" | "sf.common.invalidLink" | "sf.common.unknown" |
     "sf.common.retry" | "sf.common.loginAgain" | "sf.ui62.title") =>
     language.t(key as Parameters<typeof language.t>[0])
   const k = (key: Parameters<typeof t>[0]) => key as SfCopyKey
@@ -267,8 +269,11 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
         setView("resultState", "stale")
         return
       }
-      setView("result", result)
-      setView("resultState", result.matches.length ? "ready" : "empty")
+      const readable = result.matches.filter((match) =>
+        !match.explanation.sourceStates.some((state) => UNREADABLE_SOURCE.has(state)) &&
+        (view.includeHistorical || !match.explanation.sourceStates.includes("historical")))
+      setView("result", readable.length ? { ...result, matches: readable } : null)
+      setView("resultState", readable.length ? "ready" : "empty")
     } catch (error) {
       if (permitted(generation, signal) && serial === resultSerial) {
         console.error("SF UI62 Atlas recall failed", error)
@@ -276,18 +281,27 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
       }
     }
   }
+  const readableMatches = () => (view.result?.matches ?? []).filter((match) =>
+    !match.explanation.sourceStates.some((state) => UNREADABLE_SOURCE.has(state)) &&
+    (view.includeHistorical || !match.explanation.sourceStates.includes("historical")))
   const filtered = () => {
     const q = view.resultFilter.toLocaleLowerCase().trim()
-    if (!q) return view.result?.matches ?? []
-    return (view.result?.matches ?? []).filter((m) =>
+    const base = readableMatches()
+    if (!q) return base
+    return base.filter((m) =>
       [m.caseRef.id, ...m.explanation.matchedCriteria, ...m.explanation.currentDifferences].some((s) =>
         s.toLocaleLowerCase().includes(q)))
   }
+  const sourceStateLabel = (state: string) =>
+    (SOURCE_STATES as readonly string[]).includes(state)
+      ? t(`sf.u26.similarState.${state}` as keyof typeof SF_SIMILARITY217_COPY)
+      : t("sf.common.unknown")
   const resultsState = (): SfUiState =>
     privacy() !== "ready" ? privacy() :
     view.catalogState !== "ready" && view.catalogState !== "empty" ? view.catalogState === "idle" ? "loading" : view.catalogState :
     view.sourceState === "denied" ? "denied" :
     view.resultState === "idle" ? "ready" :
+    view.resultState === "ready" && readableMatches().length === 0 ? "empty" :
     view.resultState === "ready" && filtered().length === 0 ? "filtered-empty" :
     view.resultState
   const resultsMessage = () =>
@@ -350,11 +364,14 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
                   <option value={candidate.encoded}>{candidate.title} — {candidate.version}</option>}</For>
               </select>
             </label>
-            <Show when={view.sourceState === "loading"}><p role="status">{t("sf.common.loading")}</p></Show>
-            <Show when={view.sourceState === "stale" || view.sourceState === "unavailable" || view.sourceState === "invalid"}>
-              <p role="alert">{t(view.sourceState === "stale" ? "sf.common.stale" :
-                view.sourceState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")}</p>
-              <button type="button" class="mx-btn" onClick={() => { void changeSelected(view.selected) }}>{t("sf.u26.similarRefresh")}</button>
+            <Show when={view.sourceState === "loading" || view.sourceState === "stale" || view.sourceState === "unavailable" || view.sourceState === "invalid"}>
+              <SfStatePanel
+                state={view.sourceState === "loading" ? "loading" : view.sourceState === "stale" ? "stale" : view.sourceState === "invalid" ? "invalid" : "unavailable"}
+                messageKey={k(view.sourceState === "loading" ? "sf.common.loading" :
+                  view.sourceState === "stale" ? "sf.common.stale" :
+                  view.sourceState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")}
+                onRetryRead={view.sourceState === "loading" ? undefined : () => { void changeSelected(view.selected) }}
+              />
             </Show>
             <Show when={view.source}>
               {(original) => <>
@@ -397,7 +414,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
         <SfStatePanel state={resultsState()} messageKey={k(resultsMessage())}
           onRetryRead={privacy() === "ready" ? () =>
             view.resultState !== "idle" && view.source ? void submit() : void loadCatalog(owner.generation()) : undefined}>
-          <Show when={view.result}>
+          <Show when={view.sourceState === "ready" && view.result}>
             {(data) =>
               <section class="sf-memory-section" data-sf-similar-matches>
                 <h2>{t("sf.u26.similarMatches")}</h2>
@@ -416,7 +433,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
                         <dl class="sf-memory-facts">
                           <dt>{t("sf.u26.similarMatched")}</dt><dd>{match.explanation.matchedCriteria.join(", ")}</dd>
                           <dt>{t("sf.u26.similarDifferences")}</dt><dd>{match.explanation.currentDifferences.join(", ") || "—"}</dd>
-                          <dt>{t("sf.u26.similarStates")}</dt><dd>{match.explanation.sourceStates.join(", ")}</dd>
+                          <dt>{t("sf.u26.similarStates")}</dt><dd>{match.explanation.sourceStates.map(sourceStateLabel).join(", ")}</dd>
                           <dt>{t("sf.u26.similarMemoryRecord")}</dt><dd>{match.memoryRecordRef}</dd>
                         </dl>
                         <h3>{t("sf.u26.similarSourceEvidence")}</h3>

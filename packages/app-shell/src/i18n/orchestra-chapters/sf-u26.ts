@@ -66,6 +66,16 @@ export const SF_U26_COPY = {
   "sf.u26.notAttributed": "Not attributed",
   "sf.u26.unknown": "Unknown",
   "sf.u26.unavailable": "Unavailable",
+  "sf.u26.impactState.material": "Material",
+  "sf.u26.impactState.irrelevant": "Irrelevant",
+  "sf.u26.impactState.unknown": "Unknown",
+  "sf.u26.severityValue.reconsider": "Reconsider",
+  "sf.u26.severityValue.unknown": "Unknown",
+  "sf.u26.availability.available": "Available",
+  "sf.u26.availability.unavailable": "Unavailable",
+  "sf.u26.coverage.complete": "Complete",
+  "sf.u26.coverage.partial": "Partial",
+  "sf.u26.coverage.unknown": "Unknown",
 } as const
 
 export const SF_U26_COPY_BR: Readonly<Record<keyof typeof SF_U26_COPY, string>> = {
@@ -135,4 +145,14 @@ export const SF_U26_COPY_BR: Readonly<Record<keyof typeof SF_U26_COPY, string>> 
   "sf.u26.notAttributed": "Não atribuído",
   "sf.u26.unknown": "Desconhecido",
   "sf.u26.unavailable": "Indisponível",
+  "sf.u26.impactState.material": "Material",
+  "sf.u26.impactState.irrelevant": "Irrelevante",
+  "sf.u26.impactState.unknown": "Desconhecido",
+  "sf.u26.severityValue.reconsider": "Reconsiderar",
+  "sf.u26.severityValue.unknown": "Desconhecido",
+  "sf.u26.availability.available": "Disponível",
+  "sf.u26.availability.unavailable": "Indisponível",
+  "sf.u26.coverage.complete": "Completa",
+  "sf.u26.coverage.partial": "Parcial",
+  "sf.u26.coverage.unknown": "Desconhecida",
 }

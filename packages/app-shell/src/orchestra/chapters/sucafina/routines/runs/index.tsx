@@ -14,6 +14,7 @@ import {
   n29ContextState, n29Key, n29Permitted, n29ResponseState,
   n29SameAuthority, n29StateKey, useN29Copy,
 } from "../catalog/ui"
+import { StatusText } from "../../reviews/labels"
 import "./runs.css"
 
 type Routine = (typeof SfRoutineResult)["Type"]
@@ -188,13 +189,13 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
     return { kind: "run" as const, runRef: result.runRef as SfRef, task, inputVersion: result.admissionVersion }
   }
   const nativeRunPhase = (): SfRunPhase => {
-    if (view.mode !== "projection" || !view.proof?.execution) return "ready"
+    if (view.mode !== "projection" || !view.proof?.execution) return "unavailable"
     const { state } = view.proof.execution
     if (state === "completed") return view.proof.verifier === "verified" ? "complete" : "unavailable"
     if (state === "cancelled") return "cancelled"
     if (state === "failed") return "failed"
     if (state === "preparing") return "running"
-    return "queued"
+    return "unavailable"
   }
 
   return (
@@ -241,13 +242,13 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                   <h2>{t("sf.u27.status")}</h2>
                   <Show when={identity()} fallback={
                     <SfRunState identity={{ kind: "unadmitted", task: runTask() }}
-                      state={source().admission === "admitted" ? "ready" : "needs-input"}
+                      state={source().admission === "admitted" ? "unavailable" : "needs-input"}
                       actions={[]} onOpen={() => undefined} />
                   }>
                     {(run) => <SfRunState identity={run()} state={nativeRunPhase()}
                       actions={[]} onOpen={() => undefined} />}
                   </Show>
-                  <p>{t("sf.u27.admission")}: <bdi>{source().admission}</bdi></p>
+                  <p>{t("sf.u27.admission")}: <StatusText value={source().admission} /></p>
                   <p>{t("sf.u27.correlation")}: <bdi>{source().correlationId}</bdi></p>
                   <Show when={source().runRef}>
                     <p>{t("sf.u27.runRef")}: <bdi>{source().runRef}</bdi></p>
@@ -261,10 +262,10 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                   <Show when={view.mode === "projection" && view.proof}
                     fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
                     {(proof) => <>
-                      <p><strong>{t("sf.u27.verifier")}:</strong> <bdi>{proof().verifier}</bdi></p>
+                      <p><strong>{t("sf.u27.verifier")}:</strong> <StatusText value={proof().verifier} /></p>
                       <Show when={proof().execution} fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
                         {(receipt) => <>
-                          <p><strong>{t("sf.u27.phase")}:</strong> <bdi>{receipt().state}</bdi></p>
+                          <p><strong>{t("sf.u27.phase")}:</strong> <StatusText value={receipt().state} /></p>
                           <p><strong>{t("sf.u27.revision")}:</strong> <bdi>{receipt().revision}</bdi></p>
                         </>}
                       </Show>
@@ -283,8 +284,8 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                 </section>
                 <section class="mx-card" aria-label={t("sf.u27.pending")}>
                   <h2>{t("sf.u27.pending")}</h2>
-                  <Show when={source().pending.length} fallback={<p>{t("sf.common.empty")}</p>}>
-                    <ul><For each={source().pending}>{(item) => <li><bdi>{item}</bdi></li>}</For></ul>
+                  <Show when={source().pending.length} fallback={<SfStatePanel state="empty" messageKey={n29StateKey("empty")} />}>
+                    <ul><For each={source().pending}>{(item) => <li><StatusText value={item} /></li>}</For></ul>
                   </Show>
                 </section>
                 <section class="mx-card" aria-label={t("sf.u27.resultRef")}>

@@ -16,6 +16,7 @@ import {
 } from "../../shared/change-review"
 import { SfReceiptView, type SfReceipt } from "../../shared/receipt"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
+import { sfOperationReady } from "../cases/model"
 import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
 import {
@@ -144,7 +145,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const current = selected()
     const data = view.caseData
     const ready = owner.ready()
-    if (!current || !data || !ready || view.busy || view.outcomeUnknown ||
+    if (!current || !data || !ready || !operationGranted("decisions.decision-review") || view.busy || view.outcomeUnknown ||
       !["ready", "partial"].includes(active())) return
     const generation = owner.generation()
     const fence = ++mutationFence
@@ -193,11 +194,27 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
             field[side === "before" ? "beforeCurrency" : "afterCurrency"] : ""),
       ),
     })) ?? []
+  const commandFields = (): readonly SfReviewField[] => {
+    const review = view.review
+    const data = view.caseData
+    if (!review || !data) return []
+    const field = (path: string, value: string | number): SfReviewField => ({
+      path, label: { key: u18Key("sf.u18.changes.target"), params: { field: path } }, value: u18Text(value),
+    })
+    return [
+      field("caseRef.id", data.id), field("caseRef.incarnation", data.incarnation), field("caseRef.version", data.version),
+      field("choiceId", review.choiceId), field("changeId", review.changeId), field("reviewDigest", review.reviewDigest),
+    ]
+  }
+  const operationGranted = (operationId: string) => {
+    const ready = owner.ready()
+    return !!ready && sfOperationReady(ready.context, operationId)
+  }
   const reviewAllowed = () => {
     const change = selected()
     const review = view.review
     const data = view.caseData
-    return !!(change && review && data &&
+    return !!(change && review && data && operationGranted("decisions.decision-apply") &&
       review.state === "planned" && change.state === "planned" &&
       change.caseVersion === data.version &&
       review.expectedVersion === change.expectedVersion &&
@@ -235,7 +252,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const change = selected()
     const data = view.caseData
     const ready = owner.ready()
-    if (!reviewAllowed() || !r || !change || !data || !ready) return
+    if (!reviewAllowed() || !r || !change || !data || !ready || !operationGranted("decisions.decision-apply")) return
     const controller = new AbortController()
     writeAbort = controller
     const fence = ++mutationFence
@@ -249,7 +266,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         { signal: controller.signal, idempotencyKey: operationRef },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
-      if (result.kind === "response" && result.body.status === "ok") {
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
         const value = result.body.value
         setView({
           applyOutcome: value, review: null,
@@ -277,7 +294,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     const change = selected()
     const data = view.caseData
     const ready = owner.ready()
-    if (!change || !data || !ready || view.busy || privateState()) return
+    if (!change || !data || !ready || view.busy || privateState() || !operationGranted("decisions.decision-recover")) return
     const controller = new AbortController()
     writeAbort = controller
     const generation = owner.generation()
@@ -291,9 +308,9 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         { signal: controller.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
-      if (result.kind === "response" && result.body.status === "ok") {
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
         setView({ applyOutcome: result.body.value, outcomeUnknown: false,
-          state: result.body.value.outcome === "applied" ? "ready" : "partial" })
+          state: result.body.value.outcome === "applied" ? "ready" : result.body.value.outcome === "conflict" ? "conflict" : "partial" })
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)
@@ -373,7 +390,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                 </Show>
                 <Show when={!view.review && !view.outcomeUnknown}>
                   <button type="button" class="mx-btn primary"
-                    disabled={view.busy || change().state !== "planned" || active() !== "ready"}
+                    disabled={view.busy || !operationGranted("decisions.decision-review") || change().state !== "planned" || active() !== "ready"}
                     onClick={() => void requestReview()}>
                     {t("sf.u18.changes.review")}
                   </button>
@@ -392,14 +409,13 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                     version: review().expectedVersion, fields: producerFields("before") }}
                   proposed={{ kind: "draft", intentRef: view.reviewIntent as SfIntentRef,
                     sourceRef: u18Ref(change().target.id),
-                    sourceVersion: review().expectedVersion, fields: producerFields("after") }}
+                    sourceVersion: review().expectedVersion, fields: [...commandFields(), ...producerFields("after")] }}
                   effects={effects()} coverage={coverage()}
                   blockingReasons={reviewAllowed() ? [] : [u18Message("sf.u18.changes.stale")]}
                   confirmation={confirmation()} state={active()}
                   onConfirm={() => void apply()}
                   onRevise={() => setView("review", null)}
                   onCancel={() => setView("review", null)}
-                  onReconcile={() => void reconcile()}
                 />}
               </Show>
               <Show when={view.applyOutcome}>
@@ -421,7 +437,6 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   producerStatus={receipts().length ? { kind: "receipt-found" } : { kind: "pending" }}
                   effects={effects()} receipts={receipts()}
                   state={view.outcomeUnknown ? "outcome-unknown" : active()}
-                  onReconcileRead={() => void reconcile()}
                 />
               </Show>
               <Show when={view.outcomeUnknown}>
@@ -434,8 +449,9 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     </SfStatePanel>
     <Show when={view.outcomeUnknown && active() === "outcome-unknown"}>
       <button type="button" class="mx-btn"
-        disabled={view.busy} onClick={() => void reconcile()}>
-        {t("sf.u18.receipts.reconcile")}
+        disabled={view.busy || !operationGranted("decisions.decision-recover")}
+        onClick={() => void reconcile()}>
+        decisions.decision-recover
       </button>
     </Show>
   </SfPageFrame>

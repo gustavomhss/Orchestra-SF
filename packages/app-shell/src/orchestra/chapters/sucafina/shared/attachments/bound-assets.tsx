@@ -1,7 +1,10 @@
 import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfFilesClient, readSfFilesSignedAssetQuery } from "@orchestra/client/sucafina/files"
+import { useLanguage } from "@/context/language"
 import { useSfContext } from "../../context"
+import { SfStatePanel } from "../states"
+import type { SfCopyKey } from "../frame/types"
 
 /**
  * WS-7: UI adapter to the ORIGINAL A06 source asset producer.
@@ -49,9 +52,9 @@ const safeRef = (value: unknown): value is string =>
 const assetRef = (value: unknown): string | undefined =>
   safeRef(value) ? value : typeof value === "number" && Number.isSafeInteger(value) && value >= 0
     ? String(value) : undefined
-const assetName = (asset: PublicAsset): string =>
+const assetName = (asset: PublicAsset): string | undefined =>
   typeof asset.name === "string" && asset.name.trim() && !/[\x00-\x1f\x7f]/.test(asset.name)
-    ? asset.name : assetRef(asset.id) ?? "Unidentified attachment"
+    ? asset.name : assetRef(asset.id)
 export function sfAssetFileAdmissible(file: Pick<File, "name" | "size" | "type">): boolean {
   const extension = file.name.split(".").pop()?.toLowerCase() ?? ""
   return file.name.length > 0 && file.name.length <= 255 && !/[\\/\"\x00-\x1f\x7f]/.test(file.name) &&
@@ -63,13 +66,37 @@ type Scope = Readonly<{
 }>
 type Phase = "idle" | "selected" | "sending" | "checking" | "accepted" |
   "unavailable" | "blocked" | "denied" | "stale" | "outcome-unknown"
+type BoundKey =
+  | "orchestra.sf.s04.bound.blockedSize"
+  | "orchestra.sf.s04.bound.blockedSelection"
+  | "orchestra.sf.s04.bound.sending"
+  | "orchestra.sf.s04.bound.readFailed"
+  | "orchestra.sf.s04.bound.unconfirmed"
+  | "orchestra.sf.s04.bound.accepted"
+  | "orchestra.sf.s04.bound.rejected"
+  | "orchestra.sf.s04.bound.stale"
+  | "orchestra.sf.s04.bound.denied"
+  | "orchestra.sf.s04.bound.unavailable"
+  | "orchestra.sf.s04.bound.noReference"
+  | "orchestra.sf.s04.bound.checking"
+  | "orchestra.sf.s04.bound.referenceGone"
+  | "orchestra.sf.s04.bound.signature"
+  | "orchestra.sf.s04.bound.downloadDenied"
+  | "orchestra.sf.s04.bound.downloaded"
 export function SfBoundAssets(props: SfBoundAssetProps) {
   const sf = useSfContext()
+  const language = useLanguage()
+  const t = (value: BoundKey | "orchestra.sf.s04.bound.unidentified" | "orchestra.sf.s04.bound.empty" |
+    "orchestra.sf.s04.bound.refUnavailable" | "orchestra.sf.s04.bound.ref" | "orchestra.sf.s04.bound.download" |
+    "orchestra.sf.s04.bound.admissionClosed" | "orchestra.sf.s04.bound.attach" | "orchestra.sf.s04.bound.selected" |
+    "orchestra.sf.s04.bound.admit" | "orchestra.sf.s04.bound.reread",
+    params?: Record<string, string | number>) =>
+    language.t(value as Parameters<typeof language.t>[0], params)
   const inputId = createUniqueId()
   const [ui, setUi] = createStore({
     file: undefined as File | undefined,
     phase: "idle" as Phase,
-    detail: "",
+    detail: "" as BoundKey | "",
     busy: false,
   })
   let controller = new AbortController()
@@ -118,7 +145,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     begin()
     if (!file) { setUi({ file: undefined, phase: "idle", detail: "" }); return }
     if (!sfAssetFileAdmissible(file)) {
-      setUi({ file: undefined, phase: "blocked", detail: "Invalid extension, MIME or size (maximum 25 MiB). Nothing was uploaded." })
+      setUi({ file: undefined, phase: "blocked", detail: "orchestra.sf.s04.bound.blockedSize" })
       return
     }
     setUi({ file, phase: "selected", detail: "" })
@@ -130,15 +157,15 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     const ready = sf.ready()
     if (!file || !snapshot || !ready || !upload || !canAdmit() || ui.busy ||
         !sfAssetFileAdmissible(file)) {
-      setUi({ phase: "blocked", detail: "No authorized file selection or current record version." })
+      setUi({ phase: "blocked", detail: "orchestra.sf.s04.bound.blockedSelection" })
       return
     }
     const signal = begin()
-    setUi({ phase: "sending", busy: true, detail: "Awaiting server admission and malware scan…" })
+    setUi({ phase: "sending", busy: true, detail: "orchestra.sf.s04.bound.sending" })
     let bytes: Uint8Array
     try { bytes = new Uint8Array(await file.arrayBuffer()) }
     catch {
-      if (current(snapshot) && !signal.aborted) setUi({ busy: false, phase: "unavailable", detail: "Could not read the selected file." })
+      if (current(snapshot) && !signal.aborted) setUi({ busy: false, phase: "unavailable", detail: "orchestra.sf.s04.bound.readFailed" })
       return
     }
     if (signal.aborted || !current(snapshot) || ui.file !== file ||
@@ -152,22 +179,22 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     if (response.kind === "transport-error") {
       setUi({ busy: false, file: undefined,
         phase: response.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable",
-        detail: "Admission was not confirmed. Refresh the source before any new attempt." })
+        detail: "orchestra.sf.s04.bound.unconfirmed" })
       return
     }
     if (response.status >= 200 && response.status < 300 && response.body.ok === true) {
       // Even a producer receipt is not proof that the next authorized read sees the ref.
       setUi({ busy: false, file: undefined, phase: "accepted",
-        detail: "Scanner accepted the file. Re-reading the linked source and its version…" })
+        detail: "orchestra.sf.s04.bound.accepted" })
       props.onReconcile()
       return
     }
     setUi({ busy: false, file: undefined,
       phase: response.status === 403 ? "denied" : response.status === 409 ? "stale" :
         response.status === 422 ? "blocked" : "unavailable",
-      detail: response.status === 422 ? "The server rejected this file (scanner, type or configured limit)." :
-        response.status === 409 ? "Record version changed. Refresh before uploading." :
-        response.status === 403 ? "The server denied attachment admission." : "Attachment admission is unavailable." })
+      detail: response.status === 422 ? "orchestra.sf.s04.bound.rejected" :
+        response.status === 409 ? "orchestra.sf.s04.bound.stale" :
+        response.status === 403 ? "orchestra.sf.s04.bound.denied" : "orchestra.sf.s04.bound.unavailable" })
   }
   const download = async (id: string, name: string) => {
     const snapshot = scope()
@@ -175,21 +202,21 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     if (!snapshot || !ready || ui.busy || !portReady("files.asset.link") ||
         !portReady("files.asset.download") ||
         !props.assets.some((asset) => assetRef(asset.id) === id)) {
-      setUi({ phase: "denied", detail: "No currently authorized attachment reference." })
+      setUi({ phase: "denied", detail: "orchestra.sf.s04.bound.noReference" })
       return
     }
     const signal = begin()
-    setUi({ busy: true, phase: "checking", detail: "Checking current source and signed link…" })
+    setUi({ busy: true, phase: "checking", detail: "orchestra.sf.s04.bound.checking" })
     const client = createSfFilesClient(ready.transport)
     const link = await client["files.asset.link"]({ surface: props.surface, assetId: id }, { signal })
     if (signal.aborted || !current(snapshot)) return
     if (link.kind !== "response" || link.status !== 200 || link.body.ok !== true) {
-      setUi({ busy: false, phase: "denied", detail: "This reference is no longer available to this principal." })
+      setUi({ busy: false, phase: "denied", detail: "orchestra.sf.s04.bound.referenceGone" })
       return
     }
     const signed = readSfFilesSignedAssetQuery(link.body.query)
     if (!signed || signed.assetId !== id || !current(snapshot)) {
-      setUi({ busy: false, phase: "unavailable", detail: "Invalid or mismatched source signature." })
+      setUi({ busy: false, phase: "unavailable", detail: "orchestra.sf.s04.bound.signature" })
       return
     }
     const result = await client["files.asset.download"]({
@@ -200,7 +227,7 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     if (result.kind !== "response" || result.status !== 200 ||
         !(result.body instanceof Uint8Array) || !result.body.byteLength ||
         !props.assets.some((asset) => assetRef(asset.id) === id)) {
-      setUi({ busy: false, phase: "denied", detail: "Download denied, revoked or incomplete." })
+      setUi({ busy: false, phase: "denied", detail: "orchestra.sf.s04.bound.downloadDenied" })
       return
     }
     // Private bytes are never rendered as HTML or retained as a reusable href.
@@ -210,46 +237,47 @@ export function SfBoundAssets(props: SfBoundAssetProps) {
     anchor.download = name.replace(/[\\/\x00-\x1f\x7f]/g, "_").slice(0, 180)
     anchor.click()
     requestAnimationFrame(() => URL.revokeObjectURL(href))
-    setUi({ busy: false, phase: "idle", detail: "Downloaded from a fresh authorized source link." })
+    setUi({ busy: false, phase: "idle", detail: "orchestra.sf.s04.bound.downloaded" })
   }
 
+  const label = (asset: PublicAsset) => assetName(asset) ?? t("orchestra.sf.s04.bound.unidentified")
   return <div class="sf-bound-assets" data-sf-asset-record={props.recordRef} data-sf-asset-phase={ui.phase}>
-    <Show when={props.assets.length} fallback={<p>No admitted attachments are linked to this record.</p>}>
+    <Show when={props.assets.length} fallback={<SfStatePanel state="empty" messageKey={"orchestra.sf.s04.bound.empty" as SfCopyKey} />}>
       <ul><For each={props.assets}>{(asset) => {
         const id = assetRef(asset.id)
-        const name = assetName(asset)
+        const name = label(asset)
         return <li>
           <span>{name}</span>
-          <Show when={id} fallback={<span> · Source reference unavailable</span>}>
+          <Show when={id} fallback={<span>{" · "}{t("orchestra.sf.s04.bound.refUnavailable")}</span>}>
             {(ref) => <>
-              <span> · ref: {ref()}</span>
+              <span>{" · "}{t("orchestra.sf.s04.bound.ref", { ref: ref() })}</span>
               <button type="button" class="mx-btn" disabled={ui.busy || !portReady("files.asset.link") ||
                 !portReady("files.asset.download") || !scope()}
-                onClick={() => { void download(ref(), name) }}>Download (verify access)</button>
+                onClick={() => { void download(ref(), name) }}>{t("orchestra.sf.s04.bound.download")}</button>
             </>}
           </Show>
         </li>
       }}</For></ul>
     </Show>
-    <Show when={props.uploadKind} fallback={<p>Admission is not available at this source stage. No file was marked clean.</p>}>
+    <Show when={props.uploadKind} fallback={<p>{t("orchestra.sf.s04.bound.admissionClosed")}</p>}>
       <div class="sf-bound-assets-admit">
-        <label for={inputId}>Attach a source document (server scan required)</label>
+        <label for={inputId}>{t("orchestra.sf.s04.bound.attach")}</label>
         <input id={inputId} type="file" accept=".pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx"
           disabled={!canAdmit() || ui.busy} onChange={(event) => {
             const file = event.currentTarget.files?.[0]
             event.currentTarget.value = ""
             choose(file)
           }} />
-        <Show when={ui.file}><p>Selected: {ui.file?.name} ({ui.file?.size} bytes); not yet admitted.</p></Show>
+        <Show when={ui.file}>{(file) => <p>{t("orchestra.sf.s04.bound.selected", { name: file().name, bytes: file().size })}</p>}</Show>
         <button type="button" class="mx-btn primary" disabled={!ui.file || !canAdmit() || ui.busy}
-          onClick={() => { void admit() }}>Admit / scan / link (version {props.recordVersion})</button>
+          onClick={() => { void admit() }}>{t("orchestra.sf.s04.bound.admit", { version: props.recordVersion })}</button>
       </div>
     </Show>
-    <Show when={ui.detail}><p role={ui.phase === "denied" || ui.phase === "blocked" ||
-      ui.phase === "stale" || ui.phase === "outcome-unknown" ? "alert" : "status"}>{ui.detail}</p></Show>
+    <Show when={ui.detail}>{(detail) => <p role={ui.phase === "denied" || ui.phase === "blocked" ||
+      ui.phase === "stale" || ui.phase === "outcome-unknown" ? "alert" : "status"}>{t(detail() as Parameters<typeof t>[0])}</p>}</Show>
     <Show when={ui.phase === "stale" || ui.phase === "outcome-unknown" || ui.phase === "accepted"}>
       <button type="button" class="mx-btn" disabled={ui.busy} onClick={props.onReconcile}>
-        Re-read record and asset references
+        {t("orchestra.sf.s04.bound.reread")}
       </button>
     </Show>
   </div>

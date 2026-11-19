@@ -7,14 +7,13 @@ import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { decodeVendorContractsPage, vendorRef, vendorVersion } from "./model"
 import {
-  decodeRequestsPage, isPoWritable, poFromRecord, requestRef, requestVersion, validatePo,
-  type SfPoEdit, type SfRequestsRead,
+  decodeRequestsPage, isPoWritable, requestRef, requestVersion,
+  type SfRequestsRead,
 } from "../requests/model"
 
 type Ready = Extract<SfRequestsRead, { kind: "ready" }>
 type Review = Readonly<{
   request: SfRef; requestVersion: number; oldRef: string; contractRef: string
-  po: SfPoEdit
 }>
 type Scope = Readonly<{
   epoch: number; owner: string; stamp: string; contract: string; version: number
@@ -146,13 +145,12 @@ export function SfContractRequestLinks(props: Props) {
     const ref = row && requestRef(row)
     if (!row || !row.po || !ref) return
     const version = requestVersion(source, ref)
-    const po = { ...poFromRecord(row), contractRef: props.contractRef }
-    if (version === undefined || !validatePo(po) || !props.contractRef) {
-      setState({ status: "stale", notice: "Missing current PO fields or source version. No write dispatched." })
+    if (version === undefined || !props.contractRef) {
+      setState({ status: "stale", notice: "Missing current source version. No write dispatched." })
       return
     }
     setState({ review: { request: ref, requestVersion: version,
-      oldRef: row.po.contractRef ?? "", contractRef: props.contractRef, po },
+      oldRef: row.po.contractRef ?? "", contractRef: props.contractRef },
       status: "reviewing", notice: "" })
   }
   const confirmLink = async () => {
@@ -198,7 +196,7 @@ export function SfContractRequestLinks(props: Props) {
     setState("notice", "Submitting source-version-bound PO contract relation…")
     const result = await createSfProcurementClient(ready.transport)["domain.command.CAP25.save"]({
       page: "Requests", action: "save", id: review.request, version: review.requestVersion,
-      values: { po: review.po },
+      values: { po: { contractRef: review.contractRef } },
     }, { signal, idempotencyKey: crypto.randomUUID() })
     if (signal.aborted || !current(expected)) return
     if (result.kind === "transport-error") {
@@ -251,8 +249,8 @@ export function SfContractRequestLinks(props: Props) {
           onClick={reviewLink}>Review source link</button>
       </Show>
       <Show when={state.review}>{(review) => <div data-sf-contract-link-review="true">
-        <p>Review: {review().request} (version {review().requestVersion}), existing contract reference:
-          {review().oldRef || "none"} → {review().contractRef}. This uses the source PO save, not a client-only tag.</p>
+        <p>Review: {review().request} (version {review().requestVersion}), contract reference:
+          {review().oldRef || "none"} → {review().contractRef}. Only this contract reference is submitted.</p>
         <button type="button" class="mx-btn primary" disabled={state.busy || props.disabled}
           onClick={() => { void confirmLink() }}>Confirm contract link</button>
         <button type="button" class="mx-btn" disabled={state.busy}

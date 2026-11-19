@@ -1,3 +1,4 @@
+import { useNavigate } from "@solidjs/router"
 import { For, Show, type JSX } from "solid-js"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
@@ -6,6 +7,7 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame"
+import { sfEntryDestinationRequest } from "../../navigation-state"
 import { createPeopleSession } from "../structure/session"
 import "../structure/people.css"
 
@@ -19,6 +21,7 @@ const key = (value: string) => value as SfCopyKey
  */
 export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Element {
   const { t } = useSfPresentation()
+  const navigate = useNavigate()
   const session = createPeopleSession<HeadcountData>("CAP06", () => props.route.href,
     (transport, signal) => {
       const selection = {
@@ -38,6 +41,7 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
       item.family === "domain-read" && item.resource === "CAP07")
     return !destination?.canRead || resource?.state === "denied"
   }
+  const structureHref = () => structureDenied() ? undefined : sfEntryDestinationRequest(props.route, "CAP07")
   const metric = (labelKey: string, value: string | number | undefined) => (
     <Show when={value !== undefined}>
       <div class="sf-people-stat">
@@ -63,15 +67,14 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
           value: { kind: "data", text: String(snapshot()!.value.selection.year ?? "") } },
       ] : []}
       tabs={[]} activeTab={null}
-      // A valid CAP07 route/permission does not supply an owner-bound SfHref.
-      // Keep this action fail-closed until I00/132 installs the public builder
-      // and native transition; report an actual denied destination as denied.
-      primaryAction={{
+      primaryAction={structureHref() ? {
         id: "open-team-structure", labelKey: key("sf.cap06.primary"),
-        tone: "primary", disabled: true, busy: false,
-        reasonKey: sfCommonKey(structureDenied() ? "sf.common.noAccess" : "sf.common.unavailable"),
-        onInvoke: () => undefined,
-      }}
+        tone: "primary", disabled: false, busy: false,
+        onInvoke: () => {
+          const href = structureHref()
+          if (href) navigate(href)
+        },
+      } : undefined}
       secondaryActions={[]} density="comfortable" layout="reading"
       onLayoutMode={() => undefined}
     >

@@ -69,6 +69,10 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     "sf.common.filterEmpty" | "sf.common.stale" | "sf.common.invalidLink" |
     "sf.common.loginAgain" | "sf.common.retry" | "sf.common.currentSource") => value as SfCopyKey
   const t = (value: keyof typeof SF_U26_COPY) => language.t(value as Parameters<typeof language.t>[0])
+  const closed = (prefix: "sf.u26.impactState" | "sf.u26.severityValue" | "sf.u26.availability" | "sf.u26.coverage", value: string) => {
+    const name = `${prefix}.${value}` as keyof typeof SF_U26_COPY
+    return name in SF_U26_COPY ? t(name) : t("sf.u26.unknown")
+  }
   const [view, setView] = createStore<MemoryViewState>({
     caseId: "", incarnation: "", versionText: "", ...EMPTY,
   })
@@ -325,7 +329,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
                   <ul class="sf-memory-list">
                     <For each={view.signals}>{(signal) => <li>
                       <div><strong>{signal.label}</strong>
-                        <small>{t("sf.u26.materiality")}: {signal.impact.state} · {t("sf.u26.action")}: {signal.action}</small>
+                        <small>{t("sf.u26.materiality")}: {closed("sf.u26.impactState", signal.impact.state)} · {t("sf.u26.action")}: {signal.action}</small>
                         <p>{signal.impact.reason}</p>
                         <small>{t("sf.u26.evidence")}: {signal.impact.current.length}</small>
                       </div>
@@ -345,19 +349,19 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
                 <h2>{t("sf.u26.materiality")}</h2>
                 <dl class="sf-memory-facts">
                   <dt>{t("sf.u26.condition")}</dt><dd>{data().snapshot.condition.id}</dd>
-                  <dt>{t("sf.u26.impact")}</dt><dd>{data().impact.state}</dd>
+                  <dt>{t("sf.u26.impact")}</dt><dd>{closed("sf.u26.impactState", data().impact.state)}</dd>
                   <dt>{t("sf.u26.reason")}</dt><dd>{data().impact.reason}</dd>
                   <dt>{t("sf.u26.source")}</dt><dd>{data().scope.source.type}: {data().scope.source.id}</dd>
                   <dt>{t("sf.u26.version")}</dt><dd>{data().scope.source.version}</dd>
                   <dt>{t("sf.u26.period")}</dt><dd>{data().scope.period.start} – {data().scope.period.end}</dd>
                   <dt>{t("sf.u26.fields")}</dt><dd>{data().scope.fields.join(", ")}</dd>
                   <dt>{t("sf.u26.observedAt")}</dt><dd>{data().scope.source.observedAt}</dd>
-                  <dt>{t("sf.u26.changed")}</dt><dd>{data().snapshot.change.availability}</dd>
+                  <dt>{t("sf.u26.changed")}</dt><dd>{closed("sf.u26.availability", data().snapshot.change.availability)}</dd>
                   <dt>{t("sf.u26.before")}</dt><dd>{data().snapshot.change.before.length}</dd>
                   <dt>{t("sf.u26.after")}</dt><dd>{data().snapshot.change.after.length}</dd>
                 </dl>
                 <Show when={data().signal}>{(signal) => (
-                  <p role="status">{t("sf.u26.severity")}: {signal().severity} · {signal().reason}</p>
+                  <p role="status">{t("sf.u26.severity")}: {closed("sf.u26.severityValue", signal().severity)} · {signal().reason}</p>
                 )}</Show>
                 <p>{t("sf.u26.causality")}</p>
                 <p class="sf-memory-help">{t("sf.u26.selectionRequired")}</p>
@@ -379,7 +383,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
                   <dt>{t("sf.u26.delta")}</dt><dd>{data().delta}</dd>
                   <dt>{t("sf.u26.cutoff")}</dt><dd>{data().cutoff}</dd>
                   <dt>{t("sf.u26.period")}</dt><dd>{data().period.start} – {data().period.end}</dd>
-                  <dt>{t("sf.u26.coverage")}</dt><dd>{data().compatibility.coverage}</dd>
+                  <dt>{t("sf.u26.coverage")}</dt><dd>{closed("sf.u26.coverage", data().compatibility.coverage)}</dd>
                   <dt>{t("sf.u26.source")}</dt><dd>{data().sourceRefs.map((ref) => ref.refId).join(", ")}</dd>
                   <dt>{t("sf.u26.history")}</dt><dd>{data().baselineRefs.map((ref) => ref.refId).join(", ")}</dd>
                 </dl>

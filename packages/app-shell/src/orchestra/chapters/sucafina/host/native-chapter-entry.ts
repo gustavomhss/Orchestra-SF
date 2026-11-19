@@ -8,7 +8,7 @@ const entries: Readonly<Record<SfNativeChapterId, string>> = {
   "sf-people": "/orchestra/sf-people/overview",
   "sf-operations": "/orchestra/sf-operations/service",
   "sf-portfolio": "/orchestra/sf-portfolio/overview",
-  "sf-procurement": "/orchestra/sf-procurement/overview",
+  "sf-procurement": "/orchestra/sf-procurement/requests",
   "sf-planner": "/orchestra/sf-planner/overview",
   "sf-home": "/orchestra/sf-home",
   "sf-work": "/orchestra/sf-work",
@@ -17,7 +17,7 @@ const entries: Readonly<Record<SfNativeChapterId, string>> = {
   "sf-reviews": "/orchestra/sf-reviews/agenda",
   "sf-imports": "/orchestra/sf-imports/new",
   "sf-documents": "/orchestra/sf-documents",
-  "sf-memory": "/orchestra/sf-memory",
+  "sf-memory": "/orchestra/sf-memory/signals",
   "sf-routines": "/orchestra/sf-routines",
 }
 
@@ -147,7 +147,7 @@ export function requestSfNativeChapterNavigation(request: Request): Promise<SfNa
   return live ? live(request) : Promise.resolve("unmounted")
 }
 
-/** A failed live-owner transition never falls back to a raw route. */
+/** A failed or unmounted live-owner transition never falls back to a raw route. */
 export async function openSfNativeChapter(request: Request, deps: Readonly<{
   request: (request: Request) => Promise<SfNativeChapterNavigationResult>
   confirmExit: () => Promise<boolean>
@@ -155,12 +155,9 @@ export async function openSfNativeChapter(request: Request, deps: Readonly<{
   selectProfile: () => void
   navigate: (href: string) => void
 }>): Promise<void> {
-  const href = sfNativeChapterEntry(request.chapter)
-  if (!href) return
+  if (!sfNativeChapterEntry(request.chapter)) return
   const result = await deps.request(request)
-  if (result !== "unmounted" && result !== "profile-mismatch") return
-  if (result === "profile-mismatch" && !(await deps.confirmExit())) return
+  if (result === "committed" || result === "blocked") return
+  if (!(await deps.confirmExit())) return
   if (!deps.sameProfile()) return
-  deps.selectProfile()
-  deps.navigate(href)
 }

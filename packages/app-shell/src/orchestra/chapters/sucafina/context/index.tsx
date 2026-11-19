@@ -92,6 +92,14 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
         item.contractRevision === "sf-native-ui/1",
       )
       if (!choices.length) {
+        if (discoveryDenied(discovery) || (!changingSelection && prior.status === "denied")) {
+          const lostDrafts = current?.drafts.dirty() === true
+          current?.drafts.revoke("access-revoked")
+          current = undefined
+          publish(generation, { status: "denied", selection })
+          if (lostDrafts) notifyDraftRevoked()
+          return
+        }
         current?.drafts.revoke("owner-changed")
         current = undefined
         fail(generation, selection, "installation-unavailable")
@@ -218,6 +226,14 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
       publish(generation, { status: "ready", selection, owner: renewedIdentity, ownerKey: renewedKey, binding, context: fresh }, current)
     } catch (error) {
       if (abort.signal.aborted || disposed || generation !== store.generation) return
+      if (discoveryDenied(error) || (!changingSelection && prior.status === "denied")) {
+        const lostDrafts = current?.drafts.dirty() === true
+        current?.drafts.revoke("access-revoked")
+        current = undefined
+        publish(generation, { status: "denied", selection })
+        if (lostDrafts) notifyDraftRevoked()
+        return
+      }
       console.error("Sucafina context read failed", error instanceof Error ? error.name : "unknown")
       current?.drafts.quarantine()
       fail(generation, selection, "network")
@@ -354,6 +370,14 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     current = undefined
   })
   return <Context.Provider value={handle}>{props.children}</Context.Provider>
+}
+
+function discoveryDenied(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false
+  const detail = value as { status?: unknown; httpStatus?: unknown; reason?: unknown }
+  return detail.status === "denied" || detail.status === "unauthenticated"
+    || detail.httpStatus === 401 || detail.httpStatus === 403
+    || detail.reason === "denied" || detail.reason === "unauthenticated"
 }
 
 export function useSfContext(): SfContextHandle {

@@ -49,9 +49,24 @@ const toRateForm = (rate: Rate): RateForm => ({
   name: rate.name, locs: typeof rate.locs === "string" ? rate.locs : Array.isArray(rate.locs) ? rate.locs.join(", ") : "",
   cur: rate.cur, annual: rate.annual === null ? "" : String(rate.annual),
 })
-const money = (value: number | null | undefined, currency: string, locale: string) =>
-  value === null || value === undefined ? null
-    : new Intl.NumberFormat(locale, { style: "currency", currency, maximumFractionDigits: 2 }).format(value)
+const money = (value: number | null | undefined, currency: string | null | undefined, locale: string) => {
+  if (value === null || value === undefined) return null
+  const code = currency?.trim() ?? ""
+  if (!code) return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " unspecified"
+  const iso = /^[A-Za-z]{3}$/.test(code) ? code.toUpperCase() : ""
+  if (!iso) return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " " + code
+  try {
+    return new Intl.NumberFormat(locale, { style: "currency", currency: iso, maximumFractionDigits: 2 }).format(value)
+  } catch {
+    return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " " + code
+  }
+}
+const soleRateCurrency = (rates: ReadonlyArray<{ cur: string }> | undefined) => {
+  if (!rates || rates.length === 0) return null
+  const codes = rates.map((rate) => rate.cur.trim())
+  if (codes.some((code) => !code) || new Set(codes).size !== 1) return null
+  return codes[0]
+}
 const numerically = (v: string) => v.trim() && Number.isFinite(Number(v)) ? Number(v) : undefined
 
 export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Element {
@@ -517,7 +532,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                           <h3>{t("sf.u08.monthly")}</h3>
                           <table><thead><tr><For each={months()}>{(_, index) => <th>{index() + 1}</th>}</For></tr></thead>
                             <tbody><tr><For each={months()}>{(amount) =>
-                              <td>{money(amount, "USD", language.intl()) ?? t("sf.u08.none")}</td>}</For></tr></tbody>
+                              <td>{money(amount, page().data.rates?.find((rate) => rate.id === selected().rateId)?.cur, language.intl()) ?? t("sf.u08.none")}</td>}</For></tr></tbody>
                           </table>
                         </div>
                       )}
@@ -531,7 +546,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                   <div><dt>{t("sf.u08.fte")}</dt><dd>{page().data.metrics?.fte === undefined || page().data.metrics?.fte === null
                     ? t("sf.u08.none") : page().data.metrics?.fte}</dd></div>
                   <Show when={page().data.rates !== undefined && page().data.metrics?.hrTotal !== undefined}>
-                    <div><dt>{t("sf.u08.total")}</dt><dd>{money(page().data.metrics?.hrTotal, "USD", language.intl()) ?? t("sf.u08.none")}</dd></div>
+                    <div><dt>{soleRateCurrency(page().data.rates)?.toUpperCase() === "USD" ? t("sf.u08.total") : t("sf.u06.hrStaff")}</dt><dd>{money(page().data.metrics?.hrTotal, soleRateCurrency(page().data.rates), language.intl()) ?? t("sf.u08.none")}</dd></div>
                   </Show>
                 </dl>
               </section>
@@ -575,10 +590,12 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     <form onSubmit={(e) => { e.preventDefault(); openReview("increase", "", cas(`${currentVersion()}:increase`)) }}
                       class="sf-u08-fields">
                       <label>{t("sf.u08.inc")}<input type="number" step="any" value={state.increaseForm?.inc ?? ""}
+                        disabled={readOnly()}
                         onInput={(e) => setState("increaseForm", old => old ? { ...old, inc: e.currentTarget.value } : old)}/></label>
                       <label>{t("sf.u08.incMonth")}<input type="number" min="1" max="12" step="1" value={state.increaseForm?.incMonth ?? ""}
+                        disabled={readOnly()}
                         onInput={(e) => setState("increaseForm", old => old ? { ...old, incMonth: e.currentTarget.value } : old)}/></label>
-                      <button class="mx-btn primary" type="submit">{t("sf.common.review")}</button>
+                      <button class="mx-btn primary" type="submit" disabled={readOnly()}>{t("sf.common.review")}</button>
                     </form>
                   </Show>
                 </section>
@@ -596,8 +613,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     <Show when={state.formKind === "mapping" && state.mappingForm}>
                       <form onSubmit={(e) => { e.preventDefault(); openReview("mapping", "", cas(`${currentVersion()}:leaderDomains`)) }}>
                         <label>{t("sf.u08.domain")}<input value={state.mappingForm?.domain ?? ""}
+                          disabled={readOnly()}
                           onInput={(e) => setState("mappingForm", old => old ? { ...old, domain: e.currentTarget.value } : old)}/></label>
-                        <button type="submit" class="mx-btn primary">{t("sf.common.review")}</button>
+                        <button type="submit" class="mx-btn primary" disabled={readOnly()}>{t("sf.common.review")}</button>
                       </form>
                     </Show>
                   </section>

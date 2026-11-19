@@ -554,7 +554,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const isHistory = () => props.surfaceId === "UI57" && props.route.kind === "history"
   const isReference = () => props.surfaceId === "UI56" || (props.surfaceId === "UI57" && !isHistory())
   const isExport = () => props.surfaceId === "UI68"
-  const canApply = () => !state.busy && state.phase === "reviewing" &&
+  const canApply = () => permitted("files.import-apply") && !state.busy && state.phase === "reviewing" &&
     !!state.manifest && !state.manifest.domainApplied && state.manifest.state === "preview" &&
     !!state.reference && !state.reference.receipt &&
     (!isImport() || (!!state.reviewedSelectionRef &&
@@ -570,7 +570,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={isExport() ? {
         id: "export", labelKey: key("sf.ui68.primary"), tone: "primary",
-        disabled: state.busy || state.exportKind === "po" && (!state.poSelection || state.poState !== "ready"),
+        disabled: state.busy || !permitted("files.export." + state.exportKind) ||
+          state.exportKind === "po" && (!state.poSelection || state.poState !== "ready"),
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
@@ -635,7 +636,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
                   onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
               </label>
-              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file}
+              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file ||
+                !permitted("files.import-admit") || !permitted("files.import-preview")}
                 onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
             </div>
           </Show>
@@ -658,7 +660,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   }} />
               </label>
               <button type="submit" class="mx-btn primary"
-                disabled={state.busy || !state.historyRef.trim()}>{t("sf.u23.reconcile")}</button>
+                disabled={state.busy || !state.historyRef.trim() ||
+                  !permitted("files.import-reference") || !permitted("files.import-detail")}>{t("sf.u23.reconcile")}</button>
             </form>
           </Show>
           <Show when={isReference()}>

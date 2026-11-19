@@ -64,8 +64,13 @@ export function findSubmittedPr(page: Cap26PageOk, requestRef: string): PrLookup
   if (typeof amount !== "number" || !Number.isFinite(amount))
     return { kind: "source-unavailable", reason: "amount" }
 
+  const blockSelf = page.value.data.formSettings.blockSelfApproval === true ||
+    page.value.data.formSettings.blockSelfApproval === "true" ||
+    page.value.data.formSettings.blockSelfApproval === "on"
+  const requesterIsHolder = holderId !== null && request.createdBy === holderId
   const actions = (["approve", "reject"] as const).filter((action) =>
-    groups[0] !== "others" && page.value.allowedActionIds.includes(action),
+    groups[0] !== "others" && page.value.allowedActionIds.includes(action) &&
+    !(action === "approve" && blockSelf && requesterIsHolder),
   )
   const holderName = holderId === null
     ? null

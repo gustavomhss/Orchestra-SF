@@ -10,7 +10,8 @@ import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { reviewReadState, type PreservedReview } from "../preserved/model"
+import { readPreservedProjection, reviewReadState, type PreservedReview } from "../preserved/model"
+import { PeriodText, WhenText } from "../labels"
 import "./reports.css"
 
 type Format = "docx" | "pptx"
@@ -42,8 +43,23 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     const access = owner.ready()
     return access ? readReportRecovery(access.drafts) : undefined
   }
-  const operationState = () => store.busy ? "preparing" : recovery()?.artifactRef ? "unavailable" :
-    recovery() || typeof store.marker === "string" ? "outcome-unknown" : store.marker === undefined ? "unavailable" : "idle"
+  const operationState = () => {
+    if (store.busy) return "preparing"
+    const intent = recovery()
+    if (intent?.reason === "outcome-unknown") return "outcome-unknown"
+    if (intent?.artifactRef) return "unavailable"
+    if (intent || typeof store.marker === "string") return "outcome-unknown"
+    return store.marker === undefined ? "unavailable" : "idle"
+  }
+  const coverageOwned = (review: PreservedReview) => {
+    const stamp = owner.ready()?.context.stamp
+    return !!stamp && review.sections.length > 0 && review.sections.every((section) => {
+      const projection = readPreservedProjection(section.content)
+      return !!projection && projection.context.installationId === stamp.installationId &&
+        projection.context.projectId === stamp.projectId && projection.context.principalRef === stamp.principalRef &&
+        projection.context.accessRevision === stamp.accessRevision && projection.context.policyVersion === stamp.policyVersion
+    })
+  }
   const exportAdmitted = () => {
     const access = owner.ready()
     return !!access?.context.availability.some((resource) =>
@@ -182,7 +198,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
       }}
     >
       <div class="sf-n28" data-sf-surface="UI50" data-export-state={operationState()}>
-        <Show when={typeof store.marker === "string" && !recovery()}>
+        <Show when={recovery()?.reason === "outcome-unknown" || (typeof store.marker === "string" && !recovery())}>
           <p role="alert">{t("sf.u33.unknown")}</p>
         </Show>
         <SfStatePanel state={store.readState}
@@ -192,7 +208,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
           <Show when={store.review}>{(review) => <section class="sf-n28-section" data-preserved-review={review().id}>
             <dl class="sf-n28-summary mx-card">
               <div><dt>{t("sf.u33.review")}</dt><dd>{review().id}</dd></div>
-              <div><dt>{t("sf.u33.coverage")}</dt><dd>{t("sf.u33.available")}</dd></div>
+              <div><dt>{t("sf.u33.coverage")}</dt><dd>{t(coverageOwned(review()) ? "sf.u33.available" : "sf.u33.unavailable")}</dd></div>
               <div><dt>{t("sf.u33.selected")}</dt><dd>{store.selected.length} / {review().sections.length}</dd></div>
             </dl>
             <div class="sf-n28-form">
@@ -226,7 +242,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                     <span> {t("sf.u33.include")}: <strong>{section.title}</strong></span>
                   </label>
                   <span>{t("sf.u33.records")}: {section.count}</span>
-                  <span>{t("sf.u33.period")}: {section.period.start} – {section.period.end}</span>
+                  <span>{t("sf.u33.period")}: <PeriodText start={section.period.start} end={section.period.end} /></span>
                   <span>{t("sf.u33.sources")}: {section.sourceRefs.length}</span>
                 </li>}</For>
               </ul>
@@ -238,16 +254,16 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
               <div class="sf-n28-notes">
                 <For each={review().comments}>{(comment) => <article class="mx-card">
                   <p>{comment.content}</p>
-                  <small>{comment.authorRef} · <time dateTime={comment.createdAt}>{comment.createdAt}</time></small>
+                  <small>{comment.authorRef} · <WhenText iso={comment.createdAt} /></small>
                 </article>}</For>
               </div>
             </section>
             <section class="sf-n28-section" aria-label={t("sf.u33.download")}>
               <h2>{t("sf.u33.download")}</h2>
-              <Show when={!exportAdmitted() || store.marker !== null || !!recovery() && !store.busy}>
+              <Show when={recovery()?.reason !== "outcome-unknown" && (!exportAdmitted() || store.marker !== null || !!recovery() && !store.busy)}>
                 <p role="status" data-sf-file-unavailable>{t("sf.common.unavailable")}</p>
               </Show>
-              <For each={canRecover() ? recovery()?.gaps ?? [] : []}>{(gap) => <p>{gap}</p>}</For>
+              <For each={canRecover() ? recovery()?.gaps ?? [] : []}>{() => <p>{t("sf.u32.declaredGaps")}</p>}</For>
               <Show when={store.busy}>
                 <p role="status" aria-live="polite">{t("sf.u33.preparing")}</p>
               </Show>

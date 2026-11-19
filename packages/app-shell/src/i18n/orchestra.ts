@@ -49,6 +49,7 @@ import { SF_U39_COPY, SF_U39_COPY_BR } from "./orchestra-chapters/sf-u39"
 import { SF_U40_COPY, SF_U40_COPY_BR } from "./orchestra-chapters/sf-u40"
 import { SF_U41_COPY, SF_U41_COPY_BR } from "./orchestra-chapters/sf-u41"
 import { SF_U42_COPY, SF_U42_COPY_BR } from "./orchestra-chapters/sf-u42"
+import { SF_CROSS_COPY, SF_CROSS_COPY_BR } from "./orchestra-chapters/sf-cross"
 import { SF_U43_COPY, SF_U43_COPY_BR } from "./orchestra-chapters/sf-u43"
 import { SF_U44_COPY, SF_U44_COPY_BR } from "./orchestra-chapters/sf-u44"
 import { SF_U45_COPY, SF_U45_COPY_BR } from "./orchestra-chapters/sf-u45"
@@ -466,6 +467,7 @@ export const ORCHESTRA_COPY = {
   ...SF_U40_COPY,
   ...SF_U41_COPY,
   ...SF_U42_COPY,
+  ...SF_CROSS_COPY,
   ...SF_U43_COPY,
   ...SF_U44_COPY,
   ...SF_U45_COPY,
@@ -869,6 +871,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_U40_COPY_BR,
   ...SF_U41_COPY_BR,
   ...SF_U42_COPY_BR,
+  ...SF_CROSS_COPY_BR,
   ...SF_U43_COPY_BR,
   ...SF_U44_COPY_BR,
   ...SF_U45_COPY_BR,
