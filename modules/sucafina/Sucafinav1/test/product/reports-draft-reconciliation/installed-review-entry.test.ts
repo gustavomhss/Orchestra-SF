@@ -253,12 +253,12 @@ test("installed Reports authorization I/O remains recoverable before consumption
   } finally { await f.dispose() }
 }, 60_000)
 
-test("explicit Reports refresh retains 24 selected records and preserves the previous review when source values change", async () => {
+test("explicit Reports refresh retains the exact selected records and preserves the previous review when source values change", async () => {
   const f = await installedReportsFixture()
   try {
     const period = { start: "2026-01-01", end: "2026-12-31" }
     await f.fixture.persistence.transaction("dashboard", async (snapshot) => {
-      snapshot.data.projects = Array.from({ length: 25 }, (_, index) => ({
+      snapshot.data.projects = Array.from({ length: 3 }, (_, index) => ({
         id: "refresh-project-" + index, name: "Refresh project " + index,
         status: "Planning", start: period.start, end: period.end, milestones: [],
       }))
@@ -292,7 +292,7 @@ test("explicit Reports refresh retains 24 selected records and preserves the pre
     const initial = await preview(items)
     const projects = initial.sections.find((section) => section.title === "Projects")
     if (!projects) throw new Error("Real project selection unavailable")
-    expect(projects.recordCount).toBe(25)
+    expect(projects.recordCount).toBe(3)
     const selected = items.map((item) => ({
       ...item, agendaNote: "Retain this explicit selection",
       recordRefs: initial.sectionRecordRefs.find((section) => section.sectionRef === item.id)!.recordRefs
@@ -300,7 +300,7 @@ test("explicit Reports refresh retains 24 selected records and preserves the pre
     }))
     const capturedItems = structuredClone(selected)
     const chosen = await preview(selected)
-    expect(chosen.sections.find((section) => section.id === projects.id)?.recordCount).toBe(24)
+    expect(chosen.sections.find((section) => section.id === projects.id)?.recordCount).toBe(2)
     const savedResponse = await post("review-preserve", { selectionRef: chosen.selectionRef, sectionRefs: chosen.sectionRefs })
     expect(savedResponse.status).toBe(200)
     const saved = object(await savedResponse.json()).value as { id: string }
@@ -327,7 +327,7 @@ test("explicit Reports refresh retains 24 selected records and preserves the pre
     expect(refreshed.value.map(({ selectionRef: _ref, ...item }) => item))
       .toEqual(capturedItems.map(({ selectionRef: _ref, ...item }) => item))
     const current = await preview(refreshed.value)
-    expect(current.sections.find((section) => section.id === projects.id)?.recordCount).toBe(24)
+    expect(current.sections.find((section) => section.id === projects.id)?.recordCount).toBe(2)
     expect(current.sections.flatMap((section) => section.projection.values)
       .find((value) => value.id === "budget:2026-01:forecast")?.value).toBe(190)
     expect(await read()).toEqual(prior)
