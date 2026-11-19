@@ -27,7 +27,7 @@ export async function procurementClosureJourney(page: Page, installation: { orig
     await registerKnownIncreaseRule(page, observations)
     const compared = asRecord((await clickCommand(page, form.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
     expect(asRecord(compared.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
-    const reason = "I choose the 140 USD proposal under its unresolved external cost conditions. Financial approval is still required before Apply."
+    const reason = "I choose the 140 USD proposal under its unresolved external cost conditions. Financial approval remains a separate action after the reviewed draft is applied."
     await form.getByLabel("Reason for choosing", { exact: true }).fill(reason)
     const sent = page.waitForRequest((request) => isCommand(request, "decision-choose"))
     const loaded = page.waitForEvent("domcontentloaded")

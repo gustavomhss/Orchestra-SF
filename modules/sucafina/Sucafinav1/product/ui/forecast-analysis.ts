@@ -18,18 +18,24 @@ export async function scenarioAnalysisForm(projection: AuthorizedCaseProjection,
 /** The selections and source references are restricted to the authorized case. */
 export async function forecastAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
   if (!runtime.analyses) return "<p>Forecast analysis is currently unavailable.</p>"
-  const history = `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
-  if (!runtime.forecastInputs) return `${history}<p>Forecast analysis is currently unavailable.</p>`
+  if (!runtime.forecastInputs) return `<p>Forecast analysis is currently unavailable.</p>`
   const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
   const skill = parent?.skills.find((item) => item.id === "sf-explicar-forecast")
   const models = await runtime.models().catch(() => [])
   const sources = projection.case.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
-  if (!parent || !skill || !models.length || sources.length < 2) return `${history}<p>Forecast analysis needs an available model and two forecast sources attached to this decision.</p>`
+  if (!parent || !skill || !models.length || sources.length < 2) return `<p>Forecast analysis needs an available model and two forecast sources attached to this decision.</p>`
   const config = { caseRef: { id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }, objective: projection.case.objective,
     profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest,
     outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)), models }
   const options = sources.map((source, index) => `<option value="${esc(source.refId)}">Forecast source ${index + 1}${source.target.period ? ` · ${esc(source.target.period.start)} – ${esc(source.target.period.end)}` : ""}</option>`).join("")
-  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><details><summary>Analysis settings</summary><label>Model<select name="model">${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label></details><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
+  return `<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><details><summary>Analysis settings</summary><label>Model<select name="model">${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label></details><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
+}
+
+/** Bootstrap only the metadata returned by the independently authorized history read. */
+export function analysisHistoryForm(projection: AuthorizedCaseProjection, history: Awaited<ReturnType<NonNullable<SfHostServices["analyses"]>["list"]>>) {
+  const initial = history.status === "ok" ? { status: "ok", value: history.value } : { status: "unavailable" }
+  const status = history.status !== "ok" ? "Analysis history unavailable or access changed." : history.value.length ? "" : "No analyses yet."
+  return `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}" data-initial-history="${esc(JSON.stringify(initial))}"><h3>Analysis history</h3><p role="status">${status}</p><div data-results></div></section>`
 }
 
 export const forecastAnalysisScript = `
@@ -64,10 +70,7 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
     const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
     const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value
   }
-  const load = async () => {
-    if (!section.isConnected) return
-    try {
-      const runs = await send({ action: 'list', caseRef: JSON.parse(section.dataset.case) })
+  const render = (runs) => {
       if (section.querySelector('form[data-dirty]')) { clearTimeout(timer); timer = setTimeout(load, 3000); return }
       clearTimeout(timer); output.replaceChildren(); status.textContent = runs.length ? '' : 'No analyses yet.'
       for (const run of runs) {
@@ -106,9 +109,19 @@ document.querySelectorAll('[data-analysis-history]').forEach((section) => {
         })
       }
       if (runs.some((run) => ['preparing', 'queued', 'running'].includes(run.state))) timer = setTimeout(load, 3000)
-    } catch { output.replaceChildren(); status.textContent = 'Analysis history unavailable or access changed.' }
   }
-  section.addEventListener('sf-analysis-refresh', load); load()
+  const unavailable = () => { clearTimeout(timer); output.replaceChildren(); status.textContent = 'Analysis history unavailable or access changed.' }
+  const load = async () => {
+    if (!section.isConnected) return
+    try { render(await send({ action: 'list', caseRef: JSON.parse(section.dataset.case) })) }
+    catch { unavailable() }
+  }
+  section.addEventListener('sf-analysis-refresh', load)
+  try {
+    const initial = JSON.parse(section.dataset.initialHistory)
+    if (initial.status !== 'ok' || !Array.isArray(initial.value)) throw new Error('unavailable')
+    render(initial.value)
+  } catch { unavailable() }
 })
 document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
   if (form.dataset.sfForecastReady) return; form.dataset.sfForecastReady = 'true'
