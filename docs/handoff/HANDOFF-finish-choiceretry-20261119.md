@@ -1,10 +1,12 @@
 # Handoff — finish-choiceretry-20261119
 
-SHA: 6e18d4cd7faa80ea82e47677e0cbc08a83f32d35 (código; documento em commit posterior)
+SHA: 175d8d2f5f407fe1dddcffcae80614a3b367bf19 (código; documento em commit posterior)
 Data: 2026-11-19
 Estado: partial
 
 ## Feito
+
+- Correção175d8d2f: aplica maxRequestBytes apenas quando o registry original declara o limite; exporta o schema da intenção pelo subpath público já existente de transport. A inspeção não altera policy/schema nem ganha novo grant.
 
 - Branch isolada de Assembly33 corrigida 57070fcc1968090b6df188b8ea759ed5f72eefe5. Nenhum merge da integração; não inclui o diagnóstico temporário bcc.
 - F02 ganhou somente inspectRecordedChoice, uma inspeção read-only específica para decisions.decision-choose após reload. Recebe o corpo/chave e owner como dados não confiáveis, valida schema fechado original e exige igualdade com o stamp autenticado do transporte atual.
@@ -15,7 +17,7 @@ Estado: partial
 
 ## Pendente
 
-- packages/client/src/sucafina/transport.ts:525 — novo método e retenção observada aguardam cold review, typecheck e gate estreito. Não compor antes da revisão acordada com o integrador.
+- packages/client/src/sucafina/transport.ts:528 — novo método e retenção observada aguardam cold review, typecheck e gate estreito. Não compor antes da revisão acordada com o integrador.
 - packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/record.tsx:193 (branch finish-choice, código c8a941331e8a4748f1f037d7b34804f504d727eb) — caller ainda retém somente memória; falta guardar a intenção antes do primeiro POST, reler e inspecionar dados não confiáveis após reload e só então oferecer o clique explícito.
 - packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts:43–79 — portar controles nativos preservando perda de resposta, reload, mesmo corpo/key, dois POSTs e uma escolha; nenhuma asserção foi removida.
 - Caso sem escolha/evento original correspondente permanece inconclusivo. Este delta não autoriza nova criação, não resolve uma perda anterior ao commit e não renova CAS/observação.
@@ -40,6 +42,6 @@ Estado: partial
 ## Comandos e resultados
 
 - Nenhum shell, filesystem ou teste local utilizado.
-- Novo código F02/testes: ainda não executados; nenhuma alegação de sucesso.
+- [44626583090](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44626583090) FAILURE, job135921910068, cleanup135923237473 SUCCESS:18 pass/4 fail/353expect,5.37s. Os17 testes antigos de human-retry passaram. A inspeção nova retornou antes de GET porque exigia maxRequestBytes presente; registry decision-choose:58 não declara esse campo. O teste de concorrência atingiu seu timeout original5000ms por não chegar ao GET. Correção segue exatamente a regra existente: verificar o limite somente quando publicado. Sem aumentar timeout ou retirar assert.
 - Prova independente de binding compare: run44620658522 SUCCESS 3 pass/0 fail/14 expect, código5da8d863a1f865b1c44bbc5cd782b996c3d7bf5f. Não cobre este delta.
 - Operations7 run44624816144 FAILURE antes do navegador por dois TS2367 nos callbacks de saúde. Corrigidos pelo integrador em 57070fcc com Object.is original; Operations8 run44625548030 em andamento quando este checkpoint foi escrito. Não são gates de UI38.
