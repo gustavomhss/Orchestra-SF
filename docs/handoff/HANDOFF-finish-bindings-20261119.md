@@ -1,6 +1,6 @@
 # Handoff — finish-bindings-20261119
 
-SHA: 9f3bcf615d19613521432f6e9b9e21e7c9309e15 (código do gate unitário).
+SHA: 59e05c24785d4f9398d511c798fd73d3b4073323 (código; commit de handoff posterior).
 Data: 2026-11-19
 Estado: partial
 
@@ -43,3 +43,16 @@ Estado: partial
 - Sem alterar checks de recurso operacional, dependências, nativeReadBinding, admissão, Request original, actor/stamp, ação humana, dupla leitura C08 ou revalidação de saída. Nenhuma asserção removida.
 - Ingress19 [44597044228](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44597044228): FAILURE no typecheck CLI, TS2367/2339; o path antigo eliminava todas as alternativas Decisions antes dos checks. Não executou navegador e não mede o conserto reativo CAP23.
 - Próximo gate composto de tipos/ingresso e criação/edição nativas: pendente.
+
+## Continuação — origem privada, cobertura e captura
+
+- Código 59e05c24785d4f9398d511c798fd73d3b4073323; predecessor22a11d693269b870a1f049bd87a465833607af22. UI54 usa7operações originais de dashboard-http.ts, Request/stamp/binding atuais e namespaces reais. Namespace selector ampliado de forma fechada para preferences/receipts; nenhum dado privado é publicado por saúde, sóstorageVersion/aggregateRevision/incarnation.
+- Namespacehealth [44604756705](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44604756705): SUCCESS,1pass/23expect; snapshot2cda2863df933f13fcfaf7eb6bd642bb2b436246, jobs135845362512/135846748505 success. Autoridadealterada e revogação negam valor privado; leitura/write usam admissão original.
+- Authoring core [44601715581](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44601715581): SUCCESS,2passed; snapshot1297999f0411681265711176f77e2e8e3fd17daa. Qualifica bindings de draft/edit existentes, não as novas ações abaixo.
+- Tipos composição21 [44605860232](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44605860232): CLI, SF-E2E e móduloSucafina SUCCESS; app-shell FAILURE por2campos readonly de UI54 corrigidos em e448570cd2d784cb8620d8cc642972c7f9f781c7. O gate UI54[44606767134](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44606767134) já passou os3typechecks; navegador ainda pendente quando este handoff foi escrito.
+- UI35: decision-coverage usa decisions.coverage e writes preferences+cases (baseline-coverage.ts110), exatamente a transação original; decision-promote usa decisions.promote-alternative, caseswrite e leitura da cobertura empreferences. Metadata/rotas/callbacks originais conferidos em decisions/http.ts148,162 e mutations.ts229–273. A disponibilidade não simula cenário nem calcula coverage. A ação original continua verificando caso/CAS/C02/recibo antes de gravar.
+- CAP02: dashboard-capture POST/humano reviews.preserve usa preferenceswrite; dashboard-history GET/UI sf_dashboard_read usa preferencesread. Ambos observam as funções originais dashboardServices.capture/reopen e dashboardRecords.resolve/read. Captura individual não é substituída por review-preserve: produtores distintos continuam distintos.
+- Healthmantém duasleituras C08congruentes por namespace, igualdadeagregada, revalidação inicial/final, identidade domesmo binding/produtor, cancelamento e ações humanas atuais. Nenhuma afirmação pronta é construída a partir de catálogo sozinho.
+- Asserções removidas: nenhuma. Não altera application.ts, grants, policy, baseline, digest, coveragecalculado ou sf-ci.
+- Pendente/unbound: native-ui/decision-intent-health.ts24 — qualificar UI35 coverage/promote no navegador; native-ui/dashboard-proposal-health.ts24 — qualificar capture/history e UI54 instalado. Osrunscitados anteriores não qualificam os4IDs novos deste commit.
+- Retomar: sobrepor os5blobs com merge por conteúdo em host-context para conservar o probe C12 do branch finish-ingress; executar somente os specs dos consumidores alterados e registrar resultado antes do merge.

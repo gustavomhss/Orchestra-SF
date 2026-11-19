@@ -6,6 +6,7 @@ import { selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafin
 import { sfHasOperationalResource } from "./live-context.ts"
 
 type Operation = "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read" |
+  "decisions.decision-coverage" | "decisions.decision-promote" |
   "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision"
 
 /** Only installed infrastructure and current admission. Case/source access stays in each original producer. */
@@ -22,6 +23,8 @@ export async function observeSfDecisionIntentHealth(input: {
     { id: "decisions.command.sf_case_draft", operation: "sf_case_draft", method: "POST", query: "workbench-command", path: "{mount}/dashboard", write: true, human: null },
     { id: "decisions.decision-edit", operation: "sf_case_read", method: "POST", query: "decision-edit", path: "{mount}/dashboard", write: true, human: "decisions.edit" },
     { id: "decisions.controls.read", operation: "sf_case_read", method: "GET", query: "decision-controls", path: "{mount}/dashboard", write: false, human: null },
+    { id: "decisions.decision-coverage", operation: "sf_case_read", method: "POST", query: "decision-coverage", path: "{mount}/dashboard", write: true, human: "decisions.coverage" },
+    { id: "decisions.decision-promote", operation: "sf_case_read", method: "POST", query: "decision-promote", path: "{mount}/dashboard", write: true, human: "decisions.promote-alternative" },
     { id: "bi.bi-options", operation: "sf_dashboard_read", method: "GET", query: "bi-options", path: "{mount}/dashboard", write: false, human: null },
     { id: "bi.bi-data", operation: "sf_bi_view", method: "GET", query: "bi-data", path: "{mount}/dashboard", write: false, human: null },
     { id: "bi.bi-source", operation: "sf_bi_view", method: "GET", query: "bi-source", path: "{mount}/dashboard", write: false, human: null },
@@ -63,6 +66,21 @@ export async function observeSfDecisionIntentHealth(input: {
         first.storageVersion !== second.storageVersion || first.aggregateRevision !== second.aggregateRevision ||
         first.incarnation !== second.incarnation || !await ui.revalidate(admitted.value) ||
         ui.requestFor(admitted.value) !== request || !current()) return []
+      if (candidate.id === "decisions.decision-coverage" || candidate.id === "decisions.decision-promote") {
+        // Coverage writes preferences and cases together. Promotion reads that
+        // original coverage before the original cases transaction.
+        const readPreferences = () => state.read(request, "preferences", selectSfNamespaceHealth("preferences", stamp,
+          candidate.id === "decisions.decision-coverage" ? "write" : "read"))
+        const before = await readPreferences(), after = await readPreferences()
+        if (before.status !== "ok" || after.status !== "ok" || !before.value || !after.value ||
+          before.storageVersion !== before.value.storageVersion || before.aggregateRevision !== before.value.aggregateRevision ||
+          before.incarnation !== before.value.incarnation || after.storageVersion !== after.value.storageVersion ||
+          after.aggregateRevision !== after.value.aggregateRevision || after.incarnation !== after.value.incarnation ||
+          before.storageVersion !== after.storageVersion || before.aggregateRevision !== after.aggregateRevision ||
+          before.incarnation !== after.incarnation || before.aggregateRevision !== second.aggregateRevision ||
+          before.incarnation !== second.incarnation || !await ui.revalidate(admitted.value) ||
+          ui.requestFor(admitted.value) !== request || !current()) return []
+      }
       if (candidate.human && !(await input.humanActions(request)).includes(candidate.human)) return []
       if (!await ui.revalidate(admitted.value) || !current()) return []
       return [{ operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const }]

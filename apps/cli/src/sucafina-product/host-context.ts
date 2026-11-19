@@ -1008,6 +1008,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
               if (draft.length !== 1 || draft[0]?.handlerExport !== "draftCase") return undefined
               return { producer: productHttp, dependencies: [services.dispatch, draft[0], business.cases, business.cases.draft, input.persistence] }
             }
+            if (operationId === "decisions.decision-coverage")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.baselineCoverage,
+                decisionDomain.baselineCoverage.register, business.planner, business.planner.compareForecast,
+                business.withCase, business.cases, input.persistence] }
+            if (operationId === "decisions.decision-promote")
+              return { producer: productHttp, dependencies: [portfolioHttp, extended.portfolioServices,
+                extended.portfolioServices.mutations, extended.portfolioServices.mutations.addAlternative,
+                extended.portfolioServices.planner, extended.portfolioServices.planner.simulateScenario,
+                business.baselineCoverage, business.baselineCoverage.resolveForecastCoverage,
+                business.withCase, business.cases, input.persistence] }
             if (operationId === "decisions.decision-edit" || operationId === "decisions.controls.read")
               return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.management,
                 decisionDomain.management.edit, business.withCase, business.cases, input.persistence] }
@@ -1029,6 +1039,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
           humanActions: authority.humanActions, source: (operationId) => {
             if (services.productHttp !== productHttp || !identity()) return undefined
             const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
+            if (operationId === "dashboard.dashboard-capture" || operationId === "dashboard.dashboard-history")
+              return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
+                dashboard, operationId === "dashboard.dashboard-capture" ? dashboard.capture : dashboard.reopen,
+                business.dashboardRecords, business.dashboardRecords.resolve, business.dashboardRecords.read, input.persistence] }
             const dependencies = operationId === "dashboard.dashboard-workbench" ? [dashboard.discover, decisions.discover] :
               operationId === "dashboard.dashboard-draft-read" ? [decisions.revalidateDraftRead, dashboard.observer.preparePrivateDraftRead] :
               operationId === "dashboard.dashboard-hot-topic-draft" ? [decisions.drafts, decisions.drafts.register] :

@@ -206,10 +206,11 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
               }</For>
               <Show when={section.recordCount === 0}><p>{t("sf.u25.noRecords")}</p></Show>
               <table aria-label={section.title + " · " + t("sf.u25.values")}>
-                <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th></tr></thead>
+                <thead><tr><th>{t("sf.u25.field")}</th><th>{t("sf.u25.value")}</th><th>{t("sf.u25.period")}</th><th>{t("sf.u25.evidence")}</th></tr></thead>
                 <tbody><For each={section.projection.values}>{(value) => <tr>
                   <td>{value.id}</td><td>{((value.value === null ? t("sf.u25.unavailableValue") : String(value.value)) + " " + (value.currency ?? value.unit ?? "")).trim()}</td>
                   <td>{value.period.start} – {value.period.end}</td>
+                  <td>{t("sf.u25.evidence." + value.evidenceState)}</td>
                 </tr>}</For></tbody>
               </table>
               <button type="button" class="mx-btn" disabled={index() === 0} aria-label={t("sf.u25.up") + ": " + section.title}
