@@ -369,7 +369,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                   <p role="alert">{t(sfCommonKey("sf.common.conflict"))}</p>
                 </Show>
                 <Show when={view.review && reviewProps()} fallback={
-                  <form class="sf-n21-settings-form" onSubmit={(event) => {
+                  <form class="sf-n21-settings-form" data-version={String(projection().value.versions.settings?.version ?? "")} onSubmit={(event) => {
                     event.preventDefault()
                     openReview()
                   }}>
