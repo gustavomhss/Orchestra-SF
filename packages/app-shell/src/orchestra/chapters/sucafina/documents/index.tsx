@@ -778,7 +778,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 </select>
               </label>
               <Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>
-              <button type="button" class="mx-btn primary" disabled={!state.selectedTarget || state.busy}
+              <button type="button" class="mx-btn primary" disabled={!state.selectedTarget || state.busy ||
+                !permitted("files.document-scenario-preview")}
                 onClick={() => { void scenario() }}>{t("sf.u24.previewScenario")}</button>
             </section>
             <Show when={preview()}>

@@ -164,7 +164,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
     return money ? text + " unspecified" : text
   }
   const metricRows = () => [
-    { id: "budget", label: "sf.u06.totalBudget" as const, left: left()?.total, right: right()?.total },
+    { id: "budget", label: "sf.u06.budget" as const, left: left()?.total, right: right()?.total },
     { id: "actual", label: "sf.u06.actualYtd" as const, left: left()?.actualYTD, right: right()?.actualYTD },
     { id: "outlook", label: "sf.u06.outlook" as const, left: left()?.fullYear, right: right()?.fullYear },
     { id: "hr", label: "sf.u06.hrStaff" as const, left: left()?.hrTotal, right: right()?.hrTotal },
@@ -267,10 +267,10 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                         </tbody>
                       </table>
                     </div>
-                    <p>{copy.t(key("sf.u06.budgetExplanation"), { year: year() ?? "" })}</p>
+                    <p>{copy.t(key("sf.u06.budget"))}</p>
                     <div class="sf-u46-compare-scroll">
                       <table class="sf-u46-monthly">
-                        <caption>{copy.t(key("sf.u06.monthly"))}</caption>
+                        <caption>{copy.t(key("sf.u06.budget"))}</caption>
                         <thead>
                           <tr>
                             <th rowSpan={2} scope="col">{copy.t(key("sf.u06.month"))}</th>

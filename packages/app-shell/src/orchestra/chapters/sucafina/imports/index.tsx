@@ -570,7 +570,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={isExport() ? {
         id: "export", labelKey: key("sf.ui68.primary"), tone: "primary",
-        disabled: state.busy || state.exportKind === "po" && (!state.poSelection || state.poState !== "ready"),
+        disabled: state.busy || !permitted("files.export." + state.exportKind) ||
+          state.exportKind === "po" && (!state.poSelection || state.poState !== "ready"),
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
@@ -635,7 +636,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
                   onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
               </label>
-              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file}
+              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file ||
+                !permitted("files.import-admit") || !permitted("files.import-preview")}
                 onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
             </div>
           </Show>

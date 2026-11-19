@@ -375,14 +375,15 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const abort = new AbortController()
     try {
       const result = await createSfPlannerClient(ready.transport)["planner.monthly.preview"](
-        { action: "preview", input }, { signal: abort.signal, idempotencyKey: crypto.randomUUID() },
+        { action: "preview", input }, { signal: abort.signal },
       )
       if (result.kind === "transport-error") {
         setState({ paste: { ...original, phase: "failed" }, error: t("sf.u07.previewError") })
       } else if (result.body.status !== "ok") {
         setState({ paste: { ...original, phase: "failed" }, error: t("sf.u07.previewError") })
       } else {
-        setState({ paste: reconcileBudgetPaste(original, result.body.value.rows, false),
+        const reviewed = reconcileBudgetPaste(original, result.body.value.rows, false)
+        setState({ paste: { ...reviewed, phase: reviewed.phase === "complete" ? "review" : reviewed.phase },
           pasteInput: input, error: "" })
       }
     } catch (error) {
