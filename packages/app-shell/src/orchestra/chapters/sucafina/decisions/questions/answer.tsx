@@ -158,8 +158,8 @@ export function SfQuestionAnswer(props: Readonly<{
       if (signal.aborted || props.owner.generation() !== generation) return
       if (result.kind === "transport-error") {
         setUi("reviewState", "outcome-unknown")
-      } else if (result.body.status !== "ok") {
-        setUi("reviewState", sfFailureUiState(result.body.status, result.status))
+      } else if (result.status === 401 || result.status === 403 || result.body.status !== "ok" || result.status !== 200) {
+        setUi("reviewState", result.status === 401 || result.body.status === "unauthenticated" ? "session-expired" : sfFailureUiState(result.body.status, result.status))
       } else if (result.body.value.answerRef !== preparation.answerRef) {
         setUi("reviewState", "conflict")
       } else {

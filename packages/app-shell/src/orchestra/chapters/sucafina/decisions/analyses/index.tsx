@@ -5,6 +5,7 @@ import { SF_U37_COPY } from "@/i18n/orchestra-chapters/sf-u37"
 import { createSfAnalysesClient } from "@orchestra/client/sucafina/analyses"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
 import { useSfContext } from "../../context"
+import { sfOperationReady } from "../cases/model"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
@@ -136,7 +137,11 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
   const selectedAnalysis = () => view.analyses.find((item) => analysisKey(item) === view.analysisKey)
   const selectedModel = () => view.models.find((item) => modelKey(item) === view.modelKey)
   const isBusy = () => view.phase === "preparing" || view.phase === "starting" || view.phase === "cancelling"
-  const canPrepare = () => privacy() === "ready" && view.choicesState === "ready" && !!selectedCase() &&
+  const granted = (operationId: string) => {
+    const ready = owner.ready()
+    return !!ready && sfOperationReady(ready.context, operationId)
+  }
+  const canPrepare = () => privacy() === "ready" && granted("intelligence.analysis.prepare") && view.choicesState === "ready" && !!selectedCase() &&
     !!selectedModel() && selectedAnalysis()?.skillId === "sf-enquadrar-decisao" &&
     !!view.objective.trim() && !isBusy() && view.phase !== "outcome-unknown"
 
@@ -252,12 +257,14 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal) ||
       view.caseKey !== caseSelection || view.analysisKey !== skillSelection) return
-    if (!result || result.kind !== "response" || result.body.status !== "ok") {
+    if (!result || result.kind !== "response" || result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied" || result.status !== 200 || result.body.status !== "ok") {
+      const bodyStatus = result?.kind === "response" ? result.body.status : ""
+      const http = result?.kind === "response" ? result.status : 0
       setView({
         phase: "failed", notice: !result || result.kind !== "response" ? "sf.u37.unavailable" :
-          result.body.status === "stale" ? "sf.u37.stale" :
-          result.body.status === "denied" ? "sf.u37.denied" :
-          result.body.status === "needs-input" ? "sf.u37.needsInput" : "sf.u37.unavailable",
+          http === 401 || http === 403 || bodyStatus === "denied" || bodyStatus === "unauthenticated" ? "sf.u37.denied" :
+          bodyStatus === "stale" ? "sf.u37.stale" :
+          bodyStatus === "needs-input" ? "sf.u37.needsInput" : "sf.u37.unavailable",
       })
       return
     }
@@ -269,7 +276,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const model = selectedModel()
     const request = view.preparedRequest
     const skillInput = view.prepared
-    if (!ready || !model || !request || skillInput === null || view.phase !== "reviewing" || commandSent ||
+    if (!ready || !granted("intelligence.analysis.start") || !model || !request || skillInput === null || view.phase !== "reviewing" || commandSent ||
       request.caseRef.id !== selectedCase()?.caseRef.id || request.caseRef.version !== selectedCase()?.caseRef.version ||
       request.manifestDigest !== selectedAnalysis()?.manifestDigest) return
     commandSent = true
@@ -287,8 +294,13 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       setView({ phase: "outcome-unknown", notice: "sf.u37.unknownOutcome" })
       return
     }
-    if (result.body.status !== "ok") {
-      const refused = ["stale", "denied", "needs-input", "invalid", "conflict"].includes(result.body.status)
+    if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied") {
+      commandSent = false
+      setView({ phase: "failed", notice: "sf.u37.denied" })
+      return
+    }
+    if (result.status !== 200 || result.body.status !== "ok") {
+      const refused = ["stale", "denied", "unauthenticated", "needs-input", "invalid", "conflict"].includes(result.body.status)
       if (refused) commandSent = false
       setView({ phase: refused ? "failed" : "outcome-unknown", notice:
         result.body.status === "stale" ? "sf.u37.stale" :
@@ -308,7 +320,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
   const cancel = async () => {
     const ready = owner.ready()
     const run = view.run
-    if (!ready || !run || view.phase !== "confirm-cancel" || commandSent ||
+    if (!ready || !granted("intelligence.analysis.cancel") || !run || view.phase !== "confirm-cancel" || commandSent ||
       !["preparing", "queued", "running", "needs-input"].includes(run.state)) return
     commandSent = true
     commandAbort?.abort()
@@ -325,15 +337,16 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       setView({ phase: "outcome-unknown", notice: "sf.u37.unknownOutcome" })
       return
     }
-    const refused = result.body.status === "denied" || result.body.status === "stale" ||
+    const refused = result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||
+      result.body.status === "denied" || result.body.status === "stale" ||
       result.body.status === "needs-input" || result.body.status === "invalid" || result.body.status === "conflict"
-    const acknowledged = result.body.status === "ok"
+    const acknowledged = result.status === 200 && result.body.status === "ok"
     if (acknowledged || refused) commandSent = false
     setView({
       phase: acknowledged || refused ? "idle" : "outcome-unknown",
       notice: acknowledged && result.body.value.cancelled ? "sf.u37.cancelled" :
         result.body.status === "stale" ? "sf.u37.stale" :
-          result.body.status === "denied" ? "sf.u37.denied" :
+          result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied" ? "sf.u37.denied" :
             acknowledged ? "sf.u37.unavailable" : "sf.u37.unknownOutcome",
     })
   }
@@ -430,10 +443,18 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 <dt>{t("sf.u37.skill")}</dt><dd>{view.preparedRequest!.skillId}</dd>
                 <dt>{t("sf.u37.objective")}</dt><dd>{view.preparedRequest!.objective}</dd>
                 <dt>{t("sf.u37.requested")}</dt><dd>{view.preparedRequest!.requestedOperationScope.join(", ")}</dd>
+                <dt>caseRef.incarnation</dt><dd>{view.preparedRequest!.caseRef.incarnation}</dd>
+                <dt>caseRef.version</dt><dd>{view.preparedRequest!.caseRef.version}</dd>
+                <dt>profileVersion</dt><dd>{view.preparedRequest!.profileVersion}</dd>
+                <dt>skillVersion</dt><dd>{view.preparedRequest!.skillVersion}</dd>
+                <dt>manifestDigest</dt><dd>{view.preparedRequest!.manifestDigest}</dd>
+                <dt>outputSchemaVersion</dt><dd>{view.preparedRequest!.outputSchemaVersion}</dd>
+                <dt>{t("sf.u37.chooseModel")}</dt><dd>{selectedModel() ? selectedModel()!.providerID + "/" + selectedModel()!.id + (selectedModel()!.variant ? "/" + selectedModel()!.variant : "") : ""}</dd>
+                <dt>skillInput</dt><dd><pre class="sf-analyses-original">{JSON.stringify(view.prepared)}</pre></dd>
               </dl>
               <p>{t("sf.u37.reviewSource")}</p>
               <p class="sf-analyses-note">{t("sf.u37.reviewWarning")}</p>
-              <button class="mx-btn primary" type="button" disabled={!selectedModel() || commandSent}
+              <button class="mx-btn primary" type="button" disabled={!selectedModel() || !granted("intelligence.analysis.start") || commandSent}
                 onClick={() => void start()}>{t("sf.u37.confirmStart")}</button>
               <button class="mx-btn" type="button" onClick={invalidatePrepared}>{t("sf.u37.returnToList")}</button>
             </section>
@@ -504,7 +525,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                       <div class="sf-analyses-warning">
                         <p>{t("sf.u37.cancelWarning")}</p>
                         <button class="mx-btn danger" type="button" onClick={() => void cancel()}
-                          disabled={commandSent}>{t("sf.u37.confirmCancel")}</button>
+                          disabled={commandSent || !granted("intelligence.analysis.cancel")}>{t("sf.u37.confirmCancel")}</button>
                         <button class="mx-btn" type="button" onClick={() => setView("phase", "idle")}>{t("sf.u37.returnToList")}</button>
                       </div>
                     </Show>

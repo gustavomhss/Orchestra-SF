@@ -166,9 +166,12 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
         { signal: controller.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (controller.signal.aborted || generation !== owner.generation()) return
-      if (result.kind === "response" && result.body.status === "ok") {
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok" && result.body.value.outcome === "applied") {
         setView({ outcome: { receiptId: result.body.value.receiptId,
           outcome: result.body.value.outcome }, recovery: "confirmed" })
+      } else if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
+        setView({ outcome: { receiptId: result.body.value.receiptId, outcome: result.body.value.outcome },
+          recovery: "unknown", state: result.body.value.outcome === "conflict" ? "conflict" : "partial" })
       } else if (result.kind === "response") {
         const state = u18PortState(result)
         if (state === "denied" || state === "session-expired") clearPrivate(state)

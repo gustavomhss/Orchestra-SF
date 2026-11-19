@@ -103,6 +103,10 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     }
   }
 
+  const canPrepare = () => {
+    const ready = owner.ready()
+    return !!ready && sfOperationReady(ready.context, "decisions.current-choice-prepare")
+  }
   const canPromote = () => {
     const ready = owner.ready()
     return !!ready && sfOperationReady(ready.context, "decisions.current-choice-promote")
@@ -132,8 +136,9 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     const current = selected()
     const choice = current?.choices.find((item) => item.id === choiceId)
     const ready = owner.ready()
-    if (!current || !choice?.request || !ready || view.busy ||
-      currentState() !== "ready" || view.outcome === "unknown") return
+    if (!current || !choice?.request || !ready || !canPrepare() || view.busy ||
+      currentState() !== "ready" || view.outcome === "unknown" ||
+      !sameRouteCase(props.route.params.caseRef, current.caseRef.id, current.caseRef.incarnation)) return
     const generation = owner.generation()
     const fence = ++mutationFence
     mutationAbort?.abort()
@@ -146,7 +151,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
         choice.request, { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
-      if (result.kind === "response" && result.body.status === "ok") {
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
         const review = result.body.value
         if (review.promotion.choiceId !== choiceId ||
           review.promotion.caseRef.id !== current.caseRef.id ||
@@ -194,7 +199,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
         review.promotion, { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
-      if (result.kind === "response" && result.body.status === "ok") {
+      if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
         const returned = result.body.value.caseRef
         if (returned.id !== review.promotion.caseRef.id ||
           returned.incarnation !== review.promotion.caseRef.incarnation ||
@@ -283,7 +288,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                         <p>{choice.reason}</p>
                         <button
                           type="button" class="mx-btn"
-                          disabled={!choice.request || view.busy || view.outcome !== "idle"}
+                          disabled={!choice.request || !canPrepare() || view.busy || view.outcome !== "idle"}
                           aria-pressed={view.selectedChoiceId === choice.id}
                           onClick={() => void prepare(choice.id)}
                         >
