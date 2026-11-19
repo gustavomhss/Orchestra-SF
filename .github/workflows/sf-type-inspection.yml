@@ -1,0 +1,39 @@
+name: SF canonical typecheck inspection
+on:
+  push:
+    branches:
+      - ci-types-20261119
+permissions:
+  contents: read
+jobs:
+  types:
+    name: types (${{ matrix.scope }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - scope: CLI
+            directory: apps/cli
+            command: bun run typecheck
+          - scope: app-shell
+            directory: packages/app-shell
+            command: bun run typecheck
+          - scope: SF-E2E
+            directory: packages/app-shell
+            command: bun run typecheck:sf-e2e --pretty false
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 15388053117883174329454207e60e2a878f5426
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+      - name: Match canonical Playwright Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Canonical typecheck
+        working-directory: ${{ matrix.directory }}
+        run: ${{ matrix.command }}
