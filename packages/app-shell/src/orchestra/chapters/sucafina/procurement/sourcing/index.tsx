@@ -1,5 +1,5 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSfContext } from "../../context"
 import type { SfContext, SfEditScopeKey, SfSurfaceProps } from "../../context/contracts"
@@ -425,12 +425,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       if(draft()===controllerDraft)controllerDraft.setPhase("conflict")
       setUi("review",null);setUi("phase","conflict");release();return
     }
+    // The reviewed data is snapshotted once for both the digest and strict wire codec.
+    const sourcing=structuredClone(unwrap(intent.sourcing))
     const intentRef=crypto.randomUUID() as SfOperationRef
     const idempotencyKey=crypto.randomUUID()
     const payload=intent.action==="select_quote"?{page:"Requests",action:"select_quote",
       id:intent.requestRef,version:intent.version,values:{quoteId:intent.quoteId}}:
       {page:"Requests",action:intent.action,id:intent.requestRef,
-       version:intent.version,values:{sourcing:intent.sourcing}}
+       version:intent.version,values:{sourcing}}
     const payloadJson=JSON.stringify(payload)
     let digest:string
     try{
@@ -442,6 +444,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(ui.review!==intent||phaseNow()!=="checking"||!ui.sending||ui.state!=="ready"||ui.token!==token||ref()!==intent.requestRef||
        !current||!row||row.number!==intent.requestRef||sourceVersion()!==intent.version||
        requestRevision(current,intent.requestRef)!==intent.sourceRevision||!can(intent.action)||JSON.stringify(payload)!==payloadJson||
+       JSON.stringify(sourcing)!==JSON.stringify(intent.sourcing)||
        draftConflict()||draftPending()||currentDraft!==controllerDraft||
        !sourcingDraftDispatchable(controllerDraft.snapshot(),intent.version,intent.action,intent.sourcing)||
        (intent.action==="select_quote"&&(ui.quoteChoice!==intent.quoteId||!quoteIsPersisted(row,intent.quoteId??"")||
@@ -474,9 +477,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           values:{quoteId:intent.quoteId!}},options)
         : intent.action==="submit_sourcing"
           ? await client["domain.command.CAP25.submit_sourcing"]({...requestBody,action:"submit_sourcing",
-            values:{sourcing:intent.sourcing}},options)
+            values:{sourcing}},options)
           : await client["domain.command.CAP25.save"]({...requestBody,action:"save",
-            values:{sourcing:intent.sourcing}},options)
+            values:{sourcing}},options)
       if(controller.signal.aborted||authority()!==token)return
       if(response.kind==="transport-error"){
         controllerDraft.setPhase("outcome-unknown")

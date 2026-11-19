@@ -475,8 +475,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     if (review.action !== "create" && (!review.ref || version() !== review.version ||
         row()?.status !== review.status)) return
     // Pass the original data to the strict wire schema, without Solid store proxies.
-    const pr = review.pr ? unwrap(review.pr) : undefined
-    const po = review.po ? unwrap(review.po) : undefined
+    const pr = review.pr ? structuredClone(unwrap(review.pr)) : undefined
+    const po = review.po ? structuredClone(unwrap(review.po)) : undefined
     if (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
         (review.ref && activePr()?.baseVersion !== review.version))) return
     if (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||

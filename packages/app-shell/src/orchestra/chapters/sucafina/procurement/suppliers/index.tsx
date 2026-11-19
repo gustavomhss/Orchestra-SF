@@ -535,7 +535,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       return
     }
     // Keep every original field; only remove the reactive wrapper before codec admission.
-    const value = unwrap(intent.value)
+    const value = structuredClone(unwrap(intent.value))
     const opRef = crypto.randomUUID() as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
     const requestBody = { page: "Suppliers", action: intent.action,
