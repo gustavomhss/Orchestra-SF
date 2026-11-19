@@ -5,6 +5,7 @@ import { createSfDecisionMemoryVerifier } from "../../../../../../../apps/cli/sr
 import { createSfAnalysisSelectionReaders } from "../../../../../../../apps/cli/src/sucafina-product/analysis-services-readers.ts"
 import { sfAnalysisSourcesAuthorized } from "../../../../../../../apps/cli/src/sucafina-product/analysis-memory-evidence.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { revalidateSfAtlasRecall } from "../../../../product/host-binding/atlas-memory.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { verifierOutputFixture } from "../analysis-composition/verifier-output-fixture.ts"
 import { withMemoryIntegrityFixture } from "./fixture.ts"
@@ -28,6 +29,7 @@ type Tail = {
   request: Request
   adapters: ReturnType<typeof realMemoryAdapters>
   canonicalReads: () => number
+  canonicalRecords: () => readonly unknown[] | undefined
 }
 
 // The chosen case/source seed is synthetic. C08/SQLite, C12, BCS, Atlas,
@@ -44,9 +46,10 @@ async function withHistoricalTail(scenario: string, work: (tail: Tail) => Promis
     const call = admission.value
     const recall = f.atlas.memory.recall
     let completed = 0
+    let records: readonly unknown[] | undefined
     f.atlas.memory.recall = async (caseRef, trusted) => {
       const result = await recall(caseRef, trusted)
-      if (result.status === "ok") completed += 1
+      if (result.status === "ok") { completed += 1; records = result.records }
       return result
     }
     try {
@@ -58,7 +61,7 @@ async function withHistoricalTail(scenario: string, work: (tail: Tail) => Promis
       const atlasBefore = await f.readAtlas()
       const inputIdentity = digestSfValue([f.value, f.analysis])
       const headers = digestSfValue([...request.headers.entries()])
-      await work({ f, call, request, adapters: realMemoryAdapters(f), canonicalReads: () => completed })
+      await work({ f, call, request, adapters: realMemoryAdapters(f), canonicalReads: () => completed, canonicalRecords: () => records })
       expect(f.access.allowed).toBe(false)
       expect(request.signal.aborted).toBe(false)
       expect(digestSfValue([...request.headers.entries()])).toBe(headers)
@@ -86,6 +89,14 @@ test("Memory integrity revocation tail refuses producer preparation after an aut
     const prepared = await f.deadline.phase("tail.prepare-authorized", () => producer.prepare(value, analysis, call))
     expect(prepared).toEqual({ status: "ok", value })
     expect(canonicalReads()).toBeGreaterThan(before)
+    const completedRecords = tail.canonicalRecords()
+    if (!completedRecords) throw new Error("The real Atlas observation was not recorded")
+    expect(await revalidateSfAtlasRecall([completedRecords], call)).toBe(false)
+    const independent = await f.atlas.memory.recall(f.caseRef, call)
+    expect(independent.status).toBe("ok")
+    if (independent.status !== "ok") throw new Error("Independent Atlas recall unavailable")
+    expect(await revalidateSfAtlasRecall([independent.records], call)).toBe(true)
+    expect(await revalidateSfAtlasRecall([independent.records], call)).toBe(false)
     revoke(tail)
     const rejected = await f.deadline.phase("tail.prepare-revoked", () => producer.prepare(value, analysis, call))
     expect(rejected.status).toBe("unavailable")
