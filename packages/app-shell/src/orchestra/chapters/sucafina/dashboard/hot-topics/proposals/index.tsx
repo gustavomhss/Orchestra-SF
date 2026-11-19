@@ -448,7 +448,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
         <Show when={receiptFailure()}>{(result) =>
           <p>{t(key("sf.u38.status"))}: {result().status} · {result().errors.join(" · ")}</p>
         }</Show>
-        <button type="button" class="mx-btn" onClick={() => bump((count) => count + 1)}>
+        <button type="button" class="mx-btn" onClick={() => { setApplicationResult(undefined); bump((count) => count + 1) }}>
           {t(key("sf.u38.refresh"))}
         </button>
       </section>}</Show>
