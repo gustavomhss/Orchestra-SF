@@ -25,10 +25,10 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", nativeOrigin).href)
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
-  // UNBOUND: the Requests chapter does not expose the C02 provenance anchors.
-  // Keep the source-ref/digest/version assertions until a native route owns them.
-  const source = page.locator("a[data-source-ref]").first()
+  const source = page.locator('tr[data-sf-row="' + manifest.records.comparison + '"]').locator("a[data-source-ref]")
+  await expect(source).toHaveCount(1)
   await expect(source).toBeVisible()
+  await expect(source).toHaveAttribute("href", "?request=" + encodeURIComponent(manifest.records.comparison) + "#" + encodeURIComponent(manifest.records.comparison))
   await expect(source).toHaveAttribute("data-source-ref", /.+/)
   await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
   await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
@@ -76,7 +76,12 @@ async function createDraft(page: Page, account: Account, title: string) {
   const id = (await row.getAttribute("data-sf-row")) ?? ""
   expect(id).toMatch(/^PR-2026-\d+$/)
   await expect(row.getByRole("cell").first()).toContainText(id)
-  await expect(row.getByRole("link")).toHaveCount(0)
+  const source = row.getByRole("link", { name: id, exact: true })
+  await expect(source).toHaveCount(1)
+  await expect(source).toHaveAttribute("href", "?request=" + encodeURIComponent(id) + "#" + encodeURIComponent(id))
+  await expect(source).toHaveAttribute("data-source-ref", /.+/)
+  await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
+  await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
   await openRecord(page, account, id)
   await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition draft")
   return id

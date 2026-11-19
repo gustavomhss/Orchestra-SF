@@ -593,7 +593,12 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const columns: readonly SfColumn<SfRequest>[] = [
     { id: "number", labelKey: tableKey("sf.u11.remaining.identity"), sortKey: "number",
       align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 200 },
-      render: (row) => <span>{row.number ?? "—"}</span> },
+      render: (row) => typeof row.number === "string" ? <a
+        href={"?request=" + encodeURIComponent(row.number) + "#" + encodeURIComponent(row.number)}
+        data-source-ref={row.sourceRef ?? undefined}
+        data-source-digest={row.sourceDigest ?? undefined}
+        data-source-version={row.sourceVersion === null ? undefined : String(row.sourceVersion)}
+      >{row.number}</a> : <span>—</span> },
     { id: "title", labelKey: tableKey("sf.u11.remaining.field.title"), sortKey: "title",
       align: "start", widthPolicy: { kind: "flex", minPx: 150, weight: 3 },
       render: (row) => <span>{row.pr?.title ?? "—"}</span> },
