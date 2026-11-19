@@ -20,6 +20,10 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Original review-agenda GET/POST and human review-preserve; the producer retains all admission.
+  "reviews.review-agenda-options": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-agenda"}},
+  "reviews.review-agenda": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"preview","responseMode":"json","fixedQuery":{"sf":"review-agenda"},"maxRequestBytes":262144},
+  "reviews.review-preserve": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"review-preserve"},"maxRequestBytes":262144},
   "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
   // Original procurement download(kind="po") requires one authorized request selector.
   "files.export.po": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"po"}},

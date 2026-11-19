@@ -72,7 +72,7 @@ export function createSfExtendedBusinessServices(input: {
   let disposed = false
   const productHttp: NonNullable<Application["product"]> = async (request, surface) => disposed ? undefined : await choiceHttp(request, surface) ?? await http(request, surface)
   return {
-    descriptors, replacements, productHttp, bi, biArtifacts: biArtifacts.store, choices, reviews, decisions, alternatives,
+    descriptors, replacements, productHttp, bi, biArtifacts: biArtifacts.store, choices, reviews, reviewAgenda, decisions, alternatives,
     portfolio: portfolioServices.product, portfolioServices, portfolioProof: portfolioServices.proof, units: portfolioServices.units,
     readers: { biSelection, selectedSensitivity: choices.readSensitivity,
       ...(reviews ? { reviewSnapshot: reviews.reviews.read, artifacts: reviews.artifacts } : {}),

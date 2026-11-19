@@ -6,6 +6,7 @@ import { expect } from "@playwright/test"
 import { reportsTest } from "./reports-support/fixture.ts"
 import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
 import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
+import { prepareFirstAgenda } from "./review-agenda-support/first-agenda.ts"
 import { confirmHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
 import { revokeReportsSession } from "./reports-support/revocation.ts"
@@ -26,7 +27,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
     info.annotations.push({ type: "t2a-native-parity", description: "PENDENTE — UI48/UI50 U32/U33 exibem review preservado e 25 registros; U33 exige download Office indisponivel. Falta prova de DOCX/PPTX de bytes originais e follow do source versionado." })
     const { app, corpus } = reports
-    const { saved } = await reportsTest.step("Prepare and explicitly preserve the authorized dossier", () => prepareReview(page, app, corpus, info))
+    const { saved } = await reportsTest.step("Prepare and explicitly preserve the authorized dossier", () => prepareFirstAgenda(page, app, corpus, info))
     await reportsTest.step("Edit the real January source once without refreshing the capture", () => changeForecast(page, app, corpus))
     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
     const docx = await reportsTest.step("Download DOCX and assert values, periods, all identities and the long-note tail", () => exportReview(page, app, saved, corpus, "docx", info))

@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
+import { For, Show, createEffect, createSignal, createUniqueId, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -10,6 +10,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { SfDashboardDashboardAgenda, SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
 import { operationGranted, PeriodText } from "../labels"
+import { SfMultiDomainAgenda } from "./multi-domain"
 import "./agenda.css"
 
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
@@ -29,13 +30,17 @@ function stateOf(result: { kind: "transport-error"; reason: string } | { kind: "
 
 /** UI47: the producer is the sole source for section identity, count and period. */
 export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
-  return <SfAgendaEditor year={props.route.query.year} />
+  const [multiDomain, setMultiDomain] = createSignal(false)
+  return <Show when={multiDomain()} fallback={<SfAgendaEditor year={props.route.query.year} onDomains={() => setMultiDomain(true)} />}>
+    <SfMultiDomainAgenda year={props.route.query.year} onDashboard={() => setMultiDomain(false)} />
+  </Show>
 }
 
 export function SfAgendaEditor(props: {
   year?: number
   initial?: readonly Section[]
   previousReviewRef?: string
+  onDomains?: () => void
 }) {
   const owner = useSfContext()
   const language = useLanguage()
@@ -247,7 +252,8 @@ export function SfAgendaEditor(props: {
       context={[]}
       tabs={[]}
       activeTab={null}
-      secondaryActions={[]}
+      secondaryActions={props.onDomains ? [{ id: "domains", labelKey: key("sf.u25.chooseDomains"),
+        disabled: store.phase === "submitting" || store.phase === "outcome-unknown", onInvoke: props.onDomains }] : []}
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}

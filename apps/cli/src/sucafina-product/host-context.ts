@@ -93,7 +93,7 @@ import { createSfProductContribution, createSfProductDispatch } from "./contribu
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
-import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
+import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth, observeSfReviewAgendaHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
@@ -972,11 +972,30 @@ export const createSfHostRuntimeWithRoutineNative = async (
               return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
                 business.dashboardServices, business.dashboardServices.readReview, input.persistence, input.persistence.resolveScopedSource] }
             }
+            if (operationId === "reviews.review-source" || operationId === "reviews.review-update") {
+              if (services.productHttp !== productHttp || !extended.reviews) return undefined
+              return { producer: productHttp, dependencies: [extended.productHttp, extended.reviews, extended.reviews.reviews,
+                extended.reviews.reviews.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
+                input.persistence, input.persistence.resolveScopedSource] }
+            }
             if (!nativeReviewProjection || services.nativeReviewProjection !== nativeReviewProjection || !extended.reviews) return undefined
             return { producer: nativeReviewProjection, dependencies: [authority, authority.ui, authority.state, nativeReviewProjection.handle,
               extended.reviews, extended.reviews.reviews, extended.reviews.reviews.read, business.dashboardServices,
               business.dashboardServices.discover, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
               input.persistence, input.persistence.resolveScopedSource] }
+          } }, request, stamp),
+        observeSfReviewAgendaHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions,
+          source: (operationId) => {
+            if (services.productHttp !== productHttp) return undefined
+            if (operationId === "dashboard.dashboard-agenda" || operationId === "dashboard.dashboard-review-preserve")
+              return { producer: productHttp, dependencies: [dashboardHttp, business.dashboardServices,
+                business.dashboardServices.agenda, business.dashboardServices.preserveReview,
+                business.dashboardSources, business.dashboardSources.resolveDashboardSource, input.persistence] }
+            if (!extended.reviews?.agenda) return undefined
+            return { producer: productHttp, dependencies: [extended.productHttp, extended.reviewAgenda,
+              extended.reviewAgenda.discover, extended.reviews, extended.reviews.http, extended.reviews.agenda,
+              extended.reviews.agenda.create, extended.reviews.human, extended.reviews.human.preserve, input.persistence] }
           } }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])

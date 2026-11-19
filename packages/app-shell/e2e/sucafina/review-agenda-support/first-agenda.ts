@@ -15,29 +15,18 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   await expect(page.locator('[data-sf-surface="CAP03"]')).toBeVisible()
   const sourceBefore = await readSourceData(page.request, app)
   const reportsEntry = page.getByRole("link", { name: "Reports and backup", exact: true })
-  await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda")
+  await expect(reportsEntry).toHaveAttribute("href", "/orchestra/sf-reviews/agenda?year=" + String(corpus.year))
   await reportsEntry.click()
   await expect(page.locator('[data-sf-surface="UI47"]')).toBeVisible()
-  // UNBOUND: UI47 has a dashboard-section picker, not the legacy multi-domain agenda form.
-  const form = page.locator("form.report-form")
-  await expect(form).toHaveCount(1)
-  await form.getByLabel("Format", { exact: true }).selectOption("docx")
-  await form.getByLabel("Year", { exact: true }).selectOption(String(corpus.year))
-  await form.getByLabel("Title", { exact: true }).fill("First review with several domains and periods")
-  for (const checkbox of await form.getByRole("checkbox").all()) await checkbox.uncheck()
-  await form.getByRole("checkbox", { name: "Budget Overview", exact: true }).check()
-  await form.getByRole("button", { name: "Generate Report", exact: true }).click()
-
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+  await page.getByRole("button", { name: "Choose agenda domains", exact: true }).click()
+  const preparation = page.locator("[data-sf-multi-agenda]")
   const picker = preparation.getByRole("region", { name: "Agenda topics", exact: true })
-  const chosen = preparation.getByRole("list", { name: "Selected agenda", exact: true })
+  const chosen = preparation.getByRole("list", { name: "Agenda order and periods", exact: true })
+  await expect(preparation).toHaveCount(1)
   await expect(preparation).toBeVisible()
   await expect(picker).toBeVisible()
-  await expect(chosen.getByRole("listitem")).toHaveCount(1)
-  await expect(chosen.getByRole("button", { name: "Remove selected Budget", exact: true })).toBeVisible()
-  await expect(preparation.getByRole("button", { name: "Preserve this review", exact: true })).toHaveCount(0)
-
-  let selectedCount = 1
+  await expect(preparation.getByRole("button", { name: "Confirm preservation", exact: true })).toHaveCount(0)
+  let selectedCount = 0
   const selections: ReviewAgendaOption[] = []
   const discover = async (domain: ReviewAgendaDomain, period: Period) => {
     await picker.getByLabel("Period start", { exact: true }).fill(period.start)
@@ -74,6 +63,9 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   }
 
   const dashboard = await discover("dashboard", corpus.annual)
+  await add(dashboard, "Budget Overview")
+  await expect(chosen.getByRole("listitem")).toHaveCount(1)
+  await expect(chosen.getByRole("button", { name: "Remove selected Budget Overview", exact: true })).toBeVisible()
   await expect(picker.getByRole("button", { name: "Refresh Budget Overview", exact: true })).toBeEnabled()
   const projects = await add(dashboard, "Portfolio Dashboard")
   const hotTopics = await add(dashboard, "Hot Topics & Actions")
@@ -86,10 +78,10 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   expect(procurement.item.kind).toBe("procurement-request")
   await expect(chosen.getByRole("listitem")).toHaveCount(7)
   await expect(chosen.getByText(`IT Operations · dashboard · ${corpus.january.start} – ${corpus.january.end}`, { exact: true })).toBeVisible()
-  await expect(chosen.getByText(`Budget · dashboard · ${corpus.annual.start} – ${corpus.annual.end}`, { exact: true })).toBeVisible()
+  await expect(chosen.getByText(`Budget Overview · dashboard · ${corpus.annual.start} – ${corpus.annual.end}`, { exact: true })).toBeVisible()
 
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
-  await preparation.getByRole("button", { name: "Load selection", exact: true }).click()
+  await preparation.getByRole("button", { name: "Review selected sections", exact: true }).click()
   const agendaResponse = await pendingAgenda
   const submitted = object(agendaResponse.request().postDataJSON())
   expect(Array.isArray(submitted.items)).toBe(true)
@@ -144,7 +136,7 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   await preparation.getByRole("button", { name: "Remove IT Risks", exact: true }).click()
   await expect(preparation.getByRole("heading", { level: 3 })).toHaveText(titles.filter((title) => title !== "IT Risks"))
   await expect(chosen.getByRole("button", { name: "Remove selected IT Risks", exact: true })).toHaveCount(0)
-  await preparation.getByRole("button", { name: "Move Projects up", exact: true }).click()
+  await preparation.getByRole("button", { name: "Move up: Projects", exact: true }).click()
   const orderedTitles = ["Projects", "Budget", "Hot Topics", "IT Operations", baselineTitle, candidateTitle, procurement.label]
   await expect(preparation.getByRole("heading", { level: 3 })).toHaveText(orderedTitles)
   const selectedSections = orderedTitles.map((title) => sectionNamed(preview, title))
@@ -152,7 +144,7 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
   expect(await readSourceData(page.request, app)).toEqual(sourceBefore)
 
   const pendingPreserve = page.waitForResponse(responseFor(app.dashboardURL, "review-preserve", "POST"))
-  await preparation.getByRole("button", { name: "Preserve this review", exact: true }).click()
+  await preparation.getByRole("button", { name: "Confirm preservation", exact: true }).click()
   const preserved = await pendingPreserve
   expect(preserved.status()).toBe(200)
   expect(preserved.request().postDataJSON()).toEqual({ selectionRef: preview.selectionRef, sectionRefs: selectedSections.map((section) => section.id) })
@@ -168,7 +160,7 @@ export async function prepareFirstAgenda(page: Page, app: ReportsInstallation, c
     expect(projection(section.content)).toEqual(selectedSections[index]!.projection)
   })
   expect(saved.sections[0]!.count).toBe(25)
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
+  await expect(preparation.locator("[data-sf-preserved-confirmed] p")).toHaveText("The producer confirmed that the review was preserved.")
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
   expect(await readSourceData(page.request, app)).toEqual(sourceBefore)
   await info.attach("first-agenda-explicit-selection", { body: JSON.stringify({

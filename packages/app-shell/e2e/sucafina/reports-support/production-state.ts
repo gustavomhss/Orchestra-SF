@@ -2,6 +2,7 @@ import path from "node:path"
 import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { reportsCorpus } from "./corpus.ts"
+import { seedFirstAgendaSources } from "../review-agenda-support/source-seed.ts"
 
 // Invoked under Bun by the owned setup process, only before the real CLI starts.
 // The installed source lifecycle, domain projections and authorization are not replaced.
@@ -25,6 +26,7 @@ try {
     ].map((key) => [key, { version: 1, by: principal }]))
     return { commit: true, value: undefined }
   })
+  await seedFirstAgendaSources(store, principal, today, corpus.year)
   process.stdout.write(JSON.stringify({ seeded: true, projects: corpus.projects.length, year: corpus.year, sourceForecast: corpus.before }))
 } finally {
   await store.dispose()
