@@ -11,7 +11,7 @@ import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucaf
 import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory"
 import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections"
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider"
-import { createSfWorkbenchHttp } from "../../../../../modules/sucafina/Sucafinav1/product/interface/http"
+import type { DecisionCase } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
 import { prepareC12Change } from "../../../../../modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture"
@@ -148,24 +148,32 @@ if (!retained) {
   if (queue.status !== "ok" || matches.length !== 1) throw new Error("C12_REAL_C02_SOURCE_AMBIGUOUS")
   const evidence = Schema.decodeUnknownSync(Schema.toType(SfSourceEvidenceInput))(matches[0]!.evidence)
   if (evidence.kind !== "record") throw new Error("C12_RECORD_EVIDENCE_REQUIRED")
-  // The production installation composes this original command producer after
-  // productHttp. Operations does not mount it; use the same runtime for the seed.
-  const workbench = createSfWorkbenchHttp({ origin, mount, runtime: () => installation.services?.() })
-  const draftResponse = await workbench(new Request(origin + mount + "/dashboard?sf=workbench-command", {
-    method: "POST", headers: { cookie: sessionHeader, origin, "content-type": "application/json", "idempotency-key": randomUUID() },
-    body: JSON.stringify({ operation: "sf_case_draft", input: {
-      objective: "Review a controlled requisition amount", criteria: ["Budget impact"],
-      horizon: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD", sourceRefs: [evidence],
-    } }),
-  }), "dashboard")
-  if (draftResponse?.status !== 200) {
-    const rejected = draftResponse ? object(await draftResponse.json().catch(() => ({}))) : {}
-    throw new Error(`C12_REAL_CASE_CREATION_FAILED status=${draftResponse?.status ?? "unmounted"} outcome=${typeof rejected.status === "string" ? rejected.status : "unknown"}`)
+  // C12 qualifies Apply/Recover, not authoring. Persist the synthetic case
+  // through the same authenticated C08 creation target and SQLite authority.
+  const decision: DecisionCase = {
+    id: randomUUID(), incarnation: randomUUID(), version: 1, state: "draft",
+    objective: "Review a controlled requisition amount",
+    horizon: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD",
+    participants: [actorId],
+    criteria: [{ id: randomUUID(), description: "Budget impact", required: true }],
+    sourceRefs: [evidence], alternatives: [], costCoverageBases: [], assumptions: [],
+    questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [],
   }
-  const draft = object(await draftResponse.json())
-  const match = typeof draft.outputRef === "string" ? /^case:([^:]+):([^:]+)$/.exec(draft.outputRef) : null
-  if (draft.status !== "ok" || !match) throw new Error("C12_REAL_CASE_IDENTITY_MISSING")
-  caseId = decodeURIComponent(match[1]!)
+  const existing = await authority.state.read(request(), "cases", (state) => Object.keys(state.cases).length)
+  if (existing.status !== "ok" || existing.value !== 0) throw new Error("C12_FRESH_CASE_NAMESPACE_REQUIRED")
+  const seeded = await authority.state.transaction(request(actorId, undefined, decision), {
+    namespace: "cases", expectedStorageVersion: existing.storageVersion,
+    targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
+    idempotencyKey: randomUUID(), commandDigest: digestSfValue(decision),
+  }, async (state) => {
+    state.cases[decision.id] = decision
+    return { commit: true, value: decision.id }
+  })
+  if (seeded.status !== "ok" || seeded.value !== decision.id) throw new Error("C12_REAL_CASE_SEED_FAILED")
+  caseId = seeded.value
+  const persisted = await storedCase()
+  if (persisted.value.incarnation !== decision.incarnation || persisted.value.version !== decision.version ||
+      persisted.value.objective !== decision.objective) throw new Error("C12_REAL_CASE_SEED_READBACK_FAILED")
   prepared = await prepareC12Change({ authority, evidence, request, http, storedCase, material },
     { principalRef: actorId, participants: [actorId] })
   await writeFile(metadataFile, JSON.stringify({ caseId, prepared }), { mode: 0o600 })
