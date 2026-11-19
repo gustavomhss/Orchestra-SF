@@ -95,7 +95,8 @@ export async function createThreadActorsFixture(options: Pick<Parameters<typeof 
     if (historical.revoked) return { state: "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
     if (!historical.allowed) return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
     const current = await refresh(ref, context)
-    return current.status === "ok" && await historicalAccess(ref, context) ? { state: "historical", ref, currentRef: current.value, authorizedProjection: original.projection, differences: [], accessRevision: context.binding.accessRevision, checkedAt: at } : { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
+    // The BCS historical branch must pass proveContinuity below before exposure.
+    return current.status === "ok" ? { state: "historical", ref, currentRef: current.value, authorizedProjection: original.projection, differences: [], accessRevision: context.binding.accessRevision, checkedAt: at } : { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
   }, proveContinuity: async (original, current, context) => {
     if (!historical.allowed || historical.revoked || !archived.has(original.refDigest) || original.kind !== "record") return false
     const refreshed = await refresh(original, context)

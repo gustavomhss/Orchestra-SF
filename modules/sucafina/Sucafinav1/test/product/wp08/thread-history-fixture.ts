@@ -53,7 +53,9 @@ export async function createThreadHistoryFixture(options: { supplement?: { refer
       const live = await currentForHistory(ref, context)
       if (live.status !== "ok") return current
       const projection = await fixture.records.read(live.value.refId, context)
-      if (projection.status !== "ok" || !await historicalAccess(ref, context)) return current
+      if (projection.status !== "ok") return current
+      // BCS exposes this candidate only after proveContinuity below reissues the
+      // current source and checks the original historical fence under a real root.
       return { state: "historical", ref, currentRef: live.value, authorizedProjection: captured.projection, differences: captured.projection.values.flatMap((before) => {
         const after = projection.value.values.find((value) => value.id === before.id)
         return after && before.value !== after.value ? [{ field: before.id, before: before.value, after: after.value }] : []

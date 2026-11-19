@@ -1,6 +1,6 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
-import { digestSfValue } from "../contracts/canonical.ts"
+import { canonicalSfValue, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -130,9 +130,15 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
       if (basis && (!validThreadSourceContext(basis) || !await (mode === "read" ? readReviewThreadBasis : reviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
       const authorizeSources = mode === "read" ? pin ? readHistoricalSources : readSources : pin ? historicalSources : sources
-      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
-      const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
-      if (messageRefs.length && !await authorizeSources(messageRefs, context)) return false
+      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef)) return false
+      // The thread and its messages often carry the same immutable source.
+      // Authorize each complete body once in this pass; different scopes, versions
+      // and contexts remain separate, and later passes reopen all authority.
+      const refs = [...new Map([
+        ...thread.evidenceRefs,
+        ...(thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []),
+      ].map((ref) => [canonicalSfValue(ref), ref])).values()]
+      if (!await authorizeSources(refs, context)) return false
       if (thread.recipientRef && (!await recipient(thread.recipientRef, context, mode === "read") || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
       if (!thread.messages) return mode === "write"
       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
