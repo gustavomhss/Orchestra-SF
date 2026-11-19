@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA: 6bc409c0e2731cbfbe43009ab106ed672c730043 (editor; este checkpoint acrescenta instalação nativa e ajustes de retenção)
+SHA: 7c25f0b4138dee75c777f1cbd08bb330f1adb104 (instalação; este commit acrescenta 3 cenários de navegador e a distinção entre retirada de escrita/leitura)
 Data: 2026-11-19
 Estado: partial
 
@@ -13,15 +13,17 @@ Estado: partial
 - A recuperação do primeiro save usa somente seu idempotencyKey original e a rota original de outcome, sem replay. O botão permanece dependente da ligação F02 estrita e da disponibilidade real.
 - CAP02 oferece entrada para uma nova proposta privada; esse botão navega para UI54 e não escreve o registro CAP02.
 - Instalação de testes em `proposals-support/host.ts` usa o factory original Operations, C08 e SQLite reais, sessão cifrada e rotas nativas. Os controles privados apenas retiram autoridade ou observam estado original.
+- Negação da escrita não apaga a leitura privada. Save 403 bloqueia a escrita e retém os valores até uma nova leitura real; somente negação de leitura/contexto limpa o editor e os metadados do pai.
 - Releitura da mesma base não exige nova confirmação; mudança de fonte/proposta exige confirmação. Retirada de escrita desabilita campos sem descartar valores.
 - O código de produtor e runtime/application.ts permanecem intocados.
 
 ## Pendente
 - UI54: `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/draft.tsx:1` implementado, ainda sem typecheck/gate; revisar tipos e comportamento no composto com o health original.
 - Composição F02: WP5 publicou `f5760ad992f59d258406aa52679e469c512294e5`, com exceção fechada para a chave original de outcome. Copiar seu common/registry composto, preservando os adapters; os 4 blobs domain/client são idênticos aos desta branch.
-- Composição de disponibilidade: root publicou `56de64aba20f85804c4ae584e3940e187e011c47` com health original e os 2 IDs em 3 resources. Seu selector de namespace precisa incluir preferences/receipts; root coordena esse ajuste e os bindings C12.
+- Composição de disponibilidade: root publicou `56de64aba20f85804c4ae584e3940e187e011c47` com health original e os 2 IDs em 3 resources. Selector preferences/receipts corrigido em `22a11d693269b870a1f049bd87a465833607af22`, run `44604756705` SUCCESS. Composição para o gate nativo: `8a279c2e011954b3fa27e9f69f7b1fb78b4d3104`.
 - Fixture/browser: `test/product/wp02/host-workbench.test.ts:147` e `test/product/dashboard-installed-closure/consumer-read.test.ts:64` ainda navegam no console404. Migrar para instalação nativa3000 conservando todos os fatos e negativos.
-- `packages/app-shell/e2e/sucafina/proposals-support/host.ts:1` e `installation.ts:1`: fixture publicada; faltam os 2 cenários consumer-read e gate Playwright3000. Portar também o assert de preservar registro para o controle nativo real, sem substituí-lo por permissões JSON.
+- `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:1`: 3 cenários publicados, ainda sem gate: os 2 consumer-read e o write-withdrawal de host-workbench. Asserção de preservar registro agora usa UI47 com o topic original selecionado, preview real e Confirm preservation desabilitado; não usa a rota UI53 incorreta.
+- `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241`: faltam os cenários completos agenda/histórico/C12 e conflito com segundo draft. Os 2 testes unitários puros :406/:432 permanecem. Só remapear ou retirar as jornadas Bun após qualificação nativa equivalente, sob coordenação root.
 - UI ainda sem gate. Não há qualificação de UI ou integração afirmada.
 
 ## Decisões e justificativas
@@ -32,9 +34,9 @@ Estado: partial
 - Registry/common nesta branch têm base sf-join-four. Ao compor com a branch retry, aplicar apenas os dois novos IDs, preservando os overrides de rotas e a construção SfFrozenOperationRoutes daquela branch.
 
 ## Como retomar
-1. Partir desta branch e acrescentar UI54/fixture nos caminhos acima.
-2. Compor as disponibilidades reais do root e a exceção F02 do WP5.
-3. Rodar o menor gate de navegador com os cenários originais; registrar SHA/run/resultado antes de merge.
+1. Sobrepor os 4 blobs de UI/copy e os 4 arquivos proposals-support/proposals.spec desta branch à composição `8a279c2e011954b3fa27e9f69f7b1fb78b4d3104`.
+2. Rodar test-ci app-shell/playwright `e2e/sucafina/dashboard-installed/proposals.spec.ts`; manter timeout original de 60s por teste.
+3. Corrigir somente os erros concretos, registrar SHA/run/resultado; depois completar/remapear as jornadas legadas restantes. O gate de transporte não substitui o navegador.
 
 ## Comandos e resultados
 - `bun run typecheck`: não rodado neste checkpoint.
