@@ -1,6 +1,6 @@
 # Handoff — finish-reports-20261119
 
-SHA: e664fccc3deb9ee42ba0255deca264a4005c48be (base deste ajuste; o commit atual acrescenta conclusão dos controllers, seletor primário e disponibilidade do leitor genérico).
+SHA: 7ca827d14a6eb63d898c466101089bd475ef14cb (código desta continuação; commit de handoff posterior).
 Data: 2026-11-19
 Estado: partial
 
@@ -108,3 +108,13 @@ Estado: partial
 - Gate do contrato F02 [44593918880](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44593918880): SUCCESS, 22 pass, 316 expect; código670eff1f0cfb1569ec47fba1c23780970307cb37. É dependência desta mudança; não qualifica sozinho a UI.
 - Reports6 [44589429193](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44589429193): FAILURE, 4 fail. Snapshot anterior ao conserto do loop de contexto5bd79e e aos bindings C05; RPT01/03 não montaramUI48 e RPT02/04 ficaram na leitura interrompida. Sem alegação de sucesso.
 - Pendente: packages/app-shell/e2e/sucafina/reports.spec.ts:27,42,108,124 — executar o gate instalado com F01 estável, bindings originais completos e este botão de recuperação.
+
+## Continuação — resposta original e corpo CDP
+
+- Código 7ca827d14a6eb63d898c466101089bd475ef14cb. Reports8 [44601697015](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44601697015), snapshot dbce7953e3a968f35e7d768a075109bb38598370: FAILURE, 4 falhas após compilações. Job135834512207 failure; cleanup135846012341 success. O helper aguardava response.finished em review-flow.ts608.
+- Auditoria somente de leitura [44605987156](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44605987156): SUCCESS. O artifact original mostra todas as 15 opções de agenda renderizadas; o transporte do navegador já consumiu os dados, mas CDP informa ERR_ABORTED e não conclui a espera. Nos runs3/4, JSON direto já havia produzido No data found. Não se repetiu essa tentativa isoladamente.
+- Fixture agora encaminha a chamada original por route.fetch com maxRetries0/maxRedirects0 e entrega a própria resposta por route.fulfill({response: original}). Nenhum status, cabeçalho, corpo ou autorização é construído. Há uma chamada original por gesto; não há replay de POST. Os handlers de perda de resposta específicos, registrados depois, mantêm precedência. As provas de chave/corpo iguais e uma única escrita C08 continuam ativas.
+- GET review-download e autenticação continuam no caminho original do navegador. Os formatos Office continuam proibidos como mutation/Schema.Never. A espera diagnóstica redundante finished foi retirada; a leitura e todas as asserções dos JSON originais continuam.
+- Tipos CLI/app/SF-E2E da composição14: [44601278233](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44601278233) SUCCESS. Fonte/destinos após conserto de fixtures: [44602831989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44602831989) SUCCESS, 9 pass/146 expect; não são prova de Reports instalado.
+- Asserções removidas nesta alteração: nenhuma. Timeouts do spec e fixture permanecem180000, workers1/retries0.
+- Pendente/unbound: reports.spec.ts27,42,108,124 — próximo gate de Reports deve qualificar agenda, C05, sucessora, revogação e bytes DOCX/PPTX. Não há resultado desse gate ainda.
