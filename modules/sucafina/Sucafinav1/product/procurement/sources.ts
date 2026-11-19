@@ -271,7 +271,7 @@ export function procurementRowSourceIdentity(snapshot: Snapshot, recordId: strin
   if (matches.length !== 1) return undefined
   const identity = sfScopedSourceIdentity(snapshot, matches[0]!.scope)
   if (!identity) return undefined
-  return { sourceRef: identity.incarnation, sourceDigest: identity.inputDigest }
+  return { sourceRef: identity.incarnation, sourceDigest: identity.inputDigest, sourceVersion: identity.version }
 }
 
 export function digestProcurementSource(value: unknown, settings: unknown, kind?: "request" | "supplier") {

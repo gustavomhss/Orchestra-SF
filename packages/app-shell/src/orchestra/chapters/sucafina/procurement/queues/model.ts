@@ -14,6 +14,7 @@ export type SfProcurementQueueRow = Readonly<{
   group: SfProcurementQueueGroup | null
   sourceRef: string | null
   sourceDigest: string | null
+  sourceVersion: number | null
   version: number | null
   moneySentence: string | null
   status: string | null

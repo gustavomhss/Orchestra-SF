@@ -681,7 +681,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         </Show>
         <Show when={current?.poEstimate}><p role="status">{current?.poEstimate}</p></Show>
         <Show when={current?.orderDifference}><p role="status">{current?.orderDifference}</p></Show>
-        <Show when={current?.status === "sourcing"}>
+        <Show when={current?.po?.supplierId && stage() !== "po"}>
+          <p>{t("sf.u11.remaining.field.supplierId")}: {current!.po?.supplierId}</p>
+        </Show>
+        <Show when={current?.status === "sourcing" || current?.status === "src_pending"}>
           <section>
             <Show when={current?.po}>
               <fieldset disabled>
@@ -696,7 +699,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
                 </label>
               </fieldset>
             </Show>
-            <button type="button" disabled>{t("sf.u11.remaining.submitPo")}</button>
+            <button type="button" disabled={!stageAllowed("submit_po")} onClick={() => reviewAction("submit_po")}>
+              {t("sf.u11.remaining.submitPo")}
+            </button>
           </section>
         </Show>
       </header>
@@ -782,6 +787,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
                 onClick={() => poDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
             </div>
           </Show>
+          <Show when={current?.po?.supplierId}><p>{t("sf.u11.remaining.field.supplierId")}: {current!.po?.supplierId}</p></Show>
           <Show when={current?.po?.contractRef}><p>{t("sf.u11.remaining.field.contractRef")}: {current!.po?.contractRef}</p></Show>
           <Show when={current?.po?.quoteRef}><p>{t("sf.u11.remaining.selectedQuote")}: {current!.po?.quoteRef}</p></Show>
           <Show when={stageAllowed("issue")}>
