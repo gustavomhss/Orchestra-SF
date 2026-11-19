@@ -35,7 +35,8 @@ export async function revalidateProposalSave(
     source?.refId !== original.targetEvidence.refId || source?.refDigest !== original.targetEvidence.refDigest) return { status: "unavailable" }
   const current = { caseRef: active.caseRef, target: active.target, targetEvidence: active.targetEvidence,
     fields: active.fields, sourceRefs: active.sourceRefs, expectedVersion: active.version, draftRef: active.draftRef }
-  if (!Schema.is(draftInput)(current) || current.caseRef.id !== original.caseRef.id ||
+  if (!Schema.is(draftInput)(current) || current.draftRef !== original.draftRef ||
+    current.caseRef.id !== original.caseRef.id ||
     current.caseRef.incarnation !== original.caseRef.incarnation || current.caseRef.version > actualCase.version ||
     current.target.id !== original.targetEvidence.target.recordId ||
     current.target.incarnation !== original.targetEvidence.target.incarnation) return { status: "unavailable" }
