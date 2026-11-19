@@ -144,7 +144,12 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
     {
       id: "request", labelKey: copyKey("sf.u10.queue.request"), align: "start",
       widthPolicy: { kind: "content", minPx: 100, maxPx: 240 },
-      render: (row) => <span>{row.id}</span>,
+      render: (row) => <a href={"?request=" + encodeURIComponent(row.id) + "#" + encodeURIComponent(row.id)}>{row.id}</a>,
+    },
+    {
+      id: "value-basis", labelKey: copyKey("sf.u10.queue.valueBasis"), align: "start",
+      widthPolicy: { kind: "content", minPx: 140, maxPx: 240 },
+      render: (row) => <span>{display(row.monetaryState)}</span>,
     },
     {
       id: "subject", labelKey: copyKey("sf.u10.queue.subject"), align: "start",
@@ -214,7 +219,9 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
     { id: "request", label: { key: copyKey("sf.u10.queue.request") },
       value: { kind: "text", text: { kind: "data", text: row.id } } },
     { id: "version", label: { key: copyKey("sf.u10.queue.version") },
-      value: { kind: "text", text: { kind: "data", text: String(row.version) } } },
+      value: { kind: "text", text: { kind: "data", text: row.version === null ? missing() : String(row.version) } } },
+    { id: "money", label: { key: copyKey("sf.u10.queue.moneySentence") },
+      value: { kind: "text", text: { kind: "data", text: display(row.moneySentence) } } },
     { id: "holder", label: { key: copyKey("sf.u10.queue.holder") },
       value: { kind: "text", text: { kind: "data", text: holderLabel(row) } } },
     { id: "stage", label: { key: copyKey("sf.u10.queue.stage") },

@@ -13,6 +13,8 @@ export const SF_U10_QUEUE_COPY = {
   "sf.u10.queue.all": "All",
   "sf.u10.queue.search": "Search",
   "sf.u10.queue.request": "Request",
+  "sf.u10.queue.valueBasis": "Value basis",
+  "sf.u10.queue.moneySentence": "Request money",
   "sf.u10.queue.subject": "Subject",
   "sf.u10.queue.status": "Status",
   "sf.u10.queue.stage": "Decision",

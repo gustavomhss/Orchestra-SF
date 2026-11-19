@@ -669,6 +669,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <p>{t("sf.u11.remaining.identity")}: {ref}</p>
           <p>{t("sf.u11.remaining.status")}: {current?.status}</p>
           <p>{t("sf.u11.remaining.version")}: {version() ?? "—"}</p>
+          <Show when={current?.moneySentence}>
+            <p>{current?.moneySentence}</p>
+          </Show>
         </Show>
         <Show when={current}>
           <p>{t("sf.u11.remaining.stage")}: {stage()}</p>

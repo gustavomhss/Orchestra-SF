@@ -11,10 +11,11 @@ export type SfProcurementQueueGroup = "waitingForYou" | "waitingForOthers" | "un
 export type SfProcurementQueueRow = Readonly<{
   id: SfRef
   /** Assigned ONLY by canonical procurementApprovalGroups on the producer. */
-  group: SfProcurementQueueGroup
-  sourceRef: string
-  sourceDigest: string
-  version: number
+  group: SfProcurementQueueGroup | null
+  sourceRef: string | null
+  sourceDigest: string | null
+  version: number | null
+  moneySentence: string | null
   status: string | null
   subject: string | null
   holder: string | null
@@ -72,7 +73,7 @@ export function sfQueueFilterRows(
 export function sfQueueFilterOptions(rows: readonly SfProcurementQueueRow[]) {
   const statuses = [...new Set(rows.map((row) => row.status).filter((value): value is string => value !== null))]
   const stages = [...new Set(rows.map((row) => row.approvalStage).filter((value): value is string => value !== null))]
-  const groups = [...new Set(rows.map((row) => row.group))]
+  const groups = [...new Set(rows.flatMap((row) => row.group === null ? [] : [row.group]))]
   return { statuses, stages, groups } as const
 }
 
