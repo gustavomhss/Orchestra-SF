@@ -4,7 +4,9 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
-import { createModule } from "../../../index.ts"
+import { createModule, contributions } from "../../../index.ts"
+import { createSfPeopleProjectionHandlers } from "../../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
+import { createSfLiveContext, sfContextDestinationsFromPages } from "../../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { object, rows } from "../../../runtime/contract.ts"
@@ -80,8 +82,9 @@ async function fixture(options: { role?: Role; handoffGrant?: boolean } = {}) {
       method: "POST", headers: { cookie: session.cookie!, origin, "content-type": "application/json", "idempotency-key": idempotencyKey }, body: JSON.stringify(payload),
     })
     expect((await identity.person(request()))?.id).toBe(principalRef)
+    const hostIdentity = Object.freeze({ installationId, hostId: "collaboration-host", projectId: "project", location: { directory: AbsolutePath.make(directory) } })
     const authority = createSfProductAuthority({ installationId, origin, policyVersion: "wp02-collaboration-policy", persistence, authenticate, environment,
-      identity: () => ({ installationId, hostId: "collaboration-host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
+      identity: () => hostIdentity, isAuthenticated: async (request) => !!await identity.person(request),
       createId: randomUUID, now: Date.now, commandIdentity: async (source, operation) => source.headers.get("idempotency-key") ? digestSfValue({ operation, key: source.headers.get("idempotency-key") }) : undefined,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
       grants: [{ principalRef, namespaces: ["relations"], operations: ["sf_dashboard_read"], humanActions: options.handoffGrant === false ? ["decisions.edit"] : ["collaboration.handoff.confirm", "decisions.edit"] }] })
@@ -128,7 +131,27 @@ async function fixture(options: { role?: Role; handoffGrant?: boolean } = {}) {
       if (access.status !== "ok") return access
       try { return await work(access.value) } finally { authority.human.finish(access.value) }
     }
-    const module = createModule("/sucafina", { persistence, authenticate, environment, maxJsonBytes: 100000 })
+    const services = { persistence, authenticate, environment, maxJsonBytes: 100000 }
+    const module = createModule("/sucafina", services)
+    const nativeContext = createSfLiveContext({
+      origin, mount: "/sucafina", currentBinding: () => hostIdentity,
+      admit: async (request) => {
+        const admitted = await authority.readContextAdmission(request)
+        if (admitted.status !== "ok") return admitted
+        const destinations = sfContextDestinationsFromPages(admitted.pages)
+        return destinations
+          ? { status: "ok" as const, stamp: admitted.stamp, authMode: "local-operator" as const, destinations }
+          : { status: "unavailable" as const, reason: "contract-mismatch" }
+      },
+    })
+    // This component mounts the actual read projection. Unrelated host services
+    // and operations remain unavailable; no ready claims or mutation grants are fabricated.
+    const projection = createSfPeopleProjectionHandlers({
+      origin, mount: "/sucafina", application: { ...services, domains: contributions },
+      runtime: () => undefined,
+      readContext: (request) => nativeContext.readRequestContext(request, hostIdentity),
+    }).find((handler) => handler.operationId === "domain.page.CAP02")
+    if (!projection) throw new Error("Hot Topics native projection missing")
     return { driver, persistence, authority, evidence, topics, relations, records, read,
       issue: (selection: Parameters<typeof records.issue>[0]) => read(selection, (context) => records.issue(selection, context)),
       handoff: (payload: Handoff, afterAdmission?: () => Promise<void>) => human("collaboration.handoff.confirm", payload, payload.relationKey, async (context) => {
@@ -141,7 +164,8 @@ async function fixture(options: { role?: Role; handoffGrant?: boolean } = {}) {
       }),
       setRole: (role: Role) => persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = roleRows(role); return { commit: true, value: undefined } }),
       command: (payload: unknown) => module(request(payload)),
-      page: () => module(new Request(`${origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`, { headers: { cookie: session.cookie! } })),
+      page: (authenticated = true) => projection.handle(new Request(`${origin}/sucafina/api/ui/pages/CAP02`, { headers: authenticated ? { cookie: session.cookie! } : {} })),
+      legacyPage: () => module(new Request(`${origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`, { headers: { cookie: session.cookie! } })),
       inspect: () => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: {
         topics: structuredClone(rows(snapshot.data.hotTopics)), relations: structuredClone(object(object(snapshot.data.__sfProductV1).relations)),
         budget: structuredClone(snapshot.data.opexOwners), versions: structuredClone(snapshot.versions),
@@ -190,8 +214,15 @@ test("WP08 handoff recovers a lost C03 response after SQLite reopen and follows 
     expect(repeated).toMatchObject({ state: "existing", relationId: recovered.relationId, topic: { id } })
     expect((await f.runtime.inspect()).topics).toHaveLength(1)
     const page = await f.runtime.page()
-    expect(page?.status).toBe(200)
-    expect(await page!.text()).toContain(`id="record-${id}"`)
+    expect(page.status).toBe(200)
+    expect(await page.json()).toMatchObject({
+      status: "ok", context: { principalRef: f.principalRef },
+      value: { capabilityId: "CAP02", data: { hotTopics: [expect.objectContaining({
+        id, action: request.intent.action, owner: request.intent.owner, due: request.intent.due, status: "open",
+      })] }, versions: { ["hotTopics:" + id]: recovered.topic.version } },
+    })
+    expect((await f.runtime.page(false)).status).toBe(401)
+    expect((await f.runtime.legacyPage())?.status).toBe(404)
     const update: Update = { id, version: recovered.topic.version, idempotencyKey: "progress-action", sourceRefs: [source], values: { status: "progress", due: "2026-12-10" } }
     const progressed = value(await f.runtime.update(update))
     expect(progressed).toMatchObject({ id, status: "progress", due: "2026-12-10", version: recovered.topic.version + 1 })
