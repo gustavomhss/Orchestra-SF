@@ -87,7 +87,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
       await tab.getByRole("button", { name: "Create decision" }).click()
       await tab.getByRole("heading", { name: "Compare renewals" }).waitFor()
       for (const surface of ["dashboard", "planner", "procurement"]) {
-        await tab.goto(`${origin}/sucafina/${surface}`)
+        await tab.goto(`${origin}/sucafina/${surface}?asset=page`)
         await tab.getByRole("link", { name: "Workbench", exact: true }).click()
         await tab.getByRole("heading", { name: "Workbench", exact: true }).waitFor()
       }
