@@ -23,7 +23,7 @@ export async function prepareMicrosoftInstallation(
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
     loaded: { config, directory, keys }, client, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
-    createIdentity: (secrets: LocalSecrets) => createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now }),
+    createIdentity: (secrets: LocalSecrets) => createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now, groups: config.groups }),
   }
 }
 

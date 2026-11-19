@@ -474,7 +474,9 @@ function focusBiControl(target: Element) {
   if (target instanceof SVGElement) {
     if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "0")
     target.setAttribute("focusable", "true")
-    HTMLElement.prototype.focus.call(target)
-  } else target.focus()
+  }
+  const focus = target.focus
+  if (typeof focus !== "function") return false
+  try { focus.call(target) } catch { return false }
   return target.ownerDocument.activeElement === target
 }

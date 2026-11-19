@@ -275,7 +275,9 @@ export async function createConfiguredInstallation(
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
-      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+      const postedOrigin = request.headers.get("origin")
+      const foreignOrigin = microsoft ? postedOrigin !== config.origin : Boolean(postedOrigin) && postedOrigin !== config.origin
+      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (foreignOrigin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
       const readiness = status(request)
       if (readiness) return readiness
       const auth = await identity.handle(request)

@@ -109,8 +109,9 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
       await secrets.put(sessionKey, seal(sessionKey, expiresAt), expiresAt)
       const responseHeaders = headers()
       responseHeaders.append("set-cookie", cookie(id, 28800))
-      // Enrollment opens the Orchestra shell; /sucafina/* remains a legacy homologation console.
-      responseHeaders.set("location", "/")
+      // A cross-site file open must land on the mounted surface without putting the credential in the URL.
+      // Same-origin enrollment opens the Orchestra shell; bare console GETs stay decommissioned.
+      responseHeaders.set("location", request.headers.get("sec-fetch-site") === "cross-site" ? `${mount}/dashboard` : "/")
       return new Response(null, { status: 303, headers: responseHeaders })
     },
     async prepare() {},

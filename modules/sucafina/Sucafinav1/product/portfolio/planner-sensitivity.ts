@@ -95,6 +95,9 @@ export function createPlannerSensitivity(input: {
       },
       exactThreshold: async (_request, trusted) => {
         if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario) || !assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        // Pending coverage stays a sampled disclosure. The canonical solver is a separate proof;
+        // calling it here would publish a numeric bound and hide the unresolved categories.
+        if (sourceScenario.costCoverage.coverageState !== "complete" || baselineScenario.costCoverage.coverageState !== "complete" || sourceScenario.comparisonStatus !== "complete" || baselineScenario.comparisonStatus !== "complete" || sourceScenario.total === null || baselineScenario.total === null) return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = structuredClone(await input.exactThreshold(structuredClone(request), structuredClone(binding), trusted))
         if (result.status !== "ok") return result
         const certificate = await certify(result.value, trusted)

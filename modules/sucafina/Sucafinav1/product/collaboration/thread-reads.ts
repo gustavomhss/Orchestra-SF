@@ -24,12 +24,11 @@ export function createRecipientAwareThreadReads(threads: Pick<ReturnType<typeof 
     }
     return threads.read(id, context)
   }, readHistorical: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
-    if (recipientThread) {
-      const projected = await recipientThread(id, context)
-      if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected
-      if (projected.status === "ok" && projected.value.historical) return { status: "ok", value: { id: projected.value.id, kind: projected.value.kind, ...(projected.value.recipientRef ? { recipientRef: projected.value.recipientRef } : {}), state: projected.value.state, messages: projected.value.messages, ...projected.value.historical } }
-    }
-    return threads.read(id, context)
+    if (!recipientThread) return { status: "unavailable", reason: "thread-historical-context-unavailable" }
+    const projected = await recipientThread(id, context)
+    if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected
+    if (projected.status !== "ok" || !projected.value.historical) return { status: "unavailable", reason: "thread-historical-context-unavailable" }
+    return { status: "ok", value: { id: projected.value.id, kind: projected.value.kind, ...(projected.value.recipientRef ? { recipientRef: projected.value.recipientRef } : {}), state: projected.value.state, messages: projected.value.messages, ...projected.value.historical } }
   } }
 }
 
