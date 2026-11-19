@@ -157,11 +157,7 @@ export function SfCreateCase(props: Readonly<{
         setForm({ phase: "unknown", message: "sf.ui33.createDenied" })
         return
       }
-      if (result.kind === "response" && (result.status === 401 || result.status === 403)) {
-        setForm({ phase: "unknown", hasPending: true, message: "sf.ui33.createDenied" })
-        return
-      }
-      if (result.kind === "response" && result.status === 200 && result.body.status === "ok"
+      if (result.kind === "response" && result.body.status === "ok"
         && result.body.outputRef && /^case:[^:]+:[^:]+$/.test(result.body.outputRef)) {
         // Only source returned outputRef is authoritative for a new case.
         try { localStorage.removeItem(slot) } catch (error) {
@@ -174,10 +170,9 @@ export function SfCreateCase(props: Readonly<{
       if (result.kind === "response" && result.body.status !== "ok") {
         // A 409/400 is not authoritative proof that an earlier creation
         // could not commit. Retain the same original correlation for review.
-        const denied = result.status === 401 || result.status === 403 || result.body.status === "denied"
         setForm({
           phase: "unknown", hasPending: true,
-          message: denied ? "sf.ui33.createDenied" : "sf.ui33.createConflict",
+          message: result.body.status === "denied" ? "sf.ui33.createDenied" : "sf.ui33.createConflict",
         })
         return
       }
