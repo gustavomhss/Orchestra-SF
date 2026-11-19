@@ -1,0 +1,70 @@
+name: sf-wp03-planner4-timeline
+on:
+  push:
+    branches: [audit-wp03-planner4-timeline-20261119]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read completed WP03 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14577074454/zip > "$RUNNER_TEMP/wp03.zip"
+      - name: Extract original producer observations and page text
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, os, pathlib, re, zipfile
+          root = pathlib.Path(os.environ["RUNNER_TEMP"])
+          lines = ["# WP03 planner4 original timeline", "", "Read-only source run44623928135, artifact14577074454, snapshot106afd29068c0034dc2b48821b509d9689d98917. No rerun.", ""]
+          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|idempotency[-_]?key|[?&](?:code|token|key)=", re.I)
+          def clean(value):
+              if isinstance(value, dict):
+                  return {key: "[redacted]" if sensitive.search(key) else clean(item) for key, item in value.items()}
+              if isinstance(value, list): return [clean(item) for item in value]
+              if isinstance(value, str):
+                  return "\n".join("[redacted]" if sensitive.search(line) else line for line in value.splitlines())
+              return value
+          seen = set()
+          def bounded(value):
+              if isinstance(value, dict):
+                  return {key: bounded(item) for key, item in value.items() if key not in ["attachments", "stdout", "stderr", "body"]}
+              if isinstance(value, list): return [bounded(item) for item in value]
+              if isinstance(value, str): return value[:4000]
+              return value
+          def visit(value):
+              if isinstance(value, list):
+                  for item in value: visit(item)
+              elif isinstance(value, dict):
+                  title = value.get("title", "")
+                  if isinstance(title, str) and title.startswith("real mounted Planner preserves monthly edits"):
+                      rendered = json.dumps(clean(bounded(value)), ensure_ascii=False, indent=2)
+                      if rendered not in seen:
+                          seen.add(rendered)
+                          lines.extend(["## Original WP03 report", "", "```json", rendered, "```", ""])
+                  for key, item in value.items():
+                      if key != "attachments" and isinstance(item, (dict, list)): visit(item)
+          with zipfile.ZipFile(root / "wp03.zip") as archive:
+              for name in archive.namelist():
+                  if not name.endswith("/playwright-report/index.html"): continue
+                  html = archive.read(name).decode("utf-8", "replace")
+                  payloads = re.findall(r"data:application/zip;base64,([A-Za-z0-9+/=]+)", html)
+                  lines.extend(["Embedded payloads: " + str(len(payloads)), ""])
+                  for payload in payloads[:1]:
+                      with zipfile.ZipFile(io.BytesIO(base64.b64decode(payload))) as embedded:
+                          for member in embedded.namelist():
+                              if member.endswith(".json"): visit(json.loads(embedded.read(member)))
+          text = "\n".join(lines) + "\n"
+          if not seen: raise RuntimeError("No original WP03 report found")
+          if len(text) > 600000: raise RuntimeError("Original observation exceeds bounded audit limit")
+          payload = {"message": "docs(sf): retain original WP03 planner4 timeline", "branch": "audit-wp03-planner4-timeline-20261119", "content": base64.b64encode(text.encode()).decode()}
+          (root / "proposal-payload.json").write_text(json.dumps(payload))
+          print("Read " + str(len(seen)) + " original observations; redacted credential fields only.")
+          PY
+      - name: Persist original observation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-wp03-timeline-44623928135.md --input "$RUNNER_TEMP/proposal-payload.json" > /dev/null
