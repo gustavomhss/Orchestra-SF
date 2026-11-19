@@ -8,7 +8,7 @@ import { decisionDesk, routineStatus, workList } from "../ui/components.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import { handleSfAnalysis } from "./analysis-http.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
-import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
+import { decisionCreateForm, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
 import { handleSfPlannerMonthly } from "./planner-http.ts"
 import { handleSfForecastInput } from "./forecast-http.ts"
 import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm } from "../ui/forecast-analysis.ts"
@@ -152,7 +152,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         } finally { runtime.ui.finish(access.value) }
       })() : undefined
       const routines = runs ? `<h2>Routines</h2>${runs.length ? `<ul>${runs.map((run, index) => `<li>${run.runRef ? `<a href="?${esc(new URLSearchParams({ sf: "workbench-routine", runRef: run.runRef }).toString())}">Routine ${index + 1}</a>` : `Routine ${index + 1}`} · ${esc(run.admission)}</li>`).join("")}</ul>` : "<p>No accessible routine runs.</p>"}` : "<p>Routine list is currently unavailable.</p>"
-      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${decisionCreateForm}${portfolioWidget}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
+      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${scopeDecisionCreateForm(decisionCreateForm, decisionCreationScope(admitted.value.binding))}${portfolioWidget}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
       const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined) : undefined
       if (decoded?.ok && !result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
       if (result && result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
