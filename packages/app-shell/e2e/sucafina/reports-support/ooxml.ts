@@ -57,6 +57,16 @@ export async function inspectReport(file: string, format: "docx" | "pptx", saved
   return evidence
 }
 
+export function officePackageText(bytes: Buffer, format: "docx" | "pptx") {
+  expect(bytes.length).toBeGreaterThan(100)
+  expect(bytes.subarray(0, 15).toString("utf8").toLowerCase()).not.toContain("<!doctype")
+  expect(bytes.subarray(0, 5).toString("utf8").toLowerCase()).not.toContain("<html")
+  const entries = xmlEntries(bytes, format)
+  if (format === "docx") expect(entries.map((entry) => entry.name)).toEqual(["word/document.xml"])
+  if (format === "pptx") expect(entries.length, "More than one slide must carry the selected review").toBeGreaterThan(1)
+  return normalize(entries.flatMap((entry) => xmlParagraphs(entry.xml, format)).join(""))
+}
+
 function normalize(value: string) { return value.replace(/\s+/g, " ").trim() }
 
 function displayText(value: string) { return normalize(value.replace(/\r\n|\r|\n/g, " ↵ ")) }
