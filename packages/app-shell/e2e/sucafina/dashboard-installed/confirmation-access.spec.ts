@@ -1,6 +1,6 @@
 import { expect, test, type Request } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
-import { addOwner, command, confirmDialog, dashboardUrl, monthlyForm, observeDashboardRequests, openForm, openMonth } from "./support"
+import { addOwner, command, confirmDialog, dashboardUrl, monthlyForm, observeDashboardRequests, openMonth } from "./support"
 
 test.use({ trace: "off" })
 
@@ -29,9 +29,9 @@ test("installed Dashboard confirms exact monthly changes and purges late results
       owner = await addOwner(page, "M67 Installed operating line", "1200")
       unrelated = await addOwner(page, "M67 Installed unrelated line", "2400")
       const month = await openMonth(page, owner, 1)
-      await month.getByLabel("Budget", { exact: true }).fill("123")
-      await month.getByLabel("Actual", { exact: true }).fill("34")
-      await month.getByLabel("Forecast", { exact: true }).fill("140")
+      await month.getByLabel("budget", { exact: true }).fill("123")
+      await month.getByLabel("actual", { exact: true }).fill("34")
+      await month.getByLabel("forecast", { exact: true }).fill("140")
       await command(page, month.getByRole("button", { name: "Save month", exact: true }), "preview-change")
       await expect(month.getByRole("heading", { name: "Review changes before applying", exact: true })).toBeVisible()
       await expect(month.locator("[data-preview]")).toContainText("123")
@@ -39,21 +39,21 @@ test("installed Dashboard confirms exact monthly changes and purges late results
       await expect(month.locator("[data-preview]")).toContainText("140")
       await reader.goto(url)
       await expect(monthlyForm(reader, owner, 1)).toHaveAttribute("data-record", "")
-      await expect(monthlyForm(reader, owner, 1).getByLabel("Actual", { exact: true })).toHaveValue("")
+      await expect(monthlyForm(reader, owner, 1).getByLabel("actual", { exact: true })).toHaveValue("")
       expect(applications).toBe(0)
       await confirmDialog(page, page.getByRole("dialog", { name: "Edit record", exact: true }).getByRole("button", { name: "Close editor", exact: true }), "Discard unsaved changes?", true)
       await expect(page.getByRole("dialog", { name: "Edit record", exact: true })).toBeHidden()
       await page.reload()
       await expect(monthlyForm(page, owner, 1)).toHaveAttribute("data-record", "")
-      await expect(monthlyForm(page, owner, 1).getByLabel("Budget", { exact: true })).toHaveValue("")
+      await expect(monthlyForm(page, owner, 1).getByLabel("budget", { exact: true })).toHaveValue("")
       expect(applications).toBe(0)
     })
 
     await test.step("recover an applied preview after its real successful response is lost", async () => {
       const month = await openMonth(page, owner, 1)
-      await month.getByLabel("Budget", { exact: true }).fill("123")
-      await month.getByLabel("Actual", { exact: true }).fill("34")
-      await month.getByLabel("Forecast", { exact: true }).fill("140")
+      await month.getByLabel("budget", { exact: true }).fill("123")
+      await month.getByLabel("actual", { exact: true }).fill("34")
+      await month.getByLabel("forecast", { exact: true }).fill("140")
       await command(page, month.getByRole("button", { name: "Save month", exact: true }), "preview-change")
       const preview = month.locator("[data-preview]")
       await expect(preview).toBeVisible()
@@ -85,22 +85,26 @@ test("installed Dashboard confirms exact monthly changes and purges late results
       await page.reload()
       await reader.reload()
       for (const surface of [page, reader]) {
-        await expect(monthlyForm(surface, owner, 1).getByLabel("Budget", { exact: true })).toHaveValue("123")
-        await expect(monthlyForm(surface, owner, 1).getByLabel("Actual", { exact: true })).toHaveValue("34")
-        await expect(monthlyForm(surface, owner, 1).getByLabel("Forecast", { exact: true })).toHaveValue("140")
+        await expect(monthlyForm(surface, owner, 1).getByLabel("budget", { exact: true })).toHaveValue("123")
+        await expect(monthlyForm(surface, owner, 1).getByLabel("actual", { exact: true })).toHaveValue("34")
+        await expect(monthlyForm(surface, owner, 1).getByLabel("forecast", { exact: true })).toHaveValue("140")
         await expect(monthlyForm(surface, owner, 2)).toHaveAttribute("data-record", "")
         await expect(monthlyForm(surface, unrelated, 1)).toHaveAttribute("data-record", "")
       }
       const reopened = await openMonth(page, owner, 1)
-      await expect(reopened.getByLabel("Budget", { exact: true })).toHaveValue("123")
+      await expect(reopened.getByLabel("budget", { exact: true })).toHaveValue("123")
       await info.attach("dashboard-installed-confirmed-month.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
       await page.getByRole("dialog", { name: "Edit record", exact: true }).getByRole("button", { name: "Close editor", exact: true }).click()
     })
 
     await test.step("revoke the real session while a server-authorized preview is in flight", async () => {
       await page.reload()
-      const year = page.locator(`form[data-page="OPEX Detail"][data-command="year-amount"][data-record="${owner}"]`)
-      await openForm(year)
+      const ownerRow = page.locator(`tr[data-sf-row="${owner}"]`)
+      await ownerRow.locator('button[data-sf-action="select"]').click()
+      await expect(ownerRow).toHaveAttribute("aria-selected", "true")
+      await page.locator(".sf-budget-detail").getByRole("button", { name: "Apply year amount", exact: true }).click()
+      const year = page.locator('.sf-budget-editor[data-sf-action="year-amount"] form')
+      await expect(year).toBeVisible()
       await year.getByLabel("Year amount", { exact: true }).fill("777")
       type LatePreview = { status: number; previewRef?: string }
       let captured: ((preview: LatePreview) => void) | undefined, completed: (() => void) | undefined
