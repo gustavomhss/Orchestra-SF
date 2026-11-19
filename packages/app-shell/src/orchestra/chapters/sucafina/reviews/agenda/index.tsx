@@ -252,7 +252,7 @@ export function SfAgendaEditor(props: {
       context={[]}
       tabs={[]}
       activeTab={null}
-      secondaryActions={props.onDomains ? [{ id: "domains", labelKey: key("sf.u25.chooseDomains"),
+      secondaryActions={props.onDomains ? [{ id: "domains", labelKey: key("sf.u25.chooseDomains"), tone: "secondary", busy: false,
         disabled: store.phase === "submitting" || store.phase === "outcome-unknown", onInvoke: props.onDomains }] : []}
       density="comfortable"
       layout="work"

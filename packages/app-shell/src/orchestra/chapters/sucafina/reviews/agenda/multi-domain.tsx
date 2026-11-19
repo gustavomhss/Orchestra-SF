@@ -150,7 +150,7 @@ export function SfMultiDomainAgenda(props: { year?: number; onDashboard: () => v
   }
   return <SfPageFrame titleKey={key("sf.ui47.title")} context={[]} tabs={[]} activeTab={null}
     density="comfortable" layout="work" onLayoutMode={() => undefined}
-    secondaryActions={[{ id: "dashboard", labelKey: key("sf.u25.dashboardAgenda"), disabled: busy(), onInvoke: props.onDashboard }]}
+    secondaryActions={[{ id: "dashboard", labelKey: key("sf.u25.dashboardAgenda"), tone: "secondary", busy: false, disabled: busy(), onInvoke: props.onDashboard }]}
     primaryAction={{ id: "preview", labelKey: key("sf.u25.preview"), tone: "primary", busy: store.phase === "loading",
       disabled: busy() || !store.selected.length || !allowed("reviews.review-agenda"), onInvoke: () => { void prepare() } }}>
     <div class="sf-n28" data-sf-surface="UI47" data-sf-multi-agenda data-phase={store.phase}>
