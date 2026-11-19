@@ -168,3 +168,15 @@ Estado: partial
 - Teardown aguarda page.unrouteAll({behavior:"wait"}), em vez de remover o handler enquanto route.fetch/fulfill original ainda está em curso. Não ignora erros nem repete requisição.
 - Asserções removidas/relaxadas: nenhuma. Retirada somente a criação/fechamento da aba auxiliar e a configuração duplicada do shell; mesmo fluxo de negócio, mesmo timeout180000ms.
 - `packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:236`: source edit ainda unbound de qualificação após essa correção. `review-flow.ts:122`: preservar/ler passou até o seletor ambíguo, gate13 deve atravessá-lo.
+
+
+## Checkpoint após Reports13
+
+SHA de código atual: b68ad05f2718422dbaf6d18860859aaa51521325
+Estado: partial
+- [44623670174](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44623670174): FAILURE,4fail/0pass; snapshotc53d8a446baec758e7adda02374cc8ab1674a42d; job135911686901 e cleanup135920846253. CLI/app/SF-E2E typechecks SUCCESS; cleanup SUCCESS.
+- RPT1–3 avançaram captura/montagem e edição real OPEX110→190, mas review-flow.ts:301 perdeu o corpo CDP da resposta200. O observador existente agora retém CAP04 e apenas o POST original OPEX Detail/save-entry com maxRetries0/maxRedirects0. Quatro leituras do helper usam os mesmos bytes originais. Todas as expectativas de status, payload, CAS,1POST e reload permanecem.
+- RPT4 chegou à UI50/read200 e preservou ID correto, mas coverageOwned reportou fonte indisponível (reports/index.tsx:56–63). Nenhuma comparação ou asserção desse guard foi alterada. O fixture observa somente o GETcontext que o navegador já emite e registra booleans de igualdade dos5campos e validade da projeção original, sem valores de owner ou novas chamadas.
+- [44627042253](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44627042253): SUCCESS da extração somente leitura do artifact14577399208. Confirma mensagem de fonte indisponível; artifact não contém traceZIP (0arquivos), portanto não permite concluir qual campo divergiu.
+- Pendente: packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx:56 (causa da cobertura), review-flow.ts:302 (readback/CAS ainda não alcançados), review-flow.ts:332 (Office real/GETdownload não qualificado). Asserções removidas: nenhuma. Timeouts inalterados.
+- Retomar com reports.spec.ts na composição que contém estes2arquivos. Registrar resultado e diagnóstico antes de mudar qualquer guard de acesso.
