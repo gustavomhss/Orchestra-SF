@@ -96,6 +96,7 @@ import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth, observeSfReviewAgendaHealth } from "./native-ui/report-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
+import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
 import { observeSfDashboardProposalHealth } from "./native-ui/dashboard-proposal-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
@@ -967,6 +968,29 @@ export const createSfHostRuntimeWithRoutineNative = async (
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
+        observeSfDocumentHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: (operationId) => {
+            const assets = input.assets
+            if (services.productHttp !== productHttp || !identity() || !documents || !assets ||
+              assets.persistence !== input.persistence || assets.services.signingKey.byteLength < 32) return undefined
+            const source = documents.documents
+            const operation = operationId === "files.document-requests" ? documents.discoverRequests :
+              operationId === "files.document-sources" ? documents.discover :
+              operationId === "files.document-admit" ? documents.admitSelection :
+              operationId === "files.document-schema" ? documents.schemas.register :
+              operationId === "files.document-schemas" ? documents.schemas.list :
+              operationId === "files.document-extract" ? source.extract :
+              operationId === "files.document-confirm" ? source.confirm :
+              operationId === "files.document-candidates" ? source.list :
+              operationId === "files.document-open" ? source.resolvePresentation : source.search
+            if (typeof operation !== "function") return undefined
+            return { producer: productHttp, dependencies: [documentHttp, documents, source, operation,
+              documents.schemas, documents.schemas.resolve, documents.schemas.verify,
+              documents.dispatch, documents.descriptors, source.admit, source.documents,
+              source.documents.read, source.documents.revalidate, source.evidenceHost,
+              source.evidenceHost.parser, source.evidenceHost.parser.extractPdf, source.evidenceHost.parser.extractDocx,
+              assets, assets.persistence, assets.services, assets.services.signingKey] }
+          } }, request, stamp),
         observeSfImportHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           humanActions: authority.humanActions, source: () => {
             const assets = input.assets
