@@ -17,7 +17,7 @@ import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Su
 import { initializeAbsentSfProductState } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 
 // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
-// One real embedded host serves the native producers through the production shell proxy.
+// One real embedded host serves the native producers and built shell on its own origin.
 // The three isolated local-operator sessions exercise distinct actors, not Entra identities.
 const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
 await chmod(directory, 0o700)
@@ -40,6 +40,7 @@ Object.assign(process.env, {
 // read Global.node; concurrent roots can otherwise observe its uninitialized export.
 await import("@orchestra/core/global")
 const { createEmbeddedRoutes } = await import("../../../../server/src/routes.ts")
+const { WebUi } = await import("../../../../server/src/web-ui.ts")
 const { createOperationsInstallation } = await import("../operations-support/installation.ts")
 const { AppNodeBuilder } = await import("@orchestra/core/effect/app-node-builder")
 const { LayerNode } = await import("@orchestra/core/effect/layer-node")
@@ -69,7 +70,7 @@ const server = Bun.serve({
     return await active.handle?.(request) ?? new Response("Starting", { status: 503 })
   },
 })
-const origin = "http://127.0.0.1:3000"
+const origin = server.url.origin
 const bankKey = randomBytes(32)
 const environment = async () => ({ at, id: randomUUID, directory: people, bankKey })
 const signingKey = randomBytes(32)
@@ -111,10 +112,12 @@ const installation = await createOperationsInstallation({
   isAuthenticated: async (request) => Boolean(await sessionAccount(request)),
   environment, signingKey, scanner,
 })
-const embedded = HttpRouter.toWebHandler(createEmbeddedRoutes({
+const shellRoot = await WebUi.resolveRoot([path.resolve(import.meta.dirname, "../../../../../apps/web/dist")])
+if (!shellRoot) throw new Error("WP04_BUILT_SHELL_REQUIRED")
+const embedded = HttpRouter.toWebHandler(Layer.merge(createEmbeddedRoutes({
   host: installation.host,
   sucafinaInstallations: installation.discovery,
-}).pipe(
+}), WebUi.layer(shellRoot)).pipe(
   // Same request services as the canonical sdk-next embedded composition.
   HttpRouter.provideRequest(AppNodeBuilder.build(LayerNode.group([
     PermissionSaved.node, ClaudeCodeAccount.node,
@@ -173,7 +176,7 @@ active.handle = async (request) => {
   const url = new URL(request.url)
   if (url.origin !== origin) return new Response("Access denied", { status: 403 })
   if (url.pathname === "/api" || url.pathname.startsWith("/api/")) return embedded.handler(request)
-  if (url.pathname !== mount && !url.pathname.startsWith(mount + "/")) return new Response("Not found", { status: 404 })
+  if (url.pathname !== mount && !url.pathname.startsWith(mount + "/")) return embedded.handler(request)
   const enrollment = url.pathname === mount + "/auth/local" && url.searchParams.getAll("code").length === 1
     ? url.searchParams.get("code") : undefined
   const account = enrollment ? enrollmentOwners.get(enrollment) : await sessionAccount(request)
