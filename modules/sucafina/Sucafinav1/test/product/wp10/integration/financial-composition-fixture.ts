@@ -34,8 +34,10 @@ export async function financialCompositionFixture(options: { clock?: { at: strin
   })
   const guards = { proposalCoverageWrites: new WeakSet<object>(), dashboardHostWrites: new WeakSet<object>(), procurementEvidenceWrites: new WeakSet<object>(),
     caseSelectionWrites: new WeakSet<object>(), threadHistoryWrites: new WeakSet<object>(), analysisSelectionWrites: new WeakSet<object>() }
+  const identity = Object.freeze({ installationId: "installation", hostId: "host", projectId: "project",
+    location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) })
   const authority = createSfProductAuthority({ installationId: "installation", origin: "https://example.test", policyVersion: "policy", ...guards,
-    identity: () => ({ installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
+    identity: () => identity,
     persistence, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox", ...(options.atlas ? ["atlas" as const] : [])],
       operations: ["sf_dashboard_read", "sf_bi_view", "sf_work_list", "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_portfolio_evaluate", "sf_sensitivity_evaluate", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare"],
       humanActions: ["decisions.prepare-portfolio", "decisions.promote-portfolio", "decisions.prepare-changes", "decisions.choose", "decisions.answer-question", "reviews.preserve", "decisions.coverage", "decisions.criteria", "decisions.promote-alternative", "decisions.select-portfolio", ...options.humanActions ?? []] }],
@@ -59,6 +61,6 @@ export async function financialCompositionFixture(options: { clock?: { at: strin
     if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, "sf_review_prepare", digest)) throw new Error("Authenticated review context unavailable")
     return admitted.value
   }
-  return { directory, store, persistence, active, guards, authority, business, portfolio, request, read, at, clock,
+  return { directory, store, persistence, active, guards, authority, business, portfolio, request, read, at, clock, identity,
     dispose: async () => { portfolio.dispose(); business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }

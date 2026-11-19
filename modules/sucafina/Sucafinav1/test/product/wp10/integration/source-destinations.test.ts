@@ -1,12 +1,16 @@
 import { expect, test } from "bun:test"
 import { createDashboardSourceIssuer } from "../../../../product/integration/dashboard-sources.ts"
-import { createApplication } from "../../../../runtime/application.ts"
+import { createApplication, type Application } from "../../../../runtime/application.ts"
+import { createSfLiveContext, sfContextDestinationsFromPages } from "../../../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
+import { createSfDomainProjectionHandlers } from "../../../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { createSfOperationsProjectionHandlers } from "../../../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
+import { matchSfNativeRoutePath } from "../../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts"
 import { DashboardBudget } from "../../../../runtime/dashboard-budget.ts"
 import { DashboardOperations } from "../../../../runtime/dashboard-operations.ts"
 import { sfExtendedSourceLinks } from "../../../../../../../apps/cli/src/sucafina-product/extended-source-links.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 
-test("authorized monthly source links open the real page with the exact primary calendar period", async () => {
+test("authorized monthly source links select the native chapter and producer with the exact primary calendar period", async () => {
   const fixture = await financialCompositionFixture(), call = await fixture.read()
   const { authority, business, persistence } = fixture
   try {
@@ -16,12 +20,27 @@ test("authorized monthly source links open the real page with the exact primary 
       return { commit: true, value: undefined }
     })
     const issue = createDashboardSourceIssuer({ host: business.host, scopedSources: persistence })
-    const application = createApplication("/sucafina", { persistence, authenticate: authority.host.authenticate, environment: authority.host.environment,
-      maxJsonBytes: 262144, domains: { dashboard: [DashboardBudget, DashboardOperations], planner: [], procurement: [] } })
+    const application: Application = { persistence, authenticate: authority.host.authenticate, environment: authority.host.environment,
+      maxJsonBytes: 262144, domains: { dashboard: [DashboardBudget, DashboardOperations], planner: [], procurement: [] } }
+    const live = createSfLiveContext({
+      origin: "https://example.test", mount: "/sucafina", currentBinding: () => fixture.identity,
+      admit: async (request) => {
+        const admitted = await authority.readContextAdmission(request)
+        if (admitted.status !== "ok") return admitted
+        const destinations = sfContextDestinationsFromPages(admitted.pages)
+        return destinations
+          ? { status: "ok" as const, stamp: admitted.stamp, authMode: "local-operator" as const, destinations }
+          : { status: "unavailable" as const, reason: "contract-mismatch" as const }
+      },
+    })
+    const dependencies = { origin: "https://example.test", mount: "/sucafina", application,
+      runtime: () => undefined, readContext: (request: Request) => live.readRequestContext(request, fixture.identity) }
+    const handlers = [...createSfDomainProjectionHandlers(dependencies), ...createSfOperationsProjectionHandlers(dependencies)]
+    const legacy = createApplication("/sucafina", application)
     for (const item of [
-      { page: "IT Operations", field: "opsTickets", year: "2027", month: "2", yearKey: "opsYear", monthKey: "operationsMonth", end: "2027-02-28" },
-      { page: "IT Security KPIs", field: "secKpi", year: "2024", month: "2", yearKey: "secYear", monthKey: "securityMonth", end: "2024-02-29" },
-      { page: "Executive Dashboard", field: "executiveMonths", year: "2025", month: "3", yearKey: "execYear", monthKey: "executiveMonth", end: "2025-03-31" },
+      { page: "IT Operations", cap: "CAP11", path: "/orchestra/sf-operations/service", field: "opsTickets", year: "2027", month: "2", end: "2027-02-28" },
+      { page: "IT Security KPIs", cap: "CAP12", path: "/orchestra/sf-operations/security", field: "secKpi", year: "2024", month: "2", end: "2024-02-29" },
+      { page: "Executive Dashboard", cap: "CAP01", path: "/orchestra/sf-dashboard/executive", field: "executiveMonths", year: "2025", month: "3", end: "2025-03-31" },
     ]) {
       const period = { start: `${item.year}-${item.month.padStart(2, "0")}-01`, end: item.end }
       const issued = await issue({ page: item.page, fields: [item.field], period }, call)
@@ -33,19 +52,27 @@ test("authorized monthly source links open the real page with the exact primary 
       const links = await sfExtendedSourceLinks({ business, reference: issued.value.evidence, call, url: new URL("https://example.test/sucafina/dashboard?sf=review-source&year=2026") })
       expect(links).toHaveLength(1)
       const destination = new URL(links[0]!.url, "https://example.test")
-      expect(destination.searchParams.get(item.yearKey)).toBe(item.year)
-      expect(destination.searchParams.get(item.monthKey)).toBe(item.month)
-      expect(destination.searchParams.get("page")).toBe(item.page)
-      const response = await application(new Request(destination))
-      expect(response?.status).toBe(200)
-      const html = await response!.text()
-      for (const [key, value] of [[item.yearKey, item.year], [item.monthKey, item.month]]) {
-        const select = [...html.matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/g)].find((match) => new RegExp(`(?:data-query|name)="${key}"`).test(match[1]!))
-        expect(select, `The real ${item.page} page must render ${key}`).toBeDefined()
-        const selected = /<option\b([^>]*\bselected\b[^>]*)>([^<]*)<\/option>/.exec(select![2]!)
-        expect(selected).toBeDefined()
-        expect(/\bvalue="([^"]*)"/.exec(selected![1]!)?.[1] ?? selected![2]!.trim()).toBe(value)
-      }
+      expect(destination.origin).toBe("https://example.test")
+      expect(destination.pathname).toBe(item.path)
+      expect(Object.fromEntries(destination.searchParams)).toEqual({ year: item.year, month: item.month })
+      expect(matchSfNativeRoutePath(destination.pathname)).toMatchObject({ surfaceId: item.cap, kind: "entry" })
+      expect(evidence.authorizedProjection?.context.period).toEqual(period)
+      const handler = handlers.find((entry) => entry.operationId === `domain.page.${item.cap}`)
+      expect(handler, `The real ${item.page} native producer must be mounted`).toBeDefined()
+      if (!handler) throw new Error("Native source producer unavailable")
+      const source = new URL(`/sucafina/api/ui/pages/${item.cap}`, destination.origin)
+      source.search = destination.search
+      const response = await handler.handle(new Request(source))
+      expect(response.status).toBe(200)
+      expect(response.headers.get("content-type")).toContain("application/json")
+      expect(response.headers.get("cache-control")).toContain("no-store")
+      const body: unknown = await response.json()
+      expect(body).toMatchObject({
+        status: "ok", context: { principalRef: call.binding.principalRef, accessRevision: call.binding.accessRevision },
+        value: { capabilityId: item.cap, selection: { year: Number(item.year), month: Number(item.month) } },
+      })
+      expect((await legacy(new Request("https://example.test/sucafina/dashboard?" +
+        new URLSearchParams({ page: item.page, year: item.year }))))?.status).toBe(404)
       expect(links[0]!.label).toContain(`${period.start} a ${period.end}`)
     }
   } finally { authority.ui.finish(call); await fixture.dispose() }

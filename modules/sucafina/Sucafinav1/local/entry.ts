@@ -31,7 +31,7 @@ import { restoreBackup } from "../runtime/operations.ts"
 import type { RestoreTransport } from "../runtime/operations.ts"
 import type { Surface } from "../src/identity.ts"
 import { createLocalIdentity } from "../runtime/local-identity.ts"
-import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
+import { bootstrapLocalSurface, initializeConfiguredMicrosoftRoleMaps } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import type { EntraOptions } from "../runtime/local-contract.ts"
@@ -129,6 +129,7 @@ export async function createConfiguredInstallation(
     }
   }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+  if (microsoft) await initializeConfiguredMicrosoftRoleMaps({ groups: config.groups, store })
   // Only the explicitly isolated, OS-owned scratch profile needs an empty native first-run state.
   // Never materialize or migrate the corporate/Microsoft product namespace before admission.
   if (operator) await initializeAbsentSfProductState(store, randomUUID)
