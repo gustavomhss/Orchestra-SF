@@ -7,6 +7,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
+import type { DomainProjection } from "../contracts/context.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import { buildPlannerFinancialProjection, plannerSourceActor, projectPlannerSource } from "./port.ts"
 import { simulatePlannerOperations } from "./scenario.ts"
@@ -83,8 +84,11 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
     // The derived graph stays private. Equal authenticated raw bodies, the
     // pinned source/period and current binding determine this projection; the
     // observation clock only annotates sourceRefs.
-    const values = buildPlannerFinancialProjection({ projection, ref, period, binding: context, at })
-    if (new Set(values.values.map((entry) => entry.id)).size !== values.values.length) return false
+    let values: DomainProjection
+    try {
+      values = buildPlannerFinancialProjection({ projection, ref, period, binding: context, at })
+      if (new Set(values.values.map((entry) => entry.id)).size !== values.values.length) return false
+    } catch { return false }
     const references = scenario.operations.flatMap((operation) => operation.replacementRef ? [operation.replacementRef] : [])
     const resolve = () => Promise.all(references.map((reference) => input.scenarioInputs.resolveAmount(reference, context)))
     const resolved = structuredClone(await resolve())
