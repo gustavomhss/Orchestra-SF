@@ -16,10 +16,12 @@ test("installed Dashboard confirms exact monthly changes and purges late results
   reader.on("pageerror", (error) => errors.push(error.message))
   const transport = observeDashboardRequests(info, [{ page, label: "primary" }, { page: reader, label: "reader" }])
   const url = dashboardUrl(installation.origin, "OPEX Detail")
+  const producerURL = "/sucafina/dashboard?" + new URLSearchParams({ page: "OPEX Detail" })
   let owner = "", unrelated = "", applications = 0
   const lateDelivery: { release?: () => void } = {}
   const countApplications = (request: Request) => {
-    if (request.method() === "POST" && request.url() === url && request.postDataJSON()?.action === "apply-preview") applications++
+    if (request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/dashboard" &&
+      new URL(request.url()).searchParams.get("page") === "OPEX Detail" && request.postDataJSON()?.action === "apply-preview") applications++
   }
   page.on("request", countApplications)
   try {
@@ -72,12 +74,12 @@ test("installed Dashboard confirms exact monthly changes and purges late results
         await route.abort("failed")
         delivered?.({ status: actual.status(), applied: body.value?.applied === true, previewRef: body.value?.previewRef })
       }
-      await page.route(url, dropApply)
+      await page.route(producerURL, dropApply)
       await month.getByRole("button", { name: "Confirm and apply", exact: true }).click()
       const receipt = await lost
       expect(receipt).toMatchObject({ status: 200, applied: true, previewRef: ref })
       await expect(month.getByRole("button", { name: "Check saved outcome", exact: true })).toBeEnabled()
-      await page.unroute(url, dropApply)
+      await page.unroute(producerURL, dropApply)
       const outcome = await command(page, month.getByRole("button", { name: "Check saved outcome", exact: true }), "read-preview")
       expect(outcome.value).toMatchObject({ applied: true, previewRef: ref })
       await expect(page.getByRole("dialog", { name: "Edit record", exact: true })).toBeHidden()
@@ -123,7 +125,7 @@ test("installed Dashboard confirms exact monthly changes and purges late results
         await hold
         try { await route.fulfill({ response: actual }) } finally { completed?.() }
       }
-      await page.route(url, delayPreview)
+      await page.route(producerURL, delayPreview)
       await year.getByRole("button", { name: "Apply year amount", exact: true }).click()
       const late = await observed
       expect(late.status).toBe(200)
@@ -141,12 +143,12 @@ test("installed Dashboard confirms exact monthly changes and purges late results
       expect(await page.evaluate(() => history.state)).toBeNull()
       lateDelivery.release?.()
       await released
-      await page.unroute(url, delayPreview)
+      await page.unroute(producerURL, delayPreview)
       await expect(page.locator("[data-access-unavailable]")).toBeVisible()
       await expect(page.locator("[data-preview]")).toHaveCount(0)
       await expect(page.locator("body")).not.toContainText("M67 Installed operating line")
       expect(await page.evaluate(() => history.state)).toBeNull()
-      const denied = await page.context().request.post(url, {
+      const denied = await page.context().request.post(producerURL, {
         headers: { origin: installation.origin },
         data: { page: "OPEX Detail", action: "apply-preview", version: 0, values: { previewRef: late.previewRef } },
       })
