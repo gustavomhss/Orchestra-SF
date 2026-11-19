@@ -123,6 +123,7 @@ export type CreateSfHostRuntime = (input: {
     | "reviews.review-agenda-options" | "reviews.review-agenda" | "reviews.review-preserve"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
     | "decisions.decision-coverage" | "decisions.decision-promote"
+    | "decisions.decision-compare" | "decisions.decision-choose" | "decisions.decision-criteria"
     | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision",
     producer: object) => object | undefined

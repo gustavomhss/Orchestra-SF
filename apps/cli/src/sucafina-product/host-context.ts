@@ -1018,6 +1018,19 @@ export const createSfHostRuntimeWithRoutineNative = async (
                 extended.portfolioServices.planner, extended.portfolioServices.planner.simulateScenario,
                 business.baselineCoverage, business.baselineCoverage.resolveForecastCoverage,
                 business.withCase, business.cases, input.persistence] }
+            if (operationId === "decisions.decision-compare")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.compare,
+                business.planner, business.planner.compareScenarios, business.results,
+                business.withCase, business.cases, input.persistence] }
+            if (operationId === "decisions.decision-choose")
+              return { producer: productHttp, dependencies: [portfolioHttp, extended.portfolioServices,
+                extended.portfolioServices.mutations, extended.portfolioServices.mutations.recordChoice,
+                business.results, business.results.readHistoricalScenario,
+                business.withCase, business.cases, input.persistence] }
+            if (operationId === "decisions.decision-criteria")
+              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain,
+                decisionDomain.criteria, decisionDomain.criteria.register, authority.human,
+                business.withCase, business.cases, input.persistence] }
             if (operationId === "decisions.decision-edit" || operationId === "decisions.controls.read")
               return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.management,
                 decisionDomain.management.edit, business.withCase, business.cases, input.persistence] }
