@@ -18,7 +18,7 @@ Estado: complete
 ## Pendente
 
 - Nenhuma causa funcional Microsoft permanece aberta nesta fatia. Os oito shards SF completos, guards e a integração final continuam sob coordenação; este gate qualifica somente os quatro arquivos abaixo.
-- O refinamento de asserção pós-gate em `modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts:139` entra na próxima qualificação da integração. Não se atribui o run anterior a um SHA diferente.
+- O refinamento de asserção pós-gate em `modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts:140` entra na próxima qualificação da integração. Não se atribui o run anterior a um SHA diferente.
 - A migração de hosts unitários Hot Topics é uma fatia separada, `finish-source-tests-20261119`, inicialmente em `test/product/wp02/hot-topics.test.ts:18` e `test/product/wp08/handoff.test.ts:24` (caminhos sob o módulo); não faz parte deste PR.
 
 ## Decisões e justificativas
