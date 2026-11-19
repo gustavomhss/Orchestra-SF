@@ -87,9 +87,13 @@ export function SfAssumptionDivergence(props: {
         mutation: { expectedStorageVersion: version.body.value, idempotencyKey: key },
       }, { signal: abort.signal, idempotencyKey: key })
       if (abort.signal.aborted || props.owner.generation() !== generation) return
-      if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
+      if (result.kind === "response" && (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied")) {
+        setUi({ phase: "failed", error: result.status === 401 || result.body.status === "unauthenticated" ? "Sessão expirada." : "Sem permissão para registrar a divergência." })
+      } else if (result.kind === "transport-error" || result.kind === "response" && result.status >= 500) {
         setUi({ phase: "unknown", error: `Resultado desconhecido; não repetir a mutation. Correlação: ${key}.` })
-      } else if (result.body.status !== "ok") {
+      } else if (result.kind !== "response") {
+        setUi({ phase: "unknown", error: `Resultado desconhecido; não repetir a mutation. Correlação: ${key}.` })
+      } else if (result.status !== 200 || result.body.status !== "ok") {
         setUi({ phase: "failed", error: `Produtor não confirmou: ${sfFailureUiState(result.body.status, result.status)}.` })
       } else {
         const thread = result.body.value
@@ -141,8 +145,13 @@ export function SfAssumptionDivergence(props: {
         <Show when={ui.phase === "reviewing" && selected()}>
           {(source) => <div class="sf-n24-review">
             <h3>Confirmar clarificação (threads CAS)</h3>
-            <p><bdi>{source().refId}</bdi> · caso v{props.record.version}</p>
-            <p><bdi>{ui.text}</bdi></p>
+            <p>kind clarification · case v{props.record.version}</p>
+            <p>sourceRef <bdi>{source().refId}</bdi></p>
+            <p>sourceIncarnation <bdi>{source().kind === "record" ? source().target.incarnation : ""}</bdi></p>
+            <p>observedVersion {source().kind === "record" ? source().target.version : ""}</p>
+            <p>period {source().kind === "record" && source().target.period ? source().target.period.start : props.record.horizon.start} – {source().kind === "record" && source().target.period ? source().target.period.end : props.record.horizon.end}</p>
+            <p>evidenceRefs <bdi>{source().refId}</bdi> · <bdi>{source().evidenceLevel}</bdi></p>
+            <p>body <bdi>{ui.text.trim()}</bdi></p>
           </div>}
         </Show>
         <Show when={ui.phase === "committed" ? ui.receipt : undefined}>

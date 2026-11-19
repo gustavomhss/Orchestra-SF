@@ -115,8 +115,8 @@ export function SfQuestionConsume(props: Readonly<{
         setUi({ state: "outcome-unknown", submitting: false })
         return
       }
-      if (result.body.status !== "ok") {
-        setUi({ state: sfFailureUiState(result.body.status, result.status), submitting: false })
+      if (result.status === 401 || result.status === 403 || result.body.status !== "ok" || result.status !== 200) {
+        setUi({ state: result.status === 401 || result.body.status === "unauthenticated" ? "session-expired" : sfFailureUiState(result.body.status, result.status), submitting: false })
         return
       }
       setUi({ state: "ready", consumed: result.body.value, contribution: undefined,
@@ -137,7 +137,7 @@ export function SfQuestionConsume(props: Readonly<{
         <Show when={ui.state === "ready" && ui.contribution} fallback={
           <SfStatePanel
             state={ui.state}
-            messageKey={"sf.ui37.unavailable" as import("../../shared/frame").SfCopyKey} />
+            messageKey={(ui.state === "session-expired" ? "sf.common.loginAgain" : ui.state === "denied" ? "sf.common.noAccess" : ui.state === "conflict" || ui.state === "stale" ? "sf.ui37.versionChanged" : "sf.ui37.unavailable") as import("../../shared/frame").SfCopyKey} />
         }>
           {(contribution) => <>
             <p>{t("sf.ui37.proposalScope")}</p>

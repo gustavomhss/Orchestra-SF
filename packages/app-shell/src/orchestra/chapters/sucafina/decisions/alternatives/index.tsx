@@ -110,7 +110,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
         return
       }
       const selected = result.body.value.selected
-      if (selected && selected.caseRef.id !== current) {
+      if (selected && !sameRouteCase(current, selected.caseRef.id, selected.caseRef.incarnation)) {
         setUi({ choices: undefined, choicesCase: undefined, choicesState: "stale" })
         return
       }
@@ -166,7 +166,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
         return
       }
       const review = result.body.value
-      if (review.promotion.caseRef.id !== requestedCase || review.promotion.choiceId !== choiceId) {
+      if (!sameRouteCase(requestedCase, review.promotion.caseRef.id, review.promotion.caseRef.incarnation) || review.promotion.choiceId !== choiceId) {
         setUi({ reviewState: "stale", choiceReview: undefined })
         return
       }
@@ -322,4 +322,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
       </div>
     </SfPageFrame>
   )
+}
+
+function sameRouteCase(routeRef: string, id: string, incarnation: string) {
+  return `case:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}` === routeRef
 }

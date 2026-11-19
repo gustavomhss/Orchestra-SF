@@ -125,9 +125,11 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
       }
       if (result.kind === "transport-error") {
         setUi({ phase: "unknown", message: "sf.ui37.pending" })
-      } else if (result.body.status !== "ok") {
+      } else if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" || result.body.status === "denied") {
+        setUi({ phase: "unavailable", message: result.status === 401 || result.body.status === "unauthenticated" ? "sf.common.loginAgain" : "sf.common.noAccess" })
+      } else if (result.body.status !== "ok" || result.status !== 200) {
         const state = sfFailureUiState(result.body.status, result.status)
-        setUi({ phase: state === "stale" || state === "conflict" ? "stale" : "unavailable", message: "sf.ui37.unavailable" })
+        setUi({ phase: state === "stale" || state === "conflict" ? "stale" : "unavailable", message: state === "conflict" || state === "stale" ? "sf.ui37.versionChanged" : "sf.ui37.unavailable" })
       } else if (result.body.value.caseRef !== caseRef() ||
         result.body.value.expectedCaseVersion !== latest.version) {
         setUi({ phase: "stale", message: "sf.ui37.versionChanged" })
@@ -245,12 +247,14 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                   <div class="sf-n24-review" role="group" aria-label={t("sf.ui37.confirm")}>
                     <p><bdi>{ui.text}</bdi></p>
                     <p>{t("sf.ui37.criterion")}: <bdi>{
-                      current().criteria.find((item) => item.id === ui.criterion)?.description || ui.criterion || t("sf.ui37.noCriterion")
-                    }</bdi></p>
-                    <p>{t("sf.ui37.recipient")}: <bdi>{ui.recipient || t("sf.ui37.noRecipient")}</bdi></p>
+                      current().criteria.find((item) => item.id === ui.criterion)?.description || t("sf.ui37.noCriterion")
+                    }</bdi><Show when={ui.criterion}>{" · "}<bdi>{ui.criterion}</bdi></Show></p>
+                    <p>{t("sf.ui37.recipient")}: <bdi>{
+                      ui.recipients.find((person) => person.id === ui.recipient)?.name || t("sf.ui37.noRecipient")
+                    }</bdi><Show when={ui.recipient}>{" · "}<bdi>{ui.recipient}</bdi></Show></p>
                     <p>{t("sf.ui37.scope")}</p>
                     <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
-                      <li><bdi>{source.refId}</bdi></li>}</For></ul>
+                      <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi> · <bdi>{source.kind}</bdi></li>}</For></ul>
                   </div>
                 </Show>
                 <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>
