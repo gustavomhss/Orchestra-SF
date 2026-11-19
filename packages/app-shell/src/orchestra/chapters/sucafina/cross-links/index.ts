@@ -17,6 +17,7 @@ export type SfExecutiveRecord = Readonly<{
 export type SfExecutiveLink =
   | Readonly<{ kind: "agenda" | "projects" | "risks" | "stakeholders" | "topics" | "new-topic" }>
   | SfExecutiveRecord
+  | Readonly<{ kind: "contract"; ref: string }>
   | Readonly<{ kind: "relations"; source: SfExecutiveRecord }>
 export type SfExecutiveSourceRoute = Readonly<{
   ownerSelection: SfOwnerSelection
@@ -27,7 +28,7 @@ const operationReady = (context: SfContext, operationId: string) =>
   context.availability.some((resource) => resource.operations.some((operation) =>
     operation.operationId === operationId && operation.state === "ready" && operation.operational))
 
-const admitted = (context: SfContext, capability: "CAP02" | "CAP10" | "CAP13" | "CAP15") =>
+const admitted = (context: SfContext, capability: "CAP02" | "CAP10" | "CAP13" | "CAP14" | "CAP15") =>
   context.destinations.some((item) => item.capabilityId === capability && item.canRead) &&
   operationReady(context, "domain.page." + capability)
 
@@ -39,6 +40,7 @@ export function sfExecutiveLinkAllowed(context: SfContext, target: SfExecutiveLi
         operationReady(context, "dashboard.dashboard-review-preserve")
     case "projects": case "project": return admitted(context, "CAP10")
     case "risks": case "risk": return admitted(context, "CAP13")
+    case "contract": return admitted(context, "CAP14")
     case "stakeholders": case "stakeholder": return admitted(context, "CAP15")
     case "topics": case "topic": return admitted(context, "CAP02")
     case "new-topic":
@@ -51,9 +53,9 @@ export function sfExecutiveLinkAllowed(context: SfContext, target: SfExecutiveLi
   }
 }
 
-function isRecord(target: SfExecutiveLink): target is SfExecutiveRecord {
+function isRecord(target: SfExecutiveLink): target is SfExecutiveRecord | Readonly<{ kind: "contract"; ref: string }> {
   return target.kind === "project" || target.kind === "risk" ||
-    target.kind === "stakeholder" || target.kind === "topic"
+    target.kind === "stakeholder" || target.kind === "topic" || target.kind === "contract"
 }
 const validRef = (ref: string) => ref.trim().length > 0 && ref.length <= 4096
 
@@ -78,6 +80,9 @@ export function sfExecutiveLinkRequest(from: SfExecutiveSourceRoute, target: SfE
     case "risk":
       path = "/orchestra/sf-operations/risks/" + encodeSfRouteRef(target.ref)
       break
+    case "contract":
+      path = "/orchestra/sf-procurement/contracts/" + encodeSfRouteRef(target.ref)
+      break
     case "stakeholders": path = "/orchestra/sf-operations/stakeholders"; break
     case "stakeholder":
       path = "/orchestra/sf-operations/stakeholders/" + encodeSfRouteRef(target.ref)
@@ -96,6 +101,10 @@ export function sfExecutiveLinkRequest(from: SfExecutiveSourceRoute, target: SfE
   }
   if ((target.kind === "projects" || target.kind === "project") &&
       from.query.year !== undefined) query.set("year", String(from.query.year))
+  if (target.kind === "topic" || target.kind === "topics" || target.kind === "new-topic") {
+    if (from.query.year !== undefined) query.set("year", String(from.query.year))
+    if (from.query.month !== undefined) query.set("month", String(from.query.month))
+  }
   return path + "?" + query.toString()
 }
 
@@ -109,6 +118,8 @@ export function sfExecutiveLinkMatches(route: SfResolvedRoute, target: SfExecuti
     case "risks": return route.surfaceId === "CAP13" && route.kind === "entry"
     case "risk": return route.surfaceId === "CAP13" && route.kind === "detail" &&
       route.params.riskRef === target.ref
+    case "contract": return route.surfaceId === "CAP14" && route.kind === "detail" &&
+      route.params.contractRef === target.ref
     case "stakeholders": return route.surfaceId === "CAP15" && route.kind === "entry"
     case "stakeholder": return route.surfaceId === "CAP15" && route.kind === "detail" &&
       route.params.stakeholderRef === target.ref
@@ -153,6 +164,12 @@ export async function sfExecutiveRevalidateRef(
       return !signal.aborted && result.kind === "response" && result.status === 200 &&
         result.body.status === "ok" && result.body.value.capabilityId === "CAP13" &&
         result.body.value.data.risks?.some((item) => String(item.id) === record.ref) === true
+    }
+    if (record.kind === "contract") {
+      const result = await createSfDomainClient(transport)["domain.page.CAP14"]({}, { signal })
+      return !signal.aborted && result.kind === "response" && result.status === 200 &&
+        result.body.status === "ok" && result.body.value.capabilityId === "CAP14" &&
+        result.body.value.data.contracts?.some((item) => String(item.id) === record.ref) === true
     }
     const result = await createSfDomainClient(transport)["domain.page.CAP15"]({}, { signal })
     return !signal.aborted && result.kind === "response" && result.status === 200 &&

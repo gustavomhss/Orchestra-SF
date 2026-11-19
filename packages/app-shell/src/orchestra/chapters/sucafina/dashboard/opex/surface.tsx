@@ -778,7 +778,12 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         context={[{ id: "year", label: { key: key("year") }, value: { kind: "data", text: String(year()) } }]}
         tabs={[]} activeTab={null}
         primaryAction={pageAction()}
-        secondaryActions={[]}
+        secondaryActions={[{
+          id: "refresh-data", labelKey: sfCommonKey("sf.common.refreshData"), tone: "secondary",
+          disabled: view.busy || view.state === "loading" || context.state().status !== "ready",
+          busy: view.state === "loading",
+          onInvoke: () => setView("reload", (value) => value + 1),
+        }]}
         density="comfortable" layout="split"
         onLayoutMode={(mode) => setLayoutMode(mode)}
       >
