@@ -140,6 +140,39 @@ type RetainedMutation = PendingMutation & Readonly<{ key: string; confirmed: boo
 type ErrorReason = SfTransportFailure["reason"]
 const failure = (reason: ErrorReason): SfTransportFailure => ({ kind: "transport-error", reason })
 
+// Failure diagnostics for the two observed native creates. Only schema-owned
+// field names and value types are emitted; never values, headers or owner IDs.
+function procurementCreateShape(input: unknown) {
+  const kind = (value: unknown) => value === null ? "null" : Array.isArray(value) ? "array"
+    : typeof value === "number" && !Number.isFinite(value) ? "non-finite-number" : typeof value
+  const fields = (value: unknown, allowed: readonly string[]) => {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) return { kind: kind(value) }
+    const entries = Object.entries(value)
+    return {
+      fields: Object.fromEntries(entries.filter(([key]) => allowed.includes(key)).map(([key, value]) => [key, kind(value)])),
+      excess: entries.filter(([key]) => !allowed.includes(key)).length,
+    }
+  }
+  const root = typeof input === "object" && input !== null ? input : {}
+  const values = "values" in root ? root.values : undefined
+  const nested = typeof values === "object" && values !== null ? values : {}
+  return {
+    root: fields(input, ["page", "action", "id", "version", "values", "confirmed"]),
+    values: fields(values, ["pr", "supplier"]),
+    ...("pr" in nested ? { pr: fields(nested.pr, [
+      "title", "type", "description", "estAmount", "costCenter", "needBy", "justification",
+      "recurring", "frequency", "estAnnual", "expenseType", "category", "requesterName",
+    ]) } : {}),
+    ...("supplier" in nested ? { supplier: fields(nested.supplier, [
+      "legalName", "tradingName", "type", "country", "address", "taxId", "regNo",
+      "contactName", "contactEmail", "contactPhone", "financeEmail", "paymentTerms",
+      "currency", "incoterm", "riskRating", "dueDiligence", "sanctionsDate", "nda", "dpa",
+      "certifications", "categories", "contacts", "commercial", "compliance", "notes",
+      "iban", "account", "bankName", "swift", "accountHolder", "bankCountry",
+    ]) } : {}),
+  }
+}
+
 // Preserve the full route contract: the catalog literals happen to omit
 // response modes owned by dedicated consumers, but that does not narrow F02.
 function cataloguedRoute(operationId: SfOperationId): SfNativeOperationRoute | undefined {
@@ -176,9 +209,25 @@ export function createSfTransport(options: Readonly<{
       input: Input,
       call: SfCallOptions,
     ): Promise<SfTransportResult<Output>> {
-      if (!validBinding || !owned || !isCurrent()) return failure("contract-mismatch")
+      let checkedInput: unknown
+      const mismatch = (stage: string) => {
+        if (operation.operationId === "domain.command.CAP25.create" ||
+            operation.operationId === "domain.command.CAP27.create") {
+          const diagnostic = { capabilityId: operation.operationId === "domain.command.CAP25.create" ? "CAP25" : "CAP27",
+            action: "create", kind: "transport-error", reason: "contract-mismatch", stage }
+          try {
+            console.info("SF_PROCUREMENT_COMMAND_BOUNDARY " + JSON.stringify({
+              ...diagnostic, original: procurementCreateShape(input), parsed: procurementCreateShape(checkedInput),
+            }))
+          } catch {
+            console.info("SF_PROCUREMENT_COMMAND_BOUNDARY " + JSON.stringify(diagnostic))
+          }
+        }
+        return failure("contract-mismatch")
+      }
+      if (!validBinding || !owned || !isCurrent()) return mismatch("binding-owner-generation")
       if (call.signal.aborted) return failure("aborted")
-      if (!options.desktop && !webOrigin()) return failure("contract-mismatch")
+      if (!options.desktop && !webOrigin()) return mismatch("web-origin")
       const metadata = cataloguedRoute(operation.operationId)
       if (!metadata || metadata.effect === "authentication" || operation.operationId === "ctx.installations") {
         // Auth and global discovery have their own canonical SDK/navigation.
@@ -197,10 +246,11 @@ export function createSfTransport(options: Readonly<{
       const codec = options.operations[operation.operationId]
       if (!codec) return failure("contract-unavailable")
       const parsedInput = Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(input)
-      if (Option.isNone(parsedInput)) return failure("contract-mismatch")
+      if (Option.isNone(parsedInput)) return mismatch("operation-input-schema")
+      checkedInput = parsedInput.value
       const upload = sfIsUploadOperation(operation.operationId)
         ? sfUploadSlot(operation.operationId, parsedInput.value) : undefined
-      if (sfIsUploadOperation(operation.operationId) && !upload) return failure("contract-mismatch")
+      if (sfIsUploadOperation(operation.operationId) && !upload) return mismatch("upload-slot")
       const codecInput = upload && typeof parsedInput.value === "object" && parsedInput.value !== null
         ? Object.fromEntries(Object.entries(parsedInput.value).filter(([key]) => key !== "bytes"))
         : parsedInput.value
@@ -208,7 +258,7 @@ export function createSfTransport(options: Readonly<{
         try { return codec.decodeInput(codecInput) }
         catch { return { status: "invalid" } as const }
       })()
-      if (decoded.status !== "ok") return failure("contract-mismatch")
+      if (decoded.status !== "ok") return mismatch("binding-input-codec")
       const isBytes = metadata.responseMode === "bytes"
       if (isBytes !== sfIsByteOperation(operation.operationId) &&
           (isBytes || operation.operationId.startsWith("files.export.") ||
@@ -226,7 +276,7 @@ export function createSfTransport(options: Readonly<{
         if (!expectation || Object.keys(expectation).length !== 3 ||
             expectation.installationId !== options.binding.installationId ||
             expectation.projectId !== options.binding.projectId ||
-            expectation.hostId !== options.binding.hostId) return failure("contract-mismatch")
+            expectation.hostId !== options.binding.hostId) return mismatch("context-expectation")
       }
       const wireInput = operation.operationId === "ctx.context" ? {
         installationId: options.binding.installationId,
@@ -234,7 +284,7 @@ export function createSfTransport(options: Readonly<{
         hostId: options.binding.hostId,
       } : decoded.value
       const route = operationUrl(options.binding, metadata, wireInput, operation.operationId)
-      if (!route) return failure("contract-mismatch")
+      if (!route) return mismatch("operation-route")
       const postRead = metadata.method === "POST" && (metadata.effect === "read" || metadata.effect === "preview")
       // This original C08 lookup is read-only, but addresses the first save by
       // its original command identity. A fresh key would read a different outcome.
@@ -245,30 +295,30 @@ export function createSfTransport(options: Readonly<{
       const humanRetry = call.retry === "same-intent"
       if (call.retry !== undefined &&
           (call.retry !== "same-intent" || !mutating || !HUMAN_RETRY_OPERATIONS.has(operation.operationId)))
-        return failure("contract-mismatch")
-      if (postRead && !draftOutcomeRead && call.idempotencyKey !== undefined) return failure("contract-mismatch")
+        return mismatch("retry-policy")
+      if (postRead && !draftOutcomeRead && call.idempotencyKey !== undefined) return mismatch("post-read-key")
       const key = metadata.method === "POST"
         ? postRead && !draftOutcomeRead
           ? typeof crypto !== "undefined" && typeof crypto.randomUUID === "function" ? crypto.randomUUID() : undefined
           : call.idempotencyKey
         : undefined
-      if (metadata.method === "POST" && (!key || !KEY.test(key))) return failure("contract-mismatch")
-      if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
+      if (metadata.method === "POST" && (!key || !KEY.test(key))) return mismatch("mutation-key")
+      if (metadata.method === "GET" && call.idempotencyKey !== undefined) return mismatch("get-key")
       const bodyValue = metadata.method === "POST"
         ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
           ? asJsonObject(wireInput)?.evidence
           : operationBody(metadata, wireInput)
         : undefined
-      if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
+      if (metadata.method === "POST" && bodyValue === undefined) return mismatch("body-discriminator")
       const body = bodyValue === undefined ? undefined : JSON.stringify(bodyValue)
       if (body !== undefined && metadata.maxRequestBytes !== undefined &&
           (!Number.isSafeInteger(metadata.maxRequestBytes) || metadata.maxRequestBytes < 0 ||
             new TextEncoder().encode(body).byteLength > metadata.maxRequestBytes)) {
-        return failure("contract-mismatch")
+        return mismatch("request-size")
       }
       const legacyMutation = mutating && /\{surface\}|\/dashboard$|\/planner$|\/procurement$/.test(metadata.pathTemplate)
       if (legacyMutation && !stamp) return failure("contract-unavailable")
-      if (stamp && !sameStampInstallation(stamp, options.binding)) return failure("contract-mismatch")
+      if (stamp && !sameStampInstallation(stamp, options.binding)) return mismatch("stamp-installation")
       if (mutating && pending.size >= MUTATION_LIMIT && !pending.has(key!)) return failure("contract-unavailable")
       // Bind each mutation intent to the actual bytes as well as its metadata,
       // without serializing a Uint8Array or creating an optimistic retry.
@@ -279,26 +329,26 @@ export function createSfTransport(options: Readonly<{
         (body ?? "") + (uploadDigest ? "\\u0000" + uploadDigest : "")) : undefined
       if (mutating && digest === undefined) return failure("contract-unavailable")
       const ownerHeader = legacyMutation && mutationOwner ? nativeOwnerHeader(mutationOwner) : undefined
-      if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
+      if (legacyMutation && !ownerHeader) return mismatch("owner-header")
       const previous = mutating ? pending.get(key!) : undefined
       const last = retained.get(operation.operationId)
       const reportRetry = operation.operationId === "reviews.report.prepare"
       if (mutating) {
         if (mutationOwner && (!stamp || !equalContextStamp(mutationOwner, stamp)))
-          return failure("contract-mismatch")
+          return mismatch("mutation-owner-changed")
         if (humanRetry && (!last || last.key !== key || last.digest !== digest ||
             !last.owner || !stamp || !equalContextStamp(last.owner, stamp) ||
             !previous && !last.confirmed))
-          return failure("contract-mismatch")
+          return mismatch("retry-intent")
         if (!humanRetry && last && last.key === key) {
           if (last.digest !== digest || !last.owner || !stamp || !equalContextStamp(last.owner, stamp))
-            return failure("contract-mismatch")
+            return mismatch("retained-intent")
           return failure("outcome-unknown")
         }
         if (previous !== undefined) {
           if (previous.digest !== digest ||
               previous.owner && (!stamp || !equalContextStamp(previous.owner, stamp)))
-            return failure("contract-mismatch")
+            return mismatch("pending-intent")
           if (!reportRetry && !humanRetry) return failure("outcome-unknown")
         }
         if (mutationInFlight.has(key!)) return failure("outcome-unknown")
