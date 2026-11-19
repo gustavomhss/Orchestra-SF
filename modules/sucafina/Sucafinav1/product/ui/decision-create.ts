@@ -228,7 +228,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
     } catch {
       if (denied || !form.isConnected || intention !== attempt) return
       attempt.uncertain = true
-      status.textContent = 'Creation is unconfirmed. Retry the same request here, or reload to check its durable receipt.'
+      status.textContent = 'Creation is unconfirmed. Your entries are locked to the original request; retry the same request to reconcile it.'
     } finally {
       clearTimeout(timeout); submitting = false
       present()
