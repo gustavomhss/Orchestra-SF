@@ -4,6 +4,7 @@ import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { asRecord, caseIdentity, enterWorkbench } from "../decisions-support/journey"
+import { observedReportResponse, retainReportResponse } from "../reports-support/model"
 
 export const horizon = { start: "2027-01-01", end: "2027-12-31" }
 export const objective = "BI62 · renewal versus transition with separately quoted training"
@@ -30,7 +31,8 @@ export type InstalledBiCorpus = {
 /** Only source inputs are synthetic. The existing Planner UI saves them, and
  * normal authenticated HTTP commands issue sources, classify coverage, promote
  * scenarios and persist every comparison/portfolio. No result, reference,
- * grant, provider, response, route handler or installation store is replaced.
+ * grant, provider or installation store is replaced. The Planner observer retains
+ * the complete original response bytes through a single pass-through request.
  */
 export async function prepareInstalledBi(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]): Promise<InstalledBiCorpus> {
   const plans = await preparePlanner(page, installation, observations)
@@ -253,6 +255,15 @@ async function evaluatePair(page: Page, origin: string, caseRef: CaseRef, base: 
 }
 
 async function preparePlanner(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
+  // Keep the original command body observable when the native review rerenders.
+  await page.route((url) => url.origin === installation.origin && url.pathname === "/sucafina/planner" &&
+    !url.searchParams.has("sf") && ["Versions", "OPEX"].includes(url.searchParams.get("page") ?? ""),
+  async (route) => {
+    if (route.request().method() !== "POST") return route.fallback()
+    const original = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+    await retainReportResponse(route.request(), original)
+    await route.fulfill({ response: original })
+  })
   const url = (name: "Versions" | "OPEX", version?: string) => "/orchestra/sf-planner/" +
     (name === "Versions" ? "versions" : "opex") + "?" + new URLSearchParams({ year: "2027", ...(version ? { version } : {}) })
   const versionRow = (id: string) => page.locator('tr[data-sf-row="' + id + '"]')
@@ -395,14 +406,15 @@ async function lineId(page: Page, name: string) {
 
 async function addLine(page: Page, name: string, amount: number, actorId: string, observations: Record<string, unknown>[], origin: string) {
   await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/opex")
-  const form = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]')
-  await expect(form).toHaveCount(1)
-  await form.getByLabel("Name", { exact: true }).fill(name)
-  await form.getByLabel("Owner", { exact: true }).selectOption(actorId)
-  await form.getByLabel("Element", { exact: true }).selectOption("licenses")
-  await expect(form.getByLabel("Currency", { exact: true })).toHaveValue("USD")
-  await form.getByLabel("Annual budget", { exact: true }).fill(String(amount))
-  await plannerCommand(page, form.getByRole("button", { name: "Save", exact: true }), "save", observations, origin)
+  const surface = page.getByRole("region", { name: "OPEX", exact: true })
+  await expect(surface).toHaveCount(1)
+  await expect(surface.getByLabel("Name", { exact: true })).toBeVisible()
+  await surface.getByLabel("Name", { exact: true }).fill(name)
+  await surface.getByLabel("Owner", { exact: true }).selectOption(actorId)
+  await surface.getByLabel("Element", { exact: true }).selectOption("licenses")
+  await expect(surface.getByLabel("Currency", { exact: true })).toHaveValue("USD")
+  await surface.getByLabel("Annual budget", { exact: true }).fill(String(amount))
+  await plannerCommand(page, surface.getByRole("button", { name: "Save", exact: true }), "save", observations, origin)
   return lineId(page, name)
 }
 
@@ -487,7 +499,7 @@ async function plannerCommand(page: Page, button: Locator, action: string, obser
     const response = observed.response!
     expect(response.status()).toBe(200)
     expect(response.headers()["content-type"]).toContain("application/json")
-    const body = asRecord(await response.json())
+    const body = asRecord(observedReportResponse(response))
     expect(body.ok).toBe(true)
     await expect(review).toHaveCount(0)
     observations.push({ stage: "planner-command", action, httpStatus: response.status() })

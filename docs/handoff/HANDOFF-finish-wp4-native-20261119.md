@@ -1,6 +1,6 @@
 # Handoff — finish-wp4-native-20261119
 
-SHA do código: d992d1064b7da595bca0cb04457f3e347a8d6616
+SHA do código: a4d29fff44349d058324c3e54c041d5cf0cad859
 Data: 2026-11-19
 Estado: partial
 
@@ -57,3 +57,13 @@ Estado: partial
 - Dependência de composição: exports retainReportResponse/observedReportResponse de reports-support/model.ts já presentes em assembly28 a7286859312e8a27bd47367fc30333577ae929ae; não foram duplicados nem editados neste branch.
 - Pendente/unbound: extended-flows.ts:97 precisa comprovar o término no próximo gate; se o aborto persistir, reter o diagnóstico original e não omitir a asserção. composition.spec.ts:305 continua aguardando causa de admissão CAP25, em paralelo ao diagnóstico original UI48 da raiz. O restante de WP4 não foi ampliado neste checkpoint.
 - Como retomar: compor somente o novo extended-flows.ts sobre assembly28, preservando os quatro blobs anteriores2e787. Integrador decide o único próximo gate WP4 após resolver a admissão; este delta ainda não tem run de qualificação. Não declarar PASS/GO a partir da auditoria.
+
+
+## CAP25 — diagnóstico de admissão original após falha
+
+- Código a4d29fff44349d058324c3e54c041d5cf0cad859, estado partial; somente wp10/composition.spec.ts. O caso original de Requests do run44602654358 mostrou Sucafina route not admitted e não fez GET CAP25/C02. As asserções de summary, sourceVersion, todas as colunas, três fornecedores, scores87.9/85.0 e30240USD/FX1.08 continuam intactas.
+- Conferência de código: local/entry.ts monta createSfProcurementProjectionHandlers e observeSfDomainHealth como o factory Operations. domain-health.ts:98–114 exige sf_request_read original e a fonte procurement-request-selection/all; não exige período global persistido. Não foi aplicada a correção de seleção C12 a esse fluxo, nem alterada disponibilidade F01.
+- Feito: o observer conserva somente em memória a URL do último GET context original. Se a asserção do summary falhar, a fixture faz uma releitura autenticada nessa mesma URL, decodifica SfContextResult e registra apenas HTTPstatus/status, destination CAP25 (capabilityId/canRead/allowedActionIds) e availability CAP25. Nenhuma identidade, query, header, cookie ou token é publicado. Depois relança a mesma falha; em sucesso não faz essa leitura extra.
+- Asserções removidas: nenhuma. Não aumenta timeout, não espera falsamente um C02 que nunca foi emitido, não cria fonte, grant ou resultado. O diagnóstico serve para distinguir ausência de admissão, fonte ou handler com fatos do produtor.
+- Pendente/unbound: wp10/composition.spec.ts:316 precisa coletar o diagnóstico se a recusa persistir no próximo gate composto; wp10/extended-flows.ts:42 ainda requer qualificação do buffer original BI05 d992; wp03/planner-mounted.spec.ts:11 mantém a qualificação pendente do TSV nativo anterior. Nenhum novo WP4 gate foi lançado aqui.
+- Retomar: compor este blob de composition.spec.ts junto do buffer d992 e dos quatro deltas2e787 já descritos; coordenar um único gate WP4 com a raiz. Se CAP25 recusar novamente, usar facts.cap25Destinations/cap25Availability do artefato original antes de qualquer mudança de produto.
