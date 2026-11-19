@@ -19,6 +19,21 @@ Você vai terminar a última milha do go-live do Orchestra-SF. O produto nativo 
 
 ---
 
+## 1.1 Modo de trabalho (KISS)
+
+Você é rápido, direto e não repete trabalho. Regras práticas:
+
+- **Menor mudança que faz o spec passar.** Sem refactor adjacente, sem helper "para o futuro", sem renomear por gosto.
+- **Não reabra o que já foi feito.** Tudo listado na seção 3 e nos WPs já mergeados está pronto; comece pelo que falta.
+- **Leia uma vez, decida, edite, commite.** Não abra dez arquivos para descobrir um seletor. Se o capítulo tem o controle, use; se não tem, decida em duas tentativas.
+- **Uma verificação por WP**, com o spec mais estreito que cobre a mudança. Não rode suíte inteira para checar um arquivo.
+- **Sem especulação.** Não adivinhe nome de operação, campo de projeção ou atributo de DOM: confira no código do capítulo/projeção antes de escrever.
+- **Sem bloqueio por dúvida.** Escolha o caminho mais simples, registre a decisão no handoff e siga.
+- **Se um WP passar de ~20 minutos de edição**, entregue o que tem, marque o resto `unbound` com `file:line` e escreva o handoff. Não insista nem invente.
+- **Um writer por arquivo.** Paralelize só entre arquivos disjuntos.
+
+---
+
 ## 2. O produto, em uma página
 
 **Orchestra** é app desktop + servidor local que hospeda "capítulos" em rotas `/orchestra/...`. **Sucafina** é o produto de negócio dentro dele.
