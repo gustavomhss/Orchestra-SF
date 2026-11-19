@@ -29,7 +29,17 @@ const empty: Fields = { action: "", owner: "", due: "", priority: "normal", note
 const object = (value: unknown): Record<string, unknown> | undefined =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : undefined
 const rows = (value: unknown): readonly unknown[] => Array.isArray(value) ? value : []
-const same = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right)
+function same(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true
+  if (Array.isArray(left) || Array.isArray(right))
+    return Array.isArray(left) && Array.isArray(right) && left.length === right.length &&
+      left.every((value, index) => same(value, right[index]))
+  const a = object(left), b = object(right)
+  if (!a || !b) return false
+  const keys = Object.keys(a)
+  return keys.length === Object.keys(b).length &&
+    keys.every((field) => Object.hasOwn(b, field) && same(a[field], b[field]))
+}
 const validCase = Schema.is(draftInput.fields.caseRef)
 const validDraft = Schema.is(draftInput)
 
@@ -324,6 +334,7 @@ export function SfHotTopicPrivateDraft(props: {
           </div>
         </Show>
         <Show when={state() === "current"}><p role="status">{t(key(needsCurrent() ? "sf.u38.proposalCurrentLoaded" : "sf.u38.proposalEditsRetained"))}</p></Show>
+        <Show when={state() === "current" && needsCurrent() && !canWrite()}><p role="status">{t(key("sf.u38.proposalEditsRetained"))}</p></Show>
         <Show when={state() === "write-denied" || !canWrite() && state() === "current"}><p role="status">{t(key("sf.u38.privateWriteUnavailable"))}</p></Show>
         <Show when={state() === "unavailable"}><p role="status">{t(key("sf.u38.privateReadUnavailable"))}</p></Show>
         <Show when={state() === "conflict"}><p role="alert">{t(key("sf.u38.sourceChanged"))}</p></Show>
