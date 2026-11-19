@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { rows } from "../../../runtime/contract.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { available, createRelationsFixture } from "./relations-fixture.ts"
@@ -111,7 +112,7 @@ test("record issuance keeps two source reads with canonical metadata verificatio
   } finally { await fixture.dispose() }
 })
 
-for (const fault of ["source", "access", "request", "headers", "lease", "selection"] as const)
+for (const fault of ["source", "access", "request", "headers", "lease", "selection", "clock"] as const)
 test("record issuance refuses " + fault + " drift between its independent observations", async () => {
   const fixture = await createRelationsFixture()
   try {
@@ -140,6 +141,7 @@ test("record issuance refuses " + fault + " drift between its independent observ
         if (fault === "headers") request.headers.set("actor", "another-person")
         if (fault === "lease") Reflect.set(context, "lease", {})
         if (fault === "selection") selection.fields.push("status")
+        if (fault === "clock") fixture.clock.at = "2027-01-01T00:00:00Z"
       }
       return value
     }
@@ -293,6 +295,60 @@ test("record issuance refuses " + fault + " mutation at the last authority callb
     const result = await fixture.records.issue(selection, context)
     expect(observations).toBe(2)
     expect(finalChecks).toBe(2)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+
+test("record issuance checks the registry again after a durable edit following its second read", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const read = fixture.persistence.readScopedSource
+    let observations = 0, changed = false
+    fixture.persistence.readScopedSource = async (...args) => {
+      const value = await read(...args)
+      if (value) observations++
+      return value
+    }
+    const revalidate = fixture.host.revalidate
+    fixture.host.revalidate = async (context) => {
+      const allowed = await revalidate(context)
+      if (observations === 2 && !changed) {
+        changed = true
+        await fixture.persistence.transaction("dashboard", async (snapshot) => {
+          rows(snapshot.data.projects).find((row) => row.id === "project")!.name = "Changed after the second read"
+          return { commit: true, value: undefined }
+        })
+      }
+      return allowed
+    }
+    const result = await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, fixture.read)
+    expect(observations).toBe(2)
+    expect(changed).toBe(true)
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  } finally { await fixture.dispose() }
+})
+
+test("record issuance refuses an abort while acquiring its observation time", async () => {
+  const fixture = await createRelationsFixture()
+  try {
+    const controller = new AbortController()
+    const request = new Request(fixture.request(), { signal: controller.signal })
+    const payload = digestSfValue({ recordRefs: [] })
+    const context = available(await fixture.ui.admit(request, "sf_relation_read", payload))
+    expect(await fixture.ui.validate(context, "sf_relation_read", payload)).toBe(true)
+    const environment = fixture.host.environment
+    fixture.host.environment = async (current) => {
+      const value = await environment(current)
+      controller.abort()
+      return value
+    }
+    const result = await fixture.records.issue({ page: "Portfolio Dashboard", recordType: "projects",
+      recordId: "project", fields: ["name"], period: fixture.period }, context)
+    expect(controller.signal.aborted).toBe(true)
     expect(result.status).not.toBe("ok")
     expect(result).not.toHaveProperty("value")
   } finally { await fixture.dispose() }

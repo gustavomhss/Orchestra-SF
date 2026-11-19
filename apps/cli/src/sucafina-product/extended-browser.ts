@@ -149,6 +149,7 @@ if (root && bootstrap) {
     dispose = () => { view.dispose(); discussion?.dispose() }
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
+    const preparationUrl = location.href
     const client = createReviewPreparationBrowser()
     const discover = createReviewAgendaDiscoveryBrowser()
     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
@@ -166,6 +167,13 @@ if (root && bootstrap) {
       refreshItems: (items) => guarded<ReviewAgendaItem[]>(() => items.length > 0 && items.every((item) => item.kind === "dashboard" && item.recordRefs !== undefined)
         ? refreshDashboardReviewAgenda(items, discover)
         : Promise.resolve({ status: "ok", value: structuredClone([...items]) })),
+      // Align shell refreshes and focus probes with the confirmed preserved state
+      // without remounting the view or replacing the operator's current draft.
+      onPreserved: (reference) => { if (!closed) history.replaceState(history.state, "", reviewUrl(reference)) },
+      onPrepared: (previousReviewRef) => {
+        if (!closed) history.replaceState(history.state, "", previousReviewRef
+          ? sfReviewNavigationUrl(location.href, { previousReviewRef }) : preparationUrl)
+      },
       openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")

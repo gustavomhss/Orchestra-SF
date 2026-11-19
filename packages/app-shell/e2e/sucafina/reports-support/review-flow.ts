@@ -84,6 +84,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   expect(saved.sections[0]!.count).toBe(options.removeOne ? 24 : 25)
   expect(projection(saved.sections[0]!.content).values).toEqual(retained.sections.find((section) => section.title === "Projects")!.projection.values)
   await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
+  await expectReviewAddress(page, app, { reviewRef: saved.id })
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
   await info.attach("preserved-selection", { body: JSON.stringify({ selectionRef: retained.selectionRef, selectedRecords: retained.sectionRecordRefs, saved }, null, 2), contentType: "application/json" })
   return { preparation, saved }
@@ -132,11 +133,20 @@ export async function readSourceData(request: APIRequestContext, app: ReportsIns
   return { projects: data.projects, opexOwners: data.opexOwners, opexEntries: data.opexEntries, hotTopics: data.hotTopics }
 }
 
+async function expectReviewAddress(page: Page, app: ReportsInstallation, destination: { reviewRef: string } | { previousReviewRef: string }) {
+  const expected = new URL(app.dashboardURL)
+  expected.search = new URLSearchParams({ sf: "review", ...destination }).toString()
+  expected.hash = ""
+  await expect(page, "The installed URL must identify the confirmed review state without Reports form parameters").toHaveURL(expected.toString())
+}
+
 export async function preserveNewRevision(page: Page, app: ReportsInstallation, prior: PreservedReview, corpus: ReportsCorpus) {
+  await expectReviewAddress(page, app, { reviewRef: prior.id })
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const load = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
   await preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
   const selected = await agendaResult(await load)
+  await expectReviewAddress(page, app, { previousReviewRef: prior.id })
   expect(selected.sections.flatMap((section) => section.projection.values).filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
   expect(selected.sections.filter((section) => section.title === "Projects").map((section) => section.recordCount)).toEqual([24])
@@ -159,6 +169,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
     .getByRole("row").filter({ has: page.getByRole("cell", { name: corpus.forecastField, exact: true }) }).getByRole("cell"))
     .toHaveText([corpus.forecastField, `${corpus.after} unspecified`, `${corpus.annual.start} – ${corpus.annual.end}`])
   expect(await readReview(page.request, app.dashboardURL, prior.id)).toEqual(prior)
+  await expectReviewAddress(page, app, { reviewRef: next.id })
   expect(await readReview(page.request, app.dashboardURL, next.id)).toEqual(next)
   return next
 }
@@ -230,7 +241,9 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+  const confirmation = preparation.locator("[data-preserved-review-ref]")
+  await expect(confirmation).toHaveAttribute("data-preserved-review-ref", saved.id)
+  await expect(confirmation).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
   const transport = observeReviewTransport(page, app, "review-report")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
   const response = await (async () => {
@@ -285,7 +298,9 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   const transport = observeReviewTransport(page, app, "review-read", "GET")
   try {
     const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-    await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+    const confirmation = preparation.locator("[data-preserved-review-ref]")
+    await expect(confirmation).toHaveAttribute("data-preserved-review-ref", saved.id)
+    await expect(confirmation).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
     const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
     await expect(open).toBeVisible()
     await expect(open).toBeEnabled()
