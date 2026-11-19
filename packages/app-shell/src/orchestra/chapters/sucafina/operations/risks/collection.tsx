@@ -417,10 +417,10 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                     onPage={() => undefined} onSelect={(recordRef) => setStore({
                       mode: "detail", selected: recordRef })}
                     rowActions={() => [
-                      { id: "edit", labelKey: k("sf.common.edit"), tone: "secondary",
-                        disabled: !admitted("save"), busy: store.busy },
-                      { id: "delete", labelKey: k("sf.u30.delete"), tone: "danger",
-                        disabled: !admitted("delete"), busy: store.busy },
+                      ...(admitted("save") ? [{ id: "edit", labelKey: k("sf.common.edit"), tone: "secondary" as const,
+                        disabled: store.busy, busy: store.busy }] : []),
+                      ...(admitted("delete") ? [{ id: "delete", labelKey: k("sf.u30.delete"), tone: "danger" as const,
+                        disabled: store.busy, busy: store.busy }] : []),
                     ]}
                     onRowAction={({ recordRef, actionId }) => {
                       const candidates = rows().filter((row) => String(row.id) === String(recordRef))
