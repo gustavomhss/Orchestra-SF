@@ -1,6 +1,6 @@
 # Handoff — finish-proposaldraft-20261119
 
-SHA de código: e0793cbb683c97352e8f3d1d4a52e2035032da1b (inclui digest Node69711218 e confirmação Applyfc5c0d; gate8 parcial4/5 no composto3cfe8242)
+SHA de código: 092c6d202557960541fb43b68e2cf995ee489e38 (consumo do CommandReceipt original após gate8; ainda sem gate9)
 Data: 2026-11-19
 Estado: partial
 
@@ -23,7 +23,7 @@ Estado: partial
 
 ## Pendente
 - `packages/app-shell/e2e/sucafina/dashboard-installed/proposals.spec.ts:689`: casos1/2/3/4 passaram integralmente no gate8; caso5 confirmou Apply e alerta visível, mas a leitura final independente de C08 aguardou enquanto a redescoberta automática pós-Apply estava pendente até o limite original60s.
-- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:291`: redescoberta automática após Apply ainda pendente na falha do caso5. O alerta real em:412 passou. Nenhuma causa de deadlock foi comprovada; a cadeia histórica específica está sendo avaliada.
+- `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx:313,437`: novo consumo/renderização do recibo retornado e releitura explícita aguardam gate9. Root aprovou o recorte do consumidor após a timeline; nenhuma causa de deadlock foi comprovada ou corrigida no produtor.
 - `packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/capture.tsx:1`: captura/histórico/imutabilidade e source render passaram suas etapas no caso5, mas a jornada completa ainda aguarda o próximo gate. Save desconhecido não é repetido.
 - `modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:139,241,461` e `.../dashboard-installed-closure/consumer-read.test.ts:53,168`: ainda mantidos até equivalência nativa passar; root coordena o remapeamento canônico. Os 2 units puros host-workbench :406/:430 permanecem.
 - Parent root compõe F02, health e registros; nunca copiar common/registry antigos desta branch sobre os adapters compostos.
@@ -39,7 +39,7 @@ Estado: partial
 - Registry/common nesta branch têm base main350dfc1, anterior à composição atual de adapters. Ao compor com a branch retry, aplicar apenas os dois novos IDs, preservando os overrides de rotas e a construção SfFrozenOperationRoutes daquela branch.
 
 ## Como retomar
-1. Sobrepor somente proposals/index.tsx de fc5c0d e proposals.spec.ts de e0793c à composição corrente do root (assembly33 f9ade6c já contém os deltas anteriores). O spec inclui o digest Node69711218. Preservar todos os outros revalidadores e health compostos.
+1. Sobrepor somente os três blobs de092c6d (proposals/index.tsx, sf-u38.ts e proposals.spec.ts) ao código composto do gate8, 3cfe8242dde39aa5e5fefa3629b6c3acf900275c. Preservar todos os outros revalidadores e health compostos; root revisa o diff antes de gate9.
 2. Pedido test-ci: package `app`, directory `packages/app-shell`, runner `playwright`, config `e2e/playwright.production.config.ts`, args `["e2e/sucafina/dashboard-installed/proposals.spec.ts"]`, env ORCHESTRA_CHANNEL=prod.
 3. Corrigir erros concretos, registrar SHA/run/resultado. Depois remapear as jornadas Bun correspondentes, mantendo as duas unidades puras e todas asserções de negócio.
 
@@ -127,3 +127,12 @@ As duas unidades sem navegador de host-workbench (:406, :430) permanecem no gate
 - O erro route.fetch disposed é consequência do encerramento pelo timeout. Não foi atribuído a erro de autorização, deadlock ou corrupção; não se alteraram withCase, caches, transações, timeouts ou asserções para ocultá-lo.
 - Contrato lido para a próxima decisão: `product/decisions/apply.ts:25,138-162` devolve CommandReceipt original após fences, releitura do recibo e reconciliaçãoC08. A UI ainda não consome esse recibo diretamente. Proposta de correção enviada ao root; nenhuma alteração adicional de UI/produtor ou gate9 neste checkpoint.
 - Legado continua presente até5/5; 215expect atuais e todas as expectativas de estado final/recibo são mantidas.
+
+## Recibo original no consumidor após gate8 (092c6d, ainda não qualificado)
+- Root escolheu o ajuste do consumidor. A UI usa o CommandReceipt devolvido pelo Apply original, cuja implementação em `product/decisions/apply.ts:25,138-162` já releu o recibo, confirmou os fences e reconciliou o caso antes do retorno.
+- `proposals/index.tsx:120-131` confere id, idempotencyKey, commandDigest, targetIncarnation, principal atual, surface dashboard, versão e data na forma original; projeta apenas id/version/at/result para exibição. O union de falha usa os status reais de `runtime/contract.ts:52-62`.
+- Somente `receipt.result.ok === true` permite o resultado aplicado. Um envelope statusok com recibo de falha mostra resultado não confirmado e os status/erros originais. Dados desconhecidos permanecem unknown; nenhum recibo nasce de uma proposta ou de uma leitura posterior.
+- OwnerKey, geração, transport e changeId da rota cercam a exibição. Depois de receber um recibo, outro Apply fica bloqueado e a revisão/planned anterior não é apresentada como estado corrente.
+- Remove apenas a redescoberta automática redundante desse acknowledgement. O botão Refresh source chama o leitor original explicitamente, sob a autoridade atual. Não se alterou produtor, C08, withCase, cache ou transação, nem se alegou deadlock resolvido.
+- O spec mantém a leitura independente final de preferences/cases/receipts/registro e a prova de um Apply/recibo. Acrescenta comparação da UI com id/version/at e result.ok do corpo original retido, presença da releitura explícita e ausência de novo Confirm application: **221 expects**, sem remover as215 anteriores, sem aumentar os timeouts.
+- Código `092c6d202557960541fb43b68e2cf995ee489e38`; arquivos somente proposals/index.tsx, sf-u38.ts (EN/PT) e proposals.spec.ts. Nenhum gate9 lançado neste checkpoint.
