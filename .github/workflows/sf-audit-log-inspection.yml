@@ -1,7 +1,7 @@
-name: sf-original-reports-context
+name: sf-original-upload8-stamp
 on:
   push:
-    branches: [audit-reports13-20261119]
+    branches: [audit-upload8-20261119]
 permissions:
   actions: read
   contents: write
@@ -10,81 +10,79 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read completed Reports artifact
+      - name: Read completed Operations artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14577399208/zip > "$RUNNER_TEMP/original.zip"
-      - name: Inspect original owner comparisons and source command
+        run: gh api --allow-escape-sequences repos/gustavomhss/Orchestra-SF/actions/artifacts/14579851540/zip > "$RUNNER_TEMP/original.zip"
+      - name: Compare original authority fields without exporting values
         run: |
           python3 - <<'PY'
-          import base64, io, json, os, pathlib, re, urllib.parse, zipfile
+          import base64, io, json, os, pathlib, urllib.parse, zipfile
           root = pathlib.Path(os.environ["RUNNER_TEMP"])
-          lines = ["# Original Reports context comparison", "", "Read-only inspection of run44623670174, artifact14577399208. No product rerun or changed assertion. Owner values are not exported; only original equality results.", ""]
-          sensitive = re.compile(r"authorization|cookie|password|credential|secret|bearer|nonce|access.token|[?&](?:code|token|key)=", re.I)
-          fields = ["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"]
-          matched = 0
+          fields = ["installationId", "projectId", "hostId", "principalRef", "policyVersion", "accessRevision"]
+          safe_keys = {"value", "context", "stamp", "data"}
+          def stamp_nodes(value, path="", depth=0):
+              if depth > 6: return []
+              if isinstance(value, dict):
+                  if all(key in value for key in fields): return [(path or "root", {key: value[key] for key in fields})]
+                  output = []
+                  for key in ["value", "context", "stamp", "data"]:
+                      if key in value: output.extend(stamp_nodes(value[key], path + "." + key, depth + 1))
+                  return output
+              return []
+          def same(a, b):
+              if a is None or b is None: return None
+              return {key: a.get(key) == b.get(key) for key in fields}
+          rows = []
           with zipfile.ZipFile(root / "original.zip") as archive:
               for name in archive.namelist():
-                  if name.endswith("/error-context.md"):
-                      lines += ["## " + name, ""]
-                      for line in archive.read(name).decode("utf-8", errors="replace").splitlines()[:350]:
-                          if not sensitive.search(line): lines.append(line[:1000])
-                      lines.append("")
-                  if not name.endswith(".zip"): continue
-                  matched += 1
-                  lines += ["## Original trace " + name, ""]
+                  if "baa3d" not in name or not name.endswith(".zip"): continue
                   with zipfile.ZipFile(io.BytesIO(archive.read(name))) as trace:
-                      entries = []
-                      for network in [p for p in trace.namelist() if p.endswith(".network")]:
-                          for raw in trace.read(network).decode("utf-8", errors="replace").splitlines():
-                              try: entry = json.loads(raw)
+                      resources = {path.rsplit("/", 1)[-1]: path for path in trace.namelist()}
+                      for filename in trace.namelist():
+                          if not filename.endswith(".network"): continue
+                          for raw in trace.read(filename).decode("utf-8", errors="replace").splitlines():
+                              try: item = json.loads(raw)
                               except ValueError: continue
-                              entry = entry.get("snapshot", entry)
-                              request, response = entry.get("request", {}), entry.get("response", {})
+                              item = item.get("snapshot", item)
+                              request, response = item.get("request", {}), item.get("response", {})
                               url = urllib.parse.urlsplit(request.get("url", ""))
-                              query = urllib.parse.parse_qs(url.query)
-                              if not (url.path.endswith("/api/ui/context") or query.get("sf", [""])[0] == "review-read" or
-                                      query.get("page", [""])[0] == "OPEX Detail"): continue
+                              if not (url.path.endswith("/api/ui/context") or url.path.endswith("/api/ui/pages/CAP27") or request.get("method") == "POST"): continue
                               content = response.get("content", {})
-                              sha = content.get("_sha1")
-                              resource = next((p for p in trace.namelist() if sha and p.endswith("/" + sha)), None)
-                              body = None
-                              if resource:
-                                  try: body = json.loads(trace.read(resource))
-                                  except (ValueError, UnicodeError): pass
-                              entries.append((entry.get("startedDateTime", ""), url.path, query, request, response, body))
-                      entries.sort(key=lambda item: item[0])
-                      contexts = [body["value"]["stamp"] for _, pathname, _, _, response, body in entries
-                                  if pathname.endswith("/api/ui/context") and response.get("status") == 200 and
-                                  isinstance(body, dict) and isinstance(body.get("value"), dict) and isinstance(body["value"].get("stamp"), dict)]
-                      latest = contexts[-1] if contexts else None
-                      observed = []
-                      for at, pathname, query, request, response, body in entries:
-                          row = {"at": at, "path": pathname, "method": request.get("method"), "status": response.get("status"),
-                                 "sf": query.get("sf", [None])[0], "page": query.get("page", [None])[0], "originalBodyCaptured": isinstance(body, dict)}
-                          if isinstance(body, dict):
-                              row["producerStatus"] = body.get("status")
-                              if "ok" in body: row["ok"] = body["ok"]
-                              value = body.get("value")
-                              if isinstance(value, dict) and query.get("sf", [""])[0] == "review-read":
-                                  row["sections"] = []
-                                  for section in value.get("sections", []):
-                                      if not isinstance(section, dict): continue
-                                      content = section.get("content")
-                                      context = content.get("context") if isinstance(content, dict) else None
-                                      row["sections"].append({"title": section.get("title"), "contentObject": isinstance(content, dict),
-                                          "contextKeys": sorted(context) if isinstance(context, dict) else [],
-                                          "matchesLatestStamp": {field: context.get(field) == latest.get(field) for field in fields}
-                                              if isinstance(context, dict) and latest else None})
-                          observed.append(row)
-                      lines += [json.dumps({"contextsCaptured": len(contexts), "observed": observed[-18:]}, ensure_ascii=False, indent=2), ""]
-          lines += ["Matching original trace archives: " + str(matched)]
-          result = "\n".join(lines) + "\n"
-          payload = {"message": "docs(sf): retain original Reports owner comparisons", "branch": "audit-reports13-20261119", "content": base64.b64encode(result.encode()).decode()}
+                              resource = resources.get(content.get("_sha1"))
+                              source, data = "absent", None
+                              if resource: source, data = "resource", trace.read(resource)
+                              elif isinstance(content.get("text"), str):
+                                  source = "inline"
+                                  try: data = base64.b64decode(content["text"]) if content.get("encoding") == "base64" else content["text"].encode()
+                                  except ValueError: data = None
+                              parsed, parse = None, "absent"
+                              if data is not None:
+                                  try: parsed, parse = json.loads(data), "json"
+                                  except (ValueError, UnicodeError): parse = "not-json"
+                              stamps = stamp_nodes(parsed)
+                              rows.append({"at": item.get("startedDateTime"), "path": url.path,
+                                  "method": request.get("method"), "status": response.get("status"),
+                                  "bodySource": source, "bodyBytes": len(data) if data is not None else None,
+                                  "declaredBytes": content.get("size"), "mimeType": content.get("mimeType") if content.get("mimeType") in ["application/json", "text/plain", "text/html"] else "other",
+                                  "parse": parse, "stampLocations": [p for p, _ in stamps], "_stamp": stamps[0][1] if len(stamps) == 1 else None})
+          rows.sort(key=lambda r: r.get("at") or "")
+          first, latest_context, latest_page = None, None, None
+          for row in rows:
+              current = row.pop("_stamp")
+              row["equalFirstCapturedStamp"] = same(current, first)
+              row["equalPreviousContextStamp"] = same(current, latest_context)
+              row["equalPreviousPageStamp"] = same(current, latest_page)
+              if current:
+                  if first is None: first = current
+                  if row["path"].endswith("/api/ui/context"): latest_context = current
+                  if row["path"].endswith("/api/ui/pages/CAP27"): latest_page = current
+          report = "# Original upload authority comparison\n\nRead-only inspection of run 44625548030, artifact 14579851540. No product rerun or request replay. Comparisons contain only booleans; no stamp values, headers, cookies, credentials or request body values. A missing body is unknown, never equality.\n\n" + json.dumps(rows, indent=2) + "\n"
+          payload = {"message": "docs(sf): retain original upload authority comparisons", "branch": "audit-upload8-20261119", "content": base64.b64encode(report.encode()).decode()}
           (root / "payload.json").write_text(json.dumps(payload))
-          print("Inspected original screens and owner equality only; no headers or owner values exported.")
+          print("Compared original authority fields; exported booleans and response metadata only.")
           PY
-      - name: Persist original observation
+      - name: Persist original comparisons
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-reports-context-44623670174.md --input "$RUNNER_TEMP/payload.json" > /dev/null
+        run: gh api --method PUT repos/gustavomhss/Orchestra-SF/contents/docs/handoff/observed-upload8-authority-44625548030.md --input "$RUNNER_TEMP/payload.json" > /dev/null
