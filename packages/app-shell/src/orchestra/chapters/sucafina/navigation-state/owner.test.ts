@@ -71,7 +71,7 @@ describe("versioned Teams native owner selectors", () => {
     const paths = [
       "/orchestra/sf-dashboard/executive", "/orchestra/sf-bi", "/orchestra/sf-planner/overview",
       "/orchestra/sf-planner/opex", "/orchestra/sf-procurement/requests", "/orchestra/sf-people/overview",
-      "/orchestra/sf-operations/service", "/orchestra/sf-portfolio/overview", "/orchestra/sf-decisions/new",
+      "/orchestra/sf-operations/service", "/orchestra/sf-portfolio/overview", "/orchestra/sf-decisions/r_Y2FzZQ/alternatives",
       "/orchestra/sf-work", "/orchestra/sf-home/context", "/orchestra/sf-memory/signals",
       "/orchestra/sf-reviews/agenda", "/orchestra/sf-documents", "/orchestra/sf-routines",
     ]
