@@ -1,4 +1,4 @@
-import { Context, Data, Effect, Layer, LayerMap, Schema, Scope } from "effect"
+import { Context, Data, Effect, Layer, LayerMap, RcMap, Schema, Scope } from "effect"
 import { LayerNode } from "./effect/layer-node"
 import { Node } from "./effect/app-node"
 import { Location } from "./location"
@@ -6,7 +6,7 @@ import type { LocationError, LocationServices } from "./location-services"
 import type { SessionOwner } from "./session/owner"
 
 /** Cache storage is private: every acquisition and invalidation passes current owner admission. */
-export type Interface = Pick<LayerMap.LayerMap<Location.Ref, LocationServices, LocationError>, "get" | "contextEffect" | "invalidate">
+export type Interface = ScopedMap<LocationServices, LocationError>
 
 export class Service extends Context.Service<Service, Interface>()("@orchestra/example/LocationServiceMap") {
   static get(ref: Location.Ref) {
@@ -16,7 +16,10 @@ export class Service extends Context.Service<Service, Interface>()("@orchestra/e
 
 export const node = LayerNode.unbound(Service, Node.tags.values.global)
 
-type ScopedMap<A, E> = Pick<LayerMap.LayerMap<Location.Ref, A, E>, "get" | "contextEffect" | "invalidate">
+type ScopedMap<A, E> = Pick<LayerMap.LayerMap<Location.Ref, A, E>, "get" | "contextEffect" | "invalidate"> & {
+  /** Only placements acquired by the current private lease and operation are visible. */
+  readonly keys: Effect.Effect<ReadonlyArray<Location.Ref>>
+}
 class CacheKey extends Data.Class<{
   readonly directory: Location.Ref["directory"]
   readonly workspaceID: Location.Ref["workspaceID"]
@@ -57,7 +60,23 @@ export function makeScoped<A, E, R>(
     const facade: ScopedMap<A, E> = {
       get: (ref) => Layer.effectContext(contextEffect(ref)),
       contextEffect,
-      invalidate: (ref) => Effect.flatMap(keyFor(ref), (key) => locations.invalidate(key)),
+      invalidate: (ref) => Effect.flatMap(keyFor(ref), (key) => {
+        const remove = locations.invalidate(key)
+        return key.binding ? key.binding.bind(remove) : remove
+      }),
+      keys: Effect.gen(function* () {
+        const binding = yield* owners.location.pipe(Effect.orDie)
+        const read = RcMap.keys(locations.rcMap).pipe(Effect.map((keys) =>
+          Object.freeze(Array.from(keys).filter((key) => key.binding === binding).map((key) =>
+            Location.Ref.make({ directory: key.directory, ...(key.workspaceID === undefined ? {} : { workspaceID: key.workspaceID }) }),
+          )),
+        ))
+        if (binding) return yield* binding.bind(read)
+        const refs = yield* read
+        // A concurrently marked corporate database must not be exposed through a retained technical map.
+        yield* owners.location.pipe(Effect.orDie)
+        return refs
+      }),
     }
     return facade
   })

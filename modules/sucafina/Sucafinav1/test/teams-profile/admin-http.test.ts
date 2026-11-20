@@ -113,7 +113,7 @@ test("admin-http: enabling a verified Team, retrying and removing the last profi
   expect(Schema.is(TeamProfile.AdminConfigureResult)(enabledValue)).toBe(true)
   const result = await f.read(cookie)
   const body = await result.text()
-  expect(JSON.parse(body)).toEqual({ status: "ok", configRevision: 1, profiles: [{ profile: f.profile, enabled: true }] })
+  expect(JSON.parse(body)).toEqual({ status: "ok", configRevision: 1, profiles: [{ profile: Schema.decodeUnknownSync(TeamProfile.Ref)(f.profile), enabled: true }] })
   for (const secret of ["synthetic-access-", "synthetic-refresh-", "supremeAdminGroupId", "principalObjectId", "accessRevision", "audit", "grants", "epoch", group]) expect(body).not.toContain(secret)
   expect(await (await f.post(cookie, f.command("enable", 1))).json()).toEqual({ status: "ok", configRevision: 1, changed: false })
   expect(await f.policy.audit()).toHaveLength(1)

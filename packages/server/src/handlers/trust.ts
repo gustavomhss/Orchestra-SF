@@ -4,7 +4,7 @@ import { Global } from "@orchestra/core/global"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { Mcp } from "@orchestra/core/mcp"
 import { InvalidRequestError } from "@orchestra/protocol/errors"
-import { Context, Effect, RcMap } from "effect"
+import { Context, Effect } from "effect"
 import { HttpApiBuilder, HttpApiSchema } from "effect/unstable/httpapi"
 import { Api } from "../api"
 
@@ -15,7 +15,7 @@ export const TrustHandler = HttpApiBuilder.group(Api, "server.trust", (handlers)
     const global = yield* Global.Service
     const locations = yield* LocationServiceMap.Service
     const applyTrust = Effect.fn(function* () {
-      const refs = yield* RcMap.keys(locations.rcMap)
+      const refs = yield* locations.keys
       yield* Effect.forEach(
         refs,
         (ref) =>
