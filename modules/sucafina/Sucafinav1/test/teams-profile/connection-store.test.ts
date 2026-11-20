@@ -241,3 +241,32 @@ test("connection-store-08: final authority reads use all three current snapshots
     expect(f.revision()).toBe(1)
   } finally { pending.release(); await detached?.catch(() => undefined); await f.close() }
 })
+
+test("connection-store-09: metadata inspection retains absence and tombstone CAS without returning plaintext", async () => {
+  const f = await fixture()
+  try {
+    const access = await f.access()
+    expect(await f.vault.inspect(access, key())).toBeUndefined()
+    const created = await f.vault.write(access, command())
+    const metadata = await f.vault.inspect(access, key())
+    expect(metadata).toEqual(created.metadata)
+    expect(JSON.stringify(metadata)).not.toContain("synthetic-personal-secret")
+    expect(Object.keys(metadata ?? {}).toSorted()).toEqual(["key", "label", "revision", "state"])
+    await f.vault.remove(access, { key: key(), expectedRevision: 1 })
+    expect(await f.vault.inspect(access, key())).toEqual({
+      key: key(), label: "Personal connection", revision: 2, state: "removed",
+    })
+    await expect(f.vault.write(access, command())).rejects.toThrow("CONFLICT")
+    await expect(f.vault.write(access, { ...command(), action: "update", expectedRevision: 2 })).rejects.toThrow("CONFLICT")
+    const recreated = await f.vault.write(access, { ...command(), expectedRevision: 2 })
+    expect(recreated.metadata.revision).toBe(3)
+    expect((await f.vault.inspect(access, key()))?.revision).toBe(3)
+    expect(await f.vault.inspect(await f.access(owner(profileB)), key())).toBeUndefined()
+    expect(await f.vault.inspect(await f.access(owner(profileA, other)), key())).toBeUndefined()
+    await expect(f.vault.inspect(await f.access(owner(), async () => false), key())).rejects.toThrow("FORBIDDEN")
+    const stored = f.raw.query("SELECT * FROM sf_team_connections").get()
+    f.raw.query("DELETE FROM sf_team_connections").run()
+    await expect(f.vault.inspect(access, key())).rejects.toThrow("UNAVAILABLE")
+    expect(stored).toBeDefined()
+  } finally { await f.close() }
+})

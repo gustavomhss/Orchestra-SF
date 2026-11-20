@@ -396,6 +396,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         owner: freezeOwner(owner),
         check: (action, resource) => check(client.check(action, resource)),
         list: (category, resourceId) => check(client.list(category, resourceId)),
+        inspect: (key) => check(client.inspect(key)),
         read: (key) => check(client.read(key)),
         write: (input) => write(client.write(input)),
         remove: (input) => write(client.remove(input)),

@@ -56,6 +56,9 @@ test("team-connections-01: real private grants and Owner route Core credentials 
       if (!port) throw new Error("Actual private vault required")
       const metadata = yield* port.list("integration")
       expect(metadata).toHaveLength(1)
+      const inspected = yield* port.inspect({ category: "integration", resourceId: integrationID, id: created.id })
+      expect(inspected).toEqual(metadata[0])
+      expect(JSON.stringify(inspected)).not.toContain("synthetic-private-token")
       expect(JSON.stringify(metadata)).not.toContain("synthetic-private-token")
       expect(yield* service.inheritedFrom(created.id)).toBeUndefined()
       return created

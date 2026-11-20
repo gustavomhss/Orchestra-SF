@@ -16,6 +16,7 @@ export type TeamConnectionAccess = Readonly<{
 export type TeamConnectionStored = Readonly<{ metadata: ConnectionAccess.Metadata; encodedValue?: string }>
 export interface TeamConnectionStore {
   readonly list: (access: TeamConnectionAccess, resources: readonly ConnectionAccess.Resource[]) => Promise<readonly ConnectionAccess.Metadata[]>
+  readonly inspect: (access: TeamConnectionAccess, key: ConnectionAccess.Key) => Promise<ConnectionAccess.Metadata | undefined>
   readonly read: (access: TeamConnectionAccess, key: ConnectionAccess.Key) => Promise<TeamConnectionStored | undefined>
   readonly write: (access: TeamConnectionAccess, input: ConnectionAccess.Write) => Promise<TeamConnectionStored>
   readonly remove: (access: TeamConnectionAccess, input: ConnectionAccess.Remove) => Promise<void>
@@ -127,6 +128,13 @@ export function createTeamConnectionStore(input: Readonly<{
       return Object.freeze(values)
       })
     },
+    inspect: (access, key) => {
+      const selected = Object.freeze({ ...Schema.decodeUnknownSync(ConnectionAccess.Key)(key) })
+      return execute(access, "read", [resourceOf(selected)], (db, current) => {
+        const row = readRow(db, current.owner, selected)
+        return row ? inspectStored(db, current.owner, row) : undefined
+      })
+    },
     read: (access, key) => {
       const selected = Object.freeze({ ...Schema.decodeUnknownSync(ConnectionAccess.Key)(key) })
       return execute(access, "read", [resourceOf(selected)], (db, current) => {
@@ -223,7 +231,7 @@ function readRow(db: Database, owner: TeamProfile.Owner, key: ConnectionAccess.K
   }
   return row
 }
-function materialize(db: Database, owner: TeamProfile.Owner, row: Row, cipher: ReturnType<typeof teamConnectionCipher>): TeamConnectionStored {
+function inspectStored(db: Database, owner: TeamProfile.Owner, row: Row): ConnectionAccess.Metadata {
   const metadata = Schema.decodeUnknownSync(ConnectionAccess.Metadata)({
     key: { category: row.category, resourceId: row.resource_id, id: row.connection_id },
     label: row.label, revision: row.revision, state: row.state,
@@ -236,6 +244,11 @@ function materialize(db: Database, owner: TeamProfile.Owner, row: Row, cipher: R
       (metadata.state === "removed") !== (audit.action === "remove") ||
       (metadata.state === "removed") !== (row.ciphertext === null) ||
       row.digest !== rowDigest(owner, metadata, row.ciphertext)) throw unavailable()
+  // The state describes the retained record, not whether a provider will accept the credential.
+  return freezeMetadata(metadata)
+}
+function materialize(db: Database, owner: TeamProfile.Owner, row: Row, cipher: ReturnType<typeof teamConnectionCipher>): TeamConnectionStored {
+  const metadata = inspectStored(db, owner, row)
   const encodedValue = row.ciphertext === null ? undefined : cipher.open(row.ciphertext, associated(owner, metadata))
   if (encodedValue !== undefined && (Buffer.byteLength(encodedValue, "utf8") > 65536 ||
       Option.isNone(Schema.decodeUnknownOption(Schema.fromJsonString(Schema.Unknown))(encodedValue)))) throw unavailable()
