@@ -1,67 +1,136 @@
 # Handoff — sf-ui-c02
 
-SHA: 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4 (último commit de código; a documentação será posterior)
-Data: 2026-11-19
+SHA: 63c9a0d7fb26a244327b1f5b30ac8adae213760b (último código; o commit deste checkpoint de documentação é posterior)
+Data: 2026-11-19T23:02:19-03:00
 Estado: partial
 
 Base: sf-join-four @ f7dd58e32bc834f1485df20b91adbf759b4c4ad0.
-Template: docs/handoff/HANDOFF-TEMPLATE.md de sf-handoff-brief, blob 725697cdae3a42133df81a42637ff70214a78cb3; o caminho não existe na base nem em sf-join-four consultada.
+Template: docs/handoff/HANDOFF-TEMPLATE.md de sf-handoff-brief, blob725697cdae3a42133df81a42637ff70214a78cb3; o template não existe na base.
+Retomada solicitada: “Preciso de tudo completo e verde irmao, sem excessoes.”
+Este é um checkpoint durante a execução. As suítes de navegador ainda não estão verdes.
 
 ## Feito
 
-- T1 — commit ffa13012bc0ac2bba113860946930355c0a9a37f: packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx:596-604 agora renderiza o anchor C02 na coluna number com o href exigido e sourceRef/sourceDigest/sourceVersion recebidos do produtor. A identidade ausente não gera href; versão null/undefined não vira texto. Os três campos já eram opcionais em packages/schema/src/sucafina/procurement.ts:170-172; schema não editado.
-- T1 — packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:83-89 substitui a expectativa incompatível de zero links por exatamente um link com ID/nome, href exato, sourceRef não vazio, digest 64 hex e versão numérica. As assertions de entrada C02 em :36-40 permanecem.
-- T2 — commit 6efb113c755279654c306a6fe76c99bcbffb345f: login, criação e abertura deixam de forçar porta 3000. A inspeção revelou que o host escutava 4174 mas publicava/aceitava 3000 e rejeitava rotas SPA; aplicou-se a contingência expressamente autorizada no briefing. wp04/host.ts usa server.url.origin, resolve o build real em apps/web/dist e compõe WebUi.layer com as rotas embedded, preservando autenticação/origin/POST guards.
-- T2 — commit 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4: a fixture publica projectId/installationId da identidade real obtida depois do health. O helper chapterUrl da spec preserva o triplet nativo server/project/installation nas três navegações. Os IDs são seletores, não grants; o runtime continua realizando discovery/context/admissão.
-- T3 — commit dddce89d6a6c2b1d4c0f52a97e0c321d3454f141: packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx:133 move SfBudgetReportLink para fora de SfStatePanel. Texto e href /orchestra/sf-reviews/agenda permanecem exatos. A rota CAP03 foi confirmada em route-registry.ts:33-36.
-- Revisão independente por leitura: anchor/schema/assertions, transporte/guards e Budget foram revistos por agentes separados; patch de owner recebeu segunda revisão do contrato. Isso não equivale a gate runtime verde.
-- Readback via GitHub confirmou o conteúdo dos quatro arquivos publicados e compare confirmou somente esses quatro paths de código, com quatro commits lineares sobre a base. As comparações parent->snapshot de ambos os gates finais mostraram somente .ci-run.json, um commit à frente e zero atrás.
+### T1 — anchor C02 e jornada Requests
+
+- O número da tabela Requests é um anchor com href exato `?request=<encoded>#<encoded>` e os três atributos de proveniência recebidos do produtor. Não há cálculo de digest C02 no componente.
+- CAP25 agora publica evidence.refId/evidence.refDigest/version do membro correspondente da fila já preparada e validada. A autoridade, revalidação e emissão da fila continuam nos produtores existentes. Não foram criados scopes artificiais na fixture.
+- sourceRef/sourceDigest/sourceVersion permanecem opcionais no schema. O DTO poFieldSources também é opcional e usa purchaseOrderFieldSources do domínio, com fontes/valores persistidos para a leitura do PO.
+- Requests apresenta os fieldErrors reais de422 com aria-invalid/aria-describedby e foco; preserva entradas em409 e só adota a versão após releitura autorizada e escolha explícita.
+- A edição depois de409, antes da releitura, mantém a comparação e impede envio com CAS antigo (f1e8aa1). A edição durante uma resposta pendente conserva o payload enviado e mantém entradas posteriores como dirty.
+- O controlador compartilhado mantém o comportamento padrão e recebe allowPendingEdits somente nos drafts PR/PO. A regressão específica passou: run44652278683,7testes,53assertions.
+- Aprovações preservam comentário em409 e recusam reviver ação cancelada. Sourcing publica qty/unitPrice e mostra seleção real. A fila mostra baseAmount/baseCurrency do produtor.
+- Suppliers mantém editor parcial e autorização bancária, com projeção redigida do viewer. Settings conserva entradas após422 e executa save/reset reais mediante revisão, com defaults do produtor.
+
+### T2 — origem e prova wp04
+
+- O host serve a SPA construída na própria origem4174, compondo WebUi com as rotas embedded e mantendo guards de origem/autenticação/POST. O spec não força3000 e wp04 não usa4110.
+- Os oito cenários foram ligados aos controles nativos de Requests, sourcing, approvals, suppliers, settings e filas. Continuam verificando versões, payloads, identidade, conteúdo, foco, FX congelado, redaction, ausência de escrita automática e emissão interna do PO.
+- A prova de conflito usa dois atores reais; a perda de resposta retém a resposta de uma mutação que efetivamente chegou ao produtor.
+- O filtro por teclado exige a opção src_pending pelo valor real. End também é verificado contra a última opção publicada; não se presume que a ordem dos registros coloque src_pending no fim.
+- O perfil é selecionado pela UI existente Add project/Open project. No código63c9a0d, a seleção e o diretório são confirmados no Home antes de montar o capítulo. Depois são exigidos discovery200 da instalação única, owner ready e persistência após reload.
+- Essa mudança estrutural evita iniciar o preparo com F01 sem diretório. Ainda não foi demonstrado que uma corrida de owners tenha causado o timeout anterior. As fases de bootstrap são registradas sem depender de page.evaluate após fechamento.
+- O href C02 mantém o hash exigido; o teste de clique respeita a canonização de URL já existente no F01, mantendo query de request, owner ready e linha selecionada.
+
+### T3 — Budget, Reports e C05
+
+- Reports and backup permanece fora de SfStatePanel e de condicionais de dados, com href exato /orchestra/sf-reviews/agenda. CAP03 continua registrado em /orchestra/sf-dashboard/budget.
+- Budget mostra os totais já produzidos somente quando o ano da seleção coincide com o ano exibido, sem calcular total na UI.
+- A fixture Reports usa sua instalação CLI real na origem4110, separada do hostwp04. Lê a senha privada criada pelo daemon em XDG_STATE_HOME/orchestra/password e exige health401 anônimo e200/healthy/version com a credencial real antes de configurar a conexão pelo formulário nativo.
+- A projeção da agenda usa o selector original com IDs de seção distintos, títulos canônicos e refs autorizados atuais. UI47 permite retirar exatamente um dos25registros sem alterar a fonte; a sucessora UI48 mantém os mesmos24IDs e previousReviewRef exato.
+- UI48 usa dashboard-agenda/dashboard-review-preserve já publicados, com seleção e preview explícitos. Outcome desconhecido não dispara retry automático.
+- C05 conserva no Intent a observação preparada e o payload/key originais. Retry same action exige marcador same-intent explícito; perda de leitura preserva drafts e intenção.
+- A releitura por focus após reconciliação consulta ctx.context nativo antes de thread/answer, compara os6campos de stamp e descarta resposta se mudar owner, geração, transporte, review, intenção ou operação. O spec substitui o GET do documento legado por200/no-store/contrato/principal/tuple reais, conservando as provas de nenhuma nova escrita.
+- 401/403 e estados autoritativos denied/unauthenticated retiram dados privados e invalidam o owner. O cenário de revogação usa F01 nativo e conserva controle positivo de uma nova sessão.
 
 ## Pendente
 
-- T1 e T3 permanecem partial. T2 atingiu seu aceite específico: todos os oito casos do run 44646627443 passaram pelo heading Requests em procurement.spec.ts:34 e falharam somente depois em :37. A suíte inteira não ficou verde.
-- T1 — unbound(packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:37): primeira falha observada, a[data-source-ref] ausente, nos oito casos; digest/versão não foram alcançados. A UI contém o anchor e preserva os campos opcionais. Não foi constatado erro de reader/schema que justifique outro patch.
-- T1 — unbound(apps/cli/src/sucafina-product/native-ui/procurement.ts:225-230): lacuna de publicação C02 encontrada por leitura. publishedRequestBasis ignora a evidência por membro já preparada pela fila e consulta procurementRowSourceIdentity; essa função exige exatamente um scope individual procurement-request (modules/sucafina/Sucafinav1/product/procurement/sources.ts:267-274), enquanto createSelection publica scope de coleção procurement-request-selection (:182-206). Os membros da coleção já carregam evidência autorizada, consumida pelo contrato existente em runtime/procurement.ts:1031-1032 como evidence.refId/evidence.refDigest/version. A projeção CAP25 reconhece a fila em native-ui/procurement.ts:243-245, mas publica a base individual nullable em :261-265.
-- T1 — não resolver criando scopes artificiais na fixture. initializeSources e a transação de seed sincronizam records (source-lifecycle.ts:164-178); synchronizeScopes só atualiza scopes existentes (:242-245). A emissão individual legítima existe em procurement/sources.ts:67-84, com autenticação e contexto; ela não deve ser simulada para fazer o teste passar. A retomada produtora deve projetar a evidência C02 já preparada e validada, mantendo sua autoridade/identidade. Esse arquivo está fora do escopo atribuído à sessão.
-- Limite do diagnóstico T1: o log prova ausência do anchor e passagem pelo heading. Sem inspeção do DOM/payload no ZIP, ele sozinho não distingue leitura indisponível, conjunto vazio e proveniência null. A lacuna do produtor acima é evidência estática coerente com a falha, não alegação de que o payload runtime foi aberto. O único aviso Bun de idle timeout não informa URL; não se aumentou timeout nem se atribuiu esse aviso à leitura CAP25.
-- Reports — unbound(packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:21): primeira asserção observada no run 44646379209, link Reports and backup ausente, timeout preservado de 10000ms. Os quatro casos falharam nesse ponto. Diagnóstico por leitura: a navegação em :19 fornece só year, sem perfil/diretório real selecionado; chapter-route.tsx:129-131 passa directory vazio e owner-runtime231.tsx:197-200 não descobre por localização vazia. O log comprova a ausência do link; a causa de seleção está fundamentada no código, não em inspeção do ZIP.
-- Reports posterior: reports-support/review-flow.ts:27 já declara UNBOUND para remoção de um único registro; reviews/agenda/index.tsx:308-310 só remove seção. Não recriar controles.
-- WP04 posterior: procurement.spec.ts:149 e :226 ainda exigem section[id]-pr e details/form do console legado. Se alcançados, parar e registrar a primeira falha observada; não reconstruir o DOM morto.
-- Anchor C02: owner-runtime231.tsx:433-436 recusa a perda do triplet em navegação a partir de owner explícito. Este trabalho preserva o href exato solicitado; valida presença/metadata, sem alegar prova de clique do anchor em contexto explícito.
-- Guards gerais e typecheck completo de app-shell permanecem para a integração. Os typechecks E2E embutidos nos dois gates passaram; isso não equivale ao typecheck geral do pacote. Não há execução local.
+- T1/T2 — packages/app-shell/e2e/sucafina/native/select-profile.ts:41 — aguardar e analisar44657275046. O último wp04 completo atingiu60s em todos os8testes; o log não mostrou qual await primário ficou pendente. O novo helper altera a ordem de preparação e identifica sua fase.
+- T3 — packages/app-shell/e2e/sucafina/reports-support/fixture.ts:7 — o run44654544465 atingiu180s no setup dos4testes. Os controles de health401/200 anteriores ao helper foram alcançados, mas a conclusão da conexão pela UI/perfil não foi comprovada.
+- T3/C05 — packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/answer.tsx:176 — a correção de releitura3050a842 ainda precisa do gate Reports completo após comprovar o bootstrap compartilhado.
+- Não há declaração de navegador verde. Typecheck geral do pacote e check:guards não foram executados separadamente; os resultados registrados são os gates específicos solicitados.
 
 ## Decisões e justificativas
 
-- Asserções de negócio removidas: nenhuma. A expectativa de zero links foi substituída por contrato positivo mais estrito para refletir a T1. Não há skip, timeout maior, check vazio ou mudança de digest/proveniência.
-- wp04/host.ts foi o único arquivo adicional à lista inicial: necessário pela contingência explícita da T2, confirmada no código. Não foram alterados packages/server/src/web-ui.ts, runtime/application.ts, workflow ou fronteiras de autorização.
-- Não foram recriados #content, data-surface, heading Decisions, sidebar, Homologação local, details/summary ou formulários section[id]-pr.
-- O runner existente exige ci-run-linux-* (.github/workflows/test-ci.yml:33-36) e config Playwright explícita (script/test-ci-request.ts:110-113). As branches de gate usam esse prefixo sem mudar o guard.
-- O seletor app-shell do exemplo não existe no catálogo: as duas tentativas iniciais falharam antes de instalar/executar testes em script/test-ci-package.ts:35. O request foi corrigido para package app. O erro de configuração está registrado, não apresentado como falha de produto ou validação.
-- T1 e T2 compartilham a execução final do mesmo procurement.spec.ts no SHA que contém ambas as correções; não se duplica a suíte idêntica para produzir dois recibos.
-- Snapshots de CI foram criados atomicamente com .ci-run.json e parent no SHA de código. Nenhum .ci-run.json foi adicionado à branch de trabalho. Pico de concorrência desta sessão: dois gates. Nenhum sf-ci, merge, shell ou teste local.
+- As dependências adicionais foram implementadas para atender à retomada das jornadas completas. A lista de arquivos abaixo deixa a ampliação explícita.
+- Asserções de negócio removidas: nenhuma. A expectativa inicial de zero links foi trocada pelo contrato positivo C02. Os seletores do console antigo foram substituídos pelos controles nativos mantendo as verificações de negócio. Uma expectativa nova de hash persistido após clique foi retirada porque o F01 já canoniza o hash; o href exato com hash segue verificado.
+- Não houve skip, xfail, aumento de timeout, comparação vazia ou fabricação de resposta de produto.
+- Nenhum console morto foi recriado. O details/summary já existente em preserved/answer.tsx na base não foi introduzido por este diff. Não foram criados #content, data-surface, heading Decisions, sidebar, Homologação local ou section[id]-pr.
+- Não foi editado modules/sucafina/Sucafinav1/runtime/application.ts, workflow ou branch proibida. Não houve merge, shell, teste local ou sf-ci.
+- O workflow exige prefixo ci-run-linux-* e config Playwright explícita. package app-shell não existe no catálogo; os gates usam package app. Os guards não foram alterados.
+- Cada snapshot CI é filho do SHA de código e acrescenta somente .ci-run.json. Esse arquivo não está na branch de trabalho.
+- T1/T2 compartilham o gate do mesmo spec. Pico de concorrência:2. Não houve rerun idêntico sem alteração; após a falha Reports, aguarda-se primeiro a observação do bootstrap no wp04 para poupar CI.
 
 ## Como retomar
 
-1. Partir da branch sf-ui-c02, código 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4; ler este handoff e as conclusões finais.
-2. Primeiro, o integrador/owner do produtor deve fechar C02 em apps/cli/src/sucafina-product/native-ui/procurement.ts usando a evidência autorizada já preparada pela fila. Inspecionar também o payload/trace do artifact 14589477538 quando houver leitor autorizado de ZIP; não atribuir causalidade a detalhes que não foram observados.
-3. O owner da fixture Reports deve estabelecer o perfil/diretório real selecionado da shell antes de review-flow.ts:19. Apenas acrescentar triplet à primeira URL não comprova o clique subsequente no href exato sem triplet; a seleção precisa sobreviver à navegação pela agenda, preservando a admissão original.
-4. Após fix concreto, usar GitHub/Actions com branch ci-run-linux-* e o request exato pertinente abaixo. Não repetir o gate apenas para ver como está. Integrar os quatro arquivos de código e este handoff; não tocar branches proibidas nem rodar sf-ci nesta sessão.
+1. Partir de sf-ui-c02; o código deste checkpoint é63c9a0d7fb26a244327b1f5b30ac8adae213760b.
+2. Ler a conclusão e o primeiro erro de44657275046. O helper registra a fase da espera; não repetir a mesma execução sem nova correção concreta.
+3. Com o bootstrap comprovado, executar Reports completo no SHA que contém3050a842 e63c9a0d, usando o request abaixo e no máximo2gates simultâneos.
+4. Corrigir apenas causas sustentadas e manter as assertions. Atualizar este handoff com SHAs, runs/conclusões e unbound(file:line), até o fechamento completo.
+5. Se houver novo timeout, distinguir a fase observada da hipótese causal. Os ZIPs dos artifacts não foram extraídos pelo conector; não alegar inspeção de DOM/trace não realizada.
 
 ## Comandos e resultados
 
-- bun typecheck (app-shell): não executado separadamente/localmente. A etapa Typecheck the installed SF E2E sources concluiu success nos runs 44646379209 e 44646627443.
+- bun typecheck (app-shell): não executado separadamente. Os gates Playwright concluídos passaram pelo typecheck SF E2E embutido.
 - bun run check:guards --base origin/dev: não executado separadamente; não declarado verde.
-- Tentativa T2: run 44646029764, snapshot 1748a50b7d8a62df89c383077429b8c303e09aca, parent 6efb113c755279654c306a6fe76c99bcbffb345f — failure em Read request, TEST_PACKAGE_NOT_FOUND:app-shell, script/test-ci-package.ts:35. Job 135988712663; nenhum teste executado; cleanup success.
-- Tentativa T3: run 44646129589, snapshot 0d6e3a6a82d33895b6b7211b28a6fce9524816ea, parent dddce89d6a6c2b1d4c0f52a97e0c321d3454f141 — failure pelo mesmo seletor inválido em Read request. Job 135989055854; nenhum teste executado; cleanup success.
-- Gate T1/T2: [run 44646627443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646627443), snapshot 55d805d907e6dde33c6e3970eea148519bb4db01, parent 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4 — failure; job 135990747207. Seleção e typecheck E2E success; build/host iniciaram; 8 testes executados com 1 worker, 8 failed / 0 passed, todos em procurement.spec.ts:37 depois do heading :34. Cleanup 135994350082 success. Artifact [14589477538](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646627443/artifacts/14589477538), 34359248 bytes, upload success. O download pelo conector retornou somente referência ZIP; nenhum membro/DOM/trace foi extraído sob a restrição somente GitHub.
-- Gate T3: [run 44646379209](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646379209), snapshot 47a498e47becb6a9b6ab551099a114fdd66df4fd, parent ffa13012bc0ac2bba113860946930355c0a9a37f — failure; job 135989909108. Seleção e typecheck success; build completo; 4 testes executados com 1 worker, 4 failed / 0 passed, todos em reports-support/review-flow.ts:21. O blob Budget é idêntico ao do código final: 8e5e5b39efa18f0fe40c5e944a84f1ccad9ac022. Artifact [14589541312](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646379209/artifacts/14589541312), 239546 bytes, upload success; ZIP não inspecionado.
+- bun run test:ci: somente pelas branches de request em Actions, conforme tabela.
+- Unidade de drafts: test/sucafina-native/procurement-draft-conflict.test.ts — 7pass,0fail,53expect no run44652278683.
 
-Request T1/T2:
+| Run | SHA de código | Snapshot CI | Conclusão |
+| --- | --- | --- | --- |
+| [44646029764](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646029764) | 6efb113c755279654c306a6fe76c99bcbffb345f | 1748a50b7d8a62df89c383077429b8c303e09aca | failure — Read request: TEST_PACKAGE_NOT_FOUND:app-shell; nenhum teste executado; cleanup success |
+| [44646129589](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646129589) | dddce89d6a6c2b1d4c0f52a97e0c321d3454f141 | 0d6e3a6a82d33895b6b7211b28a6fce9524816ea | failure — mesmo seletor inválido no request Reports; nenhum teste executado; cleanup success |
+| [44646627443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646627443) | 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4 | 55d805d907e6dde33c6e3970eea148519bb4db01 | failure — 8/8 em procurement.spec.ts:37; heading Requests(:34) já alcançado; typecheck E2E e cleanup success |
+| [44646379209](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646379209) | ffa13012bc0ac2bba113860946930355c0a9a37f | 47a498e47becb6a9b6ab551099a114fdd66df4fd | failure — 4/4 em reports-support/review-flow.ts:21, link ausente; typecheck/build success |
+| [44652278683](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652278683) | 496a115b8e6d541a7b2d7da27276225a7654e07e | 64af66e17c6b1a5389057095243554ade1c20869 | success — regressão de drafts: 7 pass, 0 fail, 53 expect; cleanup success |
+| [44652437588](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652437588) | 015c75a42f1fe32d776e9dbab944b4202d9d7e90 | c7fcea5707becab77b41cc3dd128a0181b59150c | failure — 8/8 atingiram 60000ms; erro secundário Playwright response GUID sem stack do await primário; typecheck/build e cleanup success |
+| [44652818501](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652818501) | f1e8aa1c8b622cb99e6ee5e49bb049fe77264de4 | 80cb157ff07b388cdf41c9f99a6f05bc94a644ce | failure — 4/4 em native/select-profile.ts:19 antes de aparecer o perfil; typecheck/build e cleanup success |
+| [44654544465](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44654544465) | 7554bb4a476d2e693348462c0fed216ebec4200c | 8f306b3ca51038ce157e51e40a6ba14fe2b4c5d4 | failure — 4/4: fixture reports timeout 180000ms durante setup, reports-support/fixture.ts:7; helper registrou unavailable=true,pageErrors=[] após página fechada; typecheck/build e cleanup success |
+| [44657275046](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657275046) | 63c9a0d7fb26a244327b1f5b30ac8adae213760b | 8a4a0dc763320d9b752434d79e997cc98735cdf2 | in_progress — wp04 completo, com seleção de perfil no Home, CAS reforçado e filtro por teclado corrigido |
+
+Artifacts relevantes:14589477538 (wp04 antigo),14589541312 (Reports antigo),14592066071 (Reports sem Basic),14593360996 (wp04 timeout). Os logs foram lidos; nenhum ZIP foi extraído.
+
+Requests:
 ```json
+{"package":"app","runner":"bun","args":["test/sucafina-native/procurement-draft-conflict.test.ts"]}
 {"package":"app","runner":"playwright","config":"e2e/playwright.production.config.ts","args":["e2e/sucafina/wp04/procurement.spec.ts"]}
-```
-
-Request T3:
-```json
 {"package":"app","runner":"playwright","config":"e2e/playwright.production.config.ts","args":["e2e/sucafina/reports.spec.ts"]}
 ```
+
+## Arquivos alterados
+
+- apps/cli/src/sucafina-product/extended-review-cycle.ts
+- apps/cli/src/sucafina-product/native-ui/procurement.ts
+- apps/cli/src/sucafina-product/native-ui/reviews.ts
+- apps/cli/src/sucafina-product/review-agenda-projection.ts
+- docs/handoff/HANDOFF-sf-ui-c02.md
+- modules/sucafina/Sucafinav1/product/reviews/selection.ts
+- packages/app-shell/e2e/sucafina/native/select-profile.ts
+- packages/app-shell/e2e/sucafina/reports-support/fixture.ts
+- packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts
+- packages/app-shell/e2e/sucafina/reports-support/production-installation.ts
+- packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
+- packages/app-shell/e2e/sucafina/reports-support/revocation.ts
+- packages/app-shell/e2e/sucafina/reports.spec.ts
+- packages/app-shell/e2e/sucafina/wp04/host.ts
+- packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts
+- packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts
+- packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts
+- packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/panel.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/copy.ts
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/forms.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/requests.css
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/model.ts
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/record-selection.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/answer.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx
+- packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts
+- packages/app-shell/test/sucafina-native/procurement-draft-conflict.test.ts
+- packages/schema/src/sucafina/procurement.ts
