@@ -8,6 +8,7 @@ import type { DecisionCasePort, DomainPortHost, PlannerSourceHost, PortResult } 
 import type { SfProductStatePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { createSfCaseReadBatch } from "./case-read-batch.ts"
+import type { SfCaseReadBatchAdmission } from "./case-read-batch.ts"
 import { sfPlannerRecordMaterialized } from "./planner-case-read-batch.ts"
 import { sfProcurementRecordMaterialized } from "./procurement-record-read-scope.ts"
 
@@ -29,7 +30,12 @@ export function createSfMixedCaseReadBatch(input: {
     readerIdentity: () => readonly unknown[]
   }
 }): DecisionCasePort["read"] {
-  return createSfCaseReadBatch(input, { kind: "mixed",
+  return createSfCaseReadBatch(input, sfMixedCaseReadAdmission(input))
+}
+
+/** Reuse the exact domain admission for complete read-only producer phases. */
+export function sfMixedCaseReadAdmission(input: Omit<Parameters<typeof createSfMixedCaseReadBatch>[0], "read">): SfCaseReadBatchAdmission {
+  return { kind: "mixed",
     identity: () => [input.sources, input.sources.resolveForecastSource, input.procurement, input.procurement.contextFor,
       input.procurement.selection, input.procurement.isCurrentRecord, input.procurement.readerIdentity, ...input.procurement.readerIdentity()],
     forCall: (call) => {
@@ -66,7 +72,7 @@ export function createSfMixedCaseReadBatch(input: {
         return { kind: "current", value: { selection: structuredClone(selection), context: context.value, principal } }
       } }
     },
-  })
+  }
 }
 
 /** Only ordinary current cases with Planner bases and explicit individual
