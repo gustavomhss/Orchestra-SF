@@ -1,3 +1,4 @@
+import { discoverSfDashboardAgenda } from "./dashboard-services.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -45,7 +46,7 @@ export function createSfExtendedReviewCycle(input: { authority: ReturnType<typeo
         if (current.status !== "ok") return current
         const resolved = await business.dashboardSources.resolveDashboardSource(current.value.selectionRef, call)
         if (resolved.status !== "ok") return resolved
-        const discovered = await business.dashboardServices.discover({ page: source.id, period: section.period }, call)
+        const discovered = await discoverSfDashboardAgenda(business.dashboardServices, { page: source.id, period: section.period }, call)
         if (discovered.status !== "ok") return discovered
         if (!discovered.value.agenda) { value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "Este tópico requer uma seleção de origem antes de preparar a nova revisão." }); continue }
         value.available ||= resolved.value.evidence.target.incarnation !== source.incarnation || resolved.value.evidence.target.version !== source.version

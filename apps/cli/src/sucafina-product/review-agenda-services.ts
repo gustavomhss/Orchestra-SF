@@ -1,3 +1,4 @@
+import { discoverSfDashboardAgenda } from "./dashboard-services.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { Period, ProductContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessContextService, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -182,7 +183,7 @@ export function createSfReviewAgendaServices(input: SfReviewAgendaServicesInput)
     const key = (domain: string, id: string) => `agenda:${digestSfValue({ domain, id, period: query.period })}`
     if (!query.domain || query.domain === "dashboard") {
       for (const page of pages) {
-        const result = await input.business.dashboardServices.discover({ page, period: topicPages ? structuredClone(query.period) : query.period }, call)
+        const result = await discoverSfDashboardAgenda(input.business.dashboardServices, { page, period: topicPages ? structuredClone(query.period) : query.period }, call)
         if (!await live()) return { status: "denied", reason: "agenda-authority-unavailable" }
         if (result.status !== "ok" || !result.value.agenda) continue
         const section = topicPages ? structuredClone(result.value.agenda.section) : result.value.agenda.section
@@ -269,7 +270,7 @@ export function createSfReviewAgendaServices(input: SfReviewAgendaServicesInput)
         }
       }
       // Contracts are owned by Dashboard; Procurement permission alone never grants their content.
-      const contracts = await input.business.dashboardServices.discover({ page: "Vendor Contracts", period: query.period }, call)
+      const contracts = await discoverSfDashboardAgenda(input.business.dashboardServices, { page: "Vendor Contracts", period: query.period }, call)
       const selectedContracts = contracts.status === "ok" && contracts.value.agenda
         ? await createDashboardAgendaSelector({ host, dashboard: input.business.dashboard, sources: input.business.dashboardSources, recordEvidence: input.business.dashboardRecords })(contracts.value.agenda.section, call) : undefined
       if (selectedContracts?.status === "ok") for (const reference of selectedContracts.value.recordRefs) {
