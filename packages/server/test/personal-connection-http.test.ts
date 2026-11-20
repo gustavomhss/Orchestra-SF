@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { Database } from "bun:sqlite"
 import path from "node:path"
-import { Effect, Schema } from "effect"
+import { Effect } from "effect"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import type { SfProductGrant } from "../../../modules/sucafina/Sucafinav1/product/integration/product-authority"
 import { productGrant } from "../../../modules/sucafina/Sucafinav1/test/teams-profile/product-fixture"

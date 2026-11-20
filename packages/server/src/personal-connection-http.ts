@@ -83,7 +83,7 @@ export const makeInstalledPersonalConnectionHttp = (options: Options) => Effect.
         if (body.status !== "parsed") return response({ status: "invalid-request" }, body.status)
         const command = Schema.decodeUnknownOption(ConnectionAccess.PersonalCommand)(body.value).valueOrUndefined
         if (!command) return response({ status: "invalid-request" }, 400)
-        yield* vault.check(command.action, command.key)
+        yield* vault.check(command.action, { category: command.key.category, resourceId: command.key.resourceId })
         if (original.signal.aborted) return response({ status: "denied" }, 403)
         // Every adapter rechecks current ACL and generation at the locked storage boundary.
         // A failure after submission is ambiguous; it never authorizes an automatic retry.
