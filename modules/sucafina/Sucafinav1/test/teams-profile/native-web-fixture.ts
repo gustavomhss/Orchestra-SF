@@ -129,12 +129,15 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
   const ready = Promise.withResolvers<(request: Request) => Promise<Response>>()
   const release = Promise.withResolvers<void>()
   const sessionRequests: Request[] = []
+  const runtimeState = { opened: false, closed: false }
   // f.run keeps this one AppNodeBuilder graph and its Scope alive until close awaits every finalizer.
   const runtime = f.run(Effect.gen(function* () {
+    yield* Effect.addFinalizer(() => Effect.sync(() => { runtimeState.closed = true }))
     const mounted = yield* makeInstalledSessionHttp({
       origin: f.binding.origin, mount: f.binding.mount, location: () => f.location,
       readAdmission: (original) => { sessionRequests.push(original); return f.authority.readCoreSessionAdmission(original) },
     })
+    runtimeState.opened = true
     ready.resolve(mounted)
     yield* Effect.promise(() => release.promise)
   }))
@@ -171,6 +174,6 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
     if (failure?.status === "rejected") throw failure.reason
   })()
   return { ...f, descriptor, handle, seedPlannerVersion, metadataCalls, configured: Object.freeze(configured),
-    sessionRequests, sessionCalls: f.calls, sessionActions: Object.freeze([...input.sessionActions ?? []]), close,
+    sessionRequests, runtimeState, sessionCalls: f.calls, sessionActions: Object.freeze([...input.sessionActions ?? []]), close,
     [Symbol.asyncDispose]: close }
 }
