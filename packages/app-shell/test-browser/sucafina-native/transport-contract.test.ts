@@ -83,6 +83,9 @@ describe("Q01 integrated transport contract / original producer", () => {
   test("Q01-TRANSPORT-REGISTRY preserves the frozen catalog and its explicit source extension", () => {
     expect(Object.keys(catalog.operations)).toHaveLength(305)
     const expectedExtensions = {
+      // Original runtime/admin.ts configure-summaries, exposed by the bounded native port.
+      "local-admin.summary-read": { method: "GET", pathTemplate: "{mount}/api/ui/local-admin/summary-settings", effect: "read", responseMode: "json" },
+      "local-admin.summary-configure": { method: "POST", pathTemplate: "{mount}/api/ui/local-admin/configure-summaries", effect: "mutation", responseMode: "json", maxRequestBytes: 16384 },
       "dashboard.dashboard-draft-read": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
         responseMode: "json", fixedQuery: { sf: "dashboard-draft-read" } },
       "dashboard.dashboard-hot-topic-draft-outcome": { method: "POST", pathTemplate: "{mount}/dashboard", effect: "read",
@@ -125,6 +128,8 @@ describe("Q01 integrated transport contract / original producer", () => {
     // decision-domain-http.ts owns edit CAS; product/reviews/http.ts owns read/agenda/preserve.
     for (const id of ["dashboard.dashboard-draft-read", "dashboard.dashboard-hot-topic-draft-outcome", "decisions.decision-edit", "reviews.review-read", "reviews.review-agenda-options", "reviews.review-agenda", "reviews.review-preserve"] as const)
       expect(Object.hasOwn(catalog.operations, id)).toBe(false)
+    expect(Object.hasOwn(catalog.operations, "local-admin.summary-read")).toBe(false)
+    expect(Object.hasOwn(catalog.operations, "local-admin.summary-configure")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.members")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.po")).toBe(false)
     expect(Object.hasOwn(catalog.operations, "files.export.review")).toBe(false)

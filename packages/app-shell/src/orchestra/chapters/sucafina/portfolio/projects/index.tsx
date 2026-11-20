@@ -13,6 +13,7 @@ import { SfDataTable, type SfColumn, type SfSort, type SfCopyKey as SfTableCopyK
 import { SfListDetail, SfRecordDetail } from "../../shared/detail"
 import { SfMilestoneEditor, SfProjectEditor, type SfMilestoneDraft } from "./editor"
 import { sfProjectHref } from "./paths"
+import { createSfPortfolioViewState } from "../view-state"
 import { sfAdmitted, sfOwnerMatches, sfProjectCommand, sfReadProjects } from "./producer"
 import { PROJECT_STATUS, sfProjectDraft, sfProjectValues, sfProjectVersion, sfSourceDate,
   type SfProjectEdit, type SfProjectPage, type SfProjectRecord } from "./model"
@@ -35,6 +36,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
   const navigate = useNavigate()
+  const filters = createSfPortfolioViewState(owner, () => props.route)
   const t = (key: keyof typeof SF_U05_COPY) => language.t(key as Parameters<typeof language.t>[0])
   const [refresh, setRefresh] = createSignal(0)
   const [layout, setLayout] = createSignal<SfLayoutMode>("single")
@@ -45,15 +47,12 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
     state: SfUiState
     page: SfProjectPage | null
     selectedId: string | null
-    search: string
-    status: string
-    filter: string
     review: ReviewCommand | null
     reviewSave: boolean
     busy: boolean
     uncertain: boolean
     notice: keyof typeof SF_U05_COPY | null
-  }>({ state: "loading", page: null, selectedId: null, search: "", status: "", filter: "",
+  }>({ state: "loading", page: null, selectedId: null,
     review: null, reviewSave: false, busy: false, uncertain: false, notice: null })
   const ready = () => owner.state().status === "ready" ? owner.ready() : undefined
   const permitted = (operation: string, action?: "save" | "delete" | "save-milestone" | "delete-milestone" | "import") => {
@@ -162,13 +161,13 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
   })
 
   const rows = createMemo(() => {
-    const needle = view.search.toLocaleLowerCase().trim()
+    const needle = filters.value.search.toLocaleLowerCase().trim()
     const records = view.page?.records.filter((row) =>
       (!needle || [row.name, row.desc, row.pm].some((text) => typeof text === "string" &&
         text.toLocaleLowerCase().includes(needle))) &&
-      (!view.status || row.status === view.status) &&
-      (view.filter !== "watch" || row.watchList === true) &&
-      (view.filter !== "at-risk" || row.risk === "Medium" || row.risk === "High")) ?? []
+      (!filters.value.status || row.status === filters.value.status) &&
+      (filters.value.filter !== "watch" || row.watchList === true) &&
+      (filters.value.filter !== "at-risk" || row.risk === "Medium" || row.risk === "High")) ?? []
     const current = sort()
     if (current.kind === "none") return records
     const sign = current.direction === "asc" ? 1 : -1
@@ -371,22 +370,22 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
             <section class="sf-u05-list" aria-label={t("sf.u05.projects.filters")}>
               <form class="sf-u05-filters" onSubmit={(event) => event.preventDefault()}>
                 <label>{t("sf.u05.projects.search")}
-                  <input type="search" value={view.search} onInput={(event) => setView("search", event.currentTarget.value)} />
+                  <input type="search" value={filters.value.search} onInput={(event) => filters.change({ search: event.currentTarget.value })} />
                 </label>
                 <label>{t("sf.u05.projects.status")}
-                  <select value={view.status} onChange={(event) => setView("status", event.currentTarget.value)}>
+                  <select value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
                     <option value="">{t("sf.u05.projects.all")}</option>
                     <For each={PROJECT_STATUS}>{(status) => <option value={status}>{status}</option>}</For>
                   </select>
                 </label>
                 <label>{t("sf.u05.projects.show")}
-                  <select value={view.filter} onChange={(event) => setView("filter", event.currentTarget.value)}>
+                  <select value={filters.value.filter} onChange={(event) => filters.change({ filter: event.currentTarget.value })}>
                     <option value="">{t("sf.u05.projects.all")}</option>
                     <option value="watch">{t("sf.u05.projects.watch")}</option>
                     <option value="at-risk">{t("sf.u05.projects.atRisk")}</option>
                   </select>
                 </label>
-                <button class="mx-btn" type="button" onClick={() => setView({ search: "", status: "", filter: "" })}>
+                <button class="mx-btn" type="button" onClick={() => filters.reset()}>
                   {t("sf.u05.projects.reset")}
                 </button>
               </form>

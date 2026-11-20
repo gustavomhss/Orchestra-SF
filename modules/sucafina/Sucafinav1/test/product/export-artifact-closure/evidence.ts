@@ -16,10 +16,6 @@ export async function recordExportEvidence(input: { caseId: string; name: string
   await Bun.write(join(exportEvidenceDirectory, file_name), input.bytes)
   await Bun.write(join(exportEvidenceDirectory, `${input.caseId}.manifest.json`), JSON.stringify(manifest, null, 2) + "\n")
   console.log("SF66_EXPORT_EVIDENCE " + JSON.stringify(manifest))
-  const encoded = Buffer.from(input.bytes).toString("base64")
-  const size = 12_000
-  const total = Math.ceil(encoded.length / size)
-  for (let index = 0; index < total; index++) console.log("SF66_EXPORT_BYTES " + JSON.stringify({ case_id: input.caseId, format: manifest.format,
-    sha256: manifest.sha256, index, total, data: encoded.slice(index * size, (index + 1) * size) }))
+  // Original bytes and their digest travel as artifacts; keep the job log bounded.
   return manifest
 }

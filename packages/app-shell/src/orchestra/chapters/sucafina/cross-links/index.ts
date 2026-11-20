@@ -4,6 +4,7 @@ import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../navigation-state"
 import { sfReadProjects } from "../portfolio/projects/producer"
+import { parseSfSignalPriorities } from "../dashboard/executive/signals"
 
 /**
  * WS-8. References are original producer identities, never a title, owner
@@ -17,6 +18,7 @@ export type SfExecutiveRecord = Readonly<{
 export type SfExecutiveLink =
   | Readonly<{ kind: "agenda" | "projects" | "risks" | "stakeholders" | "topics" | "new-topic" }>
   | SfExecutiveRecord
+  | Readonly<{ kind: "signal-priority"; ids: readonly string[] }>
   | Readonly<{ kind: "relations"; source: SfExecutiveRecord }>
 export type SfExecutiveSourceRoute = Readonly<{
   ownerSelection: SfOwnerSelection
@@ -27,7 +29,7 @@ const operationReady = (context: SfContext, operationId: string) =>
   context.availability.some((resource) => resource.operations.some((operation) =>
     operation.operationId === operationId && operation.state === "ready" && operation.operational))
 
-const admitted = (context: SfContext, capability: "CAP02" | "CAP10" | "CAP13" | "CAP15") =>
+const admitted = (context: SfContext, capability: "CAP01" | "CAP02" | "CAP10" | "CAP13" | "CAP15") =>
   context.destinations.some((item) => item.capabilityId === capability && item.canRead) &&
   operationReady(context, "domain.page." + capability)
 
@@ -37,6 +39,7 @@ export function sfExecutiveLinkAllowed(context: SfContext, target: SfExecutiveLi
       return operationReady(context, "projection.review") &&
         operationReady(context, "dashboard.dashboard-agenda") &&
         operationReady(context, "dashboard.dashboard-review-preserve")
+    case "signal-priority": return admitted(context, "CAP01") && parseSfSignalPriorities(target.ids) !== undefined
     case "projects": case "project": return admitted(context, "CAP10")
     case "risks": case "risk": return admitted(context, "CAP13")
     case "stakeholders": case "stakeholder": return admitted(context, "CAP15")
@@ -63,12 +66,17 @@ export function sfExecutiveLinkRequest(from: SfExecutiveSourceRoute, target: SfE
   if (!owner.serverKey || !owner.projectId || !owner.installationId) return
   if (isRecord(target) && !validRef(target.ref)) return
   if (target.kind === "relations" && !validRef(target.source.ref)) return
+  if (target.kind === "signal-priority" && !parseSfSignalPriorities(target.ids)) return
 
   const query = new URLSearchParams({
     server: owner.serverKey, project: owner.projectId, installation: owner.installationId,
   })
   let path = ""
   switch (target.kind) {
+    case "signal-priority":
+      path = "/orchestra/sf-dashboard/executive"
+      target.ids.forEach((id) => query.append("signalPriority", id))
+      break
     case "agenda": path = "/orchestra/sf-reviews/agenda"; break
     case "projects": path = "/orchestra/sf-portfolio/projects"; break
     case "project":
@@ -94,14 +102,20 @@ export function sfExecutiveLinkRequest(from: SfExecutiveSourceRoute, target: SfE
       query.set("source", target.source.ref)
       break
   }
-  if ((target.kind === "projects" || target.kind === "project") &&
+  if ((target.kind === "projects" || target.kind === "project" || target.kind === "risk" ||
+      target.kind === "topic" || target.kind === "signal-priority") &&
       from.query.year !== undefined) query.set("year", String(from.query.year))
+  if ((target.kind === "risk" || target.kind === "topic" || target.kind === "signal-priority") &&
+      from.query.month !== undefined) query.set("month", String(from.query.month))
   return path + "?" + query.toString()
 }
 
 /** The F01-resolved route, not our candidate URL, decides what can open. */
 export function sfExecutiveLinkMatches(route: SfResolvedRoute, target: SfExecutiveLink): boolean {
   switch (target.kind) {
+    case "signal-priority": return route.surfaceId === "CAP01" && route.kind === "entry" &&
+      (route.query.signalPriority ?? []).length === target.ids.length &&
+      target.ids.every((id, index) => route.query.signalPriority?.[index] === id)
     case "agenda": return route.surfaceId === "UI47" && route.kind === "entry"
     case "projects": return route.surfaceId === "CAP10" && route.kind === "entry"
     case "project": return route.surfaceId === "CAP10" && route.kind === "detail" &&
@@ -132,8 +146,20 @@ export async function sfExecutiveRevalidateRef(
 ): Promise<boolean> {
   if (signal.aborted) return false
   const record = target.kind === "relations" ? target.source : isRecord(target) ? target : undefined
-  if (!record) return true
+  if (!record && target.kind !== "signal-priority") return true
   try {
+    if (target.kind === "signal-priority") {
+      if (!parseSfSignalPriorities(target.ids)) return false
+      const result = await createSfDomainClient(transport)["domain.page.CAP01"]({
+        ...(from.query.year === undefined ? {} : { execYear: from.query.year }),
+        ...(from.query.month === undefined ? {} : { executiveMonth: from.query.month }),
+      }, { signal })
+      if (signal.aborted || result.kind !== "response" || result.status !== 200 ||
+          result.body.status !== "ok" || result.body.value.capabilityId !== "CAP01") return false
+      const current = result.body.value.data.signals
+      return current !== undefined && target.ids.every((id) => current.filter((item) => item.id === id).length === 1)
+    }
+    if (!record) return false
     if (record.kind === "project") {
       const result = await sfReadProjects(transport, "CAP10", {
         ...(from.query.year === undefined ? {} : { year: from.query.year }),
