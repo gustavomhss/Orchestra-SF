@@ -1,0 +1,233 @@
+name: ci-efficiency-proof
+
+on:
+  push:
+    branches: [ci-efficiency-check]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-efficiency-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      REVIEWED_SOURCE_SHA: "a08a2b7d5eb3455da143ed6ce2bd259ae9a1dc9a"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Gate, profile, cache promotion and shard binding regressions
+        run: node --test script/sf-ci/gate.test.mjs script/sf-ci/shard-plan.test.mjs script/sf-ci/cache-source.test.mjs script/sf-ci/shard-adoption.test.mjs
+      - name: Timing report boundary regressions
+        if: ${{ !cancelled() }}
+        run: python3 -m unittest discover -s script/sf-ci -p 'test_timings.py' -v
+      - name: Cold install with complete source fingerprint
+        if: ${{ !cancelled() }}
+        id: dependencies
+        uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+          save: "false"
+      - uses: ./.github/actions/omni-binaries
+        if: ${{ !cancelled() }}
+        with:
+          save: "false"
+      - uses: ./.github/actions/ripgrep
+        if: ${{ !cancelled() }}
+        with:
+          save: "false"
+      - name: Real installed inputs remain stable after frozen installation
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        env:
+          MODULES_KEY: ${{ steps.dependencies.outputs.modules-cache-key }}
+        run: |
+          ORCHESTRA_CACHE_NODE_ABI="$(node -p 'process.versions.modules')" bun --eval '
+            import assert from "node:assert/strict"
+            import { dependencyFingerprint } from "./script/ci-cache-inputs.ts"
+            const result = await dependencyFingerprint(process.cwd(), {
+              bunVersion: Bun.version, nodeAbi: process.env.ORCHESTRA_CACHE_NODE_ABI,
+              nodeEnv: process.env.NODE_ENV ?? ""
+            })
+            assert.equal(process.env.MODULES_KEY, "Linux-X64-modules-v5-" + result.fingerprint)
+            assert.ok(result.inputs.includes("packages/core/vendor/hugr-lean-0.4.0-0660c2b5dc92.tgz"))
+            assert.ok(result.inputs.includes("modules/sucafina/Sucafinav1/vendor/xlsx-0.20.3.tgz"))
+            assert.equal(result.modulesPaths.length, 36)
+            console.log(JSON.stringify({ fingerprint: result.fingerprint, inputCount: result.inputs.length,
+              modulePaths: result.modulesPaths.length, stableAfterFrozenInstall: true }))
+          '
+      - name: Cache mutations and existing surgical runner contracts
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        working-directory: packages/core
+        env:
+          GITHUB_ACTIONS: "false"
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: bun test --timeout 30000 ./test/setup-bun-cache.test.ts ./test/setup-bun-cache-inputs.test.ts ./test/test-ci-request.test.ts ./test/test-ci-app-lanes.test.ts ./test/test-ci-guard-context.test.ts
+      - name: Static ownership and real explicit-file JUnit
+        id: junit
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        working-directory: modules/sucafina
+        env:
+          GITHUB_ACTIONS: "false"
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ci-efficiency-evidence"
+          bun test --timeout 30000 --reporter=junit \
+            "--reporter-outfile=$GITHUB_WORKSPACE/ci-efficiency-evidence/report.xml" \
+            ./Sucafinav1/test/product/fixture/ci-static-contract.test.ts \
+            ./Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts \
+            ./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts \
+            ./Sucafinav1/test/product/ui-split/ui-work/guards.test.ts \
+            ./Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts
+      - name: Collect genuine timings and retain acceptance identities
+        if: ${{ !cancelled() && steps.junit.outcome != 'skipped' }}
+        env:
+          TEST_CONCLUSION: ${{ steps.junit.outcome }}
+        run: |
+          python3 script/sf-ci/timings.py \
+            --report ci-efficiency-evidence/report.xml --output ci-efficiency-evidence/timings.json \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite CI-SF --directory modules/sucafina \
+            --file-root "$GITHUB_WORKSPACE/modules/sucafina" --conclusion "$TEST_CONCLUSION" --partial
+          python3 script/sf2h/final-bundle/verify-bun-report.py ci-efficiency-evidence/report.xml > ci-efficiency-evidence/summary.json
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFileSync } from "node:fs"
+          import { bunCoverageIdentity } from "./script/sf-ci/gate.mjs"
+          const summary = JSON.parse(readFileSync("ci-efficiency-evidence/summary.json", "utf8"))
+          const identity = bunCoverageIdentity(summary)
+          const timing = JSON.parse(readFileSync("ci-efficiency-evidence/timings.json", "utf8"))
+          assert.equal(identity.fileCount, 5)
+          assert.equal(timing.counts.cases, summary.counts.tests)
+          assert.ok(identity.files.every(file => timing.files.some(item => item.path === file)))
+          assert.equal(timing.acceptanceEvidence, false)
+          assert.equal(timing.partial, true)
+          assert.deepEqual(timing.files.map(item => item.path).filter(file => identity.files.includes(file)), identity.files)
+          console.log("REAL_JUNIT_IDENTITY " + JSON.stringify(identity))
+          console.log("REAL_TIMINGS_SOURCE " + JSON.stringify(timing.source))
+          console.log("REAL_TIMINGS_FILES " + JSON.stringify(timing.files.map(item => ({
+            file: item.path, seconds: item.knownCaseSeconds, cases: item.cases.length
+          }))))
+          NODE
+      - name: Generate the current eight-shard batch without dispatch
+        if: ${{ !cancelled() }}
+        run: |
+          mkdir -p ci-efficiency-evidence
+          node script/sf-ci/gate.mjs plan CI-SF > ci-efficiency-evidence/plan.json
+          node script/sf-ci/shard-adoption.mjs generate --plan ci-efficiency-evidence/plan.json \
+            --source "$REVIEWED_SOURCE_SHA" --out ci-efficiency-evidence/batch
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFileSync, writeFileSync } from "node:fs"
+          import { selectSuiteFiles } from "./script/sf-ci/gate.mjs"
+          const manifest = JSON.parse(readFileSync("sf/ci/suites.json", "utf8"))
+          const plan = JSON.parse(readFileSync("ci-efficiency-evidence/plan.json", "utf8"))
+          const selected = selectSuiteFiles(manifest, "CI-SF")
+          assert.deepEqual(plan.shards.flatMap(part => part.files).sort(), selected)
+          assert.equal(new Set(selected).size, selected.length)
+          assert.equal(plan.shards.length, 8)
+          const browser = selectSuiteFiles(manifest, "CI-APP-BROWSER")
+          const result = { reviewedSource: process.env.REVIEWED_SOURCE_SHA, snapshot: process.env.GITHUB_SHA,
+            files: selected.length, selectedFilesSha256: plan.selectedFilesSha256, browserFiles: browser.length,
+            shards: plan.shards.map(part => ({ index: part.index, files: part.files.length,
+              scoreSeconds: part.historicalLoadSeconds, unprofiledFiles: part.unprofiledFiles })),
+            dispatched: false, acceptanceEvidence: false }
+          writeFileSync("ci-efficiency-evidence/selection.json", JSON.stringify(result, null, 2) + "\n")
+          console.log("CURRENT_SELECTION " + JSON.stringify(result))
+          NODE
+      - name: Validate workflow boundaries
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        run: bun script/sf-ci/efficiency-workflow-probe.mjs
+      - name: Core typecheck
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        working-directory: packages/core
+        run: bun run typecheck
+      - name: Sucafina typecheck
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        working-directory: modules/sucafina
+        run: bun run typecheck
+      - name: Repository guards against default and focused bases
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-efficiency-evidence
+          set +e
+          bun run check:spawn-imports > ci-efficiency-evidence/spawn.log 2>&1
+          spawn_status=$?
+          bun run check:guards --base origin/dev > ci-efficiency-evidence/guard-dev.log 2>&1
+          dev_status=$?
+          bun run check:guards --base 23f851dbc6b86c0a571dd95f4b2bb2558b9dc1cd > ci-efficiency-evidence/guard-focused.log 2>&1
+          focused_status=$?
+          set -e
+          cat ci-efficiency-evidence/spawn.log ci-efficiency-evidence/guard-dev.log ci-efficiency-evidence/guard-focused.log
+          printf '{"spawn":%d,"default":%d,"focused":%d}\n' "$spawn_status" "$dev_status" "$focused_status" > ci-efficiency-evidence/guards.json
+          test "$spawn_status" -eq 0 && test "$dev_status" -eq 0 && test "$focused_status" -eq 0
+      - name: Diagnose frozen lock drift without qualifying a modified tree
+        if: ${{ failure() && steps.dependencies.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          printf 'Diagnostic only: resolve lock metadata; this failed candidate is not qualified.\n'
+          bun install --lockfile-only --ignore-scripts
+          git diff --stat -- bun.lock
+          git diff -- bun.lock
+      - name: Publish scoped proof
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-efficiency-proof-${{ github.sha }}
+          path: ci-efficiency-evidence/
+          if-no-files-found: error
+          retention-days: 7
+
+  default-install:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: e63629b7e64b858b7e54438b3277a3de4aae62c2
+          persist-credentials: false
+      - name: Cold frozen install of the default-branch candidate
+        id: dependencies
+        uses: ./.github/actions/setup-bun
+        with:
+          save: "false"
+      - name: Verify exact default source and stable cache inputs
+        env:
+          MODULES_KEY: ${{ steps.dependencies.outputs.modules-cache-key }}
+        run: |
+          test "$(git rev-parse HEAD)" = e63629b7e64b858b7e54438b3277a3de4aae62c2
+          ORCHESTRA_CACHE_NODE_ABI="$(node -p 'process.versions.modules')" bun --eval '
+            import assert from "node:assert/strict"
+            import { dependencyFingerprint } from "./script/ci-cache-inputs.ts"
+            const result = await dependencyFingerprint(process.cwd(), {
+              bunVersion: Bun.version, nodeAbi: process.env.ORCHESTRA_CACHE_NODE_ABI,
+              nodeEnv: process.env.NODE_ENV ?? ""
+            })
+            assert.equal(process.env.MODULES_KEY, "Linux-X64-modules-v5-" + result.fingerprint)
+            assert.equal(result.modulesPaths.length, 36)
+            console.log(JSON.stringify({ source: "e63629b7e64b858b7e54438b3277a3de4aae62c2", fingerprint: result.fingerprint,
+              inputs: result.inputs.length, modulePaths: result.modulesPaths.length, stableAfterFrozenInstall: true }))
+          '
+      - name: Diagnose frozen lock drift without qualifying a modified tree
+        if: ${{ failure() && steps.dependencies.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          printf 'Diagnostic only: resolve lock metadata; this failed candidate is not qualified.\n'
+          bun install --lockfile-only --ignore-scripts
+          git diff --stat -- bun.lock
+          git diff -- bun.lock
