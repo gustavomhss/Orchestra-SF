@@ -238,9 +238,7 @@ const ConnectionPolicy = Context.Reference<{
   defaultValue: () => ({ environment: true, check: () => Effect.void }),
 })
 
-export const locationLayer = Layer.effect(
-  Service,
-  Effect.gen(function* () {
+const make = Effect.gen(function* () {
     const credentials = yield* Credential.Service
     const policy = yield* ConnectionPolicy
     const events = yield* EventV2.Service
@@ -572,8 +570,9 @@ export const locationLayer = Layer.effect(
         }),
       },
     })
-  }),
-)
+  })
+
+export const locationLayer = Layer.effect(Service, make)
 
 /** Registry handles and OAuth callbacks retain their original private owner, never a caller's later profile. */
 const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
@@ -587,10 +586,9 @@ const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
       yield* vault.check(action, { category: "integration", resourceId: integrationID }).pipe(Effect.orDie)
     })) : Effect.void
   // Build in the location's live scope: OAuth attempts and the scrub fiber outlive one method call.
-  const context = yield* Layer.build(locationLayer).pipe(Effect.provideService(ConnectionPolicy, {
+  const integrations = yield* make.pipe(Effect.provideService(ConnectionPolicy, {
     environment: binding === undefined, check,
   }))
-  const integrations = Context.get(context, Service)
   if (!binding) return integrations
   return Service.of({
     transform: (transform) => binding.bind(integrations.transform((draft) => binding.bind(Effect.suspend(() => {

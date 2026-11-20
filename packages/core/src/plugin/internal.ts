@@ -19,6 +19,7 @@ import { FileSystem } from "../filesystem"
 import { FSUtil } from "../fs-util"
 import { Global } from "../global"
 import { Integration } from "../integration"
+import { SessionOwner } from "../session/owner"
 import { Location } from "../location"
 import { ModelsDev } from "../models-dev"
 import { Npm } from "../npm"
@@ -60,6 +61,8 @@ export function define<R>(plugin: Plugin<R>) {
 
 const layer = Layer.effectDiscard(
   Effect.gen(function* () {
+    const owners = yield* SessionOwner.Service
+    const binding = yield* owners.location.pipe(Effect.orDie)
     const catalog = yield* Catalog.Service
     const commands = yield* CommandV2.Service
     const plugin = yield* PluginV2.Service
@@ -108,11 +111,13 @@ const layer = Layer.effectDiscard(
         load(ConfigReferencePlugin.Plugin),
         load(AgentPlugin.Plugin),
         load(CommandPlugin.Plugin),
-        load(ModelsDevPlugin),
+        // A corporate location has no implicit provider discovery or eager credential probes.
+        // Private provider definitions will install their own admitted catalog explicitly.
+        ...(binding ? [] : [load(ModelsDevPlugin)]),
         load(ConfigAgentPlugin.Plugin),
         load(ConfigCommandPlugin.Plugin),
         load(ConfigSkillPlugin.Plugin),
-        ...ProviderPlugins.map(load),
+        ...(binding ? [] : ProviderPlugins.map(load)),
         load(ConfigExternalPlugin.Plugin),
         load(ConfigProviderPlugin.Plugin),
         load(VariantPlugin.Plugin),
@@ -152,5 +157,6 @@ export const node = makeLocationNode({
     httpClient,
     SkillV2.node,
     Reference.node,
+    SessionOwner.node,
   ],
 })

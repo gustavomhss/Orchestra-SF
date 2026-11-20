@@ -24,6 +24,7 @@ import {
   release as remoteRelease,
 } from "./remote"
 import { Credential } from "../credential"
+import { SessionOwner } from "../session/owner"
 import { Database } from "../database/database"
 import { makeLocationNode } from "../effect/app-node"
 import { Global } from "../global"
@@ -125,11 +126,8 @@ export interface HandoffInterface {
 
 export class HandoffService extends Context.Service<HandoffService, HandoffInterface>()("@orchestra/v2/InboxHandoff") {}
 
-export const layer = (
-  options: { workTransport?: Options; feedTransport?: Options; projectBoard?: boolean } = {},
-) =>
-  Layer.effect(
-    Service,
+type LayerOptions = { workTransport?: Options; feedTransport?: Options; projectBoard?: boolean }
+const make = (options: LayerOptions = {}) =>
     Effect.gen(function* () {
       const database = yield* Database.Service
       const location = yield* Location.Service
@@ -696,13 +694,109 @@ export const layer = (
         slackSelect: (generation, selected) => slackOperation(sync.select(generation, selected)),
         slackSync: (generation) => slackOperation(sync.sync(generation)),
       })
-    }),
-  )
+    })
+
+/** Generic technical Inbox utility. Corporate production uses the admitted node below. */
+export const layer = (options: LayerOptions = {}) => Layer.effect(Service, make(options))
+
+const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const binding = yield* owners.location.pipe(Effect.orDie)
+  if (!binding) {
+    const service = yield* make()
+    const check = <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.gen(function* () {
+      if (yield* owners.location.pipe(Effect.orDie))
+        return yield* Effect.die(new InboxError({ reason: "unavailable" }))
+      const value = yield* effect
+      if (yield* owners.location.pipe(Effect.orDie))
+        return yield* Effect.die(new InboxError({ reason: "unavailable" }))
+      return value
+    })
+    // A technical handle retained across a corporate cut cannot keep reading old installation rows.
+    yield* check(Effect.void)
+    return Service.of({
+      ...service,
+      calendarConfiguration: (input) => check(service.calendarConfiguration(input)),
+      discoverCalendars: (generation) => check(service.discoverCalendars(generation)),
+      feeds: () => check(service.feeds()),
+      addFeed: (input) => check(service.addFeed(input)),
+      removeFeed: (id) => check(service.removeFeed(id)),
+      syncFeed: (id) => check(service.syncFeed(id)),
+      notificationConfiguration: (source, input) => check(service.notificationConfiguration(source, input)),
+      gitlabConfiguration: (input) => check(service.gitlabConfiguration(input)),
+      upsert: (input) => check(service.upsert(input)),
+      list: () => check(service.list()),
+      archive: (id) => check(service.archive(id)),
+      markRead: (id) => check(service.markRead(id)),
+      remindTomorrow: (id) => check(service.remindTomorrow(id)),
+      saveDraft: (id, text) => check(service.saveDraft(id, text)),
+      originDraft: (id, text) => check(service.originDraft(id, text)),
+      send: (id, text) => check(service.send(id, text)),
+      handoff: (ids) => check(service.handoff(ids)),
+      require: (ids) => check(service.require(ids)),
+      connect: (input) => check(service.connect(input)),
+      accounts: () => check(service.accounts()),
+      disconnectAccount: (source, generation) => check(service.disconnectAccount(source, generation)),
+      syncWork: (source, generation) => check(service.syncWork(source, generation)),
+      githubPreferences: (input) => check(service.githubPreferences(input)),
+      communicationConfiguration: (source, input) => check(service.communicationConfiguration(source, input)),
+      discoverCommunication: (source, generation) => check(service.discoverCommunication(source, generation)),
+      slackStart: () => check(service.slackStart()),
+      slackStatus: (id) => check(service.slackStatus(id)),
+      slackCancel: (id) => check(service.slackCancel(id)),
+      slackDisconnect: () => check(service.slackDisconnect()),
+      slackScope: () => check(service.slackScope()),
+      slackDiscover: (generation, cursor) => check(service.slackDiscover(generation, cursor)),
+      slackSelect: (generation, selected) => check(service.slackSelect(generation, selected)),
+      slackSync: (generation) => check(service.slackSync(generation)),
+    })
+  }
+  // A Team selection does not adopt the installation Inbox or its old account slots.
+  // Until a private Inbox source is admitted, do not construct its migration, sync,
+  // account discovery or remote callbacks. Unavailability never becomes an empty read.
+  const unavailable = () => binding.bind(Effect.die(new InboxError({ reason: "unavailable" })))
+  return Service.of({
+    calendarConfiguration: unavailable,
+    discoverCalendars: unavailable,
+    feeds: unavailable,
+    addFeed: unavailable,
+    removeFeed: unavailable,
+    syncFeed: unavailable,
+    notificationConfiguration: unavailable,
+    gitlabConfiguration: unavailable,
+    upsert: unavailable,
+    list: unavailable,
+    archive: unavailable,
+    markRead: unavailable,
+    remindTomorrow: unavailable,
+    saveDraft: unavailable,
+    originDraft: unavailable,
+    send: unavailable,
+    handoff: unavailable,
+    require: unavailable,
+    door: () => { throw new InboxError({ reason: "unavailable" }) },
+    connect: unavailable,
+    accounts: unavailable,
+    disconnectAccount: unavailable,
+    syncWork: unavailable,
+    githubPreferences: unavailable,
+    communicationConfiguration: unavailable,
+    discoverCommunication: unavailable,
+    slackStart: unavailable,
+    slackStatus: unavailable,
+    slackCancel: unavailable,
+    slackDisconnect: unavailable,
+    slackScope: unavailable,
+    slackDiscover: unavailable,
+    slackSelect: unavailable,
+    slackSync: unavailable,
+  })
+}))
 
 export const node = makeLocationNode({
   service: Service,
-  layer: layer(),
-  deps: [Database.node, Location.node, Credential.node, SlackAuth.node],
+  layer: admittedLayer,
+  deps: [Database.node, Location.node, Credential.node, SlackAuth.node, SessionOwner.node],
 })
 
 // Installation store for a request that names no mounted project. Board is not projected. Handoff does not create a session.
