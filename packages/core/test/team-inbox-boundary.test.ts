@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test"
-import { Database as BunDatabase } from "bun:sqlite"
 import { Context, Effect, Exit, Layer } from "effect"
 import { sql } from "drizzle-orm"
 import { Credential } from "../src/credential"
@@ -72,12 +71,20 @@ test("team-inbox-02: an already constructed technical Inbox refuses a subsequent
     expect(Exit.isFailure(yield* Effect.exit(inbox.accounts()))).toBe(true)
   }).pipe(Effect.provide(layer))))
   // Inspect retained bytes separately: the production adapter correctly refuses every read of a malformed marker.
-  const inspection = new BunDatabase(filename, { readonly: true })
+  const retained = await inspectRetainedInbox(filename)
+  expect(retained.rows).toEqual([])
+  expect(retained.markers).toEqual([{ name: "sf_authority_generation" }])
+}, 30000)
+
+async function inspectRetainedInbox(filename: string) {
+  const { Database } = await import("bun:sqlite")
+  const inspection = new Database(filename, { readonly: true })
   try {
-    expect(inspection.query("SELECT * FROM inbox_row").all()).toEqual([])
-    expect(inspection.query("SELECT name FROM sqlite_master WHERE name = 'sf_authority_generation'").all())
-      .toEqual([{ name: "sf_authority_generation" }])
+    return {
+      rows: inspection.query("SELECT * FROM inbox_row").all(),
+      markers: inspection.query("SELECT name FROM sqlite_master WHERE name = 'sf_authority_generation'").all(),
+    }
   } finally {
     inspection.close()
   }
-}, 30000)
+}
