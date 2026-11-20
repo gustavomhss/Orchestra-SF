@@ -1,9 +1,10 @@
 import { expect, test } from "bun:test"
-import type { BrowserContext, Page, Request as BrowserRequest } from "@playwright/test"
+import type { BrowserContext, Page } from "@playwright/test"
 import { expectSpawn } from "../../../../../packages/core/test/fixture/omni-expect.ts"
 import { launchBrowserDriver } from "../product/wp02/browser-driver-fixture.ts"
 import { buildNativeTeamsWeb } from "./native-web-build.ts"
 import { nativeTeamWebFixture } from "./native-web-fixture.ts"
+import { serveNativeTeamsWeb } from "./native-web-network.ts"
 import { profileA, profileB, teamRow } from "./installation-fixture.ts"
 import { authority, group, oid } from "../microsoft-login/oidc-fixture.ts"
 
@@ -25,6 +26,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   let f: Awaited<ReturnType<typeof nativeTeamWebFixture>> | undefined
   let admin: Awaited<ReturnType<typeof nativeTeamWebFixture>> | undefined
   let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
+  const networks: Awaited<ReturnType<typeof serveNativeTeamsWeb>>[] = []
   const contexts: BrowserContext[] = [], errors: string[] = [], runtimeErrors: string[] = []
   const contextReplies: { status: string; teams?: string; bound: boolean }[] = []
   const observed: { fixture: "business" | "admin"; path: string; method: string; cookie: boolean; basic: boolean; selector: string | null; status: number }[] = []
@@ -42,36 +44,21 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     admin.provider.hooks.before = (request) => new URL(request.url).pathname === "/v1.0/me/joinedTeams"
       ? Response.json({ error: { code: "ServiceUnavailable" } }, { status: 503 }) : undefined
     const open = async (fixture: NonNullable<typeof f>, name: "business" | "admin") => {
-      const browser = await driver!.browser.newContext({ offline: true, serviceWorkers: "block", locale: "en-US", viewport: { width: 1360, height: 900 } })
-      browser.setDefaultTimeout(7000)
-      contexts.push(browser)
-      browser.on("page", (page) => {
-        page.on("pageerror", (error) => errors.push(error.message))
-        page.on("console", (message) => {
-          if (message.type() === "error" && /^(Teams |Microsoft sign-out)/.test(message.text()))
-            runtimeErrors.push(message.text())
-        })
-      })
-      await browser.route("**/*", async (route) => {
-        const wire = route.request(), url = new URL(wire.url())
-        if (url.href.startsWith(authority + "/oauth2/v2.0/authorize?")) {
-          const code = await fixture.provider.issueCode(url.href, oid)
+      const network = await serveNativeTeamsWeb({
+        origin: fixture.binding.origin,
+        authorize: async (address) => {
+          const url = new URL(address), code = await fixture.provider.issueCode(url.href, oid)
           const callback = new URL(url.searchParams.get("redirect_uri")!)
           callback.searchParams.set("code", code)
           callback.searchParams.set("state", url.searchParams.get("state")!)
-          await route.fulfill({ status: 303, headers: { Location: callback.href, "Cache-Control": "no-store" } })
-          return
-        }
-        if (url.origin !== fixture.binding.origin) { await route.abort(); return }
-        const headers = await wire.allHeaders(), bytes = wire.postDataBuffer(), abort = new AbortController()
-        const failed = (request: BrowserRequest) => { if (request === wire) abort.abort() }
-        browser.on("requestfailed", failed)
-        try {
-          const request = new Request(wire.url(), { method: wire.method(), headers, signal: abort.signal,
-            ...(["GET", "HEAD"].includes(wire.method()) ? {} : { body: bytes === null ? undefined : new Uint8Array(bytes).buffer }) })
+          return new Response(null, { status: 303, headers: { Location: callback.href, "Cache-Control": "no-store" } })
+        },
+        handle: async (request) => {
+          const url = new URL(request.url)
           if (name === "business" && holdLogout && url.pathname === fixture.binding.mount + "/auth/logout") {
             logoutEntered.resolve(); await logoutRelease.promise
           }
+          // The actual TLS Request is passed unchanged to the installed handlers.
           const response = url.pathname.startsWith(fixture.binding.mount + "/") || url.pathname.startsWith("/api/")
             ? await fixture.handle(request) : await built!.asset(request) ?? new Response(null, { status: 404 })
           if (url.pathname.endsWith("/api/ui/context")) {
@@ -90,15 +77,22 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
             cookie: request.headers.has("cookie"), basic: request.headers.has("authorization"),
             selector: request.headers.get("x-sf-team-profile"), status: response.status })
           if (name === "business" && url.pathname === fixture.binding.mount + "/auth/logout") logoutHandled.resolve()
-          const outgoing = Object.fromEntries(response.headers)
-          const cookies = response.headers.getSetCookie()
-          if (cookies.length) outgoing["set-cookie"] = cookies.join("\n")
-          if (!abort.signal.aborted) await route.fulfill({ status: response.status, headers: outgoing,
-            body: Buffer.from(await response.arrayBuffer()) })
-        } catch (error) {
-          // A cancelled original browser request has no recipient for a late reply.
-          if (!abort.signal.aborted) throw error
-        } finally { browser.off("requestfailed", failed) }
+          return response
+        },
+      })
+      networks.push(network)
+      // The only trusted TLS exception is this known synthetic certificate.
+      // The proxy itself rejects every host except the two exact fixture hosts.
+      const browser = await driver!.browser.newContext({ proxy: { server: network.proxy },
+        ignoreHTTPSErrors: true, serviceWorkers: "block", locale: "en-US", viewport: { width: 1360, height: 900 } })
+      browser.setDefaultTimeout(7000)
+      contexts.push(browser)
+      browser.on("page", (page) => {
+        page.on("pageerror", (error) => errors.push(error.message))
+        page.on("console", (message) => {
+          if (message.type() === "error" && /^(Teams |Microsoft sign-out)/.test(message.text()))
+            runtimeErrors.push(message.text())
+        })
       })
       const page = await browser.newPage()
       await page.goto(fixture.binding.origin + "/", { waitUntil: "domcontentloaded" })
@@ -109,46 +103,33 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     const waitTeam = (page: Page, id: string) => page.waitForFunction((expected) =>
       document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected") === expected, id)
     const picker = (page: Page) => page.locator(".sf-team-picker-wide [data-sf-team-picker]")
-    // Playwright only routes the first hop of a redirect chain. Keep the
-    // browser offline, observe each unchanged 303/Set-Cookie, then navigate to
-    // its exact Location as a new routed request. No cookie/token injection.
-    // https://playwright.dev/docs/network#redirects
-    const redirect = async (page: Page, url: string, navigate: () => Promise<unknown>) => {
-      const reply = page.waitForResponse((response) => response.url() === url && response.request().isNavigationRequest())
-      const blocked = page.waitForEvent("requestfailed", { predicate: (request) =>
-        request.isNavigationRequest() && request.redirectedFrom()?.url() === url })
-      // requestfailed precedes Chromium committing its offline error document.
-      // Wait for that main-frame commit so a late error navigation cannot replace
-      // the next independently routed OAuth hop or its successfully loaded UI.
-      const committed = page.waitForEvent("framenavigated", { predicate: (frame) => frame === page.mainFrame() })
-      const [movement, response, failed, frame] = await Promise.allSettled([navigate(), reply, blocked, committed])
-      if (frame.status !== "fulfilled") throw new Error("The blocked redirect did not finish its main-frame navigation")
-      await page.waitForLoadState("domcontentloaded")
-      if (response.status !== "fulfilled" || failed.status !== "fulfilled")
-        throw new Error("The isolated browser did not observe the expected redirect")
-      if (movement.status === "rejected" && !String(movement.reason).includes("net::ERR_INTERNET_DISCONNECTED"))
-        throw new Error("Unexpected navigation failure in the isolated Microsoft fixture")
-      expect(response.value.status()).toBe(303)
-      expect(failed.value.failure()?.errorText).toBe("net::ERR_INTERNET_DISCONNECTED")
-      const location = response.value.headers()["location"]
-      if (!location) throw new Error("Microsoft fixture redirect has no Location")
-      const target = new URL(location, url)
-      expect(failed.value.url() === target.href).toBe(true)
-      return target
-    }
     const signIn = async (page: Page, fixture: NonNullable<typeof f>) => {
       await waitState(page, "unauthenticated")
       const link = page.locator("[data-sf-microsoft-login]")
       const login = fixture.binding.origin + fixture.binding.mount + "/auth/login?returnTo=%2F"
       expect(await link.getAttribute("href")).toBe(login)
       expect(await link.getAttribute("target")).toBe("_self")
-      const authorize = await redirect(page, login, () => link.click({ noWaitAfter: true }))
+      const start = page.waitForResponse((response) => response.url() === login && response.request().isNavigationRequest())
+      const issued = page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.origin + url.pathname === authority + "/oauth2/v2.0/authorize" && response.request().isNavigationRequest()
+      })
+      const completed = page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.origin + url.pathname === fixture.binding.origin + fixture.binding.mount + "/auth/callback" &&
+          response.request().isNavigationRequest()
+      })
+      // Chromium follows the unchanged signed redirect chain and stores the
+      // Secure HttpOnly mount cookie itself. No route, cookie or token injection.
+      const [begin, authorization, callback] = await Promise.all([start, issued, completed, link.click()])
+      expect(begin.status()).toBe(303)
+      expect(authorization.status()).toBe(303)
+      expect(callback.status()).toBe(303)
+      const authorize = new URL(begin.headers()["location"]!)
       expect(authorize.origin + authorize.pathname).toBe(authority + "/oauth2/v2.0/authorize")
-      const callback = await redirect(page, authorize.href, () => page.goto(authorize.href))
-      expect(callback.origin + callback.pathname).toBe(fixture.binding.origin + fixture.binding.mount + "/auth/callback")
-      const root = await redirect(page, callback.href, () => page.goto(callback.href))
-      expect(root.href).toBe(fixture.binding.origin + "/")
-      await page.goto(root.href, { waitUntil: "domcontentloaded" })
+      const returned = new URL(authorization.headers()["location"]!)
+      expect(returned.origin + returned.pathname).toBe(fixture.binding.origin + fixture.binding.mount + "/auth/callback")
+      expect(new URL(callback.headers()["location"]!, callback.url()).href).toBe(fixture.binding.origin + "/")
       await waitState(page, "authenticated")
       expect(new URL(page.url()).pathname).toBe("/")
     }
@@ -312,10 +293,11 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
         calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
     }
     const browserClosed = await Promise.allSettled(contexts.map((context) => context.close()))
+    const networkClosed = await Promise.allSettled(networks.map((network) => network.close()))
     const driverClosed = await Promise.allSettled([driver?.close()])
     const fixturesClosed = await Promise.allSettled([f?.close(), admin?.close()])
     const buildClosed = await Promise.allSettled([built?.close()])
-    const failures = [...browserClosed, ...driverClosed, ...fixturesClosed, ...buildClosed]
+    const failures = [...browserClosed, ...networkClosed, ...driverClosed, ...fixturesClosed, ...buildClosed]
       .flatMap((entry) => entry.status === "rejected" ? [entry.reason] : [])
     if (failures.length) throw new AggregateError(failures, "Native Teams Web qualification cleanup failed")
   }
