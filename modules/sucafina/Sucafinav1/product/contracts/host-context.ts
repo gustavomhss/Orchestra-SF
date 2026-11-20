@@ -135,6 +135,8 @@ export type CreateSfHostRuntime = (input: {
   /** Server-only resolver capabilities preserve the original admission object across awaits. */
   teamProfiles?: Parameters<typeof createSfProductAuthority>[0]["teamProfiles"]
   readGrants?: () => Promise<readonly SfProductGrant[]>
+  /** Host-only personal connection store and provisioned key reader; never shared Team settings. */
+  teamConnections?: Parameters<typeof createSfProductAuthority>[0]["teamConnections"]
   /** Same original Request; bool only, no person or credential leaves this callback. */
   isAuthenticated?: (request: Request) => Promise<boolean>
   persistence: Application["persistence"] & SfScopedSourcePort
