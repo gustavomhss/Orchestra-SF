@@ -93,7 +93,13 @@ export function openTeamProfileMigrationFiles(filename: string, storageId: strin
         if (source.sourceDigest !== plan.sourceDigest) return fail()
         directory()
         const filename = checkpointPath(plan), bytes = primary.serialize()
-        if (!bytes.length || bytes.length > 256 * 1024 * 1024) return fail()
+        if (bytes.length < 100 || bytes.length > 256 * 1024 * 1024 ||
+            bytes.subarray(0, 16).toString("utf8") !== "SQLite format 3\0" ||
+            bytes[18] !== 2 || bytes[19] !== 2) return fail()
+        // sqlite3_deserialize cannot open a WAL-mode image without its WAL. The
+        // serialized copy contains the coherent pages; normalize only its format
+        // flags before hashing and saving the standalone immutable checkpoint.
+        bytes[18] = 1; bytes[19] = 1
         const digest = hash(bytes), file = privateFile(filename, true)
         try {
           const size = fstatSync(file.fd).size
@@ -112,7 +118,9 @@ export function openTeamProfileMigrationFiles(filename: string, storageId: strin
           const size = fstatSync(file.fd).size
           if (size !== checkpoint.bytes || size < 1 || size > 256 * 1024 * 1024) return false
           const bytes = readFileSync(file.fd)
-          if (hash(bytes) !== checkpoint.digest || checkpoint.sourceDigest !== plan.sourceDigest) return false
+          if (hash(bytes) !== checkpoint.digest || checkpoint.sourceDigest !== plan.sourceDigest ||
+              bytes.length < 100 || bytes.subarray(0, 16).toString("utf8") !== "SQLite format 3\0" ||
+              bytes[18] !== 1 || bytes[19] !== 1) return false
           // Deserialize the actual saved bytes in a disposable database. No saved
           // authority file is opened and no checkpoint replaces a live database.
           const inspection = Database.deserialize(bytes, { readonly: true })
