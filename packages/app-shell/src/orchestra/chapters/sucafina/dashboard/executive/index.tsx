@@ -24,7 +24,7 @@ const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
 export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Element {
   const { t, locale } = useSfPresentation()
   const language = useLanguage()
-  const reader = useU02Projection<ExecutiveData>("CAP01", props.route, "domain.page.CAP01",
+  const reader = useU02Projection<ExecutiveData>("CAP01", () => props.route, "domain.page.CAP01",
     (transport, selection, signal) => createSfDomainClient(transport)["domain.page.CAP01"]({
       ...(selection.year === undefined ? {} : { execYear: selection.year }),
       ...(selection.month === undefined ? {} : { executiveMonth: selection.month }),
