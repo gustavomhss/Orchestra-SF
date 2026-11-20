@@ -1,4 +1,4 @@
-import { createEffect, createMemo, onCleanup, Show, For, type JSX } from "solid-js"
+import { createEffect, createMemo, onCleanup, untrack, Show, For, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfOperationRef } from "@orchestra/schema/sucafina/context"
@@ -177,8 +177,11 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const projection = currentProjection()
     const controller = draft()
     const currentVersion = settingsVersion(projection)
-    if (projection && controller && currentVersion !== undefined)
-      controller.receiveRemote({ baseVersion: currentVersion, value: projection.value.data.settings })
+    if (projection && controller && currentVersion !== undefined) {
+      const remote = { baseVersion: currentVersion, value: projection.value.data.settings }
+      // Publishing the draft must not subscribe this source effect to its own snapshot.
+      untrack(() => controller.receiveRemote(remote))
+    }
   })
   const snapshot = () => draft()?.snapshot()
   const active = () => {
