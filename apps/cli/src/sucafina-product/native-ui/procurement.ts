@@ -295,9 +295,10 @@ function pageData(
     // reconstructs defaults. Both projections share CAP28's admin/source fence.
     data: {
       settings: pick(data.settings, settingsKeys), resetSettings: pick(initialProcurementSettings(), settingsKeys), directory,
-      // The original conflict() admits CAS 0 before the first settings write.
-      // Preserve the absent history: do not manufacture versions.settings or by.
-      ...(!Object.hasOwn(snapshot.data, "store") && !Object.hasOwn(snapshot.versions, "settings")
+      // The original conflict() admits CAS 0 while the Settings revision is absent.
+      // Supplier writes may already have persisted the shared store.
+      // Do not manufacture versions.settings, an author or persisted history.
+      ...(!Object.hasOwn(snapshot.versions, "settings")
         ? { settingsInitialization: { state: "absent" as const, expectedVersion: 0 as const } } : {}),
     },
     versions: versionsFor(view, ["settings"]),
