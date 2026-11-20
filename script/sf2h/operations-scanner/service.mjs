@@ -4,11 +4,15 @@ import { createConnection } from "node:net"
 import { userInfo } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { readTeamsScannerAdmission } from "../../sf-ci/team-profile-scanner.mjs"
 
 const [action, directory, detail] = process.argv.slice(2)
 const root = realpathSync(directory)
 const temporary = realpathSync(process.env.RUNNER_TEMP)
-if (path.dirname(root) !== temporary || !/^sf-operations(?:63|75)-\d+-\d+\.[A-Za-z0-9]+$/.test(path.basename(root)))
+const teams = process.env.GITHUB_REF_NAME?.startsWith("tp-scan-") ? readTeamsScannerAdmission() : undefined
+const rootPattern = teams ? new RegExp("^sf-teams-profile-scan-" + process.env.GITHUB_RUN_ID + "-" + process.env.GITHUB_RUN_ATTEMPT + "\\.[A-Za-z0-9]+$")
+  : /^sf-operations(?:63|75)-\d+-\d+\.[A-Za-z0-9]+$/
+if (path.dirname(root) !== temporary || !rootPattern.test(path.basename(root)))
   throw new Error("OPERATIONS_SCANNER_STATE_OUTSIDE_JOB")
 const lock = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "tools.lock.json"), "utf8"))
 const evidence = path.join(root, "evidence")
@@ -120,7 +124,8 @@ if (action === "initialize") {
   mkdirSync(evidence, { recursive: true })
   save("tools.lock.json", lock)
   save("setup.json", {
-    schema: "sf2h.operations63.scanner-setup.v1", status: "STARTING", root,
+    schema: teams ? "teams-profile-scanner-setup-v1" : "sf2h.operations63.scanner-setup.v1", status: "STARTING", root,
+    ...(teams ? { teamsProfile: teams.envelope } : {}),
     productSnapshot: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID,
     runAttempt: process.env.GITHUB_RUN_ATTEMPT, branch: process.env.GITHUB_REF_NAME,
     startedAt: new Date().toISOString(), syntheticDatabase: false, productQualification: "NOT_RUN",
