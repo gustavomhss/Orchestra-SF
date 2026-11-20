@@ -259,9 +259,10 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(applies).toEqual([JSON.stringify({ manifestId: preview.id, version: preview.version })])
   await expect(root).toHaveAttribute("data-sf-phase", "unknown")
   await expect(root).toHaveAttribute("data-sf-read-state", "outcome-unknown")
-  await expect(root.locator('.sf-state-panel[data-sf-state="outcome-unknown"]')).toHaveCount(1)
+  const unknown = root.locator('.sf-state-panel[data-sf-state="outcome-unknown"]')
+  await expect(unknown).toHaveCount(1)
   await expect(apply).toHaveCount(0)
-  const reconcile = root.getByRole("button", { name: "Refresh receipt", exact: true })
+  const reconcile = unknown.getByRole("button", { name: "Checking the outcome…", exact: true })
   await expect(reconcile).toHaveCount(1)
   await expect(reconcile).toBeEnabled()
   // Register only after the original POST failed delivery; a fresh pre-Apply
