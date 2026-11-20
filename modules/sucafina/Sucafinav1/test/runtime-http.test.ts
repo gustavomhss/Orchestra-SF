@@ -238,11 +238,18 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const freshSave = page.waitForResponse((response) => response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/sucafina/dashboard")
+    const freshRead = page.waitForResponse((response) => response.request().method() === "GET" &&
+      new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13")
     await page.getByRole("button", { name: "Save", exact: true }).click()
     const fresh = await freshSave
     expect(fresh.status()).toBe(200)
     expect(fresh.request().postDataJSON()).toMatchObject({ page: "IT Risks", action: "save", id: riskId, version: 2,
       values: { name: "Remote edit", impact: "4", probability: "2" } })
+    const confirmed = await freshRead
+    expect(confirmed.status()).toBe(200)
+    expect(object(object(await confirmed.json()).value).versions).toMatchObject({ ["risks:" + riskId]: 3 })
+    await editor.waitFor({ state: "hidden" })
+    await page.locator('tr[data-sf-row="' + riskId + '"]').getByText("Remote edit", { exact: true }).waitFor()
     await mkdir(join(process.cwd(), "../../test-ci-evidence"), { recursive: true })
     await page.screenshot({ path: join(process.cwd(), "../../test-ci-evidence/sucafina-risks.png"), fullPage: true })
 
