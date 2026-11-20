@@ -10,6 +10,7 @@ import { CapabilityOperator } from "@orchestra/core/capability/operator/index"
 import { Context, Effect, Layer, Scope } from "effect"
 import { FetchHttpClient, HttpRouter, HttpServer } from "effect/unstable/http"
 import { makeOperatorTransport } from "./operator-transport"
+import { requireTechnicalClient } from "./technical-client"
 
 export const create = Effect.fn("Orchestra.create")(function* () {
   const scope = yield* Scope.Scope
@@ -47,7 +48,7 @@ export const create = Effect.fn("Orchestra.create")(function* () {
     Effect.provideService(FetchHttpClient.Fetch, transport.fetch),
   )
   return {
-    ...client,
+    ...requireTechnicalClient(client),
     tools: { register: tools.register },
   }
 })
