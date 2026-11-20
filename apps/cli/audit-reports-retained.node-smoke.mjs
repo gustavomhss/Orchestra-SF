@@ -136,8 +136,11 @@ function snapshotMarkers(snapshot) {
     const entry = /^\s*-\s+([a-z][a-z-]*)(?=\s|:|$)(.*)$/.exec(line)
     if (!entry || !kinds.includes(entry[1])) return []
     const tail = entry[2].trim()
-    const named = /^"([^"]*)"(?:\s+\[[^\]]*\])?(?::|$)/.exec(tail)?.[1]
-    const content = tail.startsWith(":") ? tail.slice(1).trim().replace(/^"(.*)"$/, "$1") : undefined
+    // Playwright 1.59.1 AI snapshots append multiple attributes (ref, cursor, state).
+    // Unnamed nodes can inline text after those attributes; none of the attributes are emitted.
+    const named = /^"([^"]*)"(?:\s+\[[^\]]*\])*(?::|$)/.exec(tail)?.[1]
+    const afterAttributes = tail.replace(/^(?:\[[^\]]*\]\s*)+/, "")
+    const content = afterAttributes.startsWith(":") ? afterAttributes.slice(1).trim().replace(/^"(.*)"$/, "$1") : undefined
     return [{ role: entry[1], label: named ?? content }]
   })
   const stateRoles = ["status", "paragraph", "generic", "alert", "text"]
