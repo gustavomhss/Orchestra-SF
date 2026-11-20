@@ -1,3 +1,4 @@
+import type { createTeamProfileMigrationAuthority } from "../../runtime/team-profile-migration-authority.ts"
 import type { Host } from "@orchestra/core/host"
 import type { Location } from "@orchestra/core/location"
 import type { ModelV2 } from "@orchestra/core/model"
@@ -53,6 +54,8 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   productHttp?: NonNullable<Application["product"]>
   /** Existing Core HTTP adapters under the Microsoft mount, using the original admitted Request. */
   sessionHttp?: (original: Request) => Promise<Response | undefined>
+  /** Private metadata/cut route, bound to the same host and current supreme-group admission. */
+  migrationHttp?: (original: Request) => Promise<Response | undefined>
   /** Private page projection prepared before the page lock and fenced inside it. */
   productView?: NonNullable<Application["productView"]>
   /** Private UI discovery; absent until its real collection registry is mounted. */
@@ -137,6 +140,8 @@ export type CreateSfHostRuntime = (input: {
   readGrants?: () => Promise<readonly SfProductGrant[]>
   /** Host-only personal connection store and provisioned key reader; never shared Team settings. */
   teamConnections?: Parameters<typeof createSfProductAuthority>[0]["teamConnections"]
+  /** Original-Request migration authority, never serialized or inferred from Team selection. */
+  migrationAuthority?: ReturnType<typeof createTeamProfileMigrationAuthority>
   /** Same original Request; bool only, no person or credential leaves this callback. */
   isAuthenticated?: (request: Request) => Promise<boolean>
   persistence: Application["persistence"] & SfScopedSourcePort

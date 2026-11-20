@@ -36,6 +36,7 @@ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
 import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
+import { createTeamProfileMigrationAuthority } from "../runtime/team-profile-migration-authority.ts"
 import { createTeamProfileIdentityBoundary } from "../runtime/team-profile-identity.ts"
 import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
@@ -164,6 +165,10 @@ export async function createConfiguredInstallation(
     origin: config.origin, mount: config.mount, installationId, tenantId: microsoft.loaded.config.tenantId,
     resolver: profileResolver,
   }) : undefined
+  const migrationAuthority = microsoft && profileResolver ? createTeamProfileMigrationAuthority({
+    origin: config.origin, installationId, tenantId: microsoft.loaded.config.tenantId,
+    resolver: profileResolver, microsoft,
+  }) : undefined
   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
   const backups = await createLocalBackups(backupDirectory)
   const recovery = operator ? await loadRecoveryConfiguration(loaded.directory) : undefined
@@ -188,6 +193,7 @@ export async function createConfiguredInstallation(
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
     ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId, readGrants: microsoft.readGrants, teamProfiles: teamBoundary?.profiles } : {}),
+    ...(migrationAuthority ? { migrationAuthority } : {}),
     ...(microsoft && driver.teamConnections ? { teamConnections: { store: driver.teamConnections, readKey: microsoft.readConnectionKey } } : {}),
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
     nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
@@ -325,6 +331,10 @@ export async function createConfiguredInstallation(
       await identity.prepare(request)
       const teamProfileResponse = await teamProfileHttp?.(request)
       if (teamProfileResponse) return teamProfileResponse
+      if (url.pathname === `${config.mount}/api/ui/team-profile-migration`) {
+        const response = await runtime?.services?.()?.migrationHttp?.(request)
+        return response ?? utilityJson({ status: "unavailable" }, 503)
+      }
       if (operator && url.pathname === `${config.mount}/backups`) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
         const person = await identity.person(request)
