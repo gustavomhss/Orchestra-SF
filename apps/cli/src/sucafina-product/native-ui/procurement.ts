@@ -1,6 +1,7 @@
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
+import { canChangeAssetKind } from "../../../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot, View } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { procurementMonetaryFacts, procurementMoneySentence, procurementOrderPresentation, procurementRequestSummary } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
@@ -167,6 +168,10 @@ function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
   const safe = pick(source, includeBank ? [...supplierKeys, ...bankKeys] : supplierKeys)
   if (Object.hasOwn(source, "history"))
     safe.history = rows(source.history).map((entry) => pick(entry, ["field"]))
+  // References already crossed the original supplier visibility boundary.
+  // Private storage, scanner state and signed URLs never enter the projection.
+  if (Object.hasOwn(source, "attachments"))
+    safe.attachments = rows(source.attachments).map((entry) => pick(entry, ["id", "name"]))
   if (Object.hasOwn(source, "contacts"))
     safe.contacts = rows(source.contacts).map((entry) => pick(entry, ["name", "email", "phone"]))
   if (Object.hasOwn(source, "commercial"))
@@ -278,6 +283,7 @@ function pageData(
       suppliers: suppliers.map((row) => selectSupplier(row, actor.roles.some((role) => role === "admin" || role === "supplier admin"))),
       requests: requestsSummary, formSettings,
       bankVerificationAvailable: data.bankVerificationAvailable === true,
+      canUploadAttachment: canChangeAssetKind(actor, "supplier"),
     },
     versions: versionsFor(view, suppliers.filter((row) => typeof row.id === "string")
       .map((row) => "suppliers:" + String(row.id))),

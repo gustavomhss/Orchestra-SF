@@ -284,6 +284,7 @@ const SuppliersData = Schema.Struct({
   requests: Schema.Array(SfProcurementRequest),
   formSettings: PublicSettings,
   bankVerificationAvailable: Schema.Boolean,
+  canUploadAttachment: optional(Schema.Boolean),
 })
 const SettingsData = Schema.Struct({
   settings: SfProcurementSettings, directory: Schema.Array(DirectoryEntry),
