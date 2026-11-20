@@ -578,11 +578,21 @@ function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
     // Array.from densifies holes; each path is copied separately, including shared aliases.
     if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
     const descriptors = Object.getOwnPropertyDescriptors(value)
-    return Object.fromEntries(Object.keys(descriptors).map((key) => {
+    const keys = Object.keys(descriptors)
+    const copied: Record<string, unknown> = {}
+    const defineProperty = Object.defineProperty
+    const normalized = { value: undefined as unknown, enumerable: true, writable: true, configurable: true }
+    Object.setPrototypeOf(normalized, null)
+    // Capture every descriptor before child visits, which can replace siblings.
+    // The private output descriptor cannot observe inherited get/set attributes.
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index]!
       const descriptor = descriptors[key]!
       if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
-      return [key, copyValue(descriptor.value, ancestors)]
-    }))
+      normalized.value = copyValue(descriptor.value, ancestors)
+      defineProperty(copied, key, normalized)
+    }
+    return copied
   } finally {
     ancestors.delete(value)
   }
