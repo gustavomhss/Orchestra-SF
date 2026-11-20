@@ -1,13 +1,20 @@
 /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
+import { c17Clock, c17End } from "../../runtime/audit-c17-synchronous-profile.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 
 export function canonicalSfValue(value: unknown): string {
-  return JSON.stringify(canonical(value))
+  const c17Started = c17Clock()
+  try {
+    return JSON.stringify(canonical(value))
+  } finally { c17End("canonical.bytes", c17Started) }
 }
 
 export function digestSfValue(value: unknown): string {
-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+  const c17Started = c17Clock()
+  try {
+    return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+  } finally { c17End("canonical.digest", c17Started) }
 }
 
 /** Integrity of the whole reference; authentication remains in the source resolver. */

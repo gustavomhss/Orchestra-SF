@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { c17Clock, c17End, c17MixedInitializer, c17MixedSpan } from "../../../../modules/sucafina/Sucafinav1/runtime/audit-c17-synchronous-profile.ts"
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -210,6 +211,7 @@ export function createSfPlannerCalculationServices(input: {
         return await input.withCalculationCase<Value>(call, selected.value.stored.caseRef, async () => {
           if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
           let preparedRoot: Awaited<ReturnType<typeof readRoot.prepare>> | undefined
+          let auditMixed = false
           // Direct record-only issues retain their original concurrency. A
           // local mixed closure can instead own its complete existing producer.
           const inheritedOwner = !!parent?.open && parent.call === call && parent.request === request &&
@@ -224,12 +226,15 @@ export function createSfPlannerCalculationServices(input: {
               !preparedInput.value.assumptions.some((assumption) => assumption.state !== "hypothetical") &&
               !preparedInput.value.operations.some((operation) => operation.replacementRef) &&
               input.replayScenario === rootReplay && input.evidence === rootEvidence
+            auditMixed = mixed
             if (preparedInput.ok && (inheritedOwner && records || mixed)) {
               const stateReader = rootState.read, resultReader = rootResults.readForCalculation
               const evidenceResolve = rootEvidence.resolve, evidenceContext = rootEvidence.context
               const selectedDigest = digestSfValue(selected.value)
               const admissions: { value: unknown; digest: string }[] = []
-              const sameOwner = () => scope.open && !request.signal.aborted && input.host.requestFor(call) === request &&
+              const sameOwner = () => {
+                const c17Started = c17Clock()
+                try { return scope.open && !request.signal.aborted && input.host.requestFor(call) === request &&
                 requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding &&
                 (!parent || parent.open && parent.call === call && parent.request === request &&
                   parent.requestDigest === requestDigest && parent.binding === binding) && input.host === rootHost &&
@@ -238,20 +243,25 @@ export function createSfPlannerCalculationServices(input: {
                 rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader &&
                 (!mixed || input.replayScenario === rootReplay && input.evidence === rootEvidence &&
                   rootEvidence.resolve === evidenceResolve && rootEvidence.context === evidenceContext) &&
-                digestSfValue(selected.value) === selectedDigest && admissions.every((entry) => digestSfValue(entry.value) === entry.digest)
+                digestSfValue(selected.value) === selectedDigest && admissions.every((entry) => digestSfValue(entry.value) === entry.digest) }
+                finally { c17End("service.sameOwner", c17Started) }
+              }
               const sameReaders = () => current() && sameOwner()
               // Own and foreign C08 scopes skip this initializer entirely. All
               // extra selectors and any source warming belong before baseline.
-              preparedRoot = await readRoot.prepare(call, async () => {
-                if (mixed) {
-                  const plan = plannerLocalSourcePlan(selected.value.stored, preparedInput.value.baseRef)
-                  return plan ? prepareMixedSources(plan, selected.value.stored, preparedInput.value, call, sameReaders,
-                    (value) => admissions.push({ value, digest: digestSfValue(value) })) : "unsupported"
-                }
-                if (!records || !await freshRecordSources(records, call) || !sameReaders()) return false
-                const coverage = await coverageReader(preparedInput.value.baseRef, call)
-                return coverage.status === "ok" && sameReaders()
-              }, sameReaders, sameOwner)
+              const auditPrepare = mixed ? c17MixedSpan("mixed.prepare") : undefined
+              try {
+                preparedRoot = await readRoot.prepare(call, c17MixedInitializer(mixed ? 2 : 1, async () => {
+                  if (mixed) {
+                    const plan = plannerLocalSourcePlan(selected.value.stored, preparedInput.value.baseRef)
+                    return plan ? prepareMixedSources(plan, selected.value.stored, preparedInput.value, call, sameReaders,
+                      (value) => admissions.push({ value, digest: digestSfValue(value) })) : "unsupported"
+                  }
+                  if (!records || !await freshRecordSources(records, call) || !sameReaders()) return false
+                  const coverage = await coverageReader(preparedInput.value.baseRef, call)
+                  return coverage.status === "ok" && sameReaders()
+                }), sameReaders, sameOwner)
+              } finally { auditPrepare?.() }
               if (!preparedRoot) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
             }
           }
@@ -266,7 +276,10 @@ export function createSfPlannerCalculationServices(input: {
           const produce = () => (recordOnly ? recordCalculation : calculation).issue(runId, call)
           // Stage the value until the physical root is accepted. The original
           // completed/finish/final witness below still run after this boundary.
-          const issued = preparedRoot ? await preparedRoot.run(produce) : await produce()
+          const auditProduce = auditMixed ? c17MixedSpan("mixed.produce") : undefined
+          let issued: Awaited<ReturnType<typeof calculation.issue>>
+          try { issued = preparedRoot ? await preparedRoot.run(produce) : await produce() }
+          finally { auditProduce?.() }
           if (issued.status !== "ok") return issued
           const observed = scope.observation?.completed()
           if (scope.observation && !observed) return { status: "unavailable", reason: "calculation-observation-incomplete" }
@@ -287,18 +300,30 @@ export function createSfPlannerCalculationServices(input: {
     const value = structuredClone(incoming)
     const fences = await input.readSourceFences(call)
     if (!fences) return { status: "unavailable", reason: "calculation-source-fence-unavailable" }
-    const replay = await input.replayScenario(value.request, call)
+    const auditReplay = c17MixedSpan("publish.replay")
+    let replay: Awaited<ReturnType<typeof input.replayScenario>>
+    try { replay = await input.replayScenario(value.request, call) }
+    finally { auditReplay() }
     if (replay.status !== "ok") return replay
     if (plannerScenarioDigest(replay.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "calculation-result-replay-changed" }
     const captured = { requestDigest: digestSfValue(value.request), resultDigest: digestSfValue(value.result), resultRef: undefined as string | undefined, sources: fences }
     captures.set(call, captured)
     try {
-      const saved = await input.persist(value, callId, call, { ...comparisonReplay, simulateScenario: input.replayScenario })
+      const auditPersist = c17MixedSpan("publish.persist")
+      let saved: Awaited<ReturnType<typeof input.persist>>
+      try { saved = await input.persist(value, callId, call, { ...comparisonReplay, simulateScenario: input.replayScenario }) }
+      finally { auditPersist() }
       if (saved.status !== "ok") return saved
       captured.resultRef = saved.value.resultRef
-      const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call)
+      const auditRegister = c17MixedSpan("publish.register")
+      let registered: Awaited<ReturnType<typeof requests.register>>
+      try { registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call) }
+      finally { auditRegister() }
       if (registered.status !== "ok") return { status: registered.status, reason: "calculation-request-binding-unavailable" }
-      const issued = await issue(saved.value.resultRef, call)
+      const auditIssue = c17MixedSpan("publish.issue")
+      let issued: Awaited<ReturnType<typeof issue>>
+      try { issued = await issue(saved.value.resultRef, call) }
+      finally { auditIssue() }
       return issued.status === "ok" ? saved : issued
     } catch { return { status: "unavailable", reason: "calculation-publication-unavailable" } }
     finally { captures.delete(call) }
