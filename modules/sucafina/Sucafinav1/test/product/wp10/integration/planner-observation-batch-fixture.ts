@@ -1,4 +1,5 @@
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import type { SfHumanAction } from "../../../../product/integration/human-authority.ts"
 import type { DecisionCase, CostCoverageBasis } from "../../../../product/contracts/decisions.ts"
 import type { DomainPortHost, PortResult } from "../../../../product/contracts/ports.ts"
 import { compareScenarios } from "../../../../product/planner/scenario-comparison-port.ts"
@@ -9,9 +10,9 @@ import type { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 // The data below is a declared SQLite fixture. Scenarios, stored results, human
 // criteria, units and the final choice are produced by their real domain APIs.
-export async function plannerObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, mixed = false, options: { sourceOnly?: boolean } = {}) {
+export async function plannerObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, mixed = false, options: { sourceOnly?: boolean; humanActions?: readonly SfHumanAction[] } = {}) {
   const fixture = await deadline.phase("fixture.initialize", async () => {
-    const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check(), humanActions: ["decisions.portfolio.read"] })
+    const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check(), humanActions: ["decisions.portfolio.read", ...options.humanActions ?? []] })
     deadline.own(() => value.dispose())
     return value
   })
