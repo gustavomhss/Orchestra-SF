@@ -338,17 +338,6 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     expect(successful[0]!.key).not.toBe("")
     expect(successful[0]!.reviewRef).toBe(successful[1]!.reviewRef)
     expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
-    checkpoint("report-thread-revoked")
-    control.threadAllowed = false
-    await view.getByRole("button", { name: "Generate DOCX", exact: true }).click()
-    await expect(view.getByRole("status")).toContainText("Report unavailable")
-    await expect(view.getByRole("table")).toHaveCount(0)
-    await expect(view.getByRole("link", { name: "Download generated report", exact: true })).toHaveCount(0)
-    await expect(view).not.toContainText(commentText)
-    await expect(view).not.toContainText("Retain this agenda note")
-    await expect(view).not.toContainText("120 USD")
-    expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
-    control.threadAllowed = true
     checkpoint("revision-source-unavailable")
     control.available = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
@@ -382,20 +371,55 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const screenshot = fileURLToPath(new URL("../../../../e2e/test-results/lean-visual/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
     await timed("screenshot", () => page.screenshot({ path: screenshot, fullPage: true, timeout: 10000 }))
-    checkpoint("selection-revoke")
-    control.allowed = false
-    await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
-    await expect(view.getByRole("status")).toContainText("Selection unavailable")
-    await expect(view.getByRole("table")).toHaveCount(0)
-    await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
-    await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toHaveCount(0)
-    await expect(view.getByRole("button", { name: "Prepare current data as a new revision", exact: true })).toBeEnabled()
-    expect(await storedReviews()).toHaveLength(2)
-    checkpoint("meeting-open-preserved")
-    control.allowed = true
     const originalRef = successful[0]!.reviewRef!
     const currentRef = (await storedReviews()).find((ref) => ref !== originalRef)
     if (!currentRef) throw new Error("WP07_CURRENT_REVIEW_NOT_PRESERVED")
+    const preservedRefs = [originalRef, currentRef].sort()
+    const denialMessage = "Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation."
+    const assertPreparationPurged = async () => {
+      await expect(view.getByRole("status")).toHaveText(denialMessage)
+      await expect(view.getByRole("heading", { name: "Prepare review", exact: true })).toBeVisible()
+      await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toHaveCount(0)
+      await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
+      await expect(view.getByRole("table")).toHaveCount(0)
+      await expect(view.getByRole("listitem")).toHaveCount(0)
+      await expect(view.getByRole("button")).toHaveCount(0)
+      await expect(view.getByRole("link")).toHaveCount(0)
+      for (const privateText of [commentText, "Retain this agenda note", "120 USD", "130 USD", originalRef, currentRef])
+        await expect(view).not.toContainText(privateText)
+      expect((await storedReviews()).sort()).toEqual(preservedRefs)
+    }
+    // An access denial permanently fences this view. Exercise recoverable source
+    // unavailability and revision preservation above, before intentionally
+    // revoking its captured thread; no denied selector may be reused afterward.
+    checkpoint("report-thread-revoked")
+    control.threadAllowed = false
+    const [deniedReport] = await Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review-report"),
+      view.getByRole("button", { name: "Generate DOCX", exact: true }).click(),
+    ])
+    expect(deniedReport.status()).toBe(403)
+    expect(await deniedReport.json()).toMatchObject({ status: "denied" })
+    await assertPreparationPurged()
+    control.threadAllowed = true
+    // Reopening is an explicit new preparation after restored authority, not
+    // resurrection of the previous instance's purged order, refs or notes.
+    await page.goto(`${origin}/sucafina/dashboard?previousReviewRef=${encodeURIComponent(currentRef)}`, { waitUntil: "domcontentloaded" })
+    await view.getByRole("button", { name: "Load selection", exact: true }).click()
+    await expect(forecast.getByRole("cell", { name: "130 USD", exact: true })).toBeVisible()
+    await expect(view).toContainText(commentText)
+    await expect(view).toContainText("Retain this agenda note")
+    checkpoint("selection-revoke")
+    control.allowed = false
+    const [deniedSelection] = await Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review-agenda"),
+      view.getByRole("button", { name: "Refresh selection from current data", exact: true }).click(),
+    ])
+    expect(deniedSelection.status()).toBe(403)
+    expect(await deniedSelection.json()).toMatchObject({ status: "denied" })
+    await assertPreparationPurged()
+    checkpoint("meeting-open-preserved")
+    control.allowed = true
     const currentUrl = `${origin}/sucafina/dashboard?review=${encodeURIComponent(currentRef)}`
     const originalUrl = `${origin}/sucafina/dashboard?review=${encodeURIComponent(originalRef)}`
     await page.goto(currentUrl, { waitUntil: "domcontentloaded" })
