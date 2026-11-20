@@ -18,6 +18,8 @@ import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../..
 import { observeSfDecisionApplicationHealth } from "../../../../../../apps/cli/src/sucafina-product/native-ui/decision-application-health.ts"
 import { mountSfNativeProjections } from "../../../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import type { SfTrustedInstallationSource } from "../../../../../../packages/server/src/sucafina-installations.ts"
+import { encodeSfRouteRef } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts"
+import { matchSfNativeRoutePath } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts"
 import { createC12Fixture, prepareC12Change } from "./fixture.ts"
 
 type Fixture = Awaited<ReturnType<typeof createC12Fixture>>
@@ -221,8 +223,16 @@ export async function createC12NativeConsumer() {
       }
       return await native.projections(request) ?? new Response(null, { status: 404 })
     }
-    const url = origin + "/orchestra/sf-decisions/" + encodeURIComponent(encodeCaseRef(prepared.request.caseRef)) +
-      "/changes/" + encodeURIComponent(prepared.request.changeId)
+    const caseRef = encodeCaseRef(prepared.request.caseRef)
+    const pathname = "/orchestra/sf-decisions/" + encodeSfRouteRef(caseRef) +
+      "/changes/" + encodeSfRouteRef(prepared.request.changeId)
+    // The installed shell admits only canonical F01 route tokens. Parse this
+    // actual link before launching Chrome; syntax does not grant case access.
+    const routeCandidate = matchSfNativeRoutePath(pathname)
+    if (routeCandidate?.surfaceId !== "UI39" || routeCandidate.kind !== "entry" ||
+      routeCandidate.parameters.caseRef !== caseRef || routeCandidate.parameters.changeRef !== prepared.request.changeId)
+      throw new Error("C12 native prepared-change route does not preserve its original references")
+    const url = origin + pathname
     phase("ready")
     return {
       url, prepared, traffic,
