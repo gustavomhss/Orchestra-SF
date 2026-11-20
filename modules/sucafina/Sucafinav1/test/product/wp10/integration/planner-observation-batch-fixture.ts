@@ -1,6 +1,7 @@
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { SfHumanAction } from "../../../../product/integration/human-authority.ts"
-import type { DecisionCase, CostCoverageBasis } from "../../../../product/contracts/decisions.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/decisions.ts"
+import type { DecisionCase, CostCoverageBasis, CostCoverageEntry } from "../../../../product/contracts/decisions.ts"
 import type { DomainPortHost, PortResult } from "../../../../product/contracts/ports.ts"
 import { compareScenarios } from "../../../../product/planner/scenario-comparison-port.ts"
 import { createSfPlannerObservationBatch } from "../../../../../../../apps/cli/src/sucafina-product/planner-observation-batch.ts"
@@ -10,7 +11,7 @@ import type { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 // The data below is a declared SQLite fixture. Scenarios, stored results, human
 // criteria, units and the final choice are produced by their real domain APIs.
-export async function plannerObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, mixed = false, options: { sourceOnly?: boolean; humanActions?: readonly SfHumanAction[] } = {}) {
+export async function plannerObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>, mixed = false, options: { sourceOnly?: boolean; sharedBase?: boolean; humanActions?: readonly SfHumanAction[] } = {}) {
   const fixture = await deadline.phase("fixture.initialize", async () => {
     const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check(), humanActions: ["decisions.portfolio.read", ...options.humanActions ?? []] })
     deadline.own(() => value.dispose())
@@ -33,7 +34,7 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
     sources.push(issued.value.evidence)
   }
   const basis: CostCoverageBasis = { id: "metric-basis", version: 1, decisionType: "renewal-transition-v1",
-    categoryIds: ["training"], additionalCategoryIds: [], sourceRefs: sources }
+    categoryIds: options.sharedBase ? [...RENEWAL_TRANSITION_CATEGORIES] : ["training"], additionalCategoryIds: [], sourceRefs: sources }
   const companion = mixed ? await procurementSource(fixture, call, period) : undefined
   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Read deterministic criterion metadata", horizon: period, currency: "USD",
     participants: ["person"], criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], sourceRefs: [...sources, ...(companion ? [companion] : [])],
@@ -45,7 +46,28 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
     return { commit: true, value: true }
   })
   if (seeded.status !== "ok") throw new Error("Metric case fixture unavailable")
-  fixture.business.bindForecastCoverage(async (reference, context) => {
+  const coverageRefs: string[] = []
+  if (options.sharedBase) for (const [index, source] of sources.entries()) {
+    if (source.kind !== "record") throw new Error("Actual Planner record source required")
+    const projection = await fixture.business.withCase(call, caseRef, {}, () =>
+      fixture.business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period, currency: "USD" }, call))
+    if (projection.status !== "ok") throw new Error("Actual shared-base coverage components unavailable: " + projection.reason)
+    const entries: CostCoverageEntry[] = [
+      { status: "included", categoryId: "service", componentRefs: projection.value.baseline.components.map((component) => component.id),
+        evidenceRefs: [source], scopeNote: "The selected license forecast supplies the twelve service components." },
+      { status: "pending", categoryId: "training", reason: "No training evidence has been supplied" },
+    ]
+    const request = { caseRef, source, basis, entries, expectedVersion: 0 }
+    const human = await fixture.authority.human.admit(fixture.request(`metric-shared-base-coverage-${index}`), "decisions.coverage", request)
+    if (human.status !== "ok") throw new Error("Actual shared-base coverage admission unavailable")
+    try {
+      const registered = await fixture.business.withCase(human.value, caseRef, {}, () =>
+        fixture.business.baselineCoverage.register(request, human.value))
+      if (registered.status !== "ok") throw new Error("Actual shared-base coverage registration unavailable: " + registered.reason)
+      coverageRefs.push(registered.value.coverageRef)
+    } finally { fixture.authority.human.finish(human.value) }
+  }
+  else fixture.business.bindForecastCoverage(async (reference, context) => {
     const source = await fixture.business.plannerSources.resolveForecastSource(reference, context)
     if (source.status !== "ok") return source
     return { status: "ok", value: { coverageRef: "fixture:metric-pending-coverage", basis,
@@ -65,7 +87,8 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
         requestDigest: digestSfValue(scenario), sourceRefs: result.value.sourceRefs, idempotencyKey: `metric-result-${index}` }, call)
       if (saved.status !== "ok") return saved
       resultRefs.push(saved.value.resultRef)
-      alternatives.push({ id: index ? "candidate" : "baseline", version: 1, title: index ? "Candidate" : "Baseline", scenario, result: result.value })
+      alternatives.push({ id: options.sharedBase ? result.value.costCoverage.alternativeId : index ? "candidate" : "baseline",
+        version: options.sharedBase ? result.value.costCoverage.alternativeVersion : 1, title: index ? "Candidate" : "Baseline", scenario, result: result.value })
     }
     return { status: "ok", value: { alternatives, resultRefs } }
   }))
@@ -78,17 +101,32 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
     return { commit: true, value: true }
   })
   if (bound.status !== "ok") throw new Error("Produced metric alternatives could not be bound")
-  const ruleInput = { caseRef, criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte" as const, value: 0,
+  let selectedCaseRef = caseRef
+  let promotedAlternative: Awaited<ReturnType<typeof fixture.portfolio.mutations.addAlternative>> | undefined
+  if (options.sharedBase) {
+    const request = { caseRef, title: "A separate human alternative on the candidate base", coverageRef: coverageRefs[1]!,
+      scenario: { baseRef: sources[1]!.refId, operations: [{ kind: "replace" as const, targetRef: "line:1", amount: 90,
+        currency: "USD", period: { start: "2026-01-01", end: "2026-01-31" } }], assumptions: [] } }
+    const human = await fixture.authority.human.admit(fixture.request("metric-shared-base-promotion"), "decisions.promote-alternative", request)
+    if (human.status !== "ok") throw new Error("Actual shared-base promotion admission unavailable")
+    try {
+      promotedAlternative = await fixture.business.withCase(human.value, caseRef, {}, () =>
+        fixture.portfolio.mutations.addAlternative(request, human.value))
+      if (promotedAlternative.status !== "ok") throw new Error("Actual shared-base promotion unavailable: " + promotedAlternative.reason)
+      selectedCaseRef = promotedAlternative.value.caseRef
+    } finally { fixture.authority.human.finish(human.value) }
+  }
+  const ruleInput = { caseRef: selectedCaseRef, criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte" as const, value: 0,
     unit: "USD", period, evidenceRefs: sources, expectedRuleVersion: 0 }
   const human = await fixture.authority.human.admit(fixture.request(), "decisions.criteria", ruleInput)
   if (human.status !== "ok") throw new Error("Actual human criterion admission unavailable")
-  const rule = await fixture.business.withCase(human.value, caseRef, {}, () => fixture.portfolio.rules.register(ruleInput, human.value))
+  const rule = await fixture.business.withCase(human.value, selectedCaseRef, {}, () => fixture.portfolio.rules.register(ruleInput, human.value))
     .finally(() => fixture.authority.human.finish(human.value))
   if (rule.status !== "ok") throw new Error(`Actual criterion registration failed: ${rule.reason}`)
   const scenarios = fixture.business.plannerProduct.scenarios
   if (!scenarios) throw new Error("Actual stored scenario resolver unavailable")
-  return { ...fixture, stateRequest: fixture.request, call, caseRef, sources, scenarios, period, companion,
-    request: { caseRef, criterionId: "cost", ruleRef: rule.value.ruleRef, ruleVersion: rule.value.version,
+  return { ...fixture, stateRequest: fixture.request, call, caseRef: selectedCaseRef, sources, scenarios, period, companion, promotedAlternative,
+    request: { caseRef: selectedCaseRef, criterionId: "cost", ruleRef: rule.value.ruleRef, ruleVersion: rule.value.version,
       metricRef: "planner:known-subtotal-difference", baselineRef: produced.value.resultRefs[0]!, scenarioRef: produced.value.resultRefs[1]! } }
 }
 
