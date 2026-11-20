@@ -1,3 +1,6 @@
+import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import type { createTeamProfileResolver, TeamProfileResolution } from "../../runtime/team-profile-resolver.ts"
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import type { Application } from "../../runtime/application.ts"
 import { roleMap } from "../../runtime/admin.ts"
@@ -19,6 +22,11 @@ import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./hu
 import type { SfHumanAction } from "./human-authority.ts"
 
 export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[] }>
+
+/** Private verified resolver; the transport supplies only a sealed selection intent. */
+export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
+  resolve: (request: Request) => Promise<TeamProfileResolution>
+}>
 
 const collaborationReads: Record<string, { operation: string; namespaces: readonly SfStateNamespace[] }> = {
   "collaboration.question.output": { operation: "sf_question_prepare", namespaces: ["cases", "contributions"] },
@@ -49,6 +57,9 @@ export function createSfProductAuthority(input: {
   environment: Application["environment"]
   isAuthenticated?: (request: Request) => Promise<boolean>
   grants: readonly SfProductGrant[]
+  /** Current private installation policy. A failed read never falls back to construction-time grants. */
+  readGrants?: () => Promise<readonly SfProductGrant[]>
+  teamProfiles?: SfProductTeams
   createId: () => string
   now: () => number
   commandIdentity: (request: Request, operation: string, inputDigest: string) => Promise<string | undefined>
@@ -69,12 +80,23 @@ export function createSfProductAuthority(input: {
   /** Only the composition's active prepared execution may resolve a Procurement receipt target. */
   authorizePreparedTarget?: (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
-  const grants = structuredClone(input.grants)
-  if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin ||
-    new Set(grants.map((grant) => grant.principalRef)).size !== grants.length || grants.some((grant) => !grant.principalRef.trim() ||
-      new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length ||
-      new Set(grant.humanActions).size !== (grant.humanActions?.length ?? 0) || grant.humanActions?.some((action) => !sfHumanActions.some((value) => value === action))))
+  const grants = productGrants(input.grants)
+  const readGrants = input.readGrants
+  const teamProfiles = input.teamProfiles ? Object.freeze({ ...input.teamProfiles }) : undefined
+  if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) ||
+      new URL(input.origin).origin !== input.origin || teamProfiles && !readGrants)
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
+  const currentGrants = async () => readGrants ? productGrants(await readGrants()) : grants
+  // A Request never reacquires a session generation after refresh, relogin or a changed selection.
+  const teamResolutions = new WeakMap<Request, Promise<TeamProfileResolution>>()
+  const resolveTeams = (request: Request) => {
+    if (!teamProfiles) return undefined
+    const known = teamResolutions.get(request)
+    if (known) return known
+    const pending = teamProfiles.resolve(request)
+    teamResolutions.set(request, pending)
+    return pending
+  }
   const creationTarget = Object.freeze({ ref: `sf-workspace:${encodeURIComponent(input.installationId)}`, incarnation: input.installationId })
   const nativeEvidenceWrites = new WeakSet<object>()
   const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
@@ -86,37 +108,75 @@ export function createSfProductAuthority(input: {
     Object.freeze(copy.location)
     return Object.freeze(copy)
   }
-  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
+  const effective = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.(), context = false) => {
     if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
+      request.headers.get("sec-fetch-site") === "cross-site" ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
     const identityDigest = digestSfValue(current)
-    const observe = async (surface: Surface, snapshot: Snapshot) => {
-      const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!actor) return undefined
-      const access = object(object(snapshot.data.access)[actor.id])
+    const policy = await currentGrants()
+    const resolution = await resolveTeams(request)
+    if (teamProfiles && resolution?.status !== "authenticated") return undefined
+    const profile = resolution?.status === "authenticated" ? resolution : undefined
+    if (profile && (!teamProfiles || !(context
+      ? await teamProfiles.revalidateResolution(profile)
+      : profile.admission && await teamProfiles.revalidate(profile.admission)))) return undefined
+    const maps = () => surfaces.map((surface) => ({
+      surface, rows: roleMap(surface === "dashboard" ? dashboard : snapshots[surface], surface),
+    }))
+    const mapped = maps()
+    const mappedDigest = digestSfValue(mapped)
+    const observed = await Promise.all(mapped.map(async (entry) => ({
+      surface: entry.surface,
+      actor: await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows }),
+    })))
+    const present = observed.flatMap((entry) => entry.actor ? [{ ...entry, actor: entry.actor }] : [])
+    const principalRef = profile?.principal.principalObjectId ?? present[0]?.actor.id
+    if (!principalRef || principalRef.startsWith("local:") ||
+        present.some((entry) => entry.actor.id !== principalRef) || request.signal.aborted) return undefined
+    if (profile?.admission && (profile.admission.profile.installationId !== input.installationId ||
+        profile.admission.profile.tenantId !== profile.principal.tenantId ||
+        profile.admission.principal.principalObjectId !== principalRef ||
+        profile.admission.configRevision !== profile.configRevision)) return undefined
+    const scopes = () => surfaces.map((surface) => {
+      const snapshot = surface === "dashboard" ? dashboard : snapshots[surface]
+      const access = object(object(snapshot.data.access)[principalRef])
       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
-        (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
+          (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
         throw new Error("SF_PRODUCT_ACCESS_SCOPE_INVALID")
-      return { actor, surface, assigned: Array.isArray(access.assigned) ? [...access.assigned].toSorted() : [],
-        domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
-    }
-    const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
-    const present = observed.filter((entry) => entry !== undefined)
-    const first = present[0]?.actor
-    if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
-    const grant = grants.find((entry) => entry.principalRef === first.id)
-    if (!grant) return undefined
+      return { surface, assigned: Array.isArray(access.assigned) ? [...new Set(access.assigned)].toSorted() : [],
+        domains: Array.isArray(access.domains) ? [...new Set(access.domains)].toSorted() : [] }
+    })
+    const scoped = scopes()
+    const grant = policy.find((entry) => entry.principalRef === principalRef)
     const roles = present.flatMap((entry) => entry.actor.roles.filter((role) => role.surface === entry.surface))
-      .map((role) => ({ surface: role.surface, role: role.role })).toSorted((a, b) => `${a.surface}:${a.role}`.localeCompare(`${b.surface}:${b.role}`))
-    if (!roles.length) return undefined
+      .map((role) => ({ surface: role.surface, role: role.role }))
+      .toSorted((a, b) => `${a.surface}:${a.role}`.localeCompare(`${b.surface}:${b.role}`))
     const canWrite = present.some((entry) => entry.actor.canWrite)
-    const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
-    const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
-      principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
-    if (digestSfValue(identity()) !== identityDigest) return undefined
-    return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
+    // Directory, role and policy readers are asynchronous. Recheck the retained
+    // original session/profile before rereading the current private grant policy.
+    if (profile && (!teamProfiles || !(context
+      ? await teamProfiles.revalidateResolution(profile)
+      : profile.admission && await teamProfiles.revalidate(profile.admission)))) return undefined
+    if (digestSfValue(await currentGrants()) !== digestSfValue(policy) ||
+        digestSfValue(maps()) !== mappedDigest || digestSfValue(scopes()) !== digestSfValue(scoped) ||
+        digestSfValue(identity()) !== identityDigest || request.signal.aborted) return undefined
+    const accessRevision = digestSfValue({
+      installationId: current.installationId, projectId: current.projectId, principalRef,
+      ...(profile ? { principal: profile.principal, profile: profile.admission?.profile ?? null,
+        configRevision: profile.configRevision } : {}),
+      roles, roleMaps: mapped, scopes: scoped, canWrite,
+      grant: grant ? { namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(),
+        humanActions: [...grant.humanActions ?? []].toSorted() } : null,
+      policyVersion: input.policyVersion,
+    })
+    return { principalRef, policyVersion: input.policyVersion, accessRevision, canWrite, grant, roles, profile,
+      identity: current, observed }
+  }
+  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
+    const actor = await effective(request, dashboard, snapshots)
+    return actor?.grant && actor.roles.length && (!teamProfiles || actor.profile?.admission) ? { ...actor, grant: actor.grant } : undefined
   }
   const resolve = async (request: Request) => {
     if (!input.persistence.currentSnapshots) return undefined
@@ -130,7 +190,8 @@ export function createSfProductAuthority(input: {
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined
-      return { principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
+      return { principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision,
+        ...(actor.profile?.admission ? { profile: actor.profile.admission.profile } : {}) }
     },
     resolveTarget: async (request, snapshot, namespace, targetRef, command) => {
       const actor = await principal(request, snapshot)
@@ -165,7 +226,10 @@ export function createSfProductAuthority(input: {
       }
       if (namespace === "receipts" && command.domainSurface === "procurement") {
         if (!actor.canWrite) return undefined
-        return input.authorizePreparedTarget?.(request, snapshot, targetRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+        const target = await input.authorizePreparedTarget?.(request, snapshot, targetRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+        const current = await principal(request, snapshot)
+        return current && current.principalRef === actor.principalRef && current.accessRevision === actor.accessRevision &&
+          current.policyVersion === actor.policyVersion ? target : undefined
       }
       const parsed = parseCaseRef(targetRef)
       if (targetRef.startsWith("case:") && !parsed) return undefined
@@ -173,7 +237,12 @@ export function createSfProductAuthority(input: {
       const entry = Object.hasOwn(cases, id) ? object(cases[id]) : undefined
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
         Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
-      if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+      if (namespace === "documents") {
+        const target = await input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+        const current = await principal(request, snapshot)
+        return current && current.principalRef === actor.principalRef && current.accessRevision === actor.accessRevision &&
+          current.policyVersion === actor.policyVersion ? target : undefined
+      }
       return undefined
     },
   })
@@ -222,9 +291,13 @@ export function createSfProductAuthority(input: {
     if (!session || session.id !== value.sessionID || session.agent !== value.profile.id || session.projectID !== actor.identity.projectId ||
       digestSfValue(session.location) !== digestSfValue(actor.identity.location) || digestSfValue(session.model) !== digestSfValue(record.value.model) ||
       digestSfValue(identity()) !== digestSfValue(actor.identity) || request.signal.aborted) return undefined
-    return actor
+    const current = await resolve(request).catch(() => undefined)
+    if (!current || current.principalRef !== actor.principalRef || current.accessRevision !== actor.accessRevision ||
+        current.policyVersion !== actor.policyVersion || digestSfValue(current.identity) !== digestSfValue(actor.identity)) return undefined
+    return current
   }
   const authorizeBinding = async (value: SfNativeAdmission, binding: TrustedExecutionBinding, purpose: "execute" | "interrupt", request = value.request): Promise<boolean> => {
+    const generation = await input.providerGeneration()
     const actor = await admission(value, purpose, request).catch(() => undefined)
     return !!actor && binding.nativeSessionId === value.sessionID && binding.runId === value.runId &&
       binding.caseId === value.caseRef.id && binding.caseVersion === value.caseRef.version && binding.caseIncarnation === value.caseRef.incarnation &&
@@ -232,7 +305,7 @@ export function createSfProductAuthority(input: {
       digestSfValue(binding.skillReceipts) === digestSfValue(value.skillReceipts) && binding.entryMode === value.entryMode && binding.installationId === actor.identity.installationId && binding.hostId === actor.identity.hostId &&
       binding.projectId === actor.identity.projectId && binding.locationId === digestSfValue(actor.identity.location) &&
       binding.principalRef === actor.principalRef && binding.policyVersion === actor.policyVersion && binding.accessRevision === actor.accessRevision &&
-      binding.providerGeneration === await input.providerGeneration()
+      binding.providerGeneration === generation
   }
   const authorizeNative = (value: SfNativeAdmission, binding: TrustedExecutionBinding) => authorizeBinding(value, binding, "execute")
   // Cleanup after durable cancellation never reauthorizes model execution or tool leases.
@@ -241,9 +314,9 @@ export function createSfProductAuthority(input: {
       ? authorizeBinding(value, binding, "interrupt", request) : Promise.resolve(false)
   const native = createSfExecutionBindingRegistry({
     authenticateAndResolve: async (value) => {
+      const generation = await input.providerGeneration()
       const actor = await admission(value).catch(() => undefined)
       const now = input.now()
-      const generation = await input.providerGeneration()
       if (!actor || !Number.isSafeInteger(now) || now < 0 || now > 8_639_999_999_700_000 ||
         !Number.isSafeInteger(generation) || generation === undefined || generation < 0) return undefined
       return { installationId: actor.identity.installationId, hostId: actor.identity.hostId, projectId: actor.identity.projectId,
@@ -263,12 +336,69 @@ export function createSfProductAuthority(input: {
     if (!current?.canWrite || current.principalRef !== actor.principalRef || current.accessRevision !== actor.accessRevision || current.policyVersion !== actor.policyVersion || request.signal.aborted) return []
     return [...actor.grant.humanActions ?? []]
   }
+  /** Current public projection only; holders and grants remain in the resolver/authority closures. */
+  const readTeamContextAdmission = async (request: Request) => {
+    if (!teamProfiles || !input.persistence.currentSnapshots)
+      return { status: "unavailable", reason: "host-unavailable" } as const
+    if (!identity() || request.signal.aborted)
+      return { status: "unavailable", reason: "identity-unavailable" } as const
+    const resolution = await resolveTeams(request)?.catch(() => undefined)
+    if (!resolution) return { status: "unavailable", reason: "host-unavailable" } as const
+    if (resolution.status === "unauthenticated" || resolution.status === "denied") return resolution
+    if (resolution.status === "unavailable")
+      return { status: "unavailable", reason: "host-unavailable" } as const
+    const read = async (dashboard: Snapshot) => {
+      const snapshots = input.persistence.currentSnapshots?.()
+      if (!snapshots) return { status: "unavailable", reason: "host-unavailable" } as const
+      const actor = await effective(request, dashboard, snapshots, true).catch(() => undefined)
+      if (!actor?.profile || request.signal.aborted) return { status: "unavailable", reason: "contract-mismatch" } as const
+      const admitted = actor.grant && actor.roles.length ? actor.profile.admission : undefined
+      const binding = admitted ? Schema.decodeUnknownSync(TeamProfile.Binding)({
+        owner: { profile: admitted.profile, principal: admitted.principal },
+        revisions: { configRevision: admitted.configRevision, accessRevision: actor.accessRevision },
+      }) : undefined
+      const pages: readonly { surface: Surface; page: string }[] = binding ? actor.observed.flatMap((entry) => {
+        if (!entry.actor) return []
+        const roles = entry.actor.roles.filter((role) => role.surface === entry.surface).map((role) => role.role)
+        const snapshot = entry.surface === "dashboard" ? dashboard : snapshots[entry.surface]
+        const summaries = Array.isArray(snapshot.data.summaries)
+          ? snapshot.data.summaries.filter((value): value is string => typeof value === "string") : []
+        const allowed = entry.surface === "dashboard" ? dashboardPages({ roles }, summaries) :
+          entry.surface === "planner" ? plannerKeys({ roles }) : procurementKeys({ roles })
+        return allowed.map((page) => ({ surface: entry.surface, page }))
+      }) : []
+      const projection = Schema.decodeUnknownSync(TeamProfile.Authenticated)({
+        contractRevision: "sf-team-profile/1", status: "authenticated", installationId: input.installationId,
+        principal: actor.profile.principal, accessRevision: actor.accessRevision,
+        administration: actor.profile.administration, teams: actor.profile.teams,
+      })
+      return {
+        status: "ok" as const, projection, ...(binding ? { binding } : {}), pages,
+        technical: {
+          installationId: actor.identity.installationId, projectId: actor.identity.projectId,
+          hostId: actor.identity.hostId, principalRef: actor.principalRef,
+          policyVersion: actor.policyVersion, accessRevision: actor.accessRevision,
+        },
+      }
+    }
+    const snapshots = input.persistence.currentSnapshots()
+    if (snapshots) return read(snapshots.dashboard)
+    return input.persistence.transaction("dashboard", async (snapshot) => ({
+      commit: false, value: await read(snapshot),
+    }), { signal: request.signal })
+  }
   /**
    * Host-private F01 context source. Uses the original Request and the same
    * guarded principal/role-map resolver as the product state. Returns no grant,
    * group, role, directory, cookie or source snapshot to the UI.
    */
   const readContextAdmission = async (request: Request) => {
+    if (teamProfiles) {
+      const context = await readTeamContextAdmission(request)
+      if (context.status !== "ok") return context
+      if (!context.binding) return { status: "denied" } as const
+      return { status: "ok" as const, stamp: { ...context.technical, team: context.binding }, pages: context.pages }
+    }
     if (!identity() || request.signal.aborted) return { status: "unavailable", reason: "identity-unavailable" } as const
     const admitted = await resolve(request).catch(() => undefined)
     if (!admitted) {
@@ -318,6 +448,26 @@ export function createSfProductAuthority(input: {
       commit: false, value: await readAdmittedContext(),
     }), { signal: request.signal })
   }
-  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readTeamContextAdmission }
 }
 
+
+/** Snapshot only trusted private policy, including an intentional empty grant list. */
+function productGrants(value: readonly SfProductGrant[]): readonly SfProductGrant[] {
+  if (!Array.isArray(value) || value.length > 1000 ||
+      new Set(value.map((grant) => grant.principalRef)).size !== value.length ||
+      value.some((grant) => !grant || typeof grant.principalRef !== "string" || !grant.principalRef.trim() ||
+        !Array.isArray(grant.namespaces) || !Array.isArray(grant.operations) ||
+        new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length ||
+        grant.namespaces.some((namespace) => typeof namespace !== "string" || !namespace.trim()) ||
+        grant.operations.some((operation) => typeof operation !== "string" || !operation.trim()) ||
+        grant.humanActions !== undefined && (!Array.isArray(grant.humanActions) ||
+          new Set(grant.humanActions).size !== grant.humanActions.length ||
+          grant.humanActions.some((action) => !sfHumanActions.some((known) => known === action)))))
+    throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
+  return Object.freeze(value.map((grant) => Object.freeze({
+    principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
+    operations: Object.freeze([...grant.operations].toSorted()),
+    humanActions: Object.freeze([...grant.humanActions ?? []].toSorted()),
+  })).toSorted((left, right) => left.principalRef.localeCompare(right.principalRef)))
+}

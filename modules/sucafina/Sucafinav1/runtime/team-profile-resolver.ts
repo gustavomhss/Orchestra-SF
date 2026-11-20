@@ -23,11 +23,14 @@ export type TeamProfileResolution =
   | Readonly<{
       status: "authenticated"
       principal: TeamProfile.Principal
+      /** Current shared catalog revision; never a business access revision. */
+      configRevision: number
       administration: TeamProfile.Administration
       teams: TeamProfile.TeamState
       /** Server-only: callers must remove it from any wire projection. */
       admission?: TeamProfileAdmission
     }>
+type Resolved = Extract<TeamProfileResolution, { status: "authenticated" }>
 type Observation = Readonly<{ session: MicrosoftProfileSession; principal: TeamProfile.Principal; policy: TeamProfilePolicySource }>
 type Captured = Readonly<{ status: "observed"; observation: Observation }> | Failure
 
@@ -46,6 +49,9 @@ export function createTeamProfileResolver(input: {
   const policy = input.policy
   const now = input.now ?? Date.now
   const admissions = new WeakMap<object, Readonly<{ observation: Observation; admission: TeamProfileAdmission }>>()
+  const resolutions = new WeakMap<object, Readonly<{
+    observation: Observation; catalog: TeamProfileCatalog; selector?: TeamProfile.Selector; result: Resolved
+  }>>()
 
   const currentPolicy = async () => {
     const value = await policy()
@@ -58,7 +64,7 @@ export function createTeamProfileResolver(input: {
   const capture = async (request: Request): Promise<Captured> => {
     const session = await microsoftSession(request).catch(() => undefined)
     if (!session || request.signal.aborted) return { status: "unauthenticated" }
-    const principal = await Promise.resolve().then(() => teamProfilePrincipal(session.principal)).catch(() => undefined)
+    const principal = await Promise.resolve().then(() => Object.freeze(teamProfilePrincipal(session.principal))).catch(() => undefined)
     if (!principal || principal.tenantId !== binding.tenantId) return { status: "denied" }
     const configured = await currentPolicy().catch(() => undefined)
     if (!configured) return { status: "unavailable", reason: "policy-unavailable" }
@@ -137,7 +143,11 @@ export function createTeamProfileResolver(input: {
     async resolve(request: Request, value?: unknown): Promise<TeamProfileResolution> {
       const parsed = value === undefined ? undefined : Schema.decodeUnknownOption(TeamProfile.Selector)(value)
       if (parsed && Option.isNone(parsed)) return { status: "denied" }
-      const selector = parsed && Option.isSome(parsed) ? parsed.value : undefined
+      // Seal the caller's intent before the first asynchronous identity lookup.
+      const decoded = parsed && Option.isSome(parsed) ? parsed.value : undefined
+      const selector = decoded?.kind === "team"
+        ? Object.freeze({ ...decoded, profile: Object.freeze({ ...decoded.profile }) })
+        : decoded ? Object.freeze({ ...decoded }) : undefined
       if (selector && !sameTeamProfileBinding(selector.kind === "team" ? selector.profile : selector, binding))
         return { status: "denied" }
       const captured = await capture(request)
@@ -155,12 +165,33 @@ export function createTeamProfileResolver(input: {
         admin.status === "denied" ? { status: "denied" } :
         { status: "unavailable", reason: projectionReason(admin.reason) }
       const state = eligibleTeams(binding, observation.principal, catalog, teams, selector?.kind === "team" ? selector.profile : undefined)
-      if (state.status !== "ready" || selector?.kind === "administration")
-        return { status: "authenticated", principal: observation.principal, administration, teams: state }
-      // This is eligibility under the current catalog, never a business accessRevision.
-      const holder = Object.freeze({ profile: state.selected, principal: observation.principal, configRevision: catalog.configRevision })
-      admissions.set(holder, Object.freeze({ observation, admission: holder }))
-      return { status: "authenticated", principal: observation.principal, administration, teams: state, admission: holder }
+      // These registries retain the original session closure even when no business Team is available.
+      const holder = state.status === "ready" && selector?.kind !== "administration"
+        ? Object.freeze({ profile: state.selected, principal: observation.principal, configRevision: catalog.configRevision }) : undefined
+      if (holder) admissions.set(holder, Object.freeze({ observation, admission: holder }))
+      const result: Resolved = Object.freeze({
+        status: "authenticated", principal: observation.principal, configRevision: catalog.configRevision,
+        administration: Object.freeze(administration), teams: Object.freeze(state), ...(holder ? { admission: holder } : {}),
+      })
+      resolutions.set(result, Object.freeze({ observation, catalog, selector, result }))
+      return result
+    },
+    async revalidateResolution(candidate: unknown): Promise<boolean> {
+      if (typeof candidate !== "object" || candidate === null) return false
+      const held = resolutions.get(candidate)
+      if (!held || await verify(held.observation)) return false
+      // Administration is verified independently, including zero Teams and failed directory enumeration.
+      const teams = held.observation.policy.teams === "direct"
+        ? await held.observation.session.teams() : { state: "unavailable" as const, reason: "capability_disabled" as const }
+      const admin = await administrator(held.observation)
+      if (teams.state === "unauthenticated" || admin?.status === "unauthenticated" ||
+          await stableCatalog(held.observation, held.catalog)) return false
+      const administration: TeamProfile.Administration = !admin ? { status: "available" } :
+        admin.status === "denied" ? { status: "denied" } : { status: "unavailable", reason: projectionReason(admin.reason) }
+      const current = eligibleTeams(binding, held.observation.principal, held.catalog, teams,
+        held.selector?.kind === "team" ? held.selector.profile : undefined)
+      return sameResolution(held.result.teams, current) &&
+        JSON.stringify(administration) === JSON.stringify(held.result.administration)
     },
     async revalidate(candidate: unknown): Promise<boolean> {
       if (typeof candidate !== "object" || candidate === null) return false
@@ -211,10 +242,20 @@ function eligibleTeams(
   const choices = observed.teams.filter((team) => catalog.profiles.some((entry) => entry.enabled && entry.profile.teamObjectId === team.teamObjectId))
     .map((team) => Schema.decodeUnknownOption(TeamProfile.Choice)({ profile: teamProfileRef(binding, team.teamObjectId), displayName: team.name }))
   if (choices.some(Option.isNone)) return { status: "unavailable", reason: "invalid-response" }
-  const valid = Object.freeze(choices.flatMap((choice) => Option.isSome(choice) ? [Object.freeze(choice.value)] : []))
+  const valid = Object.freeze(choices.flatMap((choice) => Option.isSome(choice) ? [Object.freeze({ ...choice.value, profile: Object.freeze(choice.value.profile) })] : []))
   if (new Set(valid.map((choice) => choice.profile.teamObjectId)).size !== valid.length) return { status: "unavailable", reason: "invalid-response" }
   if (selected && !valid.some((choice) => choice.profile.teamObjectId === selected.teamObjectId)) return { status: "revoked" }
   if (valid.length === 0) return { status: "no-teams" }
   if (!selected && valid.length > 1) return { status: "selection-required", choices: valid }
   return { status: "ready", choices: valid, selected: selected ?? valid[0].profile, configRevision: catalog.configRevision }
+}
+
+/** Presentation labels never change authority; relation, selection and revision do. */
+function sameResolution(left: TeamProfile.TeamState, right: TeamProfile.TeamState) {
+  const material = (value: TeamProfile.TeamState) =>
+    value.status === "ready" || value.status === "selection-required"
+      ? { status: value.status, choices: value.choices.map((choice) => choice.profile.teamObjectId).toSorted(),
+          ...(value.status === "ready" ? { selected: value.selected, configRevision: value.configRevision } : {}) }
+      : value
+  return JSON.stringify(material(left)) === JSON.stringify(material(right))
 }

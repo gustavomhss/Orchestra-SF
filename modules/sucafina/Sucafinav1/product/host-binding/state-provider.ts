@@ -1,3 +1,5 @@
+import { Option, Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
@@ -221,8 +223,11 @@ export function createSfProductState(input: {
         if (!target) return { commit: false, value: { status: "denied", reason: "target-access-unavailable" } }
         if (target.incarnation !== command.targetIncarnation)
           return { commit: false, value: { status: "conflict", reason: "target-replaced" } }
-        const key = JSON.stringify([authority.principalRef, command.namespace, command.targetRef, command.idempotencyKey])
-        const prior = state.transactions[key]
+        const lookup = sfTransactionLookup(state, authority, command)
+        if (lookup.status === "ambiguous")
+          return { commit: false, value: { status: "denied", reason: "transaction-profile-provenance-required" } }
+        const key = lookup.key
+        const prior = lookup.status === "found" ? lookup.receipt : undefined
         if (prior) {
           if (prior.commandDigest !== command.commandDigest || prior.targetIncarnation !== command.targetIncarnation || prior.scopeDigest !== scopeDigest)
             return { commit: false, value: { status: "conflict", reason: "idempotency-content-changed" } }
@@ -230,7 +235,7 @@ export function createSfProductState(input: {
           if (request.signal.aborted || admitted.some((entry, index) => !sameAuthority(entry.authority, current[index])) || !(await checksCurrent()))
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
           const currentTarget = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef, command)
-          if (currentTarget?.incarnation !== target.incarnation)
+          if (request.signal.aborted || currentTarget?.incarnation !== target.incarnation)
             return { commit: false, value: { status: "denied", reason: "target-authority-changed" } }
           return { commit: false, value: { status: "ok", storageVersion: prior.storageVersion, aggregateRevision: prior.aggregateRevision, incarnation: prior.incarnation, value: structuredClone(prior.value) as T } }
         }
@@ -242,7 +247,7 @@ export function createSfProductState(input: {
         const current = await Promise.all(admitted.map((entry) => input.authorize(request, snapshot, entry.namespace, "write")))
         if (admitted.some((entry, index) => !sameAuthority(entry.authority, current[index])) || !(await checksCurrent())) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const currentTarget = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef, command)
-        if (currentTarget?.incarnation !== target.incarnation)
+        if (request.signal.aborted || currentTarget?.incarnation !== target.incarnation)
           return { commit: false, value: { status: "denied", reason: "target-authority-changed" } }
         if (!result.commit) return { commit: false, value: { status: "preview", storageVersion: state.versions[command.namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value: result.value } }
         if (staged.schemaVersion !== 1 || staged.revision !== state.revision || staged.incarnation !== state.incarnation)
@@ -350,4 +355,72 @@ function readSfState(snapshot: Snapshot): SfProductState | undefined {
   if (sfProductStateAdditiveFields.some((field) => state[field] !== undefined && (!state[field] || typeof state[field] !== "object" || Array.isArray(state[field])))) return undefined
   if (!legacy && (!state.biArtifacts || typeof state.biArtifacts !== "object" || Array.isArray(state.biArtifacts))) return undefined
   return (legacy ? { ...state, versions: { ...versions, "bi-artifacts": 0 }, biArtifacts: {} } : state) as SfProductState
+}
+
+export function sfTransactionKey(
+  authority: Pick<SfStateAuthority, "principalRef" | "profile">,
+  command: Pick<SfStateMutation, "namespace" | "targetRef" | "idempotencyKey">,
+) {
+  const intent = [authority.principalRef, command.namespace, command.targetRef, command.idempotencyKey]
+  return JSON.stringify(authority.profile ? [...intent, "sf-team-profile/1",
+    authority.profile.installationId, authority.profile.tenantId, authority.profile.teamObjectId] : intent)
+}
+
+/** Match one durable intention without adopting an unscoped or foreign Team receipt. */
+export function sfTransactionLookup(
+  state: Pick<SfProductState, "transactions">,
+  authority: SfStateAuthority,
+  command: Pick<SfStateMutation, "namespace" | "targetRef" | "idempotencyKey">,
+) {
+  const intent = [authority.principalRef, command.namespace, command.targetRef, command.idempotencyKey]
+  const legacyKey = JSON.stringify(intent)
+  const key = sfTransactionKey(authority, command)
+  const siblingPrefix = `${legacyKey.slice(0, -1)},`
+  // No migration or rehash: old bytes and unknown outcomes remain retained.
+  if (Object.keys(state.transactions).some((storedKey) =>
+    storedKey !== key && (storedKey === legacyKey || storedKey.startsWith(siblingPrefix))))
+    return { status: "ambiguous" } as const
+  return Object.hasOwn(state.transactions, key)
+    ? { status: "found" as const, key, receipt: state.transactions[key] }
+    : { status: "missing" as const, key }
+}
+
+export type SfTransactionIdentity = Readonly<{
+  principalRef: string
+  namespace: SfStateNamespace
+  targetRef: string
+  idempotencyKey: string
+  profile?: TeamProfile.Ref
+}>
+
+/** Decode a genuine key for comparison only; parsing never issues authority or changes historical bytes. */
+export function sfTransactionIdentity(key: string): SfTransactionIdentity | undefined {
+  try {
+    const value: unknown = JSON.parse(key)
+    if (!Array.isArray(value) || value.length !== 4 && value.length !== 8 ||
+        !value.every((entry: unknown): entry is string => typeof entry === "string" && entry.length > 0) ||
+        JSON.stringify(value) !== key) return undefined
+    const namespace = namespaces.find((candidate) => candidate === value[1])
+    if (!namespace) return undefined
+    const intent = { principalRef: value[0], namespace, targetRef: value[2], idempotencyKey: value[3] }
+    if (value.length === 4) return intent
+    if (value[4] !== "sf-team-profile/1") return undefined
+    const decoded = Schema.decodeUnknownOption(TeamProfile.Ref)({
+      installationId: value[5], tenantId: value[6], teamObjectId: value[7],
+    })
+    return Option.isSome(decoded) ? { ...intent, profile: decoded.value } : undefined
+  } catch { return undefined }
+}
+
+/** Scope comparison only; callers must still enforce grants and the actual resource. */
+export function sfTransactionBelongsTo(
+  authority: Pick<SfStateAuthority, "principalRef" | "profile">,
+  key: string,
+) {
+  const intent = sfTransactionIdentity(key)
+  if (!intent || intent.principalRef !== authority.principalRef) return false
+  if (!authority.profile) return intent.profile === undefined
+  return intent.profile?.installationId === authority.profile.installationId &&
+    intent.profile.tenantId === authority.profile.tenantId &&
+    intent.profile.teamObjectId === authority.profile.teamObjectId
 }

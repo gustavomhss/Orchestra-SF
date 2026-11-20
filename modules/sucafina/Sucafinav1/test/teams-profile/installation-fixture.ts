@@ -1,4 +1,6 @@
 import { expect } from "bun:test"
+import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { LocalStore } from "../../runtime/local-contract.ts"
@@ -11,8 +13,8 @@ import { group, microsoftFixture, oid, tenant } from "../microsoft-login/oidc-fi
 export const teamA = "77777777-7777-4777-8777-777777777777"
 export const teamB = "88888888-8888-4888-8888-888888888888"
 export const installationId = "synthetic-teams-installation"
-export const profileA = { installationId, tenantId: tenant, teamObjectId: teamA }
-export const profileB = { installationId, tenantId: tenant, teamObjectId: teamB }
+export const profileA = Schema.decodeUnknownSync(TeamProfile.Ref)({ installationId, tenantId: tenant, teamObjectId: teamA })
+export const profileB = Schema.decodeUnknownSync(TeamProfile.Ref)({ installationId, tenantId: tenant, teamObjectId: teamB })
 
 /** Real private files, SQLite and signed OIDC; every identifier/credential belongs to this synthetic provider. */
 export async function teamProfileFixture(input: {
