@@ -4,6 +4,13 @@ import { Layer } from "effect"
 import type { ClaudeCodeAccount } from "./claude-code-account"
 import type { Database } from "./database/database"
 import type { EventV2 } from "./event"
+import type { AppProcess } from "./process"
+import type { FSUtil } from "./fs-util"
+import type { MoveSession } from "./control-plane/move-session"
+import type { SessionOwner } from "./session/owner"
+import type { SessionProcess } from "./session-process"
+import type { SessionSubagentModels } from "./session/subagent-models"
+import type { TaskBackground } from "./tool/task-background"
 import type { LayerNode } from "./effect/layer-node"
 import type { Node } from "./effect/app-node"
 import { LocationServiceMap } from "./location-service-map"
@@ -18,6 +25,11 @@ export type ReferenceServices =
   | EventV2.Service
   | LocationServiceMap.Service
   | ClaudeCodeAccount.Service
+
+/** Existing global graph available after reference overrides, with no second coordinator. */
+export type RuntimeServices = ReferenceServices | SessionV2.Service | SessionOwner.Service |
+  SessionSubagentModels.Service | SessionProcess.Service | AppProcess.Service | FSUtil.Service |
+  MoveSession.Service | TaskBackground.Service
 
 /**
  * What a product module hands a composition root. A root applies all contributions once, to its single
@@ -34,6 +46,8 @@ export interface Contribution {
   readonly locationNodes?: ReadonlyArray<Node.LocationNode<unknown, LocationError>>
   /** Context.Reference overrides (core/host/* references), provided to the API layer. */
   readonly references?: Layer.Layer<never, never, ReferenceServices>
+  /** Scoped runtime startup after the root graph and all reference overrides are available. */
+  readonly runtime?: Layer.Layer<never, never, RuntimeServices>
 }
 
 // One coordinator per process: these stay owned by the composition root.
@@ -56,7 +70,10 @@ export function merge(contributions: ReadonlyArray<Contribution>) {
   if (location) throw new Error(`Host contribution Location node is not unique: ${location}`)
   const [first, ...rest] = contributions.flatMap((item) => (item.references ? [item.references] : []))
   const references: Layer.Layer<never, never, ReferenceServices> = !first ? Layer.empty : rest.length === 0 ? first : Layer.mergeAll(first, ...rest)
-  return { replacements, nodes, locationNodes, references }
+  const [runtimeFirst, ...runtimeRest] = contributions.flatMap((item) => item.runtime ? [item.runtime] : [])
+  const runtime: Layer.Layer<never, never, RuntimeServices> = !runtimeFirst ? Layer.empty :
+    runtimeRest.length === 0 ? runtimeFirst : Layer.mergeAll(runtimeFirst, ...runtimeRest)
+  return { replacements, nodes, locationNodes, references, runtime }
 }
 
 function repeated(names: ReadonlyArray<string>) {

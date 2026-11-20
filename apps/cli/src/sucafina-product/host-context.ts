@@ -1,4 +1,5 @@
 export { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+import { createSfSessionHttp } from "./session-http.ts"
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { createHash, randomUUID } from "node:crypto"
@@ -196,6 +197,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
     authorizeDocument: createSfDocumentTargetAuthority(input),
     authorizePreparedTarget: (request, snapshot, targetRef, actor) => preparedAuthority.business?.procurementDecisions.authorizeReceiptTarget(request, snapshot, targetRef, actor) ?? Promise.resolve(undefined),
   })
+  const sessionHttp = createSfSessionHttp({ authority, origin: input.origin, mount: input.mount,
+    authMode: input.authMode, location: () => identity()?.location })
   const nativeRegistry = authority.native
   authority.native = { ...nativeRegistry,
     bind: async (admission) => {
@@ -1065,7 +1068,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: nativePhases.services.routineRuns,
     routineEvidence: { readExecution: nativePhases.services.readExecution, openResult: nativePhases.services.openResult },
-    productHttp,
+    productHttp, sessionHttp: sessionHttp.sessionHttp,
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
@@ -1083,7 +1086,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     interrupt: (binding) => state.api ? Effect.runPromise(state.api.interrupt(binding)) : Promise.resolve({ status: "unavailable", reason: "native-host-unavailable" }),
   } }
   return { identity, services: () => identity() ? services : undefined,
-    contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution,
+    contributions: [{ id: "sucafina-host-context", nodes: [node] }, sessionHttp.contribution, gate.contribution, native.contribution,
       installedRoutinePublication.contribution, routinePublication.contribution,
       routineGovernance.contribution, nativePhases.contribution, nativePhasePrompt,
       routineRuntime.contribution, routineRuntime.mount(product)] }

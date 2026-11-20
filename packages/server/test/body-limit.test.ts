@@ -121,3 +121,32 @@ it.live("a chunked body with no declared length is cut off at the limit with 413
     expect(received).toMatch(/^HTTP\/1\.1 413/)
   }),
 )
+
+const installedIt = testEffect(
+  HttpRouter.serve(Layer.mergeAll(
+    HttpRouter.add("POST", "/sucafina/api/session/ses_1/prompt", read),
+    HttpRouter.add("POST", "/sucafina-other/api/session/ses_1/prompt", read),
+    HttpRouter.add("POST", "/sucafina/api/session", read),
+    BodyLimit.layerWithMount("/sucafina"),
+  ), { disableListenLog: true, disableLogger: true }).pipe(
+    Layer.provideMerge(NodeHttpServer.layerTest),
+    Layer.provideMerge(NodeServices.layer),
+  ),
+)
+
+installedIt.live("the exact installed mount retains the existing prompt upload budget without widening sibling routes", () =>
+  Effect.gen(function* () {
+    const size = BodyLimit.DEFAULT_LIMIT + MiB
+    const upload = yield* post("/sucafina/api/session/ses_1/prompt", size)
+    expect(upload.status).toBe(200)
+    expect(yield* upload.text).toBe(String(size))
+    const target = yield* port
+    for (const route of ["/sucafina-other/api/session/ses_1/prompt", "/sucafina/api/session"]) {
+      const received = yield* Effect.promise(() => answer(target, declared(route, size)))
+      expect(received).toMatch(/^HTTP\/1\.1 413/)
+    }
+    const tooLarge = yield* Effect.promise(() =>
+      answer(target, declared("/sucafina/api/session/ses_1/prompt", BodyLimit.UPLOAD_LIMIT + 1)))
+    expect(tooLarge).toMatch(/^HTTP\/1\.1 413/)
+  }),
+)

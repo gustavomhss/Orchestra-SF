@@ -4,7 +4,9 @@ import { MoveSession } from "@orchestra/core/control-plane/move-session"
 import { TaskBackground } from "@orchestra/core/tool/task-background"
 import { SlashCommand } from "@orchestra/core/slash-command"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
-import { DateTime, Effect, Stream } from "effect"
+import { Context, DateTime, Effect, Schema, Scope, Stream } from "effect"
+import { SessionOwner } from "@orchestra/core/session/owner"
+import { openSessionAccess, protectSessionCursor, readSessionCursor, sessionPlacement, verifySessionAccess } from "../session-access"
 import { HttpApiBuilder, HttpApiSchema } from "effect/unstable/httpapi"
 import { Api } from "../api"
 import { SessionsCursor } from "@orchestra/protocol/groups/session"
@@ -48,6 +50,7 @@ const missingOrBusy = {
 export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handlers) =>
   Effect.gen(function* () {
     const session = yield* SessionV2.Service
+    const owners = yield* SessionOwner.Service
     const subagentModels = yield* SessionSubagentModels.Service
     const appProcess = yield* AppProcess.Service
     const sessionProcess = yield* SessionProcess.Service
@@ -107,10 +110,13 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.list",
         Effect.fn(function* (ctx) {
+          const access = yield* openSessionAccess(owners, "session.list")
           const query =
             ctx.query.cursor !== undefined
-              ? yield* SessionsCursor.parse(ctx.query.cursor).pipe(
-                  Effect.mapError(() => new InvalidCursorError({ message: "Invalid cursor" })),
+              ? yield* readSessionCursor(owners, "sessions", ctx.query.cursor).pipe(
+                  Effect.flatMap((value) => SessionsCursor.parse(value).pipe(
+                    Effect.mapError(() => new InvalidCursorError({ message: "Invalid cursor" })),
+                  )),
                 )
               : ctx.query
           const sessions = yield* session.list({
@@ -120,28 +126,29 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
           })
           const first = sessions[0]
           const last = sessions.at(-1)
+          yield* verifySessionAccess(owners, access, "session.list")
           return {
             data: sessions,
             cursor: {
               previous: first
-                ? SessionsCursor.make({
+                ? Schema.decodeUnknownSync(SessionsCursor)(yield* protectSessionCursor(owners, "sessions", SessionsCursor.make({
                     ...query,
                     anchor: {
                       id: first.id,
                       time: DateTime.toEpochMillis(first.time.created),
                       direction: "previous",
                     },
-                  })
+                  })))
                 : undefined,
               next: last
-                ? SessionsCursor.make({
+                ? Schema.decodeUnknownSync(SessionsCursor)(yield* protectSessionCursor(owners, "sessions", SessionsCursor.make({
                     ...query,
                     anchor: {
                       id: last.id,
                       time: DateTime.toEpochMillis(last.time.created),
                       direction: "next",
                     },
-                  })
+                  })))
                 : undefined,
             },
           }
@@ -150,24 +157,29 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.create",
         Effect.fn(function* (ctx) {
-          return {
-            data: yield* session
+          const access = yield* openSessionAccess(owners, "session.create")
+          const location = yield* sessionPlacement(ctx.payload.location)
+          const data = yield* session
               .create({
                 id: ctx.payload.id,
                 agent: ctx.payload.agent,
                 model: ctx.payload.model,
-                location: ctx.payload.location ?? { directory: AbsolutePath.make(process.cwd()) },
+                location: location ?? { directory: AbsolutePath.make(process.cwd()) },
               })
-              .pipe(typedNotFound),
-          }
+              .pipe(typedNotFound)
+          yield* verifySessionAccess(owners, access, "session.create", data.id)
+          return { data }
         }),
       )
       .handle(
         "session.active",
         Effect.fn(function* () {
+          const access = yield* openSessionAccess(owners, "session.active")
+          const active = yield* session.active
+          yield* verifySessionAccess(owners, access, "session.active")
           return {
             data: Object.fromEntries(
-              Array.from(yield* session.active, (sessionID) => [sessionID, { type: "running" as const }]),
+              Array.from(active, (sessionID) => [sessionID, { type: "running" as const }]),
             ),
           }
         }),
@@ -325,12 +337,14 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.move",
         Effect.fn(function* (ctx) {
+          const placement = yield* sessionPlacement(ctx.payload.location)
+          const destination = placement ?? ctx.payload.location
           if (ctx.payload.moveChanges) {
             // Carrying uncommitted changes is the control-plane move: capture, apply at the destination, then reset the source.
             yield* moveSession
               .moveSession({
                 sessionID: ctx.params.sessionID,
-                destination: { directory: ctx.payload.location.directory },
+                destination: { directory: destination.directory },
                 moveChanges: true,
               })
               .pipe(
@@ -339,7 +353,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
                   "MoveSession.DestinationProjectMismatchError": () =>
                     Effect.fail(
                       new InvalidRequestError({
-                        message: `${ctx.payload.location.directory} is not in the Session's project`,
+                        message: `${destination.directory} is not in the Session's project`,
                         field: "location",
                       }),
                     ),
@@ -354,7 +368,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
                     Effect.fail(
                       new ConflictError({
                         message: `Could not apply changes: ${error.message}`,
-                        resource: ctx.payload.location.directory,
+                        resource: destination.directory,
                       }),
                     ),
                   "MoveSession.ResetSourceChangesError": (error) =>
@@ -368,7 +382,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
               )
             return HttpApiSchema.NoContent.make()
           }
-          yield* session.move({ sessionID: ctx.params.sessionID, location: ctx.payload.location }).pipe(
+          yield* session.move({ sessionID: ctx.params.sessionID, location: destination }).pipe(
             Effect.catchTags({
               "Session.NotFoundError": operationErrors["Session.NotFoundError"],
               "Session.BusyError": operationErrors["Session.BusyError"],
@@ -646,7 +660,13 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
           // The stream's missing-session error is raised when the stream is pulled, after this handler has already
           // succeeded. Check first so the declared 404 is the response, not a defect inside an open event stream.
           yield* session.get(ctx.params.sessionID).pipe(typedNotFound)
-          return session.events({ sessionID: ctx.params.sessionID, after: ctx.query.after }).pipe(Stream.orDie)
+          const access = yield* openSessionAccess(owners, "session.events", ctx.params.sessionID)
+          const context = (yield* Effect.context<never>()).pipe(Context.omit(Scope.Scope))
+          return session.events({ sessionID: ctx.params.sessionID, after: ctx.query.after }).pipe(
+            Stream.mapEffect((event) => verifySessionAccess(owners, access, "session.events", ctx.params.sessionID).pipe(Effect.as(event))),
+            Stream.provideContext(context),
+            Stream.orDie,
+          )
         }),
       )
       .handle(

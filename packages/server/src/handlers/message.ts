@@ -1,5 +1,7 @@
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionV2 } from "@orchestra/core/session"
+import { SessionOwner } from "@orchestra/core/session/owner"
+import { openSessionAccess, protectSessionCursor, readSessionCursor, verifySessionAccess } from "../session-access"
 import { Effect, Schema } from "effect"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { Api } from "../api"
@@ -27,14 +29,17 @@ const cursor = {
 export const MessageHandler = HttpApiBuilder.group(Api, "server.message", (handlers) =>
   Effect.gen(function* () {
     const session = yield* SessionV2.Service
+    const owners = yield* SessionOwner.Service
 
     return handlers.handle(
       "session.messages",
       Effect.fn(function* (ctx) {
+        const access = yield* openSessionAccess(owners, "session.messages", ctx.params.sessionID)
         if (ctx.query.cursor && ctx.query.order !== undefined)
           return yield* new InvalidCursorError({ message: "Cursor cannot be combined with order" })
+        const token = ctx.query.cursor ? yield* readSessionCursor(owners, "messages:" + ctx.params.sessionID, ctx.query.cursor) : undefined
         const decoded = yield* Effect.try({
-          try: () => (ctx.query.cursor ? cursor.decode(ctx.query.cursor) : undefined),
+          try: () => (token ? cursor.decode(token) : undefined),
           catch: () => new InvalidCursorError({ message: "Invalid cursor" }),
         })
         const order = decoded?.order ?? ctx.query.order ?? "desc"
@@ -68,11 +73,12 @@ export const MessageHandler = HttpApiBuilder.group(Api, "server.message", (handl
           )
         const first = messages[0]
         const last = messages.at(-1)
+        yield* verifySessionAccess(owners, access, "session.messages", ctx.params.sessionID)
         return {
           data: messages,
           cursor: {
-            previous: first ? cursor.encode(first, order, "previous") : undefined,
-            next: last ? cursor.encode(last, order, "next") : undefined,
+            previous: first ? yield* protectSessionCursor(owners, "messages:" + ctx.params.sessionID, cursor.encode(first, order, "previous")) : undefined,
+            next: last ? yield* protectSessionCursor(owners, "messages:" + ctx.params.sessionID, cursor.encode(last, order, "next")) : undefined,
           },
         }
       }),

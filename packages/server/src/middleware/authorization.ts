@@ -1,4 +1,6 @@
 import { ServerAuth } from "../auth"
+import type { SessionOwner } from "@orchestra/core/session/owner"
+import { guardSessionEndpoint } from "../session-access"
 import { parseSfInstallationSelector, readSfInstallations, type SfTrustedInstallationSource } from "../sucafina-installations"
 import { UnauthorizedError } from "@orchestra/protocol/errors"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
@@ -40,24 +42,47 @@ function credentialFromRequest(request: HttpServerRequest.HttpServerRequest) {
   return Effect.succeed(emptyCredential())
 }
 
-export const authorizationLayerWith = (installed?: SfTrustedInstallationSource) => Layer.effect(
+export const authorizationLayerWith = (installed?: SfTrustedInstallationSource, owners?: SessionOwner.Interface) => Layer.effect(
   Authorization,
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
-    if (!ServerAuth.required(config)) return Authorization.of((effect) => effect)
-    return Authorization.of((effect) =>
+    const protect = <A, E, R>(effect: Effect.Effect<A, E, R>, group: string, endpoint: string) =>
+      Effect.gen(function* () {
+        // Technical health contains no profile data. Corporate administration
+        // remains on its separately authenticated installation mount.
+        if (group === "server.health") return yield* effect
+        if (installed) {
+          const observed = yield* Effect.promise((signal) => installed.current(signal)).pipe(
+            Effect.catchCause(() => Effect.succeed(undefined)),
+          )
+          // A failed/missing configured source is not evidence of a local host.
+          if (!observed || observed.authMode !== "local-operator")
+            return yield* new UnauthorizedError({ message: "Corporate installation admission required" })
+        }
+        if (owners) {
+          const scope = yield* owners.open().pipe(Effect.mapError(() =>
+            new UnauthorizedError({ message: "Corporate installation admission required" })))
+          const value = yield* guardSessionEndpoint(owners, group, endpoint, effect)
+          yield* owners.verify(scope).pipe(Effect.mapError(() =>
+            new UnauthorizedError({ message: "Corporate installation admission required" })))
+          return value
+        }
+        return yield* effect
+      })
+    return Authorization.of((effect, options) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest
         // Browsers cannot set headers on WebSocket upgrades, so a ticketed PTY connect skips
         // credential checks here; the connect handler consumes and validates the ticket.
         const url = new URL(request.url, "http://localhost")
-        if (hasPtyConnectTicketURL(url)) return yield* effect
+        if (hasPtyConnectTicketURL(url)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         // Media elements cannot send headers either; the content handler verifies the HMAC ticket.
-        if (hasCapabilityContentTicketURL(url)) return yield* effect
+        if (hasCapabilityContentTicketURL(url)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         // Only the configured current Microsoft metadata endpoint is public; the descriptor grants no admission.
         if (installed && (yield* Effect.promise((signal) => publicBootstrap(request, installed, signal)))) return yield* effect
+        if (!ServerAuth.required(config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         const credential = yield* credentialFromRequest(request)
-        if (ServerAuth.authorized(credential, config)) return yield* effect
+        if (ServerAuth.authorized(credential, config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         if (process.env.SF_AUTH_DIAG === "1" && /^\/sucafina\/(?:dashboard|planner|procurement)$/.test(url.pathname)) {
           console.error("SF_AUTH_DIAG_LAYER", JSON.stringify({ layer: "server-middleware", stage: "authorization-denied", path: url.pathname }))
           yield* HttpEffect.appendPreResponseHandler((_request, response) =>

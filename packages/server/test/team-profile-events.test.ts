@@ -1,0 +1,178 @@
+import { expect, test } from "bun:test"
+import { DateTime, Effect, Exit, Fiber, Queue, Schema, Stream } from "effect"
+import { TestClock } from "effect/testing"
+import { EventV2 } from "@orchestra/core/event"
+import { SessionV2 } from "@orchestra/core/session"
+import { SessionOwner } from "@orchestra/core/session/owner"
+import { Event } from "@orchestra/schema/event"
+import { SessionEvent } from "@orchestra/schema/session-event"
+import { OrchestraEvent } from "@orchestra/protocol/groups/event"
+import { encodeEvent, eventFrames, eventStream } from "../src/handlers/event"
+import { teamSessionHttpFixture, profileA, profileB, other } from "./fixture/team-session-http"
+
+function reader(response: Response) {
+  if (!response.body) throw new Error("Actual event stream required")
+  const stream = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ""
+  return {
+    async next() {
+      while (true) {
+        const delimiter = buffer.indexOf("\n\n")
+        if (delimiter >= 0) {
+          const frame = buffer.slice(0, delimiter)
+          buffer = buffer.slice(delimiter + 2)
+          const data = frame.split("\n").filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).join("\n")
+          if (data) return Schema.decodeUnknownSync(OrchestraEvent)(JSON.parse(data))
+          continue
+        }
+        const chunk = await stream.read()
+        if (chunk.done) return undefined
+        buffer += decoder.decode(chunk.value, { stream: true })
+      }
+    },
+    cancel: () => stream.cancel(),
+  }
+}
+
+test("http-events-01: live HTTP subscribers see only their captured person and Team, independent of publisher scope", async () => {
+  await using f = await teamSessionHttpFixture()
+  const secondCookie = await f.login(other)
+  await f.run((http) => Effect.gen(function* () {
+    const sessions = yield* SessionV2.Service
+    const a = yield* f.create(http, "ses_stream_a")
+    const b = yield* f.create(http, "ses_stream_b", profileB)
+    const person = yield* f.create(http, "ses_stream_person", profileA, secondCookie)
+    const identities = [[profileA, f.cookie, a.id], [profileB, f.cookie, b.id], [profileA, secondCookie, person.id]] as const
+    const streams = []
+    for (const [profile, cookie] of identities) {
+      const response = yield* Effect.promise(() => http.mounted(f.request("/api/event", profile, cookie)))
+      expect(response.status).toBe(200)
+      expect(response.headers.get("content-type")).toContain("text/event-stream")
+      const incoming = reader(response)
+      streams.push(incoming)
+      expect((yield* Effect.promise(() => incoming.next()))?.type).toBe("server.connected")
+    }
+    try {
+      for (const [profile, cookie, id] of identities.toReversed())
+        yield* f.admitted(f.businessRequest(profile, cookie), sessions.rename({ sessionID: id, title: "private:" + id }))
+      for (const [index, incoming] of streams.entries()) {
+        const value = yield* Effect.promise(() => incoming.next())
+        expect(value?.type).toBe("session.next.renamed")
+        if (!value || value.type !== "session.next.renamed") throw new Error("Actual owned rename event required")
+        expect(value.data.sessionID).toBe(identities[index]![2])
+        expect(value.data.title).toBe("private:" + identities[index]![2])
+      }
+    } finally {
+      yield* Effect.promise(() => Promise.all(streams.map((stream) => stream.cancel())))
+    }
+  }))
+})
+
+test("http-events-02: owner filtering precedes serialization and publisher-created connected events gain no public exception", async () => {
+  await using f = await teamSessionHttpFixture()
+  await f.run((http) => Effect.gen(function* () {
+    const own = yield* f.create(http, "ses_stream_encode_own")
+    const foreign = yield* f.create(http, "ses_stream_encode_foreign", profileB)
+    const events = yield* EventV2.Service
+    const owners = yield* SessionOwner.Service
+    const scope = yield* f.admitted(f.businessRequest(), owners.open())
+    const encoded: string[] = []
+    const frame = eventFrames((data) => {
+      if (!data || typeof data !== "object" || !("id" in data) || typeof data.id !== "string")
+        throw new Error("Canonical event identifier required")
+      encoded.push(data.id)
+      return encodeEvent(data)
+    })
+    const pull = yield* Stream.toPull(eventStream(events, frame, { owners, scope }))
+    yield* pull
+    const first = encoded.length
+    const forbidden = yield* f.admitted(f.businessRequest(profileB), events.publish(SessionEvent.Renamed, {
+      sessionID: foreign.id, timestamp: DateTime.nowUnsafe(), title: "foreign-secret",
+    }))
+    const spoof = yield* f.admitted(f.businessRequest(), events.publish(Event.define({ type: "server.connected", schema: {} }), {}))
+    const allowed = yield* f.admitted(f.businessRequest(), events.publish(SessionEvent.Renamed, {
+      sessionID: own.id, timestamp: DateTime.nowUnsafe(), title: "owned-visible",
+    }))
+    let text = ""
+    while (!text.includes(allowed.id)) text += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
+    expect(text).toContain("owned-visible")
+    expect(text).not.toContain("foreign-secret")
+    expect(encoded).not.toContain(forbidden.id)
+    expect(encoded).not.toContain(spoof.id)
+    expect(encoded.slice(first)).toEqual([allowed.id])
+  }))
+})
+
+test("http-events-03: logout closes the original HTTP subscription when a different live publisher delivers a late event", async () => {
+  await using f = await teamSessionHttpFixture()
+  const secondCookie = await f.login(other)
+  await f.run((http) => Effect.gen(function* () {
+    const sessions = yield* SessionV2.Service
+    yield* f.create(http, "ses_stream_logged_out")
+    const foreign = yield* f.create(http, "ses_stream_late", profileA, secondCookie)
+    const response = yield* Effect.promise(() => http.mounted(f.request("/api/event")))
+    const incoming = reader(response)
+    expect((yield* Effect.promise(() => incoming.next()))?.type).toBe("server.connected")
+    try {
+      yield* Effect.promise(() => f.logout(f.cookie))
+      yield* f.admitted(f.businessRequest(profileA, secondCookie), sessions.rename({ sessionID: foreign.id, title: "late-private" }))
+      const ended = yield* Effect.promise(() => incoming.next()).pipe(Effect.exit)
+      expect(Exit.isFailure(ended) || Exit.isSuccess(ended) && ended.value === undefined).toBe(true)
+      const reconnect = yield* Effect.promise(() => http.mounted(f.request("/api/event")))
+      expect(reconnect.status).toBe(401)
+    } finally {
+      yield* Effect.promise(() => incoming.cancel()).pipe(Effect.catchCause(() => Effect.void))
+    }
+  }))
+})
+
+test("http-events-04: an idle corporate stream revalidates on the unchanged 15-second heartbeat cadence", async () => {
+  await using f = await teamSessionHttpFixture()
+  await f.run(() => Effect.gen(function* () {
+    const events = yield* EventV2.Service
+    const owners = yield* SessionOwner.Service
+    const scope = yield* f.admitted(f.businessRequest(), owners.open())
+    const received = yield* Queue.unbounded<string>()
+    const listening = yield* Stream.runForEach(eventStream(events, eventFrames(), { owners, scope }),
+      (bytes) => Queue.offer(received, new TextDecoder().decode(bytes))).pipe(Effect.exit, Effect.forkChild)
+    let connected = ""
+    while (!connected.includes("server.connected")) connected += yield* Queue.take(received)
+    yield* TestClock.adjust(0)
+    yield* Effect.promise(() => f.logout(f.cookie))
+    yield* TestClock.adjust(15_000)
+    const exit = yield* Fiber.join(listening)
+    expect(Exit.isFailure(exit)).toBe(true)
+  }).pipe(Effect.provide(TestClock.layer())))
+})
+
+test("http-events-05: burst order and finite history replay keep canonical payloads and private owner records off the wire", async () => {
+  await using f = await teamSessionHttpFixture()
+  await f.run((http) => Effect.gen(function* () {
+    const owned = yield* f.create(http, "ses_stream_order")
+    const events = yield* EventV2.Service
+    const owners = yield* SessionOwner.Service
+    const scope = yield* f.admitted(f.businessRequest(), owners.open())
+    const pull = yield* Stream.toPull(eventStream(events, eventFrames(), { owners, scope }))
+    yield* pull
+    const ids: string[] = []
+    for (let index = 0; index < 12; index++) {
+      const event = yield* f.admitted(f.businessRequest(), events.publish(SessionEvent.Renamed, {
+        sessionID: owned.id, timestamp: DateTime.nowUnsafe(), title: "burst-" + index,
+      }))
+      ids.push(event.id)
+    }
+    let text = ""
+    while (!text.includes(ids.at(-1)!)) text += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
+    expect(ids.map((id) => text.indexOf(id))).toEqual(ids.map((id) => text.indexOf(id)).toSorted((a, b) => a - b))
+    for (const id of ids) expect(text.split(id)).toHaveLength(2)
+    expect(text).not.toContain("session.owner.bound")
+    const history = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + owned.id + "/history?after=0&limit=50")))
+    expect(history.status).toBe(200)
+    const json = yield* Effect.promise(() => history.text())
+    expect(json).toContain("burst-11")
+    expect(json).not.toContain("session.owner.bound")
+    const foreign = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + owned.id + "/history?after=0", profileB)))
+    expect(foreign.status).toBe(401)
+  }))
+})
