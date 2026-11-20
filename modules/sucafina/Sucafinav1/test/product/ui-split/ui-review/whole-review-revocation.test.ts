@@ -9,6 +9,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const fixture = await createMeetingFixture()
     const browser = await launchWp01Browser().catch(async (error) => { try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Review setup and cleanup failed") } throw error })
     let failure: unknown
+    const errors: string[] = []
     try {
       const context = await fixture.newContext(browser)
       const page = await context.newPage()
@@ -40,7 +41,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await oldPanel!.textContent()).not.toContain("Preserved Operations")
       expect(await page.locator("[data-dashboard-history-view]").count()).toBe(0)
       expect(await page.locator("body").textContent()).not.toContain(fixture.original.id)
-    } catch (error) { failure = error; console.error("G04 review component failed", error); throw error }
+    } catch (error) { failure = error; console.error("G04 review component failed", { httpTrace: fixture.httpTrace, browserErrors: errors }, error); throw error }
     finally {
       // The component owns its proxy and contexts. Close it before releasing the
       // shared browser lease; two concurrent context.close calls are not cleanup.

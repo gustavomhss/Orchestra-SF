@@ -4,6 +4,7 @@ import { roleMap } from "../../runtime/admin.ts"
 import { digestSfValue } from "../../product/contracts/canonical.ts"
 import { createAuthorizedComponentRenderer } from "../product/wp01/component-renderer-fixture.ts"
 import { createMicrosoftComponentFixture } from "../product/wp01/microsoft-component-fixture.ts"
+import { createRecoveryFixture } from "../product/wp02/workbench-recovery-fixture.ts"
 
 // Integration contracts for the G04 composition. These are not browser-pool
 // declarations and do not count toward its fixed 40-source/206-body evidence.
@@ -61,5 +62,19 @@ test("component projection refuses a RoleMap revision change even when roles and
     expect(after.actorRoles).toEqual(before.actorRoles)
     expect(after.versions).toBe(before.versions)
     expect(after.roleMap).not.toBe(before.roleMap)
+  } finally { await fixture.close() }
+}, 15_000)
+
+test("component Hot Topic discovery shares the business clock with durable scoped source projections", async () => {
+  const fixture = await createRecoveryFixture()
+  try {
+    const result = await fixture.read((context) => fixture.dashboard.discover({ page: "Hot Topics & Actions" }, context))
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("Actual scoped discovery failed: " + result.status + " " + result.reason)
+    const source = result.value.records.find((entry) => entry.label === "Original action")?.draft
+    expect(source).toBeDefined()
+    expect(source?.target.period).toEqual({ start: fixture.clock.at.slice(0, 10), end: fixture.clock.at.slice(0, 10) })
+    expect(source?.fields.action).toBe("Original action")
+    expect(source?.targetEvidence.refDigest).toMatch(/^[a-f0-9]{64}$/)
   } finally { await fixture.close() }
 }, 15_000)

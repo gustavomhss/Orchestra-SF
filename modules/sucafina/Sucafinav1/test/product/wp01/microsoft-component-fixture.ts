@@ -7,6 +7,9 @@ import type { SfProductGrant } from "../../../product/integration/product-author
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createTeamProfileIdentityBoundary } from "../../../runtime/team-profile-identity.ts"
 import { roleMap } from "../../../runtime/admin.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { teamProductFixture, productRoleGroup } from "../../teams-profile/product-fixture.ts"
 import { serveNativeTeamsWeb } from "../../teams-profile/native-web-network.ts"
 import { profileA, teamRow } from "../../teams-profile/installation-fixture.ts"
@@ -44,6 +47,10 @@ export async function createMicrosoftComponentFixture(input: Readonly<{
     }
     const boundary = createTeamProfileIdentityBoundary({ identity: f.identity, resolver: f.resolver, ...f.binding })
     const clock = { at: input.at ?? "2026-11-13T08:00:00Z" }
+    // Business as-of time and its persisted source projections share one clock.
+    // The independent OIDC clock governs token/session expiry, not record periods.
+    const persistence = createSfSourcePersistence({ persistence: f.store, enumerate: enumerateSfSources,
+      createId: randomUUID, projectScope: createSfSourceScopeProjector(() => clock.at) })
     const environment: ModuleServices["environment"] = async (request) => ({
       at: clock.at, id: randomUUID, directory: await boundary.identity.directory(request),
     })
@@ -132,7 +139,7 @@ export async function createMicrosoftComponentFixture(input: Readonly<{
     }
     const network = await networkFor(oid)
     const mount = (extra: Pick<ModuleServices, "product" | "productView" | "workbookLimits"> = {}, widgets: ComponentWidgets = {}) => {
-      services = { ...extra, persistence: f.persistence, authenticate: boundary.identity.authenticate, environment, maxJsonBytes: 100000 }
+      services = { ...extra, persistence, authenticate: boundary.identity.authenticate, environment, maxJsonBytes: 100000 }
       module = createModule(f.binding.mount, services)
       renderer = createAuthorizedComponentRenderer({ ...f.binding, boundary, services, widgets })
       return dispatch
@@ -193,10 +200,10 @@ export async function createMicrosoftComponentFixture(input: Readonly<{
     }
     const createAuthority = (extra: Partial<Pick<ProductAuthorityOptions,
       "proposalCoverageWrites" | "dashboardHostWrites" | "commandIdentity" | "authorizeDocument">> = {}) =>
-      createSfProductAuthority({ ...f.options, ...extra, environment, teamProfiles: boundary.profiles })
+      createSfProductAuthority({ ...f.options, ...extra, persistence, environment, teamProfiles: boundary.profiles })
     return {
       ...f, origin: f.binding.origin, principalRef: oid, otherPrincipalRef: other, boundary, environment, clock, policy,
-      persistence: f.persistence, routing, dispatch, mount, newContext, loginPage, request, fetch: clientFetch, productAuthority: createAuthority, setRole,
+      persistence, routing, dispatch, mount, newContext, loginPage, request, fetch: clientFetch, productAuthority: createAuthority, setRole,
       async close() {
         if (disposed) return
         disposed = true

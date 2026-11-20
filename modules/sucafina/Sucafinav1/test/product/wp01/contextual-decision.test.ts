@@ -48,8 +48,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
         validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok) })
       const unmounted = (port: string): never => { throw new Error("Contextual component does not mount " + port) }
-      const services = { ...authority, dispatch,
-        get sessions() { return unmounted("sessions") }, get selected() { return unmounted("selected") }, models: () => unmounted("models") } satisfies SfHostServices
+      const componentServices = (sourceHost: SfHostServices["host"]) => ({ ...authority, host: sourceHost, dispatch,
+        get sessions() { return unmounted("sessions") }, get selected() { return unmounted("selected") }, models: () => unmounted("models") } satisfies SfHostServices)
+      const services = componentServices(authority.host)
       const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
       host.mount({ product }, { contextualDecision: true })
       const app = host.dispatch
@@ -70,7 +71,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         expect(response?.status).toBe(400)
         expect(await response!.text()).not.toContain("data-source-refs=")
       }
-      const absentSource = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, host: { ...authority.host, persistence: driver } }) })
+      const absentSource = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => componentServices({ ...authority.host, persistence: driver }) })
       expect((await within(absentSource(host.request(new URL(contextUrl()).pathname.slice("/sucafina".length) + new URL(contextUrl()).search, cookie), "dashboard"), "missing source port"))?.status).toBe(503)
       // The source projection can issue evidence only for its actual as-of period.
       const futureContext = new URL(contextUrl())
