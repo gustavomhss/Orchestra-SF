@@ -1,5 +1,5 @@
 import { describe, expect } from "bun:test"
-import { Cause, Deferred, Effect, Exit, Fiber, Layer } from "effect"
+import { Cause, Deferred, Effect, Exit, Fiber, Layer, Option } from "effect"
 import { SessionRunCoordinator } from "@orchestra/core/session/run-coordinator"
 import { testEffect } from "./lib/effect"
 
@@ -91,5 +91,55 @@ describe("SessionRunCoordinator maintenance", () => {
       expect(work).toBe(0)
       expect(Array.from(yield* coordinator.active)).toEqual([])
     }),
+  )
+})
+
+describe("SessionRunCoordinator exclusive completion", () => {
+  for (const fails of [false, true]) {
+    it.effect("awaits private binding finalization before returning an inner " + (fails ? "failure" : "value"), () =>
+      Effect.scoped(Effect.gen(function* () {
+        const checking = yield* Deferred.make<void>()
+        const release = yield* Deferred.make<void>()
+        const failure = new Error("original exclusive failure")
+        let returned = false
+        const coordinator = yield* SessionRunCoordinator.make<string, never>({
+          bind: Effect.succeed(<A, E, R>(effect: Effect.Effect<A, E, R>) => effect.pipe(
+            Effect.ensuring(Deferred.succeed(checking, undefined).pipe(Effect.andThen(Deferred.await(release)))),
+          )),
+          drain: () => Effect.void,
+        })
+        const work = fails ? Effect.fail(failure) : Effect.succeed("original value")
+        const pending = yield* coordinator.exclusive("owned", work).pipe(
+          Effect.exit, Effect.tap(() => Effect.sync(() => { returned = true })), Effect.forkChild,
+        )
+        yield* Deferred.await(checking)
+        expect(returned).toBe(false)
+        expect(Array.from(yield* coordinator.active)).toEqual(["owned"])
+        yield* Deferred.succeed(release, undefined)
+        const result = yield* Fiber.join(pending)
+        expect(returned).toBe(true)
+        expect(Array.from(yield* coordinator.active)).toEqual([])
+        if (fails) {
+          expect(Exit.isFailure(result) && Cause.squash(result.cause)).toBe(failure)
+        } else {
+          expect(Exit.isSuccess(result) && result.value).toEqual(Option.some("original value"))
+        }
+      })),
+    )
+  }
+
+  it.effect("does not return a completed inner value when the final private binding recheck rejects it", () =>
+    Effect.scoped(Effect.gen(function* () {
+      const revoked = new Error("private binding revoked after work")
+      const coordinator = yield* SessionRunCoordinator.make<string, never>({
+        bind: Effect.succeed(<A, E, R>(effect: Effect.Effect<A, E, R>) => effect.pipe(
+          Effect.tap(() => Effect.die(revoked)),
+        )),
+        drain: () => Effect.void,
+      })
+      const result = yield* coordinator.exclusive("revoked", Effect.succeed("must not escape")).pipe(Effect.exit)
+      expect(Exit.isFailure(result) && Cause.squash(result.cause)).toBe(revoked)
+      expect(Array.from(yield* coordinator.active)).toEqual([])
+    })),
   )
 })
