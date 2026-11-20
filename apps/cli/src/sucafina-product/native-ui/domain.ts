@@ -1,3 +1,4 @@
+import { createSfSummarySettingsHandlers } from "./summary-settings.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -267,5 +268,6 @@ export function createSfDomainProjectionHandlers(deps: SfNativeHostDependencies)
       handle: (request: Request) => page(deps, request, cap),
     })),
     { operationId: "projection.local-admin", handle: (request: Request) => localAdmin(deps, request) },
+    ...createSfSummarySettingsHandlers(deps),
   ]
 }

@@ -19,6 +19,9 @@ export const SF_U28_COPY = {
   "sf.u28.actions": "Actions",
   "sf.u28.version": "Version",
   "sf.u28.import": "Import JSON",
+  // Original runtime/admin.ts labels, retained verbatim under COPY-01.
+  "sf.u28.summaries": "Additional viewer summaries",
+  "sf.u28.saveSummaries": "Save summaries",
 } as const
 
 export const SF_U28_COPY_BR: Readonly<Record<keyof typeof SF_U28_COPY, string>> = {
