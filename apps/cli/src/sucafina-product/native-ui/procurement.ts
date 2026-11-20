@@ -293,8 +293,13 @@ function pageData(
   return {
     // The reset command invokes this same producer function; the browser never
     // reconstructs defaults. Both projections share CAP28's admin/source fence.
-    data: { settings: pick(data.settings, settingsKeys), directory,
-      resetSettings: pick(initialProcurementSettings(), settingsKeys) },
+    data: {
+      settings: pick(data.settings, settingsKeys), resetSettings: pick(initialProcurementSettings(), settingsKeys), directory,
+      // The original conflict() admits CAS 0 before the first settings write.
+      // Preserve the absent history: do not manufacture versions.settings or by.
+      ...(!Object.hasOwn(snapshot.data, "store") && !Object.hasOwn(snapshot.versions, "settings")
+        ? { settingsInitialization: { state: "absent" as const, expectedVersion: 0 as const } } : {}),
+    },
     versions: versionsFor(view, ["settings"]),
   }
 }

@@ -11,7 +11,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewConfirmation } from "../../shared/change-review"
 import { SfProcurementSettingsFields } from "./fields"
-import { SETTINGS_REF, changedSettings, settingsReview } from "./model"
+import { SETTINGS_REF, changedSettings, settingsReview, settingsVersion } from "./model"
 import type { Settings, SettingsProjection } from "./model"
 import "./settings.css"
 
@@ -149,7 +149,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const ready = owner.ready()
     const projection = currentProjection()
     if (!ready || owner.state().status !== "ready" || !projection) return undefined
-    const version = projection.value.versions.settings?.version
+    const version = settingsVersion(projection)
     if (version === undefined || !Number.isSafeInteger(version)) return undefined
     const editScopeKey = JSON.stringify([
       "CAP28", props.route.query.year ?? null, props.route.query.month ?? null,
@@ -176,7 +176,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
   createEffect(() => {
     const projection = currentProjection()
     const controller = draft()
-    const currentVersion = projection?.value.versions.settings?.version
+    const currentVersion = settingsVersion(projection)
     if (projection && controller && currentVersion !== undefined)
       controller.receiveRemote({ baseVersion: currentVersion, value: projection.value.data.settings })
   })
@@ -239,9 +239,10 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const page = currentProjection()
     const state = active()
     const action = view.review
+    const sourceVersion = settingsVersion(page)
     if (!ready || current.status !== "ready" || !page || !state || !action || !view.reviewRef ||
         view.busy || !actionAllowed(action) || !(action === "reset" ? canReset() : canReview()) ||
-        state.baseVersion !== page.value.versions.settings?.version ||
+        sourceVersion === undefined || state.baseVersion !== sourceVersion ||
         confirmation.purpose !== action ||
         confirmation.binding.kind !== "catalog-command" ||
         confirmation.binding.operationId !== (action === "reset" ? "domain.command.CAP28.reset" : "domain.command.CAP28.save") ||
@@ -251,10 +252,10 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const generationAtReview = owner.generation()
     const command = action === "reset" ? {
       page: "Settings" as const, action: "reset" as const,
-      version: page.value.versions.settings!.version, values: {},
+      version: sourceVersion, values: {},
     } : {
       page: "Settings" as const, action: "save" as const,
-      version: page.value.versions.settings!.version, values: { settings: structuredClone(state.value) },
+      version: sourceVersion, values: { settings: structuredClone(state.value) },
     }
     const idempotencyKey = crypto.randomUUID()
     // F01/S03 binds the exact reviewed CAS, digest and idempotency key. Never
@@ -388,7 +389,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                   <p role="alert">{t(sfCommonKey("sf.common.conflict"))}</p>
                 </Show>
                 <Show when={view.review && reviewProps()} fallback={
-                  <form class="sf-n21-settings-form" data-version={String(projection().value.versions.settings?.version ?? "")} onSubmit={(event) => {
+                  <form class="sf-n21-settings-form" data-version={String(settingsVersion(projection()) ?? "")} onSubmit={(event) => {
                     event.preventDefault()
                     openReview()
                   }}>

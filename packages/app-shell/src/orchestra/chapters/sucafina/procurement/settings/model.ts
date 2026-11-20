@@ -9,6 +9,14 @@ export type SettingsProjection = Extract<
   { status: "ok" }
 >
 
+/** A first-write CAS is an explicit producer fact, never inferred from a missing version. */
+export function settingsVersion(current: SettingsProjection | undefined): number | undefined {
+  if (!current) return undefined
+  const initial = current.value.data.settingsInitialization
+  if (initial) return Object.hasOwn(current.value.versions, "settings") ? undefined : initial.expectedVersion
+  return current.value.versions.settings?.version
+}
+
 export const SETTINGS_REF = "settings" as SfRef
 export const SETTINGS_INTENT = "settings-configuration-edit" as SfIntentRef
 export const settingsLabel: Readonly<Partial<Record<keyof Settings, string>>> = {
@@ -65,14 +73,15 @@ export function settingsReview(
   current: SettingsProjection, proposed: Readonly<Settings>, operationRef: SfOperationRef,
   action: "save" | "reset" = "save",
 ): Omit<SfChangeReviewProps, "onConfirm" | "onRevise" | "onCancel"> {
-  const sourceVersion = current.value.versions.settings?.version
+  const persistedVersion = current.value.versions.settings?.version
+  const sourceVersion = settingsVersion(current)
   const names = action === "reset"
     ? (Object.keys(settingsLabel) as (keyof Settings)[]).filter((name) =>
         Object.hasOwn(current.value.data.settings, name) || Object.hasOwn(proposed, name))
     : changedSettings(current.value.data.settings, proposed)
-  const base: SfReviewSnapshot = sourceVersion === undefined
+  const base: SfReviewSnapshot = persistedVersion === undefined
     ? { kind: "not-provided", reason: message("sf.common.previousValuesUnavailable") }
-    : { kind: "persisted", ref: SETTINGS_REF, version: sourceVersion as SfVersion,
+    : { kind: "persisted", ref: SETTINGS_REF, version: persistedVersion as SfVersion,
         fields: fields(current.value.data.settings, names) }
   const draft: SfReviewSnapshot = {
     kind: "draft", intentRef: SETTINGS_INTENT, sourceRef: SETTINGS_REF,
@@ -93,7 +102,9 @@ export function settingsReview(
     coverage: {
       state: sourceVersion === undefined ? "unavailable" : "partial",
       summary: message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.partial"),
-      reasons, knownCount: names.length, expectedCount: null,
+      reasons: sourceVersion !== undefined && persistedVersion === undefined
+        ? [message("sf.common.previousValuesUnavailable")] : reasons,
+      knownCount: names.length, expectedCount: null,
     },
     blockingReasons: reasons,
     confirmation: blocked
