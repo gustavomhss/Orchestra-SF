@@ -1,16 +1,20 @@
 import { expect, test } from "bun:test"
+import path from "node:path"
 import { Effect, Exit, Layer, Schema, Stream } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
 import { LLM, LLMClient, Model } from "@orchestra/llm"
 import { OpenAICompatibleChat } from "@orchestra/llm/protocols/openai-compatible-chat"
 import { Auth, RequestExecutor } from "@orchestra/llm/route"
-import { ClaudeCodeHost } from "@orchestra/engine-claude-code/v2/host"
+import { ClaudeCodeHost } from "../../../modules/engine-adapters/claude-code/src/v2/host"
 import { createSfTokenGate } from "../../../apps/cli/src/sucafina-product/token-gate"
 import { ProviderAccess } from "@orchestra/schema/provider-access"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { SessionAccess } from "@orchestra/schema/session-access"
 import { Catalog } from "../src/catalog"
 import { LayerNodePlatform } from "../src/effect/app-node-platform"
+import { AppNodeBuilder } from "../src/effect/app-node-builder"
+import { LayerNode } from "../src/effect/layer-node"
+import { Database } from "../src/database/database"
 import { LocationServiceMap } from "../src/location-service-map"
 import { ModelV2 } from "../src/model"
 import { SessionV2 } from "../src/session"
@@ -123,7 +127,7 @@ async function fixture(options: { bindings?: boolean; key?: boolean; tokenGate?:
     const sessions = yield* SessionV2.Service
     return yield* sessions.create({ id: SessionV2.ID.make(id), location: f.location, model: selected })
   })
-  return { ...f, endpoint, grants, bindings, seen, hooks, seed, cancelled: cancelled.promise,
+  return { ...f, endpoint, grants, bindings, seen, hooks, seed, tlsFetch, cancelled: cancelled.promise,
     async [Symbol.asyncDispose]() {
       hooks.release?.()
       await f[Symbol.asyncDispose]()
@@ -376,4 +380,32 @@ test("private-provider-10: the installed C15 token-gate replacement cannot send 
     expect(Exit.isFailure(result)).toBe(true)
     expect(f.seen).toHaveLength(0)
   })))
+}, 30000)
+
+test("private-provider-11: the same C15 client keeps explicit native HTTPS calls on an observed technical database", async () => {
+  await using f = await fixture()
+  const gate = createSfTokenGate({ upstream: ClaudeCodeHost.node,
+    isSfOwned: () => Effect.die("The technical unclassified model must not request SF lineage") })
+  // This is a separate technical database, not another graph over the corporate store.
+  const layer = AppNodeBuilder.build(LayerNode.group([LayerNodePlatform.llmClient, SessionOwner.node]), [
+    [Database.node, Database.layerFromPath(path.join(f.directory, "technical-provider.sqlite"))],
+    [LayerNodePlatform.httpClient, FetchHttpClient.layer.pipe(Layer.provide(Layer.succeed(FetchHttpClient.Fetch, f.tlsFetch)))],
+    ...gate.contribution.replacements ?? [],
+  ])
+  await Effect.gen(function* () {
+    const owners = yield* SessionOwner.Service
+    const scope = yield* owners.open()
+    expect(owners.owner(scope)).toBeUndefined()
+    expect(owners.generation(scope)).toBeUndefined()
+    const llm = yield* LLMClient.Service
+    const model = OpenAICompatibleChat.route.with({
+      provider: "explicit-technical-provider", endpoint: { baseURL: f.endpoint },
+      auth: Auth.bearer(Auth.value("synthetic-technical-key")),
+    }).model({ id: "technical-model" })
+    const events = yield* llm.stream(LLM.request({ model, prompt: "Explicit technical request" })).pipe(Stream.runCollect)
+    expect(events.filter((event) => event.type === "text-delta").map((event) => event.text).join(""))
+      .toBe("approved-native-response")
+  }).pipe(Effect.provide(layer), Effect.scoped, Effect.runPromise)
+  expect(f.seen).toHaveLength(1)
+  expect(f.seen[0].authorization).toBe("Bearer synthetic-technical-key")
 }, 30000)
