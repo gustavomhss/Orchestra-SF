@@ -49,7 +49,10 @@ test("schedule-ledger-01: a restarted technical scheduler settles a removed admi
     const tasks = yield* ScheduledTask.Service
     const { db } = yield* Database.Service
     const session = yield* sessions.create({ agent, location })
-    const owner = { sessionID: session.id, projectID: session.projectID, location: session.location, agentID: agent } satisfies Capability.Owner
+    const owner = { sessionID: session.id, projectID: session.projectID, location: {
+      directory: session.location.directory,
+      ...(session.location.workspaceID === undefined ? {} : { workspaceID: session.location.workspaceID }),
+    }, agentID: agent } satisfies Capability.Owner
     const task = yield* tasks.capability.create(owner, definition)
     // The prompt is admitted through the real Session producer. Fault injection rejects only
     // its later receipt UPDATE, leaving the exact durable frontier of a stopped process.
@@ -93,7 +96,10 @@ test("schedule-ledger-02: actual Microsoft/Owner admission preserves removed res
     const sessions = yield* SessionV2.Service
     const tasks = yield* ScheduledTask.Service
     const session = yield* sessions.create({ agent, location: f.location })
-    const owner = { sessionID: session.id, projectID: session.projectID, location: session.location, agentID: agent } satisfies Capability.Owner
+    const owner = { sessionID: session.id, projectID: session.projectID, location: {
+      directory: session.location.directory,
+      ...(session.location.workspaceID === undefined ? {} : { workspaceID: session.location.workspaceID }),
+    }, agentID: agent } satisfies Capability.Owner
     const task = yield* tasks.capability.create(owner, definition)
     const result = yield* tasks.capability.run(owner, task.id, "corporate-invocation")
     yield* tasks.capability.remove(owner, task.id)
