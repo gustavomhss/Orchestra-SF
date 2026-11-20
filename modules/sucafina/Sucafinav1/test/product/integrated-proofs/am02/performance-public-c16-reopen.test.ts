@@ -175,7 +175,7 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
       throw new Error("Original native runs unavailable")
     for (const row of freshRoutes) {
       const previous = old.find((item) => item.route === row.route)!
-      const prior = expectedState.nativeRuns[previous.runId]
+      const prior: SfNativeRunRecord | undefined = expectedState.nativeRuns[previous.runId]
       if (!prior || prior.state !== "queued" || prior.version !== 2)
         throw new Error("Original native preparation was not persisted")
       const ready = await fixture.prepare(row.route)
@@ -195,7 +195,7 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
       expect(prior.requestDigest).toBe(digestSfValue(intent))
       expect(prior.intentDigest).toBe(digestSfValue(intent))
       expect(prior.skillInputDigest).toBe(digestSfValue({ operation: row.operation, period: nativePeriod }))
-      const { native, reason, outputRef, ...seed } = prior
+      const { native, reason, outputRef, ...seed }: SfNativeRunRecord = prior
       expect(native).toEqual({ sessionID: previous.sessionID, skillReceipt: previous.receipt })
       expect(reason).toBeUndefined()
       expect(outputRef).toBeUndefined()
@@ -205,7 +205,8 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
       const attached: SfNativeRunRecord = { ...created, version: 2, state: "queued",
         native: { sessionID: ready.sessionID, skillReceipt: ready.skillReceipts[0]! } }
       const targetRef = `case:${encodeURIComponent(ready.caseRef.id)}:${encodeURIComponent(ready.caseRef.incarnation)}`
-      for (const record of [created, attached]) {
+      const records: readonly SfNativeRunRecord[] = [created, attached]
+      for (const record of records) {
         const key = JSON.stringify([binding.principalRef, "contributions", targetRef, `run:${record.runRef}:${record.version}`])
         expect(Object.hasOwn(expectedState.transactions, key)).toBe(false)
         expectedState.nativeRuns[ready.runId] = record
