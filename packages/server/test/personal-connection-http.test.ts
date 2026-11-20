@@ -39,7 +39,7 @@ test("personal-http-01: original Microsoft Request and explicit connection ACL w
       if (absent.status !== "available") throw new Error("Current slot required")
       expect(absent.connection).toEqual({ key, label: "", revision: 0, state: "absent" })
       expect(absent.namespace.owner.profile).toEqual(profileA)
-      expect(absent.namespace.owner.principal.principalObjectId).toBe(oid)
+      expect(String(absent.namespace.owner.principal.principalObjectId)).toBe(oid)
       expect(absent.namespace.authorityGeneration).toBe(1)
       for (const [command, status, revision] of [
         [create, "saved", 1],
@@ -91,7 +91,7 @@ test("personal-http-02: metadata and revisions are isolated by full Team and imm
       if (result.status !== "available") throw new Error("Current slot required")
       expect(result.connection).toEqual({ key, label: "", revision: 0, state: "absent" })
       expect(result.namespace.owner.profile).toEqual(profile)
-      expect(result.namespace.owner.principal.principalObjectId).toBe(cookie === f.cookie ? oid : other)
+      expect(String(result.namespace.owner.principal.principalObjectId)).toBe(cookie === f.cookie ? oid : other)
     }
     const forged = yield* Effect.promise(() => http.mounted(f.jsonRequest(route, {
       ...create, owner: { profile: profileA, principal: { principalObjectId: other } },
@@ -140,8 +140,8 @@ test("personal-http-04: origin, route, query, body and public key schema are clo
   try {
     await f.run((http) => Effect.gen(function* () {
       for (const headers of [
-        { authorization: basic }, { "sec-fetch-site": "cross-site" }, { origin: "https://other.invalid" },
-        { host: "other.invalid" },
+        new Headers({ authorization: basic }), new Headers({ "sec-fetch-site": "cross-site" }),
+        new Headers({ origin: "https://other.invalid" }), new Headers({ host: "other.invalid" }),
       ]) {
         const denied = yield* Effect.promise(() => http.mounted(f.request(route + query, profileA, f.cookie, { headers })))
         expect(denied.status).toBe(403)
