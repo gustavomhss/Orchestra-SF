@@ -100,7 +100,7 @@ O cancelamento ocorreu durante `wp10/integration/planner-calculation.test.ts:684
 
 ## Limite da evidência
 
-São execuções cirúrgicas de todos os arquivos dos shards, no Actions. O `test-ci` não produz o recibo completo de `sf-ci`, não executa sua verificação de cobertura e usa Omni no escopo `declared` para seleções explícitas. Não há alegação de baseline, coverage, digest de execução ou GO. Os hashes de seleção são cálculos de inventário, não recibos.
+Os requests selecionam todos os arquivos canônicos de cada shard para verificação no Actions; o shard 5 foi interrompido e o shard 6 ainda não concluiu. O `test-ci` não produz o recibo completo de `sf-ci`, não executa sua verificação de cobertura e usa Omni no escopo `declared` para seleções explícitas. Não há alegação de baseline, coverage, digest de execução ou GO. Os hashes de seleção são cálculos de inventário, não recibos.
 
 
 ## Fatias preparadas — ainda sem commit de código ou gate
