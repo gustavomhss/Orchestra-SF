@@ -310,6 +310,19 @@ test("An unmaterialized current Planner scope falls through before canonical wor
     const fixture = await prepare(deadline), measured = observations(fixture, deadline)
     const root = fixture.persistence.readSnapshotRoot
     if (!root) throw new Error("Real LocalStore read root unavailable")
+    // This guard owns the Planner adapter only. Its fallback still uses the
+    // actual case reader; other composed batch adapters cannot add probe roots.
+    const plannerOnly = fixture.batch(async (...args) => {
+      const available = fixture.persistence.readSnapshotRoot
+      try {
+        fixture.persistence.readSnapshotRoot = undefined
+        return await fixture.business.cases.read(...args)
+      } finally { fixture.persistence.readSnapshotRoot = available }
+    })
+    const protectedBefore = await fixture.authority.state.read(fixture.request(), "cases", (state) => state)
+    const currentScopes = () => fixture.store.transaction("planner", async (snapshot) => ({ commit: false,
+      value: Object.values(snapshot.sfSources!.scopes!).filter((entry) => entry.scope.recordType === "planner-version" &&
+        entry.scope.recordId === fixture.refs[0]!.target.recordId) }))
     const clearScope = () => fixture.store.transaction("planner", async (snapshot) => {
       const entries = snapshot.sfSources!.scopes!
       const keys = Object.keys(entries).filter((key) => entries[key]!.scope.recordType === "planner-version" &&
@@ -322,22 +335,39 @@ test("An unmaterialized current Planner scope falls through before canonical wor
     try {
       fixture.persistence.readSnapshotRoot = undefined
       await clearScope()
-      canonical = await fixture.business.cases.read(fixture.argument, fixture.call)
+      const missing = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
+      canonical = await plannerOnly(fixture.argument, fixture.call)
+      // BCS checks the captured scope before reaching the source issuer. A
+      // missing access binding cannot be silently recreated by reading a case.
+      expect(await currentScopes()).toEqual([])
+      expect(await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))).toEqual(missing)
     } finally { fixture.persistence.readSnapshotRoot = root }
     expect(canonical.status).not.toBe("ok")
+    expect(canonical).toEqual({ status: "unavailable", reason: "case-evidence-unavailable" })
+    // Reissue through the real authenticated producer before clearing again.
+    // The new scope must not make the case's old captured selector valid.
+    const controlSource = ok(await fixture.business.plannerProduct.issueSource(fixture.refs[0]!.target.recordId, fixture.call), "Reissue canonical control source")
+    expect(controlSource.evidence.target.incarnation).not.toBe(fixture.refs[0]!.target.incarnation)
+    expect(await plannerOnly(fixture.argument, fixture.call)).toEqual(canonical)
     await clearScope()
+    const missing = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
     measured.reset()
-    const result = await fixture.business.cases.read(fixture.argument, fixture.call)
+    const result = await plannerOnly(fixture.argument, fixture.call)
     expect(result).toEqual(canonical)
     expect(measured.counts.roots).toBe(1)
     expect(measured.counts.sources).toBeGreaterThan(0)
     expect(measured.counts.sourcesInRoot).toBe(0)
-    const restored = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false,
-      value: Object.values(snapshot.sfSources!.scopes!).filter((entry) => entry.scope.recordType === "planner-version" &&
-        entry.scope.recordId === fixture.refs[0]!.target.recordId) }))
+    expect(await currentScopes()).toEqual([])
+    expect(await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))).toEqual(missing)
+    const issued = ok(await fixture.business.plannerProduct.issueSource(fixture.refs[0]!.target.recordId, fixture.call), "Reissue observed source")
+    const restored = await currentScopes()
     expect(restored).toHaveLength(1)
     expect(restored[0]!.alive).toBe(true)
     expect(restored[0]!.incarnation).not.toBe(fixture.refs[0]!.target.incarnation)
+    expect(restored[0]!.incarnation).toBe(issued.evidence.target.incarnation)
+    expect(issued.evidence.target.incarnation).not.toBe(controlSource.evidence.target.incarnation)
+    expect(await plannerOnly(fixture.argument, fixture.call)).toEqual(canonical)
+    expect(await fixture.authority.state.read(fixture.request(), "cases", (state) => state)).toEqual(protectedBefore)
   } finally { await deadline.close() }
 }, 120_000)
 
