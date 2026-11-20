@@ -359,6 +359,7 @@ export function createSfAtlasMemory(input: {
       if (digestSfValue(captured.value.item.eventRef) !== digestSfValue(ref)) return { ...unavailable("idempotency-content-changed"), status: "conflict" }
       // A durable receipt is a recovery result, not a second append. Reauthorize it without rerunning the scanner.
       if (captured.value.item.state === "settled") {
+        const receipt = captured.value.item.receipt
         const recover = async (): Promise<MemoryWriteReceipt> => {
           const replay = await input.state.read(request, "outbox", (state, actor) => {
             const value = state.cases[ref.target.caseId]
@@ -380,7 +381,6 @@ export function createSfAtlasMemory(input: {
           const readable = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
           if (readable.status !== "ok" || !stable()) return unavailable("case-unavailable")
           pin(readable.value)
-          const receipt = captured.value.item.receipt
           const committed = receipt.status === "committed" || receipt.status === "already-committed"
           const owner = committed ? deriveSfMemoryOwner(readable.value.context, readable.value.case) : undefined
           if (committed && !owner) return unavailable("capture-unavailable")
