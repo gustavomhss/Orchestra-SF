@@ -3,6 +3,7 @@ import { ClientSideConnection, ndJsonStream, type SessionNotification } from "@a
 import { Orchestra } from "@orchestra/client"
 import { serveAcp } from "../src/acp/serve"
 import { mcpConfig, promptContent } from "../src/acp/agent"
+import { CorporateSessionTransportError, runTurn } from "../src/turn"
 
 const location = { directory: "/work", project: { id: "p", directory: "/work" } }
 const session = { id: "ses_1", projectID: "p", title: "t", cost: 0, tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } }, time: { created: 1, updated: 2 }, location: { directory: "/work" } }
@@ -13,7 +14,7 @@ const event = (seq: number, type: string, data: Record<string, unknown>) => ({
   durable: { aggregateID: "ses_1", seq, version: 1 },
 })
 
-function stub(options: { stream: unknown[]; permissions?: unknown[] }) {
+function stub(options: { stream: unknown[]; permissions?: unknown[]; namespace?: unknown; historyNamespace?: unknown }) {
   const calls: Array<{ route: string; body: unknown }> = []
   const server = Bun.serve({
     port: 0,
@@ -24,8 +25,8 @@ function stub(options: { stream: unknown[]; permissions?: unknown[] }) {
         return Response.json({ location, data: [{ id: "m1", providerID: "p1", name: "M1", enabled: true, variants: [] }] })
       if (route === "GET /model/default") return Response.json({ location, data: { id: "m1", providerID: "p1", name: "M1" } })
       if (route === "GET /agent") return Response.json({ location, data: [{ id: "build", name: "Build", mode: "primary", hidden: false, permissions: [] }] })
-      if (route === "POST /session") return Response.json({ data: session })
-      if (route === "GET /session/ses_1/history") return Response.json({ data: [], hasMore: false })
+      if (route === "POST /session") return Response.json({ data: { ...session, ...(options.namespace ? { namespace: options.namespace } : {}) } })
+      if (route === "GET /session/ses_1/history") return Response.json({ data: [], hasMore: false, ...(options.historyNamespace ? { namespace: options.historyNamespace } : {}) })
       if (route === "POST /session/ses_1/prompt")
         return Response.json({ data: { id: "msg_1", sessionID: "ses_1", admittedSeq: 1, prompt: { text: "" }, delivery: "steer", timeCreated: 1 } })
       if (route === "POST /session/ses_1/wait") return new Response(null, { status: 204 })
@@ -117,4 +118,53 @@ describe("acp", () => {
       ]),
     ).toEqual({ text: 'a\n<context uri="file:///g">\nbody\n</context>', files: [{ uri: "file:///f", name: "f" }] })
   })
+})
+
+const corporateNamespace = {
+  version: 1,
+  owner: {
+    profile: { installationId: "consumer-installation", tenantId: "11111111-1111-1111-1111-111111111111", teamObjectId: "22222222-2222-2222-2222-222222222222" },
+    principal: { tenantId: "11111111-1111-1111-1111-111111111111", principalObjectId: "33333333-3333-3333-3333-333333333333" },
+  },
+  authorityGeneration: 1,
+}
+
+test("the technical ACP consumer refuses an installed Session Info before adopting it", async () => {
+  const s = stub({ stream: [], namespace: corporateNamespace })
+  try {
+    const peer = editor(s.client)
+    await expect(peer.connection.newSession({ cwd: "/work", mcpServers: [] })).rejects.toThrow()
+    expect(peer.updates).toEqual([])
+    expect(s.calls.filter((call) => call.route.includes("/prompt"))).toEqual([])
+  } finally { s.server.stop(true) }
+})
+
+test("the technical turn rejects even an empty corporate history before submitting a prompt", async () => {
+  const s = stub({ stream: [], historyNamespace: corporateNamespace })
+  let submitted = 0, delivered = 0
+  try {
+    await expect(runTurn(s.client, {
+      sessionID: "ses_1",
+      submit: async () => { submitted++; return { id: "msg_1" } },
+      onEvent: () => { delivered++ },
+      onPermission: async () => "reject",
+    })).rejects.toBeInstanceOf(CorporateSessionTransportError)
+    expect(submitted).toBe(0)
+    expect(delivered).toBe(0)
+    expect(s.calls.map((call) => call.route)).toEqual(["GET /session/ses_1/history"])
+  } finally { s.server.stop(true) }
+})
+
+test("the technical turn refuses a corporate frame before forwarding its inner event", async () => {
+  const s = stub({ stream: [{ namespace: corporateNamespace, event: event(1, "session.next.text.ended", { text: "private corporate text" }) }] })
+  let delivered = 0
+  try {
+    await expect(runTurn(s.client, {
+      sessionID: "ses_1",
+      submit: async () => ({ id: "msg_1" }),
+      onEvent: () => { delivered++ },
+      onPermission: async () => "reject",
+    })).rejects.toBeInstanceOf(CorporateSessionTransportError)
+    expect(delivered).toBe(0)
+  } finally { s.server.stop(true) }
 })

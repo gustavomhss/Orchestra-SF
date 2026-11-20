@@ -2,25 +2,33 @@ import type { Host } from "@orchestra/core/host"
 import { Location } from "@orchestra/core/location"
 import { SessionOwner } from "@orchestra/core/session/owner"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
+import { SchemaErrorMiddleware } from "@orchestra/protocol/middleware/schema-error"
+import { makeSessionGroup } from "@orchestra/protocol/groups/session"
+import { MessageGroup } from "@orchestra/protocol/groups/message"
+import { EventGroup } from "@orchestra/protocol/groups/event"
+import { ReferenceGroup } from "@orchestra/protocol/groups/reference"
 import { Context, Effect, Layer, Schema, Scope } from "effect"
 import { HttpEffect, HttpRouter, HttpServer, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
-import { Api } from "./api"
 import { BodyLimit } from "./body-limit"
 import { EventHandler } from "./handlers/event"
 import { MessageHandler } from "./handlers/message"
 import { ReferenceHandler } from "./handlers/reference"
 import { SessionHandler } from "./handlers/session"
-import { layer } from "./location"
+import { layer, LocationMiddleware } from "./location"
 import { schemaErrorLayer } from "./middleware/schema-error"
-import { sessionLocationLayer } from "./middleware/session-location"
+import { SessionLocationMiddleware, sessionLocationLayer } from "./middleware/session-location"
 import { guardSessionEndpoint, InstalledSession, unauthorized } from "./session-access"
 
+// Reuse the canonical groups and middleware placement with their literal keys.
+// Indexing Api.groups widens each group's type to every group of the full API.
 const sessionApi = HttpApi.make("server")
-  .add(Api.groups["server.session"])
-  .add(Api.groups["server.message"])
-  .add(Api.groups["server.event"])
-  .add(Api.groups["server.reference"])
+  .add(makeSessionGroup(SessionLocationMiddleware))
+  .add(MessageGroup.middleware(SessionLocationMiddleware))
+  .add(EventGroup)
+  .add(ReferenceGroup.middleware(LocationMiddleware))
+  .middleware(Authorization)
+  .middleware(SchemaErrorMiddleware)
 
 export interface InstalledSessionOptions {
   readonly origin: string
@@ -90,5 +98,5 @@ export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Ef
     Effect.sync(() => HttpRouter.toWebHandler(routes, { disableLogger: true })),
     (value) => Effect.promise(() => value.dispose()),
   )
-  return http.handler
+  return (original: Request) => http.handler(original, services)
 })

@@ -13,7 +13,7 @@ import path from "path"
 import { InstallationVersion } from "@orchestra/core/installation/version"
 import type { McpAddInput, MessagesListOutput, Orchestra } from "@orchestra/client"
 import { buildConfigOptions, parseModelSelection, type ConfigOptionProvider } from "./config-option"
-import { runTurn, type Event } from "../turn"
+import { requireTechnicalSession, runTurn, type Event } from "../turn"
 
 type Client = ReturnType<typeof Orchestra.make>
 type Update = SessionNotification["update"]
@@ -67,11 +67,11 @@ export class OrchestraAgent implements Agent {
   async newSession(params: { cwd: string; mcpServers: McpServer[] }) {
     const catalog = await this.catalog(params.cwd)
     const model = catalog.defaultModel
-    const created = await this.client.sessions.create({
+    const created = requireTechnicalSession(await this.client.sessions.create({
       location: { directory: params.cwd },
       agent: catalog.defaultMode,
       model: model ? { providerID: model.providerID, id: model.modelID } : undefined,
-    })
+    }))
     this.sessions.set(created.id, { cwd: params.cwd, model, modeId: created.agent ?? catalog.defaultMode })
     await this.registerMcp(params.cwd, params.mcpServers)
     return { sessionId: created.id, configOptions: await this.options(created.id) }
@@ -93,12 +93,12 @@ export class OrchestraAgent implements Agent {
   }
 
   async listSessions(params: { cwd?: string | null; cursor?: string | null }) {
-    const page = await this.client.sessions.list({
+    const page = requireTechnicalSession(await this.client.sessions.list({
       limit: 100,
       order: "desc",
       directory: params.cwd ?? undefined,
       cursor: params.cursor ?? undefined,
-    })
+    }))
     return {
       sessions: page.data
         .filter((item) => !item.parentID)
@@ -119,7 +119,7 @@ export class OrchestraAgent implements Agent {
   }
 
   async unstable_forkSession(params: { sessionId: string; cwd: string; mcpServers?: McpServer[] }) {
-    const forked = await this.client.sessions.fork({ sessionID: params.sessionId }).catch(notFound(params.sessionId))
+    const forked = requireTechnicalSession(await this.client.sessions.fork({ sessionID: params.sessionId }).catch(notFound(params.sessionId)))
     await this.adopt(forked.id, params.cwd)
     await this.registerMcp(params.cwd, params.mcpServers ?? [])
     return { sessionId: forked.id, configOptions: await this.options(forked.id) }
@@ -207,7 +207,7 @@ export class OrchestraAgent implements Agent {
 
   /** Reads a stored session into this agent's live state, restoring the model and mode it last used. */
   private async adopt(sessionId: string, cwd: string) {
-    const stored = await this.client.sessions.get({ sessionID: sessionId }).catch(notFound(sessionId))
+    const stored = requireTechnicalSession(await this.client.sessions.get({ sessionID: sessionId }).catch(notFound(sessionId)))
     const catalog = await this.catalog(cwd)
     this.sessions.set(sessionId, {
       cwd,
@@ -221,7 +221,7 @@ export class OrchestraAgent implements Agent {
     const messages: Message[] = []
     let cursor: string | undefined
     do {
-      const page = await this.client.messages.list({ sessionID: sessionId, limit: 200, order: "asc", cursor }).catch(notFound(sessionId))
+      const page = requireTechnicalSession(await this.client.messages.list({ sessionID: sessionId, limit: 200, order: "asc", cursor }).catch(notFound(sessionId)))
       messages.push(...page.data)
       cursor = page.cursor.next ?? undefined
     } while (cursor)
