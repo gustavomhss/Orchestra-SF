@@ -44,7 +44,7 @@ test("official Teams Client consumes the installed HTTP namespace and durable pr
     expect((await client.get({ sessionID })).namespace).toEqual(client.namespace())
     const messageID = Schema.decodeUnknownSync(SessionMessage.ID)("msg_native_official_client")
     const receipt = await client.prompt({ sessionID, id: messageID, text: "Recorded admission through the official Client." })
-    expect(receipt.messageID).toBe(messageID)
+    expect(receipt.id).toBe(messageID)
     expect(f.sessionCalls.wakes).toBe(1)
     expect(f.sessionCalls.resumes).toBe(0)
     expect((await client.list()).data.map((item) => item.id)).toEqual([sessionID])

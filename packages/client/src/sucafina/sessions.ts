@@ -230,7 +230,7 @@ export function createSfTeamSessions(input: Readonly<{
   }
   const client = Orchestra.make({ baseUrl: binding.publicOrigin, fetch })
   const checkedInfo = (value: unknown, initialize = false) => {
-    const decoded = decode(() => Schema.decodeUnknownSync(Info, strict)(value))
+    const decoded = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(Info), strict)(value))
     inspect(decoded.namespace, initialize)
     return Schema.encodeSync(Info)(decoded)
   }
@@ -240,7 +240,7 @@ export function createSfTeamSessions(input: Readonly<{
       const query = decode(() => Schema.decodeUnknownSync(ListInput, strict)(value))
       if (query.cursor && !listCursors.has(query.cursor)) throw new SfTeamSessionError("protocol")
       const wire = await withCurrent(() => client.sessions.list(query, { signal }))
-      const decoded = decode(() => Schema.decodeUnknownSync(List, strict)(wire))
+      const decoded = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(List), strict)(wire))
       inspect(decoded.namespace, true)
       for (const item of decoded.data) inspect(item.namespace)
       remember(decoded.cursor, listCursors)
@@ -255,7 +255,7 @@ export function createSfTeamSessions(input: Readonly<{
     async active(signal?: AbortSignal) {
       ready()
       const value = await withCurrent(() => client.sessions.active({ signal }))
-      const result = decode(() => Schema.decodeUnknownSync(Active, strict)(value))
+      const result = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(Active), strict)(value))
       inspect(result.namespace)
       return Schema.encodeSync(Active)(result)
     },
@@ -265,7 +265,7 @@ export function createSfTeamSessions(input: Readonly<{
       const cursors = messageCursors.get(query.sessionID) ?? new Set<string>()
       if (query.cursor && !cursors.has(query.cursor)) throw new SfTeamSessionError("protocol")
       const wire = await withCurrent(() => client.messages.list(query, { signal }))
-      const result = decode(() => Schema.decodeUnknownSync(Messages, strict)(wire))
+      const result = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(Messages), strict)(wire))
       inspect(result.namespace)
       if (result.data.some((message) => "sessionID" in message && message.sessionID !== query.sessionID))
         return invalidate("protocol")
@@ -276,7 +276,7 @@ export function createSfTeamSessions(input: Readonly<{
       ready()
       const query = decode(() => Schema.decodeUnknownSync(HistoryInput, strict)(value))
       const wire = await withCurrent(() => client.sessions.history(query, { signal }))
-      const result = decode(() => Schema.decodeUnknownSync(History, strict)(wire))
+      const result = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(History), strict)(wire))
       inspect(result.namespace)
       if (result.data.some((event) => event.data.sessionID !== query.sessionID)) return invalidate("protocol")
       return Schema.encodeSync(History)(result)
@@ -294,7 +294,7 @@ export function createSfTeamSessions(input: Readonly<{
       const wire = await withCurrent(() => client.sessions.prompt({
         sessionID: query.sessionID, id: query.id, prompt: { text: query.text },
       }, { signal }))
-      const result = decode(() => Schema.decodeUnknownSync(SessionInput.Admitted, strict)(wire))
+      const result = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(SessionInput.Admitted), strict)(wire))
       if (result.id !== query.id || result.sessionID !== query.sessionID || result.prompt.text !== query.text) return invalidate("protocol")
       return Schema.encodeSync(SessionInput.Admitted)(result)
     },
@@ -317,7 +317,7 @@ export function createSfTeamSessions(input: Readonly<{
       ready()
       for await (const value of client.events.subscribe({ signal })) {
         check()
-        const result = decode(() => Schema.decodeUnknownSync(Frame, strict)(value))
+        const result = decode(() => Schema.decodeUnknownSync(Schema.toCodecJson(Frame), strict)(value))
         inspect(result.namespace)
         yield Schema.encodeSync(OrchestraEvent)(result.event)
       }

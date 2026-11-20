@@ -256,3 +256,24 @@ test("synthetic message identity must match the requested session even with a co
     expect(f.client.namespace()).toBeUndefined()
   } finally { f.close() }
 }))
+
+test("canonical HttpApi JSON optional fields are decoded before the response namespace is exposed", async () => browser(async () => {
+  const WireList = Schema.Struct({
+    data: Schema.Array(Session.Info), namespace: TeamProfile.SessionNamespace,
+    cursor: Schema.Struct({ previous: Schema.optional(Schema.String), next: Schema.optional(Schema.String) }),
+  })
+  const wire = Schema.encodeSync(Schema.toCodecJson(WireList))({
+    data: [Schema.decodeUnknownSync(Session.Info)(info)], namespace, cursor: { previous: undefined, next: undefined },
+  })
+  expect(wire.cursor.previous).toBeNull()
+  expect(wire.cursor.next).toBeNull()
+  const f = fixture(async () => json(wire))
+  try {
+    const result = await f.client.list()
+    expect(result.data[0]?.id).toBe(id)
+    expect(result.cursor.previous).toBeUndefined()
+    expect(result.cursor.next).toBeUndefined()
+    expect(f.client.namespace()).toEqual(namespace)
+    expect(f.failures).toEqual([])
+  } finally { f.close() }
+}))
