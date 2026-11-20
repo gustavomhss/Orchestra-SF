@@ -16,12 +16,14 @@ export function c17End(label: string, started: number, aborted = false) {
   if (aborted) reportedAbort = true
   // Async measurements are inclusive and overlap; never sum them as CPU time.
   // Labels are fixed source categories. No state, Request or source bytes escape.
-  console.info("SF_C17_PROFILE", JSON.stringify({
-    product: "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
-    elapsedMs: Math.round(now - begun), aborted, cumulative: true, asyncInclusive: true,
-    metrics: Object.fromEntries([...metrics].sort(([a], [b]) => a.localeCompare(b)).map(([name, item]) =>
-      [name, { count: item.count, totalMs: Math.round(item.totalMs * 1000) / 1000, maxMs: Math.round(item.maxMs * 1000) / 1000 }])),
-  }))
+  try {
+    console.info("SF_C17_PROFILE", JSON.stringify({
+      product: "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      elapsedMs: Math.round(now - begun), aborted, cumulative: true, asyncInclusive: true,
+      metrics: Object.fromEntries([...metrics].sort(([a], [b]) => a.localeCompare(b)).map(([name, item]) =>
+        [name, { count: item.count, totalMs: Math.round(item.totalMs * 1000) / 1000, maxMs: Math.round(item.maxMs * 1000) / 1000 }])),
+    }))
+  } catch { /* Diagnostic output cannot replace a product return or exception. */ }
 }
 
 // Origin enum: 0 other, 1 scenario-request-store, 2 calculation-read-scope, 3 unclassified.
