@@ -5,6 +5,7 @@ import { withReportsInstallation } from "./production-installation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 
 export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; corpus: ReportsCorpus } }>({
+  baseURL: "http://localhost:4110",
   reports: [async ({ page }, use, info) => {
     expect(info.project.metadata.bundle, "CI-UI-REPORTS requires the existing production config").toBe("production")
     expect(info.config.workers, "The production installer binds its fixed port 4110").toBe(1)

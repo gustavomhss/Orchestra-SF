@@ -5,6 +5,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
+import { selectSfProfile } from "../native/select-profile"
 
 /** This fixture starts the existing CLI installation, never a fixture HTTP server. */
 export type ReportsInstallation = {
@@ -162,6 +163,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
           await redeemOperatorEnrollment(page, installation,
             AbortSignal.any([lifetime.signal, AbortSignal.timeout(input.startupTimeoutMs)]))
           enrollment.prepared = false
+          await selectSfProfile(page, { origin: installation.origin, directory: installation.root })
         }),
       }
       yield* Effect.promise(() => authenticated.signIn(input.page))
