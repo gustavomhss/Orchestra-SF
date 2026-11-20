@@ -1,7 +1,23 @@
 # HANDOFF — sf-native-fixture-types
 
+## Resultado real — qualificado nesta fonte, superseded na integração
+
+Run [44675334180](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675334180), snapshot1831671428f708f9b7694eb49edd35cc2dc2d658, parent direto236a1703278d87e478958a957269b04100e5af66: **success**.
+- Testjob136085695982 e cleanup136086099888: success.
+- Compilador canônico real: exit0;3644arquivos listados; os3fixtures e import-health.ts presentes, **4/4**.
+- Bun original: **14pass/0fail/1385expects,3arquivos,6.01s**.
+- Controles efêmeros presentes somente no snapshot: .ci-run.json, step emtest-ci.yml e tsconfig.sfc-fixture-types.json. Nenhum deles é candidato a merge.
+- Escopo: os4blobs declarados e os tipos de suas dependências. Não é typecheck integral de toda a aplicação.
+
+Durante a execução, outra sessão integrou os reparos por #457/#459/#453. O source atual de Import test é64735e4149ef3ebfe6f81eabfc7887b9cf43f6e5, que usa NonNullable<Parameters<typeof importFixture>[0]>; a fonte deste gate usa1208354d…, com Parameters<typeof importFixture>[0]. Esta é a única diferença do arquivo, sem mudança de valores/callbacks/assertions.
+Preservar o blob integrado64735e41. Object.is817f50, Asset5d2f67 e Budgetb75a837 são idênticos. **Não abrir PR duplicado, não sobrescrever o teste atual e não repetir este gate.**
+
+A prova estática externa44674216763 compilou exatamente os blobs integrados e terminou com15/16comandos exit0: sete typechecks, geraçãoAtlas/Client, E2E/config/inclusão, Webbuild e spawn passaram. O agregado é **failure**, pelo guarddev com0errors/2GATEherdados. Esse resultado não se torna retroativamente success por este gate alternativo.
+
+Estado deste trabalho: **COMPLETE para a qualificação da fonte alternativa; SUPERSEDED para integração**. Base e histórico abaixo permanecem rastreáveis. Nenhum merge adicional é necessário.
+
 ## SHA e estado
-Estado: PARTIAL — aguarda compilação real dos inputs alterados e os três testes originais por Actions.
+Estado inicial: PARTIAL — estado anterior ao gate, preservado como histórico.
 Código: 56c37078b7238619a16b9e5ae7273a4485c06b54.
 Tree de código: 428827d866ab2c466247e6aa94356660f630af31.
 Base integrada: 45514008d7ce275327003c5d92faaeeab2479739.
@@ -32,5 +48,5 @@ Este gate não é typecheck integral do projeto. Erros de outros owners, incluin
 
 ## Estado, artefatos e retomada
 Nenhum gate foi executado neste checkpoint, nem merge/GO/deploy. suites.json e freeze12 permanecem intactos. Não há pacote ou baseline produzido por este recorte.
-O typecheck E2E no Operations44673130503 passou com o mesmo blob Object.is; a jornada global terminou failure1/5 e não qualifica esta correção de fixtures por si.
+O typecheck E2E no Operations44673130503 passou com o mesmo blob Object.is; a jornada global terminou failure, com1pass/4fail e não qualifica esta correção de fixtures por si.
 Atualizar este handoff somente com o run/snapshot/jobs reais da compilação e testes. Em success, integrar apenas estes quatro paths e documentação; os dois handoffs de origem são históricos. Em failure, registrar file:line e corrigir a causa antes de outro gate.
