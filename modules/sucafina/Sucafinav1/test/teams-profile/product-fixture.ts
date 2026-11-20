@@ -114,5 +114,8 @@ export async function teamProductFixture(input: {
     if (kind === "team") query.set("teamObjectId", profile.teamObjectId)
     return f.request(`/api/ui/context?${query}`, currentCookie)
   }
-  return { ...f, ...makeAuthority(), cookie, grants, writeGrants, hooks, technical, binding, makeAuthority, businessRequest, contextRequest }
+  const product = makeAuthority()
+  // Match local/entry: source identities exist before the guarded product persistence is used.
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await product.persistence.initializeSources(surface)
+  return { ...f, ...product, cookie, grants, writeGrants, hooks, technical, binding, makeAuthority, businessRequest, contextRequest }
 }
