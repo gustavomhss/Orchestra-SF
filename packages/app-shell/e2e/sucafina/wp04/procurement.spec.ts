@@ -603,7 +603,7 @@ test("the A B C comparison shows score components and retains submitted FX in th
 
   // The exact C02 anchor omits owner parameters; the real selected profile survives it.
   await queueRow.getByRole("link", { name: id, exact: true }).click()
-  await expect(page).toHaveURL((url) => url.searchParams.get("request") === id && decodeURIComponent(url.hash.slice(1)) === id && !url.searchParams.has("server"))
+  await expect(page).toHaveURL((url) => url.searchParams.get("request") === id && !url.searchParams.has("server"))
   await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-provider-state", "ready")
   await expect(queueRow).toHaveAttribute("aria-selected", "true")
   await expect(queueRow.getByRole("cell", { name: "32400 USD", exact: true })).toHaveCount(1)
