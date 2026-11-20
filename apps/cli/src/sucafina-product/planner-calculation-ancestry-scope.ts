@@ -216,7 +216,7 @@ function leafFor(state: Readonly<SfProductState>, runId: string, call: TrustedDo
   const record = object(state.preferences["sf:proposal-coverage:scenario-request:" + digestSfValue(runId)])
   if (!stored || stored.kind !== "scenario" || record.schema !== "sf-scenario-request-v1" || record.resultRef !== runId ||
     record.engineVersion !== "planner-runtime-v1" || record.requestDigest !== stored.requestDigest || record.resultDigest !== stored.resultDigest ||
-    record.recordDigest !== digestSfValue(Object.fromEntries(Object.entries(record).filter(([key]) => key !== "recordDigest"))) return undefined
+    record.recordDigest !== digestSfValue(Object.fromEntries(Object.entries(record).filter(([key]) => key !== "recordDigest")))) return undefined
   const parsed = decodeSfOperationInput("sf_scenario_simulate", record.request)
   const selected = state.cases[stored.caseRef.id]
   if (!parsed.ok || parsed.value.assumptions.length || parsed.value.operations.length || digestSfValue(parsed.value) !== stored.requestDigest ||
