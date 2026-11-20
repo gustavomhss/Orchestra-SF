@@ -210,7 +210,9 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       expect((await getReview(context, initial.review.id)).digest).toBe(initial.review.digest)
       for (const report of initial.reports) expect((await downloadReview(context, report.artifactRef)).digest).toBe(report.digest)
       const staleInput = await prepareThroughHost(context, initial.meeting, "reject-historical-source")
-      expect(staleInput.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
+      // The current case selection is rejected before the analysis producer runs.
+      expect(staleInput.response.status).toBe(403)
+      expect(staleInput.body).toEqual({ status: "denied", reason: "case-selection-unavailable" })
       const unauthorized = new Request(new URL(`/sucafina/dashboard?sf=review-download&artifactRef=${encodeURIComponent(initial.reports[0]!.artifactRef)}`, context.origin))
       const refused = await context.services.productHttp!(unauthorized, "dashboard")
       if (!refused) throw new Error("The real review download route disappeared")
