@@ -4,7 +4,7 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
-import { createModule } from "../../../index.ts"
+import { contributions, createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
@@ -17,6 +17,10 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
+import { createNativeBrowserAssets } from "../native-ui-browser/browser-assets.ts"
+import { createNativeBrowserHost } from "../native-ui-browser/host.ts"
+import type { SfHostServices } from "../../../product/contracts/host-context.ts"
+import { observeSfDashboardDraftHealth } from "../../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts"
 import { createSfDashboardHttp } from "../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -26,11 +30,12 @@ export const initialCaseRef = { id: "private-case-identity", incarnation: "case-
 // SQLite, encrypted operator session, module, C08 and source producers. The policy
 // switch can only restrict the authenticated operator; it never grants access.
 export async function createConsumerReadFixture() {
+  const assets = await createNativeBrowserAssets()
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-dashboard-consumer-read-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(directory)
   const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
+  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 404 }) })
   const origin = server.url.origin, installationId = randomUUID(), principalRef = `macos:${installationId}:1000`
   const clock = { at: "2026-11-13T08:00:00Z" }, policy = { readable: true, writable: true }
   const httpTrace: { mode: string; method: string; state: "received" | "returned" | "threw"; status?: number; elapsedMs?: number }[] = []
@@ -47,8 +52,9 @@ export async function createConsumerReadFixture() {
     return { commit: true, value: undefined }
   })
   const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
-  const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
-    installationId, origin, policyVersion: "policy", persistence, authenticate, environment, now: Date.now, createId: randomUUID,
+  const binding = { installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }
+  const authority = createSfProductAuthority({ identity: () => binding,
+    installationId, origin, policyVersion: "policy", persistence, authenticate, isAuthenticated: async (request) => Boolean(await identity.person(request)), environment, now: Date.now, createId: randomUUID,
     commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() :
       request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
@@ -65,13 +71,35 @@ export async function createConsumerReadFixture() {
   })
   const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
-  const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, maxJsonBytes: 100000 })
+  const application = { persistence, authenticate, environment, product: http, maxJsonBytes: 100000 }
+  const module = createModule("/sucafina", application)
+  const services = { ...authority, productHttp: http } as SfHostServices
+  const native = createNativeBrowserHost({ origin, mount: "/sucafina", directory, identity: () => binding,
+    application: { ...application, domains: contributions }, authority, services: () => services,
+    observe: (request, stamp) => observeSfDashboardDraftHealth({
+      ui: authority.ui, state: authority.state, humanActions: authority.humanActions,
+      binding: (_operationId, producer) => producer === http && application.product === http && services.productHttp === http ? http : undefined,
+      source: (id) => {
+        if (application.product !== http || services.productHttp !== http) return undefined
+        const operation = id === "dashboard.dashboard-workbench" ? dashboard.discover :
+          id === "dashboard.dashboard-hot-topic-source" ? dashboard.issue :
+          id === "dashboard.dashboard-draft-read" ? decisions.revalidateDraftRead :
+          id === "dashboard.dashboard-hot-topic-draft" ? decisions.drafts.register :
+          id === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list :
+          id === "dashboard.dashboard-capture" ? dashboard.capture : decisions.drafts.lookupFirstSave
+        return { producer: http, handler: http, operation,
+          dependencies: [authority, authority.ui, authority.state, authority.human, dashboard, decisions,
+            records, persistence, persistence.transaction, persistence.transactionAll!] }
+      },
+    }, request, stamp),
+  })
   routing.handle = async (request) => {
     const mode = new URL(request.url).searchParams.get("sf"), started = performance.now()
     const observation: (typeof httpTrace)[number] | undefined = ["dashboard-workbench", "dashboard-hot-topic-draft", "dashboard-draft-read"].includes(mode ?? "") ? { mode: mode!, method: request.method, state: "received" } : undefined
     if (observation) httpTrace.push(observation)
     try {
-      const response = await identity.handle(request) ?? await module(request)
+      const response = await identity.handle(request) ?? assets.handle(request, { directory }) ??
+        await native.handle(request) ?? await module(request)
       if (observation) { observation.state = "returned"; observation.status = response?.status ?? 503 }
       return response
     } catch (error) {
