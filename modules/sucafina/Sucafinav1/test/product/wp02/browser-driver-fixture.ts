@@ -161,8 +161,12 @@ async function forward(client) {
   })
   await opened.promise
   const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
-  // The async iterator pauses incoming reads while the WebSocket is backpressured.
-  for await (const chunk of client) {
+  // Pause incoming reads while the WebSocket is backpressured, but retain the
+  // writable half after a clean EOF. The default async iterator destroys the
+  // Duplex at EOF; on this allowHalfOpen socket that aborts pending replies and
+  // the normal WebSocket close handshake below. This function owns both halves
+  // and still requires explicit end, physical close, drained writes and WS1000.
+  for await (const chunk of client.iterator({ destroyOnReturn: false })) {
     if (failure) throw failure
     if (pending.length + chunk.length > limits.maxQueuedBytes) throw new Error("Browser bridge input exceeded its bound")
     pending = Buffer.concat([pending, chunk])

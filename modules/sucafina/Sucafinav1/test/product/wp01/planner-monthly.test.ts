@@ -53,12 +53,14 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
     })
     const { expect: browserExpect } = await import("@playwright/test")
     const driver = await launchBrowserDriver("planner-monthly")
+    const errors: string[] = []
+    let primaryFailure: { error: unknown } | undefined
     try {
       const context = await driver.browser.newContext({ viewport: { width: 1440, height: 1000 } })
       context.setDefaultTimeout(5000)
       context.setDefaultNavigationTimeout(5000)
       await enrollNativeBrowser(context, origin, () => identity.enroll())
-      const tab = await context.newPage(), errors: string[] = []
+      const tab = await context.newPage()
       tab.on("pageerror", (error) => errors.push(error.message))
       await tab.goto(origin + "/orchestra/sf-planner/opex?year=2027&version=v1")
       const grid = tab.getByRole("grid")
@@ -114,6 +116,18 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       expect(after.data).toEqual(before)
       expect(after.version).toEqual({ version: 1, by: "another" })
       expect(errors).toEqual([])
-    } finally { await driver.close(); driver.report() }
+    } catch (error) {
+      primaryFailure = { error }
+      if (errors.length) console.error("SF_PLANNER_NATIVE_PAGE_ERRORS", JSON.stringify(errors))
+      throw error
+    } finally {
+      try { await driver.close() }
+      catch (cleanupError) {
+        if (primaryFailure)
+          throw new AggregateError([primaryFailure.error, cleanupError], "Planner monthly test and browser cleanup failed")
+        throw cleanupError
+      }
+      if (!primaryFailure) driver.report()
+    }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)
