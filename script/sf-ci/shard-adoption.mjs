@@ -67,7 +67,7 @@ export function createShardBatch({ sourceSha, attemptId, plan }) {
     refName: PREFIX + sourceSha + "-" + attemptId + "-" + part.index,
     request: {
       package: "sucafina", directory: "modules/sucafina", runner: "bun",
-      args: ["--timeout", "30000", ...part.files],
+      args: ["--timeout", "30000", ...part.files.map((file) => "./" + file)],
       env: { ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1" },
       sfShard: {
         schemaVersion: 1, suiteId: "CI-SF", sourceSha, attemptId,

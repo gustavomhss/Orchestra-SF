@@ -32,12 +32,13 @@ test("generates one deterministic complete batch and eight distinct create-only 
   assert.deepEqual(createShardBatch({ sourceSha: SOURCE, attemptId: ATTEMPT, plan }), batch)
   assert.equal(batch.requests.length, 8)
   assert.equal(new Set(batch.requests.map((entry) => entry.refName)).size, 8)
-  const files = batch.requests.flatMap((entry) => entry.request.args.slice(2)).sort()
+  const files = batch.requests.flatMap((entry) => entry.request.args.slice(2).map((file) => file.slice(2))).sort()
   assert.deepEqual(files, plan.shards.flatMap((part) => part.files).sort())
   for (const entry of batch.requests) {
     assert.ok(entry.refName.includes(SOURCE))
     assert.ok(entry.refName.includes(ATTEMPT))
-    assert.deepEqual(entry.request.args.slice(0, 2), ["--timeout", "30000"])
+    assert.deepEqual(entry.request.args, ["--timeout", "30000",
+      ...plan.shards[entry.request.sfShard.shardIndex - 1].files.map((file) => "./" + file)])
     assert.deepEqual(entry.request.env, { ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1" })
     assert.equal(entry.request.runner, "bun")
   }
@@ -148,6 +149,7 @@ test("changed profile diagnostics are bound even when assignment stays identical
 })
 
 for (const [name, update] of [
+  ["bare filename without explicit path prefix", (request) => { request.args[2] = request.args[2].slice(2) }],
   ["missing file", (request) => { request.args.pop() }],
   ["duplicate file", (request) => { request.args.push(request.args[2]) }],
   ["foreign file", (request) => { request.args[2] = "foreign/other.test.ts" }],
