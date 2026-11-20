@@ -27,7 +27,21 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
   if (!button || !output || !status || !caseRef) return
   const threadId = entry.dataset.thread
   const prefix = 'sf:recipient-reply:v1:'
-  const storageKey = prefix + encodeURIComponent(JSON.stringify([scope, caseRef.id, caseRef.incarnation, threadId]))
+  // Corporate personal storage belongs to the immutable Team and principal.
+  // Project remains historical placement in the checked envelope, never its owner key.
+  const owner = scope.owner
+  let personalScope = scope
+  if (owner !== undefined) {
+    const profile = owner?.profile, principal = owner?.principal
+    if (!profile || !principal ||
+        ['installationId', 'tenantId', 'teamObjectId'].some((key) => typeof profile[key] !== 'string' || !profile[key]) ||
+        ['tenantId', 'principalObjectId'].some((key) => typeof principal[key] !== 'string' || !principal[key]) ||
+        profile.installationId !== scope.installationId || principal.principalObjectId !== scope.principalRef ||
+        profile.tenantId !== principal.tenantId) return
+    personalScope = ['sf-team-personal/1', profile.installationId, profile.tenantId,
+      profile.teamObjectId, principal.tenantId, principal.principalObjectId, 'recipient-reply']
+  }
+  const storageKey = prefix + encodeURIComponent(JSON.stringify([personalScope, caseRef.id, caseRef.incarnation, threadId]))
   const clearPending = () => { try { sessionStorage.removeItem(storageKey) } catch {} }
   const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b)
   const canonical = (value) => value === undefined ? ['absent'] : value === null ? ['null'] :

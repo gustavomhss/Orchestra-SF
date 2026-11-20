@@ -24,9 +24,15 @@ export async function createBrowserHostFixture(browser: Browser) {
   const origin = server.url.origin
   let actors: Awaited<ReturnType<typeof createThreadActorsFixture>> | undefined
   let context: BrowserContext | undefined
+  const owned: Promise<PromiseSettledResult<unknown>>[] = []
+  const observe = <T>(operation: Promise<T>): Promise<T> => {
+    owned.push(operation.then((value) => ({ status: "fulfilled", value }), (reason) => ({ status: "rejected", reason })))
+    return operation
+  }
   const close = async () => {
     const errors: unknown[] = []
     try { await context?.close() } catch (error) { errors.push(error) }
+    for (const result of await Promise.all(owned)) if (result.status === "rejected") errors.push(result.reason)
     try { await server.stop(true) } catch (error) { errors.push(error) }
     try { await actors?.dispose() } catch (error) { errors.push(error) }
     if (errors.length) throw new AggregateError(errors, "Shared Collaboration browser cleanup failed")
@@ -103,7 +109,7 @@ export async function createBrowserHostFixture(browser: Browser) {
       const stored = state.threads[thread.id]
       return isThread(stored) ? stored : undefined
     })
-    return { ...app, origin, context, page, errors, attempts, thread, caseRef, view, send, reply, inspect, close }
+    return { ...app, origin, context, page, errors, attempts, thread, caseRef, view, send, reply, inspect, observe, close }
   } catch (error) {
     try { await close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Shared Collaboration setup and cleanup failed") }
     throw error
