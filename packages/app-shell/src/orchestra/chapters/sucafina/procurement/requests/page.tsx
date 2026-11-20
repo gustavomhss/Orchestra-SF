@@ -924,7 +924,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
                 {t("sf.u11.remaining.savePr")}
               </button>
             </Show>
-            <Show when={!creating() && actionAllowed("submit_pr")}>
+            <Show when={!creating() && (actionAllowed("submit_pr") || current?.status === "pr_pending")}>
               <button type="button" class="mx-btn primary" disabled={!stageAllowed("submit_pr") || !!view.reviewing}
                 data-sf-request-action="submit_pr" onClick={() => reviewAction("submit_pr")}>
                 {t("sf.u11.remaining.submitPr")}
