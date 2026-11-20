@@ -17,7 +17,7 @@ export async function revalidatePrivateHotTopicDraft(
   if (Option.isNone(decoded)) return { status: "unavailable" }
   const selected = decoded.value, original = selected.targetEvidence
   if (original.installationId !== fresh.stamp.installationId || original.projectId !== fresh.stamp.projectId ||
-    original.target.recordType !== "hotTopics" || original.evidenceLevel !== "observed" ||
+    original.target.surface !== "dashboard" || original.target.recordType !== "hotTopics" || original.evidenceLevel !== "observed" ||
     input.identity.kind === "record" && !selected.draftRef || input.identity.kind === "new" && !!selected.draftRef) return { status: "unavailable" }
   if (!fresh.availability.some((resource) => resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
     resource.operations.some((entry) => entry.operationId === "dashboard.dashboard-draft-read" && entry.state === "ready" && entry.operational)))
@@ -35,9 +35,12 @@ export async function revalidatePrivateHotTopicDraft(
     source.value.caseRef.incarnation !== selected.caseRef.incarnation ||
     source.value.targetEvidence.installationId !== fresh.stamp.installationId ||
     source.value.targetEvidence.projectId !== fresh.stamp.projectId ||
+    source.value.targetEvidence.evidenceLevel !== "observed" ||
+    source.value.targetEvidence.target.surface !== original.target.surface ||
     source.value.targetEvidence.target.recordType !== original.target.recordType ||
-    source.value.targetEvidence.target.recordId !== original.target.recordId ||
-    source.value.targetEvidence.target.incarnation !== original.target.incarnation) return { status: "unavailable" }
+    source.value.targetEvidence.target.recordId !== original.target.recordId) return { status: "unavailable" }
+  // The canonical read above proves the original physical record. Its newly
+  // issued C02 scope incarnation may change after write authority is withdrawn.
   let sourceVersion = 0
   if (input.identity.kind === "record") {
     const draft = object(result.draft)

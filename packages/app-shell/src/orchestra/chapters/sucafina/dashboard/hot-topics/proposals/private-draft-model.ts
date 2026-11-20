@@ -34,6 +34,8 @@ export function object(value: unknown): Record<string, unknown> | undefined {
 const text = (value: unknown): value is string => typeof value === "string" && !!value.trim()
 const decodeDraft = (value: unknown) => Schema.decodeUnknownOption(SfDashboardDashboardHotTopicDraft.input, { onExcessProperty: "error" })(value)
 const sameCase = (a: CaseRef, b: CaseRef) => a.id === b.id && a.incarnation === b.incarnation
+// The original producer proves physical continuity. C02 scope incarnations may
+// change when authority/field scope changes without replacing the record.
 const evidenceMatches = (value: DraftRequest["targetEvidence"], expected: DraftRequest["targetEvidence"]) =>
   value.installationId === expected.installationId && value.projectId === expected.projectId &&
   value.target.surface === expected.target.surface && value.target.recordType === expected.target.recordType &&
@@ -46,7 +48,7 @@ export function readSelection(value: DraftValue): DraftReadRequest {
 
 function validTarget(request: DraftRequest) {
   const source = request.targetEvidence
-  return source.evidenceLevel === "observed" && source.target.recordType === "hotTopics" &&
+  return source.evidenceLevel === "observed" && source.target.surface === "dashboard" && source.target.recordType === "hotTopics" &&
     source.target.recordId === request.target.id && source.target.incarnation === request.target.incarnation &&
     source.target.version === request.target.version &&
     request.fields.action.trim() && request.fields.owner.trim() && /^\d{4}-\d{2}-\d{2}$/.test(request.fields.due) &&
