@@ -25,6 +25,7 @@ import { observeSfDecisionIntentHealth } from "../../../../../../../apps/cli/src
 import { createNativeBrowserHost } from "../../native-ui-browser/host.ts"
 import { createNativeBrowserAssets } from "../../native-ui-browser/browser-assets.ts"
 import { enrollNativeBrowser } from "../../native-ui-browser/session.ts"
+import { observeNativeFetch } from "../../native-ui-browser/observed-fetch.ts"
 import type { DomainProjection } from "../../../../product/contracts/context.ts"
 import { sfPlannerBiSelection } from "../../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
@@ -219,6 +220,12 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
       (value) => value.close(),
     )
     const context = await owned.browser.newContext({ serviceWorkers: "block" })
+    const capture = await observeNativeFetch(context, { origin, timeoutMs: 10_000, endpoints: [
+      { method: "GET", path: mount + "/dashboard", sf: "bi-data" },
+      { method: "GET", path: mount + "/dashboard", sf: "bi-source" },
+      { method: "GET", path: mount + "/api/ui/context" },
+      { method: "GET", path: mount + "/api/ui/pages/CAP17" },
+    ] })
     signal.throwIfAborted()
     const page = await context.newPage()
     signal.throwIfAborted()
@@ -284,7 +291,7 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     if (!owner) throw new Error("Real native F01 owner unavailable")
     signal.throwIfAborted()
     const count = (mode: string) => observations.filter((entry) => entry.mode === mode).length
-    return { page, context, origin, mount, owner, selectionRef, observations, failures, aborted, holdNext, count, dispose, report: owned.report }
+    return { page, context, origin, mount, owner, selectionRef, observations, failures, aborted, holdNext, count, capture, dispose, report: owned.report }
 
   } catch (error) {
     console.error("SF_BI_LIFECYCLE_SETUP", JSON.stringify({ stage, cancelled: signal.aborted, error: error instanceof Error ? error.message : String(error) }))
@@ -301,13 +308,14 @@ test("native BI keeps its owner, refreshes on manual focus and timer, and signs 
     const { page } = world
     const refresh = async (action: () => Promise<unknown>) => {
       const before = world.count("bi-data"), beforeAuthority = world.count("native-context")
-      const data = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
-      const authority = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith("/api/ui/context"))
-      await action()
-      expect((await authority).status()).toBe(200)
-      const response = await data
-      expect(response.status()).toBe(200)
-      expect((await response.json()).request).toEqual({ viewId: "BI01", selectionRef: world.selectionRef,
+      const [authority, response] = await Promise.all([
+        page.waitForResponse((response) => new URL(response.url()).pathname.endsWith("/api/ui/context")),
+        world.capture(page, (response) => new URL(response.url).searchParams.get("sf") === "bi-data"),
+        action(),
+      ])
+      expect(authority.status()).toBe(200)
+      expect(response.status).toBe(200)
+      expect((response.body as { request: unknown }).request).toEqual({ viewId: "BI01", selectionRef: world.selectionRef,
         period: { start: "2026-01-01", end: "2026-12-31" } })
       await page.getByText("Data updated.", { exact: true }).waitFor()
       expect(world.count("bi-data")).toBeGreaterThan(before)
@@ -323,13 +331,15 @@ test("native BI keeps its owner, refreshes on manual focus and timer, and signs 
     await page.getByRole("button", { name: "View data", exact: true }).click()
     expect((await deadline.phase("hold-real-data", () => success.reached.promise)).status).toBe(200)
     const beforeLogout = world.count("logout")
-    const aborted = page.waitForEvent("requestfailed", (request) => new URL(request.url()).searchParams.get("sf") === "bi-data")
     // Two user activations still start exactly one genuine identity POST.
-    await page.getByRole("button", { name: "Sign out", exact: true }).evaluate((button) => {
-      (button as HTMLButtonElement).click(); (button as HTMLButtonElement).click()
-    })
-    expect((await deadline.phase("hold-real-logout", () => logout.reached.promise)).status).toBe(204)
-    await aborted
+    const [logoutResponse] = await Promise.all([
+      deadline.phase("hold-real-logout", () => logout.reached.promise),
+      page.waitForEvent("requestfailed", (request) => new URL(request.url()).searchParams.get("sf") === "bi-data"),
+      page.getByRole("button", { name: "Sign out", exact: true }).evaluate((button) => {
+        (button as HTMLButtonElement).click(); (button as HTMLButtonElement).click()
+      }),
+    ])
+    expect(logoutResponse.status).toBe(204)
     // Logout is still held, but the native owner has already fenced its
     // generation, removed private BI UI and aborted the old successful read.
     await page.waitForFunction(() => document.querySelector('[data-sf-host="owner-runtime231"]')?.getAttribute("data-sf-provider-state") === "resolving")
@@ -366,13 +376,14 @@ test("native BI independently polls authority while awaiting a held result and r
       headers: { origin: world.origin, cookie: cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ") }, redirect: "manual" })
     expect(revoked.status).toBe(204)
     expect(world.aborted).not.toContain("bi-data")
-    const authority = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith("/api/ui/context"))
-    await page.clock.runFor(29_000)
-    const denied = await authority
+    const [denied] = await Promise.all([
+      world.capture(page, (response) => new URL(response.url).pathname.endsWith("/api/ui/context")),
+      page.clock.runFor(29_000),
+    ])
     // F01 distinguishes a durably revoked operator session from a current
     // authenticated principal denied by policy. This is its real 401 envelope.
-    expect(denied.status()).toBe(401)
-    expect(await denied.json()).toEqual({ status: "unauthenticated" })
+    expect(denied.status).toBe(401)
+    expect(denied.body).toEqual({ status: "unauthenticated" })
     await page.waitForFunction(() => document.querySelector('[data-sf-host="owner-runtime231"]')?.getAttribute("data-sf-provider-state") === "unavailable")
     expect(world.count("native-context")).toBeGreaterThan(beforeAuthority)
     expect(await page.locator("[data-sf-catalog], .sf-bi-figure, [data-sf-bi-focus]").count()).toBe(0)
@@ -398,12 +409,13 @@ test("clearing native BI selection while genuine authorized options are delayed 
     const options = world.holdNext("bi-options"), beforeData = world.count("bi-data")
     await page.getByRole("button", { name: "Refresh data", exact: true }).click()
     expect((await deadline.phase("hold-real-options", () => options.reached.promise)).status).toBe(200)
-    const aborted = page.waitForEvent("requestfailed", (request) => new URL(request.url()).searchParams.get("sf") === "bi-options")
-    await page.getByLabel("Selection", { exact: true }).selectOption("")
-    await aborted
+    await Promise.all([
+      page.waitForEvent("requestfailed", (request) => new URL(request.url()).searchParams.get("sf") === "bi-options"),
+      page.locator('[data-sf-field="selection"]').selectOption(""),
+    ])
     options.release.resolve(); await options.finished.promise
     await page.clock.runFor(1)
-    expect(await page.getByLabel("Selection", { exact: true }).inputValue()).toBe("")
+    expect(await page.locator('[data-sf-field="selection"]').inputValue()).toBe("")
     expect(await page.getByRole("button", { name: "View data", exact: true }).isDisabled()).toBe(true)
     expect(await page.locator("[data-sf-catalog] table, [data-sf-catalog] nav a").count()).toBe(0)
     expect(await page.getByText("Read data for the current selection.", { exact: true }).isVisible()).toBe(true)
@@ -415,7 +427,7 @@ test("clearing native BI selection while genuine authorized options are delayed 
     await page.clock.runFor(30_000)
     expect((await authority).status()).toBe(200)
     expect(world.count("bi-data")).toBe(beforeData)
-    expect(await page.getByLabel("Selection", { exact: true }).inputValue()).toBe("")
+    expect(await page.locator('[data-sf-field="selection"]').inputValue()).toBe("")
     expect(world.failures).toEqual([])
     await world.dispose()
     world.report()
@@ -428,18 +440,18 @@ test("native BI returns from its real Planner source with the same human filters
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
     const { page } = world
-    await page.getByLabel("Analysis view", { exact: true }).selectOption("BI02")
-    await page.getByLabel("End date", { exact: true }).fill("2026-03-31")
+    await page.locator('[data-sf-field="view"]').selectOption("BI02")
+    await page.locator('[data-sf-field="end"]').fill("2026-03-31")
     const options = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
     await page.getByRole("button", { name: "Choose context", exact: true }).click()
     expect((await options).status()).toBe(200)
-    await page.getByLabel("Selection", { exact: true }).selectOption("planner")
-    const versions = await page.getByLabel("Base version", { exact: true }).locator("option").evaluateAll((items) =>
+    await page.locator('[data-sf-field="selection"]').selectOption("planner")
+    const versions = await page.locator('[data-sf-field="base-version"]').locator("option").evaluateAll((items) =>
       items.map((item) => (item as HTMLOptionElement).value).filter(Boolean))
     expect(versions).toHaveLength(2)
-    await page.getByLabel("Base version", { exact: true }).selectOption(versions[0]!)
-    await page.getByLabel("Candidate version", { exact: true }).selectOption(versions[1]!)
-    await page.getByLabel("Comparison currency", { exact: true }).fill("USD")
+    await page.locator('[data-sf-field="base-version"]').selectOption(versions[0]!)
+    await page.locator('[data-sf-field="candidate-version"]').selectOption(versions[1]!)
+    await page.locator('[data-sf-field="currency"]').fill("USD")
     const data = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
     await page.getByRole("button", { name: "View data", exact: true }).click()
     const dataResponse = await data
@@ -453,12 +465,13 @@ test("native BI returns from its real Planner source with the same human filters
     const marker = page.locator("[data-sf-catalog] .sf-bi-source-actions button[data-sf-bi-focus]").first()
     const valueId = await marker.getAttribute("data-sf-bi-focus")
     expect(valueId).toBeTruthy()
-    const source = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source")
-    await marker.click()
-    const sourceResponse = await source
-    expect(sourceResponse.status()).toBe(200)
-    expect(new URL(sourceResponse.url()).searchParams.get("valueId")).toBe(valueId)
-    const original: { links: { label: string; url: string }[] } = await sourceResponse.json()
+    const [sourceResponse] = await Promise.all([
+      world.capture(page, (response) => new URL(response.url).searchParams.get("sf") === "bi-source"),
+      marker.click(),
+    ])
+    expect(sourceResponse.status).toBe(200)
+    expect(new URL(sourceResponse.url).searchParams.get("valueId")).toBe(valueId)
+    const original = sourceResponse.body as { links: { label: string; url: string }[] }
     expect(original.links.length).toBeGreaterThan(0)
     const originalUrl = new URL(original.links[0]!.url, world.origin)
     const link = page.getByRole("navigation", { name: "Authorized source links", exact: true }).locator("a").first()
@@ -468,12 +481,13 @@ test("native BI returns from its real Planner source with the same human filters
     expect(nativeUrl.searchParams.get("server")).toBe(world.origin)
     expect(nativeUrl.searchParams.get("project")).toBe(new URL(page.url()).searchParams.get("project"))
     expect(nativeUrl.searchParams.get("installation")).toBe(new URL(page.url()).searchParams.get("installation"))
-    const planner = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith("/api/ui/pages/CAP17"))
-    await link.click()
+    const [plannerResponse] = await Promise.all([
+      world.capture(page, (response) => new URL(response.url).pathname.endsWith("/api/ui/pages/CAP17")),
+      link.click(),
+    ])
     await page.waitForURL((url) => url.pathname === "/orchestra/sf-planner/overview")
-    const plannerResponse = await planner
-    expect(plannerResponse.status()).toBe(200)
-    const plannerBody = await plannerResponse.json()
+    expect(plannerResponse.status).toBe(200)
+    const plannerBody = plannerResponse.body as { status: string; value: { data: { selectedVersion: { id: string } } } }
     expect(plannerBody.status).toBe("ok")
     expect(plannerBody.value.data.selectedVersion.id).toBe(originalUrl.searchParams.get("version"))
     expect(await page.locator("[data-sf-catalog]").count()).toBe(0)
@@ -490,13 +504,13 @@ test("native BI returns from its real Planner source with the same human filters
     expect((await fresh).status()).toBe(200)
     await page.getByText("Data updated.", { exact: true }).waitFor()
     expect(world.count("bi-data")).toBeGreaterThan(beforeReturn)
-    expect(await page.getByLabel("Analysis view", { exact: true }).inputValue()).toBe("BI02")
-    expect(await page.getByLabel("Start date", { exact: true }).inputValue()).toBe("2026-01-01")
-    expect(await page.getByLabel("End date", { exact: true }).inputValue()).toBe("2026-03-31")
-    expect(await page.getByLabel("Selection", { exact: true }).inputValue()).toBe("planner")
-    expect(await page.getByLabel("Base version", { exact: true }).inputValue()).toBe(versions[0]!)
-    expect(await page.getByLabel("Candidate version", { exact: true }).inputValue()).toBe(versions[1]!)
-    expect(await page.getByLabel("Comparison currency", { exact: true }).inputValue()).toBe("USD")
+    expect(await page.locator('[data-sf-field="view"]').inputValue()).toBe("BI02")
+    expect(await page.locator('[data-sf-field="start"]').inputValue()).toBe("2026-01-01")
+    expect(await page.locator('[data-sf-field="end"]').inputValue()).toBe("2026-03-31")
+    expect(await page.locator('[data-sf-field="selection"]').inputValue()).toBe("planner")
+    expect(await page.locator('[data-sf-field="base-version"]').inputValue()).toBe(versions[0]!)
+    expect(await page.locator('[data-sf-field="candidate-version"]').inputValue()).toBe(versions[1]!)
+    expect(await page.locator('[data-sf-field="currency"]').inputValue()).toBe("USD")
     expect(await page.evaluate(() => document.activeElement?.getAttribute("data-sf-bi-focus"))).toBe(valueId)
     expect(await world.owner.evaluate((node) => node.isConnected && node.getAttribute("data-sf-provider-state") === "ready")).toBe(true)
     expect(world.failures).toEqual([])

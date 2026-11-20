@@ -4,6 +4,7 @@ import type { Locator, Page, Response, Route } from "@playwright/test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
+import { observeNativeFetch, type NativeFetchCapture, type NativeFetchResponse } from "../native-ui-browser/observed-fetch.ts"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { createConsumerReadFixture, initialCaseRef } from "./ownhost-fixture.ts"
 import { decodePrivateWorkbench, sourceDraft } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/private-draft-model.ts"
@@ -12,18 +13,19 @@ const currentLoaded = "Current version loaded. Compare the differences and confi
 const savedMessage = "Draft saved. It can be included in a case choice before preparation."
 const confirmationLabel = "I reviewed the current proposal and want to keep my values."
 const modeResponse = (mode: string) => (response: Response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === mode
+const capturedMode = (mode: string) => (response: NativeFetchResponse) => response.method === "POST" && new URL(response.url).searchParams.get("sf") === mode
 const modeUrl = (mode: string) => (url: URL) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
 
-async function openWorkbench(page: Page, origin: string) {
+async function openWorkbench(page: Page, origin: string, capture: NativeFetchCapture) {
   await page.goto(`${origin}/orchestra/sf-dashboard/hot-topics`)
   await page.getByRole("link", { name: "Private follow-up proposals", exact: true }).click()
   const panel = page.getByRole("region", { name: "Private follow-up proposals", exact: true })
   const [response] = await Promise.all([
-    page.waitForResponse(modeResponse("dashboard-workbench")),
+    capture(page, capturedMode("dashboard-workbench")),
     panel.getByRole("button", { name: "Load options", exact: true }).click(),
   ])
-  expect(response.status()).toBe(200)
-  const envelope = object(await response.json())
+  expect(response.status).toBe(200)
+  const envelope = object(response.body)
   expect(envelope.status).toBe("ok")
   const decoded = decodePrivateWorkbench(envelope.value)
   expect(decoded).toBeDefined()
@@ -55,18 +57,18 @@ async function chooseNew(panel: Locator) {
   await panel.getByRole("combobox", { name: "Source Hot Topic", exact: true }).selectOption({ label: "Original action" })
 }
 
-async function saveDraft(page: Page, panel: Locator) {
+async function saveDraft(page: Page, panel: Locator, capture: NativeFetchCapture) {
   const [written, discovered] = await Promise.all([
-    page.waitForResponse(modeResponse("dashboard-hot-topic-draft")),
-    page.waitForResponse(modeResponse("dashboard-workbench")),
+    capture(page, capturedMode("dashboard-hot-topic-draft")),
+    capture(page, capturedMode("dashboard-workbench")),
     panel.getByRole("button", { name: "Save private draft", exact: true }).click(),
   ])
-  expect(written.status()).toBe(200)
-  expect(object(await written.json()).status).toBe("ok")
-  expect(discovered.status()).toBe(200)
-  expect(object(await discovered.json()).status).toBe("ok")
+  expect(written.status).toBe(200)
+  expect(object(written.body).status).toBe("ok")
+  expect(discovered.status).toBe(200)
+  expect(object(discovered.body).status).toBe("ok")
   await panel.getByText(savedMessage, { exact: true }).waitFor()
-  return written.request().postDataJSON() as Record<string, unknown>
+  return written.requestBody as Record<string, unknown>
 }
 
 // Each test launches the existing Node-owned BrowserDriver and mounts the actual
@@ -82,14 +84,18 @@ test("Dashboard reads the current source and active private proposal while prese
     const context = await driver.browser.newContext()
     context.setDefaultTimeout(10000)
     context.setDefaultNavigationTimeout(15000)
+    const capture = await observeNativeFetch(context, { origin: f.origin, timeoutMs: 10000,
+      endpoints: ["dashboard-workbench", "dashboard-hot-topic-draft", "dashboard-draft-read"]
+        .map((sf) => ({ method: "POST" as const, path: "/sucafina/dashboard", sf })),
+    })
     const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     await enrollNativeBrowser(context, f.origin, () => f.identity.enroll())
-    const panel = await openWorkbench(page, f.origin)
+    const panel = await openWorkbench(page, f.origin, capture)
     await chooseNew(panel)
     await panel.getByLabel("Action", { exact: true }).fill("Initially saved proposal")
     await panel.getByLabel("Notes", { exact: true }).fill("Initially saved private context")
-    await saveDraft(page, panel)
+    await saveDraft(page, panel, capture)
     const listed = await f.read((trusted) => f.decisions.drafts.list({ caseRef: initialCaseRef }, trusted))
     if (listed.status !== "ok" || listed.value.length !== 1) throw new Error("Saved private draft unavailable")
     const initial = await f.read((trusted) => f.decisions.drafts.readCurrent({ caseRef: initialCaseRef, draftRef: listed.value[0]!.draftRef }, trusted))
@@ -102,12 +108,12 @@ test("Dashboard reads the current source and active private proposal while prese
 
     const other = await context.newPage()
     other.on("pageerror", (error) => errors.push(error.message))
-    const otherPanel = await openWorkbench(other, f.origin)
+    const otherPanel = await openWorkbench(other, f.origin, capture)
     await otherPanel.getByRole("combobox", { name: "Case", exact: true }).selectOption({ label: "Review the action" })
     await otherPanel.getByRole("combobox", { name: "Proposal", exact: true }).selectOption({ label: "Initially saved proposal" })
     await otherPanel.getByLabel("Action", { exact: true }).fill("Active proposal from another page")
     await otherPanel.getByLabel("Notes", { exact: true }).fill("Current private proposal context")
-    const secondWrite = await saveDraft(other, otherPanel)
+    const secondWrite = await saveDraft(other, otherPanel, capture)
     expect(secondWrite.expectedVersion).toBe(1)
 
     // Before changing the source, a real stale write proves that the first page
@@ -132,14 +138,14 @@ test("Dashboard reads the current source and active private proposal while prese
     expect(object(await changed.json()).ok).toBe(true)
 
     const [discovered, checked] = await Promise.all([
-      page.waitForResponse(modeResponse("dashboard-workbench")),
-      page.waitForResponse(modeResponse("dashboard-draft-read")),
+      capture(page, capturedMode("dashboard-workbench")),
+      capture(page, capturedMode("dashboard-draft-read")),
       panel.getByRole("button", { name: "Load current version and keep my edits", exact: true }).click(),
     ])
-    expect(discovered.status()).toBe(200)
-    expect(checked.status()).toBe(200)
-    expect(checked.request().postDataJSON()).toEqual({ caseRef: original.caseRef, targetEvidence: original.targetEvidence, draftRef: original.draftRef })
-    const checkedBody = object(await checked.json())
+    expect(discovered.status).toBe(200)
+    expect(checked.status).toBe(200)
+    expect(checked.requestBody).toEqual({ caseRef: original.caseRef, targetEvidence: original.targetEvidence, draftRef: original.draftRef })
+    const checkedBody = object(checked.body)
     expect(checkedBody.status).toBe("ok")
     const current = object(checkedBody.value), proposal = object(current.draft)
     expect(current.originalSource).toEqual({ refId: original.targetEvidence.refId, refDigest: original.targetEvidence.refDigest })
@@ -162,7 +168,7 @@ test("Dashboard reads the current source and active private proposal while prese
     expect(beforeReview.status === "ok" && beforeReview.value).toEqual(active.status === "ok" && active.value)
 
     await panel.getByLabel(confirmationLabel, { exact: true }).check()
-    const reviewedWrite = await saveDraft(page, panel)
+    const reviewedWrite = await saveDraft(page, panel, capture)
     expect(reviewedWrite.expectedVersion).toBe(2)
     expect(reviewedWrite.draftRef).toBe(proposal.draftRef)
     expect(reviewedWrite.targetEvidence).toEqual(current.currentSource)
@@ -198,10 +204,14 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
     const context = await driver.browser.newContext()
     context.setDefaultTimeout(10000)
     context.setDefaultNavigationTimeout(15000)
+    const capture = await observeNativeFetch(context, { origin: f.origin, timeoutMs: 10000,
+      endpoints: ["dashboard-workbench", "dashboard-hot-topic-draft", "dashboard-draft-read"]
+        .map((sf) => ({ method: "POST" as const, path: "/sucafina/dashboard", sf })),
+    })
     const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     await enrollNativeBrowser(context, f.origin, () => f.identity.enroll())
-    const panel = await openWorkbench(page, f.origin)
+    const panel = await openWorkbench(page, f.origin, capture)
     await chooseNew(panel)
     await panel.getByLabel("Action", { exact: true }).fill("Private retained operator action")
     await panel.getByLabel("Notes", { exact: true }).fill("Private retained operator context")
@@ -255,15 +265,15 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
     await page.route(workbenchUrl, withdrawWrite)
     const [prior, restricted] = await Promise.all([
       priorWrite.promise,
-      page.waitForResponse(modeResponse("dashboard-draft-read")),
+      capture(page, capturedMode("dashboard-draft-read")),
       panel.getByRole("button", { name: "Load options", exact: true }).click(),
     ])
     await page.unroute(workbenchUrl, withdrawWrite)
     expect(object(object(object(prior).value).decisions).permissions).toMatchObject({ draft: true })
-    expect(restricted.status()).toBe(200)
-    const restrictedValue = object(object(await restricted.json()).value)
+    expect(restricted.status).toBe(200)
+    const restrictedValue = object(object(restricted.body).value)
     expect(restrictedValue.permissions).toMatchObject({ draft: false, prepare: false, apply: false, capture: false, preserve: false })
-    const originalScope = object(object(restricted.request().postDataJSON()).targetEvidence)
+    const originalScope = object(object(restricted.requestBody).targetEvidence)
     const currentScope = object(restrictedValue.currentSource)
     expect(restrictedValue.originalSource).toEqual({ refId: originalScope.refId, refDigest: originalScope.refDigest })
     expect(object(currentScope.target)).toMatchObject({ surface: "dashboard", recordType: "hotTopics", recordId: object(originalScope.target).recordId })
