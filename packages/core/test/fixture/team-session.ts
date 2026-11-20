@@ -119,6 +119,8 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
     const request = f.businessRequest(profileA, f.cookie, { method: "POST", headers: { "Idempotency-Key": randomUUID() } })
     const lease = await f.authority.ui.admit(request, "sf_case_draft", digestSfValue(value))
     if (lease.status !== "ok") throw new Error("Actual Case admission required")
+    if (!await f.authority.ui.validate(lease.value, "sf_case_draft", digestSfValue(value)))
+      throw new Error("Actual Case command consumption required")
     const cases = createDecisionCasePort({
       state: f.authority.state, host: f.authority.host, creationTarget: f.authority.creationTarget,
       operationIdentity: (context) => context.kind === "ui" ? f.authority.ui.operationIdentity(context) : undefined,
@@ -133,7 +135,7 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
     })
     const result = await cases.draft(value, lease.value)
     f.authority.ui.finish(lease.value)
-    if (result.status !== "ok") throw new Error("Actual Case persistence required")
+    if (result.status !== "ok") throw new Error(`Actual Case persistence required: ${result.status} ${result.reason}`)
     const ref = result.value
     await f.store.transaction("dashboard", async (snapshot) => {
       const product = object(snapshot.data.__sfProductV1)
