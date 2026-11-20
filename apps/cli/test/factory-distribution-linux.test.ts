@@ -201,7 +201,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       .toBe(closure.bundle.sha256)
     expect(await Bun.file(path.join(npmRoot, "cli/package.json")).exists()).toBe(true)
 
-    const config = await prepareLocalConfiguration(privateDir)
+    const config = await prepareLocalConfiguration(privateDir, "http://localhost:4120")
     // An unconfigured /status never builds the decisions host. Activate a real
     // local operator so the CLI/factory identity split fails during composition.
     const enrollment = await prepareOperatorAccess(config, true) // Activate the real owner profile before boot.
@@ -224,7 +224,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     }
     const launcher = path.join(extracted, "bin/orchestra")
     const factory = path.join(extracted, "bin/local/entry.mjs")
-    child = Bun.spawn([launcher, "serve", "--hostname", "localhost", "--port", "4110", "--installation", factory], {
+    child = Bun.spawn([launcher, "serve", "--hostname", "localhost", "--port", "4120", "--installation", factory], {
       cwd: privateDir, env, stdout: "pipe", stderr: "pipe",
     })
     const logs: string[] = []
@@ -237,7 +237,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     for (let attempt = 0; attempt < 120; attempt++) {
       if (child.exitCode !== null) break
       try {
-        const current = await fetch("http://localhost:4110/sucafina/status", {
+        const current = await fetch("http://localhost:4120/sucafina/status", {
           signal: AbortSignal.timeout(1000), redirect: "manual",
         })
         if (current.status === 200) { response = current; break }
@@ -249,7 +249,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const status: unknown = await response.json()
     expect(status).toMatchObject({ login: "local-operator", uploads: "unavailable-scanner-not-configured" })
     expect(child.exitCode).toBeNull()
-    const webResponse = await fetch("http://localhost:4110/", {
+    const webResponse = await fetch("http://localhost:4120/", {
       redirect: "error", signal: AbortSignal.timeout(15000),
     })
     expect(webResponse.status).toBe(200)
@@ -257,18 +257,18 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     // The configured local-operator branch forces complete host + decisions
     // composition before the installed listener starts; /status alone previously
     // masked the foreign WeakSet error. Assert real non-status routes too.
-    const authLanding = await fetch("http://localhost:4110/sucafina/auth/login", {
+    const authLanding = await fetch("http://localhost:4120/sucafina/auth/login", {
       redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     expect(authLanding.status).toBe(200)
     expect(await authLanding.text()).toContain("local")
-    const dashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
+    const dashboard = await fetch("http://localhost:4120/sucafina/dashboard", {
       redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     expect(dashboard.status).toBe(303)
     expect(dashboard.headers.get("location")).toContain("/sucafina/auth/login")
     const currentChoiceEndpoint = "/sucafina/dashboard?sf=current-choice&format=json"
-    const currentChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
+    const currentChoice = await fetch("http://localhost:4120" + currentChoiceEndpoint, {
       redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     expect(currentChoice.status).toBe(303)
@@ -303,11 +303,11 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       const setCookie = redeemed?.headers.get("set-cookie")
       if (!setCookie) throw new Error("SF_FACTORY_OPERATOR_SESSION_MISSING")
       cookie = setCookie.split(";")[0]!
-      expect(await identity.person(new Request("http://localhost:4110/sucafina/dashboard", {
+      expect(await identity.person(new Request("http://localhost:4120/sucafina/dashboard", {
         headers: { cookie },
       }))).toMatchObject({ id: `macos:${loaded.config.localOperator.installationId}:${loaded.config.localOperator.uid}` })
     } finally { await credentials.dispose() }
-    const authenticatedDashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
+    const authenticatedDashboard = await fetch("http://localhost:4120/sucafina/dashboard", {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     // The compiled/extracted distribution must NOT resurrect the retired HTML
@@ -320,9 +320,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     // using the compiled installation's real authenticated human command,
     // never by writing raw SQLite, bypassing authorization, or forging a fence.
     const objective = "Installed factory authenticated fence witness"
-    const created = await fetch("http://localhost:4110/sucafina/dashboard?sf=workbench-command", {
+    const created = await fetch("http://localhost:4120/sucafina/dashboard?sf=workbench-command", {
       method: "POST", redirect: "manual", signal: AbortSignal.timeout(15000),
-      headers: { cookie, origin: "http://localhost:4110", "content-type": "application/json",
+      headers: { cookie, origin: "http://localhost:4120", "content-type": "application/json",
         "idempotency-key": randomUUID() },
       body: JSON.stringify({ operation: "sf_case_draft", input: {
         objective, horizon: { start: "2027-01-01", end: "2027-12-31" },
@@ -338,7 +338,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     // The public workbench response intentionally does not expose an identity
     // receipt in every transport. The read must locate the sole persisted case
     // by its owner-authored title, and independently validate its opaque ref.
-    const authenticatedChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
+    const authenticatedChoice = await fetch("http://localhost:4120" + currentChoiceEndpoint, {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     const currentChoiceBody: unknown = await authenticatedChoice.json()
@@ -402,7 +402,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       authenticatedDashboardStatus: authenticatedDashboard.status,
       authenticatedCurrentChoiceStatus: authenticatedChoice.status,
       authenticatedCurrentChoiceState: authenticatedChoiceState,
-      origin: "http://localhost:4110",
+      origin: "http://localhost:4120",
       extractedOutsideCheckout: true,
     }
     // An upload from another workflow run/attempt must never share this namespace.

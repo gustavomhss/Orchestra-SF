@@ -21,7 +21,7 @@ export async function startPlannerInstallation(info: TestInfo) {
   const reservation = createServer()
   await new Promise<void>((resolve, reject) => {
     reservation.once("error", reject)
-    reservation.listen(4110, "localhost", () => resolve())
+    reservation.listen(4174, "127.0.0.1", () => resolve())
   })
   await new Promise<void>((resolve, reject) => reservation.close((error) => error ? reject(error) : resolve()))
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp03-browser-"))
@@ -51,7 +51,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     await rm(directory, { recursive: true, force: true })
     throw new Error(redactDiagnostics(error instanceof Error ? error.message : String(error)))
   }
-  const child = spawn("bun", ["run", path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110",
+  const child = spawn("bun", ["run", path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "127.0.0.1", "--port", "4174",
     "--public-origin", origin, "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")], {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })
@@ -72,7 +72,7 @@ export async function startPlannerInstallation(info: TestInfo) {
         if (!exited()) child.kill("SIGKILL")
         await expect.poll(exited, { message: "the fixture-owned CLI is no longer running", timeout: 5_000 }).toBe(true)
       }
-      await expect.poll(portAvailable, { message: "the fixture-owned local listener releases localhost:4110", timeout: 5_000 }).toBe(true)
+      await expect.poll(portAvailable, { message: "the fixture-owned local listener releases 127.0.0.1:4174", timeout: 5_000 }).toBe(true)
       listenerReleased = true
     } finally {
       // DEBUG diagnostics can include authentication URLs or HTTP headers. Redact
@@ -126,7 +126,7 @@ async function portAvailable() {
   const probe = createServer()
   const available = await new Promise<boolean>((resolve, reject) => {
     probe.once("error", (error: NodeJS.ErrnoException) => error.code === "EADDRINUSE" ? resolve(false) : reject(error))
-    probe.listen(4110, "localhost", () => resolve(true))
+    probe.listen(4174, "127.0.0.1", () => resolve(true))
   })
   if (available) await new Promise<void>((resolve, reject) => probe.close((error) => error ? reject(error) : resolve()))
   return available
