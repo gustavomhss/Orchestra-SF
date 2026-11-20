@@ -627,7 +627,7 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   return (
     <div class="flex min-h-0 flex-1 flex-col" data-sf-host="owner-runtime231"
       data-sf-discovery-state={discovery.status} data-sf-provider-state={provider.status} data-sf-provider-reason={provider.reason}
-      data-sf-view-state={view.status}
+      data-sf-view-state={view.status} data-sf-provider-generation={provider.generation}
       onFocusIn={(event) => {
         if (event.target instanceof HTMLElement &&
           event.target.matches("input, textarea, select, [contenteditable='true']"))
