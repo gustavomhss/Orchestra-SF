@@ -1,0 +1,47 @@
+name: ci-promotion-proof
+on:
+  push:
+    branches: [ci-promotion-proof]
+permissions:
+  contents: read
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+jobs:
+  default-guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      REVIEWED_DEV_SOURCE: "f4df73052e45f702eb8fb799723995f5375326b1"
+      REVIEWED_SF_SOURCE: "c74724c3e82f9a3fd3bdf2cd5492d966069caed8"
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version-file: package.json
+      - name: Check exact source and the real promotion record
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git diff --name-only "$REVIEWED_DEV_SOURCE" HEAD)" = ".github/workflows/ci-promotion-proof.yml"
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFileSync } from "node:fs"
+          import { selectCacheSource } from "./script/sf-ci/cache-source.mjs"
+          const promotion = JSON.parse(readFileSync(".github/sf-cache-source.json", "utf8"))
+          const source = selectCacheSource({ eventName: "push", defaultBranch: "dev", refName: "dev",
+            sha: process.env.REVIEWED_DEV_SOURCE, changedPaths: [".github/sf-cache-source.json"], promotion })
+          assert.deepEqual(source, { sourceRef: "sf-join-four", sourceSha: process.env.REVIEWED_SF_SOURCE,
+            reason: "reviewed-promotion" })
+          console.log("REVIEWED_DEFAULT_PROMOTION " + JSON.stringify(source))
+          NODE
+      - name: Default-source promotion boundary regressions
+        run: node --test script/sf-ci/cache-source.test.mjs
+      - name: Strict default-branch guards
+        run: bun run check:guards --base origin/dev
