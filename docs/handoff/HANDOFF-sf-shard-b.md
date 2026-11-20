@@ -8,6 +8,20 @@
 - Escopo: CI-SF shards 4, 5 e 6 de 8; apenas GitHub; verificação por Actions.
 - `sf-ci` não foi executado. Não há declaração de GO ou de shard verde.
 
+## Continuação — entrega completa autorizada
+
+A solicitação posterior do usuário exige correção completa, validação verde e merge. O checkpoint parcial anterior abaixo é histórico, não a entrega final.
+
+- Estado atual: **IN_PROGRESS**. Código de teste em `c6dde2ba43db83445e2043d9064eaa41dbade9fb`; integração inicial do target `062506e92427f9ff41fcb952c0b1559e65076a4d` por merge real `ead5e6767cf8944fde3c0fde8866d88668b6a295` (12 arquivos sobrepostos tinham blobs idênticos; seis alterações residuais preservadas).
+- Externamente integrados: #430 (nove causas de testes já qualificadas), #406 (S11). Nenhum branch alheio foi rebaseado.
+- Merge desta continuação: **shared #435**, correção de renderização de AlternativeDraft, fix `0a31f6c8fe5c5020165c6225212ad1b3a13c3548`, merge `82d2041d80784e2d905f99dee3bca91c63ef8350`. Gate [44667463947](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667463947): **3 pass / 0 fail** no arquivo completo `wp01/alternative-contribution.test.ts` (shard 6 original).
+- C03: fix `16fc1f1cf07a52f4cb6d02c3b509c29384cc97f9` comprovou inscrição HTTP 303/Location e destino 404; gate [44667407691](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667407691): **0 pass / 1 fail**, `wp07/browser-ui.test.ts:257`, navegação concorrente para página de erro Chromium. Fix concreto `c94011c7ad425389e3a91392d6d16203bc816241` separa página de inscrição mantendo o mesmo contexto e todas as asserções. Novo gate [44668069860](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668069860): **0 pass / 1 fail**, `wp07/browser-ui.test.ts:233` / `:45`, inicialização de Chromium excedeu 15 s antes de executar a inscrição. Pendente correção de infraestrutura; nenhum rerun idêntico.
+- S10: fix de fixture `380f2274d9160097f17b37e079e7567a821c2dde`, `wp05/engine-fixture.ts`, usa o verificador existente de operação/read-scope com mesma autoridade e sem alterar asserções/deadlines. Candidato `e325d5b2382267e1bc7a9df4f29453f4a365cec8` combina #405. Gate [44667978696](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667978696) em andamento: coverage-sensitivity-integration, sensitivity-read-scope, renewal-case-read-scope e renewal-read-scope.
+- Native sourcing: fix `c6dde2ba43db83445e2043d9064eaa41dbade9fb`, `wp04/ui-sourcing-analysis.test.ts`, testa admissão 503/403 no handler nativo atual; gate [44668567443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668567443) em andamento.
+- Preparados para revisão/gate: shared #433 (negação atual de Review), #434 (identidade única do serviço de cálculo), #436 (observação Planner durante memória, dependente de #403), #439 (link nativo UI56 de import-preview, preservar ajuste de revogação #428). C09 exige prova privada de rollback confirmado e aborto append-only antes de permitir nova tentativa. UI/BI restantes serão migrados para consumidores nativos reais e produtores autênticos.
+- Retomada: consultar os dois runs ativos, nunca repetir snapshot idêntico, gate somente após correção concreta, máximo dois simultâneos desta sessão. Integrar shared validados antes de #410; montar a composição corrente preservando hunk/blob de outros contribuidores; validar a seleção fixa de arquivos dos shards originais, pois o target mudou a distribuição LPT. Não declarar verde por soma de gates focados. Atualizar este handoff com todos os resultados e SHAs finais.
+
+
 ## Por shard
 
 | Shard | Run | SHA testado | N pass / M fail | Estado |
