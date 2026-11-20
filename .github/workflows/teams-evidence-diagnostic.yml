@@ -1,0 +1,68 @@
+name: teams-evidence-diagnostic
+
+# Work-in-progress validation. Its archive belongs to this exact push commit,
+# not to a final qualifying PR and not to an installed Microsoft/Azure host.
+on:
+  push:
+    branches:
+      - "ci-evidence-*"
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  SF_PRODUCT_SOURCE_SHA: ${{ github.sha }}
+
+jobs:
+  preflight:
+    name: Verify actual source and evidence contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout the exact work-in-progress evidence source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Bind the diagnostic snapshot to its sole source parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$(git show -s --format=%P HEAD)" = "8f69afdb6c5d2ccfa846d58e8efb2f9202c1f4bc"
+          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/teams-evidence-diagnostic.yml"
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+          git show -s --format='snapshot=%H tree=%T parents=%P'
+      - uses: ./.github/actions/setup-bun
+      - name: Select the exact Node runtime after composite setup
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+      - name: Execute source identity, browser-pool and residue controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(node --version)" = "v24.15.0"
+          test "$(bun --version)" = "1.3.14"
+          node --input-type=module -e 'import { candidateSource } from "./script/sf-ci/workflow-source.mjs"; candidateSource()'
+          bun -e 'const s = await Bun.file(".github/workflows/sf-ci.yml").text(); console.log("SF_CI_YAML_JOBS", Object.keys(Bun.YAML.parse(s).jobs));'
+          set +e
+          node --test script/sf-ci/gate.test.mjs script/sf-ci/browser-pool.test.mjs script/sf-ci/team-profile-residue.test.mjs \
+            > "$RUNNER_TEMP/teams-evidence-contracts.log" 2>&1
+          status=$?
+          set -e
+          cat "$RUNNER_TEMP/teams-evidence-contracts.log"
+          test "$status" -eq 0
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+      - name: Preserve exact observed contract output
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-evidence-contracts-${{ github.sha }}
+          path: ${{ runner.temp }}/teams-evidence-contracts.log
+          if-no-files-found: warn
+          retention-days: 14
+
