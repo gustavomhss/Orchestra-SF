@@ -294,6 +294,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
         state: document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state"),
         selected: document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected"),
         status: document.querySelector("[data-sf-team-status]")?.textContent,
+        fatal: document.querySelector<HTMLTextAreaElement>("textarea[readonly]")?.value.slice(0,1200),
         notices: [...document.querySelectorAll(".sf-team-notice")].map((element) => element.textContent),
         pickers: [...document.querySelectorAll<HTMLSelectElement>("[data-sf-team-picker]")]
           .map((element) => ({ value: element.value, disabled: element.disabled })),
