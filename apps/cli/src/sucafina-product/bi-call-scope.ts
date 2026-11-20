@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
-import type { BiPresentation, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BiViewRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -11,7 +11,7 @@ import { readSfDecisionBiSelection } from "./bi-selections.ts"
 
 type PlannerRef = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Scope = { incoming: BiViewRequest; inputDigest: string; binding: string; selection: StoredScenarioSelection; request?: Request;
-  bypass?: boolean; invalid?: "denied" | "stale"; fence?: string }
+  bypass?: boolean; invalid?: "denied" | "stale"; proof?: { fence: string; projection: DomainProjection } }
 type Fence = { kind: "current"; digest: string } | { kind: "unsupported" | "denied" } | undefined
 type SnapshotProof = { kind: "current"; digest: string; refs: readonly PlannerRef[] } | { kind: "unsupported" | "denied" } | undefined
 
@@ -47,12 +47,10 @@ export function createSfBiCallScope(input: {
       if (!decision || decision.id !== scenario.caseRef.id ||
         decision.incarnation !== scenario.caseRef.incarnation || decision.version !== scenario.caseRef.version ||
         !decision.participants.includes(actor.principalRef)) return { kind: "denied" }
-      // The completed proof may include a deterministic exclusion of a Planner
-      // component already authorized by the canonical producer. Replacement
-      // selectors, other operations and criterion evaluators keep their full path.
+      // The fast path has no external document/calculation authority, scenario
+      // operations or criterion evaluator. Their ordinary producer path remains intact.
       if (decision.criteria.length || decision.preparedChanges.length ||
-        [...decision.alternatives, ...decision.choices].some((value) => value.scenario.operations.some((operation) =>
-          operation.kind !== "exclude" || operation.replacementRef !== undefined || operation.amount !== undefined))) return { kind: "unsupported" }
+        [...decision.alternatives, ...decision.choices].some((value) => value.scenario.operations.length)) return { kind: "unsupported" }
       const refs = plannerDependencies([decision, scenario, comparison])
       if (!refs?.length) return { kind: "unsupported" }
       const sources = input.lockedSourceFences()
@@ -90,47 +88,29 @@ export function createSfBiCallScope(input: {
   }
   const changed = (): PortResult<never> => ({ status: "stale", reason: "bi-call-proof-changed" })
   const denied = (): PortResult<never> => ({ status: "denied", reason: "bi-call-authority-changed" })
-  const completedReader = <Value>() => {
-    const proofs = new WeakMap<Scope, Value>()
-    return async (selection: StoredScenarioSelection, call: TrustedDomainContext,
-      produce: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
-      const scope = active.get(call)
-      // The exported source also serves Review. A concurrent consumer holding
-      // the same context cannot borrow or poison this dispatch's completed proof.
-      if (scope && execution.getStore() !== scope) return { status: "denied", reason: "bi-call-invocation-unavailable" }
-      if (!scope || scope.bypass) return produce()
-      if (scope.invalid) return scope.invalid === "denied" ? denied() : changed()
-      if (selection.selectionRef !== scope.selection.selectionRef || selection.scenarioResultRef !== scope.selection.scenarioResultRef ||
-        selection.comparisonRef !== scope.selection.comparisonRef || selection.sensitivityResultRef !== undefined) { scope.invalid = "denied"; return denied() }
-      // C16 consumes before its first source callback. No unconsumed admission
-      // acquires a Request, case proof or result through this private holder.
-      scope.request ??= host.requestFor(call)
-      const before = await fence(call, scope)
-      if (before?.kind === "unsupported" && !scope.fence) { scope.bypass = true; return produce() }
-      if (before?.kind === "denied") { scope.invalid = "denied"; return denied() }
-      if (!before || before.kind !== "current" || scope.fence && scope.fence !== before.digest) { scope.invalid = "stale"; return changed() }
-      const proof = proofs.get(scope)
-      const result = proof !== undefined ? { status: "ok" as const, value: structuredClone(proof) } : await produce()
-      if (result.status !== "ok") return result
-      const after = await fence(call, scope)
-      if (after?.kind === "denied") { scope.invalid = "denied"; return denied() }
-      if (after?.kind !== "current" || after.digest !== before.digest) { scope.invalid = "stale"; return changed() }
-      scope.fence ??= after.digest
-      if (proof === undefined) proofs.set(scope, structuredClone(result.value))
-      return result
-    }
-  }
-  const read = completedReader<DomainProjection>()
-  const cost = completedReader<{ projection: DomainProjection; presentation: BiPresentation }>()
-  const readView = async (request: BiViewRequest, call: TrustedDomainContext,
-    produce: () => Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>>) => {
+  const read = async (selection: StoredScenarioSelection, call: TrustedDomainContext,
+    produce: () => Promise<PortResult<DomainProjection>>): Promise<PortResult<DomainProjection>> => {
     const scope = active.get(call)
-    if (scope && execution.getStore() !== scope) return { status: "denied" as const, reason: "bi-call-invocation-unavailable" }
-    if (scope && digestSfValue(request) !== scope.inputDigest) { scope.invalid = "denied"; return denied() }
-    const selected = readSfDecisionBiSelection(request.selectionRef)
-    if (!selected || !("scenarioResultRef" in selected)) return produce()
-    const result = await cost({ selectionRef: request.selectionRef, ...selected }, call, produce)
-    if (scope && digestSfValue(request) !== scope.inputDigest) { scope.invalid = "denied"; return denied() }
+    // The exported source also serves Review. A concurrent consumer holding
+    // the same context cannot borrow or poison this dispatch's completed proof.
+    if (scope && execution.getStore() !== scope) return { status: "denied", reason: "bi-call-invocation-unavailable" }
+    if (!scope || scope.bypass) return produce()
+    if (scope.invalid) return scope.invalid === "denied" ? denied() : changed()
+    if (selection.selectionRef !== scope.selection.selectionRef || selection.scenarioResultRef !== scope.selection.scenarioResultRef ||
+      selection.comparisonRef !== scope.selection.comparisonRef || selection.sensitivityResultRef !== undefined) { scope.invalid = "denied"; return denied() }
+    // C16 consumes before its first source callback. No unconsumed admission
+    // acquires a Request, case proof or result through this private holder.
+    scope.request ??= host.requestFor(call)
+    const before = await fence(call, scope)
+    if (before?.kind === "unsupported" && !scope.proof) { scope.bypass = true; return produce() }
+    if (before?.kind === "denied") { scope.invalid = "denied"; return denied() }
+    if (!before || before.kind !== "current" || scope.proof && scope.proof.fence !== before.digest) { scope.invalid = "stale"; return changed() }
+    const result = scope.proof ? { status: "ok" as const, value: structuredClone(scope.proof.projection) } : await produce()
+    if (result.status !== "ok") return result
+    const after = await fence(call, scope)
+    if (after?.kind === "denied") { scope.invalid = "denied"; return denied() }
+    if (after?.kind !== "current" || after.digest !== before.digest) { scope.invalid = "stale"; return changed() }
+    scope.proof ??= { fence: after.digest, projection: structuredClone(result.value) }
     return result
   }
   const run = async <Value>(request: BiViewRequest, call: TrustedDomainContext, work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
@@ -144,19 +124,19 @@ export function createSfBiCallScope(input: {
     return execution.run(scope, async () => {
       try {
         const result = await work()
-        if (result.status !== "ok" || scope.bypass || !scope.fence) return result
+        if (result.status !== "ok" || scope.bypass || !scope.proof) return result
         // The canonical dispatcher has its own final authorization await. Check
         // the source/case/clock again after it, then identity after our final await.
         const final = await fence(call, scope)
         if (final?.kind === "denied" || !current(call, scope)) return scope.invalid === "stale" ? changed() : denied()
-        return final?.kind === "current" && final.digest === scope.fence && current(call, scope) ? result : changed()
+        return final?.kind === "current" && final.digest === scope.proof.fence && current(call, scope) ? result : changed()
       } catch (error) {
         if (scope.request && !current(call, scope)) return scope.invalid === "stale" ? changed() : denied()
         throw error
       } finally { if (active.get(call) === scope) active.delete(call) }
     })
   }
-  return { run, read, readView }
+  return { run, read }
 }
 
 /** Recursion includes provenance in assumptions, coverage, ledger and future additive fields. */

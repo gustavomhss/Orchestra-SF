@@ -42,8 +42,6 @@ jobs:
           node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
           python3 -m unittest discover -s docs/qa/sucafina/uat-cio/scripts -p 'test_reconcile_history.py' -v
       - uses: ./.github/actions/setup-bun
-        with:
-          save: "true"
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:
           ORCHESTRA_OMNI_CONTROL: declared
@@ -55,7 +53,6 @@ jobs:
 
   static:
     name: sf/static-and-contracts
-    needs: [preflight]
     runs-on: ubuntu-24.04
     timeout-minutes: 22
     steps:
@@ -210,8 +207,6 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/omni-binaries
-        with:
-          save: "true"
       - name: Require actual Linux binary artifacts
         run: |
           set -euo pipefail
@@ -231,7 +226,7 @@ jobs:
   # CI-SF case or the fail-closed eight-suite release gate.
   procurement-queue-proof:
     name: sf/procurement-queue-integration
-    needs: [preflight, omni]
+    needs: [omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
@@ -261,7 +256,7 @@ jobs:
 
   unit:
     name: sf/test-${{ matrix.id }}
-    needs: [preflight, omni]
+    needs: [omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 28
     strategy:
@@ -357,7 +352,7 @@ jobs:
 
   unit-sf:
     name: sf/test-CI-SF-${{ matrix.shard }}
-    needs: [preflight, omni]
+    needs: [omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -432,16 +427,6 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Preserve original export evidence without binary log dumps
-        if: always() && !cancelled()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: sf-export-originals-CI-SF-${{ matrix.shard }}
-          path: ${{ runner.temp }}/sf66-export-artifacts/
-          if-no-files-found: ignore
-          compression-level: 0
-          retention-days: 7
-
       - name: Publish the shard run log on failure
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -455,7 +440,7 @@ jobs:
 
   ui:
     name: sf/test-${{ matrix.id }}
-    needs: [preflight, omni]
+    needs: [omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 24
     strategy:

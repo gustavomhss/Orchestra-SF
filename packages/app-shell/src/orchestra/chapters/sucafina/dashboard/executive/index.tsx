@@ -1,6 +1,5 @@
-import { For, Show, createMemo } from "solid-js"
+import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
 import type { JSX } from "solid-js"
-import { useLanguage } from "@/context/language"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
@@ -12,7 +11,6 @@ import { SfDomainPageData } from "@orchestra/schema/sucafina/domain"
 import { SF_U02_COPY } from "@/i18n/orchestra-chapters/sf-u02"
 import { SfU02Edit, sfU02ExecutiveTarget } from "./edit"
 import { useU02Projection, knownNumber } from "./reader"
-import { parseSfSignalPriorities, sfExecutiveSignals, sfExecutiveSignalTarget } from "./signals"
 import "./u02.css"
 
 type ExecutiveData = typeof SfDomainPageData.CAP01.Type
@@ -23,13 +21,14 @@ const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
 /** U02 — CAP01. No snapshot, local financial calculator or hidden fetch. */
 export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Element {
   const { t, locale } = useSfPresentation()
-  const language = useLanguage()
   const reader = useU02Projection<ExecutiveData>("CAP01", props.route, "domain.page.CAP01",
     (transport, selection, signal) => createSfDomainClient(transport)["domain.page.CAP01"]({
       ...(selection.year === undefined ? {} : { execYear: selection.year }),
       ...(selection.month === undefined ? {} : { executiveMonth: selection.month }),
       ...(selection.opsMonth === undefined ? {} : { opsMonth: selection.opsMonth }),
     }, { signal }))
+  const [pinned, setPinned] = createSignal<ReadonlySet<string>>(new Set())
+  createEffect(() => { const generation = reader.context.generation();void generation;setPinned(new Set<string>()) })
   const data = () => reader.snapshot()?.data
   const selected = () => reader.selection()
   const year = () => selected().year
@@ -46,15 +45,16 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     if (!Number.isFinite(date.getTime())) return value
     return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(date)
   }
-  const pinned = createMemo(() => new Set((props.route.query.signalPriority ?? [])
-    .filter((id) => entries().some((signal) => signal.id === id))))
-  const signals = createMemo(() => sfExecutiveSignals(entries(), [...pinned()]))
-  const signalFrom = () => ({
-    ownerSelection: props.route.ownerSelection,
-    query: { ...(year() === undefined ? {} : { year: year() }), ...(month() === undefined ? {} : { month: month() }) },
+  const signals = createMemo(() => {
+    const selectedYear = year()
+    const selectedMonth = month()
+    const prefix = selectedYear !== undefined && selectedMonth !== undefined
+      ? String(selectedYear) + "-" + String(selectedMonth).padStart(2, "0")
+      : selectedYear !== undefined ? String(selectedYear) : undefined
+    return [...entries()].filter((signal) => prefix === undefined || signal.date.startsWith(prefix)).sort((a, b) =>
+      Number(pinned().has(b.id)) - Number(pinned().has(a.id)) ||
+      (b.date || "").localeCompare(a.date || "") || a.id.localeCompare(b.id))
   })
-  const nextPriority = (id: string) => pinned().has(id)
-    ? [...pinned()].filter((value) => value !== id) : [...pinned(), id]
   const byYear = () => year() === undefined ? undefined : data()?.executiveByYear?.[String(year())]
   const executive = () => byYear()
   const unscoped = () => t(key("sf.u02.sourceWarning"))
@@ -191,30 +191,22 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
             {stat("open-security", "sf.u02.openSecurity", operations()?.openIncidents)}
           </dl>
         </section>
-        <section class="sf-u02-section" aria-labelledby="sf-u02-alerts" data-dashboard-signals
-          data-signal-order={JSON.stringify(signals().map((signal) => signal.id))}>
+        <section class="sf-u02-section" aria-labelledby="sf-u02-alerts">
           <h2 id="sf-u02-alerts">{t(key("sf.u02.signals"))}</h2>
-          <p>{language.plural("sf.u02.signalsShowing", entries().length, { shown: signals().length, total: entries().length })}</p>
-          <p>{language.plural("sf.u02.signalsPrioritized", entries().length, { prioritized: pinned().size, total: entries().length })}</p>
           <Show when={signals().length} fallback={<p>{t(sfCommonKey("sf.common.empty"))}</p>}>
             <div class="sf-u02-table-scroll"><table>
               <thead><tr><th scope="col">{t(key("sf.u02.fact"))}</th>
                 <th scope="col">{t(key("sf.u02.rule"))}</th><th scope="col">{t(key("sf.u02.date"))}</th>
                 <th scope="col">{t(key("sf.u02.origin"))}</th><th scope="col">{t(key("sf.u02.priority"))}</th></tr></thead>
               <tbody><For each={signals()}>{(signal) =>
-                <tr data-signal-id={signal.id}><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
-                  <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td>
-                  <td><bdi>{signal.page + " / " + signal.recordId}</bdi>
-                    <Show when={sfExecutiveSignalTarget(signal)}>{(target) =>
-                      <SfExecutiveAction from={signalFrom()} target={target()}
-                        label={{ key: key("sf.u02.openRecord") }} />}
-                    </Show>
-                  </td>
-                  <td><SfExecutiveAction from={signalFrom()} target={{ kind: "signal-priority", ids: nextPriority(signal.id) }}
-                    pressed={pinned().has(signal.id)}
-                    title={parseSfSignalPriorities(nextPriority(signal.id)) ? undefined : t(key("sf.u02.priorityLimit"))}
-                    label={{ key: key(pinned().has(signal.id) ? "sf.u02.unprioritizeSignal" : "sf.u02.prioritizeSignal"),
-                      params: { fact: signal.fact } }} /></td>
+                <tr><th scope="row">{signal.fact}</th><td>{signal.rule}</td>
+                  <td><time dateTime={signal.date}>{signal.date ? shownDate(signal.date) : missing()}</time></td><td><bdi>{signal.page + " / " + signal.recordId}</bdi></td>
+                  <td><button type="button" class="mx-btn" aria-pressed={pinned().has(signal.id)}
+                    onClick={() => { const next = new Set(pinned());
+                      if (next.has(signal.id)) next.delete(signal.id); else next.add(signal.id);
+                      setPinned(next) }}>
+                    {t(key(pinned().has(signal.id) ? "sf.u02.unprioritize" : "sf.u02.prioritize"))}
+                  </button></td>
                 </tr>}</For></tbody></table></div>
           </Show>
         </section>

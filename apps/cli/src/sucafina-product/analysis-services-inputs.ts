@@ -66,6 +66,7 @@ export function createSfAnalysisBusinessInputs(input: { business: ReturnType<typ
     const wanted = { caseRef: request.caseRef, alternatives: [{ id: String(refs[0]!.id), version: Number(refs[0]!.version) }, { id: String(refs[1]!.id), version: Number(refs[1]!.version) }] as const }
     if (!same(wanted, raw)) return { status: "needs-input", reason: "scenario-selection-invalid" }
     return createSfScenarioComparisonInput({ cases: business.cases, scenarioLookup: business.scenarioLookup, planner: business.planner, context: business.context,
+      withCaseObservation: business.withScenarioObservation,
       revalidate: authority.host.revalidate, authorizeSelection: (context) => authorize(context, raw, request) }).prepare(call, wanted)
   } }
   const sourcing: SfInputProducer = { skillIds: ["sf-comparar-sourcing"], prepare: async (raw, request, call) => {
@@ -75,7 +76,7 @@ export function createSfAnalysisBusinessInputs(input: { business: ReturnType<typ
     return createSfSourcingInput({ sourcingEvidence: business.sourcingEvidence })(selection.requestRef, call)
   } }
   const verifiers: SfAnalysisVerifier[] = [imported ? imported().verifier : createSfForecastVerifier(dependencies),
-    createSfScenarioVerifier({ ...dependencies, scenarioRef: async (caseRef, alternative, call) => {
+    createSfScenarioVerifier({ ...dependencies, withCaseObservation: business.withScenarioObservation, scenarioRef: async (caseRef, alternative, call) => {
       const value = await business.scenarioLookup({ caseRef, alternativeId: alternative.id, alternativeVersion: alternative.version }, call)
       return value.status === "ok" ? { status: "ok", value: value.value.resultRef } : value
     } }), createSfSourcingVerifier({ ...dependencies, sourcingEvidence: business.sourcingEvidence })]

@@ -22,9 +22,7 @@ const kinds: Readonly<Record<keyof typeof operations, readonly string[]>> = {
 export function isOperationsSurface(id: string): id is keyof typeof operations { return Object.hasOwn(operations, id) }
 export function parseOperationsRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-operations" || !isOperationsSurface(candidate.surfaceId) || !kinds[candidate.surfaceId].includes(candidate.kind)) return
-  // CAP13 retains the originating executive period for presentation/navigation.
-  // Its original producer input remains the status filter, without year/month.
-  const period = candidate.surfaceId === "CAP11" || candidate.surfaceId === "CAP12" || candidate.surfaceId === "CAP13"
+  const period = candidate.surfaceId === "CAP11" || candidate.surfaceId === "CAP12"
   const statusAllowed = candidate.surfaceId === "CAP13" || candidate.surfaceId === "CAP15"
   const keys = [...params.keys()]
   if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", ...(period ? ["year", "month"] : []), ...(statusAllowed ? ["status"] : [])].includes(key))) return
@@ -32,7 +30,6 @@ export function parseOperationsRouteQuery(params: URLSearchParams, candidate: Sf
   if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
   const year = params.get("year"), month = params.get("month"), status = params.get("status")
   if (year !== null && !/^\d{4}$/.test(year) || month !== null && !/^(?:[1-9]|1[0-2])$/.test(month) || status === "") return
-  if (candidate.surfaceId === "CAP13" && year !== null && (Number(year) < 2024 || Number(year) > 2027)) return
   const input = candidate.surfaceId === "CAP11" ? { ...(year === null ? {} : { opsYear: Number(year) }), ...(month === null ? {} : { operationsMonth: Number(month) }) } :
     candidate.surfaceId === "CAP12" ? { ...(year === null ? {} : { secYear: Number(year) }), ...(month === null ? {} : { securityMonth: Number(month) }) } :
     status === null ? {} : { status }

@@ -105,6 +105,8 @@ export function createSfPortfolioServices(input: {
     idempotencyKey, exactThreshold, resolveCoverageAuthority, reconciliation: { readPortfolio: reconciliation.readPortfolio },
   }) : undefined
   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
+    sensitivityUnits: (request: Parameters<Product["http"]["sensitivityUnits"]>[0], call: Parameters<Product["http"]["sensitivityUnits"]>[1]) =>
+      business.withPlannerObservation(request, call, () => rawProduct.http.sensitivityUnits(request, call)),
     prepare: (request: Parameters<Product["http"]["prepare"]>[0], call: Parameters<Product["http"]["prepare"]>[1]) =>
       composed.handoff.run("decisions.prepare-portfolio", request, call, () => rawProduct.http.prepare(request, call), mutations.replayPortfolio),
     promote: (request: Parameters<Product["http"]["promote"]>[0], call: Parameters<Product["http"]["promote"]>[1]) =>

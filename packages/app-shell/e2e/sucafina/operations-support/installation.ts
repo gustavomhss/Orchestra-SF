@@ -1,5 +1,4 @@
 import path from "node:path"
-import { createHash } from "node:crypto"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import type { LocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
@@ -44,18 +43,9 @@ export async function createOperationsInstallation(input: {
   if (input.scanner && (input.scanner.host !== "127.0.0.1" ||
     !Number.isInteger(input.scanner.port) || input.scanner.port < 1 || input.scanner.port > 65535))
     throw new Error("OPERATIONS_SCANNER_LOOPBACK_ENDPOINT_REQUIRED")
-  // Record the original scanner result at the installed boundary. The private
-  // controls observe digests and verdicts; uploaded bytes never leave this call.
-  const scans: Readonly<{ digest: string; size: number; accepted: boolean }>[] = []
   const assets = { persistence: input.persistence, services: {
     signingKey: input.signingKey,
-    scan: async (bytes: Uint8Array) => {
-      const digest = createHash("sha256").update(bytes).digest("hex")
-      const size = bytes.byteLength
-      const accepted = await scanLocalFile(bytes, input.scanner)
-      scans.push(Object.freeze({ digest, size, accepted }))
-      return accepted
-    },
+    scan: (bytes: Uint8Array) => scanLocalFile(bytes, input.scanner),
   } }
   let nativeOperational: Parameters<CreateSfHostRuntime>[0]["operational"]
   let nativeActions: Parameters<CreateSfHostRuntime>[0]["nativeActions"]
@@ -158,7 +148,6 @@ export async function createOperationsInstallation(input: {
     },
   }
   return {
-    scannerObservations: () => [...scans],
     host: runtime.contributions,
     discovery,
     identity: runtime.identity,

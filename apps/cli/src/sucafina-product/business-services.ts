@@ -53,9 +53,14 @@ import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
+import { createSfPlannerCaseReadScope, type SfPlannerCaseObservation } from "./planner-case-read-scope.ts"
+import { createSfPlannerCaseReadBatch, sfPlannerCaseReadAdmission } from "./planner-case-read-batch.ts"
+import { createSfMixedCaseReadBatch, sfMixedCaseReadAdmission } from "./mixed-case-read-batch.ts"
+import { createSfDashboardCaseReadBatch, sfDashboardCaseReadAdmission } from "./dashboard-case-read-batch.ts"
 import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
 import { createSfProcurementEvidenceReadScope, createSfProcurementRecordReadScope } from "./procurement-evidence-read-scope.ts"
 import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
+import { createSfPlannerObservationBatch } from "./planner-observation-batch.ts"
 import { createSfSourceFenceReader } from "./source-fence-read.ts"
 import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
@@ -183,10 +188,25 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     },
     readMemoryCanonical: (records, call, work) => memoryRecordRead(records, call, work),
     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
-  const cases = { ...canonicalCases, read: memoryCaseScope.read }
-  const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
+  const plannerCaseRead: { current?: ReturnType<typeof createSfPlannerCaseReadScope> } = {}
+  const physicalObservation: { current?: ReturnType<typeof createSfPlannerObservationBatch> } = {}
+  const cases = { ...canonicalCases, read: (...args: Parameters<typeof memoryCaseScope.read>) =>
+    (plannerCaseRead.current?.read ?? memoryCaseScope.read)(...args) }
+  const withScenarioObservation: SfPlannerCaseObservation = (request, call, work) =>
+    plannerCaseRead.current ? plannerCaseRead.current.run(request, call, work) : work()
+  const withMemoryObservation: SfMemoryObservation = async (request, call, work) => {
     const canonical = recall.current
-    return canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
+    const observe = () => canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
+    const version = request.caseRef.version
+    if (!plannerCaseRead.current || typeof version !== "number" || !Number.isSafeInteger(version)) return observe()
+    // One memory producer/verifier pass may reuse only its completed Planner case.
+    // The next pass opens a fresh owner; Atlas/source observations remain canonical.
+    const selected = { caseRef: { ...request.caseRef, version }, request }
+    const logical = plannerCaseRead.current, physical = physicalObservation.current
+    const read = () => logical.run(selected, call, async () => ({ status: "ok" as const, value: await observe() }))
+    const result = physical ? await physical({ kind: "empty-recall", ...selected }, call, read,
+      () => physicalObservation.current === physical && plannerCaseRead.current === logical && recall.current === canonical) : await read()
+    return result.status === "ok" ? result.value : undefined
   }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
@@ -203,15 +223,6 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     scopedSources: input.persistence, evidence: reviewCollaboration.evidence, procurement, collections: registry, cases,
     authorizeReviewThreadContext: reviewCollaboration.authorizeReviewThreadContext, reviewRecipientAuthority: reviewCollaboration.reviewRecipientAuthority,
     reviewAnswerSource: reviewCollaboration.reviewAnswerSource,
-    resolveAnswerScope: async (source, refs, call) => {
-      if (source.target.surface === "planner") return plannerConfirmation.current?.resolveAnswerScope(source, refs, call) ?? { status: "unavailable", reason: "answer-scope-unavailable" }
-      // Preserve the existing single-record Dashboard manifest. Other domains
-      // still need their own producer; a source reference grants no scope.
-      return source.target.surface === "dashboard" && refs.length === 1 && !!source.target.period
-        ? { status: "ok", value: { scope: { sourceRef: { surface: source.target.surface, type: source.target.recordType, id: source.target.recordId, incarnation: source.target.incarnation },
-          fields: source.target.fields, period: source.target.period, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" } } }
-        : { status: "unavailable", reason: "answer-scope-unavailable" }
-    },
     authority: input.authority.authority, human: input.authority.human, confirmationSource,
     captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
     issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,
@@ -446,11 +457,52 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
-  const planner = procurementComposite.planner
+  const canonicalPlanner = procurementComposite.planner
+  const withPlannerObservation = async <Value>(request: unknown, call: TrustedDomainContext,
+    work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const observation = plannerCaseRead.current
+    if (!observation || call.kind !== "ui") return work()
+    const selected = await selectedCase(call)
+    // Unselected/unsupported callers retain their canonical admission path.
+    if (selected.status !== "ok") return work()
+    // Read-only consumers may join only this exact lexical case owner. Each
+    // separate invocation starts fresh; publication remains outside this scope.
+    const physical = physicalObservation.current, scope = caseBindings.get(call)
+    const scopeDigest = digestSfValue(scope && { selected: scope.selected, binding: scope.bindingDigest, historical: scope.historical })
+    const current = () => physicalObservation.current === physical && plannerCaseRead.current === observation &&
+      caseBindings.get(call) === scope && (!scope || scope.request === host.requestFor(call)) &&
+      digestSfValue(scope && { selected: scope.selected, binding: scope.bindingDigest, historical: scope.historical }) === scopeDigest
+    const read = () => observation.observe({ caseRef: selected.value, request }, call, work)
+    return physical ? physical({ kind: "comparison", caseRef: selected.value, request }, call, read, current) : read()
+  }
+  const planner: typeof canonicalPlanner = { ...canonicalPlanner,
+    compareScenarios: (request, call) => withPlannerObservation(request, call, () => canonicalPlanner.compareScenarios(request, call)),
+  }
   const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
+  const caseReadInput = { host, state: input.authority.state, sources: plannerSources, readerIdentity: () => evidence.current, lockedSourceFences }
+  const dashboardReadInput = { ...caseReadInput,
+    dashboard: { port: dashboard, sources: dashboardSources, records: dashboardRecords, scopedSources: input.persistence,
+      readerIdentity: () => [dashboardDecisions, dashboardDecisions.resolveEvidence, dashboardDecisions.proveContinuity] } }
+  const mixedReadInput = { ...caseReadInput,
+    procurement: { contextFor, selection: selectedPeriod, isCurrentRecord: individual.isCurrent,
+      readerIdentity: () => [individual, individual.resolve, individual.issue, individual.isCurrent, individual.issueForActor, individual.resolveForPreparation,
+        registry, registry.resolveRequestSource, decisionEvidence.current, decisionEvidence.current?.resolveEvidence,
+        decisionEvidence.current?.proveContinuity] } }
+  const dashboardCanonicalRead = createSfDashboardCaseReadBatch({ ...dashboardReadInput, read: memoryCaseScope.read })
+  const mixedCanonicalRead = createSfMixedCaseReadBatch({ ...mixedReadInput, read: dashboardCanonicalRead })
+  const plannerCanonicalRead = createSfPlannerCaseReadBatch({ ...caseReadInput, read: mixedCanonicalRead })
+  plannerCaseRead.current = createSfPlannerCaseReadScope({ ...caseReadInput, read: plannerCanonicalRead })
+  physicalObservation.current = createSfPlannerObservationBatch({ ...caseReadInput,
+    admissions: [sfPlannerCaseReadAdmission(caseReadInput), sfMixedCaseReadAdmission(mixedReadInput), sfDashboardCaseReadAdmission(dashboardReadInput)],
+    readerIdentities: () => [scenarioOperationAccess, forecastCoverage.current, recall.current,
+      ...[cases, canonicalPlanner, product, product.planner, product.scenarios, plannerSources, results, context,
+        decisionDomain.current, decisionDomain.current?.proposalCoverage, decisionDomain.current?.plannerCriteria,
+        baselineCoverage, historicalCoverage, memoryCaseScope, plannerCaseRead.current, atlasState.current,
+        atlasState.current?.memory].flatMap((reader) => reader ? [reader, ...Object.entries(reader).flatMap(([key, value]) => [key, value])] : [reader])],
+  })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
@@ -734,7 +786,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations: { ...calculations, persist }, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
-    withMemoryObservation,
+    withMemoryObservation, withScenarioObservation, withPlannerObservation,
     bindReviewCollaboration: reviewCollaboration.bind,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")

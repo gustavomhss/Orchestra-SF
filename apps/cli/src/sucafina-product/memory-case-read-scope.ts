@@ -12,7 +12,7 @@ import type { DecisionCasePort, DomainPortHost } from "../../../../modules/sucaf
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
-import { cloneSfAtlasRecallResult, retainSfAtlasRecallResult, type createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+import { cloneSfAtlasRecallResult, type createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { deriveSfMemoryOwner } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
 import type { SfProcurementRecordObservation } from "./procurement-record-read-scope.ts"
@@ -24,7 +24,7 @@ type CaseRef = { id: string; incarnation: string }
 type Selection = { period: Period; expiresAt: number }
 type Proof = { ref: CaseRef; readDigest: string; fence: string; value: AuthorizedCaseProjection }
 type MemoryResult = Awaited<ReturnType<ReturnType<typeof createSfAtlasMemory>["recall"]>>
-type MemoryProof = { ref: CaseRef; inputDigest: string; fence: string; value: MemoryResult; reobserve: () => Promise<MemoryResult | undefined> }
+type MemoryProof = { ref: CaseRef; inputDigest: string; fence: string; value: MemoryResult }
 type Scope = { call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; bindingIdentity: TrustedDomainContext["binding"]; lease: TrustedDomainContext["lease"]; incoming: Parameters<Recall>[0]; inputDigest: string;
   selection: Selection; selectionDigest: string; reader: object; open: boolean; invalid: boolean; busy: Set<string>; proofs: Map<string, Proof>;
   memoryBusy: Set<string>; memories: Map<string, MemoryProof> }
@@ -316,11 +316,7 @@ export function createSfMemoryCaseReadScope(input: {
       if (proof.fence !== before.digest || proof.inputDigest !== inputDigest || digestSfValue(incoming) !== argumentDigest) {
         scope.invalid = true; return { status: "unavailable" }
       }
-      const result = await proof.reobserve()
-      if (!result || !current(scope) || digestSfValue(incoming) !== argumentDigest) {
-        scope.invalid = true; return { status: "unavailable" }
-      }
-      return result
+      return cloneSfAtlasRecallResult(proof.value)
     }
     scope.memoryBusy.add(key)
     try {
@@ -333,9 +329,7 @@ export function createSfMemoryCaseReadScope(input: {
       if (after?.kind === "unsupported") return result
       if (after?.kind !== "sf-memory-case-fence" || before.digest !== after.digest ||
         !current(scope) || digestSfValue(incoming) !== argumentDigest) { scope.invalid = true; return { status: "unavailable" } }
-      const reobserve = retainSfAtlasRecallResult(result, call)
-      if (!reobserve) { scope.invalid = true; return { status: "unavailable" } }
-      scope.memories.set(key, { ref, inputDigest, fence: after.digest, value: cloneSfAtlasRecallResult(result), reobserve })
+      scope.memories.set(key, { ref, inputDigest, fence: after.digest, value: cloneSfAtlasRecallResult(result) })
       return cloneSfAtlasRecallResult(result)
     } finally { scope.memoryBusy.delete(key) }
   }

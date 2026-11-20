@@ -4,13 +4,12 @@ import type { ScenarioComparison, ScenarioResult } from "../contracts/decisions.
 import type { ScenarioCompareRequest, ScenarioRequest } from "../contracts/operations.ts"
 import type { PlannerPort, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import { readHistoricalScenarios, type createSfDecisionResultStore } from "../decisions/result-store.ts"
+import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import type { createCriterionComparisonBindings } from "../decisions/criterion-comparison.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
 import { comparePlannerScenarios } from "./comparison.ts"
 import { plannerScenarioDigest } from "./preview-comparison.ts"
-import { resolveStoredPlannerScenarios } from "./stored-scenarios.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Input = { kind: "scenario"; request: ScenarioRequest; result: ScenarioResult } | { kind: "comparison"; request: ScenarioCompareRequest; result: ScenarioComparison }
@@ -57,7 +56,7 @@ export function createPlannerResultPersistence(input: {
     const scenarios = input.scenarios
     if (!scenarios) return { status: "unavailable", reason: "scenario-validation-unavailable" }
     if (value.request.scenarioRefs.length !== 2 || value.request.scenarioRefs[0] === value.request.scenarioRefs[1] || value.result.baselineResultRef !== value.request.scenarioRefs[0] || value.result.alternativeResultRef !== value.request.scenarioRefs[1]) return { status: "conflict", reason: "comparison-reference-mismatch" }
-    const records = structuredClone(await readHistoricalScenarios(input.store, value.request.scenarioRefs, context, "parallel"))
+    const records = structuredClone(await Promise.all(value.request.scenarioRefs.map((resultRef) => input.store.readHistoricalScenario({ resultRef }, context))))
     const failed = records.find((record) => record.status !== "ok")
     if (failed) return failed
     if (records.some((record) => record.status !== "ok" || record.value.caseRef.id !== selected.value.id || record.value.caseRef.incarnation !== selected.value.incarnation || record.value.caseRef.version > selected.value.version)) return { status: "denied", reason: "scenario-outside-case" }
@@ -67,7 +66,7 @@ export function createPlannerResultPersistence(input: {
     const rules = bindings && value.request.criteria.length ? structuredClone(await bindings.proofs(selected.value, value.request.criteria, context)) : undefined
     if (rules && rules.status !== "ok") return rules
     const validate = async (): Promise<PortResult<true>> => {
-      const current = structuredClone(await resolveStoredPlannerScenarios(scenarios, value.request.scenarioRefs, context))
+      const current = structuredClone(await Promise.all(value.request.scenarioRefs.map((reference) => scenarios.resolve(reference, context))))
       const failure = current.find((item) => item.status !== "ok")
       if (failure) return failure
       if (current.some((item, index) => {

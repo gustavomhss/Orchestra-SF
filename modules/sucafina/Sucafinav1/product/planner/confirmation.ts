@@ -16,25 +16,11 @@ import type { createPlannerSourceIssuer } from "./source-issuer.ts"
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Available = { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: RecordEvidence; projection: DomainProjection }
 
-/** C06 manifests for the actor-visible financial summary and complete answer source. */
+/** C06 manifest for the actor-visible financial summary; external dependencies require their own producer. */
 export function createPlannerConfirmationObserver(input: { host: DomainPortHost; issueSource: ReturnType<typeof createPlannerSourceIssuer>; planner: Pick<PlannerPort, "compareForecast"> }) {
   const fences = new Map<string, { source: RecordEvidence; physicalIncarnation: string; sourceFingerprint: string; dependencyFingerprint: string; at: string; actor: Actor }>()
-  const manifestFor = (scope: ConfirmationScope) => {
-    if (scope?.sourceRef?.surface !== "planner" || scope.sourceRef.type !== "planner-version" || !scope.sourceRef.id || !scope.sourceRef.incarnation || !Array.isArray(scope.fields) || !scope.fields.length || scope.fields.some((field) => typeof field !== "string" || !field) || new Set(scope.fields).size !== scope.fields.length || !isSfPeriod(scope.period) || !Array.isArray(scope.materialDependencies) || scope.materialDependencies.length) return undefined
-    if (scope.scopeDefinitionVersion === "planner-c06-v1" && scope.fields.length === 1 && scope.fields[0] === "summary") return { version: "planner-c06-v1", fields: ["summary"], requiredExternal: [] }
-    // An answer references the complete actor-visible Planner record. Its
-    // manifest cannot silently narrow that evidence to financial aggregates.
-    return scope.scopeDefinitionVersion === "planner-answer-c06-v1" && scope.fields.includes("summary")
-      ? { version: "planner-answer-c06-v1", fields: [...scope.fields].sort(), requiredExternal: [] } : undefined
-  }
-  const verifyManifest = async (scope: ConfirmationScope, context: TrustedDomainContext) => {
-    const selected = structuredClone(scope)
-    if (!manifestFor(selected) || !input.host.requestFor(context) || !await input.host.revalidate(context) || digestSfValue(scope) !== digestSfValue(selected)) return false
-    if (selected.scopeDefinitionVersion === "planner-c06-v1") return true
-    const source = await input.issueSource(selected.sourceRef.id, context)
-    return source.status === "ok" && digestSfValue([...selected.fields].sort()) === digestSfValue([...source.value.evidence.target.fields].sort()) &&
-      digestSfValue(selected.period) === digestSfValue(source.value.evidence.target.period) && await input.host.revalidate(context) && digestSfValue(scope) === digestSfValue(selected)
-  }
+  const manifestFor = (scope: ConfirmationScope) => scope?.sourceRef?.surface === "planner" && scope.sourceRef.type === "planner-version" && !!scope.sourceRef.id && !!scope.sourceRef.incarnation && scope.scopeDefinitionVersion === "planner-c06-v1" && Array.isArray(scope.fields) && scope.fields.length === 1 && scope.fields[0] === "summary" && isSfPeriod(scope.period) && Array.isArray(scope.materialDependencies) && scope.materialDependencies.length === 0 ? { version: "planner-c06-v1", fields: ["summary"], requiredExternal: [] } : undefined
+  const verifyManifest = async (scope: ConfirmationScope, context: TrustedDomainContext) => !!manifestFor(scope) && !!input.host.requestFor(context) && await input.host.revalidate(context)
   const fenceManifest = async (scope: ConfirmationScope, context: TrustedDomainContext) => !!manifestFor(scope) && !!input.host.requestFor(context) && !!input.host.persistence.currentSnapshots?.()?.planner
   const issueForActor = async (target: RecordEvidence["target"], context: TrustedDomainContext): Promise<PortResult<RecordEvidence>> => {
     if (!target || target.surface !== "planner" || target.recordType !== "planner-version" || !target.recordId || !target.period || !Array.isArray(target.fields)) return { status: "unavailable", reason: "material-scope-unavailable" }
@@ -65,12 +51,9 @@ export function createPlannerConfirmationObserver(input: { host: DomainPortHost;
     if (old[0]!.sourceIncarnation !== physical.incarnation) return { replaced: true as const, version: current.version }
     const originalProjection = projectSfSourceScope("planner", snapshot, old[0]!.scope, at)
     if (originalProjection === undefined || digestSfValue(originalProjection) !== digestSfValue(projection)) return undefined
-    if (scope.scopeDefinitionVersion === "planner-answer-c06-v1" &&
-      (digestSfValue([...scope.fields].sort()) !== digestSfValue(Object.keys(projection).sort()) || digestSfValue(scope.period) !== digestSfValue(source.target.period))) return undefined
     const financial = select(buildPlannerFinancialProjection({ projection, ref: source, period: scope.period, binding: context, at }))
     const sourceFingerprint = fingerprint(financial)
-    const dependencyFingerprint = digestSfValue({ fx: projection.fx, hc: projection.hc, entities: projection.sharedEntities, allocations: projection.sharedAllocations, year: projection.year, closed: projection.closed,
-      ...(scope.scopeDefinitionVersion === "planner-answer-c06-v1" ? { answerMaterial: projection } : {}) })
+    const dependencyFingerprint = digestSfValue({ fx: projection.fx, hc: projection.hc, entities: projection.sharedEntities, allocations: projection.sharedAllocations, year: projection.year, closed: projection.closed })
     const scopeFingerprint = digestSfValue({ physical: physical.incarnation, fields: scope.fields, period: scope.period, manifest: scope.scopeDefinitionVersion, sourceFingerprint, dependencyFingerprint })
     return { replaced: false as const, version: current.version, incarnation: current.incarnation, physicalIncarnation: physical.incarnation, sourceFingerprint, dependencyFingerprint, scopeFingerprint, projection: financial }
   }
@@ -135,18 +118,5 @@ export function createPlannerConfirmationObserver(input: { host: DomainPortHost;
     }
     return { status: "ok", value: { fence: checkCurrent, fenceSnapshot, revalidate: async () => !!input.host.persistence.transactionAll && await input.host.revalidate(context) && await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: fenceSnapshot(snapshots.planner) })).catch(() => false) && await input.host.revalidate(context) } }
   }
-  const resolveAnswerScope = async (source: RecordEvidence, evidence: readonly RecordEvidence[], context: TrustedDomainContext): Promise<PortResult<{ scope: ConfirmationScope }>> => {
-    const selected = structuredClone({ source, evidence })
-    const original = selected.source
-    if (!original || original.refDigest !== digestSfEvidenceRef(original) || original.installationId !== context.binding.installationId || original.projectId !== context.binding.projectId ||
-      original.target.surface !== "planner" || original.target.recordType !== "planner-version" || !original.target.period || selected.evidence.length !== 1 ||
-      digestSfValue(selected.evidence[0]) !== digestSfValue(original)) return { status: "unavailable", reason: "answer-scope-unavailable" }
-    const current = await input.issueSource(original.target.recordId, context)
-    if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(original)) return { status: "unavailable", reason: "answer-scope-unavailable" }
-    const scope: ConfirmationScope = { sourceRef: { surface: "planner", type: original.target.recordType, id: original.target.recordId, incarnation: original.target.incarnation },
-      fields: [...original.target.fields], period: structuredClone(original.target.period), materialDependencies: [], scopeDefinitionVersion: "planner-answer-c06-v1" }
-    if (!await verifyManifest(scope, context) || digestSfValue({ source, evidence }) !== digestSfValue(selected)) return { status: "unavailable", reason: "answer-scope-unavailable" }
-    return { status: "ok", value: { scope } }
-  }
-  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareResimulationContinuity, resolveAnswerScope }
+  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareResimulationContinuity }
 }

@@ -1,11 +1,8 @@
 # Orchestra-SF CI — Linux/Azure product boundary
 
-**State: CI rescue integrated into `sf-join-four`; product qualification and Azure release remain pending.**
-[PR #413](https://github.com/gustavomhss/Orchestra-SF/pull/413) was merged at
-`72830e53adfcb2059575b249e76c88753beb04e8`. Focused infrastructure evidence and
-shared-cache activation are recorded in [`PERFORMANCE.md`](./PERFORMANCE.md).
-The existing Epic and branch protection remain unchanged. Migrating required
-checks still requires the relevant live negative controls and explicit owner authorization.
+**State: isolated CI pilot. NO MERGE, NO RELEASE.** The existing Epic and branch
+protection remain unchanged until the replacement has live negative controls
+and the owner explicitly authorizes required-check migration.
 
 **Operational backlog / everything still pending:** [`PENDING-WORK.md`](./PENDING-WORK.md).
 This is the canonical open-work checklist for CI closure, product test red
@@ -26,18 +23,15 @@ retains historical evidence and rationale; do not interpret it as current live s
 
 ## Failure budget — fast red, complete green
 
-The Sucafina Bun suite (`CI-SF`) runs eight complete shards with **no
-`--bail`**: every shard consumes its entire manifest-selected file partition.
-The SF browser unit directory retains `--bail=5`, while the three installed
-Playwright journeys use `--max-failures=2`. Those failure limits stop only
-after a real browser failure. A successful qualification still runs every
-selected test; a failed/incomplete selection never produces a passing
-receipt or `sf/verify`. For diagnosis, run the named failing test with the
-Linux-only surgical runner. No timeout, permission or expectation has been
-relaxed.
-
-Measured job costs, shard planning and cache scope are documented in
-[`PERFORMANCE.md`](./PERFORMANCE.md).
+The full Sucafina Bun suite and the SF browser unit directory use
+`--bail=5`, while the three installed Playwright journeys use
+`--max-failures=2`. **This stops only after a real failure.** A successful
+qualification still runs every selected test; a failed/incomplete selection
+never produces a passing receipt or `sf/verify`. This prevents ten
+consecutive 165-second failures from consuming a CI runner merely to repeat
+an already decisive red verdict. For diagnosis, run the named failing test
+with the Linux-only surgical runner. No timeout, permission or expectation
+has been relaxed.
 
 The Linux-only request selector regression runs in the independent preflight
 before product typechecks, and repository guards run even if product typechecks fail, so the quality
@@ -55,17 +49,16 @@ runner and failed or skipped tests.
 
 `sf/static-and-contracts` retains Linux host/product typechecks, generated
 client and Atlas boundary, E2E typecheck, actual Web build, spawn boundaries
-and guardrails. Focused infrastructure validation and full product qualification
-remain separate evidence scopes.
+and guardrails. We do not report this pilot as green without a run.
 
-The product workflow executes **all eight approved CI families**, not
+The initial pilot executes **all eight approved CI families**, not
 a new untested dependency-based filter. Only pull-request or manual
 dispatch triggers the pipeline; push no longer schedules a redundant
 copy that gets cancelled. Browser unit tests run the full
 `packages/app-shell/test-browser/sucafina-native` directory, including
 new files automatically, rather than the unrelated canonical browser
 tests. The independent Linux-only `test-ci` selector regression runs
-on the preflight lane. The CLI and Atlas-Business families
+on the static lane. The CLI and Atlas-Business families
 now read their explicit test-file arguments exclusively from
 `sf/ci/suites.json` instead of upstream compiled distribution and redundant
 generator tests. CLI includes host installation, admission, Task/Relay
@@ -82,7 +75,7 @@ The aggregator checks all upstream job conclusions **before** attempting any
 artifact download. A failed unit, UI, static or Omni job produces a precise
 RED precheck listing each failed/cancelled/skipped/missing job; no misleading
 artifact-download error precedes that diagnostic. Only successful upstream
-runs download the complete set of suite and shard receipt directories. The aggregator keeps each
+runs download the eight receipt directories. The aggregator keeps each
 artifact in a distinct named directory and refuses missing, extra,
 duplicate or misbound receipts. This removes the 59-job
 canonical-multi-OS topology. Later PR-only path reduction requires a
@@ -114,8 +107,8 @@ scanner and host permissions remain required where consumed by SF.
 
 The archived `.github/inherited-workflows/*.disabled` are historic,
 not active. They are not reenabled to solve a false-green; the Epic remains
-unchanged by the CI rescue. The optional `test-ci` admits Linux x86_64
-requests only.
+unchanged during pilot. The optional `test-ci` is separately being fenced
+to Linux only as part of this migration.
 
 ## Proofs that require the real installed target
 
@@ -159,10 +152,10 @@ staging parameter is never acceptable.
 
 ## Adoption checklist
 
-1. Keep subsequent CI changes isolated and observe their jobs and self-tests before integration.
+1. Push **only** the isolated CI branch and observe its jobs and self-tests.
 2. Fix runner/selector problems in the CI branch; classify real product
    failures separately rather than altering runtime policy.
-3. Confirm complete receipts for all eight families, invalidation/negative controls and Linux-only
+3. Confirm all eight receipts, invalidation/negative controls and Linux-only
    execution. Keep failed/blocked proofs visible until resolved.
 4. Qualify exact frozen C, complete AM01–AM06 and independent reviews.
 5. Only then propose a separately approved branch-protection migration,

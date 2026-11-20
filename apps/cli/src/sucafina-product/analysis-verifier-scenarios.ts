@@ -1,3 +1,4 @@
+import type { SfPlannerCaseObservation } from "./planner-case-read-scope.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -9,7 +10,7 @@ import { withoutObservationTimes, type SfAnalysisDependencies, type SfAnalysisPr
 
 type ReadFailure = { readonly failed: PortResult<never> }
 
-export function createSfScenarioVerifier(dependencies: SfAnalysisDependencies & { scenarioRef: (caseRef: SfAnalysisRequest["caseRef"], alternative: { id: string; version: number }, call: TrustedDomainContext) => Promise<PortResult<string>> }): SfAnalysisVerifier {
+export function createSfScenarioVerifier(dependencies: SfAnalysisDependencies & { withCaseObservation?: SfPlannerCaseObservation; scenarioRef: (caseRef: SfAnalysisRequest["caseRef"], alternative: { id: string; version: number }, call: TrustedDomainContext) => Promise<PortResult<string>> }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-comparar-cenarios"],
     verify: async (input, request, call) => {
@@ -23,7 +24,7 @@ async function verifyComparison(dependencies: Parameters<typeof createSfScenario
   const decoded = decodeSfSkillInput("ScenarioComparisonInput", input)
   if (!decoded.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
   const value = decoded.value
-  const read = async (currentCall: TrustedDomainContext): Promise<{ current: AuthorizedCaseProjection["case"]; replay: ScenarioComparison; sources: SfAnalysisProof["sources"] } | ReadFailure | undefined> => {
+  const readCanonical = async (currentCall: TrustedDomainContext): Promise<{ current: AuthorizedCaseProjection["case"]; replay: ScenarioComparison; sources: SfAnalysisProof["sources"] } | ReadFailure | undefined> => {
     const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
     if (current.status !== "ok" || current.value.case.id !== request.caseRef.id || current.value.case.incarnation !== request.caseRef.incarnation || current.value.case.version !== request.caseRef.version) return undefined
     const domain = current.value.case
@@ -43,6 +44,13 @@ async function verifyComparison(dependencies: Parameters<typeof createSfScenario
     const sources = await dependencies.context.context({ refs }, currentCall)
     if (sources.length !== refs.length || sources.some((item) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
     return { current: current.value.case, replay: replay.value, sources }
+  }
+  const read = async (currentCall: TrustedDomainContext): ReturnType<typeof readCanonical> => {
+    if (!dependencies.withCaseObservation) return readCanonical(currentCall)
+    const selection = { caseRef: request.caseRef, request, input: value }
+    const observed = await dependencies.withCaseObservation(selection, currentCall, async () =>
+      ({ status: "ok", value: await readCanonical(currentCall) }))
+    return observed.status === "ok" ? observed.value : { failed: observed }
   }
   const proof = await read(call)
   if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }

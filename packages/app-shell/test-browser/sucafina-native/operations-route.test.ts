@@ -15,11 +15,6 @@ describe("operations route composition", () => {
     const risk = matchSfNativeRoutePath(`/orchestra/sf-operations/risks/${encodeSfRouteRef("risk")}/edit`)!
     expect(parseOperationsRouteQuery(new URLSearchParams("status=open"), risk)).toEqual({ status: "open" })
     expect(parseOperationsRouteQuery(new URLSearchParams("filter=private"), risk)).toBeUndefined()
-    expect(parseOperationsRouteQuery(new URLSearchParams("year=2026&month=11&status=open"), risk)).toEqual({ year: 2026, month: 11, status: "open" })
-    for (const query of ["year=2023", "year=2028", "month=13", "month=1&month=2", "signalPriority=risks:x"])
-      expect(parseOperationsRouteQuery(new URLSearchParams(query), risk)).toBeUndefined()
-    expect(parseOperationsRouteQuery(new URLSearchParams("year=2026"),
-      matchSfNativeRoutePath("/orchestra/sf-operations/stakeholders")!)).toBeUndefined()
   })
   test("requires readable destination and operational original read", () => {
     for (const [path, id] of [["service", "CAP11"], ["security", "CAP12"], ["risks", "CAP13"], ["stakeholders", "CAP15"], ["performance", "CAP16"]]) {

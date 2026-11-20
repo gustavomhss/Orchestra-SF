@@ -12,8 +12,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { sfReadProjects, sfAdmitted, sfOwnerMatches } from "../projects/producer"
 import { sfProjectHref } from "../projects/paths"
-import { PROJECT_STATUS, sfSourceDate, type SfProjectRecord, type SfProjectPage } from "../projects/model"
-import { createSfPortfolioViewState } from "../view-state"
+import { sfSourceDate, type SfProjectRecord, type SfProjectPage } from "../projects/model"
 import "./overview.css"
 
 const k = (value: keyof typeof SF_U05_COPY) => value as SfCopyKey
@@ -29,7 +28,6 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
   const owner = useSfContext()
   const language = useLanguage()
   const navigate = useNavigate()
-  const filters = createSfPortfolioViewState(owner, () => props.route)
   const t = (key: keyof typeof SF_U05_COPY) => language.t(key as Parameters<typeof language.t>[0])
   const [refresh, setRefresh] = createSignal(0)
   const [view, setView] = createStore<{ state: SfUiState; page: SfProjectPage | null }>({
@@ -69,7 +67,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
     const controller = new AbortController()
     onCleanup(() => controller.abort())
     void sfReadProjects(active.transport, "CAP09", {
-      year: sourceQuery.year, status: filters.value.status || undefined, filter: filters.value.filter || undefined,
+      year: sourceQuery.year, status: sourceQuery.status, filter: sourceQuery.filter,
     }, controller.signal).then((result) => {
       if (controller.signal.aborted || generation !== owner.generation()) return
       if (result.status === "failed") {
@@ -87,11 +85,9 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
   const projects = createMemo(() => {
     const current = view.page
     if (!current) return [] as SfProjectRecord[]
-    const status = filters.value.status
-    const filter = filters.value.filter
-    const search = filters.value.search.toLocaleLowerCase().trim()
+    const status = props.route.query.status
+    const filter = props.route.query.filter
     return [...current.records].filter((row) =>
-      (!search || [row.name, row.pm ?? "", row.desc ?? ""].some((field) => field.toLocaleLowerCase().includes(search))) &&
       (!status || row.status === status) &&
       (filter !== "watch" || row.watchList === true) &&
       (filter !== "at-risk" || row.risk === "Medium" || row.risk === "High"),
@@ -148,27 +144,6 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
               <p>{t("sf.u05.overview.order")}</p>
               <Show when={view.page?.capturedAt}><time>{view.page!.capturedAt}</time></Show>
             </div>
-            <form class="sf-u05-overview-filters" aria-label={t("sf.u05.projects.filters")}
-              onSubmit={(event) => event.preventDefault()}>
-              <label>{t("sf.u05.projects.search")}
-                <input type="search" value={filters.value.search}
-                  onInput={(event) => filters.change({ search: event.currentTarget.value })} />
-              </label>
-              <label>{t("sf.u05.projects.status")}
-                <select value={filters.value.status} onChange={(event) => filters.change({ status: event.currentTarget.value })}>
-                  <option value="">{t("sf.u05.projects.all")}</option>
-                  <For each={PROJECT_STATUS}>{(status) => <option value={status}>{status}</option>}</For>
-                </select>
-              </label>
-              <label>{t("sf.u05.projects.show")}
-                <select value={filters.value.filter} onChange={(event) => filters.change({ filter: event.currentTarget.value })}>
-                  <option value="">{t("sf.u05.projects.all")}</option>
-                  <option value="watch">{t("sf.u05.projects.watch")}</option>
-                  <option value="at-risk">{t("sf.u05.projects.atRisk")}</option>
-                </select>
-              </label>
-              <button class="mx-btn" type="button" onClick={() => filters.reset()}>{t("sf.u05.projects.reset")}</button>
-            </form>
             <dl class="sf-u05-overview-metrics">
               <div><dt>{t("sf.u05.overview.selected")}</dt><dd>{projects().length}</dd></div>
               <div><dt>{t("sf.u05.overview.watch")}</dt><dd>{projects().filter((project) => project.watchList === true).length}</dd></div>
