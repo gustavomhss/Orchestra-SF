@@ -17,7 +17,7 @@ const layer = Layer.effect(
     const locations = yield* LocationServiceMap.Service
     const coordinator = yield* SessionRunCoordinator.make<SessionSchema.ID, SessionRunner.RunError>({
       bind: owners.bind.pipe(Effect.orDie),
-      drain: Effect.fnUntraced((sessionID: SessionSchema.ID, force: boolean) => SessionOwner.guard(owners, sessionID, "run", (ownerScope) => Effect.gen(function* () {
+      drain: (sessionID: SessionSchema.ID, force: boolean) => SessionOwner.guard(owners, sessionID, "run", (ownerScope) => Effect.gen(function* () {
         const session = yield* store.get(sessionID)
         // A coalesced wake can outlive its Session (removal interrupts, then deletes); only an explicit run is a defect.
         if (!session && !force) return
@@ -37,7 +37,7 @@ const layer = Layer.effect(
               : Effect.logError("Failed to drain Session", cause).pipe(Effect.annotateLogs({ sessionID })),
           ),
         )
-      }))),
+      })),
     })
 
     return SessionExecution.Service.of({

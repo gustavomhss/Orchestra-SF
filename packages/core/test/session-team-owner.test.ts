@@ -71,7 +71,7 @@ test("owner-02: same physical project never joins different Teams or different p
     }))).toEqual(first)
     const before = f.calls.projects
     for (const foreign of [secondTeam, secondPerson]) {
-      for (const operation of [
+      const operations: ReadonlyArray<Effect.Effect<void, unknown>> = [
         sessions.get(id).pipe(Effect.asVoid),
         sessions.create({ id, location: f.location }).pipe(Effect.asVoid),
         sessions.messages({ sessionID: id }).pipe(Effect.asVoid),
@@ -82,7 +82,8 @@ test("owner-02: same physical project never joins different Teams or different p
         sessions.prompt({ sessionID: id, prompt: Prompt.make({ text: "forbidden" }), resume: false }).pipe(Effect.asVoid),
         sessions.rename({ sessionID: id, title: "forbidden" }),
         sessions.remove(id),
-      ]) yield* denied(SessionOwner.withLease(foreign, operation))
+      ]
+      for (const operation of operations) yield* denied(SessionOwner.withLease(foreign, operation))
       expect(yield* SessionOwner.withLease(foreign, sessions.list())).toEqual([])
     }
     expect(f.calls.projects).toBe(before)

@@ -71,8 +71,11 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
     interrupt: () => Effect.void,
   }))
   const layer = () => Layer.fresh(AppNodeBuilder.build(
-    LayerNode.group([Database.node, EventV2.node, SessionProjector.node, SessionStore.node,
-      SessionV2.node, SessionOwner.node, AuthorityGenerationRuntime.node, ...input.extraNodes ?? []]),
+    LayerNode.group([
+      LayerNode.group([Database.node, EventV2.node, SessionProjector.node, SessionStore.node,
+        SessionV2.node, SessionOwner.node, AuthorityGenerationRuntime.node]),
+      LayerNode.group(input.extraNodes ?? []),
+    ]),
     [
       [Database.node, Database.layerFromPath(filename)],
       [ProjectV2.node, projects],
