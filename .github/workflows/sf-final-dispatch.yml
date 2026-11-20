@@ -1,0 +1,106 @@
+name: sf-final-dispatch
+
+on:
+  push:
+    branches: [sf-final-dispatch]
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: sf-final-dispatch-once
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  EXPECTED_FINAL_SHA: "3910a644c7fdab1a438c2b5b39d69afc19361709"
+
+jobs:
+  dispatch:
+    name: sf/dispatch-once-at-frozen-source
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.event.repository.id == 1455724710 && github.ref == 'refs/heads/sf-final-dispatch' && github.event.created == true && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Dispatch the requested sf-ci exactly once after all source checks
+        id: dispatch
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+        with:
+          github-token: ${{ github.token }}
+          retries: 0
+          debug: false
+          script: |
+            const owner = 'gustavomhss', repo = 'Orchestra-SF';
+            const repositoryId = 1455724710, workflowId = 420530405, targetRef = 'sf-join-four';
+            const expected = process.env.EXPECTED_FINAL_SHA;
+            const request = { timeout: 10000, retries: 0 };
+            const requireState = (ok, message) => { if (!ok) throw new Error(message); };
+            requireState(/^[a-f0-9]{40}$/.test(expected || ''), 'A real frozen SHA is required');
+            requireState(context.eventName === 'push' && context.repo.owner === owner && context.repo.repo === repo &&
+              context.payload.repository?.id === repositoryId && context.ref === 'refs/heads/sf-final-dispatch' &&
+              context.payload.ref === context.ref && context.payload.created === true &&
+              context.payload.deleted !== true && context.payload.forced !== true &&
+              context.payload.before === '0'.repeat(40) && context.payload.after === context.sha &&
+              process.env.GITHUB_RUN_ATTEMPT === '1', 'Only the first creation of this driver branch is admitted');
+            const { data: driver } = await github.rest.git.getCommit({ owner, repo, commit_sha: context.sha, request });
+            requireState(driver.parents?.length === 1 && driver.parents[0].sha === expected,
+              'The driver must be a direct child of the frozen candidate');
+            const readFrozenRef = async () => {
+              const { data } = await github.rest.git.getRef({ owner, repo, ref: 'heads/' + targetRef, request });
+              requireState(data.ref === 'refs/heads/' + targetRef && data.object.type === 'commit' &&
+                data.object.sha === expected, 'The integration branch is not at the frozen SHA');
+            };
+            const runsAtFrozenSha = async () => {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                owner, repo, workflow_id: workflowId, event: 'workflow_dispatch', head_sha: expected, per_page: 100, request,
+              });
+              requireState(Number.isSafeInteger(data.total_count) && data.total_count >= 0 &&
+                Array.isArray(data.workflow_runs), 'Invalid workflow runs response');
+              requireState(data.workflow_runs.every(run => run.workflow_id === workflowId &&
+                run.event === 'workflow_dispatch' && run.head_sha === expected), 'Workflow run filter mismatch');
+              return data;
+            };
+            await readFrozenRef();
+            const { data: workflow } = await github.rest.actions.getWorkflow({ owner, repo, workflow_id: workflowId, request });
+            requireState(workflow.id === workflowId && workflow.path === '.github/workflows/sf-ci.yml' &&
+              workflow.state === 'active', 'The requested sf-ci workflow is not active');
+            const prior = await runsAtFrozenSha();
+            requireState(prior.total_count === 0 && prior.workflow_runs.length === 0,
+              'An sf-ci dispatch already exists at this SHA; no second POST is permitted');
+            await readFrozenRef();
+            let postStatus;
+            try {
+              const posted = await github.rest.actions.createWorkflowDispatch({
+                owner, repo, workflow_id: workflowId, ref: targetRef, request,
+              });
+              postStatus = posted.status;
+            } catch (error) {
+              const status = Number.isSafeInteger(error?.status) ? error.status : 'unknown';
+              core.setFailed('The sole dispatch POST did not return success (status ' + status +
+                '). Reconcile with read-only run listing; never retry this POST.');
+              return;
+            }
+            core.info('The sole sf-ci dispatch POST returned HTTP ' + postStatus + '. No retry is allowed.');
+            for (let poll = 0; poll < 8; poll++) {
+              const found = await runsAtFrozenSha();
+              requireState(found.total_count <= 1 && found.workflow_runs.length <= 1,
+                'Multiple dispatches were observed; do not dispatch again');
+              if (found.total_count === 1 && found.workflow_runs.length === 1) {
+                const run = found.workflow_runs[0];
+                requireState(run.head_branch === targetRef && run.repository?.id === repositoryId &&
+                  run.head_repository?.id === repositoryId && run.run_attempt === 1,
+                  'The observed run does not match the requested frozen source');
+                const receipt = { id: run.id, url: run.html_url, workflow_id: run.workflow_id,
+                  event: run.event, head_branch: run.head_branch, head_sha: run.head_sha,
+                  run_attempt: run.run_attempt, status: run.status, conclusion: run.conclusion,
+                  post_http_status: postStatus };
+                core.info('SF_FINAL_DISPATCH_RUN ' + JSON.stringify(receipt));
+                core.setOutput('run_id', String(run.id));
+                core.setOutput('head_sha', run.head_sha);
+                core.setOutput('run_url', run.html_url);
+                return;
+              }
+              if (poll < 7) await new Promise(resolve => setTimeout(resolve, 3000));
+            }
+            core.setFailed('Dispatch accepted but no exact run was observed. Continue with GET-only reconciliation; never issue a second POST.');
