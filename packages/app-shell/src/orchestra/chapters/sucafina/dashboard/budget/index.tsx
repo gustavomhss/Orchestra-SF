@@ -129,8 +129,8 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
         <Show when={!admitted("save-month") && !admitted("save-revenue")}>
           <p role="status">{t(sfCommonKey("sf.common.readOnly"))}</p>
         </Show>
-        <SfBudgetReportLink />
       </SfStatePanel>
+      <SfBudgetReportLink />
     </div>
   </SfPageFrame>
 }
