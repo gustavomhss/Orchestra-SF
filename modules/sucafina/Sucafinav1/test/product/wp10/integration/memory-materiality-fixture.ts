@@ -16,7 +16,7 @@ function ok<Value>(result: PortResult<Value>, label: string): Value {
 
 export async function memoryMaterialityFixture(deadline: ReturnType<typeof compositionTestDeadline>) {
   const fixture = await plannerObservationFixture(deadline, false, {
-    sourceOnly: true, humanActions: ["decisions.condition.record"],
+    sourceOnly: true, humanActions: ["decisions.condition.record", "analysis.read"],
   })
   const choiceInput = { caseRef: fixture.caseRef, alternativeId: "candidate", alternativeVersion: 1,
     comparison: { scenarioRefs: [fixture.request.baselineRef, fixture.request.scenarioRef], criteria: ["cost"] },
