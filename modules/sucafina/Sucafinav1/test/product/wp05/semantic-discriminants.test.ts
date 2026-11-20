@@ -1,7 +1,9 @@
 import { test } from "bun:test"
-import { chromium, expect } from "@playwright/test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
 import path from "node:path"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { DomainProjection, ProjectionComponent, SourceRef } from "../../../product/contracts/context.ts"
 import type { ScenarioComparison, ScenarioResult } from "../../../product/contracts/decisions.ts"
@@ -20,20 +22,23 @@ function rendererUrl() {
 
 async function withRenderer(run: (page: Page, moduleUrl: string) => Promise<void>) {
   const moduleUrl = await rendererUrl()
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  // Node owns the Chrome DevTools pipes; retain the original page and wait defaults.
+  const driver = await launchBrowserDriver("wp05-renderer")
   try {
-    const page = await browser.newPage()
+    const page = await driver.browser.newPage()
     const errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     await page.goto("about:blank")
     await run(page, moduleUrl)
     expect(errors).toEqual([])
   } finally {
-    await browser.close()
+    await driver.close()
   }
+  driver.report()
 }
 
 test("Top N stays partial; a producer-supplied other group preserves its contribution and C17 component references", async () => {
+  expectSpawn(import.meta.path)
   await withRenderer(async (page, moduleUrl) => {
     await page.evaluate(async (url) => {
       const module = await import(url)
@@ -83,6 +88,7 @@ test("Top N stays partial; a producer-supplied other group preserves its contrib
 }, 90000)
 
 test("changing only current ticket status cannot rewrite supplied opening and closing periods", async () => {
+  expectSpawn(import.meta.path)
   await withRenderer(async (page, moduleUrl) => {
     await page.evaluate(async (url) => {
       const module = await import(url)
@@ -127,6 +133,7 @@ test("changing only current ticket status cannot rewrite supplied opening and cl
 }, 90000)
 
 test("a projected date change moves the timeline but cannot create savings or remove supplied obligations", async () => {
+  expectSpawn(import.meta.path)
   await withRenderer(async (page, moduleUrl) => {
     await page.evaluate(async (url) => {
       const module = await import(url)
