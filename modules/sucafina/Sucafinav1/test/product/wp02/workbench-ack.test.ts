@@ -14,13 +14,14 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   async function withWorkbench(check: (f: Fixture, page: Page, panel: Locator) => Promise<void>) {
     const f = await createRecoveryFixture()
-    let context: BrowserContext | undefined
+    let context: BrowserContext | undefined, currentPage: Page | undefined
+    const errors: string[] = []
     try {
-      context = await browser.newContext()
-      const page = await context.newPage(), errors: string[] = []
+      context = await f.newContext(browser)
+      const page = currentPage = await context.newPage()
       page.setDefaultTimeout(10_000)
       page.on("pageerror", (error) => errors.push(error.message))
-      await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
+      await f.loginPage(page)
       await page.goto(`${f.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
       const panel = page.locator("[data-dashboard-workbench]")
@@ -28,6 +29,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await panel.getByText("Opções carregadas.", { exact: false }).waitFor()
       await check(f, page, panel)
       expect(errors).toEqual([])
+    } catch (error) {
+      console.error("G04 Dashboard ACK component failed", { httpTrace: f.httpTrace, browserErrors: errors,
+        status: await currentPage?.locator("[data-dashboard-workbench]").innerText({ timeout: 1000 }).then((text) => text.slice(-1600)).catch(() => undefined) })
+      throw error
     } finally { try { await context?.close() } finally { await f.close() } }
   }
 

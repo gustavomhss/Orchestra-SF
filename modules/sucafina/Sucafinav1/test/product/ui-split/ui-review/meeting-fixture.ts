@@ -7,7 +7,7 @@ import { createRecoveryFixture } from "../../wp02/workbench-recovery-fixture.ts"
 
 export const meetingPeriod = { start: "2026-01-01", end: "2026-12-31" }
 
-/** Reuse the installed Dashboard fixture and its actual HTTP, C08, source
+/** Reuse the Microsoft-authenticated Dashboard component fixture and its actual HTTP, C08, source
  * lifecycle and review reader. Only the initial business records are seeded. */
 export async function createMeetingFixture() {
   const fixture = await createRecoveryFixture()
@@ -20,7 +20,7 @@ export async function createMeetingFixture() {
       return { commit: true, value: undefined }
     })
     const cookie = fixture.request().headers.get("cookie")!
-    const post = (mode: string, payload: unknown) => fetch(`${fixture.origin}/sucafina/dashboard?sf=${mode}`, {
+    const post = (mode: string, payload: unknown) => fixture.fetch(`${fixture.origin}/sucafina/dashboard?sf=${mode}`, {
       method: "POST", headers: { cookie, origin: fixture.origin, "content-type": "application/json", "idempotency-key": randomUUID() },
       body: JSON.stringify(payload),
     })
@@ -34,7 +34,7 @@ export async function createMeetingFixture() {
     const historyUrl = new URL(`${fixture.origin}/sucafina/dashboard`)
     historyUrl.searchParams.set("sf", "dashboard-review")
     historyUrl.searchParams.set("id", reviewId)
-    const changeBudget = () => fetch(`${fixture.origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`, {
+    const changeBudget = () => fixture.fetch(`${fixture.origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`, {
       method: "POST", headers: { cookie, origin: fixture.origin, "content-type": "application/json" },
       body: JSON.stringify({ page: "OPEX Detail", action: "save", id: "ui-review-owner", version: 0, values: { name: "Preserved Operations", budget: 2400 } }),
     })
@@ -43,7 +43,10 @@ export async function createMeetingFixture() {
       receipts: Object.values(state.transactions).filter((entry) => entry.namespace === "reviews").length,
     }))
     return { ...fixture, cookie, post, historyUrl, changeBudget, stored, original: original.value }
-  } catch (error) { await fixture.close(); throw error }
+  } catch (error) {
+    try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Meeting component setup failed") }
+    throw error
+  }
 }
 
 export function meetingTotal(review: PreservedReview) {

@@ -4,8 +4,9 @@ import { esc } from "../../src/screen-shell.ts"
 export function caseQuestionForm(projection: AuthorizedCaseProjection) {
   const sources = projection.case.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" && !!ref.target.period && ref.target.period.start <= projection.case.horizon.start && ref.target.period.end >= projection.case.horizon.end)
   if (!sources.length) return "<p>A question needs an accessible record covering the decision period.</p>"
+  const controlId = "sf-question-" + crypto.randomUUID()
   const context = { caseRef: { id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }, period: projection.case.horizon, sources }
-  return `<section><h3>Ask a question</h3><form data-case-question data-context="${esc(JSON.stringify(context))}"><label>Record<select name="source">${sources.map((source, index) => `<option value="${index}">${esc(source.target.recordType)} · ${esc(source.target.surface)}</option>`).join("")}</select></label><button type="button" data-find-recipients>Find recipients</button><label>Recipient<select name="recipient" required><option value="">Choose a recipient</option></select></label><label>Question<textarea name="question" required></textarea></label><button type="submit">Create question</button><p role="status" aria-live="polite"></p></form></section>`
+  return `<section><h3>Ask a question</h3><form data-case-question data-context="${esc(JSON.stringify(context))}"><label for="${controlId}-source">Record</label><select id="${controlId}-source" name="source">${sources.map((source, index) => `<option value="${index}">${esc(source.target.recordType)} · ${esc(source.target.surface)}</option>`).join("")}</select><button type="button" data-find-recipients>Find recipients</button><label for="${controlId}-recipient">Recipient</label><select id="${controlId}-recipient" name="recipient" aria-label="Recipient" required><option value="">Choose a recipient</option></select><label>Question<textarea name="question" required></textarea></label><button type="submit">Create question</button><p role="status" aria-live="polite"></p></form></section>`
 }
 
 export function caseQuestionThreads(projection: AuthorizedCaseProjection) {
@@ -477,18 +478,74 @@ document.querySelectorAll('[data-case-question]').forEach((form) => {
 
 /** Resolve a work destination again when it is opened, with the current user's access. */
 export const workDestinationScript = `
-document.querySelectorAll('[data-work-destination]').forEach((button) => {
-  if (button.dataset.sfWorkReady) return; button.dataset.sfWorkReady = 'true'
-  button.addEventListener('click', async () => {
-    const status = button.parentElement.querySelector('[role=status]'); button.disabled = true; status.textContent = 'Opening work…'
-    try {
-      const url = new URL(location.href); url.search = '?sf=collaboration-work-destination'
-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ selection: JSON.parse(button.dataset.selection), actionRef: button.dataset.actionRef }) })
-      const result = await response.json(); if (!response.ok || result.status !== 'ok' || typeof result.value?.href !== 'string') throw new Error('unavailable')
-      const destination = new URL(result.value.href, location.href)
-      if (destination.origin !== location.origin || (destination.pathname !== button.dataset.mount && !destination.pathname.startsWith(button.dataset.mount + '/'))) throw new Error('unavailable')
-      location.assign(destination.href)
-    } catch { status.textContent = 'This work is unavailable or your access changed.'; button.disabled = false }
+document.querySelectorAll('[data-work-list]').forEach((list) => {
+  if (list.dataset.sfWorkReady) return
+  list.dataset.sfWorkReady = 'true'
+  const controllers = new Set()
+  const buttons = [...list.querySelectorAll('[data-work-destination]')]
+  let closed = false, epoch = 0
+  const live = (captured, button) => !closed && epoch === captured && list.isConnected && button.isConnected
+  const revoke = () => {
+    if (closed) return
+    closed = true; epoch++
+    controllers.forEach((controller) => controller.abort()); controllers.clear()
+    buttons.forEach((button) => {
+      button.disabled = true
+      for (const name of ['selection', 'actionRef', 'mount']) delete button.dataset[name]
+    })
+    list.textContent = 'Work access changed. Reopen the application with your current access.'
+    const main = list.closest('main')
+    if (main) {
+      main.dataset.accessUnavailable = 'true'
+      const heading = document.createElement('h2'); heading.textContent = 'Work access unavailable'
+      const message = document.createElement('p'); message.textContent = list.textContent
+      main.replaceChildren(heading, message)
+    }
+    try { history.replaceState(null, '', location.href) } catch {}
+    removeEventListener('sf-access-revoked', revoke)
+    removeEventListener('pagehide', revoke)
+    dispatchEvent(new Event('sf-access-revoked'))
+  }
+  addEventListener('sf-access-revoked', revoke)
+  addEventListener('pagehide', revoke)
+  buttons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      if (closed || button.disabled) return
+      const status = button.parentElement.querySelector('[role=status]')
+      if (!status) return
+      const captured = epoch
+      const controller = new AbortController(); controllers.add(controller)
+      const timer = setTimeout(() => controller.abort(), 10000)
+      button.disabled = true; status.textContent = 'Opening work…'
+      try {
+        const mount = button.dataset.mount
+        if (typeof mount !== 'string' || !mount.startsWith('/') || mount.endsWith('/') ||
+            mount.includes('?') || mount.includes('#') || mount.includes('\\\\') ||
+            !(location.pathname === mount || location.pathname.startsWith(mount + '/'))) throw new Error('invalid-mount')
+        const selection = JSON.parse(button.dataset.selection)
+        const actionRef = button.dataset.actionRef
+        if (!selection || typeof actionRef !== 'string' || !actionRef) throw new Error('invalid-selection')
+        const body = JSON.stringify({ selection, actionRef })
+        const url = new URL(location.href); url.search = '?sf=collaboration-work-destination'
+        const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: controller.signal,
+          headers: { 'Content-Type': 'application/json' }, body })
+        if (!live(captured, button)) return
+        if (response.status === 401 || response.status === 403) { revoke(); return }
+        const result = await response.json()
+        if (!live(captured, button)) return
+        if (result?.status === 'denied') { revoke(); return }
+        if (!response.ok || result?.status !== 'ok' || typeof result.value?.href !== 'string') throw new Error('unavailable')
+        const destination = new URL(result.value.href, location.href)
+        if (destination.origin !== location.origin || destination.username || destination.password ||
+            !(destination.pathname === mount || destination.pathname.startsWith(mount + '/'))) throw new Error('invalid-destination')
+        location.assign(destination.href)
+      } catch {
+        if (live(captured, button)) {
+          status.textContent = 'This work is temporarily unavailable. Retry when its current source is available.'
+          button.disabled = false
+        }
+      } finally { clearTimeout(timer); controllers.delete(controller) }
+    })
   })
 })
 `

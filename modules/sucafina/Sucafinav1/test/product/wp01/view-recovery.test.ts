@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import type { SfPersonalViewRecord } from "../../../product/interface/personal-views.ts"
-import { decisionCreateForm, decisionCreateScript } from "../../../product/ui/decision-create.ts"
+import { decisionCreateForm, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../../../product/ui/decision-create.ts"
 import { personalViewsScript, personalViewsWidget } from "../../../product/ui/personal-views.ts"
 import { documentHtml, pageMain } from "../../../src/screen-shell.ts"
 import { fields, form } from "../../../runtime/ui.ts"
@@ -72,6 +72,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   function pageHtml(body: string, script: string) {
     return documentHtml("Budget Planner", "planner", "", pageMain({ drawn: true, key: "OPEX", index: 1 }, body), "").replace("</body>", `<script>${script}</script></body>`)
   }
+  // Component routing partition only: this digest is not an authenticated actor,
+  // Team binding, session token, or proof of installed creation authorization.
+  const scopedCreation = scopeDecisionCreateForm(decisionCreateForm, decisionCreationScope({
+    installationId: "view-recovery-component", projectId: "synthetic-placement",
+    principalRef: "component-principal", policyVersion: "component-policy",
+  }))
   async function fillDecision(page: Page) {
     await page.getByText("Create a decision", { exact: true }).click()
     await page.getByLabel("Decision objective").fill("Review renewal")
@@ -86,10 +92,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test.each(["lost", "stale"])("creation freezes its request after a %s outcome and retains uncertainty on a subsequent 409", async (outcome) => {
     const requests: { key: string | null; body: string }[] = []
     const server = Bun.serve({ port: 0, fetch: async (request) => {
-      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(decisionCreateForm, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
+      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(scopedCreation, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
       requests.push({ key: request.headers.get("Idempotency-Key"), body: await request.text() })
       if (requests.length === 1 && outcome === "stale") return Response.json({ status: "stale" }, { status: 409 })
-      return requests.length === 2 ? Response.json({ status: "conflict" }, { status: 409 }) : Response.json({ status: "ok", outputRef: "case-reference-1" })
+      return requests.length === 2 ? Response.json({ status: "conflict" }, { status: 409 }) : Response.json({ status: "ok", outputRef: "case:created-decision:component-incarnation" })
     } })
     const page = await fixturePage(server)
     const network = { dropped: false }
@@ -107,10 +113,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.getByLabel("Decision objective").isDisabled()).toBe(true)
       expect(await page.getByLabel("Decision objective").inputValue()).toBe("Review renewal")
       await page.getByRole("button", { name: "Retry same creation" }).click()
-      await page.getByText("Creation is unconfirmed.", { exact: false }).waitFor()
+      await page.getByText("Creation was rejected or is uncertain.", { exact: false }).waitFor()
       expect(await page.getByLabel("Decision objective").isDisabled()).toBe(true)
       await page.getByRole("button", { name: "Retry same creation" }).click()
-      await page.waitForURL((url) => url.searchParams.get("caseRef") === "case-reference-1")
+      await page.waitForURL((url) => url.searchParams.get("caseRef") === "case:created-decision:component-incarnation")
       expect(requests.length).toBe(3)
       expect(new Set(requests.map((request) => request.key)).size).toBe(1)
       expect(new Set(requests.map((request) => request.body)).size).toBe(1)
@@ -118,36 +124,49 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     } finally { await closeFixture(page, server) }
   }, 30000)
 
-  test("a confirmed creation rejection unlocks correction and creates a new intention", async () => {
+  test("a rejected creation retains its intention until the person explicitly starts a separate one", async () => {
     const requests: { key: string | null; body: string }[] = []
     const server = Bun.serve({ port: 0, fetch: async (request) => {
-      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(decisionCreateForm, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
+      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(scopedCreation, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
       requests.push({ key: request.headers.get("Idempotency-Key"), body: await request.text() })
-      return requests.length === 1 ? Response.json({ status: "invalid" }, { status: 400 }) : Response.json({ status: "ok", outputRef: "corrected-case" })
+      return requests.length === 1 ? Response.json({ status: "invalid" }, { status: 400 }) : Response.json({ status: "ok", outputRef: "case:corrected-decision:component-incarnation" })
     } })
     const page = await fixturePage(server)
     try {
       await page.goto(new URL("planner?sf=workbench", server.url).href)
       await fillDecision(page)
       await page.getByRole("button", { name: "Create decision", exact: true }).click()
-      await page.getByText("Creation was rejected.", { exact: false }).waitFor()
+      await page.getByText("Creation was rejected or is uncertain.", { exact: false }).waitFor()
+      // A rejection is not evidence that a concurrent commit cannot complete.
+      // Keep the original body and correlation key locked until an explicit choice.
+      expect(await page.getByLabel("Decision objective").isDisabled()).toBe(true)
+      expect(await page.getByLabel("Decision objective").inputValue()).toBe("Review renewal")
+      const originalBody = requests[0]!.body
+      const originalKey = requests[0]!.key
+      const accepted = page.waitForEvent("dialog").then((dialog) => {
+        expect(dialog.type()).toBe("confirm")
+        return dialog.accept()
+      })
+      await Promise.all([within(accepted, "confirm separate creation"), page.getByRole("button", { name: "Start a separate decision", exact: true }).click()])
+      expect(requests).toHaveLength(1)
+      expect(requests[0]).toEqual({ key: originalKey, body: originalBody })
       expect(await page.getByLabel("Decision objective").isDisabled()).toBe(false)
       await page.getByLabel("Decision objective").fill("Corrected objective")
       await page.getByRole("button", { name: "Create decision", exact: true }).click()
-      await page.waitForURL((url) => url.searchParams.get("caseRef") === "corrected-case")
+      await page.waitForURL((url) => url.searchParams.get("caseRef") === "case:corrected-decision:component-incarnation")
       expect(requests[0]!.key).not.toBe(requests[1]!.key)
       expect(JSON.parse(requests[1]!.body).input.objective).toBe("Corrected objective")
     } finally { await closeFixture(page, server) }
   }, 30000)
 
   test.each([401, 403])("creation %i removes its inputs and does not echo the denied payload", async (status) => {
-    const server = Bun.serve({ port: 0, fetch: (request) => request.method === "GET" ? new Response(pageHtml(decisionCreateForm, decisionCreateScript), { headers: { "Content-Type": "text/html" } }) : Response.json({ status: "denied", detail: "PRIVATE-DENIAL" }, { status }) })
+    const server = Bun.serve({ port: 0, fetch: (request) => request.method === "GET" ? new Response(pageHtml(scopedCreation, decisionCreateScript), { headers: { "Content-Type": "text/html" } }) : Response.json({ status: "denied", detail: "PRIVATE-DENIAL" }, { status }) })
     const page = await fixturePage(server)
     try {
       await page.goto(server.url.href)
       await fillDecision(page)
       await page.getByRole("button", { name: "Create decision", exact: true }).click()
-      await page.getByText("Your access changed. Reload before creating a decision.").waitFor()
+      await page.getByText("Your access changed. Reopen an authorized page to reconcile this creation.").waitFor()
       expect(await page.locator("[data-decision-create] input, [data-decision-create] textarea").count()).toBe(0)
       expect(await page.content()).not.toContain("PRIVATE-DENIAL")
     } finally { await closeFixture(page, server) }
@@ -228,18 +247,34 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const server = Bun.serve({ port: 0, fetch: async (request) => {
       if (request.method === "GET") return new Response(pageHtml(personalViewsWidget({ surface: "planner", page: "OPEX" }), personalViewsScript), { headers: { "Content-Type": "text/html" } })
       state.calls++
-      if (state.calls === 2) { await new Promise<void>((resolve) => { state.release = resolve; state.started?.() }); return Response.json({ status: "ok", value: [entry] }, { headers: { "X-Late-Fixture": "yes" } }) }
+      if (state.calls === 2) {
+        const bytes = new TextEncoder().encode(JSON.stringify({ status: "ok", value: [entry] }))
+        const split = Math.max(1, Math.floor(bytes.length / 2))
+        let cancelled = false
+        const body = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(bytes.subarray(0, split))
+            state.release = () => { state.release = undefined; if (!cancelled) { controller.enqueue(bytes.subarray(split)); controller.close() } }
+            state.started?.()
+          },
+          cancel() { cancelled = true; state.release = undefined },
+        })
+        return new Response(body, { headers: { "Content-Type": "application/json", "X-Late-Fixture": "yes" } })
+      }
       return state.calls === 1 ? Response.json({ status: "ok", value: [entry] }) : Response.json({ status: "denied" }, { status })
     } })
     const page = await fixturePage(server)
     try {
       await page.goto(new URL("planner?page=OPEX", server.url).href)
       await page.getByRole("button", { name: "PRIVATE-VIEW", exact: true }).waitFor()
+      const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "yes")
       await page.getByRole("button", { name: "Refresh saved views" }).click()
       await within(started, "request entered the delayed fixture handler")
+      expect((await late).status()).toBe(200)
+      // The consumer is reading the incomplete body before access is revoked.
+      await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))), "enter the delayed body read")
       await page.getByRole("button", { name: "Refresh saved views" }).click()
       await page.getByText("Your access changed. Reload before opening or changing saved views.").waitFor()
-      const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "yes")
       state.release?.()
       await finishRead(page, late)
       expect(await page.content()).not.toContain("PRIVATE-VIEW")
@@ -309,17 +344,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("an older open response cannot replace the user's newer destination choice", async () => {
     const state: { started?: () => void; release?: () => void } = {}
+    const trace: { phase: string; action?: string; id?: string; status?: number; error?: string }[] = []
     const started = new Promise<void>((resolve) => { state.started = resolve })
     const first: SfPersonalViewRecord = { view: { id: "saved-view-01", title: "First destination", surface: "planner", page: "CAPEX" }, version: 1 }
     const second: SfPersonalViewRecord = { view: { id: "saved-view-02", title: "Second destination", surface: "planner", page: "OPEX", currency: "USD" }, version: 1 }
     const server = Bun.serve({ port: 0, fetch: async (request) => {
       if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("view") ? "<h1>Older destination opened</h1>" : pageHtml(personalViewsWidget({ surface: "planner", page: "OPEX" }), personalViewsScript), { headers: { "Content-Type": "text/html" } })
       const command = await request.json()
+      trace.push({ phase: "received", action: command.action, id: command.input?.id })
       if (command.action === "list") return Response.json({ status: "ok", value: [first, second] })
-      if (command.input.id === first.view.id) { await new Promise<void>((resolve) => { state.release = resolve; state.started?.() }); return Response.json({ status: "ok", value: first }, { headers: { "X-Late-Fixture": "yes" } }) }
+      if (command.input.id === first.view.id) { await new Promise<void>((resolve) => { state.release = resolve; state.started?.() }); trace.push({ phase: "released", id: first.view.id }); return Response.json({ status: "ok", value: first }, { headers: { "X-Late-Fixture": "yes" } }) }
       return Response.json({ status: "ok", value: second })
     } })
     const page = await fixturePage(server)
+    page.on("requestfailed", (request) => { if (request.method() === "POST") trace.push({ phase: "requestfailed", error: request.failure()?.errorText }) })
+    page.on("response", (response) => { if (response.request().method() === "POST") trace.push({ phase: response.headers()["x-late-fixture"] === "yes" ? "late-response" : "response", status: response.status() }) })
     try {
       const original = new URL("planner?page=OPEX", server.url).href
       await page.goto(original)
@@ -328,9 +367,13 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await page.getByRole("button", { name: "Second destination", exact: true }).click()
       await page.getByText("This view has a currency context that cannot be restored here.", { exact: false }).waitFor()
       const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "yes")
-      state.release?.(); await finishRead(page, late)
+      if (!state.release) throw new Error("Delayed open did not publish its release barrier")
+      state.release(); await finishRead(page, late)
       expect(page.url()).toBe(original)
       expect(await page.getByText("This view has a currency context that cannot be restored here.", { exact: false }).count()).toBe(1)
+    } catch (error) {
+      console.error("G04 saved-view open race failed", { trace, url: page.url() })
+      throw error
     } finally { state.release?.(); await closeFixture(page, server) }
   }, 30000)
 

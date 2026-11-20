@@ -207,7 +207,13 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const message = recovered.value?.messages[1]
       if (!message) throw new Error("Recovered real recipient message unavailable")
       await confirm.click()
-      await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+      try {
+        await page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
+      } catch (error) {
+        console.error("G04 original confirmation failure", { attempts: fixture.answerAttempts,
+          status: await page.locator("[data-case-thread] [role=status]").textContent() })
+        throw error
+      }
       const preparations = fixture.answerAttempts.filter((attempt) => attempt.route === "collaboration-answer-prepare-message")
       expect(preparations).toHaveLength(1)
       const preparation = preparations[0]

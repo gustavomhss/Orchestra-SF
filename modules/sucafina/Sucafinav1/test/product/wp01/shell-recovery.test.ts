@@ -1,16 +1,8 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import path from "node:path"
-import { randomBytes, randomUUID } from "node:crypto"
-import { createModule } from "../../../index.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
-import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -29,7 +21,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     origin: string
     url: string
     fault: Fault
-    persistence: ReturnType<typeof createSfSourcePersistence>
+    persistence: Awaited<ReturnType<typeof createMicrosoftComponentFixture>>["persistence"]
     errors: string[]
   }
 
@@ -40,24 +32,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   // The domain, authentication, HTTP handlers and SQLite remain real. Faults affect
   // only delivery, after the actual transaction or before it reaches the handler.
   async function withWorkbench(check: (fixture: Fixture) => Promise<void>) {
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp01-shell-recovery-"))
-    await chmod(directory, 0o700)
-    const driver = await openLocalStore(directory)
-    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID })
-    const fault: Fault = { used: false, posts: [] }
-    const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin
-    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId: randomUUID(), uid: 1000, name: "Shell recovery operator" }, secrets: driver.secrets, key: randomBytes(32) })
-    const authenticate: typeof identity.authenticate = async (request, context) => {
-      const actor = await identity.authenticate(request, context)
-      if (!actor || fault.denied === 401) return null
-      if (context && fault.denied === 403) return { ...actor, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
-      return actor
+    const host = await createMicrosoftComponentFixture({ names: ["Shell recovery reviewer", "Other reviewer"] })
+    const { origin, persistence } = host
+    let denial: Fault["denied"]
+    const fault: Fault = {
+      used: false, posts: [],
+      get denied() { return denial },
+      set denied(value) {
+        denial = value
+        if (value === 401) host.provider.clock.value += 24 * 60 * 60 * 1000
+        if (value === 403) host.setRole("viewer")
+      },
     }
-    const app = createModule("/sucafina", { persistence, authenticate,
-      environment: async (request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) }), maxJsonBytes: 100000 })
-    routing.handle = async (request) => {
+    // Fault delivery is separate from authority: 401 expires the real session;
+    // 403 changes actual Graph group membership observed by the production roles.
+    host.routing.handle = async (request) => {
       const body = request.method === "POST" && new URL(request.url).pathname === "/sucafina/dashboard" ? await request.clone().text() : ""
       const command = body ? object(JSON.parse(body)) : {}
       const action = typeof command.action === "string" ? command.action : ""
@@ -67,8 +56,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         fault.used = true
         return new Response("{", { headers: { "Content-Type": "application/json" } })
       }
-      const response = await identity.handle(request) ?? await app(request)
-      if (!selected || !response?.ok) return response
+      const response = await host.dispatch(request)
+      if (!selected || !response.ok) return response
       fault.used = true
       if (fault.mode === "hold-after") await new Promise<void>((resolve) => { fault.release = resolve; fault.started?.() })
       if (fault.mode === "lose-after") return new Response("{", { headers: { "Content-Type": "application/json" } })
@@ -76,6 +65,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       return response
     }
     let context: BrowserContext | undefined
+    let failure: unknown
     const errors: string[] = []
     try {
       await persistence.initializeSources("dashboard")
@@ -84,23 +74,24 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         snapshot.data.opexEntries = [{ id: "jan", ownerId: "owner-1", year: 2026, month: 1, budget: 100, actual: 25, forecast: 90 }]
         return { commit: true, value: undefined }
       })
-      context = await browser.newContext()
+      context = await host.newContext(browser)
       const page = await context.newPage()
       page.setDefaultTimeout(10_000)
       page.on("pageerror", (error) => errors.push(error.message))
       page.on("dialog", (dialog) => dialog.accept())
-      const login = await page.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
+      const login = await host.loginPage(page)
       expect(login?.status()).toBe(200)
       const url = `${origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`
       await page.goto(url)
       await check({ page, context, origin, url, fault, persistence, errors })
       expect(errors).toEqual([])
-    } finally {
+    } catch (error) { failure = error; throw error }
+    finally {
       fault.release?.()
-      await context?.close()
-      await server.stop(true)
-      await driver.dispose()
-      await rm(directory, { recursive: true, force: true })
+      const failures: unknown[] = []
+      try { await context?.close() } catch (error) { failures.push(error) }
+      try { await host.close() } catch (error) { failures.push(error) }
+      if (failures.length) throw new AggregateError([...(failure ? [failure] : []), ...failures], "Shell component fixture cleanup failed")
     }
   }
 
