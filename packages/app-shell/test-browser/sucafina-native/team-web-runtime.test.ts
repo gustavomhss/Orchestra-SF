@@ -10,6 +10,8 @@ const { createTeamWebRuntime } = runtimeModule
 const routes: typeof import("../../src/orchestra/chapters/sucafina/host/team-route") =
   await import(solidDom("../../src/orchestra/chapters/sucafina/host/team-route.ts", import.meta.dir))
 const { sfTeamContextHref, sfTeamAdministrationHref, readSfTeamWebRoute } = routes
+const ownerModule: typeof import("../../src/orchestra/chapters/sucafina/navigation-state/owner") =
+  await import(solidDom("../../src/orchestra/chapters/sucafina/navigation-state/owner.ts", import.meta.dir))
 
 // UI/transport contracts only. The production Web composition has a separate
 // Chromium + signed OIDC + SQLite test and never accepts these fixture DTOs as proof.
@@ -304,4 +306,21 @@ test("a peer logout fences automatic refresh while the original cookie logout is
     await pending
     peer.close(); first.close()
   }
+})
+
+test("native menu snapshots the reactive Team owner without accepting extra wire fields", async () => {
+  const f = fixture()
+  try {
+    await f.runtime.start()
+    expect(await f.runtime.choose(a)).toBe("selected")
+    const state = f.runtime.owner.state()
+    if (state.status !== "ready") throw new Error("Reactive owner must be ready")
+    expect(ownerModule.sfOwnerQuery(state.selection)).toEqual({
+      contractRevision: "sf-team-profile/1", server: binding.publicOrigin,
+      installationId: a.installationId, tenantId: a.tenantId, teamObjectId: a.teamObjectId,
+    })
+    for (const team of [{ ...a, principal: principal.principalObjectId }, { ...a, installationId: "foreign" }]) {
+      expect(() => ownerModule.sfOwnerQuery({ ...state.selection, team })).toThrow("SF_OWNER_SELECTOR_MISMATCH")
+    }
+  } finally { f.close() }
 })

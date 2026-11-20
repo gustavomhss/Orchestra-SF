@@ -43,11 +43,17 @@ export function sfOwnerQueryValid(params: URLSearchParams): boolean {
 export function sfOwnerQuery(selection: SfOwnerSelection): Record<string, string> {
   if (!selection.serverKey || !selection.installationId) throw new Error("SF_OWNER_SELECTOR_INCOMPLETE")
   if (selection.team) {
-    if (!Schema.is(TeamProfile.Ref)(selection.team) || selection.team.installationId !== selection.installationId)
+    // A Solid Store adds non-JSON tracking symbols to its proxy. Snapshot every
+    // enumerable JSON field, including unknown fields, before applying the same
+    // closed public codec. The schema still rejects extra JSON properties.
+    const parsed = Schema.decodeUnknownOption(TeamProfile.Ref, { onExcessProperty: "error" })(
+      Object.fromEntries(Object.entries(selection.team)),
+    )
+    if (Option.isNone(parsed) || parsed.value.installationId !== selection.installationId)
       throw new Error("SF_OWNER_SELECTOR_MISMATCH")
     return { contractRevision: "sf-team-profile/1", server: selection.serverKey,
-      installationId: selection.team.installationId, tenantId: selection.team.tenantId,
-      teamObjectId: selection.team.teamObjectId }
+      installationId: parsed.value.installationId, tenantId: parsed.value.tenantId,
+      teamObjectId: parsed.value.teamObjectId }
   }
   if (!selection.projectId) throw new Error("SF_OWNER_SELECTOR_INCOMPLETE")
   return { server: selection.serverKey, project: selection.projectId, installation: selection.installationId }
