@@ -1,7 +1,8 @@
 import { expect, test } from "bun:test"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
-import type { CostCoverageBasis, DecisionCase } from "../../../../product/contracts/decisions.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/decisions.ts"
+import type { CostCoverageBasis, CostCoverageEntry, DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { SensitivityRequest } from "../../../../product/contracts/operations.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
 import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts"
@@ -9,8 +10,9 @@ import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 // Real SQLite/C08, UI authority, Planner, human rule and host product/verifier.
-// The only coverage fixture declares unresolved training. Binding real source
-// observations as case alternatives is fixture setup, not human promotion.
+// Human classification assigns the actual Planner components to service while
+// training and the other categories remain pending. The production registry owns
+// the assessment, evidence checks and durable classification; no assessment is supplied.
 // This new budget covers calculation plus independent durable recertification
 // and retry; it changes no existing test budget and leaves 15s for cleanup.
 test("Portfolio host persists an exact known-subtotal threshold, recertifies it after composition, retries once and refuses revoked authority", async () => {
@@ -117,7 +119,43 @@ test("Portfolio host persists an exact known-subtotal threshold, recertifies it 
   }
 }, 300_000)
 
-async function exactThresholdFixture(deadline: ReturnType<typeof compositionTestDeadline>, observations: { environmentReads: number }, trace: ReturnType<typeof exactThresholdTrace>) {
+
+test("Portfolio host preserves sampled precision through persistence and a new verifier when every category is pending", async () => {
+  const deadline = compositionTestDeadline("portfolio-host-pending-threshold", 285_000)
+  const observations = { environmentReads: 0 }
+  const trace = exactThresholdTrace(deadline, observations)
+  try {
+    const fixture = await deadline.phase("fixture.complete", () => exactThresholdFixture(deadline, observations, trace, { assessService: false, steps: 1 }))
+    const product = fixture.portfolio.product
+    if (!product) throw new Error("Actual Portfolio host product unavailable")
+    const saved = ok(await deadline.phase("host.evaluate-and-store", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
+      product.http.sensitivity(fixture.input, fixture.caseRef, fixture.call))), "Pending-only sensitivity persistence")
+    expect(saved.sensitivity.evaluated.map((point) => [point.parameterValue, point.value])).toEqual([[80, -240], [400, 80]])
+    expect(saved.sensitivity).toMatchObject({ threshold: null, comparisonStatus: "conditioned",
+      thresholdEvidence: { state: "sampled", interval: { minimum: 80, maximum: 400 } } })
+    expect(saved.sensitivity.unresolvedConditions.some((condition) => condition.reason === "coverage:pending")).toBe(true)
+    expect(saved.sensitivity.unresolvedConditions.some((condition) => condition.id === "sampled-range")).toBe(true)
+    const inspect = () => fixture.authority.state.read(fixture.transport, "cases", (state) => state)
+    const durable = await inspect()
+    if (durable.status !== "ok") throw new Error("Persisted sampled sensitivity unavailable")
+    const stored = Object.values(durable.value.decisionResults ?? {}).filter((result) => result.kind === "sensitivity")
+    expect(stored).toHaveLength(1)
+    expect(stored[0]).toMatchObject({ resultRef: saved.sensitivityResultRef, requestDigest: digestSfValue(fixture.input),
+      resultDigest: digestSfValue(saved.sensitivity), result: saved.sensitivity })
+    const cold = createSfPortfolioServices({ authority: fixture.authority, business: fixture.business, ...fixture.guards })
+    deadline.own(() => cold.dispose())
+    const coldProduct = cold.product
+    if (!coldProduct) throw new Error("Recomposed Portfolio host unavailable")
+    expect(cold.proof).not.toBe(fixture.portfolio.proof)
+    expect(ok(await deadline.phase("host.recomposed-read", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
+      coldProduct.http.readSensitivity(saved.sensitivityResultRef, fixture.caseRef, fixture.call))), "Pending-only sensitivity recertification")).toEqual(saved)
+    expect(await inspect()).toEqual(durable)
+  } finally {
+    try { await deadline.close() } finally { trace.finish() }
+  }
+}, 300_000)
+
+async function exactThresholdFixture(deadline: ReturnType<typeof compositionTestDeadline>, observations: { environmentReads: number }, trace: ReturnType<typeof exactThresholdTrace>, options: { assessService?: boolean; steps?: number } = {}) {
   const fixture = await deadline.phase("fixture.initialize", async () => {
     const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => {
       observations.environmentReads++
@@ -145,7 +183,7 @@ async function exactThresholdFixture(deadline: ReturnType<typeof compositionTest
     sources.push(issued.evidence)
   }
   const basis: CostCoverageBasis = { id: "exact-threshold-basis", version: 1, decisionType: "renewal-transition-v1",
-    categoryIds: ["training"], additionalCategoryIds: [], sourceRefs: sources }
+    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: sources }
   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Certify only the known-subtotal threshold", horizon: period, currency: "USD",
     participants: ["person"], criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], sourceRefs: sources,
     alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
@@ -156,14 +194,31 @@ async function exactThresholdFixture(deadline: ReturnType<typeof compositionTest
     return { commit: true, value: true }
   })
   if (seeded.status !== "ok") throw new Error("Exact-threshold case fixture unavailable")
-  fixture.business.bindForecastCoverage(async (reference, context) => {
-    const source = await fixture.business.plannerSources.resolveForecastSource(reference, context)
-    if (source.status !== "ok") return source
-    return { status: "ok", value: { coverageRef: "fixture:exact-threshold-pending-coverage", basis,
-      assessment: { basisId: basis.id, basisVersion: basis.version, alternativeId: source.value.versionId === "v0" ? "baseline" : "candidate", alternativeVersion: 1,
-        currency: "USD", horizon: period, issues: ["fixture-training-unresolved"], evaluatedSourceRefs: [source.value.evidence], coverageState: "pending",
-        entries: [{ status: "pending", categoryId: "training", reason: "Fixture has no training evidence" }], derivedMissingCategoryIds: ["training"] } } }
-  })
+  for (const [index, source] of sources.entries()) {
+    if (source.kind !== "record") throw new Error("Actual Planner record source required")
+    const projection = ok(await fixture.business.withCase(setup, caseRef, {}, () =>
+      fixture.business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period, currency: "USD" }, setup)), "Actual coverage component projection").baseline
+    expect(projection.components).toHaveLength(12)
+    expect(projection.components.every((component) => component.amount !== null && component.evidenceState === "confirmed" && component.sourceRefs.length > 0)).toBe(true)
+    const entries: CostCoverageEntry[] = [
+      ...(options.assessService === false ? [] : [{ status: "included" as const, categoryId: "service",
+        componentRefs: projection.components.map((component) => component.id), evidenceRefs: [source],
+        scopeNote: "The selected license forecast supplies these twelve service components; other cost categories remain unresolved." }]),
+      { status: "pending", categoryId: "training", reason: "No training evidence has been supplied" },
+    ]
+    const coverageRequest = { caseRef, source, basis, entries, expectedVersion: 0 }
+    const human = ok(await fixture.authority.human.admit(fixture.request(`exact-threshold-coverage-${index}`), "decisions.coverage", coverageRequest), "Actual human coverage admission")
+    try {
+      const registered = ok(await deadline.phase(`fixture.classify-coverage-${index}`, () => fixture.business.withCase(human, caseRef, {}, () =>
+        fixture.business.baselineCoverage.register(coverageRequest, human))), "Actual baseline coverage registration")
+      const observed = ok(await fixture.business.withCase(human, caseRef, {}, () =>
+        fixture.business.baselineCoverage.resolveForecastCoverage(registered.coverageRef, human)), "Actual registered coverage")
+      expect(observed.assessment.coverageState).toBe("pending")
+      expect(observed.assessment.entries.find((entry) => entry.categoryId === "training")).toEqual(entries.at(-1))
+      expect(observed.assessment.entries.filter((entry) => entry.status !== "pending"))
+        .toEqual(options.assessService === false ? [] : [entries[0]])
+    } finally { fixture.authority.human.finish(human) }
+  }
   const produced = ok(await deadline.phase("fixture.produce-scenarios", () => fixture.business.withCase(setup, caseRef, {}, async () => {
     const alternatives: DecisionCase["alternatives"][number][] = []
     const resultRefs: string[] = []
@@ -175,7 +230,7 @@ async function exactThresholdFixture(deadline: ReturnType<typeof compositionTest
         requestDigest: digestSfValue(scenario), sourceRefs: result.value.sourceRefs, idempotencyKey: `exact-threshold-source-${index}` }, setup)
       if (saved.status !== "ok") return saved
       resultRefs.push(saved.value.resultRef)
-      alternatives.push({ id: index ? "candidate" : "baseline", version: 1, title: index ? "Candidate" : "Baseline", scenario, result: result.value })
+      alternatives.push({ id: result.value.costCoverage.alternativeId, version: result.value.costCoverage.alternativeVersion, title: index ? "Candidate" : "Baseline", scenario, result: result.value })
     }
     return { status: "ok", value: { alternatives, resultRefs } }
   })), "Actual Planner scenario production")
@@ -201,7 +256,7 @@ async function exactThresholdFixture(deadline: ReturnType<typeof compositionTest
       fixture.portfolio.rules.register(ruleInput, human))), "Actual human sensitivity rule registration")
   } finally { fixture.authority.human.finish(human) }
   const input: SensitivityRequest = { scenarioRef: produced.resultRefs[1]!,
-    parameterBounds: { parameterRef: "line:1", minimum: 80, maximum: 400, steps: 2 }, criterion: { id: "cost", operator: "lte", value: 0 } }
+    parameterBounds: { parameterRef: "line:1", minimum: 80, maximum: 400, steps: options.steps ?? 2 }, criterion: { id: "cost", operator: "lte", value: 0 } }
   const transport = fixture.request("exact-threshold-one-operation")
   const call = ok(await fixture.authority.ui.admit(transport, "sf_sensitivity_evaluate", digestSfValue(input)), "Actual sensitivity UI admission")
   deadline.own(() => fixture.authority.ui.finish(call))
