@@ -10,6 +10,8 @@ import type { ReviewThreadContext } from "../../../../modules/sucafina/Sucafinav
 import { isReviewThreadContext } from "../../../../modules/sucafina/Sucafinav1/product/reviews/thread-context.ts"
 import type { ThreadSourceContext } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts"
 import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
+import { withSfScopedSourceChecks } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import type { SfReviewReadScope } from "./review-read-integrity.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { SfReviewCollaborationBinding } from "./review-collaboration-binding.ts"
@@ -22,7 +24,7 @@ type RecipientLease = { access: AccessLease; provider?: ReviewThreadRecipientAut
  * private to one authenticated call; it is not a persisted confirmation scope. */
 export function createSfReviewCollaboration(input: {
   authority: ReturnType<typeof createSfProductAuthority>
-  application: ReturnType<typeof createReviewApplication>
+  application: ReturnType<typeof createReviewApplication> & { readScope?: SfReviewReadScope }
   evidence: BusinessContextService
   /** A real host-private recipient/source ACL provider; directory membership is insufficient. */
   recipientAuthority?: ReviewThreadRecipientAuthority
@@ -34,9 +36,12 @@ export function createSfReviewCollaboration(input: {
   const contexts = input.application.threadContext
   const readContext = contexts.read
   const readerCurrent = input.readerCurrent
+  const readScope = input.application.readScope
+  const revalidateReview = readScope?.revalidate, currentReview = readScope?.current
   const sameProducer = () => input.authority.host === host && input.application.reviews === reviews &&
     input.application.threadContext === contexts && contexts.read === readContext && input.readerCurrent === readerCurrent &&
-    (!readerCurrent || readerCurrent())
+    (!readerCurrent || readerCurrent()) && input.application.readScope === readScope &&
+    readScope?.revalidate === revalidateReview && readScope?.current === currentReview && (!currentReview || currentReview())
   const leases = new WeakMap<TrustedDomainContext, Map<string, AccessLease>>()
   const key = (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext) => digestSfValue({ pin, basis, authority: call.binding })
   const fingerprint = (pin: ReviewThreadContext) => {
@@ -91,12 +96,27 @@ export function createSfReviewCollaboration(input: {
     const first = await read.call(reviews, pin.reviewRef, call)
     if (!current() || first.status !== "ok" || digestSfValue(first.value) !== pin.reviewDigest) return unavailable()
     const before = await snapshot()
-    const second = await read.call(reviews, pin.reviewRef, call)
+    const sourceCheck = { owner: host, request, current }
+    const secondObservation = await withSfScopedSourceChecks(sourceCheck, () => read.call(reviews, pin.reviewRef, call))
+    const second = secondObservation.value
     const after = await snapshot()
-    if (!before || before !== after || !current() || second.status !== "ok" || digestSfValue(second.value) !== pin.reviewDigest ||
+    if (!before || before !== after || !current() || !secondObservation.current() || second.status !== "ok" || digestSfValue(second.value) !== pin.reviewDigest ||
       !await revalidate.call(host, call) || !current()) return unavailable()
-    const check = () => current() && fingerprint(pin) === after
-    const lease = { check, fence: async () => check() && await revalidate.call(host, call) && check() }
+    let sourceCurrent = secondObservation.current
+    const check = () => current() && sourceCurrent() && fingerprint(pin) === after
+    const lease = { check, fence: async () => {
+      if (!check()) return false
+      // Every asynchronous C05 source fence repeats the real dependency read.
+      // The synchronous recipient check below only checks this lease's
+      // structure/owners; transaction consumers await this source fence first.
+      const observation = await withSfScopedSourceChecks(sourceCheck, () => readScope && revalidateReview
+        ? revalidateReview.call(readScope, pin.reviewRef, pin.reviewDigest, call)
+        : read.call(reviews, pin.reviewRef, call))
+      sourceCurrent = observation.current
+      const observed = observation.value
+      return observed.status === "ok" && digestSfValue(observed.value) === pin.reviewDigest &&
+        check() && await revalidate.call(host, call) && check()
+    } }
     const selected = leases.get(call) ?? new Map<string, AccessLease>()
     if (selected.size >= 128 && !selected.has(key(pin, basis, call))) return unavailable()
     selected.set(key(pin, basis, call), lease); leases.set(call, selected)

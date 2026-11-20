@@ -1,3 +1,5 @@
+import { types } from "node:util"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { randomUUID } from "node:crypto"
 import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
@@ -32,6 +34,50 @@ export type SfScopedSourcePort = {
   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
+type ScopedSourceCheckScope = { owner: object; request: Request; open: boolean; failed: boolean; pins: Set<() => boolean>; producers: WeakSet<object> }
+const scopedSourceChecks = new AsyncLocalStorage<ScopedSourceCheckScope>()
+const currentSourceChecks = (scope: ScopedSourceCheckScope) => {
+  try { return !scope.failed && !scope.request.signal.aborted && [...scope.pins].every((pin) => pin()) } catch { return false }
+}
+const requireSourceChecks = (scope: ScopedSourceCheckScope) => {
+  if (!scope.open || scopedSourceChecks.getStore() !== scope || !currentSourceChecks(scope)) {
+    scope.failed = true
+    throw new Error("SF_SOURCE_CHECK_SCOPE_CLOSED")
+  }
+}
+
+/** Reobserve sources under the current authenticated read/commit group. This
+ * never supplies source authority: observe invokes the actual projector and
+ * both authorizations. The returned current check pins owners/methods only;
+ * the asynchronous producer must run again for each dependency authorization. */
+export async function withSfScopedSourceChecks<Value>(binding: { owner: object; request: Request; current: () => boolean },
+  work: () => Promise<Value>): Promise<{ value: Value; current: () => boolean }> {
+  const { owner, request, current } = binding
+  const pin = () => binding.owner === owner && binding.request === request && binding.current === current && current()
+  const inherited = scopedSourceChecks.getStore()
+  if (inherited) {
+    requireSourceChecks(inherited)
+    if (inherited.owner !== owner || inherited.request !== request) {
+      inherited.failed = true
+      throw new Error("SF_SOURCE_CHECK_SCOPE_MISMATCH")
+    }
+    inherited.pins.add(pin)
+    requireSourceChecks(inherited)
+    const value = await work()
+    requireSourceChecks(inherited)
+    return { value, current: () => currentSourceChecks(inherited) }
+  }
+  const scope: ScopedSourceCheckScope = { owner, request, open: true, failed: false, pins: new Set([pin]), producers: new WeakSet() }
+  return scopedSourceChecks.run(scope, async () => {
+    try {
+      requireSourceChecks(scope)
+      const value = await work()
+      requireSourceChecks(scope)
+      return { value, current: () => currentSourceChecks(scope) }
+    } finally { scope.open = false }
+  })
+}
+
 type CanonicalScopedSourceCheck = NonNullable<SfScopedSourcePort["checkScopedSource"]>
 // Register only factory-owned code. No snapshot, observation or result is retained.
 const canonicalSourceChecks = new WeakMap<object, CanonicalScopedSourceCheck>()
@@ -53,22 +99,65 @@ export function createSfSourcePersistence(input: {
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
 }): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+    const checking = scopedSourceChecks.getStore()
+    if (checking) requireSourceChecks(checking)
+    if (checking && !checking.producers.has(input)) {
+      // A factory with opaque configuration stays fail-closed in this lexical
+      // mode. Outside it the original callbacks and materialization remain.
+      if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) {
+        checking.failed = true
+        throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE")
+      }
+      const names = ["persistence", "projectScope"] as const
+      const descriptors = names.map((name) => [name, Object.getOwnPropertyDescriptor(input, name)] as const)
+      if (descriptors.some(([, descriptor]) => !descriptor || !("value" in descriptor))) {
+        checking.failed = true
+        throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE")
+      }
+      const persistence = input.persistence
+      if (types.isProxy(persistence)) { checking.failed = true; throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE") }
+      const methods = (["transaction", "transactionAll", "currentSnapshots", "currentSnapshot"] as const)
+        .map((name) => [name, Object.getOwnPropertyDescriptor(persistence, name)] as const)
+      if (methods.some(([, descriptor]) => descriptor && !("value" in descriptor))) {
+        checking.failed = true
+        throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE")
+      }
+      checking.pins.add(() => descriptors.every(([name, descriptor]) =>
+        Object.getOwnPropertyDescriptor(input, name)?.value === descriptor?.value) && methods.every(([name, descriptor]) => {
+          const live = Object.getOwnPropertyDescriptor(persistence, name)
+          return descriptor ? !!live && "value" in live && live.value === descriptor.value : live === undefined
+        }))
+      checking.producers.add(input)
+      requireSourceChecks(checking)
+    }
     requireSourceIdentities(snapshot)
     const scope = structuredClone(requested)
     if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
     if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
     const before = digestSfValue(snapshot)
     if (!await authorize(snapshot)) return undefined
+    if (checking) requireSourceChecks(checking)
     const projection = input.projectScope(surface, structuredClone(snapshot), structuredClone(scope))
     const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
     if (projection === undefined || !source || !await authorize(snapshot)) return undefined
+    if (checking) requireSourceChecks(checking)
     if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
     return { scope, projection, source, inputDigest: digestSfValue(projection) }
   }
   const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+    const checkScope = scopedSourceChecks.getStore()
+    if (checkScope) requireSourceChecks(checkScope)
     const observed = await observe(surface, snapshot, requested, authorize)
+    if (checkScope) requireSourceChecks(checkScope)
     if (!observed) return { commit: false, value: undefined }
     const { scope, projection, source, inputDigest } = observed
+    if (checkScope) {
+      // The same physical/scoped identity and projection must already exist.
+      // Return the newly observed projection, never a cached projection or grant.
+      const current = sfScopedSourceIdentity(snapshot, scope)
+      return { commit: false, value: current && current.inputDigest === inputDigest
+        ? { projection: structuredClone(projection), ...current } : undefined }
+    }
     const key = digestSfValue(scope)
     const prior = snapshot.sfSources!.scopes?.[key]
     const entry = {
@@ -100,14 +189,25 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
     }
   }
+  const readCheckScope = () => {
+    const scope = scopedSourceChecks.getStore()
+    if (scope) requireSourceChecks(scope)
+    return scope
+  }
+  const checkReadCommit = (scope: ScopedSourceCheckScope | undefined, commit: boolean) => {
+    if (!scope) return
+    requireSourceChecks(scope)
+    if (commit) { scope.failed = true; throw new Error("SF_SOURCE_CHECK_WRITE_FORBIDDEN") }
+  }
   const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
-    ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
-    ...(input.persistence.currentSnapshot ? { currentSnapshot: (surface: Surface) => input.persistence.currentSnapshot!(surface) } : {}),
+    ...(input.persistence.currentSnapshots ? { currentSnapshots: () => { readCheckScope(); return input.persistence.currentSnapshots!() } } : {}),
+    ...(input.persistence.currentSnapshot ? { currentSnapshot: (surface: Surface) => { readCheckScope(); return input.persistence.currentSnapshot!(surface) } } : {}),
     // Scope forwarding does not admit a source. Callers still enter transaction
     // below, preserving source guards and any underlying CurrentChoice fence.
     ...(input.persistence.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) =>
-      input.persistence.readSnapshotRoot!(work, options) } : {}),
+      { readCheckScope(); return input.persistence.readSnapshotRoot!(work, options) } } : {}),
     resolveScopedSource: async (surface, incarnation, authorize) => {
+      const checking = readCheckScope()
       const scope = await input.persistence.transaction(surface, async (snapshot) => {
         requireSourceIdentities(snapshot)
         const entries = Object.values(snapshot.sfSources!.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === incarnation)
@@ -115,21 +215,31 @@ export function createSfSourcePersistence(input: {
         if (!entry || !await authorize(snapshot, structuredClone(entry.scope))) return { commit: false, value: undefined }
         return { commit: false, value: structuredClone(entry.scope) }
       })
+      if (checking) requireSourceChecks(checking)
       if (!scope) return undefined
       const value = await persistence.readScopedSource(surface, scope, (snapshot) => authorize(snapshot, structuredClone(scope)))
+      if (checking) requireSourceChecks(checking)
       return value?.incarnation === incarnation ? { ...value, scope } : undefined
     },
-    readScopedSource: (surface, requested, authorize) => input.persistence.transaction(surface, (snapshot) =>
-      readScopedSnapshot(surface, snapshot, requested, authorize)),
-    readScopedSourcePrepared: (surface, prepare, options) => input.persistence.transaction(surface, async (snapshot) => {
-      requireSourceIdentities(snapshot)
-      // Preparation receives an isolated view. Its callback cannot alter the held
-      // source snapshot before observe establishes its existing mutation guard.
-      const prepared = await prepare(structuredClone(snapshot))
-      if (!prepared) return { commit: false, value: undefined }
-      return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize)
-    }, options),
+    readScopedSource: (surface, requested, authorize) => {
+      readCheckScope()
+      return input.persistence.transaction(surface, (snapshot) => readScopedSnapshot(surface, snapshot, requested, authorize))
+    },
+    readScopedSourcePrepared: (surface, prepare, options) => {
+      const checking = readCheckScope()
+      return input.persistence.transaction(surface, async (snapshot) => {
+        if (checking) requireSourceChecks(checking)
+        requireSourceIdentities(snapshot)
+        // Preparation receives an isolated view. Its callback cannot alter the held
+        // source snapshot before observe establishes its existing mutation guard.
+        const prepared = await prepare(structuredClone(snapshot))
+        if (checking) requireSourceChecks(checking)
+        if (!prepared) return { commit: false, value: undefined }
+        return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize)
+      }, options)
+    },
     ...(input.persistence.currentSnapshots ? { checkScopedSource: async (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => {
+      readCheckScope()
       const check = async (snapshot: Snapshot) => {
         const observed = await observe(surface, snapshot, scope, authorize)
         if (!observed) return false
@@ -141,37 +251,51 @@ export function createSfSourcePersistence(input: {
       if (snapshots) return check(snapshots[surface])
       return input.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: await check(snapshot) }))
     } } : {}),
-    initializeSources: (surface) => input.persistence.transaction(surface, async (snapshot) => {
-      if (snapshot.sfSources) {
+    initializeSources: (surface) => {
+      const checking = readCheckScope()
+      return input.persistence.transaction(surface, async (snapshot) => {
+        if (checking) requireSourceChecks(checking)
+        if (snapshot.sfSources) {
+          requireSourceIdentities(snapshot)
+          return { commit: false, value: undefined }
+        }
+        checkReadCommit(checking, true)
+        snapshot.sfSources = { schemaVersion: 1, records: {} }
+        synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
+        return { commit: true, value: undefined }
+      })
+    },
+    transaction: (surface, work, options) => {
+      const checking = readCheckScope()
+      return input.persistence.transaction(surface, async (snapshot, blobs) => {
+        if (checking) requireSourceChecks(checking)
         requireSourceIdentities(snapshot)
-        return { commit: false, value: undefined }
-      }
-      snapshot.sfSources = { schemaVersion: 1, records: {} }
-      synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
-      return { commit: true, value: undefined }
-    }),
-    transaction: (surface, work, options) => input.persistence.transaction(surface, async (snapshot, blobs) => {
-      requireSourceIdentities(snapshot)
-      const finish = guard(surface, snapshot)
-      const result = await work(snapshot, blobs)
-      if (!result.commit) return result
-      finish()
-      return result
-    }, options),
-    ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) =>
-      input.persistence.transactionAll!(async (snapshots) => {
+        const finish = guard(surface, snapshot)
+        const result = await work(snapshot, blobs)
+        checkReadCommit(checking, result.commit)
+        if (!result.commit) return result
+        finish()
+        return result
+      }, options)
+    },
+    ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
+      const checking = readCheckScope()
+      return input.persistence.transactionAll!(async (snapshots) => {
+        if (checking) requireSourceChecks(checking)
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const original = surfaces.map((surface) => snapshots[surface])
         const before = surfaces.map((surface) => digestSfValue(snapshots[surface]))
         const finish = surfaces.map((surface) => guard(surface, snapshots[surface]))
         const result = await work(snapshots)
+        checkReadCommit(checking, result.commit)
         if (result.commit) {
           if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
             throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
           surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) finish[index]!() })
         }
         return result
-      }, options) } : {}),
+      }, options)
+    } } : {}),
   }
   if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
   return persistence

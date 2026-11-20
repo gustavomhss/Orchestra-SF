@@ -24,6 +24,17 @@ export function createReviewServices(input: {
   now: () => string
 }) {
   if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !input.creationTarget.ref.trim() || !input.creationTarget.incarnation.trim()) throw new Error("SF_REVIEW_STORAGE_CONFIG_INVALID")
+  const owners = { state: input.state, host: input.host, evidence: input.evidence, selection: input.selection }
+  const methods = [
+    [owners.host, "requestFor", owners.host.requestFor], [owners.host, "revalidate", owners.host.revalidate],
+    [owners.evidence, "resolve", owners.evidence.resolve],
+    ...(["authorizeSections", "authorizeComments", "authorizeOutcomeComparison", "authorizeOutcome", "authorizeDecision", "authorizeSensitivity", "revalidate"] as const)
+      .map((name) => [owners.selection, name, owners.selection[name]] as const),
+  ] as const
+  // These pins reject composition swaps; validation still calls every method.
+  const readDependenciesCurrent = () => Object.entries(owners).every(([name, value]) =>
+    Object.getOwnPropertyDescriptor(input, name)?.value === value) && methods.every(([owner, name, value]) =>
+      Object.getOwnPropertyDescriptor(owner, name)?.value === value)
   const reviews = createReviewPort({
     state: input.state,
     creationTarget: input.creationTarget,
@@ -57,7 +68,7 @@ export function createReviewServices(input: {
       }))
       return resolutions.every(Boolean) && await input.host.revalidate(context)
     },
-  })
+  }, readDependenciesCurrent)
   const artifacts = createReviewArtifactStorage({ state: input.state, host: input.host, reviews, creationTarget: input.creationTarget, operationIdentity: (context, entry) => input.operationIdentity(context) ?? (context.kind === "native" ? input.authority.receiptFor(context, "sf_report_prepare", digestSfValue({ reviewRef: entry.reviewRef, format: entry.format, sectionRefs: entry.sectionRefs }))?.callId : undefined), maxBytes: input.maxBytes })
   return { reviews, threadContext: createReviewThreadContext({ reviews, host: input.host }), artifacts, descriptors: createReviewCapabilities({ reviews, artifacts, authority: input.authority, requiredAuthority: input.requiredAuthority }) }
 }

@@ -102,9 +102,23 @@ export function createSfReviewServices(input: {
   const readers = input.readers
   const recognizedReaders = sfResidentReviewSnapshotReaders(readers, host)
   const residentSnapshotReaders = recognizedReaders ? () => input.readers === readers && recognizedReaders() : undefined
+  const persistence = input.persistence, context = business.context, agenda = input.agenda
+  const evidenceOwner = business.evidence, evidenceCurrent = evidenceOwner.current
+  const sourceMethods = (["resolveScopedSource", "readScopedSource", "readScopedSourcePrepared", "checkScopedSource"] as const)
+    .map((name) => [name, Object.getOwnPropertyDescriptor(persistence, name)] as const)
+  const resolveEvidence = context.resolve, agendaEvidence = agenda?.resolveEvidence
+  // These pins detect owner/method swaps; successful reuse still invokes all
+  // evidence/source callbacks, so a stable function's closure can revoke access.
+  const dependenciesCurrent = () => input.authority === authority && input.business === business && authority.host === host &&
+    input.persistence === persistence && input.readers === readers && business.context === context && context.resolve === resolveEvidence &&
+    business.evidence === evidenceOwner && evidenceOwner.current === evidenceCurrent && input.agenda === agenda && agenda?.resolveEvidence === agendaEvidence &&
+    sourceMethods.every(([name, descriptor]) => {
+      const current = Object.getOwnPropertyDescriptor(persistence, name)
+      return descriptor ? "value" in descriptor && !!current && "value" in current && current.value === descriptor.value : current === undefined
+    })
   const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
     localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined),
-    residentSnapshotReaders })
+    residentSnapshotReaders, dependenciesCurrent })
   const protectedApplication: typeof application & { readScope?: typeof readScope } = { ...application, readScope,
     http: (request, surface) => readScope.run(request, () => application.http(request, surface)) }
   return { application: protectedApplication, historical, portfolioHistory, handoffs, residentSnapshotReaders, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
