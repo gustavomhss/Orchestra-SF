@@ -10,6 +10,7 @@ import { expect } from "@playwright/test"
 import type { Locator, Page, Response } from "@playwright/test"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
+import { observeNativeResponses } from "./fixture/native-response-capture.ts"
 
 test("browser previews/applies Planner XLSX and exports persisted monthly values and totals", async () => {
   console.info("browser IO: opening private installation")
@@ -113,10 +114,13 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
   expectSpawn(import.meta.path)
   console.info("browser IO: opening private native installation")
   const fixture = await localBrowser({ nativePlanner: true })
+  let disposeResponseCapture: (() => void) | undefined
   try {
     console.info("browser IO: private installation authenticated")
     const page = fixture.page
     const origin = new URL(page.url()).origin
+    const responses = await observeNativeResponses(page, origin)
+    disposeResponseCapture = responses.dispose
     page.setDefaultTimeout(10000)
     page.on("dialog", (dialog) => dialog.accept())
     const nativePage = (response: Response, capability: string) => {
@@ -129,6 +133,10 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
       return response.request().method() === method && url.origin === origin &&
         url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
     }
+    const initialCopy = responses.begin([
+      { label: "initial context", method: "GET", pathname: "/sucafina/api/ui/context" },
+      { label: "initial Settings", method: "GET", pathname: "/sucafina/api/ui/pages/CAP28" },
+    ])
     const [contextResponse, initialSettingsResponse, documentResponse] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -140,16 +148,17 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     ])
     expect(documentResponse?.status()).toBe(200)
     expect(contextResponse.status()).toBe(200)
-    const context = Schema.decodeUnknownSync(SfContextResult)(await contextResponse.json())
+    const context = Schema.decodeUnknownSync(SfContextResult)(await initialCopy.json(contextResponse))
     expect(context.status).toBe("ok")
     if (context.status !== "ok") throw new Error("Original local operator context was not admitted")
     expect(context.value.authMode).toBe("local-operator")
     expect(context.value.stamp.principalRef).toBe(fixture.actorId)
     await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
-    const initialSettings = await settingsIoProjection(initialSettingsResponse)
+    const initialSettings = await settingsIoProjection(initialSettingsResponse, () => initialCopy.json(initialSettingsResponse))
     expect(initialSettings.data.resetSettings).toBeDefined()
     expect(initialSettings.data.settingsInitialization).toEqual({ state: "absent", expectedVersion: 0 })
     expect(initialSettings.versions.settings).toBeUndefined()
+    initialCopy.finish()
     const settings = page.locator('.sf-n21-settings[data-sf-surface="CAP28"]')
     const reset = settings.locator("[data-sf-settings-reset]")
     await reset.locator("summary").click()
@@ -159,17 +168,19 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await resetControl.click()
     const resetResponse = await confirmProcurement(page, origin,
       settings.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Reset settings", exact: true }),
-      { page: "Settings", action: "reset" })
+      { page: "Settings", action: "reset" }, responses)
     expect(resetResponse.request().postDataJSON()).toMatchObject({ version: 0, values: {} })
+    const resetCopy = responses.begin([{ label: "persisted reset Settings", method: "GET", pathname: "/sucafina/api/ui/pages/CAP28" }])
     const [resetRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP28"), { timeout: 10000 }),
       page.reload(),
     ])
-    const resetSettings = await settingsIoProjection(resetRead)
+    const resetSettings = await settingsIoProjection(resetRead, () => resetCopy.json(resetRead))
     // Defaults come from the original authorized producer, never a fixture baseline.
     expect(resetSettings.data.settings).toEqual(initialSettings.data.resetSettings)
     expect(resetSettings.versions.settings).toEqual({ version: 1, by: fixture.actorId })
     expect(resetSettings.data.settingsInitialization).toBeUndefined()
+    resetCopy.finish()
     // Reset remains an admitted explicit action after the first persisted write.
     await reset.locator("summary").click()
     await expect(resetControl).toBeEnabled()
@@ -181,16 +192,18 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await policy.getByRole("button", { name: "Review changes", exact: true }).click()
     await confirmProcurement(page, origin,
       settings.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Save", exact: true }),
-      { page: "Settings", action: "save" })
+      { page: "Settings", action: "save" }, responses)
+    const policyCopy = responses.begin([{ label: "persisted policy Settings", method: "GET", pathname: "/sucafina/api/ui/pages/CAP28" }])
     const [policyRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP28"), { timeout: 10000 }),
       page.reload(),
     ])
-    const persistedSettings = await settingsIoProjection(policyRead)
+    const persistedSettings = await settingsIoProjection(policyRead, () => policyCopy.json(policyRead))
     expect(persistedSettings.data.settings.uploadCap).toBe(1048576)
     expect(persistedSettings.data.settings.levels?.slice(0, 2).map((level) => level.holderId))
       .toEqual([fixture.actorId, fixture.actorId])
     await expect(policy.getByLabel("Attachment limit (bytes)", { exact: true })).toHaveValue("1048576")
+    policyCopy.finish()
 
     await page.goto(origin + "/orchestra/sf-procurement/suppliers")
     await page.getByRole("button", { name: "New supplier", exact: true }).click()
@@ -199,18 +212,20 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await suppliers.getByRole("button", { name: "Create supplier", exact: true }).click()
     await confirmProcurement(page, origin,
       suppliers.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm once", exact: true }),
-      { page: "Suppliers", action: "create" })
+      { page: "Suppliers", action: "create" }, responses)
+    const supplierCopy = responses.begin([{ label: "created supplier", method: "GET", pathname: "/sucafina/api/ui/pages/CAP27" }])
     const [supplierRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP27"), { timeout: 10000 }),
       page.reload(),
     ])
-    const supplierPage = await suppliersIoProjection(supplierRead)
+    const supplierPage = await suppliersIoProjection(supplierRead, () => supplierCopy.json(supplierRead))
     const createdSuppliers = supplierPage.data.suppliers.filter((entry) => entry.legalName === "Private asset fixture vendor")
     expect(createdSuppliers).toHaveLength(1)
     const supplierId = createdSuppliers[0]!.id
     expect(typeof supplierId).toBe("string")
     if (!supplierId) throw new Error("The original Supplier projection omitted the created record reference")
     expect(supplierPage.data.canUploadAttachment).toBe(true)
+    supplierCopy.finish()
     const supplierRow = page.getByRole("row").filter({ hasText: "Private asset fixture vendor" })
     await expect(supplierRow).toHaveCount(1)
     await supplierRow.locator('button[data-sf-action="select"]').click()
@@ -225,6 +240,9 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await expect(uploadControl).toBeEnabled()
     // Real private HTTP asset path; the unchanged INSTREAM/PING/EICAR fixture
     // scans these browser-selected bytes. This is not production AV qualification.
+    const uploadCopy = responses.begin([
+      { label: "supplier attachment admission", method: "POST", pathname: "/sucafina/procurement", query: { upload: "supplier" } },
+    ])
     const [uploaded] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -234,15 +252,18 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
       uploadControl.click(),
     ])
     expect(uploaded.status()).toBe(200)
-    expect(await uploaded.json()).toMatchObject({ ok: true })
+    expect(await uploadCopy.json(uploaded)).toMatchObject({ ok: true })
+    uploadCopy.finish()
+    const attachmentCopy = responses.begin([{ label: "persisted supplier attachment", method: "GET", pathname: "/sucafina/api/ui/pages/CAP27" }])
     const [attachmentRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP27"), { timeout: 10000 }),
       page.reload(),
     ])
-    const attachmentPage = await suppliersIoProjection(attachmentRead)
+    const attachmentPage = await suppliersIoProjection(attachmentRead, () => attachmentCopy.json(attachmentRead))
     const persistedSupplier = attachmentPage.data.suppliers.find((entry) => entry.id === supplierId)
     expect(persistedSupplier?.attachments).toHaveLength(1)
     expect(persistedSupplier!.attachments![0]).toMatchObject({ name: "browser-clean.txt" })
+    attachmentCopy.finish()
     await supplierRow.locator('button[data-sf-action="select"]').click()
     const privateAsset = assets.getByRole("listitem").filter({ hasText: "browser-clean.txt" })
     await expect(privateAsset).toHaveCount(1)
@@ -261,12 +282,14 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(records[1]![records[0]!.indexOf("status")]).toBe("pending")
     console.info("browser IO: supplier CSV parse complete")
 
+    const membersCopy = responses.begin([{ label: "initial Members", method: "GET", pathname: "/sucafina/api/ui/pages/CAP08" }])
     const [membersRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP08"), { timeout: 10000 }),
       page.goto(origin + "/orchestra/sf-people/talent"),
     ])
-    const initialMembers = await membersIoProjection(membersRead)
+    const initialMembers = await membersIoProjection(membersRead, () => membersCopy.json(membersRead))
     expect(initialMembers.data.members.filter((member) => member.name === "Browser acceptance member fixture")).toHaveLength(0)
+    membersCopy.finish()
     const membersBook = new Workbook()
     membersBook.addWorksheet("All Members").addRows([
       ["Name", "Title", "Type", "Status", "Notes"],
@@ -291,24 +314,33 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(importsUrl.searchParams.get("project")).toBe(context.value.stamp.projectId)
     expect(importsUrl.searchParams.get("installation")).toBe(context.value.stamp.installationId)
     await imports.getByLabel("source", { exact: true }).selectOption("dashboard")
+    const targetsCopy = responses.begin([
+      { label: "Members import targets", method: "GET", pathname: "/sucafina/dashboard", query: { sf: "import-targets" } },
+    ])
     const [targetsResponse] = await Promise.all([
       page.waitForResponse((response) => dashboardFile(response, "import-targets", "GET"), { timeout: 10000 }),
       imports.getByRole("button", { name: "Find destinations", exact: true }).click(),
     ])
     expect(targetsResponse.status()).toBe(200)
-    const targets = Schema.decodeUnknownSync(SfFiles.operations["files.import-targets"].output)(await targetsResponse.json())
+    const targets = Schema.decodeUnknownSync(SfFiles.operations["files.import-targets"].output)(await targetsCopy.json(targetsResponse))
     expect(targets.status).toBe("ok")
     if (targets.status !== "ok") throw new Error("The original Members import destination was not admitted")
     const memberTargets = targets.value.filter((target) => target.surface === "dashboard" && target.label === "Members")
     expect(memberTargets).toHaveLength(1)
     expect(memberTargets[0]!.sheet).toBe("All Members")
     expect(memberTargets[0]!.formats).toContain("xlsx")
+    targetsCopy.finish()
     await imports.getByLabel("Destination", { exact: true }).selectOption(memberTargets[0]!.selectionRef)
     await imports.getByLabel("File", { exact: true }).setInputFiles(memberFile)
     console.info("browser IO: Members workbook preview")
     const previewControl = imports.getByRole("button", { name: "Generate preview", exact: true })
     await expect(previewControl).toBeVisible()
     await expect(previewControl).toBeEnabled()
+    const previewCopy = responses.begin([
+      { label: "Members import admission", method: "POST", pathname: "/sucafina/dashboard", query: { sf: "import-admit" } },
+      { label: "Members import preview", method: "POST", pathname: "/sucafina/dashboard", query: { sf: "import-preview" } },
+      { label: "Members import reference", method: "GET", pathname: "/sucafina/dashboard", query: { sf: "import-reference" } },
+    ])
     const [admittedResponse, memberResponse, referenceResponse] = await Promise.all([
       page.waitForResponse((response) => dashboardFile(response, "import-admit", "POST"), { timeout: 10000 }),
       page.waitForResponse((response) => dashboardFile(response, "import-preview", "POST"), { timeout: 10000 }),
@@ -318,9 +350,9 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(admittedResponse.status()).toBe(200)
     expect(memberResponse.status()).toBe(200)
     expect(referenceResponse.status()).toBe(200)
-    const admitted = Schema.decodeUnknownSync(SfFiles.operations["files.import-admit"].output)(await admittedResponse.json())
-    const preview = Schema.decodeUnknownSync(SfFiles.operations["files.import-preview"].output)(await memberResponse.json())
-    const reference = Schema.decodeUnknownSync(SfFiles.operations["files.import-reference"].output)(await referenceResponse.json())
+    const admitted = Schema.decodeUnknownSync(SfFiles.operations["files.import-admit"].output)(await previewCopy.json(admittedResponse))
+    const preview = Schema.decodeUnknownSync(SfFiles.operations["files.import-preview"].output)(await previewCopy.json(memberResponse))
+    const reference = Schema.decodeUnknownSync(SfFiles.operations["files.import-reference"].output)(await previewCopy.json(referenceResponse))
     expect(admitted.status).toBe("ok")
     expect(preview.status).toBe("ok")
     expect(reference.status).toBe("ok")
@@ -376,29 +408,35 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     }).locator("summary").click()
     await expect(previewMember).toBeVisible()
     await expect(previewMember).toContainText("All Members")
+    previewCopy.finish()
     const beforeApply = await membersIoProjection(await page.request.get(membersRead.url(), { timeout: 10000 }))
     expect(beforeApply.data).toEqual(initialMembers.data)
     const applyControl = imports.getByRole("button", { name: "Apply reviewed import", exact: true })
     await expect(applyControl).toBeVisible()
     await expect(applyControl).toBeEnabled()
+    const appliedCopy = responses.begin([
+      { label: "Members import apply", method: "POST", pathname: "/sucafina/dashboard", query: { sf: "import-apply" } },
+    ])
     const [appliedResponse] = await Promise.all([
       page.waitForResponse((response) => dashboardFile(response, "import-apply", "POST"), { timeout: 10000 }),
       applyControl.click(),
     ])
     expect(appliedResponse.status()).toBe(200)
-    const applied = Schema.decodeUnknownSync(SfFiles.operations["files.import-apply"].output)(await appliedResponse.json())
+    const applied = Schema.decodeUnknownSync(SfFiles.operations["files.import-apply"].output)(await appliedCopy.json(appliedResponse))
     expect(applied.status).toBe("ok")
     if (applied.status !== "ok") throw new Error("The original Members import was not committed")
     expect(applied.value).toMatchObject({ id: preview.value.id, sourceDigest, state: "applied", domainApplied: true })
     expect(applied.value.receipts).toHaveLength(1)
     expect(applied.value.receipts[0]!.status).toBe("applied")
     await expect(imports).toHaveAttribute("data-sf-phase", "receipt")
+    appliedCopy.finish()
     await page.reload()
+    const persistedCopy = responses.begin([{ label: "persisted Members", method: "GET", pathname: "/sucafina/api/ui/pages/CAP08" }])
     const [persistedResponse] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP08"), { timeout: 10000 }),
       page.goto(origin + "/orchestra/sf-people/talent"),
     ])
-    const persisted = await membersIoProjection(persistedResponse)
+    const persisted = await membersIoProjection(persistedResponse, () => persistedCopy.json(persistedResponse))
     const persistedMembers = persisted.data.members.filter((member) => member.name === "Browser acceptance member fixture")
     expect(persistedMembers).toHaveLength(1)
     expect(persistedMembers[0]).toMatchObject({
@@ -406,7 +444,11 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
       status: "Active", notes: "Synthetic business data; no corporate identity",
     })
     await expect(page.getByRole("row").filter({ hasText: "Browser acceptance member fixture" })).toHaveCount(1)
+    persistedCopy.finish()
     const membersExport = new Workbook()
+    const exportCopy = responses.begin([
+      { label: "Members XLSX bytes", method: "GET", pathname: "/sucafina/dashboard", query: { download: "members" }, body: "bytes" },
+    ])
     const [exportResponse, memberDownload] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -418,7 +460,8 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     ])
     expect(exportResponse.status()).toBe(200)
     const downloadedBytes = await memberDownload.arrayBuffer()
-    expect(Buffer.from(downloadedBytes)).toEqual(await exportResponse.body())
+    expect(Buffer.from(downloadedBytes)).toEqual(await exportCopy.body(exportResponse))
+    exportCopy.finish()
     console.info("browser IO: Members XLSX parse starting")
     await membersExport.xlsx.load(downloadedBytes)
     console.info("browser IO: Members XLSX parse complete")
@@ -434,6 +477,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     throw error
   } finally {
     console.info("browser IO: cleanup starting")
+    disposeResponseCapture?.()
     await fixture.dispose()
     console.info("browser IO: cleanup complete")
   }
@@ -475,10 +519,14 @@ async function expectDownload(page: Page, link: Locator) {
 }
 
 async function confirmProcurement(page: Page, origin: string, control: Locator,
-  command: { page: "Settings" | "Suppliers"; action: "reset" | "save" | "create" }) {
+  command: { page: "Settings" | "Suppliers"; action: "reset" | "save" | "create" },
+  responses: Awaited<ReturnType<typeof observeNativeResponses>>) {
   await expect(control).toHaveCount(1)
   await expect(control).toBeVisible()
   await expect(control).toBeEnabled()
+  const commandCopy = responses.begin([
+    { label: command.page + "/" + command.action, method: "POST", pathname: "/sucafina/procurement", query: { page: command.page } },
+  ])
   const [saved] = await Promise.all([
     page.waitForResponse((response) => {
       const url = new URL(response.url())
@@ -491,7 +539,8 @@ async function confirmProcurement(page: Page, origin: string, control: Locator,
   ])
   expect(saved.request().postDataJSON()).toMatchObject(command)
   expect(saved.status()).toBe(200)
-  expect(await saved.json()).toMatchObject({ ok: true })
+  expect(await commandCopy.json(saved)).toMatchObject({ ok: true })
+  commandCopy.finish()
   return saved
 }
 async function expectNativeDownload(page: Page, control: Locator, destination: string) {
@@ -509,23 +558,23 @@ async function expectNativeDownload(page: Page, control: Locator, destination: s
   expect(await file.exists()).toBe(true)
   return file
 }
-async function settingsIoProjection(response: Pick<Response, "status" | "json">) {
+async function settingsIoProjection(response: Pick<Response, "status" | "json">, read: () => Promise<unknown> = () => response.json()) {
   expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(await response.json())
+  const body = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(await read())
   expect(body.status).toBe("ok")
   if (body.status !== "ok") throw new Error("The original authorized Settings projection was unavailable")
   return body.value
 }
-async function suppliersIoProjection(response: Pick<Response, "status" | "json">) {
+async function suppliersIoProjection(response: Pick<Response, "status" | "json">, read: () => Promise<unknown> = () => response.json()) {
   expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await response.json())
+  const body = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await read())
   expect(body.status).toBe("ok")
   if (body.status !== "ok") throw new Error("The original authorized Supplier projection was unavailable")
   return body.value
 }
-async function membersIoProjection(response: Pick<Response, "status" | "json">) {
+async function membersIoProjection(response: Pick<Response, "status" | "json">, read: () => Promise<unknown> = () => response.json()) {
   expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(SfPeople.operations["domain.page.CAP08"].output)(await response.json())
+  const body = Schema.decodeUnknownSync(SfPeople.operations["domain.page.CAP08"].output)(await read())
   expect(body.status).toBe("ok")
   if (body.status !== "ok") throw new Error("The original authorized Members projection was unavailable")
   return body.value
