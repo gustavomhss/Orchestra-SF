@@ -1,0 +1,27 @@
+name: ci-record-proof
+on:
+  push:
+    branches: [ci-record-proof]
+permissions:
+  contents: read
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 3
+          lfs: false
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version-file: package.json
+      - name: Verify documentation source and strict changed-path guard
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git diff --name-only 0c0f0e7d7d6cc65f68a383656e402176fbe75690 HEAD)" = ".github/workflows/ci-record-proof.yml"
+          bun run check:guards --base 124d5b5c7fbc4a7a57edc0fe1420d38496402a48
