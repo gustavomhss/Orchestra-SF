@@ -63,10 +63,23 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         // A pre-existing C08 owner (including Memory preflight/commit) keeps its
         // original route. Do not prepare sources, open a root or borrow ownership.
         if (!inherited || typeof inherited !== "object") return undefined
+        // Snapshot metadata does not report a swallowed nested write. An actual
+        // readonly driver operation checks poison at its exit. These extra
+        // observations test health now; they do not accept the foreign root.
+        const healthy = async () => {
+          if (!current() || !live()) return false
+          let callbacks = 0
+          const accepted = await transaction.call(persistence, "planner", async () => {
+            callbacks++
+            return { commit: false, value: callbacks === 1 && current() && live() }
+          }, { signal: request.signal })
+          return accepted === true && callbacks === 1 && current() && live()
+        }
+        if (!await healthy()) return undefined
         return once(async (work) => {
-          if (!current() || !live()) return unavailable()
+          if (!await healthy()) return unavailable()
           const result = await work()
-          return current() && live() ? result : unavailable()
+          return await healthy() ? result : unavailable()
         })
       }
       if (!await revalidate.call(host, call) || !current() || !await initialize() || !current() ||

@@ -146,6 +146,34 @@ test("a poisoned foreign root cannot become a fresh owned or legacy attempt", as
   } finally { await f.close() }
 }, 120000)
 
+for (const boundary of ["before-work", "during-work"] as const) {
+  test(`foreign root poison ${boundary} refuses without a new root or retry`, async () => {
+    const f = await fixture()
+    try {
+      let initialized = 0, works = 0, inside: unknown, outerRejected = false
+      try { await f.persistence.transaction("planner", async () => {
+        const prepared = await f.manager.prepare(f.lease.call, async () => { initialized++; return true }, () => true)
+        if (!prepared) throw new Error("Foreign scope unavailable before poison")
+        const poison = async () => {
+          try { await f.persistence.transaction("dashboard", async () => ({ commit: true, value: true })) } catch {}
+        }
+        if (boundary === "before-work") await poison()
+        inside = await prepared.run(async () => {
+          works++
+          if (boundary === "during-work") await poison()
+          return marker()
+        })
+        return { commit: false, value: inside }
+      }) } catch { outerRejected = true }
+      expect(inside).toEqual(refused)
+      expect(outerRejected).toBe(true)
+      expect(initialized).toBe(0)
+      expect(works).toBe(boundary === "before-work" ? 0 : 1)
+      expect(f.control.roots).toBe(0)
+    } finally { await f.close() }
+  }, 120000)
+}
+
 for (const boundary of ["headers", "request", "provider", "method", "owner", "abort", "authority"] as const) {
   test(`owned replay refuses ${boundary} changes after work without fallback`, async () => {
     const f = await fixture()
