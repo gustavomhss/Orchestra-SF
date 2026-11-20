@@ -16,10 +16,11 @@ export interface Stored {
 /** Process-local only. Secret values are consumed by provider/MCP adapters, never browser metadata. */
 export interface Interface {
   readonly owner: TeamProfile.Owner
-  readonly list: (category: ConnectionAccess.Category) => Effect.Effect<ReadonlyArray<ConnectionAccess.Metadata>, Denied>
+  readonly check: (action: ConnectionAccess.Action, resource: ConnectionAccess.Resource) => Effect.Effect<void, Denied>
+  readonly list: (category: ConnectionAccess.Category, resourceId?: string) => Effect.Effect<ReadonlyArray<ConnectionAccess.Metadata>, Denied>
   readonly read: (key: ConnectionAccess.Key) => Effect.Effect<Stored | undefined, Denied>
   readonly write: (input: ConnectionAccess.Write) => Effect.Effect<Stored, Denied>
   readonly remove: (input: ConnectionAccess.Remove) => Effect.Effect<void, Denied>
 }
-/** The Owner service supplies a private generation/session fence for the final SQL authorization boundary. */
+/** The Owner service supplies a private generation fence for the final SQL authorization boundary. */
 export type Factory = (fence: () => Effect.Effect<boolean>) => Effect.Effect<Interface | undefined>

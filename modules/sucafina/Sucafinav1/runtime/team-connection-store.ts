@@ -197,10 +197,10 @@ function decodeBinding(input: TeamConnectionBinding) {
 function readHeader(db: Database, binding: TeamConnectionBinding): Header {
   const rows = db.query<Header, []>("SELECT installation_id,tenant_id,revision,key_version,key_fingerprint FROM sf_team_connection_header").all()
   const row = rows[0]
-  const audit = db.query<{ revision: number | null }, []>("SELECT MAX(sequence) AS revision FROM sf_team_connection_audit").get()
+  const audit = db.query<{ revision: number | null; count: number }, []>("SELECT MAX(sequence) AS revision, COUNT(*) AS count FROM sf_team_connection_audit").get()
   const count = db.query<{ count: number }, []>("SELECT COUNT(*) AS count FROM sf_team_connections").get()
   if (rows.length !== 1 || !row || row.installation_id !== binding.installationId || row.tenant_id !== binding.tenantId ||
-      !Number.isSafeInteger(row.revision) || row.revision < 0 || row.key_version !== 1 || (audit?.revision ?? 0) !== row.revision ||
+      !Number.isSafeInteger(row.revision) || row.revision < 0 || row.key_version !== 1 || (audit?.revision ?? 0) !== row.revision || audit?.count !== row.revision ||
       row.key_fingerprint !== null && !/^[a-f0-9]{64}$/.test(row.key_fingerprint) ||
       row.key_fingerprint === null && (row.revision !== 0 || count?.count !== 0)) throw unavailable()
   return row
@@ -242,7 +242,17 @@ function materialize(db: Database, owner: TeamProfile.Owner, row: Row, cipher: R
   return Object.freeze({ metadata: freezeMetadata(metadata), ...(encodedValue === undefined ? {} : { encodedValue }) })
 }
 function associated(owner: TeamProfile.Owner, metadata: ConnectionAccess.Metadata) {
-  return JSON.stringify({ version: 1, owner, metadata })
+  return JSON.stringify({
+    version: 1,
+    owner: {
+      profile: { installationId: owner.profile.installationId, tenantId: owner.profile.tenantId, teamObjectId: owner.profile.teamObjectId },
+      principal: { tenantId: owner.principal.tenantId, principalObjectId: owner.principal.principalObjectId },
+    },
+    metadata: {
+      key: { category: metadata.key.category, resourceId: metadata.key.resourceId, id: metadata.key.id },
+      label: metadata.label, revision: metadata.revision, state: metadata.state,
+    },
+  })
 }
 function rowDigest(owner: TeamProfile.Owner, metadata: ConnectionAccess.Metadata, ciphertext: string | null) {
   return teamConnectionDigest({ associated: associated(owner, metadata), keyVersion: 1, ciphertext })

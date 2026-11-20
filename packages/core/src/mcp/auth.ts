@@ -2,10 +2,13 @@ import { LayerNode } from "../effect/layer-node"
 import path from "path"
 import { serviceUse } from "../effect/service-use"
 import { Global } from "../global"
-import { Effect, Layer, Context, Option, Schema } from "effect"
+import { Effect, Layer, Context, Option, Schema, SynchronizedRef } from "effect"
 import { FSUtil } from "../fs-util"
 import { EffectFlock } from "../util/effect-flock"
 import { CredentialCipher } from "../credential/cipher"
+import { CredentialVault } from "../credential/vault"
+import { SessionOwner } from "../session/owner"
+import { ConnectionAccess } from "@orchestra/schema/connection-access"
 
 export const Tokens = Schema.Struct({
   accessToken: Schema.mutableKey(Schema.String),
@@ -61,7 +64,7 @@ export class Service extends Context.Service<Service, Interface>()("@orchestra/M
 
 export const use = serviceUse(Service)
 
-const layer = Layer.effect(
+const legacyLayer = Layer.effect(
   Service,
   Effect.gen(function* () {
     const fs = yield* FSUtil.Service
@@ -207,6 +210,109 @@ const layer = Layer.effect(
   }),
 )
 
-export const node = LayerNode.make({ service: Service, layer: layer, deps: [FSUtil.node, EffectFlock.node, CredentialCipher.node] })
+/** Owner-bound calls never construct the global file/key service or seal a legacy JSON file. */
+export const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const fs = yield* FSUtil.Service
+  const flock = yield* EffectFlock.Service
+  const retained = SynchronizedRef.makeUnsafe<Interface | undefined>(undefined)
+  const legacy = SynchronizedRef.modifyEffect(retained, (current) => current
+    ? Effect.succeed([current, current] as const)
+    : Service.use((service) => Effect.succeed(service)).pipe(
+      Effect.provide(legacyLayer.pipe(Layer.provide(CredentialCipher.layer))),
+      Effect.provideService(FSUtil.Service, fs),
+      Effect.provideService(EffectFlock.Service, flock),
+      Effect.map((service) => [service, service] as const),
+    ))
+  const use = <A>(
+    corporate: (vault: CredentialVault.Interface) => Effect.Effect<A, CredentialVault.Denied>,
+    technical: (service: Interface) => Effect.Effect<A>,
+  ): Effect.Effect<A> => Effect.gen(function* () {
+    const scope = yield* owners.open().pipe(Effect.orDie)
+    const vault = yield* owners.connections(scope).pipe(Effect.orDie)
+    if (vault) return yield* corporate(vault).pipe(Effect.orDie)
+    const value = yield* technical(yield* legacy)
+    yield* owners.verify(scope).pipe(Effect.orDie)
+    return value
+  })
+  const selected = (mcpName: string): ConnectionAccess.Key => Object.freeze({
+    category: "mcp", resourceId: Schema.decodeUnknownSync(ConnectionAccess.Identifier)(mcpName), id: "primary",
+  })
+  const value = (stored: CredentialVault.Stored | undefined) => {
+    if (!stored || stored.metadata.state === "removed") return Effect.succeed(undefined)
+    return Schema.decodeUnknownEffect(Schema.fromJsonString(Entry))(stored.encodedValue)
+      .pipe(Effect.mapError(() => new CredentialVault.Denied({ reason: "invalid-value" })))
+  }
+  const get = (mcpName: string) => {
+    const key = selected(mcpName)
+    return use((vault) => vault.read(key).pipe(Effect.flatMap(value)), (service) => service.get(mcpName))
+  }
+  const mutate = (key: ConnectionAccess.Key, update: (current: Entry | undefined) => Entry | undefined) =>
+    (vault: CredentialVault.Interface) => Effect.gen(function* () {
+      const stored = yield* vault.read(key)
+      const entry = update(yield* value(stored))
+      if (!entry) return
+      yield* vault.write({
+        key, label: key.resourceId, encodedValue: Schema.encodeSync(Schema.fromJsonString(Entry))(entry),
+        expectedRevision: stored?.metadata.revision ?? 0,
+        action: stored?.metadata.state === "active" ? "update" : "create",
+      })
+    })
+  const set = (mcpName: string, entry: Entry, serverUrl?: string) => {
+    const key = selected(mcpName)
+    const encoded = Schema.encodeSync(Schema.fromJsonString(Entry))(entry)
+    return use(mutate(key, () => ({ ...Schema.decodeUnknownSync(Schema.fromJsonString(Entry))(encoded),
+      ...(serverUrl === undefined ? {} : { serverUrl }) })),
+      (service) => service.set(mcpName, Schema.decodeUnknownSync(Schema.fromJsonString(Entry))(encoded), serverUrl))
+  }
+  const updateField = <K extends keyof Entry>(
+    field: K, technical: (service: Interface, name: string, value: NonNullable<Entry[K]>, url?: string) => Effect.Effect<void>,
+  ) => (mcpName: string, input: NonNullable<Entry[K]>, serverUrl?: string) => {
+      const key = selected(mcpName)
+      const copied = structuredClone(input)
+      const update = (entry: Entry | undefined) => ({ ...entry, [field]: copied, ...(serverUrl === undefined ? {} : { serverUrl }) })
+      return use(mutate(key, update), (service) => technical(service, mcpName, copied, serverUrl))
+    }
+  const clearField = (field: keyof Entry, technical: (service: Interface, name: string) => Effect.Effect<void>) => (mcpName: string) => {
+    const key = selected(mcpName)
+    const update = (entry: Entry | undefined) => {
+      if (!entry) return undefined
+      const next = { ...entry }
+      delete next[field]
+      return next
+    }
+    return use(mutate(key, update), (service) => technical(service, mcpName))
+  }
+  return Service.of({
+    all: () => use((vault) => Effect.gen(function* () {
+      const records = yield* vault.list("mcp")
+      const pairs = yield* Effect.forEach(records, (record) => Effect.gen(function* () {
+        if (record.key.id !== "primary") return yield* new CredentialVault.Denied({ reason: "invalid-value" })
+        const entry = yield* vault.read(record.key).pipe(Effect.flatMap(value))
+        return entry ? [record.key.resourceId, entry] as const : undefined
+      }))
+      return Object.fromEntries(pairs.filter((pair): pair is readonly [string, Entry] => pair !== undefined))
+    }), (service) => service.all()),
+    get,
+    getForUrl: (mcpName, serverUrl) => get(mcpName).pipe(Effect.map((entry) =>
+      entry?.serverUrl && entry.serverUrl === serverUrl ? entry : undefined)),
+    set,
+    remove: (mcpName) => {
+      const key = selected(mcpName)
+      return use((vault) => Effect.gen(function* () {
+        const stored = yield* vault.read(key)
+        if (stored) yield* vault.remove({ key, expectedRevision: stored.metadata.revision })
+      }), (service) => service.remove(mcpName))
+    },
+    updateTokens: updateField("tokens", (service, name, value, url) => service.updateTokens(name, value, url)),
+    updateClientInfo: updateField("clientInfo", (service, name, value, url) => service.updateClientInfo(name, value, url)),
+    updateCodeVerifier: updateField("codeVerifier", (service, name, value) => service.updateCodeVerifier(name, value)),
+    clearCodeVerifier: clearField("codeVerifier", (service, name) => service.clearCodeVerifier(name)),
+    updateOAuthState: updateField("oauthState", (service, name, value) => service.updateOAuthState(name, value)),
+    getOAuthState: (mcpName) => get(mcpName).pipe(Effect.map((entry) => entry?.oauthState)),
+    clearOAuthState: clearField("oauthState", (service, name) => service.clearOAuthState(name)),
+  })
+}))
+export const node = LayerNode.make({ service: Service, layer: admittedLayer, deps: [FSUtil.node, EffectFlock.node, SessionOwner.node] })
 
 export * as McpAuth from "./auth"

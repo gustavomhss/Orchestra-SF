@@ -83,6 +83,7 @@ export async function teamProductFixture(input: {
       persistence, authenticate: installed.identity.authenticate, environment,
       isAuthenticated: async (request) => Boolean(await installed.identity.person(request)),
       grants, readGrants: async () => { await hooks.beforeGrants?.(); return f.microsoft.readGrants() },
+      teamConnections: installed.store.teamConnections ? { store: installed.store.teamConnections, readKey: f.microsoft.readConnectionKey } : undefined,
       teamProfiles: {
         revalidate: installed.resolver.revalidate, revalidateResolution: installed.resolver.revalidateResolution,
         readConfiguration: async (admission) => { await hooks.beforeConfiguration?.(); return installed.resolver.readConfiguration(admission) },

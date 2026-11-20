@@ -1,3 +1,4 @@
+import { teamConnectionKey } from "./team-connection-crypto.ts"
 import { createEntraClient } from "./entra-client.ts"
 import { createMicrosoftIdentity } from "./local-identity.ts"
 import type { EntraOptions, LocalSecrets } from "./local-contract.ts"
@@ -34,6 +35,10 @@ export async function prepareMicrosoftInstallation(
       if (!Bun.deepEquals(current.keys[name], keys[name])) throw new Error("Microsoft installation keys changed; explicit reconfiguration required")
     return current.config
   }
+  const readConnectionKey = async () => {
+    await readCurrentConfiguration()
+    return teamConnectionKey(keys.session)
+  }
   const readGrants = async () => (await readCurrentConfiguration()).grants
   const readTeamProfilePolicy = async (): Promise<TeamProfilePolicySource> => {
     const current = await readCurrentConfiguration()
@@ -44,7 +49,7 @@ export async function prepareMicrosoftInstallation(
   }
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
-    loaded: { config, directory, keys }, client, readTeamProfilePolicy, readGrants, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
+    loaded: { config, directory, keys }, client, readTeamProfilePolicy, readGrants, readConnectionKey, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
     createIdentity: (secrets: LocalSecrets) => createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now }),
   }
 }

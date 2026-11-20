@@ -12,6 +12,7 @@ import { AuthorityGenerationRuntime } from "./authority-generation-runtime"
 import { SessionOwnerTable } from "./owner.sql"
 import { SessionSchema } from "./schema"
 import { SessionTable } from "./sql"
+import { CredentialVault } from "../credential/vault"
 
 export class Denied extends Schema.TaggedErrorClass<Denied>()("SessionOwner.Denied", {
   reason: Schema.Literals([
@@ -34,6 +35,7 @@ export interface Admission {
   readonly inspect?: (operations: ReadonlyArray<InspectionOperation>) => Effect.Effect<Inspection | undefined>
   /** Private current Team configuration; absence never permits directory/global fallback. */
   readonly configuration?: () => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined>
+  readonly connections?: CredentialVault.Factory
   readonly authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.Effect<boolean>
   /** Current resource exceptions within this owner; evaluated before SQL pagination. */
   readonly excludedSessions: () => Effect.Effect<ReadonlyArray<SessionSchema.ID>>
@@ -67,6 +69,7 @@ type LeaseData = Readonly<{
   kind: "request" | "recovery"
   revisions?: TeamProfile.Revisions
   configuration?: Admission["configuration"]
+  connections?: Admission["connections"]
   inspect?: Admission["inspect"]
   authorize?: Admission["authorize"]
   excludedSessions?: Admission["excludedSessions"]
@@ -102,6 +105,7 @@ export interface Interface {
   readonly active: Effect.Effect<Scope | undefined, Failure>
   readonly location: Effect.Effect<LocationBinding | undefined, Failure>
   readonly configuration: (scope: Scope) => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined, Failure>
+  readonly connections: (scope: Scope) => Effect.Effect<CredentialVault.Interface | undefined, Failure>
   readonly verify: (scope: Scope) => Effect.Effect<void, Failure>
   readonly assert: (scope: Scope, sessionID: SessionSchema.ID, operation: Operation) => Effect.Effect<void, Failure>
   readonly authorize: (scope: Scope, operation: Operation, sessionID?: SessionSchema.ID) => Effect.Effect<void, Failure>
@@ -304,11 +308,13 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       const verifyCurrent = observed.verifyCurrent
       const inspection = "binding" in observed ? observed.inspect : undefined
       const configuration = "binding" in observed ? observed.configuration : undefined
+      const connections = "binding" in observed ? observed.connections : undefined
       const authorize = "binding" in observed ? observed.authorize : undefined
       const excludedSessions = "binding" in observed ? observed.excludedSessions : undefined
       const mappedSessions = sessionIds ? new Set(sessionIds) : undefined
       if (inspection !== undefined && typeof inspection !== "function" ||
-          configuration !== undefined && typeof configuration !== "function")
+          configuration !== undefined && typeof configuration !== "function" ||
+          connections !== undefined && typeof connections !== "function")
         return yield* new Denied({ reason: "missing-admission" })
       yield* verifyProof(verifyCurrent)
       if (!(yield* provider.verifyGeneration(generation))) return yield* new Denied({ reason: "stale-admission" })
@@ -320,6 +326,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         ...(inspection ? { inspect: inspection } : {}),
         ...(revisions ? { revisions } : {}),
         ...(configuration ? { configuration } : {}),
+        ...(connections ? { connections } : {}),
         ...(mappedSessions ? { sessionIds: mappedSessions } : {}),
       })
       return lease
@@ -356,6 +363,44 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       })
       entries.set(signature, binding)
       return binding
+    }),
+    connections: (scope) => Effect.gen(function* () {
+      yield* verify(scope)
+      const retained = data(scope)
+      const lease = retained.lease
+      if (!lease) return undefined
+      if (lease.kind !== "request" || !lease.connections || !retained.generation)
+        return yield* new Denied({ reason: "storage-unavailable" })
+      // Final policy is read by the vault inside its own locked SQL read scope.
+      // This fence verifies the independent generation without opening a nested SF business transaction.
+      const generation = retained.generation
+      const fence = () => generation.verifyGeneration(lease.generation)
+        .pipe(Effect.catchCause(() => Effect.succeed(false)))
+      const client = yield* lease.connections(fence).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
+      const owner = yield* Schema.decodeUnknownEffect(TeamProfile.Owner)(client?.owner)
+        .pipe(Effect.mapError(() => new Denied({ reason: "storage-unavailable" })))
+      if (!client || !sameOwner(owner, lease.owner))
+        return yield* new Denied({ reason: "stale-admission" })
+      yield* verify(scope)
+      const check = <A>(effect: Effect.Effect<A, CredentialVault.Denied>) => Effect.gen(function* () {
+        yield* verify(scope)
+        const value = yield* effect
+        yield* verify(scope)
+        return value
+      }).pipe(Effect.mapError((error) => error instanceof CredentialVault.Denied ? error :
+        new CredentialVault.Denied({ reason: "unavailable" })))
+      const write = <A>(effect: Effect.Effect<A, CredentialVault.Denied>) =>
+        result.withWriter(scope, check(effect)).pipe(Effect.mapError((error) =>
+          error instanceof CredentialVault.Denied ? error : new CredentialVault.Denied({ reason: "unavailable" })))
+      const bound: CredentialVault.Interface = {
+        owner: freezeOwner(owner),
+        check: (action, resource) => check(client.check(action, resource)),
+        list: (category, resourceId) => check(client.list(category, resourceId)),
+        read: (key) => check(client.read(key)),
+        write: (input) => write(client.write(input)),
+        remove: (input) => write(client.remove(input)),
+      }
+      return Object.freeze(bound)
     }),
     configuration: (scope) => Effect.gen(function* () {
       yield* verify(scope)
