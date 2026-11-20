@@ -174,3 +174,40 @@ Essas alterações de pacote ainda não foram executadas na PR qualificadora. O 
 e as provas Microsoft/Azure G08/G10 continuam pendentes. Nenhum corte, restauração viva ou deploy foi realizado.
 
 A primeira rodada SF no source `e00e7c20` também passou: **149 pass, 0 fail, 13 arquivos, 1273 assertions** ([44702867050](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702867050)).
+
+## Checkpoint: tipos integrados e fronteira de restauro
+
+Fonte integrada: [79bfaa5a](https://github.com/gustavomhss/Orchestra-SF/commit/79bfaa5a8d487b8453d1d35e74b2e65c0b50ae36).
+O HTTP usa os grupos canônicos com contexto privado explícito do mesmo grafo.
+CLI, ACP e TUI técnicos recusam envelopes corporativos antes de adotar ou expor os dados.
+
+| Evidência dirigida | Resultado observado | Run |
+|---|---:|---|
+| HTTP integrado em e00e, 12 arquivos | 63 pass, 0 fail, 511 assertions | [44702863723](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702863723) |
+| Static integrado em ea8806, árvore idêntica | 15 comandos passaram; guard-dev bloqueado pelos dois arquivos protegidos | [44707320463](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44707320463) |
+| Primeiro restauro dirigido, 7 arquivos | 60 pass, 5 fail, 1 skip preexistente | [44706205693](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44706205693) |
+| Restauro C08 e regressões, 6 arquivos | 63 pass, 0 fail, 1 skip preexistente, 334 assertions | [44707605762](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44707605762) |
+
+O restauro preserva os mapas atuais de autorização, inclusive vazios ou ausentes,
+e o estado C08 acoplado com seus recibos e transações. A prova cria um caso por
+admissão Microsoft assinada, restaura um checkpoint anterior, recria a autoridade
+e repete a intenção original sem duplicar o caso. Perda de recibo, mudança de
+incarnation e substituição incerta de blob recusam a restauração atomicamente.
+
+A primeira execução expôs duas falhas na composição do teste: a lease de UI ainda
+não consumida e a conversão incompleta do principal em Actor. Foram corrigidas
+usando os contratos reais, sem reduzir assertions. A prova parity-pitr também
+falhou pela ausência do executável Litestream fixado; continua separadamente
+pendente e não foi contabilizada como coberta pela rodada de seis arquivos.
+
+Nenhuma migração de instalação, corte de autoridade, restauração Azure ou
+qualificação Microsoft real foi executada. O journal/corte do Core, o fechamento
+dos demais produtores e os gates no candidato final permanecem abertos.
+
+O coordenador de Session recebeu uma operação privada de fechamento permanente,
+também aplicada ao final do seu Scope. A suíte original e os cinco controles de
+concorrência passaram: **33 pass, 0 fail, 103 assertions**
+([44708472156](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44708472156)).
+A barreira recusa bind tardio, novos wakes e novos trabalhos exclusivos, suprime
+sucessores e aguarda todos os finalizadores. Esse resultado não atesta que
+scheduled tasks, hooks ou efeitos externos estejam drenados.

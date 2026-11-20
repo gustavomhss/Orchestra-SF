@@ -11,8 +11,8 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
-    "latestIntegratedSource": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
+    "preCheckpointHead": "3031efce31f65c7f501ceeadd0fa16aab3336b37",
+    "latestIntegratedSource": "3031efce31f65c7f501ceeadd0fa16aab3336b37",
     "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
@@ -4002,7 +4002,7 @@
     {
       "id": "WP4-GENERATION",
       "owner": "teams-generation-fence",
-      "scope": "Private control database, guarded SQL writers and project cascade guard, real canonical census and opaque migration administration. Backfill, journal/cut/restore engine unfinished.",
+      "scope": "Private generation control, SQL fence, canonical census and opaque migration administration are integrated. Current roleMap/access and coupled C08 frontier survive business restore; Core journal/cut, global drain and operational restore remain unfinished.",
       "status": "INTEGRATED_DIRECTED_PASSED_NO_CUTOVER"
     }
   ],
@@ -15351,6 +15351,216 @@
         "expects": 1273
       },
       "qualification": "Integrated component policy, migration admission and technical maintenance proof. No final/real-tenant qualification."
+    },
+    {
+      "id": "HTTP_INTEGRATED_E00E",
+      "source": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
+      "snapshot": "7adcbea9e27ed81ac6503bb0de226d8c57913b0f",
+      "runId": 44702863723,
+      "jobId": 136175203073,
+      "status": "SUCCESS",
+      "request": {
+        "package": "server",
+        "runner": "bun",
+        "args": [
+          "./test/team-profile-admission.test.ts",
+          "./test/team-profile-events.test.ts",
+          "./test/session-background-http.test.ts",
+          "./test/session-diff-http.test.ts",
+          "./test/session-move-http.test.ts",
+          "./test/session-revert-http.test.ts",
+          "./test/event-stream.test.ts",
+          "./test/body-limit.test.ts",
+          "./test/auth.test.ts",
+          "./test/host-policy.test.ts",
+          "./test/sucafina-team-discovery.test.ts",
+          "./test/sucafina-bootstrap-authorization.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 63,
+        "fail": 0,
+        "files": 12,
+        "expects": 511
+      },
+      "cleanup": {
+        "jobId": 136176435065,
+        "status": "SUCCESS"
+      },
+      "qualification": "Exact integrated HTTP component result; no final candidate or real tenant qualification."
+    },
+    {
+      "id": "STATIC_INTEGRATED_E00E",
+      "source": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
+      "runId": 44702763217,
+      "jobId": 136174874762,
+      "status": "FAILURE",
+      "findings": [
+        "Installed HTTP group union and request context types",
+        "Technical CLI/TUI consumers must reject corporate envelope before use",
+        "Factory structural assertion inference",
+        "Protected godfile-waivers.json and script/spawn-allowlist.json"
+      ],
+      "qualification": "Preserved negative observation. Subsequent fixes are separately evidenced."
+    },
+    {
+      "id": "STATIC_HTTP_CONSUMERS_D417",
+      "source": "d4177d845ccc149497498adf44cde9ce3577a24e",
+      "runId": 44704895007,
+      "jobId": 136181941503,
+      "status": "FAILURE",
+      "commands": {
+        "pass": 14,
+        "fail": 2,
+        "total": 16
+      },
+      "findings": [
+        "All HTTP/SDK/server/CLI production narrowing errors resolved",
+        "Only factory test TS2769 and protected guard remained"
+      ],
+      "qualification": "Not global static PASS. Factory type corrected in 8bde1897; permission-reader propagation corrected in 17323cf1."
+    },
+    {
+      "id": "STATIC_INTEGRATED_EA8806",
+      "source": "ea8806fdc975a23938436085455f64eee70d38a8",
+      "sourceTree": "21135edcdf845a489881cc828bf91ed882fb1fe9",
+      "snapshot": "7cc28d06150b4fe299799f783657df1f5dc80cd7",
+      "runId": 44707320463,
+      "jobId": 136190040544,
+      "status": "FAILURE",
+      "commands": {
+        "pass": 15,
+        "fail": 1,
+        "total": 16
+      },
+      "findings": [
+        "All generated checks, types, E2E configuration/inclusion and Web build exited zero",
+        "guard-dev only: protected godfile-waivers.json and script/spawn-allowlist.json require actual approval"
+      ],
+      "qualification": "Same-tree static snapshot. No protected approval fabricated and no final G01 PASS claimed."
+    },
+    {
+      "id": "RESTORE_EFFECT_FRONTIER_FIRST",
+      "source": "096bf332aa516d9ad26f7241220e242d68a50ea8",
+      "sourceTree": "6411fb7ea60bed29243221688ab0232542ba4d4d",
+      "snapshot": "91851e371a176aba698def0178e17e7f340b19cc",
+      "runId": 44706205693,
+      "jobId": 136186320479,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/restore-effect-frontier.test.ts",
+          "./Sucafinav1/test/operations-runtime.test.ts",
+          "./Sucafinav1/test/local-backups.test.ts",
+          "./Sucafinav1/test/local-backup-resilience.test.ts",
+          "./Sucafinav1/test/local-maintenance-resilience.test.ts",
+          "./Sucafinav1/test/parity-recovery-plan.test.ts",
+          "./Sucafinav1/test/parity-pitr.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 60,
+        "fail": 5,
+        "skip": 1,
+        "tests": 66,
+        "files": 7,
+        "expects": 312
+      },
+      "findings": [
+        "New C08 fixture admitted but did not consume its genuine one-time UI lease",
+        "Signed principal surface RoleRows needed the same Actor projection used in production",
+        "Pinned Litestream executable absent for parity-pitr; that operational proof is still pending"
+      ],
+      "cleanup": {
+        "jobId": 136186871460,
+        "status": "SUCCESS"
+      },
+      "qualification": "Negative evidence retained. No assertion weakened and no new skip introduced."
+    },
+    {
+      "id": "RESTORE_EFFECT_FRONTIER_FIXED",
+      "source": "6012cabd2dd16b3835927af78b56d5d7714928fc",
+      "sourceTree": "3a1c02a61e4b46f3d87037431da1236bfdb4506d",
+      "snapshot": "fd6d8eab0fc4f6909453989a61dcbe52a93bdef9",
+      "runId": 44707605762,
+      "jobId": 136190992165,
+      "status": "SUCCESS",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/restore-effect-frontier.test.ts",
+          "./Sucafinav1/test/operations-runtime.test.ts",
+          "./Sucafinav1/test/local-backups.test.ts",
+          "./Sucafinav1/test/local-backup-resilience.test.ts",
+          "./Sucafinav1/test/local-maintenance-resilience.test.ts",
+          "./Sucafinav1/test/parity-recovery-plan.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 63,
+        "fail": 0,
+        "skip": 1,
+        "tests": 64,
+        "files": 6,
+        "expects": 334
+      },
+      "existingSkip": "Foreign-owned existing root requires root fixture privileges; unchanged existing case.",
+      "cleanup": {
+        "jobId": 136191481171,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual signed C08 commit, checkpoint restore through source-lifecycle persistence, current access retention, authority restart and identical retry. Missing/corrupt frontier and blob conflict fail closed. Separate Litestream prerequisite-bound proof remains pending. Not a Core migration/cut or G10 qualification."
+    },
+    {
+      "id": "SESSION_COORDINATOR_MAINTENANCE",
+      "source": "3031efce31f65c7f501ceeadd0fa16aab3336b37",
+      "sourceTree": "e0f849cf736520d27e31e5c019d5791c88686f1c",
+      "snapshot": "9534392e5875541d5e20b3afba8fd6afceb9d0aa",
+      "runId": 44708472156,
+      "jobId": 136193857355,
+      "status": "SUCCESS",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 33,
+        "fail": 0,
+        "files": 2,
+        "expects": 103
+      },
+      "cleanup": {
+        "jobId": 136194378482,
+        "status": "SUCCESS"
+      },
+      "qualification": "Original 28 coordinator cases plus five closure/race cases. Actual owner interruption and finalizers are awaited; no durable pending input consumed or external completion inferred. Global runtime migration barrier and effect census still required."
     }
   ],
   "infrastructureReconciliation": [
