@@ -26,6 +26,7 @@ export function SfSourceNavigation(props: Readonly<{
   const { t } = useSfPresentation()
   const [busy, setBusy] = createSignal<string>()
   const [failure, setFailure] = createSignal<"denied" | "invalid" | "unavailable">()
+  const pending = { revision: 0 }
   const owner = () => {
     const route = props.route(), state = handle.state()
     if (!route || state.status !== "ready" || !entries.some((entry) => entry.surfaceId === route.surfaceId)) return
@@ -53,29 +54,31 @@ export function SfSourceNavigation(props: Readonly<{
   createEffect(() => {
     void handle.generation()
     void props.route()?.href
+    pending.revision += 1
     setBusy(undefined)
     setFailure(undefined)
   })
   const invoke = async (href: string) => {
     const current = owner(), link = links().find((item) => item.href === href)
     if (!current || !link || busy()) return
-    const generation = handle.generation()
+    const generation = handle.generation(), revision = ++pending.revision
+    const stillCurrent = () => pending.revision === revision && sfSameReadyOwnerSnapshot(handle, current.captured, generation)
     setBusy(link.surfaceId)
     setFailure(undefined)
     try {
       const result = await props.navigation.requestNativeTransition(href, "sidebar", {
         expectedOwnerKey: current.captured.ownerKey,
       })
-      if (!sfSameReadyOwnerSnapshot(handle, current.captured, generation)) return
+      if (!stillCurrent()) return
       if (result.status === "committed" || result.status === "aborted" || result.status === "kept-editing") return
       console.error("Sucafina source navigation did not commit", { status: result.status })
       setFailure(result.status === "denied" ? "denied" : result.status === "invalid-link" ? "invalid" : "unavailable")
     } catch (error) {
-      if (!sfSameReadyOwnerSnapshot(handle, current.captured, generation)) return
+      if (!stillCurrent()) return
       console.error("Sucafina source navigation failed", error instanceof Error ? error.name : "unknown")
       setFailure("unavailable")
     } finally {
-      if (sfSameReadyOwnerSnapshot(handle, current.captured, generation)) setBusy(undefined)
+      if (stillCurrent()) setBusy(undefined)
     }
   }
   return <Show when={links().length}>
