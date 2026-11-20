@@ -14,6 +14,7 @@ import { initializeAbsentSfProductState } from "../../../../product/host-binding
 
 const surfaces = ["dashboard", "planner", "procurement"] as const
 type AuthorityInput = Parameters<typeof createSfProductAuthority>[0]
+type AdmissionMark = { auth: number; getters: number; copies: number; receivers: number }
 
 async function fixture(work: (value: Awaited<ReturnType<typeof setup>>) => Promise<void>) {
   const value = await setup()
@@ -28,6 +29,9 @@ async function setup() {
   for (const surface of surfaces) await persistence.initializeSources(surface)
   await initializeAbsentSfProductState(persistence, randomUUID)
   const calls: Array<{ surface: Surface; roleMap: unknown; request: Request }> = []
+  const getters: number[] = [], copies: number[] = [], receivers: unknown[] = []
+  const boundaries: Array<AdmissionMark & { request: Request; operation: string; inputDigest: string }> = []
+  const mark = (): AdmissionMark => ({ auth: calls.length, getters: getters.length, copies: copies.length, receivers: receivers.length })
   const control: { active: boolean; role: string; hook?: (surface: Surface) => Promise<void> | void } = { active: true, role: "viewer" }
   const controller = new AbortController()
   const request = new Request("https://example.test/product", { signal: controller.signal })
@@ -42,30 +46,61 @@ async function setup() {
       return control.active ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: control.role }] } : null
     },
     environment: async () => ({ at: "2027-02-02T00:00:00Z", id: randomUUID, directory: [] }),
-    commandIdentity: async () => "projection-command", inspectSession: async () => undefined,
+    commandIdentity: async (original, operation, inputDigest) => {
+      // The existing callback separates both complete authorization rounds.
+      boundaries.push({ ...mark(), request: original, operation, inputDigest })
+      return "projection-command"
+    },
+    inspectSession: async () => undefined,
     verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1,
     authorizeDocument: async () => undefined }
   const product = createSfProductAuthority(input)
-  return { directory, store, persistence, sourceInput, input, product, calls, control, request, controller }
+  return { directory, store, persistence, sourceInput, input, product, calls, control, request, controller,
+    getters, copies, receivers, boundaries, mark }
+}
+
+function admissionRounds(f: Awaited<ReturnType<typeof setup>>, before: AdmissionMark, after: AdmissionMark) {
+  expect(before.auth).toBe(0)
+  expect(f.boundaries).toHaveLength(1)
+  const boundary = f.boundaries[0]
+  if (!boundary) throw new Error("Real commandIdentity boundary unavailable")
+  expect(boundary.request).toBe(f.request)
+  expect(boundary.operation).toBe("sf_context_get")
+  expect(boundary.inputDigest).toBe("a".repeat(64))
+  const first = f.calls.slice(before.auth, boundary.auth), second = f.calls.slice(boundary.auth, after.auth)
+  expect([...first, ...second]).toEqual(f.calls.slice(before.auth, after.auth))
+  expect(first.every((call) => call.request === f.request)).toBe(true)
+  expect(second.every((call) => call.request === f.request)).toBe(true)
+  return { first, second, boundary }
 }
 
 test("real authority keeps all three authentications and identical admission revisions on projected and full reads", async () => {
   await fixture(async (f) => {
+    const before = f.mark()
     const baseline = await f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64))
     expect(baseline.status).toBe("ok")
     if (baseline.status !== "ok") throw new Error("Baseline admission unavailable")
-    const originalCalls = f.calls.splice(0)
+    const observed = admissionRounds(f, before, f.mark())
+    const originalCalls = observed.first
     expect(originalCalls.map((call) => call.surface)).toEqual([...surfaces])
+    expect(observed.second.map((call) => call.surface)).toEqual([...surfaces])
+    expect(observed.second).toEqual(originalCalls)
     await f.store.readSnapshotRoot!(async () => {
+      const revalidateStart = f.mark()
       expect(currentSfReadonlyAuthorityData(f.persistence, surfaces)?.current()).toBe(true)
       expect(await f.product.ui.revalidate(baseline.value)).toBe(true)
-      expect(f.calls).toEqual(originalCalls)
+      const revalidated = f.calls.slice(revalidateStart.auth)
+      expect(revalidated).toEqual(originalCalls)
       expect(f.calls.every((call) => call.request === f.request)).toBe(true)
-      f.calls.length = 0
+      expect(f.boundaries).toHaveLength(1)
+      expect([...originalCalls, ...observed.second, ...revalidated]).toEqual(f.calls.slice(before.auth))
+      const stateStart = f.mark()
       const result = await f.product.state.read(f.request, "cases", () => "read callback")
       expect(result.status).toBe("ok")
       if (result.status === "ok") expect(result.value).toBe("read callback")
-      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces, ...surfaces])
+      const stateCalls = f.calls.slice(stateStart.auth)
+      expect(stateCalls.map((call) => call.surface)).toEqual([...surfaces, ...surfaces])
+      expect([...originalCalls, ...observed.second, ...revalidated, ...stateCalls]).toEqual(f.calls.slice(before.auth))
     })
     f.product.ui.finish(baseline.value)
   })
@@ -120,18 +155,29 @@ for (const change of ["consumer", "source", "driver", "composite"] as const) tes
 
 test("opaque input getters and wrappers retain their actual full-copy path", async () => {
   await fixture(async (f) => {
-    const reads = { input: 0, copies: 0 }
     const current = f.persistence.currentSnapshots!
-    const wrapped = { ...f.persistence, currentSnapshots: () => { reads.copies++; return current() } }
-    const opaque = { ...f.input, get persistence() { reads.input++; return wrapped } }
+    const wrapped = { ...f.persistence, currentSnapshots: () => { f.copies.push(f.copies.length + 1); return current() } }
+    const opaque = { ...f.input, get persistence() { f.getters.push(f.getters.length + 1); return wrapped } }
     const product = createSfProductAuthority(opaque)
     await f.store.readSnapshotRoot!(async () => {
-      const before = reads.input
+      // Construction accesses stay before this original measurement boundary.
+      const before = f.mark()
+      expect(before.copies).toBe(0)
       const admitted = await product.ui.admit(f.request, "sf_context_get", "a".repeat(64))
       expect(admitted.status).toBe("ok")
-      expect(reads.input - before).toBe(2)
-      expect(reads.copies).toBe(1)
-      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
+      const after = f.mark(), observed = admissionRounds(f, before, after)
+      const firstGetters = f.getters.slice(before.getters, observed.boundary.getters)
+      const secondGetters = f.getters.slice(observed.boundary.getters, after.getters)
+      const firstCopies = f.copies.slice(before.copies, observed.boundary.copies)
+      const secondCopies = f.copies.slice(observed.boundary.copies, after.copies)
+      expect(firstGetters.length).toBe(2)
+      expect(firstCopies.length).toBe(1)
+      expect(observed.first.map((call) => call.surface)).toEqual([...surfaces])
+      expect(secondGetters.length).toBe(2)
+      expect(secondCopies.length).toBe(1)
+      expect(observed.second.map((call) => call.surface)).toEqual([...surfaces])
+      expect([...firstGetters, ...secondGetters]).toEqual(f.getters.slice(before.getters, after.getters))
+      expect([...firstCopies, ...secondCopies]).toEqual(f.copies.slice(before.copies, after.copies))
       if (admitted.status === "ok") product.ui.finish(admitted.value)
     })
   })
@@ -168,9 +214,13 @@ test("an already poisoned root still authenticates before its original publicati
   await fixture(async (f) => {
     await expect(f.store.readSnapshotRoot!(async () => {
       await f.store.transaction("planner", async () => ({ commit: true, value: undefined })).catch(() => undefined)
+      const before = f.mark()
       const admitted = await f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64))
       expect(admitted.status).toBe("ok")
-      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
+      const observed = admissionRounds(f, before, f.mark())
+      expect(observed.first.map((call) => call.surface)).toEqual([...surfaces])
+      expect(observed.second.map((call) => call.surface)).toEqual([...surfaces])
+      expect(observed.second).toEqual(observed.first)
       if (admitted.status === "ok") f.product.ui.finish(admitted.value)
       return "cannot escape poisoned root"
     })).rejects.toThrow("Nested local write attempted")
@@ -235,16 +285,24 @@ test("an inherited role map uses the real full data receiver on the original fal
       snapshot.data.marker = surface
       return { commit: true, value: undefined }
     })
-    const receivers: unknown[] = []
+    const receivers = f.receivers
     Object.defineProperty(Object.prototype, "roleMap", { configurable: true, get() {
       receivers.push(Object.getOwnPropertyDescriptor(this, "marker")?.value)
       return []
     } })
     try {
+      const before = f.mark()
+      expect(before.receivers).toBe(0)
       const result = await f.store.readSnapshotRoot!(() => f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64)))
       expect(result.status).toBe("ok")
-      expect(receivers).toEqual(surfaces.flatMap((surface) => [surface, surface, surface]))
-      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
+      const after = f.mark(), observed = admissionRounds(f, before, after)
+      const first = receivers.slice(before.receivers, observed.boundary.receivers)
+      const second = receivers.slice(observed.boundary.receivers, after.receivers)
+      expect(first).toEqual(surfaces.flatMap((surface) => [surface, surface, surface]))
+      expect(observed.first.map((call) => call.surface)).toEqual([...surfaces])
+      expect(second).toEqual(surfaces.flatMap((surface) => [surface, surface, surface]))
+      expect(observed.second.map((call) => call.surface)).toEqual([...surfaces])
+      expect([...first, ...second]).toEqual(receivers.slice(before.receivers, after.receivers))
       if (result.status === "ok") f.product.ui.finish(result.value)
     } finally { Reflect.deleteProperty(Object.prototype, "roleMap") }
   })
