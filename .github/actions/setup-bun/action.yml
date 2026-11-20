@@ -9,6 +9,16 @@ inputs:
     description: "Save dependency caches after a miss; enable only for a reusable-ref producer"
     required: false
     default: "false"
+outputs:
+  modules-cache-hit:
+    description: "Whether the installed dependency cache matched the exact key"
+    value: ${{ steps.modules-cache.outputs.cache-hit }}
+  bun-cache-hit:
+    description: "Whether the Bun package cache matched the exact key"
+    value: ${{ steps.bun-cache.outputs.cache-hit }}
+  modules-cache-key:
+    description: "Exact installed dependency cache key used for restore and save"
+    value: ${{ steps.keys.outputs.modules }}
 runs:
   using: "composite"
   steps:
