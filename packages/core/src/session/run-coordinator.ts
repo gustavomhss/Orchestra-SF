@@ -170,9 +170,14 @@ export const make = <Key, E>(options: {
         const result = Deferred.makeUnsafe<A, E2>()
         // The caller hears the effect's own outcome; the entry only settles ownership, so it never fails.
         start(key, next, bind(effect.pipe(Effect.onExit((exit) => Deferred.done(result, exit)), Effect.ignore)))
-        // An interrupt that lands before the effect starts settles only the entry.
-        const stopped = Deferred.await(next.done).pipe(Effect.exit, Effect.andThen(Effect.interrupt))
-        return yield* restore(Effect.raceFirst(Deferred.await(result), stopped)).pipe(Effect.map(Option.some))
+        // The inner result may settle before the private binding's final
+        // authority recheck and before ownership is released. Await that whole
+        // owned execution first; an interrupt before work starts settles only
+        // entry.done and must never wait for a result which cannot be produced.
+        return yield* restore(Deferred.await(next.done).pipe(
+          Effect.orDie,
+          Effect.andThen(Deferred.await(result)),
+        )).pipe(Effect.map(Option.some))
       }))
 
     const stop = (key: Key, expected?: Entry<E>, stopOptions?: InterruptOptions): Effect.Effect<void> =>
