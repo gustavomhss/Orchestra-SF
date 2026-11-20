@@ -1,5 +1,9 @@
 # Teams Profile — execução
 
+## Estado atual — checkpoint bb02bd52
+
+Implementação em andamento, sem qualificação final. A barreira real do host, a preservação dos serviços globais entre Locations e o vault pessoal foram incorporados. O prompt nativo apresentou uma regressão HTTP 500 na descoberta de providers; a correção está isolada em validação. O corte Core ainda não passou e o pool G04 continua vermelho. Os resultados novos e seus limites estão no último checkpoint deste documento e no ledger JSON.
+
 ## Base e plano
 
 - Plano aprovado: `3148412a24f9fbdcc22149b47cf739dbd539eb8d`.
@@ -249,3 +253,78 @@ inventário do artefato final e a qualificação conjunta continuam em implement
 Nenhum corte de dados reais, deploy, aprovação de arquivo protegido, consentimento
 Microsoft ou ambiente Azure foi presumido. Os dez gates permanecem não executados
 no candidato final.
+
+## Checkpoint: grafo único, vault pessoal e corte Core em diagnóstico
+
+Fonte integrada: [bb02bd52](https://github.com/gustavomhss/Orchestra-SF/commit/bb02bd52d654699db2db0bb33ec1dd42c1f0716a).
+A barreira do host passou a acompanhar os produtores reais de Session, processos nativos
+e daemon de schedules. O grafo de Location reutiliza os serviços globais já publicados,
+incluindo Database, Owner e Event, em vez de criar uma segunda identidade de armazenamento.
+O vault usa Owner completo, cifra e AAD próprias, revisão/CAS e autorização atual por ação
+e recurso. A configuração pessoal não herda ambiente, projeto ou conexão de outra pessoa.
+
+| Evidência dirigida | Resultado observado | Run |
+|---|---:|---|
+| Barreira e writers corrigidos, 9 arquivos | 102 pass, 0 fail, 591 assertions | [44715528885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44715528885) |
+| Grafo/host integrado, 11 arquivos | 105 pass, 0 fail, 622 assertions | [44716722668](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44716722668) |
+| HTTP Core e admissão administrativa, 2 arquivos | 9 pass, 0 fail, 108 assertions | [44716726491](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44716726491) |
+| Static integrado em 5f5a3624 | 15 de 16 comandos passaram; guard-dev exige aprovação dos dois paths protegidos | [44716628414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44716628414) |
+| Vault/consumidores Core integrados, 9 arquivos | 58 pass, 0 fail, 259 assertions | [44718722463](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44718722463) |
+| Vault/SF/HTTP integrado, 3 arquivos | 14 pass, 1 fail, 136 assertions | [44718726005](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44718726005) |
+| Pool G04 na fonte 897b0463 | 166 retornos, 40 exceções; gate RED | [44717350835](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44717350835) |
+
+A falha SF foi uma resposta **500**, não um timeout do teste: o boot de um provider tentou
+ler credenciais sem o grant correspondente. A fixture somente registra o prompt e não
+deveria descobrir providers. A correção permanece no consumidor; nenhum grant foi
+acrescentado artificialmente à fixture. Execução positiva de LLM e MCP corporativos
+ainda depende de definição privada explícita e não está qualificada.
+
+O pool G04 executou e finalizou os mesmos 206 corpos dos 40 arquivos, sem finalização
+forçada; Bun contabilizou 166 pass e 41 fail por incluir a recusa final do gate.
+Foram 32 fail→pass e um pass→fail comparados ao checkpoint anterior da frente.
+Os componentes restantes estão sendo montados com autenticação Microsoft real da
+fixture, RoleMaps e grants atuais. Isso não reabre o console HTML aposentado nem
+substitui a navegação instalada exigida em G02.
+
+### Migração: código isolado e falhas preservadas
+
+A branch `teams-core-migration` contém um motor de corte de **Core Sessions**: censo
+coerente, mapa explícito ou quarentena, journal privado, checkpoint físico, barreira
+do mesmo grafo, backfill aditivo, fences de geração e ativação CAS no controle atual.
+A resposta declara `installationComplete: false`; outras categorias não vazias
+continuam recusadas antes do corte. O controle atual fica fora do checkpoint de dados.
+Isso ainda não é uma migração completa nem uma recuperação em produção.
+
+A primeira rodada teve 6 pass e 9 fail, porque a fixture não publicava Database no
+grafo raiz ([44717211717](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44717211717)).
+A segunda teve 9 pass e 6 fail: os journals reais `migration` e `__drizzle_migrations`
+precisavam de classificação técnica explícita
+([44717504228](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44717504228)).
+Os erros foram corrigidos pelos contratos reais, sem descartar conteúdo desconhecido.
+As rodadas seguintes entraram em execução prolongada; o ponto de bloqueio está sendo
+isolado por um diagnóstico Linux com prazo externo menor, sem aumentar prazos dos
+testes nem declarar sucesso. A tipagem também apontou uma referência mutável a
+`prepared`, corrigida capturando o checkpoint verificado antes da closure do journal.
+
+Falta qualificar o corte real, a classificação e migração das demais categorias e
+a recuperação que preserve os efeitos já confirmados. O teste de rollback de dados
+é uma fixture descartável; nenhum banco real de usuário foi cortado ou restaurado.
+
+### Desempenho antes da mudança nativa
+
+A fonte pinada de benchmark `531aad70b4c6f2c2d686c4254c812b2f8395f9ad` fechou os
+18 casos/repetições em três partições, com CPU 30x, carga e deadlines originais:
+
+| Partição | Resultado | Run |
+|---|---:|---|
+| Tabs | 6 pass, 0 fail | [44714633809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44714633809) |
+| Timeline com painel fechado | 6 pass, 0 fail | [44714654393](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44714654393) |
+| Timeline aberta e review | 6 pass, 0 fail | [44707583840](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44707583840) |
+
+Os 18 registros completos estão no JSON, com a fonte e os snapshots. As tentativas
+anteriores vermelhas/incompletas permanecem no histórico. Esse BEFORE pinado ainda
+não prova o AFTER, G02 ou os dez gates no candidato final.
+
+O inventário do arquivo de produção, o detector de resíduos e a composição dos gates
+na mesma fonte/árvore/arquivo continuam pendentes. Microsoft real, Azure descartável,
+aprovação de paths protegidos e release não foram presumidos.

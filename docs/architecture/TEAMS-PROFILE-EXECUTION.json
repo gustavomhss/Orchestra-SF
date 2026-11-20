@@ -11,8 +11,8 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "0e0aafdd2cd6af86a12766c22926c155f275792a",
-    "latestIntegratedSource": "0e0aafdd2cd6af86a12766c22926c155f275792a",
+    "preCheckpointHead": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
+    "latestIntegratedSource": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
     "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
@@ -3924,7 +3924,3974 @@
         "observed": "SKIPPED_BY_EXISTING_PLATFORM_CONDITION",
         "disposition": "Native Windows execution is outside the requested Linux SF scope. Cross-platform string normalization remains executed. Not counted as a pass."
       }
-    ]
+    ],
+    "nativePerformance": {
+      "source": "531aad70b4c6f2c2d686c4254c812b2f8395f9ad",
+      "status": "PINNED_BEFORE_18_PASSED",
+      "runs": [
+        {
+          "part": "tabs",
+          "snapshot": "052aa68eab493e3f6700d08487187aff31cc1c23",
+          "runId": 44714633809,
+          "jobId": 136214771124,
+          "metrics": [
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-55-42-589Z-3621",
+              "name": "benchmarks cold and hot session tab switching",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 0,
+              "context": {
+                "project": "chromium",
+                "platform": "linux"
+              },
+              "metrics": {
+                "results": {
+                  "cold": [
+                    {
+                      "firstDestinationObservedMs": 149.40000000002328,
+                      "firstCorrectObservedMs": 149.40000000002328,
+                      "stableObservedMs": 186.09999999997672,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 95.70000000001164,
+                      "firstCorrectObservedMs": 95.70000000001164,
+                      "stableObservedMs": 163.29999999998836,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 100.09999999997672,
+                      "firstCorrectObservedMs": 100.09999999997672,
+                      "stableObservedMs": 150.70000000001164,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 111,
+                      "firstCorrectObservedMs": 111,
+                      "stableObservedMs": 140.40000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 149.19999999995343,
+                      "firstCorrectObservedMs": 149.19999999995343,
+                      "stableObservedMs": 221.89999999996508,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    }
+                  ],
+                  "hot": [
+                    {
+                      "firstDestinationObservedMs": 71.40000000002328,
+                      "firstCorrectObservedMs": 71.40000000002328,
+                      "stableObservedMs": 155.60000000003492,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 87.70000000001164,
+                      "firstCorrectObservedMs": 87.70000000001164,
+                      "stableObservedMs": 171.60000000003492,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 46.40000000002328,
+                      "firstCorrectObservedMs": 46.40000000002328,
+                      "stableObservedMs": 90.90000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 56.70000000001164,
+                      "firstCorrectObservedMs": 56.70000000001164,
+                      "stableObservedMs": 122,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 53.79999999998836,
+                      "firstCorrectObservedMs": 53.79999999998836,
+                      "stableObservedMs": 111.5,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    }
+                  ]
+                },
+                "summary": {
+                  "cold": {
+                    "firstDestinationObservedMs": {
+                      "min": 95.70000000001164,
+                      "median": 111,
+                      "max": 149.40000000002328,
+                      "missing": 0
+                    },
+                    "firstCorrectObservedMs": {
+                      "min": 95.70000000001164,
+                      "median": 111,
+                      "max": 149.40000000002328,
+                      "missing": 0
+                    },
+                    "stableObservedMs": {
+                      "min": 140.40000000002328,
+                      "median": 163.29999999998836,
+                      "max": 221.89999999996508,
+                      "missing": 0
+                    }
+                  },
+                  "hot": {
+                    "firstDestinationObservedMs": {
+                      "min": 46.40000000002328,
+                      "median": 56.70000000001164,
+                      "max": 87.70000000001164,
+                      "missing": 0
+                    },
+                    "firstCorrectObservedMs": {
+                      "min": 46.40000000002328,
+                      "median": 56.70000000001164,
+                      "max": 87.70000000001164,
+                      "missing": 0
+                    },
+                    "stableObservedMs": {
+                      "min": 90.90000000002328,
+                      "median": 122,
+                      "max": 171.60000000003492,
+                      "missing": 0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-55-42-589Z-3621",
+              "name": "benchmarks v2 session tab switching with and without the review pane",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 0,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "runs": 5,
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "results": {
+                  "closed": {
+                    "cold": [
+                      {
+                        "firstDestinationObservedMs": 118.70000000001164,
+                        "firstCorrectObservedMs": 118.70000000001164,
+                        "stableObservedMs": 155.79999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 100.60000000003492,
+                        "firstCorrectObservedMs": 100.60000000003492,
+                        "stableObservedMs": 164.40000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 100.29999999998836,
+                        "firstCorrectObservedMs": 100.29999999998836,
+                        "stableObservedMs": 157.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 87.20000000001164,
+                        "firstCorrectObservedMs": 87.20000000001164,
+                        "stableObservedMs": 148.10000000003492,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 96.09999999997672,
+                        "firstCorrectObservedMs": 96.09999999997672,
+                        "stableObservedMs": 135,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      }
+                    ],
+                    "hot": [
+                      {
+                        "firstDestinationObservedMs": 44.600000000034925,
+                        "firstCorrectObservedMs": 44.600000000034925,
+                        "stableObservedMs": 95.60000000003492,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 43.29999999998836,
+                        "firstCorrectObservedMs": 43.29999999998836,
+                        "stableObservedMs": 72.90000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 42.29999999998836,
+                        "firstCorrectObservedMs": 42.29999999998836,
+                        "stableObservedMs": 73.70000000001164,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 66.70000000001164,
+                        "firstCorrectObservedMs": 66.70000000001164,
+                        "stableObservedMs": 115.09999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 62.79999999998836,
+                        "firstCorrectObservedMs": 62.79999999998836,
+                        "stableObservedMs": 112.29999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      }
+                    ]
+                  },
+                  "open": {
+                    "cold": [
+                      {
+                        "firstDestinationObservedMs": 97.90000000002328,
+                        "firstCorrectObservedMs": 97.90000000002328,
+                        "stableObservedMs": 185.60000000003492,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 123.80000000004657,
+                        "firstCorrectObservedMs": 123.80000000004657,
+                        "stableObservedMs": 232.80000000004657,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 90.90000000002328,
+                        "firstCorrectObservedMs": 90.90000000002328,
+                        "stableObservedMs": 213.70000000001164,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 90.5,
+                        "firstCorrectObservedMs": 90.5,
+                        "stableObservedMs": 196.79999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 106.09999999997672,
+                        "firstCorrectObservedMs": 106.09999999997672,
+                        "stableObservedMs": 199.59999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      }
+                    ],
+                    "hot": [
+                      {
+                        "firstDestinationObservedMs": 93.89999999996508,
+                        "firstCorrectObservedMs": 93.89999999996508,
+                        "stableObservedMs": 142.59999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 82.79999999998836,
+                        "firstCorrectObservedMs": 82.79999999998836,
+                        "stableObservedMs": 142.19999999995343,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 52,
+                        "firstCorrectObservedMs": 52,
+                        "stableObservedMs": 115.59999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 53.90000000002328,
+                        "firstCorrectObservedMs": 53.90000000002328,
+                        "stableObservedMs": 115.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 78.5,
+                        "firstCorrectObservedMs": 78.5,
+                        "stableObservedMs": 134,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      }
+                    ]
+                  }
+                },
+                "summary": {
+                  "closed": {
+                    "cold": {
+                      "firstDestinationObservedMs": {
+                        "min": 87.20000000001164,
+                        "median": 100.29999999998836,
+                        "max": 118.70000000001164,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 87.20000000001164,
+                        "median": 100.29999999998836,
+                        "max": 118.70000000001164,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 135,
+                        "median": 155.79999999998836,
+                        "max": 164.40000000002328,
+                        "missing": 0
+                      }
+                    },
+                    "hot": {
+                      "firstDestinationObservedMs": {
+                        "min": 42.29999999998836,
+                        "median": 44.600000000034925,
+                        "max": 66.70000000001164,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 42.29999999998836,
+                        "median": 44.600000000034925,
+                        "max": 66.70000000001164,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 72.90000000002328,
+                        "median": 95.60000000003492,
+                        "max": 115.09999999997672,
+                        "missing": 0
+                      }
+                    }
+                  },
+                  "open": {
+                    "cold": {
+                      "firstDestinationObservedMs": {
+                        "min": 90.5,
+                        "median": 97.90000000002328,
+                        "max": 123.80000000004657,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 90.5,
+                        "median": 97.90000000002328,
+                        "max": 123.80000000004657,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 185.60000000003492,
+                        "median": 199.59999999997672,
+                        "max": 232.80000000004657,
+                        "missing": 0
+                      }
+                    },
+                    "hot": {
+                      "firstDestinationObservedMs": {
+                        "min": 52,
+                        "median": 78.5,
+                        "max": 93.89999999996508,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 52,
+                        "median": 78.5,
+                        "max": 93.89999999996508,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 115.5,
+                        "median": 134,
+                        "max": 142.59999999997672,
+                        "missing": 0
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-55-42-589Z-3621",
+              "name": "benchmarks cold and hot session tab switching",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 1,
+              "context": {
+                "project": "chromium",
+                "platform": "linux"
+              },
+              "metrics": {
+                "results": {
+                  "cold": [
+                    {
+                      "firstDestinationObservedMs": 111.09999999997672,
+                      "firstCorrectObservedMs": 111.09999999997672,
+                      "stableObservedMs": 156.5,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 114.29999999998836,
+                      "firstCorrectObservedMs": 114.29999999998836,
+                      "stableObservedMs": 143.5,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 3,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 97.59999999997672,
+                      "firstCorrectObservedMs": 97.59999999997672,
+                      "stableObservedMs": 158.59999999997672,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 119.60000000003492,
+                      "firstCorrectObservedMs": 119.60000000003492,
+                      "stableObservedMs": 171.90000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 111.5,
+                      "firstCorrectObservedMs": 111.5,
+                      "stableObservedMs": 157.90000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    }
+                  ],
+                  "hot": [
+                    {
+                      "firstDestinationObservedMs": 62.70000000001164,
+                      "firstCorrectObservedMs": 62.70000000001164,
+                      "stableObservedMs": 123.5,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 55.79999999998836,
+                      "firstCorrectObservedMs": 55.79999999998836,
+                      "stableObservedMs": 120.90000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 54.40000000002328,
+                      "firstCorrectObservedMs": 54.40000000002328,
+                      "stableObservedMs": 118.20000000001164,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 60.09999999997672,
+                      "firstCorrectObservedMs": 60.09999999997672,
+                      "stableObservedMs": 112.40000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 45,
+                      "firstCorrectObservedMs": 45,
+                      "stableObservedMs": 113.39999999996508,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    }
+                  ]
+                },
+                "summary": {
+                  "cold": {
+                    "firstDestinationObservedMs": {
+                      "min": 97.59999999997672,
+                      "median": 111.5,
+                      "max": 119.60000000003492,
+                      "missing": 0
+                    },
+                    "firstCorrectObservedMs": {
+                      "min": 97.59999999997672,
+                      "median": 111.5,
+                      "max": 119.60000000003492,
+                      "missing": 0
+                    },
+                    "stableObservedMs": {
+                      "min": 143.5,
+                      "median": 157.90000000002328,
+                      "max": 171.90000000002328,
+                      "missing": 0
+                    }
+                  },
+                  "hot": {
+                    "firstDestinationObservedMs": {
+                      "min": 45,
+                      "median": 55.79999999998836,
+                      "max": 62.70000000001164,
+                      "missing": 0
+                    },
+                    "firstCorrectObservedMs": {
+                      "min": 45,
+                      "median": 55.79999999998836,
+                      "max": 62.70000000001164,
+                      "missing": 0
+                    },
+                    "stableObservedMs": {
+                      "min": 112.40000000002328,
+                      "median": 118.20000000001164,
+                      "max": 123.5,
+                      "missing": 0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-55-42-589Z-3621",
+              "name": "benchmarks v2 session tab switching with and without the review pane",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 1,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "runs": 5,
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "results": {
+                  "closed": {
+                    "cold": [
+                      {
+                        "firstDestinationObservedMs": 126,
+                        "firstCorrectObservedMs": 126,
+                        "stableObservedMs": 165,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 97.40000000002328,
+                        "firstCorrectObservedMs": 97.40000000002328,
+                        "stableObservedMs": 150.20000000001164,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 105.70000000001164,
+                        "firstCorrectObservedMs": 105.70000000001164,
+                        "stableObservedMs": 146,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 110.20000000001164,
+                        "firstCorrectObservedMs": 110.20000000001164,
+                        "stableObservedMs": 154,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 96.70000000001164,
+                        "firstCorrectObservedMs": 96.70000000001164,
+                        "stableObservedMs": 151.20000000001164,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      }
+                    ],
+                    "hot": [
+                      {
+                        "firstDestinationObservedMs": 61.59999999997672,
+                        "firstCorrectObservedMs": 61.59999999997672,
+                        "stableObservedMs": 95.90000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 65,
+                        "firstCorrectObservedMs": 65,
+                        "stableObservedMs": 117.10000000003492,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 57,
+                        "firstCorrectObservedMs": 57,
+                        "stableObservedMs": 113.60000000003492,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 69.90000000002328,
+                        "firstCorrectObservedMs": 69.90000000002328,
+                        "stableObservedMs": 134,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 60.899999999965075,
+                        "firstCorrectObservedMs": 60.899999999965075,
+                        "stableObservedMs": 113.59999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      }
+                    ]
+                  },
+                  "open": {
+                    "cold": [
+                      {
+                        "firstDestinationObservedMs": 97.79999999998836,
+                        "firstCorrectObservedMs": 97.79999999998836,
+                        "stableObservedMs": 207.89999999996508,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 119.89999999996508,
+                        "firstCorrectObservedMs": 119.89999999996508,
+                        "stableObservedMs": 219.19999999995343,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 101.89999999996508,
+                        "firstCorrectObservedMs": 101.89999999996508,
+                        "stableObservedMs": 212.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 98.19999999995343,
+                        "firstCorrectObservedMs": 98.19999999995343,
+                        "stableObservedMs": 196.79999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 119.29999999998836,
+                        "firstCorrectObservedMs": 119.29999999998836,
+                        "stableObservedMs": 204.70000000001164,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      }
+                    ],
+                    "hot": [
+                      {
+                        "firstDestinationObservedMs": 98.29999999998836,
+                        "firstCorrectObservedMs": 98.29999999998836,
+                        "stableObservedMs": 154.29999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 86.29999999998836,
+                        "firstCorrectObservedMs": 86.29999999998836,
+                        "stableObservedMs": 143.39999999996508,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 84.40000000002328,
+                        "firstCorrectObservedMs": 84.40000000002328,
+                        "stableObservedMs": 133.29999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 83.80000000004657,
+                        "firstCorrectObservedMs": 83.80000000004657,
+                        "stableObservedMs": 149.30000000004657,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 76,
+                        "firstCorrectObservedMs": 76,
+                        "stableObservedMs": 131.40000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      }
+                    ]
+                  }
+                },
+                "summary": {
+                  "closed": {
+                    "cold": {
+                      "firstDestinationObservedMs": {
+                        "min": 96.70000000001164,
+                        "median": 105.70000000001164,
+                        "max": 126,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 96.70000000001164,
+                        "median": 105.70000000001164,
+                        "max": 126,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 146,
+                        "median": 151.20000000001164,
+                        "max": 165,
+                        "missing": 0
+                      }
+                    },
+                    "hot": {
+                      "firstDestinationObservedMs": {
+                        "min": 57,
+                        "median": 61.59999999997672,
+                        "max": 69.90000000002328,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 57,
+                        "median": 61.59999999997672,
+                        "max": 69.90000000002328,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 95.90000000002328,
+                        "median": 113.60000000003492,
+                        "max": 134,
+                        "missing": 0
+                      }
+                    }
+                  },
+                  "open": {
+                    "cold": {
+                      "firstDestinationObservedMs": {
+                        "min": 97.79999999998836,
+                        "median": 101.89999999996508,
+                        "max": 119.89999999996508,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 97.79999999998836,
+                        "median": 101.89999999996508,
+                        "max": 119.89999999996508,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 196.79999999998836,
+                        "median": 207.89999999996508,
+                        "max": 219.19999999995343,
+                        "missing": 0
+                      }
+                    },
+                    "hot": {
+                      "firstDestinationObservedMs": {
+                        "min": 76,
+                        "median": 84.40000000002328,
+                        "max": 98.29999999998836,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 76,
+                        "median": 84.40000000002328,
+                        "max": 98.29999999998836,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 131.40000000002328,
+                        "median": 143.39999999996508,
+                        "max": 154.29999999998836,
+                        "missing": 0
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-55-42-589Z-3621",
+              "name": "benchmarks cold and hot session tab switching",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 2,
+              "context": {
+                "project": "chromium",
+                "platform": "linux"
+              },
+              "metrics": {
+                "results": {
+                  "cold": [
+                    {
+                      "firstDestinationObservedMs": 107.70000000001164,
+                      "firstCorrectObservedMs": 107.70000000001164,
+                      "stableObservedMs": 147.90000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 128.5,
+                      "firstCorrectObservedMs": 128.5,
+                      "stableObservedMs": 156.89999999996508,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 107.39999999996508,
+                      "firstCorrectObservedMs": 107.39999999996508,
+                      "stableObservedMs": 161.5,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 103.70000000001164,
+                      "firstCorrectObservedMs": 103.70000000001164,
+                      "stableObservedMs": 162.70000000001164,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 111.80000000004657,
+                      "firstCorrectObservedMs": 111.80000000004657,
+                      "stableObservedMs": 161.10000000003492,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 3,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    }
+                  ],
+                  "hot": [
+                    {
+                      "firstDestinationObservedMs": 66.70000000001164,
+                      "firstCorrectObservedMs": 66.70000000001164,
+                      "stableObservedMs": 131.40000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 65.40000000002328,
+                      "firstCorrectObservedMs": 65.40000000002328,
+                      "stableObservedMs": 121.79999999998836,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 56.20000000001164,
+                      "firstCorrectObservedMs": 56.20000000001164,
+                      "stableObservedMs": 128.40000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 1,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 60.5,
+                      "firstCorrectObservedMs": 60.5,
+                      "stableObservedMs": 127,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    },
+                    {
+                      "firstDestinationObservedMs": 59.29999999998836,
+                      "firstCorrectObservedMs": 59.29999999998836,
+                      "stableObservedMs": 114.90000000002328,
+                      "wrongDestinationSamples": 0,
+                      "blankSamples": 2,
+                      "unknownSamples": 0,
+                      "sourceSamples": 0,
+                      "reviewFileHostMissingSamples": 0,
+                      "reviewFileHostReplacedSamples": 0,
+                      "reviewHeaders": [],
+                      "reviewReplacedLevels": []
+                    }
+                  ]
+                },
+                "summary": {
+                  "cold": {
+                    "firstDestinationObservedMs": {
+                      "min": 103.70000000001164,
+                      "median": 107.70000000001164,
+                      "max": 128.5,
+                      "missing": 0
+                    },
+                    "firstCorrectObservedMs": {
+                      "min": 103.70000000001164,
+                      "median": 107.70000000001164,
+                      "max": 128.5,
+                      "missing": 0
+                    },
+                    "stableObservedMs": {
+                      "min": 147.90000000002328,
+                      "median": 161.10000000003492,
+                      "max": 162.70000000001164,
+                      "missing": 0
+                    }
+                  },
+                  "hot": {
+                    "firstDestinationObservedMs": {
+                      "min": 56.20000000001164,
+                      "median": 60.5,
+                      "max": 66.70000000001164,
+                      "missing": 0
+                    },
+                    "firstCorrectObservedMs": {
+                      "min": 56.20000000001164,
+                      "median": 60.5,
+                      "max": 66.70000000001164,
+                      "missing": 0
+                    },
+                    "stableObservedMs": {
+                      "min": 114.90000000002328,
+                      "median": 127,
+                      "max": 131.40000000002328,
+                      "missing": 0
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-55-42-589Z-3621",
+              "name": "benchmarks v2 session tab switching with and without the review pane",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 2,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "runs": 5,
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "results": {
+                  "closed": {
+                    "cold": [
+                      {
+                        "firstDestinationObservedMs": 126,
+                        "firstCorrectObservedMs": 126,
+                        "stableObservedMs": 160.29999999998836,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 85.39999999996508,
+                        "firstCorrectObservedMs": 85.39999999996508,
+                        "stableObservedMs": 146,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 110.29999999998836,
+                        "firstCorrectObservedMs": 110.29999999998836,
+                        "stableObservedMs": 160.59999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 106.90000000002328,
+                        "firstCorrectObservedMs": 106.90000000002328,
+                        "stableObservedMs": 149.80000000004657,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 105.40000000002328,
+                        "firstCorrectObservedMs": 105.40000000002328,
+                        "stableObservedMs": 152.90000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      }
+                    ],
+                    "hot": [
+                      {
+                        "firstDestinationObservedMs": 65.40000000002328,
+                        "firstCorrectObservedMs": 65.40000000002328,
+                        "stableObservedMs": 100,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 61.59999999997672,
+                        "firstCorrectObservedMs": 61.59999999997672,
+                        "stableObservedMs": 100.09999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 75.30000000004657,
+                        "firstCorrectObservedMs": 75.30000000004657,
+                        "stableObservedMs": 123.69999999995343,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 62.699999999953434,
+                        "firstCorrectObservedMs": 62.699999999953434,
+                        "stableObservedMs": 119.90000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 74.39999999990687,
+                        "firstCorrectObservedMs": 74.39999999990687,
+                        "stableObservedMs": 116.09999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [],
+                        "reviewReplacedLevels": []
+                      }
+                    ]
+                  },
+                  "open": {
+                    "cold": [
+                      {
+                        "firstDestinationObservedMs": 103.79999999993015,
+                        "firstCorrectObservedMs": 103.79999999993015,
+                        "stableObservedMs": 199.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 109.80000000004657,
+                        "firstCorrectObservedMs": 109.80000000004657,
+                        "stableObservedMs": 200.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 111,
+                        "firstCorrectObservedMs": 111,
+                        "stableObservedMs": 201.09999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 110.5,
+                        "firstCorrectObservedMs": 110.5,
+                        "stableObservedMs": 199.40000000002328,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 107.80000000004657,
+                        "firstCorrectObservedMs": 107.80000000004657,
+                        "stableObservedMs": 229.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      }
+                    ],
+                    "hot": [
+                      {
+                        "firstDestinationObservedMs": 83,
+                        "firstCorrectObservedMs": 83,
+                        "stableObservedMs": 143.5,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 61.199999999953434,
+                        "firstCorrectObservedMs": 61.199999999953434,
+                        "stableObservedMs": 121.69999999995343,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 43.199999999953434,
+                        "firstCorrectObservedMs": 43.199999999953434,
+                        "stableObservedMs": 82.59999999997672,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 94.79999999993015,
+                        "firstCorrectObservedMs": 94.79999999993015,
+                        "stableObservedMs": 144.29999999993015,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 2,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      },
+                      {
+                        "firstDestinationObservedMs": 59,
+                        "firstCorrectObservedMs": 59,
+                        "stableObservedMs": 132,
+                        "wrongDestinationSamples": 0,
+                        "blankSamples": 1,
+                        "unknownSamples": 0,
+                        "sourceSamples": 0,
+                        "reviewFileHostMissingSamples": 0,
+                        "reviewFileHostReplacedSamples": 0,
+                        "reviewHeaders": [
+                          "Mgenerated-000.tssrc/review/+3-3"
+                        ],
+                        "reviewReplacedLevels": []
+                      }
+                    ]
+                  }
+                },
+                "summary": {
+                  "closed": {
+                    "cold": {
+                      "firstDestinationObservedMs": {
+                        "min": 85.39999999996508,
+                        "median": 106.90000000002328,
+                        "max": 126,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 85.39999999996508,
+                        "median": 106.90000000002328,
+                        "max": 126,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 146,
+                        "median": 152.90000000002328,
+                        "max": 160.59999999997672,
+                        "missing": 0
+                      }
+                    },
+                    "hot": {
+                      "firstDestinationObservedMs": {
+                        "min": 61.59999999997672,
+                        "median": 65.40000000002328,
+                        "max": 75.30000000004657,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 61.59999999997672,
+                        "median": 65.40000000002328,
+                        "max": 75.30000000004657,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 100,
+                        "median": 116.09999999997672,
+                        "max": 123.69999999995343,
+                        "missing": 0
+                      }
+                    }
+                  },
+                  "open": {
+                    "cold": {
+                      "firstDestinationObservedMs": {
+                        "min": 103.79999999993015,
+                        "median": 109.80000000004657,
+                        "max": 111,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 103.79999999993015,
+                        "median": 109.80000000004657,
+                        "max": 111,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 199.40000000002328,
+                        "median": 200.5,
+                        "max": 229.5,
+                        "missing": 0
+                      }
+                    },
+                    "hot": {
+                      "firstDestinationObservedMs": {
+                        "min": 43.199999999953434,
+                        "median": 61.199999999953434,
+                        "max": 94.79999999993015,
+                        "missing": 0
+                      },
+                      "firstCorrectObservedMs": {
+                        "min": 43.199999999953434,
+                        "median": 61.199999999953434,
+                        "max": 94.79999999993015,
+                        "missing": 0
+                      },
+                      "stableObservedMs": {
+                        "min": 82.59999999997672,
+                        "median": 132,
+                        "max": 144.29999999993015,
+                        "missing": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "status": "SUCCESS",
+          "pass": 6,
+          "fail": 0
+        },
+        {
+          "part": "closed",
+          "snapshot": "5ccad83a88e28a8530d06a6014ae49a0af9731f1",
+          "runId": 44714654393,
+          "jobId": 136214850274,
+          "metrics": [
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-56-07-053Z-3623",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review pane closed",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 0,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "closed",
+                "reviewDiffs": 0
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 507.52382899999975,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 255017.40000000002,
+                "deltasPerSecond": 0.6274081690112125,
+                "rafGapSamples": 1011,
+                "rafCallbackRate": 3.8526335284292723,
+                "observedProgressWindowRafCallbackRate": 3.916363609909168,
+                "observedProgressWindowRafGapP95Ms": 983.2999999999884,
+                "observedProgressWindowRafGaps": 969,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 51,
+                "rafGapP50Ms": 133.29999999998836,
+                "rafGapP95Ms": 983.3000000000175,
+                "rafGapP99Ms": 1083.2999999999884,
+                "maxRafGapMs": 1266.6,
+                "rafGapsOver33Ms": 849,
+                "rafGapsOver50Ms": 760,
+                "missedFrameBudgetEquivalents": 14736,
+                "longestRafGapOver33MsStreak": 60,
+                "longTaskCount": 487,
+                "longTaskTimeMs": 46096,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73024,
+                    "scrollHeight": 73543,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73451,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": null
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-56-07-053Z-3623",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review diffs and pane closed",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 0,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "closed",
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 932.8040189999738,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 276666.1,
+                "deltasPerSecond": 0.5783144375114986,
+                "rafGapSamples": 966,
+                "rafCallbackRate": 3.4084578857118384,
+                "observedProgressWindowRafCallbackRate": 3.4308297929694724,
+                "observedProgressWindowRafGapP95Ms": 1016.5999999999985,
+                "observedProgressWindowRafGaps": 924,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 51,
+                "rafGapP50Ms": 150.09999999999127,
+                "rafGapP95Ms": 1016.6000000000058,
+                "rafGapP99Ms": 1150,
+                "maxRafGapMs": 1399.8999999999942,
+                "rafGapsOver33Ms": 852,
+                "rafGapsOver50Ms": 761,
+                "missedFrameBudgetEquivalents": 16041,
+                "longestRafGapOver33MsStreak": 59,
+                "longTaskCount": 649,
+                "longTaskTimeMs": 66809,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 72997,
+                    "scrollHeight": 73516,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73424,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": null
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-56-07-053Z-3623",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review pane closed",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 1,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "closed",
+                "reviewDiffs": 0
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 1009.0007099999998,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 274423.30000000005,
+                "deltasPerSecond": 0.5830408715294947,
+                "rafGapSamples": 959,
+                "rafCallbackRate": 3.4139266849454732,
+                "observedProgressWindowRafCallbackRate": 3.4209098722972473,
+                "observedProgressWindowRafGapP95Ms": 1016.5999999999767,
+                "observedProgressWindowRafGaps": 915,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 53,
+                "rafGapP50Ms": 166.60000000000582,
+                "rafGapP95Ms": 1016.5999999999985,
+                "rafGapP99Ms": 1133.300000000003,
+                "maxRafGapMs": 1283.2999999999884,
+                "rafGapsOver33Ms": 851,
+                "rafGapsOver50Ms": 763,
+                "missedFrameBudgetEquivalents": 15896,
+                "longestRafGapOver33MsStreak": 68,
+                "longTaskCount": 611,
+                "longTaskTimeMs": 57452,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73024,
+                    "scrollHeight": 73543,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73451,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": null
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-56-07-053Z-3623",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review diffs and pane closed",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 1,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "closed",
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 972.7495939999935,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 288074.5,
+                "deltasPerSecond": 0.5554118813015383,
+                "rafGapSamples": 930,
+                "rafCallbackRate": 3.157195758358421,
+                "observedProgressWindowRafCallbackRate": 3.1752963372064813,
+                "observedProgressWindowRafGapP95Ms": 1000,
+                "observedProgressWindowRafGaps": 890,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 51,
+                "rafGapP50Ms": 199.89999999999418,
+                "rafGapP95Ms": 1016.5999999999767,
+                "rafGapP99Ms": 1116.6000000000058,
+                "maxRafGapMs": 1383.2999999999884,
+                "rafGapsOver33Ms": 851,
+                "rafGapsOver50Ms": 767,
+                "missedFrameBudgetEquivalents": 16746,
+                "longestRafGapOver33MsStreak": 57,
+                "longTaskCount": 717,
+                "longTaskTimeMs": 70536,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73043,
+                    "scrollHeight": 73562,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73470,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": null
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-56-07-053Z-3623",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review pane closed",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 2,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "closed",
+                "reviewDiffs": 0
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 1022.8662090000003,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 275735.30000000005,
+                "deltasPerSecond": 0.5802666542876446,
+                "rafGapSamples": 943,
+                "rafCallbackRate": 3.343122098831199,
+                "observedProgressWindowRafCallbackRate": 3.375110110636482,
+                "observedProgressWindowRafGapP95Ms": 1016.6000000000058,
+                "observedProgressWindowRafGaps": 905,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 51,
+                "rafGapP50Ms": 166.6999999999971,
+                "rafGapP95Ms": 1016.6999999999971,
+                "rafGapP99Ms": 1100,
+                "maxRafGapMs": 1233.283999999985,
+                "rafGapsOver33Ms": 835,
+                "rafGapsOver50Ms": 753,
+                "missedFrameBudgetEquivalents": 15983,
+                "longestRafGapOver33MsStreak": 41,
+                "longTaskCount": 605,
+                "longTaskTimeMs": 56790,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73024,
+                    "scrollHeight": 73543,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73451,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": null
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-56-07-053Z-3623",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review diffs and pane closed",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 2,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "closed",
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 1033.838458000042,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 261399.80000000005,
+                "deltasPerSecond": 0.612089221185326,
+                "rafGapSamples": 1001,
+                "rafCallbackRate": 3.7356643321463996,
+                "observedProgressWindowRafCallbackRate": 3.766121496337466,
+                "observedProgressWindowRafGapP95Ms": 966.6999999999971,
+                "observedProgressWindowRafGaps": 958,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 51,
+                "rafGapP50Ms": 133.32800000003772,
+                "rafGapP95Ms": 983.2999999999884,
+                "rafGapP99Ms": 1066.5999999999767,
+                "maxRafGapMs": 1249.8999999999942,
+                "rafGapsOver33Ms": 859,
+                "rafGapsOver50Ms": 750,
+                "missedFrameBudgetEquivalents": 15079,
+                "longestRafGapOver33MsStreak": 50,
+                "longTaskCount": 574,
+                "longTaskTimeMs": 51890,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73043,
+                    "scrollHeight": 73562,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73470,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": null
+              }
+            }
+          ],
+          "status": "SUCCESS",
+          "pass": 6,
+          "fail": 0
+        },
+        {
+          "part": "open-review",
+          "snapshot": "df36e814136414cfebbaa6de07a31ffa2bfdb7d6",
+          "runId": 44707583840,
+          "jobId": 136190944018,
+          "metrics": [
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-05-42-163Z-3645",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review pane open",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 0,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "open",
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 998.8265780000002,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 347272.8999999999,
+                "deltasPerSecond": 0.460732755132923,
+                "rafGapSamples": 889,
+                "rafCallbackRate": 2.5016187358580457,
+                "observedProgressWindowRafCallbackRate": 2.505387024751099,
+                "observedProgressWindowRafGapP95Ms": 1149.8999999999942,
+                "observedProgressWindowRafGaps": 849,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 53,
+                "rafGapP50Ms": 250,
+                "rafGapP95Ms": 1150,
+                "rafGapP99Ms": 1383.2000000000116,
+                "maxRafGapMs": 2033.2999999999884,
+                "rafGapsOver33Ms": 838,
+                "rafGapsOver50Ms": 790,
+                "missedFrameBudgetEquivalents": 20438,
+                "longestRafGapOver33MsStreak": 67,
+                "longTaskCount": 991,
+                "longTaskTimeMs": 142500,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73339,
+                    "scrollHeight": 73858,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73766,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": {
+                  "summary": {
+                    "samples": 12,
+                    "firstReadyObservedMs": 329.4000000000233,
+                    "stableReadyObservedMs": 391.29999999993015,
+                    "notReadySamples": 6,
+                    "maxDiffViewers": 1,
+                    "maxDiffLines": 0,
+                    "maxCodeBlocks": 0
+                  },
+                  "samples": [
+                    {
+                      "observedAtMs": 0.5999999999767169,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 15.900000000023283,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 30.900000000023283,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 47.699999999953434,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 101.69999999995343,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 152.79999999993015,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 329.4000000000233,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 360.4000000000233,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 391.29999999993015,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 451.9000000000233,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 460.69999999995343,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 467.5999999999767,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-05-42-163Z-3645",
+              "name": "performance: review pane > loads v2 review diffs and switches active files",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 0,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "historyTurns": 72,
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "open": {
+                  "summary": {
+                    "samples": 12,
+                    "firstReadyObservedMs": 300.10000000009313,
+                    "stableReadyObservedMs": 343.30000000004657,
+                    "notReadySamples": 7,
+                    "maxDiffViewers": 1,
+                    "maxDiffLines": 0,
+                    "maxCodeBlocks": 0
+                  },
+                  "samples": [
+                    {
+                      "observedAtMs": 2.800000000046566,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 19.5,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 36.60000000009313,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 58.40000000002328,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 98,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 138.10000000009313,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 141.60000000009313,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 300.10000000009313,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 329.80000000004657,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 343.30000000004657,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 370.30000000004657,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 413.30000000004657,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    }
+                  ]
+                },
+                "switches": [
+                  {
+                    "summary": {
+                      "samples": 8,
+                      "firstReadyObservedMs": 76.39999999990687,
+                      "stableReadyObservedMs": 178,
+                      "notReadySamples": 4,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 0.09999999997671694,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 8.599999999976717,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 22.199999999953434,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 39.199999999953434,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 76.39999999990687,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 145.89999999990687,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 178,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 189,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  },
+                  {
+                    "summary": {
+                      "samples": 9,
+                      "firstReadyObservedMs": 88.30000000004657,
+                      "stableReadyObservedMs": 176.09999999997672,
+                      "notReadySamples": 4,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 0.19999999995343387,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 16.699999999953434,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 33.40000000002328,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 50.300000000046566,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 88.30000000004657,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 143,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 176.09999999997672,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 183.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 202.90000000002328,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  },
+                  {
+                    "summary": {
+                      "samples": 6,
+                      "firstReadyObservedMs": 161.80000000004657,
+                      "stableReadyObservedMs": 244,
+                      "notReadySamples": 2,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 21.900000000023283,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 53.70000000006985,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 161.80000000004657,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 205.70000000006985,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 244,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 298.4000000000233,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-05-42-163Z-3645",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review pane open",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 1,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "open",
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 963.5406149999999,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 344635.19999999995,
+                "deltasPerSecond": 0.4642590193920993,
+                "rafGapSamples": 880,
+                "rafCallbackRate": 2.4925337285132265,
+                "observedProgressWindowRafCallbackRate": 2.5119914146376265,
+                "observedProgressWindowRafGapP95Ms": 1133.3999999999942,
+                "observedProgressWindowRafGaps": 845,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 57,
+                "rafGapP50Ms": 266.6000000000349,
+                "rafGapP95Ms": 1150,
+                "rafGapP99Ms": 1283.2999999999884,
+                "maxRafGapMs": 1699.9319999999716,
+                "rafGapsOver33Ms": 818,
+                "rafGapsOver50Ms": 766,
+                "missedFrameBudgetEquivalents": 20308,
+                "longestRafGapOver33MsStreak": 77,
+                "longTaskCount": 994,
+                "longTaskTimeMs": 139429,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73339,
+                    "scrollHeight": 73858,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73766,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": {
+                  "summary": {
+                    "samples": 13,
+                    "firstReadyObservedMs": 348.20000000006985,
+                    "stableReadyObservedMs": 387.5,
+                    "notReadySamples": 9,
+                    "maxDiffViewers": 1,
+                    "maxDiffLines": 0,
+                    "maxCodeBlocks": 0
+                  },
+                  "samples": [
+                    {
+                      "observedAtMs": 1.7000000000698492,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 16.100000000093132,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 66.70000000006985,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 69,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 82.90000000002328,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 99.80000000004657,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 145,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 176.40000000002328,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 179.80000000004657,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 348.20000000006985,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 381.30000000004657,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 387.5,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 405.60000000009313,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-05-42-163Z-3645",
+              "name": "performance: review pane > loads v2 review diffs and switches active files",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 1,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "historyTurns": 72,
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "open": {
+                  "summary": {
+                    "samples": 9,
+                    "firstReadyObservedMs": 309.5,
+                    "stableReadyObservedMs": 378.5,
+                    "notReadySamples": 6,
+                    "maxDiffViewers": 1,
+                    "maxDiffLines": 0,
+                    "maxCodeBlocks": 0
+                  },
+                  "samples": [
+                    {
+                      "observedAtMs": 2.800000000046566,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 19.200000000186265,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 36.4000000001397,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 83.5,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 121.60000000009313,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 124,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 309.5,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 337.20000000018626,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 378.5,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    }
+                  ]
+                },
+                "switches": [
+                  {
+                    "summary": {
+                      "samples": 8,
+                      "firstReadyObservedMs": 83,
+                      "stableReadyObservedMs": 193,
+                      "notReadySamples": 3,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 17.4000000001397,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 31.100000000093132,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 47.60000000009313,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 83,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 151.60000000009313,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 193,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 201,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 219.80000000004657,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  },
+                  {
+                    "summary": {
+                      "samples": 6,
+                      "firstReadyObservedMs": 72.39999999990687,
+                      "stableReadyObservedMs": 130.5999999998603,
+                      "notReadySamples": 3,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 8.699999999953434,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 24.5999999998603,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 41.5999999998603,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 72.39999999990687,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 86.19999999995343,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 130.5999999998603,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  },
+                  {
+                    "summary": {
+                      "samples": 8,
+                      "firstReadyObservedMs": 141.19999999995343,
+                      "stableReadyObservedMs": 221.80000000004657,
+                      "notReadySamples": 4,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 25.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 27.399999999906868,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 40.89999999990687,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 76.89999999990687,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 141.19999999995343,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 199.39999999990687,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 221.80000000004657,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 279.19999999995343,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-05-42-163Z-3645",
+              "name": "performance: session timeline streaming > streams assistant text in v2 with review pane open",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 2,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "cpuThrottle": 30,
+                "profileCPU": false,
+                "profileVisual": false,
+                "minimal": false,
+                "queuedDeltas": 160,
+                "historyTurns": 320,
+                "eventBatch": 1,
+                "reviewPane": "open",
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "endToEndInitialContentObservedMs": 984.9082189999999,
+                "capabilities": {
+                  "visual": false,
+                  "geometry": true
+                },
+                "completionObservedMs": 335329.40000000014,
+                "deltasPerSecond": 0.47714277364287155,
+                "rafGapSamples": 882,
+                "rafCallbackRate": 2.5696762470140615,
+                "observedProgressWindowRafCallbackRate": 2.5912426400448862,
+                "observedProgressWindowRafGapP95Ms": 1083.3999999999942,
+                "observedProgressWindowRafGaps": 847,
+                "maxObservedProgressIndex": 160,
+                "observedProgressTransitions": 53,
+                "rafGapP50Ms": 266.5999999999767,
+                "rafGapP95Ms": 1099.8999999999996,
+                "rafGapP99Ms": 1316.5999999999913,
+                "maxRafGapMs": 1449.9000000000233,
+                "rafGapsOver33Ms": 833,
+                "rafGapsOver50Ms": 774,
+                "missedFrameBudgetEquivalents": 19721,
+                "longestRafGapOver33MsStreak": 164,
+                "longTaskCount": 966,
+                "longTaskTimeMs": 141196,
+                "visual": null,
+                "geometry": {
+                  "maxDistancePx": 0,
+                  "finalDistancePx": 0,
+                  "final": {
+                    "scrollTop": 73339,
+                    "scrollHeight": 73858,
+                    "clientHeight": 519,
+                    "distance": 0,
+                    "virtualHeight": 73766,
+                    "headerHeight": 92
+                  },
+                  "distanceTransitionsPx": [
+                    0
+                  ],
+                  "bottomDriftTransitions": 0,
+                  "blankSamples": 0
+                },
+                "rowReplaced": false,
+                "markdownReplaced": false,
+                "domTextCharacters": 3515,
+                "deliveredDeltas": 160,
+                "pendingDeltas": 0,
+                "reviewPane": {
+                  "summary": {
+                    "samples": 14,
+                    "firstReadyObservedMs": 360.39999999990687,
+                    "stableReadyObservedMs": 407.19999999995343,
+                    "notReadySamples": 9,
+                    "maxDiffViewers": 1,
+                    "maxDiffLines": 0,
+                    "maxCodeBlocks": 0
+                  },
+                  "samples": [
+                    {
+                      "observedAtMs": 2.8999999999068677,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 18.399999999906868,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 35.299999999813735,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 51.699999999953434,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 95.19999999995343,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 98.79999999981374,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 145.0999999998603,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 181.0999999998603,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 184.69999999995343,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 360.39999999990687,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 379.5999999998603,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 407.19999999995343,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 456.5,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 504.5999999998603,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "schemaVersion": 2,
+              "runID": "2026-11-20T09-05-42-163Z-3645",
+              "name": "performance: review pane > loads v2 review diffs and switches active files",
+              "status": "passed",
+              "expectedStatus": "passed",
+              "retry": 0,
+              "repeatEachIndex": 2,
+              "context": {
+                "project": "chromium",
+                "platform": "linux",
+                "historyTurns": 72,
+                "reviewDiffs": 72
+              },
+              "metrics": {
+                "open": {
+                  "summary": {
+                    "samples": 10,
+                    "firstReadyObservedMs": 274.19999999995343,
+                    "stableReadyObservedMs": 339.5,
+                    "notReadySamples": 6,
+                    "maxDiffViewers": 1,
+                    "maxDiffLines": 0,
+                    "maxCodeBlocks": 0
+                  },
+                  "samples": [
+                    {
+                      "observedAtMs": 3.300000000046566,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 18.899999999906868,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 36,
+                      "panelVisible": false,
+                      "header": "",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 82.19999999995343,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 113.80000000004657,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 117.69999999995343,
+                      "panelVisible": true,
+                      "header": "Review0ContextTasks0AppsFiles Changed 0All filesCreate PRExport diffGit changesLoading...Loading changes...",
+                      "diffViewers": 0,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": false
+                    },
+                    {
+                      "observedAtMs": 274.19999999995343,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 311.5,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 339.5,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    },
+                    {
+                      "observedAtMs": 341.80000000004657,
+                      "panelVisible": true,
+                      "header": "Mgenerated-000.tssrc/review/+3-3",
+                      "diffViewers": 1,
+                      "diffLines": 0,
+                      "codeBlocks": 0,
+                      "ready": true
+                    }
+                  ]
+                },
+                "switches": [
+                  {
+                    "summary": {
+                      "samples": 8,
+                      "firstReadyObservedMs": 85.69999999995343,
+                      "stableReadyObservedMs": 184.5,
+                      "notReadySamples": 4,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 0.19999999995343387,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 16.100000000093132,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 32.10000000009313,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 48.699999999953434,
+                        "panelVisible": true,
+                        "header": "Mgenerated-000.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 85.69999999995343,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 146.4000000001397,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 184.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 199.10000000009313,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  },
+                  {
+                    "summary": {
+                      "samples": 10,
+                      "firstReadyObservedMs": 106.70000000018626,
+                      "stableReadyObservedMs": 202,
+                      "notReadySamples": 6,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 1.3000000000465661,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 19.300000000046566,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 33.700000000186265,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 47.800000000046566,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 62.700000000186265,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 79.4000000001397,
+                        "panelVisible": true,
+                        "header": "Mgenerated-001.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 106.70000000018626,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 166.70000000018626,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 202,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 212.9000000001397,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  },
+                  {
+                    "summary": {
+                      "samples": 7,
+                      "firstReadyObservedMs": 112.5,
+                      "stableReadyObservedMs": 187.5,
+                      "notReadySamples": 3,
+                      "maxDiffViewers": 1,
+                      "maxDiffLines": 0,
+                      "maxCodeBlocks": 0
+                    },
+                    "samples": [
+                      {
+                        "observedAtMs": 3.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 21.700000000186265,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 56.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-002.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": false
+                      },
+                      {
+                        "observedAtMs": 112.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 167,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 187.5,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      },
+                      {
+                        "observedAtMs": 219.30000000004657,
+                        "panelVisible": true,
+                        "header": "Mgenerated-003.tssrc/review/+3-3",
+                        "diffViewers": 1,
+                        "diffLines": 0,
+                        "codeBlocks": 0,
+                        "ready": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "status": "SUCCESS",
+          "pass": 6,
+          "fail": 0
+        }
+      ],
+      "qualification": "Three immutable partitions preserve six benchmark cases x three repeats, original deadlines, CPU30x and timeline history/delta workload where applicable. Earlier failed/partial combined runs are retained in prior evidence. This is a pinned performance BEFORE source, not all final candidate gates."
+    }
   },
   "workPackages": [
     {
@@ -3991,19 +7958,19 @@
       "id": "WP2",
       "owner": "teams-shell-web",
       "scope": "Per-window Team selection, full-owner private state, native Solid Web composition and independent admin",
-      "status": "DIRECTED_156_PASSED_REAL_BUILT_WEB_G02_RED"
+      "status": "NATIVE_UI_AND_ADMIN_DIRECTED_PASSED_ISOLATED_G02_RED"
     },
     {
       "id": "WP3",
       "owner": "teams-session-owner/teams-session-runtime",
       "scope": "Durable SessionOwner, private request/worker admission, canonical namespace, mounted HTTP/SDK and technical operator refusal; TeamConfig and remaining effect/capability consumers unfinished.",
-      "status": "SESSION_HTTP_SDK_INTEGRATED_DIRECTED_PASSED_REMAINDER_IMPLEMENTING"
+      "status": "HOST_OWNER_GRAPH_VAULT_INTEGRATED_NATIVE_BOOT_REGRESSION_PENDING"
     },
     {
       "id": "WP4-GENERATION",
       "owner": "teams-generation-fence",
       "scope": "Private generation control, SQL fence, canonical census and opaque migration administration are integrated. Current roleMap/access and coupled C08 frontier survive business restore; Core journal/cut, global drain and operational restore remain unfinished.",
-      "status": "INTEGRATED_DIRECTED_PASSED_NO_CUTOVER"
+      "status": "HOST_BARRIER_INTEGRATED_CORE_CUT_ISOLATED_UNQUALIFIED"
     }
   ],
   "gates": [
@@ -15797,8 +19764,21 @@
       "source": "9b30e68524acad285fcddb54b612f3a16cf7c862",
       "sourceTree": "02c74f2b4c30cff668a0861ae1fe1613da8a3afb",
       "snapshot": "e54fe5c5ef322c3b542ca1c0effeaaec380cbf51",
-      "status": "RUNNING",
-      "qualification": "Directed candidate only. Corporate automatic scheduler remains denied without independently admitted current authority; local drain receipt cannot settle unknown external effects."
+      "status": "FAILURE",
+      "qualification": "Original tests and process ownership passed; real schedule INSERT failed because capability.create had not opened an IMMEDIATE transaction. Fixed production transaction boundary, no assertion weakened.",
+      "runId": 44714768164,
+      "jobId": 136215215808,
+      "bunReported": {
+        "pass": 101,
+        "fail": 1,
+        "expects": 572,
+        "tests": 102,
+        "files": 9
+      },
+      "cleanup": {
+        "jobId": 136216000235,
+        "status": "SUCCESS"
+      }
     },
     {
       "id": "G04_DECISION_ANALYSIS_HTTP",
@@ -15850,6 +19830,475 @@
       "jobId": 136205676437,
       "status": "FAILURE",
       "qualification": "No errors in the nine owned paths. Old reply-identity expected unknown and inherited admin/policy brand errors; integrated over current typed main and explicit expect<unknown> preserves runtime exact equality. Two protected files remain gated."
+    },
+    {
+      "id": "BACKGROUND_OWNER_FENCED_CREATE",
+      "source": "4f3b34c38eb586c940450877ef263c740f9ed455",
+      "sourceTree": "394ee36e5133745fdac380823d9ad7a4bfdfb8c2",
+      "snapshot": "76ce244a97233d4b4eb315069e555be89c6a7e2f",
+      "runId": 44715528885,
+      "jobId": 136217825525,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 102,
+        "fail": 0,
+        "expects": 591,
+        "tests": 102,
+        "files": 9
+      },
+      "cleanup": {
+        "jobId": 136218801480,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual host/process drain and current full owner/schedule SQL fence pass. Integration adds typed PlatformError-to-defect handling and the real AgentV2 codec; all data/assertions unchanged."
+    },
+    {
+      "id": "HOST_GRAPH_INTEGRATED_CORE",
+      "source": "5f5a362486f18e9b7cd7a832933fc747b8e66e47",
+      "sourceTree": "490757503c23c3c0aade956d2c6cd819492ccef8",
+      "snapshot": "5aa31fb30b0db27dd63f6ea2126786aa64406991",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/host-maintenance.test.ts",
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "./test/session-stop-runs.test.ts",
+          "./test/session-process.test.ts",
+          "./test/scheduled-task.test.ts",
+          "./test/scheduled-task-capability.test.ts",
+          "./test/session-background-owner.test.ts",
+          "./test/session-team-owner.test.ts",
+          "./test/location-global-context.test.ts",
+          "./test/location-startup-globals.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "runId": 44716722668,
+      "jobId": 136221887346,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 105,
+        "fail": 0,
+        "expects": 622,
+        "tests": 105,
+        "files": 11
+      },
+      "cleanup": {
+        "jobId": 136222946912,
+        "status": "SUCCESS"
+      },
+      "qualification": "Same integrated host maintenance, current owner, schedules, coordinator, warm/cold Location singleton identity and startup boundaries. Not a live cut."
+    },
+    {
+      "id": "HOST_GRAPH_INTEGRATED_HTTP",
+      "source": "5f5a362486f18e9b7cd7a832933fc747b8e66e47",
+      "sourceTree": "490757503c23c3c0aade956d2c6cd819492ccef8",
+      "snapshot": "e76bebef7b2bd31d40ad496ed18e59ec5dd48eb9",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web-session.test.ts",
+          "./Sucafinav1/test/teams-profile/migration-authority.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "runId": 44716726491,
+      "jobId": 136221900435,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 9,
+        "fail": 0,
+        "expects": 108,
+        "tests": 9,
+        "files": 2
+      },
+      "cleanup": {
+        "jobId": 136222817395,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual Core HTTP prompt admission and incremental SSE plus current migration administration. Recording-only execution, no model or tenant LIVE qualification."
+    },
+    {
+      "id": "CORE_MIGRATION_FIRST_FIXTURE",
+      "source": "f4999eca26dc27b6ed7fa3886baf7dd459490f59",
+      "sourceTree": "0778b4362cecfaa0ae7198269f0a156d084a1a8f",
+      "snapshot": "d630623db79ff97b4b5a7aa94ad31040f62da767",
+      "runId": 44717211717,
+      "jobId": 136223544252,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 6,
+        "fail": 9,
+        "expects": 92,
+        "tests": 15,
+        "files": 2
+      },
+      "cleanup": {
+        "jobId": 136224014713,
+        "status": "SUCCESS"
+      },
+      "qualification": "All nine new migration cases failed before the migration engine because the fixture did not publish Database at its root; six original administration cases passed. Fixed the actual graph export in f625."
+    },
+    {
+      "id": "HOST_GRAPH_INTEGRATED_STATIC",
+      "source": "5f5a362486f18e9b7cd7a832933fc747b8e66e47",
+      "sourceTree": "490757503c23c3c0aade956d2c6cd819492ccef8",
+      "snapshot": "5d9ca9ef21154b0356bb7b21e5df90ea49349cd7",
+      "runId": 44716628414,
+      "jobId": 136221563098,
+      "status": "FAILURE",
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0
+        },
+        {
+          "id": "client-generated",
+          "status": 0
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 0
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0
+        },
+        {
+          "id": "typecheck-server",
+          "status": 0
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 0
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0
+        },
+        {
+          "id": "e2e-config",
+          "status": 0
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 0
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 0
+        },
+        {
+          "id": "web-build",
+          "status": 0
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0
+        },
+        {
+          "id": "guard-dev",
+          "status": 1
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0
+        }
+      ],
+      "qualification": "All 15 nonprotected-command outcomes passed; guard-dev still rejects the two protected paths. No approval supplied or inferred."
+    },
+    {
+      "id": "CONNECTIONS_INTEGRATED_CORE",
+      "source": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
+      "sourceTree": "f5c199451d1a9a80089c429e2d25eb8b65f4ca2e",
+      "snapshot": "ad170b94d53b280f24f0fdd8dc9af35fb1c1b6c4",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/credential.test.ts",
+          "./test/credential-inherit.test.ts",
+          "./test/credential-at-rest.test.ts",
+          "./test/mcp/auth.test.ts",
+          "./test/mcp/oauth-provider.test.ts",
+          "./test/mcp/oauth-callback.test.ts",
+          "./test/integration.test.ts",
+          "./test/team-connections.test.ts",
+          "./test/team-provider-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "runId": 44718722463,
+      "jobId": 136228643177,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 58,
+        "fail": 0,
+        "expects": 259,
+        "tests": 58,
+        "files": 9
+      },
+      "cleanup": {
+        "jobId": 136229419772,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual current-owner personal connection store, Credential/MCP Auth/Integration consumers and fail-closed corporate provider boundaries. Not positive model/MCP execution."
+    },
+    {
+      "id": "CONNECTIONS_INTEGRATED_SF",
+      "source": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
+      "sourceTree": "f5c199451d1a9a80089c429e2d25eb8b65f4ca2e",
+      "snapshot": "46867023e4b7cf758710039445843b3fcb9226ec",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/connection-store.test.ts",
+          "./Sucafinav1/test/teams-profile/native-web-session.test.ts",
+          "./Sucafinav1/test/teams-profile/configuration-boundary.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "runId": 44718726005,
+      "jobId": 136228652944,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 14,
+        "fail": 1,
+        "expects": 136,
+        "tests": 15,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136229459966,
+        "status": "SUCCESS"
+      },
+      "qualification": "The recording-only native prompt returned HTTP500, not a test timeout. CredentialVault.Denied originated from provider plugin discovery at boot; the one native fixture failed at 15099.47ms. No fixture grants expanded. Consumer correction pending."
+    },
+    {
+      "id": "CORE_MIGRATION_SECOND_FIXTURE",
+      "source": "f625c4f5cfa121f7cd3ad3d21717f9775e3e3d2b",
+      "snapshot": "6a3cbb122efe1798478ce26525d65f159bb327fb",
+      "runId": 44717504228,
+      "jobId": 136224526820,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 9,
+        "fail": 6,
+        "expects": 109,
+        "tests": 15,
+        "files": 2
+      },
+      "cleanup": {
+        "jobId": 136225407226,
+        "status": "SUCCESS"
+      },
+      "qualification": "Current authority and dry-run/source-change/unsupported category checks passed. Real Core migration journals migration/__drizzle_migrations lacked technical classification; six cut cases failed. Corrected the actual journal classification, without classifying unknown private tables as technical."
+    },
+    {
+      "id": "CORE_MIGRATION_INITIAL_STATIC",
+      "source": "f625c4f5cfa121f7cd3ad3d21717f9775e3e3d2b",
+      "snapshot": "844143bf4b49294884fcf31ba6d42ad1b52ea65f",
+      "runId": 44717506652,
+      "jobId": 136224535096,
+      "status": "FAILURE",
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0
+        },
+        {
+          "id": "client-generated",
+          "status": 0
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 2
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0
+        },
+        {
+          "id": "typecheck-server",
+          "status": 0
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 0
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0
+        },
+        {
+          "id": "e2e-config",
+          "status": 0
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 0
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 0
+        },
+        {
+          "id": "web-build",
+          "status": 0
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0
+        },
+        {
+          "id": "guard-dev",
+          "status": 1
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0
+        }
+      ],
+      "qualification": "New fixture incorrectly passed title to actual Session.create; corrected through Session.rename. Protected path approvals remain absent."
+    },
+    {
+      "id": "CORE_MIGRATION_SECOND_STATIC",
+      "source": "5a63748ed5d109547c4fac4388163c6550496a49",
+      "snapshot": "938db8491719103f6c06cac0705f57be9cc181aa",
+      "runId": 44719069792,
+      "jobId": 136229813373,
+      "status": "FAILURE",
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0
+        },
+        {
+          "id": "client-generated",
+          "status": 0
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 2
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0
+        },
+        {
+          "id": "typecheck-server",
+          "status": 2
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 2
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0
+        },
+        {
+          "id": "e2e-config",
+          "status": 0
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 2
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 1
+        },
+        {
+          "id": "web-build",
+          "status": 0
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0
+        },
+        {
+          "id": "guard-dev",
+          "status": 1
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0
+        }
+      ],
+      "qualification": "TypeScript found mutable prepared possibly undefined inside the synchronous journal closure. Fixed by capturing the verified checkpoint in const at 0a0faef7, preserving assertions and runtime validation. No protected path approval fabricated."
+    },
+    {
+      "id": "G04_RECOVERY_POOL",
+      "source": "897b0463639238dbe368051fbb9515976b2f6c76",
+      "snapshot": "d5dc253e31f9c68a5987c11ae7180ffd77b7d16b",
+      "runId": 44717350835,
+      "jobId": 136224019502,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 166,
+        "fail": 41,
+        "expects": 2375,
+        "tests": 207
+      },
+      "bodyEvidence": {
+        "sources": 40,
+        "declared": 206,
+        "started": 206,
+        "finished": 206,
+        "returned": 166,
+        "threw": 40,
+        "forcedFinalization": false
+      },
+      "cleanup": {
+        "jobId": 136227935121,
+        "status": "SUCCESS"
+      },
+      "qualification": "32 fail-to-pass and one pass-to-fail compared with the preceding same 40-source matrix. Gate remains RED; component fixtures and remaining producer corrections are isolated work."
     }
   ],
   "infrastructureReconciliation": [
@@ -16431,23 +20880,23 @@
   "remainingImplementation": [
     {
       "package": "WP1",
-      "work": "Finish independent current-candidate qualification and protected static gate approval; no forged approval. Preserve explicit grants, all RoleRows and empty role maps."
+      "work": "Finish same-candidate qualification and resolve protected-path gate through real independent approval. Preserve all RoleRows, empty maps and exact action/resource grants."
     },
     {
       "package": "WP2",
-      "work": "Teams navigation and per-principal/team browser,Dock,drafts,cache,epoch isolation and concurrent windows remain unfinished."
+      "work": "Integrate and qualify the native Team workspace, administration form, browser/window/Dock/draft/cache fencing and first-prompt/SSE journey; compare all 18 AFTER benchmark executions."
     },
     {
       "package": "WP3",
-      "work": "Durable ownership and pre-read/pre-effect admission for Core sessions,events,config,MCP,jobs/Relay/RAG/Atlas/Inbox and CLI remain unfinished."
+      "work": "Correct corporate provider discovery at boot; complete private positive provider and MCP contracts, permanent scheduled task ledgers and remaining Jobs/Relay/RAG/Atlas/Inbox ownership consumers. No environment credential fallback."
     },
     {
       "package": "WP4",
-      "work": "Real census,explicit owner mappings,additive migration journal,write barrier,atomic cut,old writer fence and effect-preserving restore remain unfinished."
+      "work": "Qualify actual Core census/checkpoint/backfill/cut; locate the pending real-cut hang; complete explicit non-Session category mapping and forward recovery preserving the current authority and confirmed effect frontier."
     },
     {
       "package": "WP5",
-      "work": "Final same-candidate ten-gate qualification, scanner/prod package/native tenant/residue/restore evidence and retirement remain unfinished."
+      "work": "Build and inventory the exact production archive, finish conservative residue classification and exact source/tree/artifact provenance, run all ten gates on one final candidate, and obtain real independently admitted Microsoft/Azure observations."
     }
   ],
   "reviewLimits": [
@@ -16455,6 +20904,8 @@
     "MAX(audit)=revision does not prove gap-free historical integrity.",
     "No user data migration or cutover executed.",
     "Full current business authority/context is tested on isolated sources; coherent receipt consumer integration and static qualification are still pending.",
-    "SQL writer generation fencing is in implementation; no cutover, migration, or restore qualification."
+    "Generation fences and the actual host drain are integrated and directed-tested; isolated Core cut is not yet qualified. No real tenant data was migrated.",
+    "Personal connection audit validates count and maximum revision, but positive corporate model/MCP configuration remains incomplete and a native boot regression is open.",
+    "No final candidate, production archive, live Microsoft tenant or disposable Azure restore has been jointly qualified."
   ]
 }
