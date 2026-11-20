@@ -38,6 +38,8 @@ export function createSfPlannerCalculationServices(input: {
   sources: PlannerSourceHost
   replayScenario: PlannerPort["simulateScenario"]
   evidence: BusinessContextService
+  /** Current producers behind the public evidence and coverage facades. */
+  readerIdentity?: () => readonly unknown[]
   persist: Persist
   readSourceFences: (call: TrustedDomainContext) => Promise<SourceFences | undefined>
   lockedSourceFences: () => SourceFences | undefined
@@ -55,20 +57,22 @@ export function createSfPlannerCalculationServices(input: {
     withCalculationCase: input.withCalculationCase, lockedSourceFences: input.lockedSourceFences,
     identities: () => [input.results, ...Object.entries(input.results).flatMap(([key, value]) => [key, value]),
       input.evidence, ...Object.entries(input.evidence).flatMap(([key, value]) => [key, value]),
-      input.replayScenario, input.authorizeCase, input.operationIdentity],
+      input.replayScenario, input.authorizeCase, input.operationIdentity, input.readerIdentity, ...(input.readerIdentity?.() ?? [])],
     // The current producer retains its exact two request/result observations.
     // Only a completed descendant can replace a later repeated financial replay.
     requireCanonicalReplay: (runId, call) => {
       const frame = replaying.getStore()
       return !!frame?.open && frame.call === call && frame.runId === runId
     } })
+  // Older/direct compositions without the private producer identity retain full replay.
+  const observeAncestry: typeof ancestry.observe = (request, call, work) => input.readerIdentity ? ancestry.observe(request, call, work) : work()
   const replayScenario: PlannerPort["simulateScenario"] = (request, call) =>
-    ancestry.observe(request, call, () => input.replayScenario(request, call))
+    observeAncestry(request, call, () => input.replayScenario(request, call))
   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
     verifyRequestSources: async (request, stored, call): Promise<boolean> => {
       const records = plannerRecordSources(stored)
-      const checked = await ancestry.observe({ request, stored }, call, () => input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value:
+      const checked = await observeAncestry({ request, stored }, call, () => input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value:
         !request.assumptions.length && !request.operations.some((operation) => operation.replacementRef) && records
           ? await recordCalculation.verifyCalculationRequestSources(request, stored, call) && await freshRecordSources(records, call)
           : await calculation.verifyCalculationRequestSources(request, stored, call) })))
@@ -148,7 +152,7 @@ export function createSfPlannerCalculationServices(input: {
   })
   const verifyCalculationSources: typeof calculation.verifyCalculationSources = async (stored, refs, call) => {
     const records = plannerRecordSources(stored)
-    const checked = await ancestry.observe({ stored, refs }, call, () => input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: records
+    const checked = await observeAncestry({ stored, refs }, call, () => input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: records
       ? await recordCalculation.verifyCalculationSources(stored, refs, call) && await freshRecordSources(records, call)
       : await calculation.verifyCalculationSources(stored, refs, call) })))
     return checked.status === "ok" && checked.value
@@ -173,7 +177,7 @@ export function createSfPlannerCalculationServices(input: {
         if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
         // Enter the actual persisted case before request-store callbacks can
         // turn a precise scope refusal into a generic unavailable request.
-        return await ancestry.observe({ stored: selected.value.stored, request: selected.value.request }, call, () =>
+        return await observeAncestry({ stored: selected.value.stored, request: selected.value.request }, call, () =>
           input.withCalculationCase<Value>(call, selected.value.stored.caseRef, async () => {
           if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
           const eligible = call.kind === "ui" && plannerCalculationClosure(selected.value.stored)
@@ -285,7 +289,7 @@ export function createSfPlannerCalculationServices(input: {
     // A completed descendant cannot bypass the original service-level cycle bound.
     if (ref.kind === "calculation" && parent?.open && parent.call === call && parent.request === request &&
       parent.binding === digestSfValue([call.kind, call.binding]) && (parent.runs.has(ref.target.runId) || parent.runs.size >= 16)) return unavailable()
-    const found = await ancestry.observe(ref, call, async (): Promise<PortResult<BusinessEvidenceResolution>> => ({
+    const found = await observeAncestry(ref, call, async (): Promise<PortResult<BusinessEvidenceResolution>> => ({
       status: "ok", value: await ancestry.resolve(ref, call, () => resolveCanonicalEvidence(ref, call)),
     }))
     return found.status === "ok" ? found.value : unavailable()
