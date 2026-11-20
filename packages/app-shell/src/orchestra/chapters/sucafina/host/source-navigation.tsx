@@ -1,4 +1,5 @@
-import { createEffect, createMemo, createSignal, For, Show, type JSX } from "solid-js"
+import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
+import { createStore } from "solid-js/store"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../context"
 import type { SfNativeNavigationState } from "../navigation-state"
@@ -24,9 +25,9 @@ export function SfSourceNavigation(props: Readonly<{
 }>): JSX.Element {
   const handle = useSfContext()
   const { t } = useSfPresentation()
-  const [busy, setBusy] = createSignal<string>()
-  const [failure, setFailure] = createSignal<"denied" | "invalid" | "unavailable">()
+  const [view, setView] = createStore<{ busy?: string; failure?: "denied" | "invalid" | "unavailable" }>({})
   const pending = { revision: 0 }
+  onCleanup(() => { pending.revision += 1 })
   const owner = () => {
     const route = props.route(), state = handle.state()
     if (!route || state.status !== "ready" || !entries.some((entry) => entry.surfaceId === route.surfaceId)) return
@@ -55,16 +56,16 @@ export function SfSourceNavigation(props: Readonly<{
     void handle.generation()
     void props.route()?.href
     pending.revision += 1
-    setBusy(undefined)
-    setFailure(undefined)
+    setView("busy", undefined)
+    setView("failure", undefined)
   })
   const invoke = async (href: string) => {
     const current = owner(), link = links().find((item) => item.href === href)
-    if (!current || !link || busy()) return
+    if (!current || !link || view.busy) return
     const generation = handle.generation(), revision = ++pending.revision
     const stillCurrent = () => pending.revision === revision && sfSameReadyOwnerSnapshot(handle, current.captured, generation)
-    setBusy(link.surfaceId)
-    setFailure(undefined)
+    setView("busy", link.surfaceId)
+    setView("failure", undefined)
     try {
       const result = await props.navigation.requestNativeTransition(href, "sidebar", {
         expectedOwnerKey: current.captured.ownerKey,
@@ -72,13 +73,13 @@ export function SfSourceNavigation(props: Readonly<{
       if (!stillCurrent()) return
       if (result.status === "committed" || result.status === "aborted" || result.status === "kept-editing") return
       console.error("Sucafina source navigation did not commit", { status: result.status })
-      setFailure(result.status === "denied" ? "denied" : result.status === "invalid-link" ? "invalid" : "unavailable")
+      setView("failure", result.status === "denied" ? "denied" : result.status === "invalid-link" ? "invalid" : "unavailable")
     } catch (error) {
       if (!stillCurrent()) return
       console.error("Sucafina source navigation failed", error instanceof Error ? error.name : "unknown")
-      setFailure("unavailable")
+      setView("failure", "unavailable")
     } finally {
-      if (stillCurrent()) setBusy(undefined)
+      if (stillCurrent()) setView("busy", undefined)
     }
   }
   return <Show when={links().length}>
@@ -87,7 +88,7 @@ export function SfSourceNavigation(props: Readonly<{
       <For each={links()}>{(link) => <a href={link.href}
         data-sf-capability={link.surfaceId}
         aria-current={props.route()?.surfaceId === link.surfaceId ? "page" : undefined}
-        aria-busy={busy() === link.surfaceId} aria-disabled={busy() !== undefined}
+        aria-busy={view.busy === link.surfaceId} aria-disabled={view.busy !== undefined}
         onClick={(event) => {
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
           event.preventDefault()
@@ -96,7 +97,7 @@ export function SfSourceNavigation(props: Readonly<{
         {t(("sf." + link.surfaceId.toLowerCase() + ".title") as SfCopyKey)}
       </a>}</For>
     </nav>
-    <Show when={failure()}>{(state) => <SfStatePanel state={state()}
+    <Show when={view.failure}>{(state) => <SfStatePanel state={state()}
       messageKey={sfCommonKey(state() === "denied" ? "sf.common.noAccess"
         : state() === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")} />}</Show>
   </Show>
