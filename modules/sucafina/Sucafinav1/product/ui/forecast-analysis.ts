@@ -29,7 +29,7 @@ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection,
     profileId: parent.profile.id, profileVersion: parent.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: parent.manifestDigest,
     outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations.filter((operation) => parent.operationIds.includes(operation)), models }
   const options = sources.map((source, index) => `<option value="${esc(source.refId)}">Forecast source ${index + 1}${source.target.period ? ` · ${esc(source.target.period.start)} – ${esc(source.target.period.end)}` : ""}</option>`).join("")
-  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><details><summary>Analysis settings</summary><label>Model<select name="model">${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label></details><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status" aria-live="polite"></p></form></section>`
+  return `${history}<section><h3>Explain a forecast</h3><form data-forecast-analysis data-config="${esc(JSON.stringify(config))}"><label>Baseline<select name="baseRef">${options}</select></label><label>Comparison<select name="candidateRef">${options}</select></label><label>Start<input name="start" type="date" required value="${esc(projection.case.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(projection.case.horizon.end)}"></label><label>Currency<input name="currency" value="${esc(projection.case.currency)}" required></label><details><summary>Analysis settings</summary><label>Model<select name="model">${models.map((model, index) => `<option value="${index}">${esc(model.providerID)} · ${esc(model.id)}</option>`).join("")}</select></label></details><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><button type="button" data-analysis-retry hidden>Refresh analysis status</button><p role="status" aria-live="polite"></p></form></section>`
 }
 
 export const forecastAnalysisScript = `
@@ -54,111 +54,220 @@ document.querySelectorAll('[data-scenario-analysis]').forEach((form) => {
     finally { button.disabled = false }
   })
 })
-document.querySelectorAll('[data-analysis-history]').forEach((section) => {
-  if (section.dataset.sfAnalysisHistoryReady) return; section.dataset.sfAnalysisHistoryReady = 'true'
-  const status = section.querySelector('[role=status]')
-  const output = section.querySelector('[data-results]')
-  let timer
-  const send = async (payload) => {
-    const url = new URL(location.href); url.search = '?sf=workbench-analysis'
-    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
-    const result = await response.json(); if (!response.ok || result.status !== 'ok') throw new Error('unavailable'); return result.value
+;(() => {
+  // Every controller shares the page's revocation boundary. A late response may
+  // not recreate detached/private content or issue the next write in a chain.
+  const access = { closed: false, generation: 0, requests: new Set(), cleanups: new Set() }
+  const live = (element, generation = access.generation) => !access.closed && generation === access.generation && element.isConnected
+  const revoke = () => {
+    if (access.closed) return
+    access.closed = true; access.generation++
+    access.requests.forEach((controller) => controller.abort())
+    access.cleanups.forEach((cleanup) => cleanup())
   }
-  const load = async () => {
-    if (!section.isConnected) return
+  addEventListener('sf-access-revoked', revoke)
+  addEventListener('pagehide', revoke, { once: true })
+  const send = async (element, mode, payload, key = crypto.randomUUID()) => {
+    const generation = access.generation
+    if (!live(element, generation)) throw new Error('inactive')
+    const controller = new AbortController()
+    access.requests.add(controller)
     try {
-      const runs = await send({ action: 'list', caseRef: JSON.parse(section.dataset.case) })
-      if (section.querySelector('form[data-dirty]')) { clearTimeout(timer); timer = setTimeout(load, 3000); return }
-      clearTimeout(timer); output.replaceChildren(); status.textContent = runs.length ? '' : 'No analyses yet.'
-      for (const run of runs) {
-        const entry = document.createElement('article'); const state = document.createElement('p'); state.textContent = 'Analysis: ' + run.state; entry.append(state); output.append(entry)
-        if (['preparing', 'queued', 'running'].includes(run.state)) {
-          const button = document.createElement('button'); button.type = 'button'; button.textContent = 'Cancel analysis'
-          button.addEventListener('click', async () => { button.disabled = true; try { await send({ action: 'cancel', runRef: run.runRef }); await load() } catch { state.textContent = 'Could not confirm cancellation.'; button.disabled = false } })
-          entry.append(button)
-        }
-        if (run.state !== 'ready') continue
-        const open = document.createElement('button'); open.type = 'button'; open.textContent = 'Open result'; entry.append(open)
-        open.addEventListener('click', async () => {
-        open.disabled = true
-        try {
-          const result = await send({ action: 'output', runRef: run.runRef }); const body = document.createElement('div'); body.innerHTML = result.html; entry.append(body)
-          if (!result.outputRef) { open.remove(); return }
-          const form = document.createElement('form'); const label = document.createElement('label'); label.textContent = 'Reason for accepting this contribution'
-          const rationale = document.createElement('textarea'); rationale.required = true; label.append(rationale)
-          const button = document.createElement('button'); button.textContent = 'Accept contribution'
-          const message = document.createElement('p'); message.setAttribute('role', 'status'); message.setAttribute('aria-live', 'polite')
-          let key = crypto.randomUUID(); rationale.addEventListener('input', () => { key = crypto.randomUUID(); form.dataset.dirty = 'true' })
-          form.addEventListener('submit', async (event) => {
-            event.preventDefault(); if (!form.reportValidity() || button.disabled) return
-            button.disabled = true; rationale.disabled = true; message.textContent = 'Recording your decision…'
+      const url = new URL(location.href); url.search = '?sf=' + mode
+      const response = await fetch(url, { method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
+        body: JSON.stringify(payload), signal: controller.signal })
+      if (!live(element, generation)) throw new Error('inactive')
+      if (response.status === 401 || response.status === 403) { revoke(); throw new Error('denied') }
+      const result = await response.json()
+      if (!live(element, generation)) throw new Error('inactive')
+      if (result?.status === 'denied') { revoke(); throw new Error('denied') }
+      if (!response.ok || result?.status !== 'ok')
+        throw new Error([400, 409, 422].includes(response.status) || ['stale', 'conflict', 'needs-input'].includes(result?.status) ? 'rejected' : 'unavailable')
+      return result.value
+    } finally { access.requests.delete(controller) }
+  }
+  const activeStates = ['preparing', 'queued', 'running']
+  const terminalStates = ['ready', 'needs-input', 'unavailable', 'failed', 'cancelled', 'stale']
+
+  document.querySelectorAll('[data-analysis-history]').forEach((section) => {
+    if (section.dataset.sfAnalysisHistoryReady) return; section.dataset.sfAnalysisHistoryReady = 'true'
+    const status = section.querySelector('[role=status]')
+    const output = section.querySelector('[data-results]')
+    let timer, loading = false, again = false
+    access.cleanups.add(() => {
+      clearTimeout(timer); again = false
+      section.removeAttribute('data-case')
+      output.replaceChildren(); status.textContent = ''
+    })
+    const load = async () => {
+      if (!live(section)) return
+      if (loading) { again = true; return }
+      loading = true; clearTimeout(timer)
+      try {
+        const runs = await send(section, 'workbench-analysis', { action: 'list', caseRef: JSON.parse(section.dataset.case) })
+        if (!live(section)) return
+        if (!Array.isArray(runs) || runs.some((run) => !run || typeof run.runRef !== 'string' || !run.runRef ||
+          ![...activeStates, ...terminalStates].includes(run.state))) throw new Error('unavailable')
+        if (section.querySelector('form[data-dirty]')) { timer = setTimeout(load, 3000); return }
+        output.replaceChildren(); status.textContent = runs.length ? '' : 'No analyses yet.'
+        for (const run of runs) {
+          const entry = document.createElement('article'); entry.dataset.runRef = run.runRef
+          const state = document.createElement('p'); state.textContent = 'Analysis: ' + run.state
+          entry.append(state); output.append(entry)
+          if (activeStates.includes(run.state)) {
+            const button = document.createElement('button'); button.type = 'button'; button.textContent = 'Cancel analysis'
+            const key = crypto.randomUUID()
+            button.addEventListener('click', async () => {
+              if (!live(entry) || button.disabled) return
+              button.disabled = true
+              try { await send(entry, 'workbench-analysis', { action: 'cancel', runRef: run.runRef }, key); if (live(entry)) await load() }
+              catch { if (live(entry)) { state.textContent = 'Could not confirm cancellation.'; button.disabled = false } }
+            })
+            entry.append(button)
+          }
+          if (run.state !== 'ready') continue
+          const open = document.createElement('button'); open.type = 'button'; open.textContent = 'Open result'; entry.append(open)
+          open.addEventListener('click', async () => {
+            if (!live(entry) || open.disabled) return
+            open.disabled = true
             try {
-              const url = new URL(location.href); url.search = '?sf=decision-accept-analysis'
-              const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify({ caseRef: JSON.parse(section.dataset.case), outputRef: result.outputRef, runRef: run.runRef, rationale: rationale.value.trim() }) })
-              const accepted = await response.json(); if (!response.ok || accepted.status !== 'ok') throw new Error('unavailable')
-              delete form.dataset.dirty; location.reload()
-            } catch { message.textContent = 'Could not confirm acceptance. Your reason is preserved; retry the same request.' }
-            finally { button.disabled = false; rationale.disabled = false }
+              const result = await send(entry, 'workbench-analysis', { action: 'output', runRef: run.runRef })
+              if (!live(entry)) return
+              if (!result || typeof result.html !== 'string') throw new Error('unavailable')
+              const body = document.createElement('div'); body.dataset.analysisBody = ''; body.innerHTML = result.html; entry.append(body)
+              if (!result.outputRef) { open.remove(); return }
+              const form = document.createElement('form'); const label = document.createElement('label'); label.textContent = 'Reason for accepting this contribution'
+              const rationale = document.createElement('textarea'); rationale.required = true; label.append(rationale)
+              const button = document.createElement('button'); button.textContent = 'Accept contribution'
+              const message = document.createElement('p'); message.setAttribute('role', 'status'); message.setAttribute('aria-live', 'polite')
+              let key = crypto.randomUUID()
+              rationale.addEventListener('input', () => { key = crypto.randomUUID(); form.dataset.dirty = 'true' })
+              form.addEventListener('submit', async (event) => {
+                event.preventDefault(); if (!live(form) || !form.reportValidity() || button.disabled) return
+                button.disabled = true; rationale.disabled = true; message.textContent = 'Recording your decision…'
+                try {
+                  await send(form, 'decision-accept-analysis', { caseRef: JSON.parse(section.dataset.case), outputRef: result.outputRef, runRef: run.runRef, rationale: rationale.value.trim() }, key)
+                  if (live(form)) { delete form.dataset.dirty; location.reload() }
+                } catch { if (live(form)) message.textContent = 'Could not confirm acceptance. Your reason is preserved; retry the same request.' }
+                finally { if (live(form)) { button.disabled = false; rationale.disabled = false } }
+              })
+              form.append(label, button, message); entry.append(form); open.remove()
+            } catch { if (live(entry)) { state.textContent += ' · Result unavailable or access changed.'; open.disabled = false } }
           })
-          form.append(label, button, message); entry.append(form); open.remove()
         }
-        catch { state.textContent += ' · Result unavailable or access changed.'; open.disabled = false }
-        })
+        if (runs.some((run) => activeStates.includes(run.state))) timer = setTimeout(load, 3000)
+      } catch { if (live(section)) { output.replaceChildren(); status.textContent = 'Analysis history unavailable or access changed.' } }
+      finally {
+        loading = false
+        if (again && live(section)) { again = false; void load() }
       }
-      if (runs.some((run) => ['preparing', 'queued', 'running'].includes(run.state))) timer = setTimeout(load, 3000)
-    } catch { output.replaceChildren(); status.textContent = 'Analysis history unavailable or access changed.' }
-  }
-  section.addEventListener('sf-analysis-refresh', load); load()
-})
-document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
-  if (form.dataset.sfForecastReady) return; form.dataset.sfForecastReady = 'true'
-  const config = JSON.parse(form.dataset.config)
-  const status = form.querySelector('[role=status]')
-  const cancel = form.querySelector('[data-analysis-cancel]')
-  const button = form.querySelector('button:not([type]), button[type=submit]')
-  let runRef
-  let timer
-  form.addEventListener('input', () => { form.dataset.dirty = 'true' })
-  const send = async (mode, payload) => {
-    const url = new URL(location.href); url.search = '?sf=' + mode
-    const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(payload) })
-    const result = await response.json()
-    if (!response.ok || result.status !== 'ok') throw new Error('unavailable')
-    return result.value
-  }
-  const refresh = async () => {
-    if (!form.isConnected || !runRef) return
-    try {
-      const run = await send('workbench-analysis', { action: 'read', runRef })
-      status.textContent = 'Analysis: ' + run.state + (run.outputRef ? '. The result is being prepared for display.' : '.')
-      const active = ['preparing', 'queued', 'running'].includes(run.state)
+    }
+    section.addEventListener('sf-analysis-refresh', load); void load()
+  })
+
+  document.querySelectorAll('[data-forecast-analysis]').forEach((form) => {
+    if (form.dataset.sfForecastReady) return; form.dataset.sfForecastReady = 'true'
+    let config = JSON.parse(form.dataset.config)
+    const status = form.querySelector('[role=status]')
+    const cancel = form.querySelector('[data-analysis-cancel]')
+    const retry = form.querySelector('[data-analysis-retry]')
+    const button = form.querySelector('button:not([type]), button[type=submit]')
+    const fields = [...form.querySelectorAll('input,select,textarea')]
+    const originalDisabled = new Map(fields.map((field) => [field, field.disabled]))
+    let runRef, lastState, cancelKey, timer
+    let starting = false, reading = false, cancelling = false, uncertain = false
+    const present = () => {
+      if (!live(form)) return
+      const active = activeStates.includes(lastState)
+      const locked = starting || reading || cancelling || uncertain || active
+      button.disabled = locked
+      fields.forEach((field) => { field.disabled = locked || originalDisabled.get(field) })
       cancel.hidden = !active
-      button.disabled = active
-      if (!active) document.querySelector('[data-analysis-history]')?.dispatchEvent(new Event('sf-analysis-refresh'))
-      if (active) timer = setTimeout(refresh, 2000)
-    } catch { status.textContent = 'Analysis status unavailable. Try again from the decision.'; cancel.hidden = true }
-  }
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault(); if (!form.reportValidity()) return
-    const fields = new FormData(form); const model = config.models[Number(fields.get('model'))]
-    if (!model || fields.get('baseRef') === fields.get('candidateRef')) { status.textContent = 'Choose a model and two different forecast sources.'; return }
-    let attempted = false
-    button.disabled = true; status.textContent = 'Preparing analysis…'
-    try {
-      const skillInput = await send('workbench-forecast', { caseRef: config.caseRef, baseRef: fields.get('baseRef'), candidateRef: fields.get('candidateRef'), period: { start: fields.get('start'), end: fields.get('end') }, currency: fields.get('currency') })
-      attempted = true
-      const started = await send('workbench-analysis', { action: 'start', input: { request: { caseRef: config.caseRef, objective: config.objective, profileId: config.profileId, profileVersion: config.profileVersion, skillId: config.skillId, skillVersion: config.skillVersion, manifestDigest: config.manifestDigest, outputSchemaVersion: config.outputSchemaVersion, requestedOperationScope: config.requestedOperationScope }, skillInput, model } })
-      if (!started.runRef) throw new Error('unavailable')
-      runRef = started.runRef; delete form.dataset.dirty; await refresh()
-    } catch { status.textContent = attempted ? 'Could not confirm whether analysis started. Check the decision before starting another.' : 'Analysis could not be prepared. Check the sources and period, then try again.' }
-    finally { if (!attempted) button.disabled = false }
+      cancel.disabled = starting || reading || cancelling
+      retry.hidden = !runRef || !active && !uncertain
+      retry.disabled = starting || reading || cancelling
+    }
+    access.cleanups.add(() => {
+      clearTimeout(timer)
+      config = undefined; runRef = undefined; lastState = undefined; cancelKey = undefined
+      form.removeAttribute('data-config'); delete form.dataset.dirty
+      fields.forEach((field) => {
+        field.value = ''; field.removeAttribute('value'); field.disabled = true
+        if ('defaultValue' in field) field.defaultValue = ''
+        if (field.tagName === 'SELECT' || field.tagName === 'TEXTAREA') field.replaceChildren()
+      })
+      originalDisabled.clear(); button.disabled = true
+      cancel.remove(); retry.remove()
+      status.textContent = 'Analysis access changed. Reopen the decision with your current access.'
+    })
+    form.addEventListener('input', () => { if (live(form)) form.dataset.dirty = 'true' })
+    const refresh = async () => {
+      if (!live(form) || !runRef || reading) return
+      const current = runRef
+      reading = true; clearTimeout(timer); present()
+      try {
+        const run = await send(form, 'workbench-analysis', { action: 'read', runRef: current })
+        if (!live(form) || runRef !== current) return
+        if (!run || run.runRef !== current || ![...activeStates, ...terminalStates].includes(run.state)) throw new Error('unavailable')
+        lastState = run.state; uncertain = false
+        status.textContent = 'Analysis: ' + run.state + (run.outputRef ? '. The result is being prepared for display.' : '.')
+        if (activeStates.includes(run.state)) timer = setTimeout(refresh, 2000)
+        else document.querySelector('[data-analysis-history]')?.dispatchEvent(new Event('sf-analysis-refresh'))
+      } catch {
+        if (live(form) && runRef === current) {
+          uncertain = true
+          status.textContent = 'Analysis status unavailable. Refresh its status before starting another analysis.'
+        }
+      } finally { reading = false; present() }
+    }
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); if (!live(form) || button.disabled || !form.reportValidity()) return
+      const values = new FormData(form); const model = config.models[Number(values.get('model'))]
+      if (!model || values.get('baseRef') === values.get('candidateRef')) { status.textContent = 'Choose a model and two different forecast sources.'; return }
+      const selection = { caseRef: config.caseRef, baseRef: values.get('baseRef'), candidateRef: values.get('candidateRef'),
+        period: { start: values.get('start'), end: values.get('end') }, currency: values.get('currency') }
+      const request = { caseRef: config.caseRef, objective: config.objective, profileId: config.profileId,
+        profileVersion: config.profileVersion, skillId: config.skillId, skillVersion: config.skillVersion,
+        manifestDigest: config.manifestDigest, outputSchemaVersion: config.outputSchemaVersion, requestedOperationScope: config.requestedOperationScope }
+      const prepareKey = crypto.randomUUID(), startKey = crypto.randomUUID()
+      let attempted = false
+      starting = true; uncertain = false; runRef = undefined; lastState = undefined; clearTimeout(timer)
+      present(); status.textContent = 'Preparing analysis…'
+      try {
+        const skillInput = await send(form, 'workbench-forecast', selection, prepareKey)
+        if (!live(form)) return
+        attempted = true
+        const started = await send(form, 'workbench-analysis', { action: 'start', input: { request, skillInput, model } }, startKey)
+        if (!live(form)) return
+        if (!started || typeof started.runRef !== 'string' || !started.runRef) throw new Error('unavailable')
+        runRef = started.runRef; cancelKey = crypto.randomUUID()
+        delete form.dataset.dirty
+        starting = false; uncertain = true
+        await refresh()
+      } catch (error) {
+        if (!live(form)) return
+        const rejected = error instanceof Error && error.message === 'rejected'
+        uncertain = attempted && !rejected
+        status.textContent = rejected
+          ? 'The analysis request was rejected. Review the sources and current decision before retrying.'
+          : attempted ? 'Could not confirm whether analysis started. Check analysis history before starting another.'
+          : 'Analysis could not be prepared. Check the sources and period, then try again.'
+        if (uncertain) document.querySelector('[data-analysis-history]')?.dispatchEvent(new Event('sf-analysis-refresh'))
+      } finally { starting = false; present() }
+    })
+    retry.addEventListener('click', () => { if (!retry.disabled && !cancelling) void refresh() })
+    cancel.addEventListener('click', async () => {
+      if (!live(form) || !runRef || cancel.disabled || !activeStates.includes(lastState)) return
+      cancelling = true; clearTimeout(timer); present(); status.textContent = 'Cancelling analysis…'
+      try {
+        await send(form, 'workbench-analysis', { action: 'cancel', runRef }, cancelKey)
+        if (live(form)) await refresh()
+      } catch {
+        if (live(form)) { uncertain = true; status.textContent = 'Could not confirm cancellation. Refresh the analysis status.' }
+      } finally { cancelling = false; present() }
+    })
+    present()
   })
-  cancel.addEventListener('click', async () => {
-    if (!runRef) return
-    cancel.disabled = true; clearTimeout(timer); status.textContent = 'Cancelling analysis…'
-    try { await send('workbench-analysis', { action: 'cancel', runRef }); await refresh() }
-    catch { status.textContent = 'Could not confirm cancellation. Check the analysis status.' }
-    finally { cancel.disabled = false }
-  })
-})
+})()
 `
