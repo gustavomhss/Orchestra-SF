@@ -2,9 +2,9 @@
 
 ## SHA e estado
 
-- Estado: **PARTIAL — shard 4 enumerado; shard 5 interrompido; shard 6 em execução.**
+- Estado: **PARTIAL — shards 4 e 6 enumerados; shard 5 interrompido; correções/gates por causa em andamento.**
 - Base imutável: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` (`sf-join-four`).
-- Branch: `sf-shard-b`; checkpoint anterior: `3c600f1a6830275e074854f01bbf611274ccf245`. Esta revisão continua documental: nenhum fix de código aplicado.
+- Branch: sf-shard-b; código neste checkpoint: 4dff91a6503aa4ee6800e98030bde1c38114118b. O commit seguinte somente atualiza este handoff.
 - Escopo: CI-SF shards 4, 5 e 6 de 8; apenas GitHub; verificação por Actions.
 - `sf-ci` não foi executado. Não há declaração de GO ou de shard verde.
 
@@ -14,19 +14,19 @@
 | --- | --- | --- | --- | --- |
 | 4 | [44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692) | `dd45d888617943df40e02815d58b59f88d8a18f7` | **497 pass / 14 fail** | 511 testes, todos os 118 arquivos; Omni PASS, 428 spawns |
 | 5 | [44645913808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645913808) | `f0bccdc48b42a9d000f3bda6565fa3d88286c845` | **≥576 pass / ≥21 fail observados, sem sumário final** | job cancelado no limite de 45 minutos; 105 de 119 arquivos iniciados |
-| 6 | [44651628624](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651628624) | `204a74491764dcde4da22ebe558efc318e04a777` | indisponível | Run tests em andamento; 109 arquivos selecionados |
+| 6 | [44651628624](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651628624) | `204a74491764dcde4da22ebe558efc318e04a777` | **409 pass / 23 fail / 2 skip** | 434 testes,109 arquivos,7243 asserções,2226,61s; Omni declared PASS,18 declarados/824 spawns |
 
 No shard 5 há 576 marcadores pass (um concatenado ao final de uma linha Received de HTML), 20 marcadores fail e uma asserção adicional visível em `work-bridge.test.ts:386`, cujo marcador fail não consta depois da linha longa. Há um skip Windows/DACL pré-existente em Linux. Esses números são limites observados, não uma reconstrução do sumário ausente. A checagem Omni final não chegou a executar.
 
 ## Falhas do shard 4
 
-Caminhos abaixo relativos a `modules/sucafina/Sucafinav1/test/product/`. As 14 falhas permanecem na base; correções indicadas como preparadas ainda não foram publicadas nem verificadas.
+Caminhos abaixo relativos a `modules/sucafina/Sucafinav1/test/product/`. A tabela registra a enumeração na base. Commits e gates posteriores estão nas seções abaixo; nenhum recorte qualifica o shard inteiro.
 
 | File:line | Casos | Observação | Classificação / encaminhamento |
 | --- | ---: | --- | --- |
 | wp13/handoff-persistence.test.ts:95 | 1 | `ok` → `stale` | fixture-request-identity — novo Request em cada lookup (:58), incompatível com case-port.ts:84,107; C08 |
 | wp13/coverage-sensitivity-integration.test.ts:115 | 1 | mutação de input aceita (`false` → `true`) | shared-security-input-mutation — `product/portfolio/verification.ts:203-205`; requer PR shared |
-| wp13/handoff-domain-integration.test.ts:392 | 1 | preparação canônica indisponível | fixture sem `confirmed: false` (:391); correção preparada |
+| wp13/handoff-domain-integration.test.ts:392 | 1 | preparação canônica indisponível | fixture sem `confirmed: false` (:391); correção publicada; ver fatias |
 | wp13/handoff-c08-predispatch.test.ts:242 | 1 | replay retorna `conflict`, esperado `ok` | fixture-original-intent — substitui a versão do case em replay; produtor exige request original; C07 |
 | wp13/handoff-canonical-integration.test.ts:176 | 1 | replay retorna `conflict`, esperado `ok` | fixture-original-intent — substitui a versão do case em replay; produtor exige request original; C07 |
 | proof234/am04-c12-return.test.ts:78 → c12-receipt-recovery/consumer.ts:81 | 1 | leitura de receipts negada após revogação | fixture observa como Alice revogada; observação por Bob já autorizado preparada |
@@ -36,7 +36,7 @@ Caminhos abaixo relativos a `modules/sucafina/Sucafinav1/test/product/`. As 14 f
 | ui-split/ui-source/draft-replay.test.ts:32 | 1 | replay exato após avanço legítimo: 403, esperado 200 | shared-draft-replay — `product/decisions/hot-topic-draft.ts:94-101,206-207`; requer PR shared |
 | ui-split/ui-work/guards.test.ts:23 | 1 | exit 1 após 90011 ms | unbound — orçamento do subprocesso :19; somente WARN, nenhum finding de gate observado |
 | integrated-proofs/am01/portfolio-recall-proof.test.ts:19 | 1 | timeout 240000 ms; 579798,97 ms observados | unbound — lifecycle do host; catálogo instalado vazio, sem inferência; limite :148 |
-| integrated-proofs/am01/recall-five-profiles.test.ts:31 | 1 | SF_PRODUCT_AUTHORITY_CONFIG_INVALID | fixture duplica operações na linha 28; deduplicação preparada |
+| integrated-proofs/am01/recall-five-profiles.test.ts:31 | 1 | SF_PRODUCT_AUTHORITY_CONFIG_INVALID | fixture duplica operações na linha 28; deduplicação publicada; C01 |
 
 ## Falhas observadas do shard 5
 
@@ -87,7 +87,7 @@ O cancelamento ocorreu durante `wp10/integration/planner-calculation.test.ts:684
    - `script/test-ci-package.ts:21-35`: resolve alias `sucafina`, não `modules/sucafina`.
 5. Usados `package: sucafina`, `directory: modules/sucafina`, `runner: bun`, `args: [--timeout, 30000, ...todos os caminhos exatos do shard]`, env Omni=1. Branches de enumeração: `ci-run-linux-sfb-4r1`, `ci-run-linux-sfb-5r1`, `ci-run-linux-sfb-6`.
 6. `runtime/application.ts:76-81,91-95,382` foi somente lido. HTML legado continua descomissionado. Nenhuma navegação de browser a :4110.
-7. Correções conservadoras de fixture estão sendo preparadas por causa; gates somente após fix concreto. Falhas reais de produtor não serão convertidas em expectativas de erro.
+7. Quatorze correções de fixture foram publicadas por causa e dois PRs shared foram abertos. Gates somente após fix concreto; falhas reais de produtor não foram convertidas em expectativas de erro.
 
 ## Incidentes de admissão — zero testes de produto
 
@@ -100,67 +100,101 @@ O cancelamento ocorreu durante `wp10/integration/planner-calculation.test.ts:684
 
 ## Limite da evidência
 
-Os requests selecionam todos os arquivos canônicos de cada shard para verificação no Actions; o shard 5 foi interrompido e o shard 6 ainda não concluiu. O `test-ci` não produz o recibo completo de `sf-ci`, não executa sua verificação de cobertura e usa Omni no escopo `declared` para seleções explícitas. Não há alegação de baseline, coverage, digest de execução ou GO. Os hashes de seleção são cálculos de inventário, não recibos.
+Os requests selecionam todos os arquivos canônicos de cada shard para verificação no Actions; o shard 5 foi interrompido e os shards 4 e 6 concluíram. O `test-ci` não produz o recibo completo de `sf-ci`, não executa sua verificação de cobertura e usa Omni no escopo `declared` para seleções explícitas. Não há alegação de baseline, coverage, digest de execução ou GO. Os hashes de seleção são cálculos de inventário, não recibos.
 
 
-## Fatias preparadas — ainda sem commit de código ou gate
+## Falhas do shard 6
 
-Cada fatia preserva os controles de negócio e segurança existentes. Revisão independente: PASS. A enumeração do shard 6 deve terminar antes da publicação.
+Caminhos relativos a modules/sucafina/Sucafinav1/test/product/. Soma:23casos, sem contar novamente a lista repetida do sumário.
 
-| Causa | Arquivos sob test/product/ | Correção / gate previsto |
-| --- | --- | --- |
-| C01 — união de permissões | integrated-proofs/am01/recall-five-profiles.test.ts:28 | Deduplicar nomes, manter a união completa; gate deste arquivo. |
-| C02 — observador após revogação | proof234/am04-c12-return.test.ts:78 | Manter Alice negada; ler cases e receipts como Bob já autorizado e comparar estado completo; gate deste arquivo. |
-| C03 — inscrição do componente | wp07/browser-ui.test.ts:242 | GET real via BrowserContext.request sem seguir redirect; afirmar 303 e Location /; abrir componente já existente; gate deste arquivo. |
-| C04 — fonte observada vs hipótese | wp12/native-portfolio-preparation.ts:139-153; native-procurement-preparation.ts:190-199 | Baseline sem operações exige total conhecido exato e cobertura completa; hipóteses e cobertura ausente mantêm null/conditioned. Gate conjunto purchase + reevaluation; incluir consumer do shard 6 se atingir a mesma falha. |
-| C05 — ordem da avaliação | wp11/source-promotion-coverage.test.ts:182 | Comparar lista exata de fontes com avaliação humana independente já verificada; gate deste arquivo. |
-| C06 — link nativo | wp12/native-execution-bi.test.ts:85; wp10/integration/work-bridge.test.ts:386 | Exigir rota /orchestra, origem, ano e label completos com id/versão/período; gate conjunto dos dois arquivos. |
-| C07 — replay da intenção original | wp13/handoff-c08-predispatch.test.ts:242; handoff-canonical-integration.test.ts:162,176 | Afirmar conflito da versão alterada e igualdade completa do replay da request original; gate conjunto dos dois arquivos. |
-| C08 — identidade da request admitida | wp13/handoff-persistence.test.ts:58; handoff-domain-integration.test.ts:358 | Manter uma Request estável no host de cada fixture; gate persistence. O arquivo domain será exercitado pelo gate C09. |
-| C09 — intenção de rascunho | wp13/handoff-domain-integration.test.ts:391 | Acrescentar confirmed:false ao comando de estimate; gate domain, também cobrindo sua identidade corrigida em C08. |
+| File:line | Casos | Evidência | Classificação / encaminhamento |
+| --- | ---: | --- | --- |
+| dashboard-installed-closure/consumer-read.test.ts:64,179 | 2 | Inscrição antes de Hot Topics/summary | Migração de UI instalada; não restaurar console |
+| wp13/semantic-union-source-scenario.test.ts:50 | 1 | stale/portfolio-selection-changed após180034ms; deadline180000 | unbound — desempenho,10404 leituras de cases/126564 revalidações |
+| wp04/capabilities.test.ts:88 | 1 | unavailable/requisition-unavailable | C15 — CAS canônico requests:PR-1 ausente |
+| wp04/ui-sourcing-analysis.test.ts:98 | 1 | 503 esperado, undefined recebido | Migração/integração; interface/http.ts:26,30 não admite workbench-sourcing-input |
+| wp12/native-question-consumer.test.ts:149 | 1 | answer-reuse-unavailable; Planner17campos | Dependência shared existente #400; ainda sem gate deste teste nesse head |
+| wp12/native-verifier-negatives.test.ts:147 | 1 | invalid-forecast-input após false-monthly-total | C14 — seleção HTTP com caseRef passada ao Forecast canônico |
+| wp12/native-execution-documents-contract.test.ts:21 → native-procurement-preparation.ts:193 | 1 | null esperado,240000 recebido | C04 — fonte sem operações vs hipótese |
+| wp01/http.test.ts:56 | 1 | workbench legado404, esperado200 | Migração de UI; não restaurar contrato retirado |
+| wp01/import-receipt-browser.test.ts:26 | 1 | File encontra upload e checkbox | C13 — locator exato |
+| wp01/alternative-contribution.test.ts:46 | 2 | Subtotal null/0; corpo de proposta ausente | Migração/apresentação; contribution-body.ts default vazio:53; payload/envelope passaram:37–42 |
+| wp01/personal-views.test.ts:82 | 1 | Inscrição antes de ?page=OPEX | Migração de UI; :83–90 usa densidade e global legados |
+| wp10/integration/calculation-ancestry-composition.test.ts:26 → composition-test-deadline.ts:5 | 1 | Deadline105000 em produce-outer | unbound — desempenho;573 leituras,102548ms na fase |
+| wp10/integration/bi-case-access.test.ts:136 → bi-access-browser-fixture.ts:198 | 1 | Espera botão singular Abrir origem | C16 — opções reais de múltiplas origens; distinto de C06 |
+| wp10/native-host/native-host-disposal.test.ts:38 | 7 | SessionSubagentModels ausente nos7modos | C12 — composição do host de teste |
+| wp06/native/import-analysis.test.ts:156 → :326 | 1 | Contribuição persistida sem preview link renderizado | Migração do consumidor; persistência/importPreviewRef/mensagem passaram:148–155; não fabricarURL |
 
-Justificativas independentes:
-- `product/planner/scenario-port.ts:107-129`, `test/product/wp03/source-scenario.test.ts:32-81` e `wp13/source-scenario.test.ts:36-38` distinguem observação corrente, hipótese e cobertura ausente. Não se transforma proposta em aplicação.
-- `test/product/procurement-decision-producer/preparation.test.ts:55-74` exige intenção explícita de rascunho; missing/true são rejeitados. `confirmed:false` não é aprovação.
-- `test/product/c12-recovery-closure/original-intent.test.ts:60-68` exige conflito para case version alterada e recibo idêntico para replay exato, sem nova execução de domínio.
-- `apps/cli/src/sucafina-product/extended-source-links.ts:61-62,76-78,94` define as rotas nativas e labels; as asserções passam de substring para igualdade exata.
-- `product/decisions/cost-coverage.ts:99-121` preserva a ordem da evidência da avaliação humana, que integra o digest.
+## Fatias de teste publicadas
 
-Limites conhecidos: persistence ainda contém expectativas antigas de reconciliação em :146/:174 e replay com versão alterada em :170. Não serão alteradas antecipadamente; o gate pode expor um bloqueio posterior. Nenhum green será presumido.
+Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisão de fonte não substitui Actions.
 
-## Pendências de produtor compartilhado
-
-Nenhum código compartilhado foi alterado. As duas falhas seguintes são preservadas como regressões:
-- Sensibilidade: `product/portfolio/verification.ts:203-205` usa replay direto sem snapshot/fingerprint final dos inputs quando sensitivityReadScope está ausente. O caminho scoped tem proteção em :217-267. Exigir correção de imutabilidade e publicação do fence somente após validação final; não desviar o teste para outro caminho.
-- Replay de draft: `product/decisions/hot-topic-draft.ts:94-101,206-207` rejeita versão antiga antes de consultar o resultado durável da mesma operação, embora o avanço legítimo mantenha o escopo do draft. Preservar retorno 200 do replay exato e negação de comandos novos stale.
-
-A instrumentação de `planner-calculation.test.ts:112-123` substitui um método da cópia exposta em `business-services.ts:726`; Atlas usa o original capturado em :540. O contador 0 não prova falta de autorização. Corrigir a fronteira observável sem reduzir esperado 1; se exigir composição compartilhada, abrir PR `shared:`.
-
-
-## Propostas shared revisadas — ainda não publicadas
-
-Dois patches de produção receberam revisão independente, mas continuam **NOT_RUN / sem commit de código** enquanto a enumeração do shard 6 não termina:
-
-| Causa | Branch planejada | Mudança | Gate único planejado |
+| Causa | SHA do fix | Arquivo:linha e decisão | Gate |
 | --- | --- | --- | --- |
-| S10 — mutação na última autorização | sf-shard-b-shared-sensitivity | Retirar o retorno precoce sem scope em verification.ts:205; usar snapshots, token de tentativa, captura provisória e fingerprints finais antes de publicar. Preservar o contexto original e o caminho scoped. | wp13/coverage-sensitivity-integration.test.ts + wp13/sensitivity-read-scope.test.ts |
-| S11 — replay durável após avanço do caso | sf-shard-b-shared-draft-replay | Em hot-topic-draft.ts:94/99, usar uma referência de leitura na versão atual somente quando existe transação anterior e versão não regrediu. Pedido original permanece no digest, autorização e CAS de novos comandos. | ui-split/ui-source/draft-replay.test.ts + wp11/hot-topic-draft-domain.test.ts + wp11/hot-topic-snapshot.test.ts |
+| C01 | 122e311c4950e8846cb221ad554fd53d3d9b41de | integrated-proofs/am01/recall-five-profiles.test.ts:28 — Set da união completa de operações; remove somente duplicatas | 44656693207 |
+| C02 | 6e5dd957823b937665b91ba0020246d3bca7770d | proof234/am04-c12-return.test.ts:78 — recuperação Alice permanece negada; Bob já autorizado observa e compara o estado completo | aguardando vaga |
+| C03 | d61fe54b772e244c194789f43f94429026bc1906 | wp07/browser-ui.test.ts:242 — inscrição real sem seguir redirect; afirma 303/Location /, abre componente isolado existente | aguardando vaga |
+| C04 | dda42a61a089094f6560363449fdc734ad0566de | wp12/native-portfolio-preparation.ts:139–153; native-procurement-preparation.ts:190–199 — baseline conhecido exato 240000 e cobertura completa; hipóteses/null preservados | aguardando vaga |
+| C05 | 4bcbffc7160c3f0a47c98155c4e40d139cc8b433 | wp11/source-promotion-coverage.test.ts:182 — igualdade exata com ordem de fontes da avaliação humana já validada | aguardando vaga |
+| C06 | 6248b54d66f1d35b996c1c3e10c2836bf11b3c37 | wp12/native-execution-bi.test.ts:85; wp10/integration/work-bridge.test.ts:386 — URL e label nativos completos com fonte, versão, período e ano | aguardando vaga |
+| C07 | e062c6f06142d223c5b8dfd59bd181d9ec5a3b16 | wp13/handoff-c08-predispatch.test.ts:242; handoff-canonical-integration.test.ts:162,176 — versão alterada conflita; replay da request original devolve recibo completo idêntico | aguardando vaga |
+| C08 | b91d281808c5428e0e0643bc49fd9400cad5ddbc | wp13/handoff-persistence.test.ts:58; handoff-domain-integration.test.ts:358 — mesma Request admitida durante a operação; gate persistence, domain coberto por C09 | 44656700681 |
+| C09 | 0e5a457f4d3728a149016b972eee88b2afcdf861 | wp13/handoff-domain-integration.test.ts:391 — intenção de rascunho confirmed:false; não é aprovação | aguardando vaga |
+| C12 | afb087bb3028f7f6ab3706e50da6bbed5ddb459d | wp10/native-host/native-host-disposal.test.ts:19,57 — SessionSubagentModels real importado e exportado pelo root | aguardando vaga |
+| C13 | 94763c9deec5898cdf5b20b2dfadc5858de4919e | wp01/import-receipt-browser.test.ts:26 — File com exact:true, sem modificar o resultado/contagem da importação | aguardando vaga |
+| C14 | 489f6d09cf96ca7348aa362c81635ee1713f05ed | wp12/native-verifier-negatives.test.ts:106,146,165,202 — projeção dos quatro campos canônicos; preserva caseRef no HTTP e todas as provas adversariais | aguardando vaga |
+| C15 | 0e4541a5defc2f35385a45d50d9a4c9eb8a070aa | wp04/capabilities.test.ts:39 — CAS requests:PR-1 versão0, independente da revisão4 do wrapper legado | aguardando vaga |
+| C16 | 4dff91a6503aa4ee6800e98030bde1c38114118b | wp10/integration/bi-access-browser-fixture.ts:195 — controle atual de múltiplas origens + vínculo refDigest64hex; preserva200 retido/403/limpeza/resposta tardia | aguardando vaga |
 
-S10 e S11 terão PRs separados, com título iniciado por `shared:`, base `sf-join-four`, sem incorporar produção na branch de testes. `hot-topic-draft-domain` é regressão adicional da partição 3; não é enumeração nem qualificação do shard 3.
+### Justificativas e limites
 
-Risco concreto de S10: o caso que falhou em :115 terminou no primeiro estado de training após 134680 ms. Ao prosseguir, pode atingir o orçamento original de 300000 ms dos três estados. Preservar o orçamento e classificar qualquer ponto posterior.
+- C01 mantém a união completa de operações. C02 mantém a revogação de Alice e a negativa da recuperação; Bob já autorizado observa o mesmo estado completo.
+- C03/C13 exercitam componentes/HTTP isolados existentes, não uma jornada instalada. Nenhuma rota de produção foi recriada.
+- C04: planner/scenario-port.ts:107–129, wp03/source-scenario.test.ts:32–81 e wp13/source-scenario.test.ts:36–38 distinguem observação sem operações de hipótese. Total240000 exige cobertura completa; hipóteses e cobertura ausente mantêm null/conditioned. Fontes e digests permanecem.
+- C05: decisions/cost-coverage.ts:99–121 preserva a ordem da evidência humana, integrante do digest. Comparação exata, sem sort/contains.
+- C06: apps/cli/src/sucafina-product/extended-source-links.ts:61–62,76–78,94 define rota e label. BI passa de predicado parcial para igualdade completa; work-bridge exige anchor completo.
+- C07: c12-recovery-closure/original-intent.test.ts:60–68 exige conflito para versão alterada e recibo idêntico para request original.
+- C08: case-port.ts:84,107 exige identidade estável. Gate ultrapassou :95 e expôs :147, esperado case-reconciliation-pending, recebido recibo ok. Novo ponto em análise; não repetir sem fix.
+- C09: procurement-decision-producer/preparation.test.ts:55–74 exige intenção de rascunho explícita. confirmed:false não significa aprovação.
+- C12: packages/core/src/session/subagent-models.ts:250 fornece o serviço real; package.json:397 exporta o módulo; AppNodeBuilder:24–33 fornece ao mapa de Locations os serviços exportados pelo root. Mesmas provas de grants, leases, tickets e interrupções nos7modos.
+- C14: contracts/operations.ts:29–34,1167–1175 aceita somente baseRef/candidateRef/period/currency. caseRef HTTP, ataques, digests e provas de preservação continuam.
+- C15: procurement/decision-preparation.ts:89–90 e prepared.ts:103–107 exigem CAS independente. Os probes collateral/settings de capabilities.test.ts:71,77 já omitiam confirmed:false e podem negar antes da razão nominal; este fix não amplia sua evidência.
+- C16: analytics/source-navigation.ts:10–14,22–30 conserva todas as fontes e oferece rótulos A/B com digest verdadeiro. Permanecem200autorizado retido,403após revogação, ausência de dados privados e descarte do200tardio.
 
-PRs de outras sessões inspecionados somente para evitar sobreposição: [#398 Atlas](https://github.com/gustavomhss/Orchestra-SF/pull/398), [#400 resposta Planner](https://github.com/gustavomhss/Orchestra-SF/pull/400), [#401 custo BI](https://github.com/gustavomhss/Orchestra-SF/pull/401). Nenhum deles altera verification.ts ou hot-topic-draft.ts. Não foram integrados, alterados ou usados como evidência verde destes shards. #398 é uma possível dependência a investigar para os positivos de recall indisponíveis; a equivalência causal não foi demonstrada pelo log deste baseline.
+## Gates de correção
 
+| Causa | Run | SHA do request | Resultado |
+| --- | --- | --- | --- |
+| C01 | [44656693207](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656693207) | a0010a3b9f37d0e762cf4bd3a043ea6d9a4eb773 | em andamento |
+| C08 | [44656700681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656700681) | 9a699a80ee693cb257abe147d707ad073426143a | **0pass/1fail**, handoff-persistence.test.ts:147; Omni não aplicável,0spawn |
+| S10 | [44657814166](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657814166) | 1642f3229d99624550da44cedfc8df52848e537b | em andamento |
 
-## Pendente / como retomar
+C04 agrupa reevaluation+purchase do4 e documents-contract do6. C06 agrupa os dois arquivos do5. Não somar resultados desses recortes aos baselines como se fossem uma execução completa. Máximo de dois workflows ativos depois dos incidentes de admissão documentados.
 
-1. Aguardar e enumerar o run 44651628624; não repetir gates sem mudança.
-2. Classificar o shard 6. O shard 5 não tem total final e não pode ser anunciado completo.
-3. Publicar cada causa corrigida em commit separado de `sf-shard-b`; fazer um gate focado nos testes afetados do shard, no máximo dois ativos. Não converter a passagem de um recorte em passagem do shard inteiro.
-4. Preservar as asserções de segurança e negócio. Qualquer correção fora de `Sucafinav1/test/**` deve ir a PR separado com título `shared:`.
-5. Atualizar falhas, commits, gates e estado final deste handoff.
+## Produção compartilhada — PRs separados
+
+| Causa | PR / branch | SHA do fix | Mudança e gate |
+| --- | --- | --- | --- |
+| S10 | [#405](https://github.com/gustavomhss/Orchestra-SF/pull/405), sf-shard-b-shared-sensitivity | 8da7b9c5c8600bad368b43432f6d71ed13317b4c | portfolio/verification.ts:203–205: sem sensitivityReadScope usa snapshots, token, captura provisória e fingerprints finais; gate coverage-sensitivity-integration + sensitivity-read-scope |
+| S11 | [#406](https://github.com/gustavomhss/Orchestra-SF/pull/406), sf-shard-b-shared-draft-replay | 3190d29fa62e902f8ceefdffcf703eb367c9b2c9 | decisions/hot-topic-draft.ts:94–101,206–207: leitura na versão atual só para transação durável existente e versão não regredida; gate draft-replay + hot-topic-draft-domain + hot-topic-snapshot |
+
+Ambos drafts, título shared:, base sf-join-four, revisão independente PASS. Produção não foi incorporada em sf-shard-b. S10 preserva contexto original e caminho scoped. S11 mantém request original no digest, autorização e CAS; identidade/incarnação, escopo, fontes e integridade continuam verificados; novos comandos stale continuam negados.
+
+Risco S10: primeiro estado training levou134680ms na base; os três estados compartilham300000ms. Não aumentar limite caso surja timeout posterior. hot-topic-draft-domain pertence ao shard3 e é regressão adicional, não sua enumeração/qualificação.
+
+PRs alheios apenas inspecionados: [#398 Atlas](https://github.com/gustavomhss/Orchestra-SF/pull/398), [#400 resposta Planner](https://github.com/gustavomhss/Orchestra-SF/pull/400), [#401 custo BI](https://github.com/gustavomhss/Orchestra-SF/pull/401). Nenhum integrado, alterado ou rebaseado. #398 é hipótese para similarity217 sem equivalência causal demonstrada no log. #400 acrescenta resolveAnswerScope e manifesto Planner completo de17campos, correspondendo à lacuna em native-question-consumer:149; ainda requer verificação desse teste após integração. Não transferir green de outra sessão.
+
+## Pendente e como retomar
+
+1. Aguardar C01/S10 e registrar resultados/novos pontos. Nunca repetir gate idêntico sem mudança.
+2. Gatear os commits pendentes por causa, até dois workflows ativos. C04/C06 agrupam arquivos com mesma raiz. Não declarar shard verde por recorte.
+3. Resolver ou manter classificado o novo ponto C08:147, preservando reconciliação durável e execução única.
+4. Timeouts/processos unbound não têm raiz interna provada; não elevar prazos por palpite.
+5. Migrar consumidores legados em trabalho próprio sem restaurar #content, data-surface, details/summary ou form[data-command] como contrato.
+6. Contract-freeze exige decisão de contrato; não trocar hash para verde. planner-calculation:112–123 intercepta cópia retornada em business-services:726, enquanto Atlas usa original:540; corrigir seam observável sem reduzir esperado1.
+7. Shard5 mantém14arquivos não iniciados e cauda Planner não enumerada, unbound pelo limite do job. Nenhum pass/fail atribuído a código não executado.
+8. Atualizar este handoff com run, SHA, contagens e file:line. Erro idêntico2x sem mudança: parar e registrar unbound.
 
 ## Ordem de merge
 
-Ainda não há correções ou PR compartilhado. As mudanças publicadas até este checkpoint são apenas este handoff. Não integrar como resultado verde.
+Nada foi mesclado. Primeiro qualificar/integrar shared #405 e #406, independentes entre si, e dependências aplicáveis de outras sessões (#400 para resposta Planner; #398 permanece hipótese). Depois integrar sf-shard-b sobre a base acordada. Nenhum rebase de branches alheias. UI legada e falhas unbound continuam bloqueios explícitos; não há GO.
