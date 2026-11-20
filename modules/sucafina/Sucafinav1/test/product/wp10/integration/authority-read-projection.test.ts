@@ -55,7 +55,7 @@ test("real authority keeps all three authentications and identical admission rev
     expect(baseline.status).toBe("ok")
     if (baseline.status !== "ok") throw new Error("Baseline admission unavailable")
     const originalCalls = f.calls.splice(0)
-    expect(originalCalls.map((call) => call.surface)).toEqual(surfaces)
+    expect(originalCalls.map((call) => call.surface)).toEqual([...surfaces])
     await f.store.readSnapshotRoot!(async () => {
       expect(currentSfReadonlyAuthorityData(f.persistence, surfaces)?.current()).toBe(true)
       expect(await f.product.ui.revalidate(baseline.value)).toBe(true)
@@ -113,7 +113,7 @@ for (const change of ["consumer", "source", "driver", "composite"] as const) tes
     release.resolve()
     const result = await pending
     expect(result.status).toBe("denied")
-    expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+    expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
     expect(count.fallbacks).toBe(0)
   })
 })
@@ -131,7 +131,7 @@ test("opaque input getters and wrappers retain their actual full-copy path", asy
       expect(admitted.status).toBe("ok")
       expect(reads.input - before).toBe(2)
       expect(reads.copies).toBe(1)
-      expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
       if (admitted.status === "ok") product.ui.finish(admitted.value)
     })
   })
@@ -146,7 +146,7 @@ test("revocation and abort during real authentication remain refusals after all 
     f.control.active = false
     release.resolve()
     expect((await pending).status).toBe("denied")
-    expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+    expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
     f.control.active = true
     delete f.control.hook
     f.calls.length = 0
@@ -160,7 +160,7 @@ test("revocation and abort during real authentication remain refusals after all 
     f.controller.abort(new Error("authority projection aborted"))
     abortRelease.resolve()
     await expect(aborted).rejects.toThrow("authority projection aborted")
-    expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+    expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
   })
 })
 
@@ -170,7 +170,7 @@ test("an already poisoned root still authenticates before its original publicati
       await f.store.transaction("planner", async () => ({ commit: true, value: undefined })).catch(() => undefined)
       const admitted = await f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64))
       expect(admitted.status).toBe("ok")
-      expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
       if (admitted.status === "ok") f.product.ui.finish(admitted.value)
       return "cannot escape poisoned root"
     })).rejects.toThrow("Nested local write attempted")
@@ -191,7 +191,7 @@ test("prototype drift during authentication is refused without executing a gette
     try {
       release.resolve()
       expect((await pending).status).toBe("denied")
-      expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
       expect(receivers).toEqual([])
     } finally { Reflect.deleteProperty(Object.prototype, "access") }
   })
@@ -225,7 +225,7 @@ test("the final identity callback cannot replace the authority input owner befor
     const result = await f.store.readSnapshotRoot!(() => f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64)))
     expect(result.status).toBe("denied")
     expect(calls.identity).toBe(2)
-    expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+    expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
   })
 })
 
@@ -244,7 +244,7 @@ test("an inherited role map uses the real full data receiver on the original fal
       const result = await f.store.readSnapshotRoot!(() => f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64)))
       expect(result.status).toBe("ok")
       expect(receivers).toEqual(surfaces.flatMap((surface) => [surface, surface, surface]))
-      expect(f.calls.map((call) => call.surface)).toEqual(surfaces)
+      expect(f.calls.map((call) => call.surface)).toEqual([...surfaces])
       if (result.status === "ok") f.product.ui.finish(result.value)
     } finally { Reflect.deleteProperty(Object.prototype, "roleMap") }
   })
