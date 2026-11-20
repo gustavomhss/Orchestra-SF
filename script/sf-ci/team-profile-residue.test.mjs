@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url"
 import { gzipSync, gunzipSync } from "node:zlib"
 import { auditResidues, buildReachability, controlCases, findOccurrences, gitBlob, gitObject, gitTree,
   hash, parseArguments, parseCanonicalJson, parseTrackedInventory, readSource, readTarArchive, record,
-  requiredEntrypoints, seeds, surfaces, validateManifest, verifyArtifact, verifyControls, verifyGitSource } from "./team-profile-residue.mjs"
+  requiredEntrypoints, requirePrivateStagePaths, seeds, surfaces, validateManifest, verifyArtifact, verifyControls, verifyGitSource } from "./team-profile-residue.mjs"
 
 const completed = new Set(), registered = new Set()
 function control(name, body) {
@@ -103,7 +103,10 @@ function disposition(fixture, occurrence) {
 }
 function complete(fixture) {
   const report = auditResidues(fixture), proof = obligation(fixture)
-  const review = { schema: "teams-profile-residue-review-v1", status: "reviewed", ...report.binding,
+  const evidenceBinding = { ...report.binding, workflowSHA: env.GITHUB_SHA, runId: env.GITHUB_RUN_ID,
+    runAttempt: env.GITHUB_RUN_ATTEMPT, archiveSha256: fixture.artifact.archiveSha256,
+    artifactId: fixture.artifact.artifact.id, artifactDigest: fixture.artifact.artifact.digest }
+  const review = { schema: "teams-profile-residue-review-v1", status: "reviewed", ...evidenceBinding,
     reviewSource: source.sha, reviewer: "synthetic-unit-control", reason: "Exercises qualification conditions; never real product acceptance.",
     surfaces: [...surfaces], dispositions: report.occurrences.map((item) => disposition(fixture, item)),
     gaps: report.reachability.findings.map((item) => ({ findingId: item.id, classification: "different-meaning",
@@ -113,7 +116,7 @@ function complete(fixture) {
   const controls = { schema: "teams-profile-residue-controls-v1", ...execution,
     scannerSha256: fixture.records.find((item) => item.path === "script/sf-ci/team-profile-residue.mjs").sha256,
     testSha256: proof.fileSha256, complete: true, cases: controlCases.map((name) => ({ name, status: "pass" })) }
-  const proofs = { schema: "teams-profile-residue-proofs-v1", ...execution,
+  const proofs = { schema: "teams-profile-residue-proofs-v1", ...evidenceBinding,
     cases: [{ ...proof, status: "pass", jobId: "1234", evidenceSha256: hash("synthetic evidence fixture") }] }
   return { ...fixture, review, controls, proofs }
 }
@@ -222,6 +225,30 @@ control(controlCases[6], () => {
   const sourceOnly = ["--source", ".", "--manifest", "catalog.json", "--output", "/tmp/report"]
   assert.throws(() => parseArguments([...sourceOnly, "--diagnostic-source-only", "--installed-release", "/opt/release"]), /selection/)
   assert.equal(parseArguments([...sourceOnly, "--archive", "/tmp/archive.tar.gz", "--installed-release", "/opt/release"])["installed-release"], "/opt/release")
+  assert.throws(() => parseArguments([...sourceOnly, "--diagnostic-source-only", "--stage-private-release", "/tmp/release"]), /selection/)
+  assert.throws(() => parseArguments([...sourceOnly, "--archive", "/tmp/a.tgz", "--installed-release", "/opt/release",
+    "--stage-private-release", "/tmp/release"]), /selection/)
+  const archive = [...sourceOnly, "--archive", "/tmp/a.tgz"]
+  assert.throws(() => parseArguments([...archive, "--service-pid", "123"]), /selection/)
+  const installed = [...archive, "--installed-release", "/opt/release"]
+  for (const pid of ["0", "1e2", "9007199254740992"])
+    assert.throws(() => parseArguments([...installed, "--service-pid", pid]), /selection/)
+  assert.equal(parseArguments([...installed, "--service-pid", "123"])["service-pid"], "123")
+})
+
+test("private staging confines the verified archive and its report to separate fresh runner paths", async (t) => {
+  const temporary = await realpath(await mkdtemp(path.join(tmpdir(), "teams-stage-audit-")))
+  t.after(() => rm(temporary, { recursive: true, force: true }))
+  const root = path.join(temporary, "checkout"), runnerTemp = path.join(temporary, "runner")
+  await Promise.all([mkdir(root), mkdir(runnerTemp)])
+  const destination = path.join(runnerTemp, "release"), output = path.join(runnerTemp, "report.json")
+  const args = { root, runnerTemp, destination, output }
+  await assert.doesNotReject(requirePrivateStagePaths(args))
+  await assert.rejects(requirePrivateStagePaths({ ...args, destination: path.join(root, "release") }), /outside the checkout/)
+  await assert.rejects(requirePrivateStagePaths({ ...args, output: destination }), /separate/)
+  await assert.rejects(requirePrivateStagePaths({ ...args, output: path.join(temporary, "report.json") }), /inside RUNNER_TEMP/)
+  await writeFile(output, "keep")
+  await assert.rejects(requirePrivateStagePaths(args), /fresh report path/)
 })
 
 control(controlCases[7], () => {
@@ -304,6 +331,9 @@ control(controlCases[12], () => {
   assert.equal(report.status, "DIAGNOSTIC_UNQUALIFIED")
   assert(report.blockers.includes("same-run-actual-archive-missing"))
   assert(report.blockers.includes("independent-current-source-review-missing"))
+  assert(report.blockers.includes("executed-test-obligations-missing"))
+  assert.equal(report.review.status, "MISSING")
+  assert.equal(report.proofs.status, "MISSING")
   assert(report.blockers.includes("executed-negative-controls-missing"))
   assert(report.counts.unknownOccurrences > 0)
   assert(report.occurrences.every((item) => item.disposition === null))
@@ -314,11 +344,20 @@ control(controlCases[13], () => {
   assert.equal(auditResidues(fixture).status, "PASS")
   const missingReview = auditResidues({ ...fixture, review: undefined })
   assert.equal(missingReview.status, "DIAGNOSTIC_UNQUALIFIED")
+  assert(missingReview.blockers.includes("independent-current-source-review-missing"))
+  assert(!missingReview.blockers.includes("executed-test-obligations-missing"))
   assert.equal(auditResidues({ ...fixture, controls: undefined }).status, "DIAGNOSTIC_UNQUALIFIED")
-  assert.equal(auditResidues({ ...fixture, proofs: undefined }).status, "DIAGNOSTIC_UNQUALIFIED")
+  const missingProofs = auditResidues({ ...fixture, proofs: undefined })
+  assert.equal(missingProofs.status, "DIAGNOSTIC_UNQUALIFIED")
+  assert(missingProofs.blockers.includes("executed-test-obligations-missing"))
+  assert(!missingProofs.blockers.includes("independent-current-source-review-missing"))
   assert.equal(auditResidues({ ...fixture, review: { ...fixture.review, gaps: [] } }).status, "DIAGNOSTIC_UNQUALIFIED")
   assert.equal(auditResidues({ ...fixture, proofs: { ...fixture.proofs, cases: [] } }).status, "DIAGNOSTIC_UNQUALIFIED")
   assert.throws(() => auditResidues({ ...fixture, review: { ...fixture.review, graphSha256: "9".repeat(64) } }), /complete exact current audit/)
+  for (const field of ["runAttempt", "archiveSha256", "artifactId", "artifactDigest", "occurrencesSha256", "gapsSha256"]) {
+    assert.throws(() => auditResidues({ ...fixture, review: { ...fixture.review, [field]: "wrong" } }), /complete exact current audit/)
+    assert.throws(() => auditResidues({ ...fixture, proofs: { ...fixture.proofs, [field]: "wrong" } }), /exact audit/)
+  }
   const active = structuredClone(fixture.review)
   active.dispositions[0].classification = "active-legacy"
   const denied = auditResidues({ ...fixture, review: active })

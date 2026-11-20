@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
 import { spawn, execFile } from "node:child_process"
-import { chmod, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
+import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -44,6 +44,9 @@ export async function startPlannerInstallation(info: TestInfo) {
     XDG_STATE_HOME: path.join(directory, "host-state"),
   }
   try {
+    // The child runtime can initialize XDG directories before the setup entry runs.
+    await Promise.all(["host-data", "host-config", "host-cache", "host-state", "host-tmp", "business"]
+      .map((name) => mkdir(path.join(directory, name), { mode: 0o700 })))
     await run("bun", ["run", path.join(here, "installation-setup.ts"), directory, origin], {
       cwd: repository, env: environment, timeout: 30_000, encoding: "utf8",
     })

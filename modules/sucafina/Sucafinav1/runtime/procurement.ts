@@ -701,7 +701,12 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   }
   store.settings = fullSettings
   const actualId = command.action === "create" && "request" in result ? text(object(result.request).number) : id
-  const saved = store.requests[actualId]
+  const recordKey = `requests:${actualId}`
+  const saved = Object.hasOwn(store.requests, actualId) ? store.requests[actualId] : undefined
+  const requestVersion = (snapshot.versions[recordKey]?.version ?? 0) + 1
+  const creatingRequest = command.page === "Requests" && command.action === "create"
+  if (creatingRequest && (!saved || !actualId || actualId.trim() !== actualId || saved.request.number !== actualId ||
+      !Number.isSafeInteger(requestVersion) || requestVersion < 1)) return { ok: false, status: 503 }
   if (saved) {
     if (command.action === "create")
       saved.request.requesterName = environment.directory.find((person) => person.id === actor.id)?.name ?? actor.id
@@ -724,11 +729,11 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
       }
     }
     saved.request.history = rows(saved.request.history).map((line) => redactBank(line))
-    saved.version = (snapshot.versions[`requests:${actualId}`]?.version ?? 0) + 1
+    saved.version = requestVersion
     saved.by = actor.id
   }
   snapshot.data.store = store
-  changed(snapshot, `requests:${actualId}`, actor, environment.at, redactBank(was), redactBank(saved?.request ?? null))
+  changed(snapshot, recordKey, actor, environment.at, redactBank(was), redactBank(saved?.request ?? null))
   if (saved) {
     const step = pending(saved.request).step
     if (step && text(saved.request.status).endsWith("_pending"))
@@ -749,6 +754,7 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
   }
   return {
     ok: true,
+    ...(creatingRequest ? { procurementCreate: { requestRef: actualId, requestVersion } } : {}),
     value: visible ? (saved?.request ?? { deleted: was }) : undefined,
   }
 }

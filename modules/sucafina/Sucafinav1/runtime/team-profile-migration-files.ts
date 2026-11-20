@@ -1,6 +1,6 @@
 import { Database } from "bun:sqlite"
 import { createHash } from "node:crypto"
-import { closeSync, constants, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, realpathSync, writeFileSync } from "node:fs"
+import { closeSync, constants, fstatSync, fsyncSync, linkSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, unlinkSync, writeFileSync } from "node:fs"
 import { dirname, isAbsolute, join, resolve } from "node:path"
 import { AuthorityGeneration } from "@orchestra/core/session/authority-generation"
 import { AuthoritySqlFence } from "@orchestra/core/database/authority-sql-fence"
@@ -9,7 +9,7 @@ import type { MigrationFiles, Checkpoint } from "./team-profile-core-migration.t
 
 const fail = (): never => { throw new Error("SF_CORE_MIGRATION_FILES_UNAVAILABLE") }
 const hash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex")
-const privateFile = (filename: string, create = false) => {
+const privateFile = (filename: string, create = false, links = 1) => {
   const uid = process.geteuid?.()
   if (uid === undefined || !isAbsolute(filename) || resolve(filename) !== filename ||
       realpathSync(dirname(filename)) !== dirname(filename)) return fail()
@@ -23,7 +23,7 @@ const privateFile = (filename: string, create = false) => {
   }
   try {
     const held = fstatSync(fd), named = lstatSync(filename)
-    if (!held.isFile() || held.nlink !== 1 || held.uid !== uid || (held.mode & 0o077) !== 0 ||
+    if (!held.isFile() || held.nlink !== links || held.uid !== uid || (held.mode & 0o077) !== 0 ||
         !named.isFile() || named.isSymbolicLink() || named.ino !== held.ino || named.dev !== held.dev ||
         realpathSync(filename) !== filename) return fail()
     return { fd, device: held.dev, inode: held.ino }
@@ -89,6 +89,9 @@ export function openTeamProfileMigrationFiles(filename: string, storageId: strin
       control: driver(current),
       checkpoint(plan: TeamProfileCensus.Plan): Checkpoint {
         if (!primary.inTransaction) return fail()
+        // Hold SQLite's cross-process business writer lock until the caller ends
+        // its transaction, including when it began as a deferred transaction.
+        primary.exec("UPDATE session SET id = id WHERE 0")
         const source = TeamProfileCensus.inspectInTransaction(businessDriver, storageId)
         if (source.sourceDigest !== plan.sourceDigest) return fail()
         directory()
@@ -100,16 +103,56 @@ export function openTeamProfileMigrationFiles(filename: string, storageId: strin
         // serialized copy contains the coherent pages; normalize only its format
         // flags before hashing and saving the standalone immutable checkpoint.
         bytes[18] = 1; bytes[19] = 1
-        const digest = hash(bytes), file = privateFile(filename, true)
-        try {
-          const size = fstatSync(file.fd).size
-          if (size === 0) {
-            writeFileSync(file.fd, bytes)
-            fsyncSync(file.fd)
-          } else if (size !== bytes.length || hash(readFileSync(file.fd)) !== digest) return fail()
-        } finally { closeSync(file.fd) }
+        const digest = hash(bytes), staging = join(checkpointDirectory, "." + plan.planDigest + ".tmp")
+        if (readdirSync(checkpointDirectory).some((name) =>
+          name !== "." + plan.planDigest + ".tmp" && !/^[a-f0-9]{64}\.sqlite$/.test(name))) return fail()
+        const exists = (name: string) => {
+          try { lstatSync(name); return true }
+          catch (error) {
+            if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") return false
+            throw error
+          }
+        }
+        if (exists(staging) && !exists(filename)) {
+          // With the business writer lock held, a valid single-link staging file
+          // belongs to an interrupted publication, not another live cut.
+          const abandoned = privateFile(staging)
+          try {
+            const named = lstatSync(staging)
+            if (named.dev !== abandoned.device || named.ino !== abandoned.inode || named.nlink !== 1) return fail()
+            unlinkSync(staging)
+          } finally { closeSync(abandoned.fd) }
+        }
+        if (!exists(staging) && !exists(filename)) {
+          const fd = openSync(staging, constants.O_RDWR | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600)
+          try { writeFileSync(fd, bytes); fsyncSync(fd) } finally { closeSync(fd) }
+          const staged = privateFile(staging)
+          try {
+            if (fstatSync(staged.fd).size !== bytes.length || hash(readFileSync(staged.fd)) !== digest) return fail()
+          } finally { closeSync(staged.fd) }
+          // link() publishes without replacing a pre-existing final file.
+          linkSync(staging, filename)
+        }
+        if (exists(staging)) {
+          // Only the exact two-link publication can be recovered automatically.
+          const staged = privateFile(staging, false, 2)
+          try {
+            const final = privateFile(filename, false, 2)
+            try {
+              if (staged.device !== final.device || staged.inode !== final.inode ||
+                  fstatSync(staged.fd).size !== bytes.length || hash(readFileSync(staged.fd)) !== digest) return fail()
+              const named = lstatSync(staging)
+              if (named.dev !== staged.device || named.ino !== staged.inode || named.nlink !== 2) return fail()
+              unlinkSync(staging)
+            } finally { closeSync(final.fd) }
+          } finally { closeSync(staged.fd) }
+        }
         const parent = openSync(checkpointDirectory, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)
         try { fsyncSync(parent) } finally { closeSync(parent) }
+        const file = privateFile(filename)
+        try {
+          if (fstatSync(file.fd).size !== bytes.length || hash(readFileSync(file.fd)) !== digest) return fail()
+        } finally { closeSync(file.fd) }
         return Object.freeze({ digest, bytes: bytes.length, sourceDigest: source.sourceDigest })
       },
       verifyCheckpoint(plan: TeamProfileCensus.Plan, checkpoint: Checkpoint) {

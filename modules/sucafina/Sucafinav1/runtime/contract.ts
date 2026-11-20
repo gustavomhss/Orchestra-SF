@@ -50,7 +50,7 @@ export type Environment = {
   bankKey?: Uint8Array
 }
 export type Result =
-  | { ok: true; value?: unknown; warnings?: string[] }
+  | { ok: true; value?: unknown; warnings?: string[]; procurementCreate?: Readonly<{ requestRef: string; requestVersion: number }> }
   | {
       ok: false
       status: 400 | 403 | 404 | 409 | 422 | 503

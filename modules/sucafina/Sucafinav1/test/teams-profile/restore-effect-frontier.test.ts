@@ -24,6 +24,12 @@ const payload = {
   objective: "Confirmed case survives an older business checkpoint",
   horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["continuity"], sourceRefs: [],
 }
+// Synthetic pin for comparison tests only; this is not an independent authority.
+function admission(checkpoint: Snapshot, frontier: NonNullable<ReturnType<typeof inspectSfProductRestoreFrontier>>) {
+  const installationDigest = digestSfValue("test-installation")
+  return { installationDigest, generation: 1, pin: { installationDigest, generation: 1,
+    checkpointDigest: digestSfValue(checkpoint), frontierDigest: digestSfValue(frontier) } }
+}
 async function fixture() {
   const f = await teamProductFixture({ enabled: [profileA, profileB] })
   cleanups.push(f.close)
@@ -174,7 +180,7 @@ test("restore-frontier-05: retained product effects prevent an unclassified over
   }))).toEqual([4, 5, 6])
 })
 
-test("restore-frontier-06: a newer current passes, but rewinding both local frontiers fails against retained effects", async () => {
+test("restore-frontier-06: a current pinned frontier passes, but rewinding local state fails against retained effects", async () => {
   const f = await fixture()
   const checkpoint = await f.snapshot()
   expect((await draft(f, randomUUID())).status).toBe("ok")
@@ -187,7 +193,8 @@ test("restore-frontier-06: a newer current passes, but rewinding both local fron
   expect(frontier?.revision).toBeGreaterThan(externallyRetained.revision)
   expect(frontier?.transactions).toHaveLength(2)
   const restored = { ...checkpoint, data: structuredClone(checkpoint.data) }
-  captureSfCorporateRestoreRetention(current, checkpoint, externallyRetained).apply(restored.data)
+  if (!frontier) throw new Error("Expected current frontier")
+  captureSfCorporateRestoreRetention(current, checkpoint, frontier, admission(checkpoint, frontier)).apply(restored.data)
   expect(inspectSfProductRestoreFrontier(restored)).toEqual(frontier)
   expect(await f.snapshot()).toEqual(current)
 
@@ -199,7 +206,7 @@ test("restore-frontier-06: a newer current passes, but rewinding both local fron
   const rewound = await f.snapshot()
   expect(inspectSfProductRestoreFrontier(rewound)).toEqual(inspectSfProductRestoreFrontier(checkpoint))
   expect(() => captureSfRestoreRetention(rewound, checkpoint)).not.toThrow()
-  expect(() => captureSfCorporateRestoreRetention(rewound, checkpoint, externallyRetained))
+  expect(() => captureSfCorporateRestoreRetention(rewound, checkpoint, externallyRetained, admission(checkpoint, externallyRetained)))
     .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
   expect(await f.snapshot()).toEqual(rewound)
 })
@@ -213,16 +220,18 @@ test("restore-frontier-07: corporate preflight requires all three explicit front
   const foreign = structuredClone(current)
   object(foreign.data.__sfProductV1).incarnation = randomUUID()
 
-  expect(() => captureSfCorporateRestoreRetention(current, current, frontier)).not.toThrow()
-  expect(() => captureSfCorporateRestoreRetention(current, current, undefined))
+  expect(() => captureSfCorporateRestoreRetention(current, current, frontier, admission(current, frontier))).not.toThrow()
+  expect(() => captureSfCorporateRestoreRetention(current, current, frontier, undefined))
     .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-  expect(() => captureSfCorporateRestoreRetention(absent, current, frontier))
+  expect(() => captureSfCorporateRestoreRetention(current, current, undefined, admission(current, frontier)))
     .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-  expect(() => captureSfCorporateRestoreRetention(current, absent, frontier))
+  expect(() => captureSfCorporateRestoreRetention(absent, current, frontier, admission(current, frontier)))
     .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-  expect(() => captureSfCorporateRestoreRetention(current, foreign, frontier))
+  expect(() => captureSfCorporateRestoreRetention(current, absent, frontier, admission(absent, frontier)))
     .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-  expect(() => captureSfCorporateRestoreRetention(current, current, inspectSfProductRestoreFrontier(foreign)))
+  expect(() => captureSfCorporateRestoreRetention(current, foreign, frontier, admission(foreign, frontier)))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(() => captureSfCorporateRestoreRetention(current, current, inspectSfProductRestoreFrontier(foreign), admission(current, frontier)))
     .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
 })
 
@@ -248,10 +257,45 @@ test("restore-frontier-08: external evidence and checkpoint must each be dominat
     const current = await f.snapshot()
     const frontier = inspectSfProductRestoreFrontier(current)
     if (!frontier) throw new Error("Expected an explicit but damaged frontier")
-    expect(() => captureSfCorporateRestoreRetention(current, checkpoint, retained))
+    expect(() => captureSfCorporateRestoreRetention(current, checkpoint, retained, admission(checkpoint, retained)))
       .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-    expect(() => captureSfCorporateRestoreRetention(current, original, frontier))
+    expect(() => captureSfCorporateRestoreRetention(current, original, frontier, admission(original, frontier)))
       .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
     expect(await f.snapshot()).toEqual(current)
   }
+})
+
+test("restore-frontier-09: stale consistent snapshots and retained evidence cannot match a newer independent pin", async () => {
+  const f = await fixture()
+  const stale = await f.snapshot()
+  const staleFrontier = inspectSfProductRestoreFrontier(stale)
+  expect((await draft(f, randomUUID())).status).toBe("ok")
+  const current = await f.snapshot()
+  const latest = inspectSfProductRestoreFrontier(current)
+  if (!staleFrontier || !latest) throw new Error("Expected product frontiers")
+  const pin = admission(stale, latest)
+  expect(() => captureSfCorporateRestoreRetention(stale, stale, staleFrontier, pin))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(() => captureSfCorporateRestoreRetention(current, stale, latest, pin)).not.toThrow()
+  expect(await f.snapshot()).toEqual(current)
+})
+
+test("restore-frontier-10: current pin is bound to installation, checkpoint and generation", async () => {
+  const f = await fixture(), current = await f.snapshot()
+  const frontier = inspectSfProductRestoreFrontier(current)
+  if (!frontier) throw new Error("Expected product frontier")
+  const proof = admission(current, frontier)
+  expect(() => captureSfCorporateRestoreRetention(current, current, frontier, proof)).not.toThrow()
+  for (const invalid of [
+    { ...proof, installationDigest: digestSfValue("another-installation") },
+    { ...proof, generation: 2 },
+    { ...proof, generation: 0 },
+    { ...proof, pin: { ...proof.pin, checkpointDigest: digestSfValue("another-checkpoint") } },
+    { ...proof, pin: { ...proof.pin, frontierDigest: digestSfValue("another-frontier") } },
+  ]) expect(() => captureSfCorporateRestoreRetention(current, current, frontier, invalid))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  const changed = structuredClone(current)
+  changed.data.restoreProbe = "different checkpoint"
+  expect(() => captureSfCorporateRestoreRetention(current, changed, frontier, proof))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
 })

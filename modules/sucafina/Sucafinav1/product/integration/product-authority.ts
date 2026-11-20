@@ -147,10 +147,10 @@ export function createSfProductAuthority(input: {
     const mapped = maps()
     const mappedDigest = digestSfValue(mapped)
     const observed = input.authenticateAll
-      ? await input.authenticateAll(request, mapped.map((entry) => ({ surface: entry.surface, roleMap: entry.rows }))).catch(() => null)
+      ? structuredClone(await input.authenticateAll(request, mapped.map((entry) => ({ surface: entry.surface, roleMap: entry.rows }))).catch(() => null))
       : await Promise.all(mapped.map(async (entry) => ({
           surface: entry.surface,
-          actor: await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows }),
+          actor: structuredClone(await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows })),
         })))
     if (!observed || observed.length !== mapped.length || observed.some((entry, index) => entry.surface !== mapped[index].surface))
       return undefined
@@ -183,6 +183,21 @@ export function createSfProductAuthority(input: {
       ? await teamProfiles.revalidateResolution(profile)
       : profile.admission && await teamProfiles.revalidate(profile.admission)))) return undefined
     if (digestSfValue(await currentGrants()) !== digestSfValue(policy) ||
+        digestSfValue(maps()) !== mappedDigest || digestSfValue(scopes()) !== digestSfValue(scoped) ||
+        digestSfValue(identity()) !== identityDigest || request.signal.aborted || !sameTeamIntent(request)) return undefined
+    // Role membership is external to the role-map digest. Observe it again after
+    // the asynchronous Team and grant checks, then retain the original binding.
+    const refreshed = !teamProfiles ? observed : input.authenticateAll
+      ? await input.authenticateAll(request, mapped.map((entry) => ({ surface: entry.surface, roleMap: entry.rows }))).catch(() => null)
+      : await Promise.all(mapped.map(async (entry) => ({
+          surface: entry.surface,
+          actor: await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows }),
+        }))).catch(() => null)
+    if (!refreshed || digestSfValue(refreshed) !== digestSfValue(observed) ||
+        profile && (!teamProfiles || !(context
+          ? await teamProfiles.revalidateResolution(profile)
+          : profile.admission && await teamProfiles.revalidate(profile.admission))) ||
+        teamProfiles && digestSfValue(await currentGrants()) !== digestSfValue(policy) ||
         digestSfValue(maps()) !== mappedDigest || digestSfValue(scopes()) !== digestSfValue(scoped) ||
         digestSfValue(identity()) !== identityDigest || request.signal.aborted || !sameTeamIntent(request)) return undefined
     const accessRevision = digestSfValue({

@@ -25,13 +25,18 @@ test("original draft predicate keeps visibility, ownership, roles and stage sepa
 test("actual native request projection emits source-stamped draft capabilities", async () => {
   const snapshot: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
   const environment = { at: "2026-11-15T12:00:00Z", id: () => "id", directory: [{ id: "owner", name: "Owner" }] }
-  expect(domain.execute(snapshot, { id: "admin", roles: ["admin"], canWrite: true },
-    { page: "Settings", action: "reset", version: 0, values: {} }, environment).ok).toBe(true)
+  const reset = domain.execute(snapshot, { id: "admin", roles: ["admin"], canWrite: true },
+    { page: "Settings", action: "reset", version: 0, values: {} }, environment)
+  expect(reset.ok).toBe(true)
+  expect(reset).not.toHaveProperty("procurementCreate")
   const created = domain.execute(snapshot, { id: "owner", roles: ["requester"], canWrite: true },
     { page: "Requests", action: "create", version: 0, values: { pr: { title: "Original", type: "product", description: "Operations",
       estAmount: 100, costCenter: "IT", needBy: "2026-12-01", justification: "Renewal", recurring: false, expenseType: "OPEX" } } }, environment)
   if (!created.ok) throw new Error("source request creation failed")
   const id = String(object(created.value).number)
+  const saved = object(object(object(snapshot.data.store).requests)[id])
+  expect(created.procurementCreate).toEqual({ requestRef: id, requestVersion: saved.version })
+  expect(snapshot.versions[`requests:${id}`]?.version).toBe(saved.version)
   let actor = { id: "owner", role: "requester", canWrite: true }
   let revoked = false
   let admissions = 0
@@ -56,4 +61,15 @@ test("actual native request projection emits source-stamped draft capabilities",
   revoked = true
   admissions = 0
   expect((await handler.handle(new Request("http://localhost/sucafina/api/ui/pages/CAP25"))).status).toBe(409)
+})
+
+test("denied request creation emits no receipt metadata and leaves the domain snapshot unchanged", () => {
+  const snapshot: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+  const before = structuredClone(snapshot)
+  const denied = domain.execute(snapshot, { id: "owner", roles: ["requester"], canWrite: false },
+    { page: "Requests", action: "create", version: 0, values: { pr: { title: "Denied" } } },
+    { at: "2026-11-15T12:00:00Z", id: () => "id", directory: [] })
+  expect(denied).toMatchObject({ ok: false, status: 403 })
+  expect(denied).not.toHaveProperty("procurementCreate")
+  expect(snapshot).toEqual(before)
 })

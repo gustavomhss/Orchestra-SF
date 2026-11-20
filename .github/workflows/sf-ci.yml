@@ -310,6 +310,7 @@ jobs:
         with:
           artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
       - name: Execute exact manifest-selected Bun files
+        id: suite_run
         shell: bash
         env:
           # The canonical Actions Bun runner uses this sentry; CI=true remains enforced.
@@ -329,6 +330,19 @@ jobs:
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -gt 0 || exit 2
 
+          diagnostic() (
+            cd "$root" || exit 1
+            if [ ! -s "$evidence/summary.json" ]; then
+              test -s "$evidence/report.xml" || exit 1
+              if python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json.tmp"; then :; fi
+              node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema_version !== 1 || !Array.isArray(s.cases) || !s.cases.length || !/^[a-f0-9]{64}$/.test(s.report_sha256 || "")) process.exit(1)' "$evidence/summary.json.tmp" || exit 1
+              mv "$evidence/summary.json.tmp" "$evidence/summary.json" || exit 1
+            fi
+            SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" node script/sf-ci/gate.mjs describe-inventory > "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema !== "sf-ci-diagnostic-inventory-v1" || s.suiteId !== process.env.SF_SUITE_ID || !Array.isArray(s.identities) || !s.identities.length) process.exit(1)' "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            mv "$RUNNER_TEMP/sf-inventory.tmp" "$RUNNER_TEMP/sf-inventory.json"
+          )
+          trap 'result=$?; if [ "$result" -ne 0 ]; then if diagnostic; then :; else printf "%s\n" "Minimized inventory unavailable" >&2; fi; fi; exit "$result"' EXIT
           # Selection paths are relative to the manifest's suite.directory.
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
@@ -368,7 +382,7 @@ jobs:
           } 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
-          test "$status" -eq 0
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
@@ -381,6 +395,15 @@ jobs:
             sf-ci-evidence/${{ matrix.id }}/summary.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
           if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish minimized Bun failure inventory
+        if: ${{ failure() && steps.suite_run.outcome == 'failure' && !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-diagnostic-inventory-${{ matrix.id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-inventory.json
+          if-no-files-found: ignore
           retention-days: 7
 
   unit-sf:
@@ -417,6 +440,7 @@ jobs:
         with:
           artifact: sf-omni-linux-${{ github.event.pull_request.head.sha || github.sha }}
       - name: Execute exact manifest-selected Bun files
+        id: suite_run
         shell: bash
         env:
           GITHUB_ACTIONS: "false"
@@ -433,6 +457,19 @@ jobs:
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -gt 0 || exit 2
 
+          diagnostic() (
+            cd "$root" || exit 1
+            if [ ! -s "$evidence/summary.json" ]; then
+              test -s "$evidence/report.xml" || exit 1
+              if python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json.tmp"; then :; fi
+              node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema_version !== 1 || !Array.isArray(s.cases) || !s.cases.length || !/^[a-f0-9]{64}$/.test(s.report_sha256 || "")) process.exit(1)' "$evidence/summary.json.tmp" || exit 1
+              mv "$evidence/summary.json.tmp" "$evidence/summary.json" || exit 1
+            fi
+            SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" node script/sf-ci/gate.mjs describe-inventory > "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema !== "sf-ci-diagnostic-inventory-v1" || s.suiteId !== process.env.SF_SUITE_ID || !Array.isArray(s.identities) || !s.identities.length) process.exit(1)' "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            mv "$RUNNER_TEMP/sf-inventory.tmp" "$RUNNER_TEMP/sf-inventory.json"
+          )
+          trap 'result=$?; if [ "$result" -ne 0 ]; then if diagnostic; then :; else printf "%s\n" "Minimized inventory unavailable" >&2; fi; fi; exit "$result"' EXIT
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -450,7 +487,7 @@ jobs:
           } 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
-          test "$status" -eq 0
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
@@ -475,14 +512,12 @@ jobs:
           compression-level: 0
           retention-days: 7
 
-      - name: Publish the shard run log on failure
-        if: failure()
+      - name: Publish minimized shard failure inventory
+        if: ${{ failure() && steps.suite_run.outcome == 'failure' && !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-shard-failure-CI-SF-${{ matrix.shard }}
-          path: |
-            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/run.log
-            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/report.xml
+          name: sf-diagnostic-inventory-CI-SF-shard-${{ matrix.shard }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-inventory.json
           if-no-files-found: ignore
           retention-days: 7
 
@@ -526,6 +561,7 @@ jobs:
         shell: bash
         run: bash script/sf-ci/operations-clamd.sh
       - name: Run installed SF UI journey
+        id: suite_run
         env:
           SF_OPERATIONS_CLAMD_PORT: ${{ matrix.id == 'CI-UI-OPERATIONS' && '3310' || '' }}
         shell: bash
@@ -542,6 +578,14 @@ jobs:
           node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -eq 1 || exit 2
+
+          diagnostic() (
+            cd "$root" || exit 1
+            SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')" node script/sf-ci/gate.mjs describe-inventory > "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            node -e 'const s=JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")); if (s.schema !== "sf-ci-diagnostic-inventory-v1" || s.suiteId !== process.env.SF_SUITE_ID || !Array.isArray(s.identities) || !s.identities.length) process.exit(1)' "$RUNNER_TEMP/sf-inventory.tmp" || exit 1
+            mv "$RUNNER_TEMP/sf-inventory.tmp" "$RUNNER_TEMP/sf-inventory.json"
+          )
+          trap 'result=$?; if [ "$result" -ne 0 ]; then if diagnostic; then :; else printf "%s\n" "Minimized inventory unavailable" >&2; fi; fi; exit "$result"' EXIT
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
             import { validateManifest } from "./script/sf-ci/gate.mjs"
@@ -557,7 +601,7 @@ jobs:
           bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
-          test "$status" -eq 0
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
           # The coverage gate needs a baseline versioned from an authentic successful
@@ -575,13 +619,12 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Publish UI failure evidence
-        if: failure()
+      - name: Publish minimized UI failure inventory
+        if: ${{ failure() && steps.suite_run.outcome == 'failure' && !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-ui-failure-${{ matrix.id }}
-          path: |
-            packages/app-shell/e2e/test-results/**
+          name: sf-diagnostic-inventory-${{ matrix.id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-inventory.json
           if-no-files-found: ignore
           retention-days: 7
 
@@ -960,11 +1003,14 @@ jobs:
           ACTUAL_EXIT: ${{ steps.audit.outputs.exit_code }}
         run: |
           set -euo pipefail
-          test "$ACTUAL_EXIT" = 0
           node --input-type=module <<'NODE'
           import { readFileSync } from "node:fs"
           import path from "node:path"
           const report = JSON.parse(readFileSync(path.join(process.env.SF_TEAMS_RESIDUE_ROOT, "team-profile-residue.json"), "utf8"))
+          console.log("SF_TEAMS_RESIDUE_GATE " + JSON.stringify({ exitCode: process.env.ACTUAL_EXIT,
+            status: report.status, blockers: report.blockers, counts: report.counts,
+            review: report.review?.status ?? "UNAVAILABLE", proofs: report.proofs?.status ?? "UNAVAILABLE" }))
+          if (process.env.ACTUAL_EXIT !== "0") throw new Error("SF_TEAMS_RESIDUE_AUDIT_NOT_QUALIFIED")
           if (report.status !== "PASS" || report.counts.unclassified !== 0 || report.counts.activeLegacy !== 0 ||
               report.counts.orphan !== 0 || report.binding.sourceSHA !== process.env.SF_PRODUCT_SOURCE_SHA ||
               report.binding.sourceTreeSHA !== process.env.SF_CHECKOUT_TREE_SHA ||

@@ -13,15 +13,19 @@ import { SfInstallationSource, type SfTrustedInstallationSource } from "../../..
 import { createSfContextHandler } from "../../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
+import { createSfProcurementProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
+import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { createSfBusinessServices } from "../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfActionSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { mountSfNativeProjections } from "../../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
 import { contributions } from "../../index.ts"
 import { createApplication } from "../../runtime/application.ts"
+import { initialProcurementSettings } from "../../src/initial-settings.ts"
 import { createTeamProfileIdentityBoundary } from "../../runtime/team-profile-identity.ts"
 import { createTeamProfileHttp } from "../../runtime/team-profile-http.ts"
 import type { SessionAccess } from "@orchestra/schema/session-access"
 import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
-import type { teamProductFixture } from "./product-fixture.ts"
+import { productGrant, type teamProductFixture } from "./product-fixture.ts"
 import { profileA } from "./installation-fixture.ts"
 import { teamSessionFixture } from "../../../../../packages/core/test/fixture/team-session.ts"
 import { applicationServices } from "../../../../../packages/server/src/routes.ts"
@@ -32,6 +36,7 @@ import { isInstalledSessionPath, makeInstalledSessionHttp } from "../../../../..
 export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof teamProductFixture>[0]> & {
   /** Explicit only in the conversation fixture; existing browser cases receive no Session action grant. */
   sessionActions?: readonly SessionAccess.Action[]
+  procurement?: boolean
 } = {}) {
   const enabled = input.enabled ?? (input.teams === false ? [] : [profileA])
   const f = await teamSessionFixture({ ...input, enabled, actions: input.sessionActions ?? [], extraNodes: [applicationServices] })
@@ -59,9 +64,12 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
     Layer.provide(HttpServer.layerServices),
   ), { disableLogger: true })
   const boundary = createTeamProfileIdentityBoundary({ identity: f.identity, resolver: f.resolver, ...f.binding })
+  const procurement = input.procurement ? createSfBusinessServices({ authority: f.authority, persistence: f.persistence,
+    proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites: new WeakSet() }) : undefined
   const application = {
     authenticate: boundary.identity.authenticate, persistence: f.persistence, domains: contributions, maxJsonBytes: 8 * 1024 * 1024,
     environment: async (request: Request) => ({ ...await f.options.environment(request), directory: await f.identity.directory(request) }),
+    ...(procurement ? { productView: procurement.procurementQueueView } : {}),
   }
   let actions: ReturnType<typeof createSfActionSource>
   const destinations = async (request: Request, stamp: SfContextStamp, pages: Parameters<typeof sfContextDestinationsFromPages>[0]) =>
@@ -87,6 +95,7 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
     },
     operational: async (request, stamp) => [
       ...await observeSfPlannerPages(application, request, stamp),
+      ...(procurement ? await observeSfDomainHealth(deps, handlers, request, stamp) : []),
       ...await actions.operational(request, stamp),
     ],
   })
@@ -94,8 +103,9 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
   const context = createSfContextHandler({ origin: f.binding.origin, mount: f.binding.mount,
     runtime: () => services })
   const deps = { origin: f.binding.origin, mount: f.binding.mount, application,
-    runtime: () => undefined, readContext: context.readContext }
-  const handlers = createSfPlannerProjectionHandlers(deps)
+    runtime: () => procurement ? { ...f.authority, productView: procurement.procurementQueueView } : undefined,
+    readContext: context.readContext }
+  const handlers = [...createSfPlannerProjectionHandlers(deps), ...(procurement ? createSfProcurementProjectionHandlers(deps) : [])]
   actions = createSfActionSource(deps, handlers)
   const native = mountSfNativeProjections({ mount: f.binding.mount, context, handlers })
   const admin = createTeamProfileHttp({ ...f.binding, resolver: f.resolver })
@@ -104,6 +114,13 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
   // These tests only record prompt admission; they never supply a model/provider execution replacement.
   const configured: TeamProfile.Ref[] = []
   try {
+    if (procurement) {
+      await f.persistence.transaction("procurement", async (snapshot) => {
+        snapshot.data.store = { settings: initialProcurementSettings(), issued: { pr: [], po: [] }, suppliers: [], requests: {} }
+        return { commit: true, value: undefined }
+      })
+      await f.persistence.initializeSources("procurement")
+    }
     for (const profile of enabled) {
       const query = new URLSearchParams({ contractRevision: "sf-team-profile/1",
         installationId: f.binding.installationId, tenantId: f.binding.tenantId })
@@ -122,6 +139,7 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
       configured.push(profile)
     }
   } catch (error) {
+    procurement?.dispose()
     await metadata.dispose()
     await f[Symbol.asyncDispose]()
     throw error
@@ -145,6 +163,7 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
   const session = await ready.promise.catch(async (error) => {
     release.resolve()
     await runtime.catch(() => undefined)
+    procurement?.dispose()
     await metadata.dispose()
     await f[Symbol.asyncDispose]()
     throw error
@@ -169,11 +188,18 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
   const close = () => closing.result ??= (async () => {
     release.resolve()
     const results = await Promise.allSettled([runtime, metadata.dispose()])
+    procurement?.dispose()
     await f[Symbol.asyncDispose]()
     const failure = results.find((result) => result.status === "rejected")
     if (failure?.status === "rejected") throw failure.reason
   })()
   return { ...f, descriptor, handle, seedPlannerVersion, metadataCalls, configured: Object.freeze(configured),
     sessionRequests, runtimeState, sessionCalls: f.calls, sessionActions: Object.freeze([...input.sessionActions ?? []]), close,
-    [Symbol.asyncDispose]: close }
+  [Symbol.asyncDispose]: close }
+}
+
+export function nativeProcurementWebFixture(eligibleTeams: readonly TeamProfile.Ref[] = [profileA]) {
+  const grant = productGrant()
+  return nativeTeamWebFixture({ procurement: true, enabled: eligibleTeams, direct: eligibleTeams,
+    grants: [{ ...grant, operations: [...grant.operations, "sf_request_read"] }] })
 }

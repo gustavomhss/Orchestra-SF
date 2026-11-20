@@ -185,7 +185,7 @@ const Output_AuthorizedCaseProjection_147 = Schema.Struct({
   "checkedAt": Schema.String,
 })
 
-const Output_BusinessEvidenceRef_9: Schema.Schema<SfEvidenceRef> = Schema.Union([Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25)])
+const Output_BusinessEvidenceRef_9: Schema.Codec<SfEvidenceRef> = Schema.Union([Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25)])
 
 const Output_CaseLedgerEvent_138 = Schema.Struct({
   "id": Schema.String,

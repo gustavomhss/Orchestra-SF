@@ -1,6 +1,8 @@
 import { Schema } from "effect"
 import { optional } from "../schema"
-import type { SfContextStamp } from "./context"
+import { SfContextStamp } from "./context"
+import { SfRecordEvidence } from "./collaboration/fields"
+import { SfSourceDomainProjection } from "./decisions/source-contracts"
 
 // A03 public boundary. All values below are projected from the current authorized
 // Procurement producer; nothing here performs currency, approval or policy logic.
@@ -235,10 +237,6 @@ export const SfProcurementSettings = Schema.Struct({
   reminderDays: Schema.optional(NumericInput), escalationDays: Schema.optional(NumericInput),
   uploadCap: Schema.optional(NumericInput),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
-const Stamp = Schema.Struct({
-  installationId: NonEmpty, projectId: NonEmpty, hostId: NonEmpty, principalRef: NonEmpty,
-  policyVersion: Schema.String, accessRevision: Schema.String,
-})
 const PageSelection = Schema.Struct({
   year: Schema.optional(NonNegativeInteger), month: Schema.optional(PositiveInteger),
   filter: Schema.optional(Schema.String), q: Schema.optional(Schema.String),
@@ -272,6 +270,31 @@ const RequestsData = Schema.Struct({
   directory: Schema.Array(DirectoryEntry),
   formSettings: PublicSettings,
   bankVerificationAvailable: Schema.Boolean,
+  procurementQueueView: Schema.optional(Schema.Struct({
+    rows: Schema.Array(Schema.Struct({
+      id: NonEmpty,
+      evidence: SfRecordEvidence,
+      version: NonNegativeInteger,
+      projection: SfSourceDomainProjection,
+      status: Schema.NullOr(Schema.String),
+      subject: Schema.NullOr(Schema.String),
+      holder: Schema.NullOr(Schema.String),
+      approvalStage: Schema.NullOr(Schema.String),
+      stageEnteredAt: Schema.NullOr(Schema.String),
+      ageDays: Schema.NullOr(Schema.Finite),
+      baseAmount: Schema.NullOr(Schema.Finite),
+      baseCurrency: Schema.String,
+      submittedAmount: Schema.NullOr(Schema.Finite),
+      submittedCurrency: Schema.NullOr(Schema.String),
+      originalAmount: Schema.NullOr(Schema.Finite),
+      originalCurrency: Schema.NullOr(Schema.String),
+      monetaryState: Schema.NullOr(Schema.String),
+      reason: Schema.NullOr(Schema.String),
+      nextStep: Schema.NullOr(Schema.String),
+    })),
+    stock: SfSourceDomainProjection,
+    aging: Schema.Array(SfSourceDomainProjection),
+  })),
 })
 const ApprovalGroup = Schema.Array(SfProcurementRequest)
 const ApprovalsData = Schema.Struct({
@@ -293,7 +316,7 @@ function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "
 ) {
   return Schema.Union([
     Schema.Struct({
-      status: Schema.Literal("ok"), context: Stamp,
+      status: Schema.Literal("ok"), context: SfContextStamp,
       value: Schema.Struct({
         capabilityId: Schema.Literal(capabilityId), selection: PageSelection,
         data, versions: RequestVersion, allowedActionIds: Schema.Array(Schema.String),

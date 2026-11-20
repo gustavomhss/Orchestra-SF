@@ -1,9 +1,15 @@
 import { expect, test } from "bun:test"
+import { constants } from "node:fs"
+import { lstat, open, realpath } from "node:fs/promises"
 import type { BrowserContext, Page } from "@playwright/test"
+import { Schema } from "effect"
+import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
+import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
+import { SfDomainCommandCap25Create, SfDomainPageCap25 } from "@orchestra/schema/sucafina/procurement"
 import { expectSpawn } from "../../../../../packages/core/test/fixture/omni-expect.ts"
 import { launchBrowserDriver } from "../product/wp02/browser-driver-fixture.ts"
 import { buildNativeTeamsWeb } from "./native-web-build.ts"
-import { nativeTeamWebFixture } from "./native-web-fixture.ts"
+import { nativeProcurementWebFixture, nativeTeamWebFixture } from "./native-web-fixture.ts"
 import { serveNativeTeamsWeb } from "./native-web-network.ts"
 import { profileA, profileB, teamRow } from "./installation-fixture.ts"
 import { authority, group, oid } from "../microsoft-login/oidc-fixture.ts"
@@ -18,6 +24,393 @@ test("native Web composition retains the live host identity through anonymous F0
   } finally { await f.close() }
 })
 
+test("native Teams fixture auto-binds exactly one eligible Team to the purchase projection", async () => {
+  await using f = await nativeProcurementWebFixture([profileA])
+  const response = await f.handle(f.contextRequest("selection"))
+  expect(response.status).toBe(200)
+  const context = Schema.decodeUnknownSync(SfTeamContextResult)(await response.json())
+  expect(context.status).toBe("ok")
+  if (context.status !== "ok") throw new Error("Single eligible Team context was not admitted")
+  expect(context.value.profile.teams.status).toBe("ready")
+  if (context.value.profile.teams.status !== "ready") throw new Error("Single eligible Team was not selected")
+  expect(context.value.profile.teams.choices.map((choice) => choice.profile)).toEqual([profileA])
+  expect(context.value.profile.teams.selected).toEqual(profileA)
+  expect(context.value.stamp).toMatchObject({ installationId: f.technical.installationId,
+    projectId: f.technical.projectId, hostId: f.technical.hostId, principalRef: oid })
+  expect(context.value.stamp.team).toEqual({
+    owner: { profile: profileA, principal: { tenantId: profileA.tenantId, principalObjectId: oid } },
+    revisions: { configRevision: context.value.profile.teams.configRevision,
+      accessRevision: context.value.profile.accessRevision },
+  })
+  expectProcurementAdmission(context)
+
+  const selector = JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: profileA })
+  const page = await f.handle(f.request("/api/ui/pages/CAP25", f.cookie, { headers: { "x-sf-team-profile": selector } }))
+  expect(page.status).toBe(200)
+  const projection = Schema.decodeUnknownSync(SfDomainPageCap25.output)(await page.json())
+  expect(projection.status).toBe("ok")
+  if (projection.status !== "ok") throw new Error("Single-Team CAP25 projection was not admitted")
+  expect(projection.context.team).toEqual(context.value.stamp.team)
+  expect(projection.value.capabilityId).toBe("CAP25")
+  expect(projection.value.allowedActionIds).toContain("create")
+  expect(projection.value.data.requests).toEqual([])
+  expect(projection.value.data.procurementQueueView).toBeDefined()
+})
+
+test("native Teams fixture requires a choice between eligible Teams and withholds business projection", async () => {
+  await using f = await nativeProcurementWebFixture([profileA, profileB])
+  const response = await f.handle(f.contextRequest("selection"))
+  expect(response.status).toBe(200)
+  const context = Schema.decodeUnknownSync(SfTeamContextResult)(await response.json())
+  expect(context.status).toBe("ok")
+  if (context.status !== "ok") throw new Error("Team choice context was not admitted")
+  expect(context.value.profile.teams.status).toBe("selection-required")
+  if (context.value.profile.teams.status !== "selection-required") throw new Error("Multiple eligible Teams did not require selection")
+  expect(context.value.profile.teams.choices.map((choice) => choice.profile)).toEqual([profileA, profileB])
+  expect(context.value.stamp.team).toBeUndefined()
+  expect(context.value.destinations.some((destination) => destination.capabilityId === "CAP25")).toBe(false)
+  // Technical context availability is permitted; no business operation may appear ready.
+  expect(context.value.availability.flatMap((resource) => resource.family === "ctx" ? [] : resource.operations)
+    .filter((operation) => operation.state === "ready")).toEqual([])
+
+  const denied = await f.handle(f.request("/api/ui/pages/CAP25", f.cookie))
+  expect(denied.status).toBe(403)
+  const deniedBody: unknown = await denied.json()
+  expect(deniedBody).not.toHaveProperty("value")
+  expect(deniedBody).not.toHaveProperty("data")
+})
+
+test("native Teams fixture reports no eligible Team without business access", async () => {
+  await using f = await nativeProcurementWebFixture([])
+  const response = await f.handle(f.contextRequest("selection"))
+  expect(response.status).toBe(200)
+  const context = Schema.decodeUnknownSync(SfTeamContextResult)(await response.json())
+  expect(context.status).toBe("ok")
+  if (context.status !== "ok") throw new Error("No-Team context was not admitted")
+  expect(context.value.profile.teams).toEqual({ status: "no-teams" })
+  expect(context.value.stamp.team).toBeUndefined()
+  expect(context.value.destinations.some((destination) => destination.capabilityId === "CAP25")).toBe(false)
+  expect(context.value.availability.flatMap((resource) => resource.family === "ctx" ? [] : resource.operations)
+    .filter((operation) => operation.state === "ready")).toEqual([])
+
+  const denied = await f.handle(f.request("/api/ui/pages/CAP25", f.cookie))
+  expect(denied.status).toBe(403)
+  const deniedBody: unknown = await denied.json()
+  expect(deniedBody).not.toHaveProperty("value")
+  expect(deniedBody).not.toHaveProperty("data")
+})
+
+const installedChrome = "/opt/google/chrome/chrome"
+const purchaseBoundaryTimeoutMs = 15000
+
+async function preparePurchaseChromePages() {
+  const maxBytes = 512 * 1024 * 1024, budgetMs = 20000
+  const started = performance.now()
+  const timedOut = new Error("Purchase warm-I/O preparation exceeded its 20s budget")
+  const checkDeadline = () => { if (performance.now() - started >= budgetMs) throw timedOut }
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const deadline = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(timedOut), budgetMs) })
+  const readExecutable = async () => {
+    if (process.platform !== "linux" || await realpath(installedChrome) !== installedChrome)
+      throw new Error("Purchase warm-I/O requires the exact installed Linux Chrome path")
+    checkDeadline()
+    const entry = await lstat(installedChrome)
+    if (!entry.isFile() || !(entry.mode & 0o111) || entry.size <= 0 || entry.size > maxBytes)
+      throw new Error("Purchase warm-I/O requires a regular executable within the byte budget")
+    checkDeadline()
+    const file = await open(installedChrome, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK)
+    try {
+      checkDeadline()
+      const stat = await file.stat()
+      if (!stat.isFile() || !(stat.mode & 0o111) || stat.dev !== entry.dev || stat.ino !== entry.ino || stat.size !== entry.size)
+        throw new Error("Installed Chrome changed before warm-I/O preparation")
+      const buffer = Buffer.alloc(1024 * 1024)
+      let bytes = 0
+      while (bytes < stat.size) {
+        checkDeadline()
+        const { bytesRead } = await file.read(buffer, 0, Math.min(buffer.length, stat.size - bytes), bytes)
+        if (!bytesRead) throw new Error("Installed Chrome ended before warm-I/O preparation completed")
+        bytes += bytesRead
+      }
+      return bytes
+    } finally { await file.close() }
+  }
+  try {
+    // A timed-out kernel read may finish later; the loop issues no further reads or launch.
+    const bytes = await Promise.race([deadline, readExecutable()])
+    checkDeadline()
+    return { bytes, maxBytes, budgetMs, elapsedMs: Math.round(performance.now() - started) }
+  } finally { if (timer !== undefined) clearTimeout(timer) }
+}
+
+// Signed OIDC is synthetic; the production Web bundle, browser HTTP, queue and producer are real.
+async function runPurchaseJourney(warmIO: boolean) {
+  let phase = "browser-driver"
+  let firstObservableUiBoundary: string | undefined
+  let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
+  let built: Awaited<ReturnType<typeof buildNativeTeamsWeb>> | undefined
+  let fixture: Awaited<ReturnType<typeof nativeProcurementWebFixture>> | undefined
+  let network: Awaited<ReturnType<typeof serveNativeTeamsWeb>> | undefined
+  let browser: BrowserContext | undefined
+  let primaryError: unknown
+  let hasPrimaryError = false
+  let diagnosticPage: Page | undefined
+  let contextReadCount = 0
+  const contextReadStatuses: number[] = []
+  let cap25GetRequestCount = 0
+  let cap25GetResponseStatus: number | undefined
+  let cap25ProducerReads = 0
+  let cap25ProducerStatus: number | undefined
+  let cap25ProducerError = false
+  let cap25BrowserReadFailed = false
+  let pageErrorCount = 0
+  try {
+    expectSpawn(import.meta.path)
+    if (warmIO) {
+      phase = "warm-io-read-installed-chrome"
+      const prepared = await preparePurchaseChromePages()
+      console.info("SF_TEAMS_PURCHASE_WARM_IO", JSON.stringify({ phase: "executable-read-complete", executable: installedChrome, ...prepared }))
+    }
+    phase = warmIO ? "warm-io-browser-driver" : "browser-driver"
+    driver = await launchBrowserDriver("teams-web-transport")
+    if (warmIO) {
+      phase = "warm-io-verify-launched-chrome"
+      const launch = driver.launchObservation
+      expect(launch.executable).toBe(installedChrome)
+      if (typeof launch.getVersionReplyMs !== "number" || !Number.isFinite(launch.getVersionReplyMs) || launch.getVersionReplyMs < 0 ||
+        typeof launch.browserProduct !== "string") throw new Error("Purchase warm-I/O launch did not observe Chrome's CDP version reply")
+      console.info("SF_TEAMS_PURCHASE_WARM_IO", JSON.stringify({ phase: "same-launch-executable-and-cdp-verified", ...launch }))
+    }
+    phase = "production-web-build"
+    const assets = built = await buildNativeTeamsWeb()
+    phase = "fixture-installation"
+    const f = fixture = await nativeProcurementWebFixture()
+    const writes: { status: number; cookie: boolean; basic: boolean; selector: string | null }[] = []
+    const target = (operation: typeof SfDomainPageCap25.operationId | typeof SfDomainCommandCap25Create.operationId) =>
+      SfOperationRegistry[operation].pathTemplate.replace("{mount}", f.binding.mount)
+    network = await serveNativeTeamsWeb({
+      origin: fixture.binding.origin,
+      authorize: async (address) => {
+        const login = new URL(address)
+        const callback = new URL(login.searchParams.get("redirect_uri")!)
+        callback.searchParams.set("code", await f.provider.issueCode(login.href, oid))
+        callback.searchParams.set("state", login.searchParams.get("state")!)
+        return new Response(null, { status: 303, headers: { Location: callback.href, "Cache-Control": "no-store" } })
+      },
+      handle: async (request) => {
+        const { pathname } = new URL(request.url)
+        if (!pathname.startsWith(f.binding.mount + "/") && !pathname.startsWith("/api/"))
+          return await assets.asset(request) ?? new Response(null, { status: 404 })
+        const queueRead = pathname === target(SfDomainPageCap25.operationId) && request.method === "GET"
+        if (queueRead) cap25ProducerReads = Math.min(cap25ProducerReads + 1, 10)
+        const response = await f.handle(request).catch((error: unknown) => {
+          if (queueRead) cap25ProducerError = true
+          throw error
+        })
+        if (queueRead) cap25ProducerStatus = response.status
+        if (pathname === target(SfDomainCommandCap25Create.operationId) && request.method === "POST") {
+          writes.push({ status: response.status, cookie: request.headers.has("cookie"),
+            basic: request.headers.has("authorization"), selector: request.headers.get("x-sf-team-profile") })
+        }
+        return response
+      },
+    })
+    phase = "browser-context"
+    browser = await driver.browser.newContext({ proxy: { server: network.proxy }, ignoreHTTPSErrors: true,
+      serviceWorkers: "block", locale: "en-US", viewport: { width: 1360, height: 900 } })
+    const page = await browser.newPage()
+    diagnosticPage = page
+    page.setDefaultTimeout(purchaseBoundaryTimeoutMs)
+    page.on("request", (request) => {
+      const url = new URL(request.url())
+      if (url.pathname === `${f.binding.mount}/api/ui/context`) {
+        contextReadCount = Math.min(contextReadCount + 1, 10)
+        return
+      }
+      if (url.pathname === target(SfDomainPageCap25.operationId) && request.method() === "GET")
+        cap25GetRequestCount = Math.min(cap25GetRequestCount + 1, 10)
+    })
+    page.on("response", (response) => {
+      const url = new URL(response.url())
+      if (url.pathname === `${f.binding.mount}/api/ui/context` && contextReadStatuses.length < 5)
+        contextReadStatuses.push(response.status())
+      if (url.pathname === target(SfDomainPageCap25.operationId) && response.request().method() === "GET" &&
+          cap25GetResponseStatus === undefined) cap25GetResponseStatus = response.status()
+    })
+    page.on("pageerror", () => { pageErrorCount = Math.min(pageErrorCount + 1, 10) })
+    page.on("requestfailed", (request) => {
+      if (new URL(request.url()).pathname === target(SfDomainPageCap25.operationId) && request.method() === "GET")
+        cap25BrowserReadFailed = true
+    })
+    phase = "anonymous-shell"
+    await page.goto(fixture.binding.origin + "/")
+    await page.locator("[data-sf-teams-shell][data-sf-teams-state='unauthenticated']").waitFor({ state: "visible" })
+    firstObservableUiBoundary = "unauthenticated-teams-shell"
+    phase = "synthetic-login"
+    await page.locator("[data-sf-microsoft-login]").click()
+    await page.waitForFunction(() => document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state") === "authenticated")
+    phase = "single-team-selection"
+    await page.waitForFunction((team) => document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected") === team, profileA.teamObjectId)
+    expect(await page.locator(".sf-team-picker-wide [data-sf-team-picker]").inputValue()).toBe(profileA.teamObjectId)
+    const owner = new URLSearchParams({ contractRevision: "sf-team-profile/1", server: fixture.binding.origin,
+      installationId: fixture.binding.installationId, tenantId: fixture.binding.tenantId, teamObjectId: profileA.teamObjectId })
+    const admitted = captureResponse(page.waitForResponse((response) => {
+      const url = new URL(response.url())
+      return url.pathname === `${f.binding.mount}/api/ui/context` && url.searchParams.get("kind") === "team"
+    }))
+    const queueRead = captureResponse(page.waitForResponse((response) =>
+      new URL(response.url()).pathname === target(SfDomainPageCap25.operationId) && response.request().method() === "GET",
+    { timeout: purchaseBoundaryTimeoutMs }))
+    phase = "team-bound-navigation"
+    await page.goto(`${fixture.binding.origin}/orchestra/sf-procurement/requests/new?${owner}`)
+    phase = "purchase-admission-response"
+    const admissionResult = await admitted
+    if ("error" in admissionResult) throw admissionResult.error
+    const context = admissionResult.value
+    expect(context.status()).toBe(200)
+    const admission = Schema.decodeUnknownSync(SfTeamContextResult)(await context.json())
+    expect(admission.status).toBe("ok")
+    if (admission.status !== "ok") throw new Error("Selected Team was not admitted")
+    expect(admission.value.profile.teams.status).toBe("ready")
+    if (admission.value.profile.teams.status !== "ready") throw new Error("Single eligible Team was not selected")
+    expect(admission.value.profile.teams.choices.map((choice) => choice.profile)).toEqual([profileA])
+    expect(admission.value.profile.teams.selected).toEqual(profileA)
+    expect(admission.value.stamp.team).toEqual({
+      owner: { profile: profileA, principal: { tenantId: profileA.tenantId, principalObjectId: oid } },
+      revisions: { configRevision: admission.value.profile.teams.configRevision,
+        accessRevision: admission.value.profile.accessRevision },
+    })
+    expectProcurementAdmission(admission)
+    phase = "purchase-requests-page-render"
+    const requestsPage = page.locator('section[data-component="sf-requests-pr-po"]')
+    await requestsPage.waitFor({ state: "visible", timeout: purchaseBoundaryTimeoutMs })
+    expect(await requestsPage.count()).toBe(1)
+    firstObservableUiBoundary ??= "requests-pr-po-section"
+    phase = "purchase-CAP25-queue-response"
+    const queueResult = await queueRead
+    if ("error" in queueResult) throw queueResult.error
+    const queue = queueResult.value
+    expect(queue.status()).toBe(200)
+    const initialProjection = Schema.decodeUnknownSync(SfDomainPageCap25.output)(await queue.json())
+    expect(initialProjection.status).toBe("ok")
+    if (initialProjection.status !== "ok") throw new Error("Authorized purchase queue projection was not admitted")
+    expect(initialProjection.context.team).toEqual(admission.value.stamp.team)
+    expect(initialProjection.value.capabilityId).toBe("CAP25")
+    expect(initialProjection.value.data.requests).toEqual([])
+    expect(initialProjection.value.data.procurementQueueView).toBeDefined()
+    phase = "purchase-queue-UI-boundary"
+    const heading = page.getByRole("heading", { name: "Requests", exact: true })
+    await heading.waitFor({ state: "visible" })
+    firstObservableUiBoundary ??= "requests-heading"
+    expect(await heading.count()).toBe(1)
+    const formSelector = "article.sf-u11-detail form[data-command='create'][data-page='Requests']"
+    const form = page.locator(formSelector)
+    await form.waitFor({ state: "visible" })
+    expect(await form.count()).toBe(1)
+    const title = warmIO ? "Warm-I/O synthetic browser purchase request" : "Cold synthetic browser purchase request"
+    await form.locator('[name="pr.title"]').fill(title)
+    phase = "purchase-review-dialog"
+    await form.getByRole("button", { name: "Create request", exact: true }).click()
+    expect(writes).toHaveLength(0)
+    const review = page.locator('[data-component="sf-change-review"]')
+    await review.waitFor({ state: "visible" })
+    expect(await review.count()).toBe(1)
+    const reviewHeading = review.getByRole("heading", { name: "Review changes", exact: true })
+    await reviewHeading.waitFor({ state: "visible" })
+    expect(await reviewHeading.count()).toBe(1)
+    phase = "purchase-review-confirmation"
+    const committed = captureResponse(page.waitForResponse((response) =>
+      new URL(response.url()).pathname === target(SfDomainCommandCap25Create.operationId) && response.request().method() === "POST"))
+    phase = "purchase-confirm-dispatch"
+    await review.getByRole("button", { name: "Confirm action", exact: true }).click()
+    phase = "purchase-producer-response"
+    const commandResult = await committed
+    if ("error" in commandResult) throw commandResult.error
+    const command = commandResult.value
+    expect(command.status()).toBe(200)
+    expect(Schema.decodeUnknownSync(SfDomainCommandCap25Create.output)(await command.json())).toMatchObject({ ok: true })
+    expect(command.request().postDataJSON()).toMatchObject({
+      action: "create", page: "Requests", version: 0, values: { pr: { title } },
+    })
+    expect(writes).toEqual([{ status: 200, cookie: true, basic: false,
+      selector: JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: profileA }) }])
+
+    phase = "purchase-projection-readback"
+    const listed = captureResponse(page.waitForResponse((response) =>
+      new URL(response.url()).pathname === target(SfDomainPageCap25.operationId) && response.request().method() === "GET"))
+    await page.goto(`${fixture.binding.origin}/orchestra/sf-procurement/requests?${owner}`)
+    const listedResult = await listed
+    if ("error" in listedResult) throw listedResult.error
+    const projection = listedResult.value
+    expect(projection.status()).toBe(200)
+    const readback = Schema.decodeUnknownSync(SfDomainPageCap25.output)(await projection.json())
+    expect(readback.status).toBe("ok")
+    if (readback.status !== "ok") throw new Error("Purchase queue readback was not admitted")
+    expect(readback.context.team).toEqual(admission.value.stamp.team)
+    expect(readback.value.data.requests).toHaveLength(1)
+    expect(readback.value.data.requests[0]).toMatchObject({ createdBy: oid, pr: { title } })
+    await page.getByRole("cell", { name: title, exact: true }).waitFor()
+    expect(writes).toHaveLength(1)
+  } catch (error) {
+    hasPrimaryError = true
+    primaryError = error
+    const ui = await readPurchaseUiDiagnostic(diagnosticPage).catch(() => undefined)
+    console.info("SF_TEAMS_NATIVE_WEB_PURCHASE_FAILURE " + JSON.stringify({
+      firstFailedPhase: phase,
+      firstObservableUiBoundary: firstObservableUiBoundary ?? "not-observed",
+      errorName: error instanceof Error ? error.name : "unknown",
+      shellAlertVisible: ui?.shellAlertVisible ?? "unavailable",
+      requestsPageRendered: ui?.requestsPageRendered ?? false,
+      cap25GetObserved: cap25GetRequestCount > 0,
+      cap25GetRequestCount,
+      cap25GetResponseStatus: cap25GetResponseStatus ?? "no-response",
+      cap25ProducerReads,
+      cap25ProducerStatus: cap25ProducerStatus ?? "no-response",
+      cap25ProducerError,
+      cap25BrowserReadFailed,
+      contextReadCount,
+      contextReadStatuses,
+      pageErrorCount,
+    }))
+  }
+  const cleanupErrors: unknown[] = []
+  for (const close of [() => browser?.close(), () => network?.close(), () => fixture?.close(),
+    () => built?.close(), () => driver?.close()]) {
+    try { await close() } catch (error) { cleanupErrors.push(error) }
+  }
+  if (hasPrimaryError) throw primaryError
+  if (cleanupErrors.length) throw new AggregateError(cleanupErrors, "Purchase browser journey cleanup failed")
+}
+
+function captureResponse<T>(promise: Promise<T>) {
+  return promise.then((value) => ({ value }), (error: unknown) => ({ error }))
+}
+
+async function readPurchaseUiDiagnostic(page: Page | undefined) {
+  if (!page || page.isClosed()) return undefined
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      page.evaluate(() => ({
+        shellAlertVisible: !!document.querySelector(".sf-team-main > [role='alert']"),
+        requestsPageRendered: !!document.querySelector('section[data-component="sf-requests-pr-po"]'),
+      })).catch(() => undefined),
+      new Promise<undefined>((resolve) => { timer = setTimeout(() => resolve(undefined), 250) }),
+    ])
+  } finally { if (timer !== undefined) clearTimeout(timer) }
+}
+
+function expectProcurementAdmission(context: unknown) {
+  expect(context).toMatchObject({ status: "ok", value: {
+    destinations: expect.arrayContaining([expect.objectContaining({ capabilityId: "CAP25", canRead: true,
+      allowedActionIds: expect.arrayContaining(["create"]) })]),
+    availability: expect.arrayContaining([expect.objectContaining({ family: "procurement", resource: "CAP25", operations: expect.arrayContaining([
+      expect.objectContaining({ operationId: SfDomainPageCap25.operationId, state: "ready", operational: true }),
+      expect.objectContaining({ operationId: SfDomainCommandCap25Create.operationId, state: "ready", operational: true }),
+    ]) })]),
+  } })
+}
+
 // Focused G02 production Web composition, outside the fixed 40-source G04 pool.
 // The OAuth provider is synthetic; challenge/PKCE/JWKS/session/SQLite/HTTP/UI are real.
 test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team", async () => {
@@ -31,8 +424,9 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   const contextReplies: { status: string; teams?: string; bound: boolean }[] = []
   const observed: { fixture: "business" | "admin"; path: string; method: string; cookie: boolean; basic: boolean; selector: string | null; status: number }[] = []
   const startedAt = performance.now()
-  const httpPhases: { fixture: "business" | "admin"; path: string; method: string; startedMs: number; elapsedMs?: number; status?: number }[] = []
+  const httpPhases: { fixture: "business" | "admin"; route: string; method: string; startedMs: number; elapsedMs?: number; status?: number }[] = []
   let passed = false, phase = "build", holdLogout = false, loseConfigurationResponse = false
+  let firstObservableUiBoundary: string | undefined
   const logoutEntered = Promise.withResolvers<void>(), logoutRelease = Promise.withResolvers<void>(), logoutHandled = Promise.withResolvers<void>()
   try {
     phase = "browser-start"
@@ -62,8 +456,11 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
             logoutEntered.resolve(); await logoutRelease.promise
           }
           const start = performance.now()
-          const measured = /^\/api\/(?:session(?:\/|$)|event$)/.test(url.pathname.slice(fixture.binding.mount.length))
-            ? { fixture: name, path: url.pathname, method: request.method, startedMs: Math.round(start - startedAt) } : undefined
+          const relativePath = url.pathname.slice(fixture.binding.mount.length)
+          const measured = /^\/api\/(?:session(?:\/|$)|event$)/.test(relativePath)
+            ? { fixture: name, route: relativePath === "/api/session" ? "session-collection" :
+              relativePath === "/api/event" ? "event-stream" : "session-resource",
+              method: request.method, startedMs: Math.round(start - startedAt) } : undefined
           if (measured) httpPhases.push(measured)
           // The actual TLS Request is passed unchanged to the installed handlers.
           const response = url.pathname.startsWith(fixture.binding.mount + "/") || url.pathname.startsWith("/api/")
@@ -118,8 +515,11 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       await page.goto(fixture.binding.origin + "/", { waitUntil: "domcontentloaded" })
       return { browser, page }
     }
-    const waitState = (page: Page, state: string) => page.waitForFunction((expected) =>
-      document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state") === expected, state)
+    const waitState = async (page: Page, state: string) => {
+      await page.waitForFunction((expected) =>
+        document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state") === expected, state)
+      firstObservableUiBoundary ??= "teams-shell-" + state
+    }
     const waitTeam = (page: Page, id: string) => page.waitForFunction((expected) => {
       const picker = document.querySelector<HTMLSelectElement>(".sf-team-picker-wide [data-sf-team-picker]")
       // The admitted context publishes before the guarded history commit. Wait
@@ -363,11 +763,13 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     await configuration.locator("[data-sf-config-agent-id]").fill("analyst")
     await configuration.locator("[data-sf-config-add-agent]").click()
     await configuration.locator("[data-sf-config-instructions]").fill("Shared instructions configured by the independent administrator.")
-    const configured = administrator.page.waitForResponse((response) =>
+    const configured = captureResponse(administrator.page.waitForResponse((response) =>
       new URL(response.url()).pathname === admin!.binding.mount + "/api/ui/team-profiles/configuration" &&
-      response.request().method() === "POST")
+      response.request().method() === "POST"))
     await configuration.locator("[data-sf-config-save]").click()
-    expect((await configured).status()).toBe(200)
+    const configuredResult = await configured
+    if ("error" in configuredResult) throw configuredResult.error
+    expect(configuredResult.value.status()).toBe(200)
     await administrator.page.locator('[data-sf-team-administration="ready"]').waitFor({ state: "visible" })
     expect(await admin.profiles.readConfiguration(profileA)).toEqual({
       origin: "installation-team-store", profile: profileA, configRevision: 2,
@@ -412,32 +814,37 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     expect(errors).toEqual([])
     passed = true
   } catch (error) {
-    const clean = (text: string) => text.replace(/https?:\/\/[^\s"'<>]+/g, (raw) => {
-      try { const url = new URL(raw); return url.origin + url.pathname } catch { return "[redacted URL]" }
-    })
     console.info("SF_TEAMS_NATIVE_WEB_PRIMARY_FAILURE " + JSON.stringify({
-      phase, name: error instanceof Error ? error.name : "unknown",
-      message: error instanceof Error ? clean(error.message.split("\n")[0] ?? "") : "Non-error failure",
-      stack: error instanceof Error ? error.stack?.split("\n").filter((line) => /^\s+at /.test(line)).map(clean).slice(0,5) : [],
+      firstFailedPhase: phase,
+      firstObservableUiBoundary: firstObservableUiBoundary ?? "not-observed",
+      errorName: error instanceof Error ? error.name : "unknown",
     }))
     throw error
   } finally {
     logoutRelease.resolve()
     if (!passed) {
       const pages = await Promise.allSettled(contexts.flatMap((context) => context.pages().map((page) => page.evaluate(() => ({
-        path: location.pathname,
         state: document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state"),
-        selected: document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected"),
-        status: document.querySelector("[data-sf-team-status]")?.textContent,
-        fatal: document.querySelector<HTMLTextAreaElement>("textarea[readonly]")?.value.slice(0,1200),
-        notices: [...document.querySelectorAll(".sf-team-notice")].map((element) => element.textContent),
-        pickers: [...document.querySelectorAll<HTMLSelectElement>("[data-sf-team-picker]")]
-          .map((element) => ({ value: element.value, disabled: element.disabled })),
+        hasTeamStatus: !!document.querySelector("[data-sf-team-status]"),
+        hasProcurement: !!document.querySelector('[data-component="sf-requests-pr-po"]'),
+        hasPurchaseForm: !!document.querySelector('form[data-command="create"][data-page="Requests"]'),
       })))))
-      console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ phase, errors, runtimeErrors, contextReplies,
-        httpPhases: httpPhases.map((item) => ({ ...item, pendingMs: item.elapsedMs === undefined ? Math.round(performance.now() - startedAt - item.startedMs) : undefined })),
+      console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ firstFailedPhase: phase,
+        firstObservableUiBoundary: firstObservableUiBoundary ?? "not-observed",
+        pageErrorCount: errors.length, runtimeErrorCount: runtimeErrors.length, contextReplies,
+        httpPhases: httpPhases.map((item) => ({ fixture: item.fixture, route: item.route, method: item.method,
+          pendingMs: item.elapsedMs === undefined ? Math.round(performance.now() - startedAt - item.startedMs) : undefined,
+          elapsedMs: item.elapsedMs, status: item.status })),
         pages: pages.map((page) => page.status === "fulfilled" ? page.value : { inaccessible: true }),
-        calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
+        calls: observed.map(({ fixture, path, method, status }) => ({ fixture,
+          route: path.endsWith("/api/ui/context") ? "team-context" :
+            path.endsWith("/api/session") ? "session-collection" :
+            path.includes("/api/session/") ? "session-resource" :
+            path.endsWith("/api/event") ? "event-stream" :
+            path.endsWith("/api/ui/team-profiles/configuration") ? "team-configuration" :
+            path.endsWith("/api/ui/team-profiles") ? "team-profile-administration" :
+            path.endsWith("/auth/logout") ? "logout" : "other",
+          method, status })) }))
     }
     const browserClosed = await Promise.allSettled(contexts.map((context) => context.close()))
     const networkClosed = await Promise.allSettled(networks.map((network) => network.close()))
@@ -450,3 +857,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   }
   if (passed) driver?.report()
 }, 180000)
+
+test("native Teams Web with synthetic OIDC creates and rereads a purchase request after review", () => runPurchaseJourney(false), 120000)
+// Register after the unprepared browser cases so this read cannot affect them in a serial run.
+test("native Teams Web with synthetic OIDC creates and rereads a purchase request after review (warm-I/O diagnostic)", () => runPurchaseJourney(true), 120000)

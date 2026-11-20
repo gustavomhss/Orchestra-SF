@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from "bun:test"
-import { chmod, readFile, writeFile } from "node:fs/promises"
+import { chmod, link, mkdir, readFile, readdir, symlink, unlink, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { Effect, Layer, Schema } from "effect"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
@@ -202,7 +202,95 @@ test("core migration: a real transaction failure rolls back the whole backfill a
   expect(AuthorityControl.open(f.files.control).inspect(f.storageId)).toMatchObject({ mode: "suspended", generation: 1 })
   expect(AuthoritySqlFence.marker(f.files.business)).toBeUndefined()
   expect(f.files.business.all("SELECT count(*) AS count FROM session_owner")).toEqual([{ count: 0 }])
+  const checkpoint = path.join(f.filename + ".teams-checkpoints", prepared.planDigest + ".sqlite")
+  const bytes = await readFile(checkpoint)
   expect(await f.engine().cut(f.request(), prepared.planDigest)).toMatchObject({ status: "active", generation: 1 })
+  expect(await readFile(checkpoint)).toEqual(bytes)
+  expect(await readdir(path.dirname(checkpoint))).toEqual([path.basename(checkpoint)])
+}, 30000)
+
+test("core migration: a divergent existing checkpoint is never overwritten or removed", async () => {
+  const f = await fixture(), engine = f.engine(), prepared = await engine.prepare(f.request(), f.mapping())
+  const directory = f.filename + ".teams-checkpoints"
+  const checkpoint = path.join(directory, prepared.planDigest + ".sqlite")
+  const partial = Buffer.from("interrupted checkpoint")
+  await mkdir(directory, { mode: 0o700 })
+  await writeFile(checkpoint, partial, { mode: 0o600 })
+  await expect(engine.cut(f.request(), prepared.planDigest)).rejects.toThrow("SF_CORE_MIGRATION_FILES_UNAVAILABLE")
+  expect(await readFile(checkpoint)).toEqual(partial)
+  expect(await readdir(directory)).toEqual([path.basename(checkpoint)])
+  expect(AuthoritySqlFence.marker(f.files.business)).toBeUndefined()
+  expect(AuthorityControl.open(f.files.control).inspect(f.storageId)).toMatchObject({ mode: "suspended" })
+}, 30000)
+
+test("core migration: retry recovers a verified checkpoint interrupted after publication", async () => {
+  const f = await fixture()
+  const wrapped: MigrationFiles = { ...f.files, business: { ...f.files.business, execute: (sql, params) => {
+    if (sql.startsWith("INSERT INTO session_owner")) throw new Error("injected backfill storage failure")
+    f.files.business.execute(sql, params)
+  } } }
+  const prepared = await f.engine(wrapped).prepare(f.request(), f.mapping())
+  await expect(f.engine(wrapped).cut(f.request(), prepared.planDigest)).rejects.toThrow("injected backfill storage failure")
+  const directory = f.filename + ".teams-checkpoints"
+  const checkpoint = path.join(directory, prepared.planDigest + ".sqlite")
+  const staging = path.join(directory, "." + prepared.planDigest + ".tmp")
+  const bytes = await readFile(checkpoint)
+  await link(checkpoint, staging)
+  expect(await f.engine().cut(f.request(), prepared.planDigest)).toMatchObject({ status: "active", generation: 1 })
+  expect(await readFile(checkpoint)).toEqual(bytes)
+  expect(await readdir(directory)).toEqual([path.basename(checkpoint)])
+}, 30000)
+
+test.each(["empty", "partial", "complete"] as const)("core migration: retry resets %s private pre-publication staging", async (state) => {
+  const f = await fixture()
+  const wrapped: MigrationFiles = { ...f.files, business: { ...f.files.business, execute: (sql, params) => {
+    if (sql.startsWith("INSERT INTO session_owner")) throw new Error("injected backfill storage failure")
+    f.files.business.execute(sql, params)
+  } } }
+  const prepared = await f.engine(wrapped).prepare(f.request(), f.mapping())
+  await expect(f.engine(wrapped).cut(f.request(), prepared.planDigest)).rejects.toThrow("injected backfill storage failure")
+  const directory = f.filename + ".teams-checkpoints"
+  const checkpoint = path.join(directory, prepared.planDigest + ".sqlite")
+  const staging = path.join(directory, "." + prepared.planDigest + ".tmp")
+  const bytes = await readFile(checkpoint)
+  await unlink(checkpoint)
+  await writeFile(staging, state === "complete" ? bytes : state === "partial" ? bytes.subarray(0, 32) : Buffer.alloc(0), { mode: 0o600 })
+  expect(await f.engine().cut(f.request(), prepared.planDigest)).toMatchObject({ status: "active", generation: 1 })
+  expect(await readFile(checkpoint)).toEqual(bytes)
+  expect(await readdir(directory)).toEqual([path.basename(checkpoint)])
+}, 30000)
+
+test.each(["unknown", "alias"] as const)("core migration: refuses %s checkpoint directory entries without removing them", async (kind) => {
+  const f = await fixture(), engine = f.engine(), prepared = await engine.prepare(f.request(), f.mapping())
+  const directory = f.filename + ".teams-checkpoints"
+  const entry = path.join(directory, kind === "unknown" ? "unknown.tmp" : "." + prepared.planDigest + ".tmp")
+  await mkdir(directory, { mode: 0o700 })
+  if (kind === "unknown") await writeFile(entry, "unknown", { mode: 0o600 })
+  if (kind === "alias") await symlink(f.filename, entry)
+  await expect(engine.cut(f.request(), prepared.planDigest)).rejects.toThrow()
+  expect(await readdir(directory)).toEqual([path.basename(entry)])
+  expect(AuthoritySqlFence.marker(f.files.business)).toBeUndefined()
+  expect(AuthorityControl.open(f.files.control).inspect(f.storageId)).toMatchObject({ mode: "suspended" })
+}, 30000)
+
+test("core migration: another connection cannot reset staging while the business writer holds the lock", async () => {
+  const f = await fixture(), intent = f.mapping()
+  const plan = TeamProfileCensus.plan(TeamProfileCensus.inspect(f.files.business, f.storageId), intent)
+  const directory = f.filename + ".teams-checkpoints"
+  const staging = path.join(directory, "." + plan.planDigest + ".tmp")
+  await mkdir(directory, { mode: 0o700 })
+  await writeFile(staging, "live writer", { mode: 0o600 })
+  const other = openTeamProfileMigrationFiles(f.filename, f.storageId)
+  try {
+    f.files.business.execute("BEGIN IMMEDIATE")
+    other.business.execute("BEGIN")
+    expect(() => other.checkpoint(plan)).toThrow()
+    expect(await readFile(staging, "utf8")).toBe("live writer")
+  } finally {
+    if (other.business.inTransaction()) other.business.execute("ROLLBACK")
+    if (f.files.business.inTransaction()) f.files.business.execute("ROLLBACK")
+    other.close()
+  }
 }, 30000)
 
 test("core migration: crash after business COMMIT leaves authority suspended and resumes without replaying mappings", async () => {

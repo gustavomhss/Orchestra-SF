@@ -749,13 +749,16 @@ export function auditResidues(input) {
   const binding = { sourceSHA: source.sha, sourceTreeSHA: source.tree,
     catalogSha256: hash(catalogBytes), inventorySha256: digest(inventory),
     occurrencesSha256: digest(occurrences), graphSha256: digest(graph), gapsSha256: digest(gaps) }
+  const evidenceBinding = { ...binding, workflowSHA: env.GITHUB_SHA, runId: env.GITHUB_RUN_ID,
+    runAttempt: env.GITHUB_RUN_ATTEMPT, archiveSha256: artifact?.archiveSha256,
+    artifactId: artifact?.artifact?.id, artifactDigest: artifact?.artifact?.digest }
   const blockers = [], inline = catalog.dispositions.map((item) => { reviewDisposition(item); return item })
   let reviewBound = false
   if (review !== undefined) {
-    exactKeys(review, ["schema", "status", ...Object.keys(binding), "reviewSource", "reviewer", "reason",
+    exactKeys(review, ["schema", "status", ...Object.keys(evidenceBinding), "reviewSource", "reviewer", "reason",
       "surfaces", "dispositions", "gaps", "testObligations"])
     if (review.schema !== "teams-profile-residue-review-v1" || review.status !== "reviewed" ||
-        Object.entries(binding).some(([key, value]) => review[key] !== value) ||
+        artifact?.status !== "BOUND" || Object.entries(evidenceBinding).some(([key, value]) => review[key] !== value) ||
         !sha(review.reviewSource) || typeof review.reviewer !== "string" || !review.reviewer.trim() ||
         typeof review.reason !== "string" || !review.reason.trim() ||
         !Array.isArray(review.surfaces) || review.surfaces.length !== surfaces.length ||
@@ -821,9 +824,10 @@ export function auditResidues(input) {
     .map((item) => [JSON.stringify([item.path, item.fileSha256, item.caseName]), item])).values()]
   let proofEvidence
   if (proofs !== undefined) {
-    exactKeys(proofs, ["schema", "sourceSHA", "sourceTreeSHA", "workflowSHA", "runId", "runAttempt", "cases"])
+    exactKeys(proofs, ["schema", ...Object.keys(evidenceBinding), "cases"])
     if (proofs.schema !== "teams-profile-residue-proofs-v1" || !currentExecution(proofs, source, env) ||
-        !Array.isArray(proofs.cases)) fail("executed proof inventory is not from the current source/run")
+        artifact?.status !== "BOUND" || Object.entries(evidenceBinding).some(([key, value]) => proofs[key] !== value) ||
+        !Array.isArray(proofs.cases)) fail("executed proof inventory is not from the current source/run and exact audit")
     const seen = new Set()
     for (const item of proofs.cases) {
       exactKeys(item, ["path", "fileSha256", "caseName", "status", "jobId", "evidenceSha256"])
@@ -855,7 +859,7 @@ export function auditResidues(input) {
     limitations: [
       "File imports and lexical callsites are conservative evidence; runtime meaning requires the precise independent dispositions and executed obligations.",
       "A G09 PASS is residue qualification only. Native journeys, Microsoft operations, migration, recovery and other mandatory gates remain separate.",
-      "Artifact ID/digest and test proof receipts enter through the trusted workflow collector; they are not self-attested authority from repository JSON.",
+      "Sidecar binding is structural only; independent reviewer and execution provenance require an authenticated workflow collector, which is not wired here.",
     ],
   }
 }
@@ -884,13 +888,17 @@ export function parseArguments(argv) {
       if (values.sourceOnly) fail("duplicate source-only option")
       values.sourceOnly = true; continue
     }
-    if (!["--source", "--archive", "--manifest", "--output", "--installed-release"].includes(key) ||
+    if (!["--source", "--archive", "--manifest", "--output", "--installed-release", "--stage-private-release", "--service-pid"].includes(key) ||
         values[key.slice(2)] !== undefined || !argv[index + 1] || argv[index + 1].startsWith("--"))
       fail("unknown duplicate or incomplete argument")
     values[key.slice(2)] = argv[++index]
   }
   if (!values.source || !values.manifest || !values.output || (!values.archive && !values.sourceOnly) ||
-      values.archive && values.sourceOnly || values["installed-release"] && !values.archive)
+      values.archive && values.sourceOnly ||
+      (values["installed-release"] || values["stage-private-release"]) && !values.archive ||
+      values["installed-release"] && values["stage-private-release"] ||
+      values["service-pid"] !== undefined && (!values["installed-release"] || !decimal(values["service-pid"]) ||
+        !Number.isSafeInteger(Number(values["service-pid"]))))
     fail("exact source/archive/catalog/output selection required")
   return values
 }
@@ -926,8 +934,11 @@ export async function runAudit(options, env = process.env) {
       const relative = path.relative(root, releaseRoot)
       if (relative !== ".." && !relative.startsWith(".." + path.sep))
         fail("installed release directory must be outside checkout")
-      const { verifyTeamsInstalledRelease } = await import("./teams-installed-release.mjs")
-      installedRelease = await verifyTeamsInstalledRelease({ releaseRoot, files: archiveFiles })
+      const { verifyTeamsInstalledRelease, verifyTeamsRunningExecutable } = await import("./teams-installed-release.mjs")
+      const pid = options["service-pid"]
+      installedRelease = pid === undefined
+        ? await verifyTeamsInstalledRelease({ releaseRoot, files: archiveFiles })
+        : await verifyTeamsRunningExecutable({ releaseRoot, files: archiveFiles, pid: Number(pid) })
     }
   }
   const records = [...loaded.records, ...archiveFiles]
@@ -945,7 +956,36 @@ export async function runAudit(options, env = process.env) {
     trackedInventorySha256: verified.inventorySha256, byteBoundCount: loaded.byteBoundCount,
     contentsComplete: loaded.contentsComplete, recheckedAfter: true }
   if (installedRelease) report.installedRelease = installedRelease
+  if (options["stage-private-release"] !== undefined) {
+    const destination = options["stage-private-release"]
+    await requirePrivateStagePaths({ destination, output: options.output, root, runnerTemp: env.RUNNER_TEMP })
+    if (artifact?.status !== "BOUND") fail("private staging requires exact bound archive")
+    const { stageVerifiedTeamsRelease } = await import("./teams-stage-release.mjs")
+    const staged = await stageVerifiedTeamsRelease({ destination, files: archiveFiles })
+    report.readOnly = false
+    report.privateStage = { status: "STAGED_NOT_ACTIVATED", archiveSha256: artifact.archiveSha256, ...staged }
+  }
   return report
+}
+
+export async function requirePrivateStagePaths({ destination, output, root, runnerTemp }) {
+  if (![destination, output, runnerTemp].every((value) => typeof value === "string" &&
+      path.isAbsolute(value) && path.resolve(value) === value)) fail("private staging and report require normalized absolute paths")
+  const [temporary, parent, reportParent] = await Promise.all([
+    realpath(runnerTemp), realpath(path.dirname(destination)), realpath(path.dirname(output)),
+  ])
+  const within = (base, value) => {
+    const relative = path.relative(base, value)
+    return relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative)
+  }
+  const reportPath = path.join(reportParent, path.basename(output))
+  if (parent !== path.dirname(destination) || !within(temporary, parent) || within(root, destination) ||
+      !within(temporary, reportParent) || within(root, reportPath) || within(destination, reportPath))
+    fail("private staging and report must be separate, inside RUNNER_TEMP and outside the checkout")
+  const existingReport = await lstat(reportPath).catch((error) => {
+    if (error?.code !== "ENOENT") throw error
+  })
+  if (existingReport) fail("private staging requires a fresh report path")
 }
 async function writeReport(filename, source, report, env) {
   if (!path.isAbsolute(filename) || typeof env.RUNNER_TEMP !== "string" || !path.isAbsolute(env.RUNNER_TEMP))
@@ -970,7 +1010,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     const reason = error instanceof Error ? error.message : "unknown audit error"
     if (options) {
       try { await writeReport(options.output, options.source, { schema: "teams-profile-residue-report-v1",
-        status: "FAIL_CLOSED", readOnly: true, reason }, process.env) }
+        status: "FAIL_CLOSED", readOnly: options["stage-private-release"] === undefined, reason }, process.env) }
       catch (reportError) { console.error("TEAM_PROFILE_RESIDUE_REPORT_FAILED", reportError instanceof Error ? reportError.message : "output failed") }
     }
     console.error("TEAM_PROFILE_RESIDUE_FAIL_CLOSED", reason)

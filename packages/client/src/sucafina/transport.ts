@@ -301,20 +301,20 @@ export function createSfTransport(options: Readonly<{
       const last = retained.get(operation.operationId)
       const reportRetry = operation.operationId === "reviews.report.prepare"
       if (mutating) {
-        if (mutationOwner && (!stamp || !equalContextStamp(mutationOwner, stamp)))
+        if (mutationOwner && (!stamp || !sameSfContextStamp(mutationOwner, stamp)))
           return failure("contract-mismatch")
         if (humanRetry && (!last || last.key !== key || last.digest !== digest ||
-            !last.owner || !stamp || !equalContextStamp(last.owner, stamp) ||
+            !last.owner || !stamp || !sameSfContextStamp(last.owner, stamp) ||
             !previous && !last.confirmed))
           return failure("contract-mismatch")
         if (!humanRetry && last && last.key === key) {
-          if (last.digest !== digest || !last.owner || !stamp || !equalContextStamp(last.owner, stamp))
+          if (last.digest !== digest || !last.owner || !stamp || !sameSfContextStamp(last.owner, stamp))
             return failure("contract-mismatch")
           return failure("outcome-unknown")
         }
         if (previous !== undefined) {
           if (previous.digest !== digest ||
-              previous.owner && (!stamp || !equalContextStamp(previous.owner, stamp)))
+              previous.owner && (!stamp || !sameSfContextStamp(previous.owner, stamp)))
             return failure("contract-mismatch")
           if (!reportRetry && !humanRetry) return failure("outcome-unknown")
         }
@@ -508,7 +508,7 @@ export function createSfTransport(options: Readonly<{
         }
         const result = parsedOutput.value
         if (typeof result === "object" && result !== null && "status" in result && result.status === "ok" && "value" in result && typeof result.value === "object" && result.value !== null && "stamp" in result.value && validContextStamp(result.value.stamp)) {
-          if (stamp && !equalContextStamp(stamp, result.value.stamp)) clearIntents()
+          if (stamp && !sameSfContextStamp(stamp, result.value.stamp)) clearIntents()
           stamp = structuredClone(result.value.stamp)
         } else clear()
       }
@@ -557,7 +557,7 @@ export function createSfTransport(options: Readonly<{
       const route = operationUrl(options.binding, meta, parsed.value, "files.export.suppliers")
       if (!route) return { status: "invalid" }
       const isOwned = () => isCurrent() && !call.signal.aborted &&
-        stamp !== undefined && equalContextStamp(stamp, original)
+        stamp !== undefined && sameSfContextStamp(stamp, original)
       const limit = 64 * 1024 * 1024
       const chunks: Uint8Array[] = []
       let total = 0
@@ -651,7 +651,7 @@ export function createSfTransport(options: Readonly<{
         if (live.kind !== "response" || live.status !== 200 || live.body.status !== "ok")
           return { status: "denied" }
         const fresh = live.body.value
-        if (!equalContextStamp(fresh.stamp, original)) return { status: "stale" }
+        if (!sameSfContextStamp(fresh.stamp, original)) return { status: "stale" }
         if (!fresh.destinations.some((d) => d.capabilityId === "CAP27" &&
             d.surface === "procurement" && d.page === "Suppliers" && d.canRead) ||
             !fresh.availability.some((r) =>
@@ -769,7 +769,7 @@ export function createSfAuthActions(options: Readonly<{
   }
 }
 
-function equalContextStamp(a: SfContextStamp, b: SfContextStamp) {
+export function sameSfContextStamp(a: SfContextStamp, b: SfContextStamp) {
   return a.installationId === b.installationId && a.projectId === b.projectId &&
     a.hostId === b.hostId && a.principalRef === b.principalRef &&
     a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision &&
@@ -1098,7 +1098,7 @@ async function refreshSfFileAuthority(options: Readonly<{
         "state" in item && "operational" in item && item.operationId === operationId &&
         item.state === "ready" && item.operational === true))
     return permitted && validContextStamp(current) && sameStampInstallation(current, options.binding) &&
-      equalContextStamp(current, expected)
+      sameSfContextStamp(current, expected)
   } catch { return false }
 }
 

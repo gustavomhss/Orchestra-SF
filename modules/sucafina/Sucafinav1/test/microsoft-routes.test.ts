@@ -81,7 +81,7 @@ async function fixture(grants: readonly SfProductGrant[] = [oid, other].map((pri
   }
   const snapshot = (surface: Surface) => store.transaction(surface, async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
   const post = (cookie: string, action: string, values: Record<string, unknown>, id?: string, version = 0) => request("/procurement", cookie, { page: "Requests", action, values, version, ...(id ? { id } : {}) })
-  return { provider, store, identity, profile, environment, request, login, snapshot, post }
+  return { provider, store, identity, profile, environment, request, login, snapshot, post, rawRequest }
 }
 
 describe("Microsoft native business routes", () => {
@@ -188,6 +188,31 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
   expect(after.versions[`requests:${secondId}`]).toEqual({ version: 2, by: other })
   expect(object(object(object(object(after.data.store).requests)[secondId]).request).createdBy).toBe(other)
   expect(after.audit.at(-1)?.who).toBe(other)
+})
+
+test("creating a purchase request requires the selected Team even with a valid Microsoft session", async () => {
+  const cookie = await f.login()
+  const title = "Synthetic Team purchase request"
+  const before = await f.snapshot("procurement")
+  const denied = await f.rawRequest("/sucafina/procurement?page=Requests", {
+    method: "POST", headers: { cookie, origin: publicOrigin, "content-type": "application/json" },
+    body: JSON.stringify({ page: "Requests", action: "create", version: 0, values: { pr: { title } } }),
+  })
+  expect(denied.status).toBe(403)
+  expect(await f.snapshot("procurement")).toEqual(before)
+
+  const created = await f.request("/procurement?page=Requests", cookie, {
+    page: "Requests", action: "create", version: 0, values: { pr: { title } },
+  })
+  expect(created.status).toBe(200)
+  const page = await f.request("/api/ui/pages/CAP25", cookie)
+  expect(page.status).toBe(200)
+  expect(await page.json()).toMatchObject({ status: "ok", context: { principalRef: oid }, value: {
+    data: { requests: [expect.objectContaining({ createdBy: oid, pr: expect.objectContaining({ title }) })] },
+  } })
+  const after = await f.snapshot("procurement")
+  expect(Object.keys(object(object(after.data.store).requests))).toHaveLength(1)
+  expect(after.audit.at(-1)?.who).toBe(oid)
 })
 
 test("logout revokes a retained session at the actual business routes without affecting another user", async () => {

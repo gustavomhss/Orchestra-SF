@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto"
 import { constants } from "node:fs"
-import { lstat, open, readdir, realpath } from "node:fs/promises"
+import { lstat, open, readdir, readlink, realpath, stat } from "node:fs/promises"
 import path from "node:path"
 import { hash, parseCanonicalJson, safePath } from "./team-profile-residue.mjs"
 
@@ -76,6 +76,34 @@ export async function verifyTeamsInstalledRelease({ releaseRoot, files }) {
     if (error instanceof Refusal) throw error
     // Filesystem and JSON errors may contain raw paths or input text.
     fail("could not read release or embedded distribution")
+  }
+}
+
+// The caller supplies the PID from the trusted service supervisor. This does
+// not establish the service configuration, web root, data mount, or auth mode.
+export async function verifyTeamsRunningExecutable({ releaseRoot, files, pid }) {
+  if (process.platform !== "linux" || !Number.isSafeInteger(pid) || pid < 1)
+    fail("Linux service PID required")
+  const executable = path.join(releaseRoot, "bin/orchestra")
+  const processExecutable = `/proc/${pid}/exe`
+  const observe = async () => {
+    if (await readlink(processExecutable) !== executable) fail("running executable is not the release binary")
+    const [live, installed] = await Promise.all([stat(processExecutable, statOptions), lstat(executable, statOptions)])
+    if (!live.isFile() || !installed.isFile() || !sameStat(live, installed)) fail("running executable inode differs from release")
+    return live
+  }
+  try {
+    const before = await observe()
+    const release = await verifyTeamsInstalledRelease({ releaseRoot, files })
+    if (!sameStat(before, await observe())) fail("running executable changed during verification")
+    return {
+      proofClass: "RUNNING_EXECUTABLE_MATCHES_ARCHIVE_ONLY",
+      installedClosureSha256: release.installedClosureSha256,
+      executableSha256: files.find((file) => file.path === "bin/orchestra").sha256,
+    }
+  } catch (error) {
+    if (error instanceof Refusal) throw error
+    fail("could not observe running release executable")
   }
 }
 

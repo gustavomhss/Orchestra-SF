@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto"
 import type { Snapshot } from "./contract.ts"
 import { inspectSfProductRestoreFrontier } from "../product/host-binding/state-provider.ts"
+import { digestSfValue } from "../product/contracts/canonical.ts"
 
 /**
  * Deliberate recovery classes, not a generic merge of lifecycle records.
@@ -39,18 +40,31 @@ export function captureSfRestoreRetention(current: Snapshot, checkpoint: Snapsho
 }
 
 /**
- * Internal, read-only preflight. The caller owns independent authentication,
- * freshness verification and storage of the externally retained frontier.
- * External evidence is only compared, never merged or used to recover state.
+ * Internal, read-only preflight. The caller must authenticate and independently
+ * observe a monotonic current pin outside both snapshots and the retained frontier,
+ * verify its freshness, and hold the admission boundary through restore commit.
+ * Neither a recovered snapshot nor a digest supplied by it is a current pin.
+ * This comparison does not authenticate, persist, or establish freshness of a pin.
  */
 export function captureSfCorporateRestoreRetention(
   current: Snapshot,
   checkpoint: Snapshot,
   externallyRetained: ReturnType<typeof inspectSfProductRestoreFrontier>,
+  admission: Readonly<{
+    installationDigest: string
+    generation: number
+    pin: Readonly<{ installationDigest: string; checkpointDigest: string; generation: number; frontierDigest: string }>
+  }> | undefined,
 ) {
-  if (!externallyRetained) throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  if (!externallyRetained || !admission || !admission.pin ||
+      !/^[a-f0-9]{64}$/.test(admission.installationDigest) ||
+      !Number.isSafeInteger(admission.generation) || admission.generation < 1 ||
+      admission.pin.installationDigest !== admission.installationDigest || admission.pin.generation !== admission.generation ||
+      admission.pin.checkpointDigest !== digestSfValue(checkpoint) ||
+      admission.pin.frontierDigest !== digestSfValue(externallyRetained))
+    throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
   const frontier = inspectSfProductRestoreFrontier(current)
-  if (!frontier || !inspectSfProductRestoreFrontier(checkpoint))
+  if (!frontier || !inspectSfProductRestoreFrontier(checkpoint) || digestSfValue(frontier) !== admission.pin.frontierDigest)
     throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
   requireFrontierDominance(frontier, externallyRetained)
   return captureSfRestoreRetention(current, checkpoint)

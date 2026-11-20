@@ -88,9 +88,11 @@ export function createTeamProfileIdentityBoundary(input: {
       if (!context) return null
       const admission = await admit(request)
       if (!admission) return null
-      const actor = await identity.authenticate(request, context)
+      const actor = structuredClone(await identity.authenticate(request, context))
       if (!actor || actor.id !== admission.principal.principalObjectId ||
           !await profiles.revalidate(admission)) return null
+      const current = await identity.authenticate(request, context).catch(() => null)
+      if (!current || JSON.stringify(current) !== JSON.stringify(actor) || !await profiles.revalidate(admission)) return null
       return actor
     },
     ...(identity.authenticateAll ? { authenticateAll: async (request: Request,
@@ -99,8 +101,11 @@ export function createTeamProfileIdentityBoundary(input: {
       const maps = contexts.map((context) => ({ surface: context.surface, roleMap: context.roleMap.map((row) => ({ ...row })) }))
       const admission = await admit(request)
       if (!admission || !identity.authenticateAll || JSON.stringify(contexts) !== originalMaps) return null
-      const observed = await identity.authenticateAll(request, maps)
+      const observed = structuredClone(await identity.authenticateAll(request, maps))
       if (!observed || observed.some((entry) => entry.actor && entry.actor.id !== admission.principal.principalObjectId) ||
+          !await profiles.revalidate(admission) || JSON.stringify(contexts) !== originalMaps) return null
+      const current = await identity.authenticateAll(request, maps).catch(() => null)
+      if (!current || JSON.stringify(current) !== JSON.stringify(observed) ||
           !await profiles.revalidate(admission) || JSON.stringify(contexts) !== originalMaps) return null
       return observed
     } } : {}),

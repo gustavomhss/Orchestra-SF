@@ -1,6 +1,7 @@
 import type { SfContextStamp, SfRef } from "@orchestra/schema/sucafina/context"
 import { SfProcurementRequest } from "@orchestra/schema/sucafina/procurement"
 import type { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { sameSfContextStamp } from "@orchestra/client/sucafina/transport"
 
 /** U11-only PR/PO projection model. W19 owns title save, U12 sourcing, U13 approvals. */
 type Client = ReturnType<typeof createSfProcurementClient>
@@ -15,6 +16,7 @@ export type SfRequestSubmitPo = Parameters<Client["domain.command.CAP25.submit_p
 export type SfPrEdit = Extract<SfRequestSave["values"], { pr: unknown }>["pr"]
 export type SfPoEdit = Extract<SfRequestSave["values"], { po: unknown }>["po"]
 export type SfPoLine = NonNullable<SfPoEdit["lines"]>[number]
+type SfPrCommandInput = NonNullable<SfRequestCreate["values"]["pr"]>
 export type SfRequestCommand = "create" | "save-pr" | "save-po" | "submit_pr" |
   "submit_po" | "issue" | "cancel" | "delete"
 
@@ -25,18 +27,13 @@ export type SfRequestsRead = Readonly<{
   actionIds: readonly string[]
 }> | Readonly<{ kind: "denied" | "unauthenticated" | "unavailable" | "stale" | "invalid" }>
 
-const stampsEqual = (a: SfContextStamp, b: SfContextStamp) =>
-  a.installationId === b.installationId && a.projectId === b.projectId &&
-  a.hostId === b.hostId && a.principalRef === b.principalRef &&
-  a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
-
 export function decodeRequestsPage(value: ReadBody, expected: SfContextStamp): SfRequestsRead {
   if (value.status !== "ok") {
     if (value.status === "denied" || value.status === "unauthenticated" ||
         value.status === "stale") return { kind: value.status }
     return { kind: "unavailable" }
   }
-  if (!stampsEqual(value.context, expected)) return { kind: "stale" }
+  if (!sameSfContextStamp(value.context, expected)) return { kind: "stale" }
   const page = value.value
   if (page.capabilityId !== "CAP25" || !Array.isArray(page.data.requests) ||
       !Array.isArray(page.allowedActionIds) || !page.versions) return { kind: "invalid" }
@@ -68,6 +65,22 @@ export function prFromRecord(row?: SfRequest): SfPrEdit {
     recurring: booleanInput(pr?.recurring),
     frequency: pr?.frequency, estAnnual: numberInput(pr?.estAnnual),
     expenseType: pr?.expenseType, category: pr?.category,
+  }
+}
+export function prCommandInput(values: SfPrEdit): SfPrCommandInput {
+  return {
+    ...(values.title !== undefined ? { title: values.title } : {}),
+    ...(values.type !== undefined ? { type: values.type } : {}),
+    ...(values.description !== undefined ? { description: values.description } : {}),
+    ...(values.estAmount !== undefined ? { estAmount: values.estAmount } : {}),
+    ...(values.costCenter !== undefined ? { costCenter: values.costCenter } : {}),
+    ...(values.needBy !== undefined ? { needBy: values.needBy } : {}),
+    ...(values.justification !== undefined ? { justification: values.justification } : {}),
+    ...(values.recurring !== undefined ? { recurring: values.recurring } : {}),
+    ...(values.frequency !== undefined ? { frequency: values.frequency } : {}),
+    ...(values.estAnnual !== undefined ? { estAnnual: values.estAnnual } : {}),
+    ...(values.expenseType !== undefined ? { expenseType: values.expenseType } : {}),
+    ...(values.category !== undefined ? { category: values.category } : {}),
   }
 }
 export function postedPoLine(line: SfPoLine): SfPoLine {

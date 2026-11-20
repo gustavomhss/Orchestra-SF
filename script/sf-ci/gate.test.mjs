@@ -7,7 +7,7 @@ import { createHash } from "node:crypto"
 import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, chmodSync, linkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, describeInventory, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -447,6 +447,83 @@ test("playwright requires the exact requested spec and one clean execution", () 
   const suite = manifest.suites[5]
   assert.equal(countPlaywrightReport(playwright(suite).toString(), suite.specFile), 1)
   assert.throws(() => countPlaywrightReport(playwright(suite).toString(), "e2e/sucafina/other.spec.ts"))
+})
+test("diagnostic inventory preserves failed Bun identities without creating a pass", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-APP-SRC")
+  // Mirrors verify-bun-report.py's counts and case fields for a red JUnit report.
+  const summary = {
+    schema_version: 1, status: "FAIL", report: "/private/runner/report.xml", report_sha256: "a".repeat(64),
+    scope: "DATA_ONLY_JUNIT_VALIDATION", tests_executed_by_verifier: false,
+    issues: ["Report contains failure/error elements"],
+    counts: { tests: 2, failures: 1, errors: 0, skipped: 1, todo_identified: 0, executed: 1,
+      known_control_or_hook: 0, product_executed: 1 },
+    suites: [], limitations: [],
+    cases: [
+      { file: "test/example.test.ts", classname: "Example", name: "first identity", failures: 1, errors: 0,
+        skipped: 0, todo_identified: 0, executed: 1, known_control_or_hook: 0, product_executed: 1 },
+      { file: "test/example.test.ts", classname: "Example", name: "second identity", failures: 0, errors: 0,
+        skipped: 1, todo_identified: 0, executed: 0, known_control_or_hook: 0, product_executed: 0 },
+    ],
+  }
+  const diagnostic = describeInventory(JSON.stringify(summary), suite, { sourceSha: sha, runId, attempt, treeSha })
+  assert.deepEqual(diagnostic.binding, { sourceSha: sha, runId, attempt, treeSha })
+  assert.deepEqual(diagnostic.counts, { reportTests: 2, productCases: 2, executedCases: 1, failedCases: 1, skippedCases: 1 })
+  assert.deepEqual(diagnostic.identities.map(({ file, classname, name, status }) => ({ file, classname, name, status })), [
+    { file: "test/example.test.ts", classname: "Example", name: "first identity", status: "failed" },
+    { file: "test/example.test.ts", classname: "Example", name: "second identity", status: "skipped" },
+  ])
+  assert.equal(JSON.stringify(diagnostic).includes("PRIVATE_OUTPUT"), false)
+  assert.equal(JSON.stringify(diagnostic).includes("/private/runner"), false)
+  assert.throws(() => countBunReport(JSON.stringify(summary)), /SF_CI_FAIL_CLOSED/)
+
+  const baseline = { schemaVersion: 1, status: "HISTORIC_SUCCESSFUL_ARTIFACT", minimumCases: 2, minimumFiles: 1,
+    casesSha256: "0".repeat(64), filesSha256: "1".repeat(64) }
+  assert.throws(() => checkCoverageBaseline({ id: suite.id, coverageBaseline: baseline }, diagnostic), /SF_CI_FAIL_CLOSED/)
+})
+test("diagnostic inventory hashes Playwright case IDs and excludes report payloads", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  const source = JSON.parse(playwright(suite).toString("utf8"))
+  source.suites[0].title = "PRIVATE_REPORT_TITLE"
+  source.suites[0].specs[0].title = "PRIVATE_CASE_TITLE"
+  source.suites[0].specs[0].tests[0].results[0].stderr = [{ text: "PRIVATE_OUTPUT" }]
+  source.metadata = { token: "PRIVATE_TOKEN" }
+  const diagnostic = describeInventory(JSON.stringify(source), suite)
+  assert.deepEqual(diagnostic.counts, { reportTests: 1, productCases: 1, executedCases: 1, failedCases: 0, skippedCases: 0 })
+  assert.deepEqual(diagnostic.files, [suite.specFile])
+  assert.equal(JSON.stringify(diagnostic).includes("PRIVATE_"), false)
+  assert.match(diagnostic.identities[0].name, /^spec-[a-f0-9]{64}#0$/)
+  const sanitized = minimalPlaywrightEvidence(JSON.stringify(source), suite.specFile)
+  assert.equal(describeInventory(sanitized, suite).casesSha256, diagnostic.casesSha256)
+  assert.equal(diagnostic.coverageCasesSha256, playwrightCoverageIdentity(sanitized, suite.specFile).casesSha256)
+})
+test("Playwright diagnostic counts mixed red outcomes beyond stats.expected without changing identity hashes", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  const source = JSON.parse(playwright(suite).toString("utf8"))
+  source.stats = { expected: 1, unexpected: 1, flaky: 1, skipped: 1 }
+  source.suites[0].specs[0].tests = [
+    { expectedStatus: "passed", results: [{ status: "passed" }] },
+    { expectedStatus: "passed", results: [{ status: "failed" }] },
+    { expectedStatus: "passed", results: [{ status: "failed" }, { status: "passed" }] },
+    { expectedStatus: "passed", results: [{ status: "skipped" }] },
+  ]
+  const diagnostic = describeInventory(JSON.stringify(source), suite)
+  const file = suite.specFile
+  const specName = "spec-" + createHash("sha256").update("case-source-id").digest("hex")
+  const tuples = [0, 1, 2, 3].map((index) => file + "\0\0" + specName + "#" + index)
+  assert.deepEqual(diagnostic.counts, { reportTests: 4, productCases: 4, executedCases: 1, failedCases: 1, skippedCases: 1 })
+  assert.deepEqual(diagnostic.identities.map((item) => item.status), ["passed", "failed", "multiple-results", "skipped"])
+  assert.equal(diagnostic.casesSha256, sha256Lines(tuples))
+  assert.equal(diagnostic.executedCasesSha256, sha256Lines([tuples[0]]))
+  assert.throws(() => countPlaywrightReport(JSON.stringify(source), suite.specFile), /SF_CI_FAIL_CLOSED/)
+})
+test("diagnostic inventory rejects unknown, empty, malformed and wrong-suite evidence", () => {
+  const suite = manifest.suites.find((item) => item.id === "CI-UI-OPERATIONS")
+  for (const [raw, selected] of [["{}", suite], [JSON.stringify({ suites: [] }), suite], ["not-json", suite], [JSON.stringify(playwright(suite)), undefined]]) {
+    assert.throws(() => describeInventory(raw, selected), /SF_CI_FAIL_CLOSED/)
+  }
+  const wrong = JSON.parse(playwright(suite).toString("utf8"))
+  wrong.suites[0].file = "e2e/sucafina/decisions.spec.ts"
+  assert.throws(() => describeInventory(JSON.stringify(wrong), suite), /SF_CI_FAIL_CLOSED/)
 })
 const mutations = [
   ["missing suite", (a) => { delete a.receipts["CI-CLI"] }],
@@ -939,6 +1016,7 @@ test("native report admission rejects incomplete, flaky, retried, skipped and fo
 })
 
 test("native inventories cannot narrow original obligations or claim unimplemented Teams and recovery cases", () => {
+  const skippedRegistration = ["test", "skip"].join(".")
   for (const mutate of [
     (data) => { data.inventory.cases.pop() },
     (data) => { data.inventory.cases[0].title = "replacement case" },
@@ -947,7 +1025,12 @@ test("native inventories cannot narrow original obligations or claim unimplement
     (data) => { data.ledger.roles.u15.cases.pop() },
     (data) => { data.ledger.roles.u15.cases[0].title = "replacement case" },
     (data) => { data.ledger.roles.u15.requiredAcceptanceIds = ["A01"] },
-    (data) => { data.sourceBytes = Buffer.from(data.sourceBytes.toString().replace('test("CAP14', 'test.skip("CAP14')) },
+    (data) => {
+      const source = data.sourceBytes.toString()
+      const registration = `test(${JSON.stringify(data.inventory.cases[0].title)}`
+      assert.equal(source.split(registration).length - 1, 1)
+      data.sourceBytes = Buffer.from(source.replace(registration, skippedRegistration + registration.slice("test".length)))
+    },
     (data) => { data.meta.role = "teams" },
     (data) => { data.meta.role = "recovery" },
   ]) {

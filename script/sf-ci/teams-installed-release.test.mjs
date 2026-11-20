@@ -4,7 +4,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { test } from "node:test"
 import { hash, record } from "./team-profile-residue.mjs"
-import { verifyTeamsInstalledRelease } from "./teams-installed-release.mjs"
+import { verifyTeamsInstalledRelease, verifyTeamsRunningExecutable } from "./teams-installed-release.mjs"
 
 const cli = "bin/orchestra"
 const web = "bin/web/index.html"
@@ -57,6 +57,15 @@ test("reports only the canonical closure digest, independent of root and creatio
   }
   assert.deepEqual(await verifyTeamsInstalledRelease(first), expected)
   assert.deepEqual(await verifyTeamsInstalledRelease(second), expected)
+})
+
+test("a verified release tree cannot substitute for its executable running on Linux", async (t) => {
+  const input = await fixture(t)
+  assert.equal((await verifyTeamsInstalledRelease(input)).proofClass, "INSTALLED_RELEASE_BYTES_MATCH_ARCHIVE_ONLY")
+  await assert.rejects(verifyTeamsRunningExecutable({ ...input, pid: 0 }), /Linux service PID required/)
+  await assert.rejects(verifyTeamsRunningExecutable({ ...input, pid: process.pid }), process.platform === "linux"
+    ? /running executable is not the release binary/
+    : /Linux service PID required/)
 })
 
 async function replaceCli({ at }, bytes) {

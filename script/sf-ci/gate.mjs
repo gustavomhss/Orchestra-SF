@@ -424,6 +424,110 @@ export function countPlaywrightReport(raw, exactSpec) {
   return count
 }
 
+/** Describe identities from a report without converting test outcomes into a receipt. */
+export function describeInventory(raw, suite, binding = {}) {
+  if (typeof raw !== "string" || !raw.trim() || !suite || !["bun", "playwright"].includes(suite.kind)) {
+    fail("inventory diagnostic requires a known suite and nonempty report")
+  }
+  let report
+  try { report = JSON.parse(raw) } catch { fail("invalid inventory report JSON") }
+  const identities = []
+  let counts
+  if (suite.kind === "bun") {
+    if (!report || !["PASS", "FAIL"].includes(report.status) || !Array.isArray(report.cases) ||
+        !report.counts || report.counts.tests !== report.cases.length) fail("malformed Bun inventory report")
+    const product = []
+    for (const row of report.cases) {
+      if (!row || typeof row !== "object" || typeof row.name !== "string" || !row.name.trim() ||
+          typeof row.classname !== "string" || typeof row.file !== "string" ||
+          !Number.isSafeInteger(row.product_executed) || ![0, 1].includes(row.product_executed) ||
+          !Number.isSafeInteger(row.known_control_or_hook) || ![0, 1].includes(row.known_control_or_hook) ||
+          !["failures", "errors", "skipped", "executed"].every((key) => Number.isSafeInteger(row[key]) && [0, 1].includes(row[key]))) {
+        fail("malformed Bun inventory case")
+      }
+      if (row.known_control_or_hook === 1) continue
+      const file = validateRelative(row.file.replaceAll("\\", "/"))
+      if (!isTestFile(file) || row.classname.length > 512 || row.name.length > 1024 ||
+          /[\x00-\x1f\x7f]/.test(row.classname + row.name)) fail("unsafe Bun inventory identity")
+      const status = row.failures || row.errors ? "failed" : row.skipped ? "skipped" : row.executed === 1 ? "passed" : "not-run"
+      const identity = { file, classname: row.classname, name: row.name, status }
+      identities.push(identity)
+      if (row.product_executed === 1) product.push(identity)
+    }
+    if (!identities.length) fail("empty Bun product inventory")
+    if (!["product_executed", "failures", "errors", "skipped"].every((key) => Number.isSafeInteger(report.counts[key])) ||
+        report.counts.product_executed !== product.length ||
+        ["failures", "errors", "skipped"].some((key) => report.counts[key] !== report.cases.reduce((sum, row) => sum + row[key], 0))) {
+      fail("Bun inventory counts disagree with cases")
+    }
+    const tuple = (item) => item.file + "\0" + item.classname + "\0" + item.name
+    const sorted = (items) => items.map(tuple).sort()
+    counts = {
+      reportTests: report.cases.length,
+      productCases: identities.length,
+      executedCases: product.length,
+      failedCases: identities.filter((item) => item.status === "failed").length,
+      skippedCases: identities.filter((item) => item.status === "skipped").length,
+    }
+    identities.sort((a, b) => tuple(a) < tuple(b) ? -1 : tuple(a) > tuple(b) ? 1 : a.status < b.status ? -1 : a.status > b.status ? 1 : 0)
+    return {
+      schema: "sf-ci-diagnostic-inventory-v1", suiteId: suite.id, kind: suite.kind, binding,
+      counts, casesSha256: sha256Lines(sorted(identities)), executedCasesSha256: sha256Lines(sorted(product)),
+      files: [...new Set(identities.map((item) => item.file))].sort(),
+      filesSha256: sha256Lines([...new Set(identities.map((item) => item.file))].sort()), identities,
+    }
+  }
+
+  if (!Array.isArray(report.suites)) fail("malformed Playwright inventory report")
+  const coverageTuples = []
+  const visit = (node, inheritedFile = "") => {
+    if (!node || typeof node !== "object" || Array.isArray(node)) fail("malformed Playwright inventory suite")
+    const file = node.file || inheritedFile
+    for (const spec of node.specs || []) {
+      const canonical = canonicalPlaywrightSpec(spec.file || file, suite.specFile)
+      const identityHash = typeof spec.idHash === "string" && /^[a-f0-9]{64}$/.test(spec.idHash)
+        ? spec.idHash
+        : typeof spec.id === "string" && spec.id ? digest(spec.id) : undefined
+      if (!Array.isArray(spec.tests) || !identityHash) fail("malformed Playwright inventory spec")
+      const name = "spec-" + identityHash
+      for (const [index, test] of spec.tests.entries()) {
+        if (!Array.isArray(test.results)) fail("malformed Playwright inventory test")
+        const statuses = test.results.map((result) => result?.status)
+        if (statuses.some((status) => !["passed", "failed", "timedOut", "skipped", "interrupted"].includes(status))) {
+          fail("malformed Playwright inventory result")
+        }
+        identities.push({ file: canonical, classname: "", name: name + "#" + index,
+          status: statuses.length === 1 ? statuses[0] : statuses.length ? "multiple-results" : test.status === "skipped" ? "skipped" : "not-run" })
+        coverageTuples.push(canonical + "\0" + identityHash + "\0" + index)
+      }
+    }
+    if (node.suites !== undefined && !Array.isArray(node.suites)) fail("malformed Playwright inventory children")
+    for (const child of node.suites || []) visit(child, file)
+  }
+  for (const node of report.suites) visit(node)
+  if (!identities.length) fail("empty Playwright inventory")
+  const outcomeCounts = ["expected", "unexpected", "flaky", "skipped"].map((key) => report.stats?.[key])
+  if (outcomeCounts.some((count) => !Number.isSafeInteger(count) || count < 0) ||
+      outcomeCounts.reduce((sum, count) => sum + count, 0) !== identities.length) {
+    fail("Playwright inventory counts disagree with cases")
+  }
+  identities.sort((a, b) => {
+    const left = a.file + "\0" + a.classname + "\0" + a.name
+    const right = b.file + "\0" + b.classname + "\0" + b.name
+    return left < right ? -1 : left > right ? 1 : 0
+  })
+  const files = [...new Set(identities.map((item) => item.file))].sort()
+  const tuples = identities.map((item) => item.file + "\0" + item.classname + "\0" + item.name)
+  counts = { reportTests: outcomeCounts.reduce((sum, count) => sum + count, 0),
+    productCases: identities.length, executedCases: identities.filter((item) => item.status === "passed").length,
+    failedCases: identities.filter((item) => ["failed", "timedOut", "interrupted"].includes(item.status)).length,
+    skippedCases: identities.filter((item) => item.status === "skipped").length }
+  return { schema: "sf-ci-diagnostic-inventory-v1", suiteId: suite.id, kind: suite.kind, binding, counts,
+    casesSha256: sha256Lines(tuples), executedCasesSha256: sha256Lines(tuples.filter((_, index) => identities[index].status === "passed")),
+    coverageCasesSha256: sha256Lines(coverageTuples),
+    files, filesSha256: sha256Lines(files), identities }
+}
+
 
 export function minimalPlaywrightEvidence(raw, exactSpec) {
   const original = JSON.parse(raw)
@@ -589,6 +693,14 @@ function realRunMeta() {
       !/^[0-9]+$/.test(attempt || "")) fail("invalid GitHub Actions identity")
   return { sha, runId, attempt }
 }
+function diagnosticBinding() {
+  return {
+    sourceSha: /^[a-f0-9]{40}$/.test(process.env.SF_PRODUCT_SOURCE_SHA || "") ? process.env.SF_PRODUCT_SOURCE_SHA : null,
+    runId: /^[0-9]+$/.test(process.env.GITHUB_RUN_ID || "") ? process.env.GITHUB_RUN_ID : null,
+    attempt: /^[0-9]+$/.test(process.env.GITHUB_RUN_ATTEMPT || "") ? process.env.GITHUB_RUN_ATTEMPT : null,
+    treeSha: /^[a-f0-9]{40}$/.test(process.env.SF_CHECKOUT_TREE_SHA || "") ? process.env.SF_CHECKOUT_TREE_SHA : null,
+  }
+}
 export function releaseOnlySelection(manifest, id) {
   const suites = validateManifest(manifest)
   const suite = suites.find((entry) => entry.id === id)
@@ -734,6 +846,18 @@ async function cli() {
   if (command === "precheck") {
     requirePrerequisites(JSON.parse(process.env.SF_NEEDS_JSON || "null"))
     console.log("SF_CI_REQUIRED_JOB_CONCLUSIONS_PASS")
+    return
+  }
+  if (command === "describe-inventory") {
+    const id = process.env.SF_SUITE_ID
+    const shard = shardRequest(id)
+    const suite = suites.find((entry) => entry.id === id)
+    if (!suite || process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64") {
+      fail("inventory diagnostic requires a known Linux x64 suite")
+    }
+    const reportFile = path.join("sf-ci-evidence", evidenceId(id, shard), reportName(suite.kind))
+    const inventory = describeInventory(readFileSync(reportFile, "utf8"), suite, diagnosticBinding())
+    process.stdout.write(JSON.stringify(inventory) + "\n")
     return
   }
   if (command === "select") {

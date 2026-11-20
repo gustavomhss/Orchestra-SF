@@ -161,6 +161,49 @@ test("product-authority-03: Microsoft Team authority requires a live grant reade
   expect(await stored(f)).toBeUndefined()
 })
 
+test("product-authority: a failed repeated role observation cannot publish a Team context", async () => {
+  const f = await fixture()
+  const authenticateAll = f.options.authenticateAll
+  if (!authenticateAll) throw new Error("Microsoft batch identity required")
+  const calls = { value: 0 }
+  const authority = createSfProductAuthority({ ...f.options, authenticateAll: async (request, contexts) => {
+    calls.value += 1
+    if (calls.value === 2) return null
+    return authenticateAll(request, contexts)
+  } })
+  const context = await authority.readTeamContextAdmission(f.contextRequest("team"))
+  expect(calls.value).toBe(2)
+  expect(context.status).toBe("unavailable")
+  expect(context).not.toHaveProperty("binding")
+  expect(context).not.toHaveProperty("pages")
+})
+
+test("product-authority: mutation of a reused role observation cannot change its comparison baseline", async () => {
+  const f = await fixture()
+  const authenticateAll = f.options.authenticateAll
+  if (!authenticateAll) throw new Error("Microsoft batch identity required")
+  const shared: { value?: Awaited<ReturnType<typeof authenticateAll>> } = {}
+  const calls = { value: 0 }
+  const authority = createSfProductAuthority({ ...f.options, authenticateAll: async (request, contexts) => {
+    if (shared.value) return shared.value
+    shared.value = await authenticateAll(request, contexts)
+    return shared.value
+  } })
+  f.hooks.beforeGrants = async () => {
+    if (++calls.value !== 2) return
+    if (!shared.value) throw new Error("Initial role observation required")
+    for (const entry of shared.value) if (entry.actor) {
+      entry.actor.roles = []
+      entry.actor.canWrite = false
+    }
+  }
+  const context = await authority.readTeamContextAdmission(f.contextRequest("team"))
+  expect(calls.value).toBe(2)
+  expect(context.status).toBe("unavailable")
+  expect(context).not.toHaveProperty("binding")
+  expect(context).not.toHaveProperty("pages")
+})
+
 test("product-authority-03: editing persisted grants after construction revokes old leases and admits exactly current rights", async () => {
   const f = await fixture()
   await seed(f)
@@ -190,6 +233,32 @@ test("product-authority-03: editing persisted grants after construction revokes 
 })
 
 for (const boundary of ["read", "commit"] as const) {
+  test(`product-authority: role changes during final grant observation deny ${boundary}`, async () => {
+    const f = await fixture()
+    await seed(f)
+    const before = await stored(f)
+    const gate = barrier()
+    const calls = { value: 0 }
+    f.hooks.beforeGrants = async () => { if (++calls.value === 2) await gate.hold() }
+    const request = f.businessRequest()
+    const pending = boundary === "read"
+      ? f.authority.state.read(request, "preferences", () => "private-result")
+      : f.authority.state.transaction(request, {
+          namespace: "preferences", expectedStorageVersion: 0, targetRef: f.authority.creationTarget.ref,
+          targetIncarnation: f.authority.creationTarget.incarnation, idempotencyKey: "role-observation", commandDigest: digest,
+        }, async (state) => {
+          state.preferences["role-observation"] = { value: "must-not-commit" }
+          return { commit: true, value: "private-result" }
+        })
+    await gate.entered
+    f.provider.account.groups = [group]
+    gate.release()
+    const result = await pending
+    expect(result.status).toBe("denied")
+    expect(result).not.toHaveProperty("value")
+    expect(await stored(f)).toEqual(before)
+  })
+
   for (const change of ["grants", "roles", "membership"] as const) {
     test(`product-authority-04: ${change} revoked while ${boundary} awaits yields no output, receipt or persisted effect`, async () => {
       const f = await fixture()
