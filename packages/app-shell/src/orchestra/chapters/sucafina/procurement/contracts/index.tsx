@@ -1,3 +1,4 @@
+import { sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -117,10 +118,8 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
   }
   const buildHref = (ref?: SfRef, suffix: "" | "edit" = "") => {
     // Preserve only the F01-approved owner selection. Never put business data in URLs.
-    const url = new URL(props.route.href, "http://orchestra.invalid")
     const query = new URLSearchParams()
-    for (const name of ["server", "project", "installation"])
-      if (url.searchParams.has(name)) query.set(name, url.searchParams.get(name)!)
+    if (props.route.ownerSelection.installationId) sfAppendOwnerQuery(query, props.route.ownerSelection)
     const item = ref ? "/" + encodeSfRouteRef(ref) : ""
     const extra = suffix ? "/edit" : ""
     return "/orchestra/sf-procurement/contracts" + item + extra + (query.size ? "?" + query.toString() : "")

@@ -1,7 +1,8 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfMemory } from "@orchestra/schema/sucafina/memory"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfMemoryView } from "../memory"
@@ -11,12 +12,11 @@ export function isMemorySurface(id: string): boolean { return Object.hasOwn(kind
 export function parseMemoryRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-memory" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation"].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => !sfOwnerQueryKeys.some((name) => name === key))) return
+  if (!sfOwnerQueryValid(params)) return
   return {}
 }
-export function memoryRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function memoryRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-memory" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   const operations = candidate.surfaceId === "UI62" ? [SfDecisions.operations["projection.cases"].operationId, SfMemory.operations["intelligence.memory-similar-cases"].operationId] :
     candidate.surfaceId === "UI63" && candidate.kind === "entry" ? [SfMemory.operations["intelligence.memory-catalog"].operationId, SfMemory.operations["intelligence.memory-outcome"].operationId] :

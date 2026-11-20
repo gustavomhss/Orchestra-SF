@@ -1,9 +1,10 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfDomainPageCap09, SfDomainPageCap10 } from "@orchestra/schema/sucafina/domain"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfPortfolio } from "@orchestra/schema/sucafina/portfolio"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import type { SfSurfaceProps } from "../context/contracts"
 import { SfPortfolioOverviewView } from "../portfolio/overview"
@@ -20,16 +21,15 @@ export function parsePortfolioRouteQuery(params: URLSearchParams, candidate: SfN
   if (candidate.chapterId !== "sf-portfolio" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const cap = candidate.surfaceId === "CAP09" || candidate.surfaceId === "CAP10"
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", ...(cap ? ["year"] : []), ...(candidate.surfaceId === "CAP09" ? ["status", "filter"] : [])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...sfOwnerQueryKeys, ...(cap ? ["year"] : []), ...(candidate.surfaceId === "CAP09" ? ["status", "filter"] : [])].includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year"), status = params.get("status"), filter = params.get("filter")
   if (year !== null && !/^\d{4}$/.test(year) || status === "" || filter !== null && !["watch", "at-risk"].includes(filter)) return
   const input = { ...(year === null ? {} : { year: Number(year) }), ...(status === null ? {} : { status }), ...(filter === null ? {} : { filter }) }
   if (cap && Option.isNone(Schema.decodeUnknownOption(candidate.surfaceId === "CAP09" ? SfDomainPageCap09.input : SfDomainPageCap10.input, { onExcessProperty: "error" })(input))) return
   return input
 }
-export function portfolioRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function portfolioRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-portfolio" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   if (candidate.surfaceId === "CAP09" || candidate.surfaceId === "CAP10") {
     if (!context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead)) return false

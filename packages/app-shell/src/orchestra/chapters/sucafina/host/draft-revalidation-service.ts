@@ -2,12 +2,12 @@ import { Option, Schema } from "effect"
 import { createSfOperationsClient } from "@orchestra/client/sucafina/operations"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfOperationsSelection } from "@orchestra/schema/sucafina/operations"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { serviceListVersion, serviceMonthVersion, serviceTicketKeys } from "../operations/service/model"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidateServiceDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP11" || input.read.operationId !== "domain.page.CAP11" || input.read.actionIds.length !== 1)
     return { status: "unavailable" }

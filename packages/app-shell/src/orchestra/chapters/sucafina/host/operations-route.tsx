@@ -1,8 +1,9 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfOperations } from "@orchestra/schema/sucafina/operations"
 import { SfDomainPageCap13, SfDomainPageCap15, SfDomainPageCap16 } from "@orchestra/schema/sucafina/domain"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfServiceView } from "../operations/service"
@@ -27,9 +28,8 @@ export function parseOperationsRouteQuery(params: URLSearchParams, candidate: Sf
   const period = candidate.surfaceId === "CAP11" || candidate.surfaceId === "CAP12" || candidate.surfaceId === "CAP13"
   const statusAllowed = candidate.surfaceId === "CAP13" || candidate.surfaceId === "CAP15"
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", ...(period ? ["year", "month"] : []), ...(statusAllowed ? ["status"] : [])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...sfOwnerQueryKeys, ...(period ? ["year", "month"] : []), ...(statusAllowed ? ["status"] : [])].includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year"), month = params.get("month"), status = params.get("status")
   if (year !== null && !/^\d{4}$/.test(year) || month !== null && !/^(?:[1-9]|1[0-2])$/.test(month) || status === "") return
   if (candidate.surfaceId === "CAP13" && year !== null && (Number(year) < 2024 || Number(year) > 2027)) return
@@ -39,7 +39,7 @@ export function parseOperationsRouteQuery(params: URLSearchParams, candidate: Sf
   if (Option.isNone(Schema.decodeUnknownOption(operations[candidate.surfaceId].input, { onExcessProperty: "error" })(input))) return
   return { ...(year === null ? {} : { year: Number(year) }), ...(month === null ? {} : { month: Number(month) }), ...(status === null ? {} : { status }) }
 }
-export function operationsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function operationsRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-operations" || !isOperationsSurface(candidate.surfaceId) || !kinds[candidate.surfaceId].includes(candidate.kind)) return false
   const operation = operations[candidate.surfaceId]
   return context.destinations.some((item) => item.capabilityId === candidate.surfaceId && item.canRead) &&

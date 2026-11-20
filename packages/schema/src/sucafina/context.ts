@@ -33,7 +33,7 @@ export type SfOwnerSelection = Readonly<{
   serverKey: SfServerKey
   /** Physical placement for original business contracts; never a corporate profile identifier. */
   projectId: SfRef
-  installationId?: SfRef
+  installationId?: SfRef | TeamProfile.InstallationId
   /** Present only after the current Microsoft context validates the complete Team ref. */
   team?: TeamProfile.Ref
 }>

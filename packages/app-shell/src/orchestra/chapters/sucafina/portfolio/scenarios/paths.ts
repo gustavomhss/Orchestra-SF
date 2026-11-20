@@ -1,3 +1,4 @@
+import { sfParseOwnerQuery, sfSelectionFromQuery, sfSameOwnerSelection, sfAppendOwnerQuery } from "../../navigation-state/owner"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import type { SfCaseChoice } from "./model"
@@ -9,16 +10,11 @@ export function sfDecisionHref(
   source?: Readonly<{ caseRef?: string; resultRef?: string }>,
 ): string | null {
   const parent = new URL(String(route.href), "http://orchestra.invalid")
-  const owners = ["server", "project", "installation"].map((key) => parent.searchParams.getAll(key))
-  if (owners.some((set) => set.length > 1) ||
-    (!owners.every((set) => set.length === 0) &&
-      !owners.every((set) => set.length === 1 && !!set[0]))) return null
+  const parsed = sfParseOwnerQuery(parent.searchParams)
+  const selected = sfSelectionFromQuery(parent.searchParams, route.ownerSelection)
+  if (parsed.kind === "invalid" || !selected || !sfSameOwnerSelection(selected, route.ownerSelection)) return null
   const query = new URLSearchParams()
-  if (owners.every((set) => set.length === 1)) {
-    query.set("server", owners[0]![0]!)
-    query.set("project", owners[1]![0]!)
-    query.set("installation", owners[2]![0]!)
-  }
+  if (parsed.kind !== "absent") sfAppendOwnerQuery(query, selected)
   if (route.query.year !== undefined) query.set("year", String(route.query.year))
   let path: string
   if (destination === "list") path = "/orchestra/sf-portfolio/scenarios"

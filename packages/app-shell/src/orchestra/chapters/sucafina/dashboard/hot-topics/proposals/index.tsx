@@ -1,3 +1,4 @@
+import { sfOwnerQuery } from "../../../navigation-state/owner"
 import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
@@ -112,11 +113,7 @@ function decodeReview(value: unknown, expected: Prepared): Review | undefined {
 }
 
 function proposalRoute(props: SfSurfaceProps<"UI54">, changeId: string): string {
-  const query = new URLSearchParams({
-    server: props.route.ownerSelection.serverKey,
-    project: props.route.ownerSelection.projectId,
-  })
-  if (props.route.ownerSelection.installationId) query.set("installation", props.route.ownerSelection.installationId)
+  const query = new URLSearchParams(sfOwnerQuery(props.route.ownerSelection))
   return "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(changeId) + "?" + query.toString()
 }
 

@@ -3,7 +3,7 @@
 import * as Sentry from "@sentry/solid"
 import { render } from "solid-js/web"
 import { AppBaseProviders, AppInterface, type Platform, PlatformProvider, ServerConnection } from "@orchestra/app"
-import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken, checkServerHealth } from "@orchestra/app/web"
+import { loadInitialLocale, createBrowserDraftStore, en, zh, authFromToken, checkServerHealth, SfTeamWebApp, isSucafinaBrand } from "@orchestra/app/web"
 import pkg from "../package.json" with { type: "json" }
 
 const DEFAULT_SERVER_URL_KEY = "orchestra.settings.dat:defaultServerUrl"
@@ -145,6 +145,20 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 
 if (root instanceof HTMLElement) {
   void loadInitialLocale().then(async (locale) => {
+    if (isSucafinaBrand()) {
+      // Deployment identity selects the SF Web experience. The explicitly loaded
+      // host must still publish its current Microsoft installation; a directory,
+      // old token or generic server connection cannot substitute for that source.
+      clearAuthToken()
+      render(() => (
+        <PlatformProvider value={platform}>
+          <AppBaseProviders locale={locale}>
+            <SfTeamWebApp origin={location.origin} />
+          </AppBaseProviders>
+        </PlatformProvider>
+      ), root)
+      return
+    }
     const auth = authFromToken(new URLSearchParams(location.search).get("auth_token"))
     clearAuthToken()
     const server: ServerConnection.Http = {

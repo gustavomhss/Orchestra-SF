@@ -1,3 +1,4 @@
+import { sfParseOwnerQuery, sfSelectionFromQuery, sfSameOwnerSelection, sfAppendOwnerQuery } from "../../navigation-state/owner"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../../navigation-state"
 
@@ -12,16 +13,11 @@ export function sfProjectHref(
   originalProjectRef?: string,
 ): string | null {
   const owner = new URL(String(from.href), "http://orchestra.invalid")
-  const values = ["server", "project", "installation"].map((key) => owner.searchParams.getAll(key))
-  if (values.some((items) => items.length > 1) ||
-    (!values.every((items) => items.length === 0) &&
-     !values.every((items) => items.length === 1 && !!items[0]))) return null
+  const parsed = sfParseOwnerQuery(owner.searchParams)
+  const selected = sfSelectionFromQuery(owner.searchParams, from.ownerSelection)
+  if (parsed.kind === "invalid" || !selected || !sfSameOwnerSelection(selected, from.ownerSelection)) return null
   const query = new URLSearchParams()
-  if (values.every((items) => items.length === 1)) {
-    query.set("server", values[0]![0]!)
-    query.set("project", values[1]![0]!)
-    query.set("installation", values[2]![0]!)
-  }
+  if (parsed.kind !== "absent") sfAppendOwnerQuery(query, selected)
   if (from.query.year !== undefined) query.set("year", String(from.query.year))
   if (kind === "overview") {
     if (from.query.status !== undefined) query.set("status", from.query.status)

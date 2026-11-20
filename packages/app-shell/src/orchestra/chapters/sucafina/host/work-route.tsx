@@ -1,8 +1,9 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfWork } from "@orchestra/schema/sucafina/work"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
-import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import type { SfSurfaceProps } from "../context/contracts"
 import { SfWorkView } from "../work"
@@ -19,14 +20,13 @@ export function parseWorkRouteQuery(params: URLSearchParams, candidate: SfNative
   if (candidate.chapterId !== "sf-work" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
   const allowSource = candidate.surfaceId === "UI51" && candidate.kind === "new"
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", ...(allowSource ? ["source"] : [])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...sfOwnerQueryKeys, ...(allowSource ? ["source"] : [])].includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const source = params.get("source")
   if (source !== null && Option.isNone(Schema.decodeUnknownOption(SfCollaboration.operations["collaboration.relation-read"].input, { onExcessProperty: "error" })({ recordRefs: [source] }))) return
   return source === null ? {} : { source: source as SfRef }
 }
-export function workRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function workRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-work" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   const operations = candidate.surfaceId === "UI30" ? [SfWork.operations["projection.work-selection"].operationId, SfCollaboration.operations["collaboration.work-list"].operationId] :
     candidate.surfaceId === "UI32" ? [candidate.kind === "entry" ? SfWork.operations["views.open"].operationId : SfWork.operations["views.list"].operationId] :

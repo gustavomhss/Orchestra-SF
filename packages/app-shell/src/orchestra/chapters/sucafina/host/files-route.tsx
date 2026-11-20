@@ -1,6 +1,7 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfImportsView } from "../imports"
@@ -15,12 +16,11 @@ export function parseFilesRouteQuery(params: URLSearchParams, candidate: SfNativ
   if (!(candidate.chapterId === "sf-imports" || candidate.chapterId === "sf-documents") || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   if ((["UI55", "UI56", "UI57", "UI68"].includes(candidate.surfaceId)) !== (candidate.chapterId === "sf-imports")) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation"].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => !sfOwnerQueryKeys.some((name) => name === key))) return
+  if (!sfOwnerQueryValid(params)) return
   return {}
 }
-export function filesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function filesRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (!(candidate.chapterId === "sf-imports" || candidate.chapterId === "sf-documents") || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   if ((["UI55", "UI56", "UI57", "UI68"].includes(candidate.surfaceId)) !== (candidate.chapterId === "sf-imports")) return false
   const ready = (id: string) => context.availability.some((resource) => resource.family === "files" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))

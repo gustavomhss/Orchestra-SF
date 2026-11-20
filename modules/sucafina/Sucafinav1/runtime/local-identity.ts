@@ -322,10 +322,10 @@ function validSession(value: unknown): value is Session {
 function validLogin(value: unknown): value is Login {
   return value !== null && typeof value === "object" && "nonce" in value && typeof value.nonce === "string" && /^[a-f0-9]{64}$/.test(value.nonce) && "verifier" in value && typeof value.verifier === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.verifier) && "returnTo" in value && typeof value.returnTo === "string" && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isSafeInteger(value.expiresAt)
 }
-function safeReturn(value: string | null, mount: string) {
-  const fallback = `${mount}/dashboard`
-  if (!value || !value.startsWith(`${mount}/`) || /[\\\r\n]/.test(value)) return fallback
-  const parsed = new URL(value, "http://localhost")
-  return ["dashboard", "planner", "procurement"].some((surface) => parsed.pathname === `${mount}/${surface}`) && parsed.origin === "http://localhost" ? `${parsed.pathname}${parsed.search}` : fallback
+function safeReturn(_value: string | null, _mount: string) {
+  // The Microsoft Web login has one native return destination. Query strings,
+  // legacy HTML surfaces and previous private routes never survive a login.
+  // The native shell rereads corporate context before restoring window intent.
+  return "/"
 }
 

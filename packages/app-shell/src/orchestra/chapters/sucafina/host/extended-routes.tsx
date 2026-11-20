@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import type { JSX } from "solid-js"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { isPlannerPagesSurface, parsePlannerPagesRouteQuery, plannerPagesRouteAvailable, SfPlannerPages } from "./planner-pages-route"
@@ -106,7 +106,7 @@ export function isExtendedSurface(id: string): boolean { return families.some((f
 export function parseExtendedRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   return families.find((family) => family.matches(candidate.surfaceId))?.parse(params, candidate)
 }
-export function extendedRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function extendedRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   return families.find((family) => family.matches(candidate.surfaceId))?.available(context, candidate) === true
 }
 export function SfExtendedPages(props: Readonly<{ route: SfResolvedRoute }>): JSX.Element {

@@ -1,7 +1,8 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfPlannerOpexView } from "../planner/opex"
@@ -34,9 +35,8 @@ export function parsePlannerPagesRouteQuery(params: URLSearchParams, candidate: 
   if (candidate.chapterId !== "sf-planner" || !isPlannerPagesSurface(candidate.surfaceId) ||
     !kinds[candidate.surfaceId].includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation", "year", ...(candidate.surfaceId === "CAP21" ? [] : ["version"])].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => ![...sfOwnerQueryKeys, "year", ...(candidate.surfaceId === "CAP21" ? [] : ["version"])].includes(key))) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year"), version = params.get("version")
   if (year !== null && !/^\d{4}$/.test(year) || version !== null && (!version.trim() || /[\u0000-\u001f\u007f]/.test(version))) return
   const input = { ...(year === null ? {} : { year: Number(year) }), ...(version === null ? {} : { version }) }
@@ -44,7 +44,7 @@ export function parsePlannerPagesRouteQuery(params: URLSearchParams, candidate: 
   return { ...(year === null ? {} : { year: Number(year) }), ...(version === null ? {} : { version: version as SfRef }) }
 }
 
-export function plannerPagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function plannerPagesRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-planner" || !isPlannerPagesSurface(candidate.surfaceId) ||
     !kinds[candidate.surfaceId].includes(candidate.kind)) return false
   const operation = operations[candidate.surfaceId]

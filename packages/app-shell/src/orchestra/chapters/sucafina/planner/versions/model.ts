@@ -1,3 +1,4 @@
+import { sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
@@ -33,9 +34,7 @@ export function plannerHref(
   const params = new URLSearchParams()
   // Explicit owner tuple is all-or-none. It is a destination hint, not an ACL.
   if (route.ownerSelection.installationId) {
-    params.set("server", route.ownerSelection.serverKey)
-    params.set("project", route.ownerSelection.projectId)
-    params.set("installation", route.ownerSelection.installationId)
+    sfAppendOwnerQuery(params, route.ownerSelection)
   }
   if (selection?.year !== undefined && destination !== "import") params.set("year", String(selection.year))
   if (destination === "overview" && selection?.version) params.set("version", selection.version)

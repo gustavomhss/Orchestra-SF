@@ -1,3 +1,4 @@
+import { sfOwnerMatchesContext } from "../../navigation-state/owner"
 import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -91,9 +92,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       preview: null, previewRequestKey: null, previewState: "empty", selected: [],
       constraints: [], priorities: [], review: false, busy: false, outcomeUnknown: false, message: null })
     if (!current || status !== "ready") return
-    if (current.context.stamp.projectId !== props.route.ownerSelection.projectId ||
-      (props.route.ownerSelection.installationId &&
-       current.context.stamp.installationId !== props.route.ownerSelection.installationId)) {
+    if (!sfOwnerMatchesContext(current.context, props.route.ownerSelection)) {
       set("status", "denied"); return
     }
     const live = () => !controller.signal.aborted && owner.generation() === epoch

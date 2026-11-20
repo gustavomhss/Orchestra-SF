@@ -1,3 +1,4 @@
+import { sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
@@ -167,10 +168,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     row: row(), version: version(), actionIds: view.read?.actionIds, stamp: sf.ready()?.context.stamp,
   })
   const stageHref = (ref: SfRef, part: "detail" | "requisition" | "po" | "history" | "sourcing" | "quotes") => {
-    const url = new URL(props.route.href, "http://orchestra.invalid")
     const query = new URLSearchParams()
-    for (const param of ["server", "project", "installation"])
-      if (url.searchParams.has(param)) query.set(param, url.searchParams.get(param)!)
+    if (props.route.ownerSelection.installationId) sfAppendOwnerQuery(query, props.route.ownerSelection)
     return "/orchestra/sf-procurement/requests/" + encodeSfRouteRef(ref) +
       (part === "detail" ? "" : "/" + part) + (query.size ? "?" + query.toString() : "")
   }
