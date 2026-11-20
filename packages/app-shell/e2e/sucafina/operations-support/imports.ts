@@ -3,7 +3,7 @@ import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { captureCommandResponse, chapterURL, login, modeURL, observation } from "./runtime.ts"
@@ -365,22 +365,47 @@ export async function importJourney(page: Page, info: TestInfo) {
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
   await reader.getByRole("button", { name: "Sign out", exact: true }).click()
   expect((await signedOut).status()).toBe(204)
-  const [denied] = await retainResponses(page, [referenceTarget], () => refresh.click())
+  // Separate producer oracle with the same revoked session; this is not a UI
+  // response, recovery substitute or replay of the command.
+  const denied = await page.request.get(modeURL(account, "planner", "import-reference", { importPreviewRef: preview.id }).href, { maxRetries: 0 })
   expect(denied.status()).toBe(403)
   expect(await denied.json()).toEqual({ status: "denied" })
-  await expect(receiptPage).toHaveAttribute("data-sf-read-state", "denied")
-  const deniedState = receiptPage.locator('.sf-state-panel[data-sf-state="denied"]')
-  await expect(deniedState).toHaveCount(1)
-  await expect(deniedState.getByRole("alert")).toHaveText("You do not have access to this content.")
-  await expect(receiptPage.locator(".sf-state-content")).toHaveCount(0)
-  await expect(receiptPage.getByRole("region", { name: "Domain impact", exact: true })).toHaveCount(0)
-  await expect(receiptPage.getByRole("region", { name: "Item and field changes", exact: true })).toHaveCount(0)
-  await expect(receiptPage.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
-  await expect(receiptPage.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
-  expect(applies).toHaveLength(1)
+  const readsAfterRevocation: string[] = []
+  const observeRevokedRead = (request: Request) => {
+    if (isMode(request.url(), "import-reference") && request.method() === "GET")
+      readsAfterRevocation.push(request.method())
+  }
+  page.on("request", observeRevokedRead)
+  try {
+    // The native Files transport rechecks ctx.context before sending its file
+    // request. Logout must stop here, before any import-reference GET.
+    const [preflight] = await retainResponses(page, [{
+      method: "GET", url: account.baseURL + "/api/ui/context",
+      query: { installationId: account.installationId, projectId: account.projectId },
+      absentQuery: ["sf"],
+    }], () => refresh.click())
+    const selected = new URL(preflight.url()).searchParams
+    expect([...selected.keys()].sort()).toEqual(["hostId", "installationId", "projectId"])
+    expect(selected.get("hostId")).toMatch(/\S+/)
+    expect(preflight.status()).toBe(401)
+    expect(await preflight.json()).toEqual({ status: "unauthenticated" })
+    // Current transport collapses this genuine authority refusal into
+    // contract-unavailable. Assert its actual UI state, never call it denied.
+    await expect(receiptPage).toHaveAttribute("data-sf-read-state", "unavailable")
+    const unavailable = receiptPage.locator('.sf-state-panel[data-sf-state="unavailable"]')
+    await expect(unavailable).toHaveCount(1)
+    await expect(unavailable.getByRole("alert").getByText("Currently unavailable", { exact: true })).toBeVisible()
+    await expect(receiptPage.locator(".sf-state-content")).toHaveCount(0)
+    await expect(receiptPage.getByRole("region", { name: "Domain impact", exact: true })).toHaveCount(0)
+    await expect(receiptPage.getByRole("region", { name: "Item and field changes", exact: true })).toHaveCount(0)
+    await expect(receiptPage.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+    await expect(receiptPage.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+    expect(readsAfterRevocation).toEqual([])
+    expect(applies).toHaveLength(1)
+  } finally { page.off("request", observeRevokedRead) }
   const visibleAfterRevocation = await exported(viewerPage, viewer, version)
   expect(visibleAfterRevocation.OPEX).toEqual(after.OPEX)
-  await observation(info, "operations-import-real-receipt", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: "real Apply response delivery lost; explicit reconciliation, Refresh receipt, canonical receipt reload and reentry", crossOwner: "different authenticated viewer denied the original reference; fresh export remains authorized", revocation: "same credential logged out; cached reference denied and private DOM removed" })
+  await observation(info, "operations-import-real-receipt", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: "real Apply response delivery lost; explicit reconciliation, Refresh receipt, canonical receipt reload and reentry", crossOwner: "different authenticated viewer denied the original reference; fresh export remains authorized", revocation: "same credential logged out; separate producer reference denied403; native preflight unauthenticated401, no reference request, UI unavailable and private DOM absent" })
   await reader.close()
   await viewerContext.close()
 }
