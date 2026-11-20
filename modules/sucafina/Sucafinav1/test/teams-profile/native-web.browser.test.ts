@@ -276,6 +276,16 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     expect(observed.some((call) => call.path === "/api/session" || call.path === "/api/reference" || call.path === "/api/global/health")).toBe(false)
     expect(errors).toEqual([])
     passed = true
+  } catch (error) {
+    const clean = (text: string) => text.replace(/https?:\/\/[^\s"'<>]+/g, (raw) => {
+      try { const url = new URL(raw); return url.origin + url.pathname } catch { return "[redacted URL]" }
+    })
+    console.info("SF_TEAMS_NATIVE_WEB_PRIMARY_FAILURE " + JSON.stringify({
+      phase, name: error instanceof Error ? error.name : "unknown",
+      message: error instanceof Error ? clean(error.message.split("\n")[0] ?? "") : "Non-error failure",
+      stack: error instanceof Error ? error.stack?.split("\n").filter((line) => /^\s+at /.test(line)).map(clean).slice(0,5) : [],
+    }))
+    throw error
   } finally {
     logoutRelease.resolve()
     if (!passed) {
