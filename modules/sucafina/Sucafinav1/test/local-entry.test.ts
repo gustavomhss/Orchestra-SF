@@ -120,20 +120,22 @@ test("enrolled operator authenticates when the serving process cannot resolve th
       method: "POST", headers: { cookie, origin, "content-type": "application/json" },
       body: JSON.stringify({ page: "IT Risks", action: "save", version: 0, values: { name: "Recorded operator proof", impact: 3, probability: 2 } }),
     }))
-    expect(saved?.status).toBe(200)
-    expect(await saved!.json()).toMatchObject({ ok: true })
+    expect(saved?.status).toBe(403)
+    expect(await saved!.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
+    const maintenance = await installation.handler(new Request(`${origin}/sucafina/backups`, { headers: { cookie } }))
+    expect(maintenance?.status).toBe(200)
     const status = await installation.handler(new Request(`${origin}/sucafina/status`))
     expect(await status!.json()).toMatchObject({ login: "local-operator" })
     await f.store.transaction("dashboard", async (snapshot) => {
-      expect(snapshot.audit).toHaveLength(1)
-      expect(snapshot.audit[0]).toMatchObject({ who: `macos:${f.operator.installationId}:${f.operator.uid}`, name })
+      expect(snapshot.audit).toHaveLength(0)
+      expect(snapshot.data.__sfProductV1).toMatchObject({ schemaVersion: 1, revision: 0 })
       return { commit: false, value: undefined }
     })
     expect((await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } })))?.status).toBe(404)
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 
-test("local owner writes persist in isolated local data and audit the actual OS account", async () => {
+test("local operator has no business grants and denied writes leave both isolated stores unchanged", async () => {
   const f = await localAccess()
   const installation = await createLocalInstallation({ origin }, f.file, f.environment)
   const corporate = await openLocalStore(path.join(f.root, "business"))
@@ -146,11 +148,23 @@ test("local owner writes persist in isolated local data and audit the actual OS 
     }))
     expect((await post({}))?.status).toBe(401)
     expect((await post({ cookie, origin: "https://untrusted.example" }))?.status).toBe(403)
-    expect((await post({ cookie }))?.status).toBe(200)
+    const rejected = await post({ cookie })
+    expect(rejected?.status).toBe(403)
+    expect(await rejected!.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
+    for (const endpoint of ["/dashboard?sf=current-choice&format=json", "/api/ui/context", "/notifications"]) {
+      const response = await installation.handler(new Request(origin + "/sucafina" + endpoint, { headers: { cookie } }))
+      expect(response?.status).toBe(403)
+      expect(await response!.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
+    }
+    const product = await installation.handler(new Request(origin + "/sucafina/dashboard?sf=workbench-command", {
+      method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": "denied-operator" },
+      body: JSON.stringify({ operation: "sf_case_draft", input: { objective: "must not be created" } }),
+    }))
+    expect(product?.status).toBe(403)
+    expect(await product!.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
     await f.store.transaction("dashboard", async (snapshot) => {
-      expect(snapshot.audit).toHaveLength(1)
-      expect(snapshot.audit[0].who).toBe(`macos:${f.operator.installationId}:${f.operator.uid}`)
-      expect(snapshot.audit[0].name).toBe(userInfo().username)
+      expect(snapshot.audit).toHaveLength(0)
+      expect(snapshot.data.__sfProductV1).toMatchObject({ schemaVersion: 1, revision: 0 })
       expect(snapshot.data.roleMap).toBeUndefined()
       return { commit: false, value: undefined }
     })
@@ -313,7 +327,7 @@ test("private maintenance routes enforce local identity, origin and confirmation
     expect(html).toContain("Create backup")
     expect(html).toContain("Restore backup")
     expect((await post({ action: "restore-backup", confirmed: true, version: 0, values: { surface: "dashboard", id: "../escape" } }))?.status).toBe(422)
-    expect((await installation.handler(new Request(`${origin}/sucafina/notifications`, { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify({ ids: ["not-a-message"] }) })))?.status).toBe(422)
+    expect((await installation.handler(new Request(`${origin}/sucafina/notifications`, { method: "POST", headers: { cookie, origin, "content-type": "application/json" }, body: JSON.stringify({ ids: ["not-a-message"] }) })))?.status).toBe(403)
     const logout = await installation.handler(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect(logout?.status).toBe(204)
     expect((await installation.handler(new Request(`${origin}/sucafina/backups`, { headers: { cookie } })))?.status).toBe(303)

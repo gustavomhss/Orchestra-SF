@@ -74,7 +74,15 @@ def parse_receipt(receipt_path, c, expected_sha):
     except (UnicodeError, ValueError):
         refuse("factory run receipt malformed")
     if not isinstance(receipt, dict) or \
-       receipt.get("schema") != "sf-factory-package-proof-v1" or \
+       receipt.get("schema") != "sf-factory-package-proof-v2" or \
+       receipt.get("proofRole") != "factory-technical-packaging" or \
+       not re.fullmatch(r"[0-9a-f]{40}", str(receipt.get("sourceTreeSHA", ""))) or \
+       receipt.get("businessAuthority") != "none" or receipt.get("businessUnchanged") is not True or \
+       receipt.get("authentication") != "local-operator" or \
+       receipt.get("authenticatedCurrentChoiceStatus") != 403 or \
+       receipt.get("authenticatedCurrentChoiceState") != "denied" or \
+       receipt.get("authenticatedBusinessCommandStatus") != 403 or \
+       receipt.get("authenticatedNativeBusinessStatus") != 403 or \
        receipt.get("sourceSHA") != c or receipt.get("checkoutSHA") != c or \
        receipt.get("expectedSourceSHA") != c or \
        receipt.get("archiveSha256") != expected_sha or \
