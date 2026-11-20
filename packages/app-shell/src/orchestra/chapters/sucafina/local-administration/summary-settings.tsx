@@ -33,6 +33,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
     data: undefined as Settings | undefined,
     selected: [] as SummaryPage[],
     review: false,
+    intent: null as string | null,
     busy: false,
     blocked: false,
     notice: "",
@@ -66,7 +67,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   }
   const clear = (page: SfUiState) => {
     writing?.abort()
-    setState({ page, scope: "", data: undefined, selected: [], review: false, busy: false, blocked: false, notice: "" })
+    setState({ page, scope: "", data: undefined, selected: [], review: false, intent: null, busy: false, blocked: false, notice: "" })
   }
   const failure = (status: number): SfUiState => status === 401 ? "session-expired"
     : status === 403 ? "denied" : status === 409 ? "stale" : status === 400 || status === 422 ? "invalid" : "unavailable"
@@ -90,7 +91,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
       if (result.status !== 200 || result.body.status !== "ok") return clear(failure(result.status))
       if (!sameStamp(result.body.context, current.ready.context.stamp)) return clear("denied")
       setState({ page: "ready", scope: current.scope, data: result.body.value,
-        selected: [...result.body.value.pages], review: false, busy: false, blocked: false, notice: "" })
+        selected: [...result.body.value.pages], review: false, intent: null, busy: false, blocked: false, notice: "" })
     }).catch(() => { if (!abort.signal.aborted && sameOwner(current)) clear("unavailable") })
     onCleanup(() => abort.abort())
   })
@@ -104,7 +105,8 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   const save = async () => {
     const current = admitted(writeId)
     const source = visible()
-    if (!current || !source || !canWrite() || !state.review || state.busy || state.blocked) return
+    if (!current || !source || !canWrite() || !state.review || !state.intent || state.busy || state.blocked) return
+    const idempotencyKey = state.intent
     const pages = source.availablePages.filter((page) => state.selected.includes(page))
     const version = source.version
     const abort = new AbortController()
@@ -114,7 +116,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
     try {
       const result = await createSfDomainClient(current.ready.transport)[writeId]({
         context: { ...current.ready.context.stamp }, version, pages,
-      }, { signal: abort.signal })
+      }, { signal: abort.signal, idempotencyKey })
       if (abort.signal.aborted || !sameOwner(current)) return
       if (result.kind !== "response") {
         setState({ blocked: true, notice: "sf.common.operationUnknown" })
@@ -133,17 +135,17 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
         return
       }
       if (after.status === 401 || after.status === 403) return clear(failure(after.status))
-      if (after.status !== 200 || after.body.status !== "ok" ||
-          !sameStamp(after.body.context, current.ready.context.stamp)) {
+      if (after.status !== 200 || after.body.status !== "ok") {
         setState({ blocked: true, notice: "sf.common.operationUnknown" })
         return
       }
+      if (!sameStamp(after.body.context, current.ready.context.stamp)) return clear("denied")
       if (after.body.value.version !== version + 1 || JSON.stringify(after.body.value.pages) !== JSON.stringify(pages)) {
         setState({ blocked: true, review: false, notice: "sf.common.stale" })
         return
       }
       setState({ data: after.body.value, selected: [...after.body.value.pages],
-        review: false, blocked: false, notice: "sf.common.saved" })
+        review: false, intent: null, blocked: false, notice: "sf.common.saved" })
     } catch {
       if (!abort.signal.aborted && sameOwner(current)) setState({ blocked: true, notice: "sf.common.operationUnknown" })
     } finally {
@@ -175,7 +177,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
           </>}>
             <form data-sf-summary-form data-version={source().version} onSubmit={(event) => {
               event.preventDefault()
-              if (canWrite() && !state.busy && !state.blocked) setState("review", true)
+              if (canWrite() && !state.busy && !state.blocked) setState({ review: true, intent: crypto.randomUUID() })
             }}>
               <fieldset disabled={state.busy || state.blocked || state.review}>
                 <legend>{text("sf.u28.summaries")}</legend>
@@ -193,10 +195,10 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
           <button type="button" class="mx-btn" disabled={state.busy} onClick={refresh}>{text("sf.common.currentSource")}</button>
           <Show when={state.review && canWrite()}>
             <SfChangeReview
-              operation={{ ref: "local-admin:configure-summaries" as SfOperationRef,
+              operation={{ ref: state.intent as SfOperationRef,
                 label: message("sf.u28.saveSummaries"), scope: { kind: "message", message: message("sf.u28.summaries") } }}
               base={persisted()} current={persisted()}
-              proposed={{ kind: "draft", intentRef: "local-admin:summary-review" as SfIntentRef,
+              proposed={{ kind: "draft", intentRef: state.intent as SfIntentRef,
                 sourceRef: "config:summaries" as SfRef, sourceVersion: source().version, fields: fields(state.selected) }}
               effects={[{ id: "configure-summaries", domain: "dashboard", state: "proposed",
                 title: { kind: "message", message: message("sf.u28.summaries") }, details: fields(state.selected) }]}

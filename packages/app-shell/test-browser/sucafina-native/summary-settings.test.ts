@@ -43,15 +43,19 @@ async function waitFor(predicate: () => unknown) {
 const button = (node: HTMLElement, label: string) =>
   [...node.querySelectorAll<HTMLButtonElement>("button")].find((item) => item.textContent?.trim() === label)
 const checkbox = (node: HTMLElement) => node.querySelector<HTMLInputElement>('input[name="pages"][value="IT Risks"]')!
-async function fixture(options: { write?: boolean; foreignReply?: boolean; foreignRoute?: boolean;
+async function fixture(options: { write?: boolean; foreignReply?: boolean; foreignAfterRead?: boolean; foreignRoute?: boolean;
   configure?: (input: Configure) => Promise<unknown> } = {}) {
   let persisted: Settings = { pages: [], availablePages: [...DASHBOARD_PAGES], version: 0, canConfigure: true }
-  const calls: { id: string; input: unknown }[] = []
+  const calls: { id: string; input: unknown; idempotencyKey?: string }[] = []
+  let reads = 0
   const captured: { handle?: SfContextHandle } = {}
-  const transport: SfTransport = { async execute(operation, input) {
-    calls.push({ id: operation.operationId, input: structuredClone(input) })
+  const transport: SfTransport = { async execute(operation, input, callOptions) {
+    calls.push({ id: operation.operationId, input: structuredClone(input), idempotencyKey: callOptions.idempotencyKey })
+    if (operation.operationId === "local-admin.summary-configure")
+      expect(callOptions.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/)
+    if (operation.operationId === "local-admin.summary-read") reads += 1
     const body = operation.operationId === "local-admin.summary-read"
-      ? { status: "ok", context: options.foreignReply ? { ...stamp, principalRef: "foreign" } : stamp, value: persisted }
+      ? { status: "ok", context: options.foreignReply || options.foreignAfterRead && reads > 1 ? { ...stamp, principalRef: "foreign" } : stamp, value: persisted }
       : operation.operationId === "local-admin.summary-configure"
         ? await (options.configure ?? (async (value: Configure) => {
           expect(value.context).toEqual(stamp)
@@ -100,6 +104,7 @@ test("UI69 reviews the closed original summaries command and refreshes its persi
     await waitFor(() => view.node.querySelector("[data-sf-summary-form]")?.getAttribute("data-version") === "1")
     expect(view.calls.map((call) => call.id)).toEqual(["local-admin.summary-read", "local-admin.summary-configure", "local-admin.summary-read"])
     expect(view.calls[1]!.input).toEqual({ context: stamp, version: 0, pages: ["IT Risks"] })
+    expect(view.calls[1]!.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/)
     expect(checkbox(view.node).checked).toBe(true)
     expect(view.node.querySelector("[data-sf-summary-version]")?.textContent).toBe("1")
     expect(view.node.textContent).toContain("Changes saved.")
@@ -166,4 +171,19 @@ test("UI69 purges the editor and ignores a late command reply after revocation",
     expect(view.node.textContent).not.toContain("Changes saved.")
     expect(view.calls.map((call) => call.id)).toEqual(["local-admin.summary-read", "local-admin.summary-configure"])
   } finally { gate.resolve({ ok: true }); view.close() }
+})
+
+test("UI69 purges private settings if the post-command source reply belongs to another owner", async () => {
+  const view = await fixture({ foreignAfterRead: true })
+  try {
+    await waitFor(() => checkbox(view.node))
+    review(view.node)
+    await waitFor(() => button(view.node, "Save summaries"))
+    button(view.node, "Save summaries")!.click()
+    await waitFor(() => view.node.textContent?.includes("You do not have access"))
+    expect(view.node.querySelector("[data-sf-summary-form]")).toBeNull()
+    expect(view.node.querySelector("[data-sf-summary-version]")).toBeNull()
+    expect(view.node.textContent).not.toContain("Changes saved.")
+    expect(view.calls.map((call) => call.id)).toEqual(["local-admin.summary-read", "local-admin.summary-configure", "local-admin.summary-read"])
+  } finally { view.close() }
 })
