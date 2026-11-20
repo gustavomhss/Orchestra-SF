@@ -70,7 +70,7 @@ export function createSfDecisionResultStore(input: {
   verifySources: (value: Result, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   /** The host supplies the canonical producer replay with ancestry tracking; freshness alone cannot authenticate nested calculations. */
   verifyCalculationSources?: (value: Extract<StoredDecisionResult, { kind: "scenario" }>, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
-  /** Current readonly result suffix only; writes and historical readers retain their original boundaries. */
+  /** Current readonly result suffix and scenario-write preflight; never publication or historical reads. */
   observeRead?: <Value>(incoming: unknown, context: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>) => Promise<PortResult<Value>>
   createId: () => string
@@ -271,7 +271,15 @@ export function createSfDecisionResultStore(input: {
     if (!source || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
     const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "case-unavailable" }
-    if (!allowedCase(current.value, request.caseRef, context) || !await authorizeCase(current.value!, context).catch(() => false) || !await verifySources(request, request.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+    const preflight = async (): Promise<PortResult<true>> => {
+      if (!allowedCase(current.value, request.caseRef, context) || !await authorizeCase(current.value!, context).catch(() => false) || !await verifySources(request, request.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+      return { status: "ok", value: true }
+    }
+    // Only the readonly source admissions share a completed ancestor. The owner
+    // closes before identity creation and the durable C08 transaction below.
+    const admitted = request.kind === "scenario" && input.observeRead
+      ? await input.observeRead({ request, current: current.value }, context, preflight) : await preflight()
+    if (admitted.status !== "ok") return admitted
     const id = input.createId()
     if (!id.trim()) return { status: "unavailable", reason: "result-identity-unavailable" }
     const stored = { schema: "sf-decision-result-v1" as const, resultRef: `decision-result:${encodeURIComponent(id)}`, caseRef: request.caseRef, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, requestDigest: request.requestDigest, resultDigest: digestSfValue(request.result), sourceRefs: request.sourceRefs, createdAt: input.now(), kind: request.kind, result: request.result } as StoredDecisionResult
