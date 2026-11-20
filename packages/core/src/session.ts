@@ -37,6 +37,8 @@ import { Global } from "./global"
 import type { ToolSafety } from "./tool-safety"
 import { SessionDurable } from "@orchestra/schema/durable-event-manifest"
 import { SessionArchive } from "./session/archive"
+import { SessionOwner } from "./session/owner"
+import { SessionOwnerEvent } from "@orchestra/schema/session-owner-event"
 import { SessionLifecycle } from "./session/lifecycle"
 import { SessionSubagentModels } from "./session/subagent-models"
 import type { Permission } from "@orchestra/schema/permission"
@@ -271,6 +273,7 @@ const layer = Layer.effect(
     const projects = yield* ProjectV2.Service
     const execution = yield* SessionExecution.Service
     const store = yield* SessionStore.Service
+    const owners = yield* SessionOwner.Service
     const locations = yield* LocationServiceMap.Service
     const global = yield* Global.Service
     const promptObserver = yield* SessionPrompt.Service
@@ -375,14 +378,19 @@ const layer = Layer.effect(
     const result = Service.of({
       create: Effect.fn("V2Session.create")(function* (input) {
         const sessionID = input.id ?? SessionSchema.ID.create()
-        const recorded = yield* store.get(sessionID)
-        if (recorded) return recorded
+        const ownerScope = yield* owners.open().pipe(Effect.orDie)
+        yield* owners.assert(ownerScope, sessionID, "create").pipe(Effect.orDie)
+        const existing = yield* db.select({ id: SessionTable.id }).from(SessionTable)
+          .where(eq(SessionTable.id, sessionID)).get().pipe(Effect.orDie)
+        const recorded = existing ? yield* store.get(sessionID) : undefined
+        if (recorded) { yield* owners.verify(ownerScope).pipe(Effect.orDie); return recorded }
+        if (input.agent || input.model) yield* owners.authorize(ownerScope, "model", sessionID).pipe(Effect.orDie)
         if (input.parentID) yield* result.get(input.parentID)
         const project = yield* projects.resolve(input.location.directory)
         yield* ProjectV2.record(db, events, project)
         const timestamp = yield* DateTime.now
-        const publish = events
-          .publish(
+        const publish = Effect.gen(function* () {
+          const created = yield* events.publish(
             SessionEvent.Created,
             {
               sessionID,
@@ -408,7 +416,13 @@ const layer = Layer.effect(
             },
             { location: input.location },
           )
-          .pipe(
+          const owner = owners.owner(ownerScope)
+          const generation = owners.generation(ownerScope)
+          if (owner && generation !== undefined)
+            yield* events.publish(SessionOwnerEvent.Bound, { sessionID, timestamp, owner, generation })
+          yield* owners.verify(ownerScope).pipe(Effect.orDie)
+          return created
+        }).pipe(
             Effect.as({ type: "created" } as const),
             Effect.catchDefect((defect) => {
               if (!(defect instanceof SessionProjector.SessionAlreadyProjected)) {
@@ -431,12 +445,13 @@ const layer = Layer.effect(
               yield* result.get(input.parentID!)
               return yield* publish
             }), (transaction) => SessionLifecycle.withParent(input.parentID!, transaction))
-          : publish)
-        if (projected.type === "existing") return projected.session
+          : events.transact(publish))
+        if (projected.type === "existing") { yield* owners.assert(ownerScope, sessionID, "read").pipe(Effect.orDie); return projected.session }
         // TODO: Restore recorded sessions onto replacement synchronized workspaces in a future API slice.
         const created = yield* result.get(sessionID).pipe(Effect.orDie)
         // `session-start` hooks run once a new Session is stored; their outcome never undoes it.
         yield* hook(created, { operation: "session-start" }).pipe(Effect.exit)
+        yield* owners.verify(ownerScope).pipe(Effect.orDie)
         return created
       }),
       get: Effect.fn("V2Session.get")(function* (sessionID) {
@@ -444,7 +459,7 @@ const layer = Layer.effect(
         if (!session) return yield* new NotFoundError({ sessionID })
         return session
       }),
-      archive: Effect.fn("V2Session.archive")(function* (input) {
+      archive: Effect.fn("V2Session.archive")((input) => SessionOwner.guard(owners, input.sessionID, "write", () => Effect.gen(function* () {
         // An archived Session is hidden from every client, so nobody could answer a permission prompt of its run.
         if (!input.archived) {
           if (!(yield* SessionArchive.set(db, events, input)))
@@ -454,12 +469,12 @@ const layer = Layer.effect(
         yield* result.get(input.sessionID)
         if (!(yield* stopped([input.sessionID], SessionArchive.set(db, events, input), { discardPending: true })))
           return yield* new NotFoundError({ sessionID: input.sessionID })
-      }),
-      rename: Effect.fn("V2Session.rename")(function* (input) {
+      }))),
+      rename: Effect.fn("V2Session.rename")((input) => SessionOwner.guard(owners, input.sessionID, "write", () => Effect.gen(function* () {
         if (!(yield* SessionLifecycle.rename(db, events, input)))
           return yield* new NotFoundError({ sessionID: input.sessionID })
-      }),
-      remove: Effect.fn("V2Session.remove")(function* (sessionID) {
+      }))),
+      remove: Effect.fn("V2Session.remove")((sessionID) => SessionOwner.guard(owners, sessionID, "write", (ownerScope) => Effect.gen(function* () {
         yield* result.get(sessionID)
         const remove = (ids: ReadonlyArray<SessionSchema.ID>): Effect.Effect<void, NotFoundError> => Effect.suspend(() => {
           const tree = { ids }
@@ -477,10 +492,12 @@ const layer = Layer.effect(
             Effect.flatMap((outcome) => outcome.retry ? remove(outcome.retry) : Effect.void),
           )
         })
-        yield* remove([sessionID, ...(yield* SessionLifecycle.descendants(db, sessionID))])
-      }),
-      list: (input) => SessionArchive.list(db, input),
-      messages: Effect.fn("V2Session.messages")(function* (input) {
+        const ids = [sessionID, ...(yield* SessionLifecycle.descendants(db, sessionID))]
+        yield* Effect.forEach(ids, (id) => owners.assert(ownerScope, id, "write").pipe(Effect.orDie), { discard: true })
+        yield* remove(ids)
+      }))),
+      list: (input) => SessionArchive.list(db, input).pipe(Effect.provideService(SessionOwner.Service, owners)),
+      messages: Effect.fn("V2Session.messages")((input) => SessionOwner.guard(owners, input.sessionID, "read", () => Effect.gen(function* () {
         yield* result.get(input.sessionID)
         const direction = input.cursor?.direction ?? "next"
         const requestedOrder = input.order ?? "desc"
@@ -513,32 +530,36 @@ const layer = Layer.effect(
           Effect.orDie,
         )
         return yield* Effect.forEach(direction === "previous" ? rows.toReversed() : rows, decode)
-      }),
-      message: Effect.fn("V2Session.message")(function* (input) {
+      }))),
+      message: Effect.fn("V2Session.message")((input) => SessionOwner.guard(owners, input.sessionID, "read", () => Effect.gen(function* () {
         const stored = yield* store.message(input.messageID)
         return stored?.sessionID === input.sessionID ? stored.message : undefined
-      }),
-      context: Effect.fn("V2Session.context")(function* (sessionID) {
+      }))),
+      context: Effect.fn("V2Session.context")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         yield* result.get(sessionID)
         return yield* store.context(sessionID)
-      }),
+      }))),
       events: (input) =>
         Stream.unwrap(
           result
             .get(input.sessionID)
             .pipe(Effect.as(events.durable({ aggregateID: input.sessionID, after: input.after }))),
-        ).pipe(Stream.filter((event): event is SessionEvent.DurableEvent => isDurableSessionEvent(event))),
-      history: Effect.fn("V2Session.history")(function* (input) {
+        ).pipe(
+          Stream.filter((event): event is SessionEvent.DurableEvent => isDurableSessionEvent(event)),
+          Stream.mapEffect((event) => SessionOwner.guard(owners, input.sessionID, "read", () => Effect.succeed(event))),
+        ),
+      history: Effect.fn("V2Session.history")((input) => SessionOwner.guard(owners, input.sessionID, "read", () => Effect.gen(function* () {
         yield* result.get(input.sessionID)
         return yield* EventV2.readAggregate(db, {
           ...input,
           aggregateID: input.sessionID,
           manifest: SessionDurable,
-        })
-      }),
-      prompt: Effect.fn("V2Session.prompt")((input) =>
+        }).pipe(Effect.provideService(SessionOwner.Service, owners))
+      }))),
+      prompt: Effect.fn("V2Session.prompt")((input) => SessionOwner.guard(owners, input.sessionID, "prompt", (ownerScope) =>
         Effect.uninterruptibleMask((restore) =>
           Effect.gen(function* () {
+            if (input.resume !== false) yield* owners.authorize(ownerScope, "run", input.sessionID).pipe(Effect.orDie)
             const messageID = input.id ?? SessionMessage.ID.create()
             const notes = yield* restore(promptHooks({ ...input, id: messageID }))
             const prompt = resolvePrompt(input.prompt)
@@ -582,8 +603,8 @@ const layer = Layer.effect(
             return admitted
           }),
         ),
-      ),
-      fork: Effect.fn("V2Session.fork")(function* (input) {
+      )),
+      fork: Effect.fn("V2Session.fork")((input) => SessionOwner.guard(owners, input.sessionID, "fork", (ownerScope) => Effect.gen(function* () {
         const source = yield* result.get(input.sessionID)
         const rows = yield* db
           .select()
@@ -599,7 +620,7 @@ const layer = Layer.effect(
         const forked = yield* result.create({ location: source.location, agent: source.agent, model: source.model })
         yield* SessionLifecycle.rename(db, events, { sessionID: forked.id, title: forkedTitle(source.title) })
         // As the legacy import does: copied rows take negative sequences below every event the fork will project.
-        yield* db
+        yield* owners.withWriter(ownerScope, db
           .transaction(
             () =>
               Effect.forEach(
@@ -627,13 +648,13 @@ const layer = Layer.effect(
                     }),
                   ),
                 { discard: true },
-              ),
+              ).pipe(Effect.tap(() => owners.verify(ownerScope).pipe(Effect.orDie))),
             { behavior: "immediate" },
           )
-          .pipe(Effect.orDie)
+          .pipe(Effect.orDie)).pipe(Effect.orDie)
         return yield* result.get(forked.id)
-      }),
-      move: Effect.fn("V2Session.move")(function* (input) {
+      }))),
+      move: Effect.fn("V2Session.move")((input) => SessionOwner.guard(owners, input.sessionID, "move", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         const project = yield* projects.resolve(input.location.directory)
         if (project.id !== session.projectID)
@@ -654,16 +675,16 @@ const layer = Layer.effect(
             )
           }),
         )
-      }),
-      shell: Effect.fn("V2Session.shell")(function* (input) {
+      }))),
+      shell: Effect.fn("V2Session.shell")((input) => SessionOwner.guard(owners, input.sessionID, "run", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         // An interrupt aborts the command, which the runner records as its end; the request itself still succeeds.
         yield* exclusive(
           session,
           runner(session, (runner) => runner.shell({ sessionID: session.id, command: input.command, callID: input.id })),
         ).pipe(Effect.catchCause((cause) => (Cause.hasInterruptsOnly(cause) ? Effect.void : Effect.failCause(cause))))
-      }),
-      skill: Effect.fn("V2Session.skill")(function* (input) {
+      }))),
+      skill: Effect.fn("V2Session.skill")((input) => SessionOwner.guard(owners, input.sessionID, "run", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         const found = yield* exclusive(
           session,
@@ -671,8 +692,9 @@ const layer = Layer.effect(
         )
         if (!found) return yield* new SkillNotFoundError({ sessionID: session.id, skill: input.skill })
         if (input.resume !== false) yield* resumeDetached(session.id)
-      }),
-      synthetic: Effect.fn("V2Session.synthetic")(function* (input) {
+      }))),
+      synthetic: Effect.fn("V2Session.synthetic")((input) => SessionOwner.guard(owners, input.sessionID, "prompt", (ownerScope) => Effect.gen(function* () {
+        if (input.resume !== false) yield* owners.authorize(ownerScope, "run", input.sessionID).pipe(Effect.orDie)
         const session = yield* result.get(input.sessionID)
         const messageID = input.id ?? SessionMessage.ID.create()
         yield* exclusive(
@@ -688,14 +710,14 @@ const layer = Layer.effect(
         )
         if (input.resume !== false) yield* resumeDetached(session.id)
         return messageID
-      }),
-      generate: Effect.fn("V2Session.generate")(function* (input) {
+      }))),
+      generate: Effect.fn("V2Session.generate")((input) => SessionOwner.guard(owners, input.sessionID, "run", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         return yield* runner(session, (runner) => runner.generate({ sessionID: session.id, prompt: input.prompt })).pipe(
           Effect.mapError((error) => new RunFailedError({ sessionID: session.id, message: messageOf(error) })),
         )
-      }),
-      switchAgent: Effect.fn("V2Session.switchAgent")(function* (input) {
+      }))),
+      switchAgent: Effect.fn("V2Session.switchAgent")((input) => SessionOwner.guard(owners, input.sessionID, "model", () => Effect.gen(function* () {
         // As a model switch: choosing the agent the Session already has records nothing.
         if ((yield* result.get(input.sessionID)).agent === input.agent) return
         yield* events.publish(SessionEvent.AgentSwitched, {
@@ -704,8 +726,8 @@ const layer = Layer.effect(
           timestamp: yield* DateTime.now,
           agent: input.agent,
         })
-      }),
-      switchModel: Effect.fn("V2Session.switchModel")(function* (input) {
+      }))),
+      switchModel: Effect.fn("V2Session.switchModel")((input) => SessionOwner.guard(owners, input.sessionID, "model", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         if (
           session.model?.providerID === input.model.providerID &&
@@ -719,19 +741,19 @@ const layer = Layer.effect(
           timestamp: yield* DateTime.now,
           model: input.model,
         })
-      }),
-      getPermission: Effect.fn("V2Session.getPermission")(function* (sessionID) {
+      }))),
+      getPermission: Effect.fn("V2Session.getPermission")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         yield* result.get(sessionID)
         const row = yield* db.select({ permission: SessionTable.permission }).from(SessionTable).where(eq(SessionTable.id, sessionID)).get().pipe(Effect.orDie)
         return row?.permission ?? []
-      }),
-      setPermission: Effect.fn("V2Session.setPermission")(function* (input) {
+      }))),
+      setPermission: Effect.fn("V2Session.setPermission")((input) => SessionOwner.guard(owners, input.sessionID, "model", () => Effect.gen(function* () {
         yield* result.get(input.sessionID)
         const permission = [...input.permission]
         yield* events.publish(SessionEvent.PermissionChanged, { sessionID: input.sessionID, timestamp: yield* DateTime.now, permission })
         return permission
-      }),
-      compact: Effect.fn("V2Session.compact")(function* (input) {
+      }))),
+      compact: Effect.fn("V2Session.compact")((input) => SessionOwner.guard(owners, input.sessionID, "run", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         return yield* exclusive(
           session,
@@ -739,29 +761,37 @@ const layer = Layer.effect(
             Effect.mapError((error) => new RunFailedError({ sessionID: session.id, message: messageOf(error) })),
           ),
         )
-      }),
-      wait: Effect.fn("V2Session.wait")(function* (sessionID) {
+      }))),
+      wait: Effect.fn("V2Session.wait")((sessionID) => SessionOwner.guard(owners, sessionID, "read", () => Effect.gen(function* () {
         yield* result.get(sessionID)
         yield* execution.exclusive(sessionID, Effect.void, { wait: true })
+      }))),
+      active: Effect.gen(function* () {
+        const scope = yield* owners.open().pipe(Effect.orDie)
+        yield* owners.authorize(scope, "read").pipe(Effect.orDie)
+        const active = yield* execution.active
+        const ids = yield* Effect.forEach(Array.from(active), (id) =>
+          owners.canRead(scope, id).pipe(Effect.orDie, Effect.map((allowed) => allowed ? id : undefined)))
+        yield* owners.verify(scope).pipe(Effect.orDie)
+        return new Set(ids.filter((id): id is SessionSchema.ID => id !== undefined))
       }),
-      active: execution.active,
-      resume: Effect.fn("V2Session.resume")(function* (sessionID) {
+      resume: Effect.fn("V2Session.resume")((sessionID) => SessionOwner.guard(owners, sessionID, "run", () => Effect.gen(function* () {
         yield* result.get(sessionID)
         yield* execution.resume(sessionID)
-      }),
-      interrupt: Effect.fn("V2Session.interrupt")((sessionID) =>
+      }))),
+      interrupt: Effect.fn("V2Session.interrupt")((sessionID) => SessionOwner.guard(owners, sessionID, "control", () =>
         Effect.uninterruptible(execution.interrupt(sessionID)),
-      ),
-      diff: Effect.fn("V2Session.diff")(function* (input) {
+      )),
+      diff: Effect.fn("V2Session.diff")((input) => SessionOwner.guard(owners, input.sessionID, "read", () => Effect.gen(function* () {
         const session = yield* result.get(input.sessionID)
         return yield* SessionRevert.diff(input).pipe(
           Effect.provideService(Database.Service, database),
           Effect.provide(locations.get(session.location)),
           Effect.mapError((error) => error as NotFoundError | MessageNotFoundError | Snapshot.Error),
         )
-      }),
+      }))),
       revert: {
-        stage: Effect.fn("V2Session.revert.stage")((input) => exclusive(
+        stage: Effect.fn("V2Session.revert.stage")((input) => SessionOwner.guard(owners, input.sessionID, "write", () => exclusive(
           { id: input.sessionID },
           Effect.gen(function* () {
             const session = yield* result.get(input.sessionID)
@@ -772,8 +802,8 @@ const layer = Layer.effect(
               Effect.mapError((error) => error as NotFoundError | MessageNotFoundError | Snapshot.Error),
             )
           }),
-        )),
-        clear: Effect.fn("V2Session.revert.clear")((sessionID) => exclusive(
+        ))),
+        clear: Effect.fn("V2Session.revert.clear")((sessionID) => SessionOwner.guard(owners, sessionID, "write", () => exclusive(
           { id: sessionID },
           Effect.gen(function* () {
             const session = yield* result.get(sessionID)
@@ -785,14 +815,14 @@ const layer = Layer.effect(
               Effect.mapError((error) => error as NotFoundError | Snapshot.Error),
             )
           }),
-        )),
-        commit: Effect.fn("V2Session.revert.commit")((sessionID) => exclusive(
+        ))),
+        commit: Effect.fn("V2Session.revert.commit")((sessionID) => SessionOwner.guard(owners, sessionID, "write", () => exclusive(
           { id: sessionID },
           Effect.gen(function* () {
             const session = yield* result.get(sessionID)
             yield* SessionRevert.commit(session).pipe(Effect.provideService(EventV2.Service, events))
           }),
-        )),
+        ))),
       },
     })
 
@@ -833,6 +863,7 @@ export const node = makeGlobalNode({
     ProjectV2.node,
     SessionExecution.node,
     SessionStore.node,
+    SessionOwner.node,
     LocationServiceMap.node,
     SessionProjector.node,
     SessionArchive.node,

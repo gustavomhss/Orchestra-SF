@@ -1,7 +1,7 @@
 export * as SessionLegacyImport from "./legacy-import"
 
 import path from "node:path"
-import { asc, eq, sql } from "drizzle-orm"
+import { and, asc, eq, sql } from "drizzle-orm"
 import { Effect, Option, Schema } from "effect"
 import type {
   CompactionPart,
@@ -14,6 +14,7 @@ import type {
 } from "./legacy-transcript"
 import { Database } from "../database/database"
 import { SessionMessage } from "./message"
+import { SessionOwner } from "./owner"
 import { MessageTable, PartTable, SessionMessageTable, SessionTable } from "./sql"
 
 // Legacy and V2 share the `session` table, but legacy keeps transcripts in `message`/`part` and V2 reads `session_message`.
@@ -31,22 +32,34 @@ const encode = Schema.encodeSync(SessionMessage.Message)
  * Callers must finish this before anything can prompt a Session: eligibility is "no V2 message yet".
  */
 export const run = Effect.fn("SessionLegacyImport.run")(function* (db: Database.Interface["db"]) {
+  const owners = Option.getOrUndefined(yield* Effect.serviceOption(SessionOwner.Service))
+  const scope = owners ? yield* owners.open().pipe(Effect.orDie) : undefined
+  if (owners && scope) yield* owners.authorize(scope, "replay").pipe(Effect.orDie)
+  else yield* SessionOwner.ensureTechnical(db)
+  const visible = owners && scope ? yield* owners.predicate(scope).pipe(Effect.orDie) : undefined
   const pending = yield* db
     .select({ sessionID: MessageTable.session_id })
     .from(MessageTable)
-    .where(
+    .innerJoin(SessionTable, eq(SessionTable.id, MessageTable.session_id))
+    .where(and(visible,
       sql`not exists (select 1 from ${SessionMessageTable} where ${SessionMessageTable.session_id} = ${MessageTable.session_id})`,
-    )
+    ))
     .groupBy(MessageTable.session_id)
     .all()
     .pipe(Effect.orDie)
-  const results = yield* Effect.forEach(pending, (item) => importSession(db, item.sessionID))
+  if (owners && scope) yield* owners.verify(scope).pipe(Effect.orDie)
+  const results = yield* Effect.forEach(pending, (item) => owners
+    ? SessionOwner.guard(owners, item.sessionID, "replay", (current) => importSession(db, item.sessionID, { owners, scope: current }))
+    : SessionOwner.access(db, item.sessionID, "replay", importSession(db, item.sessionID)))
+  if (owners && scope) yield* owners.verify(scope).pipe(Effect.orDie)
+  else yield* SessionOwner.ensureTechnical(db)
   return results.filter(Boolean).length
 })
 
 const importSession = Effect.fnUntraced(function* (
   db: Database.Interface["db"],
   sessionID: (typeof MessageTable.$inferSelect)["session_id"],
+  admitted?: { readonly owners: SessionOwner.Interface; readonly scope: SessionOwner.Scope },
 ) {
   const session = yield* db
     .select({ directory: SessionTable.directory })
@@ -80,7 +93,7 @@ const importSession = Effect.fnUntraced(function* (
     ),
   )
   if (converted.length === 0) return false
-  yield* db
+  const writing = db
     .transaction(
       () =>
         Effect.forEach(
@@ -101,10 +114,11 @@ const importSession = Effect.fnUntraced(function* (
               .run()
           },
           { discard: true },
-        ),
+        ).pipe(Effect.tap(() => admitted ? admitted.owners.assert(admitted.scope, sessionID, "replay").pipe(Effect.orDie) : SessionOwner.ensureTechnical(db))),
       { behavior: "immediate" },
     )
     .pipe(Effect.orDie)
+  yield* (admitted ? admitted.owners.withWriter(admitted.scope, writing).pipe(Effect.orDie) : writing)
   return true
 })
 

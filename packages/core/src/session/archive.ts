@@ -10,6 +10,7 @@ import { SessionEvent } from "./event"
 import { columns, fromRow } from "./info"
 import { SessionSchema } from "./schema"
 import { SessionTable } from "./sql"
+import { SessionOwner } from "./owner"
 
 class Unchanged extends Error {}
 class NotFound extends Error {}
@@ -38,12 +39,12 @@ export const set = Effect.fn("SessionArchive.set")(function* (
     )
 })
 
-export const query = (db: Database.Interface["db"], input: ListInput = {}) => {
+export const query = (db: Database.Interface["db"], input: ListInput = {}, visibility?: SQL) => {
   const direction = input.anchor?.direction ?? "next"
   const requestedOrder = input.order ?? "desc"
   const order = direction === "previous" ? (requestedOrder === "asc" ? "desc" : "asc") : requestedOrder
   const sortColumn = SessionTable.time_created
-  const conditions: Array<SQL | undefined> = []
+  const conditions: Array<SQL | undefined> = [visibility]
   if (!input.includeArchived) conditions.push(isNull(SessionTable.time_archived))
   if ("directory" in input) conditions.push(eq(SessionTable.directory, input.directory))
   if (input.workspaceID) conditions.push(eq(SessionTable.workspace_id, input.workspaceID))
@@ -83,8 +84,11 @@ export const query = (db: Database.Interface["db"], input: ListInput = {}) => {
 
 /** Visibility is a SQL predicate, applied before pagination rather than trimming projected pages. */
 export const list = Effect.fn("SessionArchive.list")(function* (db: Database.Interface["db"], input: ListInput = {}) {
-  const built = query(db, input)
+  const owners = yield* SessionOwner.Service
+  const scope = yield* owners.open().pipe(Effect.orDie)
+  const built = query(db, input, yield* owners.predicate(scope).pipe(Effect.orDie))
   const rows = yield* built.statement.all().pipe(Effect.orDie)
+  yield* owners.verify(scope).pipe(Effect.orDie)
   return (built.direction === "previous" ? rows.toReversed() : rows).map(fromRow)
 })
 

@@ -42,7 +42,13 @@ export interface Coordinator<Key, E> {
   ) => Effect.Effect<Option.Option<A>, E2>
 }
 
+type Binding = <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
+
+const unbound: Binding = (effect) => effect
+
 type Entry<E> = {
+  readonly bind: Binding
+  pendingBind?: Binding
   readonly done: Deferred.Deferred<void, E>
   readonly discardPending: boolean
   owner?: Fiber.Fiber<void, never>
@@ -52,6 +58,8 @@ type Entry<E> = {
 
 export const make = <Key, E>(options: {
   readonly drain: (key: Key, force: boolean) => Effect.Effect<void, E>
+  /** Captures only the caller's private admission closure; keys remain process-global Session IDs. */
+  readonly bind?: Effect.Effect<Binding>
 }): Effect.Effect<Coordinator<Key, E>, never, Scope.Scope> =>
   Effect.gen(function* () {
     const active = new Map<Key, Entry<E>>()
@@ -59,7 +67,8 @@ export const make = <Key, E>(options: {
 
     const drain = (key: Key, force: boolean) => Effect.suspend(() => options.drain(key, force))
 
-    const makeEntry = (discardPending = false): Entry<E> => ({
+    const makeEntry = (bind: Binding, discardPending = false): Entry<E> => ({
+      bind,
       done: Deferred.makeUnsafe<void, E>(),
       discardPending,
       pendingWake: false,
@@ -83,72 +92,77 @@ export const make = <Key, E>(options: {
     const settle = (key: Key, entry: Entry<E>, exit: Exit.Exit<void, E>) => {
       if (Exit.isSuccess(exit) && !entry.stopping && entry.pendingWake) {
         entry.pendingWake = false
-        start(key, entry, drain(key, false), true)
+        const bind = entry.pendingBind ?? entry.bind
+        entry.pendingBind = undefined
+        start(key, entry, bind(drain(key, false)), true)
         return
       }
 
-      const successor = entry.pendingWake ? makeEntry() : undefined
+      const successor = entry.pendingWake ? makeEntry(entry.pendingBind ?? entry.bind) : undefined
       if (successor === undefined) active.delete(key)
       else {
         active.set(key, successor)
-        start(key, successor, drain(key, false), true)
+        start(key, successor, successor.bind(drain(key, false)), true)
       }
       Deferred.doneUnsafe(entry.done, exit)
     }
 
     const run = (key: Key, runOptions?: RunOptions): Effect.Effect<void, E> =>
-      Effect.uninterruptibleMask((restore) => {
+      Effect.uninterruptibleMask((restore) => Effect.gen(function* () {
+        const bind = yield* restore(options.bind ?? Effect.succeed(unbound))
         const entry = active.get(key)
         if (entry !== undefined) {
-          if (entry.stopping) return restore(Deferred.await(entry.done).pipe(Effect.andThen(run(key, runOptions))))
-          return restore(Deferred.await(entry.done))
+          if (entry.stopping) return yield* restore(Deferred.await(entry.done).pipe(Effect.andThen(run(key, runOptions))))
+          return yield* restore(Deferred.await(entry.done))
         }
 
-        const next = makeEntry()
+        const next = makeEntry(bind)
         active.set(key, next)
-        start(key, next, drain(key, true))
-        return restore(Deferred.await(next.done)).pipe(
+        start(key, next, bind(drain(key, true)))
+        return yield* restore(Deferred.await(next.done)).pipe(
           Effect.onInterrupt(() => runOptions?.interruptOnCancel ? stop(key, next) : Effect.void),
         )
-      })
+      }))
 
     const wake = (key: Key) =>
-      Effect.sync(() => {
+      Effect.flatMap(options.bind ?? Effect.succeed(unbound), (bind) => Effect.sync(() => {
         const entry = active.get(key)
         if (entry !== undefined) {
           if (entry.discardPending) return
           entry.pendingWake = true
+          entry.pendingBind = bind
           return
         }
 
-        const next = makeEntry()
+        const next = makeEntry(bind)
         active.set(key, next)
-        start(key, next, drain(key, false))
-      })
+        start(key, next, bind(drain(key, false)))
+      }))
 
     const exclusive = <A, E2>(
       key: Key,
       effect: Effect.Effect<A, E2>,
       exclusiveOptions?: ExclusiveOptions,
     ): Effect.Effect<Option.Option<A>, E2> =>
-      Effect.uninterruptibleMask((restore) => {
+      Effect.uninterruptibleMask((restore) => Effect.gen(function* () {
+        const bind = yield* restore(options.bind ?? Effect.succeed(unbound))
         const entry = active.get(key)
         if (entry !== undefined) {
-          if (!exclusiveOptions?.wait) return Effect.succeedNone
-          return restore(Deferred.await(entry.done)).pipe(
+          if (!exclusiveOptions?.wait) return Option.none()
+          return yield* restore(Deferred.await(entry.done)).pipe(
             Effect.exit,
             Effect.andThen(exclusive(key, effect, exclusiveOptions)),
           )
         }
-        const next = makeEntry(exclusiveOptions?.discardPending ?? false)
+        const next = makeEntry(bind, exclusiveOptions?.discardPending ?? false)
         active.set(key, next)
         const result = Deferred.makeUnsafe<A, E2>()
         // The caller hears the effect's own outcome; the entry only settles ownership, so it never fails.
-        start(key, next, effect.pipe(Effect.onExit((exit) => Deferred.done(result, exit)), Effect.ignore))
+        start(key, next, bind(effect.pipe(Effect.onExit((exit) => Deferred.done(result, exit)), Effect.ignore)))
         // An interrupt that lands before the effect starts settles only the entry.
         const stopped = Deferred.await(next.done).pipe(Effect.exit, Effect.andThen(Effect.interrupt))
-        return restore(Effect.raceFirst(Deferred.await(result), stopped)).pipe(Effect.map(Option.some))
-      })
+        return yield* restore(Effect.raceFirst(Deferred.await(result), stopped)).pipe(Effect.map(Option.some))
+      }))
 
     const stop = (key: Key, expected?: Entry<E>, stopOptions?: InterruptOptions): Effect.Effect<void> =>
       Effect.suspend(() => {
@@ -158,7 +172,7 @@ export const make = <Key, E>(options: {
         entry.stopping = true
         // Interrupting drops the drain, not the inbox: a wake recorded meanwhile promotes at the follow-up, as a wake
         // registered during cleanup already does.
-        if (stopOptions?.discardPending) entry.pendingWake = false
+        if (stopOptions?.discardPending) { entry.pendingWake = false; entry.pendingBind = undefined }
         return Fiber.interrupt(entry.owner)
       })
 

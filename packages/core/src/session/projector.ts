@@ -14,6 +14,8 @@ import { SessionMessage } from "./message"
 import { SessionMessageUpdater } from "./message-updater"
 import { fromRow } from "./info"
 import { SessionInput } from "./input"
+import { SessionOwner } from "./owner"
+import { SessionOwnerEvent } from "@orchestra/schema/session-owner-event"
 import { WorkspaceV2 } from "../workspace"
 import { MessageTable, PartTable, SessionInputTable, SessionMessageTable, SessionContextEpochTable, SessionTable } from "./sql"
 
@@ -198,8 +200,15 @@ const layer = Layer.effectDiscard(
   Effect.gen(function* () {
     const events = yield* EventV2.Service
     const { db } = yield* Database.Service
-    yield* events.project(SessionEvent.Created, (event) =>
+    const owners = yield* SessionOwner.Service
+    yield* events.project(SessionOwnerEvent.Bound, (event, origin) => owners.confirmBound(event, origin.replay).pipe(Effect.orDie))
+    yield* events.project(SessionEvent.Created, (event, origin) =>
       Effect.gen(function* () {
+        const ownerScope = yield* owners.open().pipe(Effect.orDie)
+        // Bind only an authorized new creation, in the same SQL transaction as its projection.
+        // Recovery must install the journal-verified mapping first; event bytes are not authority.
+        if (origin.replay) yield* owners.assert(ownerScope, event.data.sessionID, "replay").pipe(Effect.orDie)
+        else yield* owners.bindNew(ownerScope, event.data.sessionID).pipe(Effect.orDie)
         const time = DateTime.toEpochMillis(event.data.timestamp)
         const workspaceID = event.data.location.workspaceID ? WorkspaceV2.ID.make(event.data.location.workspaceID) : null
         const stored = yield* db
@@ -402,4 +411,4 @@ const layer = Layer.effectDiscard(
   }),
 )
 
-export const node = makeGlobalNode({ name: "session-projector", layer, deps: [EventV2.node, Database.node] })
+export const node = makeGlobalNode({ name: "session-projector", layer, deps: [EventV2.node, Database.node, SessionOwner.node] })
