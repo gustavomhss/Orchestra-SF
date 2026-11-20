@@ -38,7 +38,7 @@ import { compositionTestDeadline } from "./composition-test-deadline.ts"
 async function staleCalculationFixture(deadline: ReturnType<typeof compositionTestDeadline>, name: string) {
   const metrics = { transactions: 0, allTransactions: 0, currentSnapshotReads: 0, authentications: 0, environments: 0,
     coverageReads: 0, calculationReads: 0, calculationSettled: 0, historicalReads: 0, historicalSettled: 0,
-    privateAdmissions: 0, contextReads: 0, privateContextReads: 0, settlements: 0 }
+    admissions: 0, contextReads: 0, lockedContextReads: 0, settlements: 0 }
   // Counters observe existing calls only. Nested phase deltas are inclusive;
   // a settled calculation can still be unavailable or rejected, not a proof.
   const phase = <T>(label: string, work: () => Promise<T>) => {
@@ -226,36 +226,46 @@ async function staleCalculationFixture(deadline: ReturnType<typeof compositionTe
 }
 
 function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>, options: {
-  afterPrivateRead?: (call: TrustedDomainContext) => Promise<void>
-  privateRequest?: (request: Request) => Request
-  afterPrivateAdmission?: (call: TrustedUiContext) => void
+  afterSourceRead?: (call: TrustedDomainContext, locked: boolean) => Promise<void>
+  staleRequestFor?: (request: Request | undefined, call: TrustedDomainContext) => Request | undefined
+  beforeStaleAuthorize?: (call: TrustedDomainContext) => void
 } = {}) {
   const { runtime, caseRef, calculation, start, run, phase, metrics } = fixture
   const settlementId = ++metrics.settlements
   const { authority, business, persistence } = runtime
   const controller = new AbortController(), base = runtime.request()
   const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
-  const privateCalls: TrustedUiContext[] = []
-  const privateStates: string[][] = []
+  const admittedCalls: TrustedUiContext[] = []
+  const sourceReads: { call: TrustedDomainContext; locked: boolean; states: string[] }[] = []
   let originalCall: TrustedDomainContext | undefined
   const human = { ...authority.human, admit: async (...args: Parameters<typeof authority.human.admit>) => {
-    const admitted = await authority.human.admit(originalCall && options.privateRequest ? options.privateRequest(args[0]) : args[0], args[1], args[2])
-    if (originalCall && admitted.status === "ok") { metrics.privateAdmissions++; privateCalls.push(admitted.value); options.afterPrivateAdmission?.(admitted.value) }
+    expect(args[0]).toBe(request)
+    const admitted = await authority.human.admit(...args)
+    if (admitted.status === "ok") { metrics.admissions++; admittedCalls.push(admitted.value) }
     return admitted
   } }
   const currentAuthority = { host: authority.host, state: authority.state, human }
-  const stale = createSfStaleAnalysisAccess({ authority: currentAuthority, persistence, request, start,
+  // Faults belong to the actual stale boundary. They never create or borrow a
+  // second human lease, and the run context retains its original authority.
+  const staleAuthority = { host: { ...authority.host, requestFor: (call: TrustedDomainContext) => {
+    const actual = authority.host.requestFor(call)
+    return options.staleRequestFor ? options.staleRequestFor(actual, call) : actual
+  } }, human: { ...human, authorize: async (...args: Parameters<typeof human.authorize>) => {
+    options.beforeStaleAuthorize?.(args[0])
+    return human.authorize(...args)
+  } } }
+  const stale = createSfStaleAnalysisAccess({ authority: staleAuthority, persistence, request, start,
     proof: { runRef: run.runRef, caseRef, contextFingerprint: run.contextFingerprint, evidenceRefs: [calculation] },
     context: { context: async (selection, call) => {
+      expect(call).toBe(originalCall)
+      expect(authority.host.requestFor(call)).toBe(request)
       const read = ++metrics.contextReads
-      const privateRead = call !== originalCall
-      if (privateRead) metrics.privateContextReads++
-      const sources = await phase(`settlement.${settlementId}.context.${privateRead ? "private" : "original"}.${read}`,
+      const locked = !!persistence.currentSnapshots?.()
+      if (locked) metrics.lockedContextReads++
+      const sources = await phase(`settlement.${settlementId}.context.${locked ? "locked" : "warm"}.${read}`,
         () => business.context.context(selection, call))
-      if (call !== originalCall) {
-        privateStates.push(sources.map((source) => source.state))
-        await options.afterPrivateRead?.(call)
-      }
+      sourceReads.push({ call, locked, states: sources.map((source) => source.state) })
+      await options.afterSourceRead?.(call, locked)
       return sources
     } } })
   const raw = createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
@@ -266,10 +276,11 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
       return persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { status: "ok" as const, value: { sourceFence: sfRunSourceFence(snapshot) } } }))
     },
     revalidateForCommit: async (record, call, snapshot, output) => {
-      expect(privateCalls.every((privateCall) => authority.host.requestFor(privateCall) === undefined)).toBe(true)
+      expect(call).toBe(originalCall)
+      expect(authority.host.requestFor(call)).toBe(request)
       if (record.state !== "stale") return { status: "denied", reason: "fixture-fresh-publication-unavailable" }
       const result = await phase(`settlement.${settlementId}.commit`, () => stale.commit(record, call, snapshot, output))
-      expect(privateCalls.every((privateCall) => authority.host.requestFor(privateCall) === undefined)).toBe(true)
+      expect(authority.host.requestFor(call)).toBe(request)
       return result
     }, now: () => fixture.at })
   const store = stale.wrapStore(raw)
@@ -279,7 +290,7 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
     originalCall = call
     try { return await action(call) } finally { originalCall = undefined }
   }))
-  return { withRun, store, stale, raw, privateCalls, privateStates, request, controller }
+  return { withRun, store, stale, raw, admittedCalls, sourceReads, request, controller }
 }
 
 async function withStaleCalculation(name: string, work: (fixture: Awaited<ReturnType<typeof staleCalculationFixture>>) => Promise<void>) {
@@ -300,17 +311,32 @@ test("Late captured calculation settles its original output after case advance w
     const settled = await access.withRun(async (call) => {
       expect((await runtime.business.selectedCase(call)).status).toBe("unavailable")
       const scoped = await fixture.phase("positive.original-scoped-read", () => runtime.business.context.resolve(calculation, call))
-      expect(scoped.state).toBe("unavailable")
-      expect(scoped.authorizedProjection).toBeUndefined()
+      expect(scoped).toMatchObject({ state: "historical", ref: calculation, currentRef: calculation,
+        accessRevision: call.binding.accessRevision, differences: [{ field: "case.version", before: caseRef.version, after: 2 }] })
+      const historical = scoped.authorizedProjection
+      if (!historical || !("values" in historical)) throw new Error("Real historical calculation projection unavailable")
+      expect(historical).toMatchObject({ engineVersion: calculation.target.engineVersion,
+        context: { installationId: calculation.installationId, projectId: calculation.projectId, surface: "planner",
+          period: calculation.target.period, currency: calculation.target.currency } })
+      expect(historical.values).toEqual(expect.arrayContaining([
+        expect.objectContaining({ id: "scenario:result-ref", value: calculation.target.runId }),
+        expect.objectContaining({ id: "scenario:request-digest", value: calculation.target.inputDigest }),
+        expect.objectContaining({ id: "scenario:result-digest", value: calculation.target.resultDigest }),
+      ]))
+      // Historical projection cannot refresh the caller's original case selector.
+      expect(await runtime.business.selectedCase(call)).toEqual({ status: "unavailable", reason: "case-selection-unavailable" })
       const result = await fixture.phase("positive.preserve-stale", () => access.store.preserveStale(run.runRef, "case-changed", output, call))
       expect((await runtime.business.selectedCase(call)).status).toBe("unavailable")
       expect((await fixture.phase("positive.original-current-issue", () => runtime.business.calculations.issue(calculation.target.runId, call))).status).toBe("unavailable")
       return result
     })
     expect(settled).toMatchObject({ status: "ok", value: { state: "stale", version: run.version + 1, caseRef, outputRef: output.id } })
-    expect(access.privateCalls).toHaveLength(2)
-    expect(access.privateStates).toEqual([["historical"], ["historical"]])
-    expect(access.privateCalls.every((call) => runtime.authority.host.requestFor(call) === undefined)).toBe(true)
+    expect(access.admittedCalls).toHaveLength(1)
+    expect(access.sourceReads.map(({ locked, states }) => ({ locked, states }))).toEqual([
+      { locked: false, states: ["historical"] }, { locked: true, states: ["historical"] }, { locked: true, states: ["historical"] },
+    ])
+    expect(access.sourceReads.every(({ call }) => call === access.admittedCalls[0])).toBe(true)
+    expect(runtime.authority.host.requestFor(access.admittedCalls[0]!)).toBeUndefined()
     expect(digestSfValue(output)).toBe(originalOutput)
     const reopened = await fixture.reopen()
     const saved = await reopened.authority.state.read(reopened.request(), "contributions", (state) => ({ run: state.nativeRuns?.[run.runRef], output: state.contributions[output.id] }))
@@ -331,9 +357,12 @@ test("Late calculation settlement rejects another case, a later producer, missin
   await withStaleCalculation("lineage-and-source-fences", async (fixture) => {
     const { runtime, caseRef, calculation, run, output } = fixture
     const held: { snapshot?: Snapshot } = {}
-    const mutation = settlement(fixture, { afterPrivateRead: async () => {
+    let changedDuringRead = 0
+    const mutation = settlement(fixture, { afterSourceRead: async (_call, locked) => {
+      expect(locked).toBe(true)
       if (!held.snapshot) throw new Error("Real shared C08 snapshot unavailable")
-      held.snapshot.data.changedDuringPrivateRead = true
+      changedDuringRead++
+      held.snapshot.data.changedDuringHistoricalRead = true
     } })
     if (!run.native) throw new Error("Deterministic running fixture unavailable")
     const pending: SfNativeRunRecord = { ...run, native: run.native, state: "stale", version: run.version + 1, outputRef: output.id }
@@ -344,8 +373,11 @@ test("Late calculation settlement rejects another case, a later producer, missin
       try { return { commit: false, value: await mutation.stale.preflight(pending, call, output) } }
       finally { delete held.snapshot }
     }))).toEqual({ status: "denied", reason: "analysis-stale-access-unavailable" })
-    expect(mutation.privateStates).toEqual([["historical"]])
-    expect(mutation.privateCalls.every((call) => runtime.authority.host.requestFor(call) === undefined)).toBe(true)
+    expect(changedDuringRead).toBe(1)
+    expect(mutation.admittedCalls).toHaveLength(1)
+    expect(mutation.sourceReads.map(({ states }) => states)).toEqual([["historical"]])
+    expect(mutation.sourceReads[0]!.call).toBe(mutation.admittedCalls[0])
+    expect(runtime.authority.host.requestFor(mutation.admittedCalls[0]!)).toBeUndefined()
     const before = await runtime.authority.state.read(runtime.request(), "cases", (state) => ({ decision: state.cases[caseRef.id], result: state.decisionResults?.[calculation.target.runId], atlas: state.atlas }))
     if (before.status !== "ok" || !before.value.decision || !before.value.result) throw new Error("Real captured calculation unavailable")
     const original = { ...before.value, decision: before.value.decision, result: before.value.result }
@@ -370,7 +402,8 @@ test("Late calculation settlement rejects another case, a later producer, missin
         await fixture.change((state) => { restore(state); entry.mutate(state) })
         expect(await access.store.preserveStale(run.runRef, "case-changed", output, call))
           .toEqual({ status: "denied", reason: entry.reason })
-        expect(access.privateCalls.every((privateCall) => runtime.authority.host.requestFor(privateCall) === undefined)).toBe(true)
+        expect(access.admittedCalls).toEqual([call])
+        expect(runtime.authority.host.requestFor(call)).toBe(access.request)
       }
       await fixture.change(restore)
       const saved = await runtime.authority.state.read(runtime.request(), "contributions", (state) => ({ run: state.nativeRuns?.[run.runRef], output: state.contributions[output.id] }))
@@ -384,33 +417,61 @@ test("Late calculation settlement rejects another case, a later producer, missin
         .toEqual({ status: "denied", reason: "analysis-stale-access-unavailable" })
       return { status: "ok", value: true }
     })).toEqual({ status: "ok", value: true })
+    expect(access.admittedCalls).toHaveLength(1)
+    expect(runtime.authority.host.requestFor(access.admittedCalls[0]!)).toBeUndefined()
     const after = await runtime.authority.state.read(runtime.request(), "contributions", (state) => ({ run: state.nativeRuns?.[run.runRef], output: state.contributions[output.id] }))
     expect(after.status === "ok" && after.value.run).toEqual(run)
     expect(after.status === "ok" && after.value.output).toBeUndefined()
   })
 }, 120_000)
 
-test("Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease", async () => {
+test("Original historical scope refuses a substituted Request, first or last authorization loss, and closes every admitted lease", async () => {
   expectSpawn(import.meta.path)
-  await withStaleCalculation("private-authority-boundaries", async (fixture) => {
+  await withStaleCalculation("original-authority-boundaries", async (fixture) => {
     const { runtime, run, output, control } = fixture
     for (const fault of ["request", "first-authorize", "last-authorize", "finish"] as const) {
       let fired = false
       const access = settlement(fixture, {
-        privateRequest: fault === "request" ? (request) => { fired = true; return new Request(request) } : undefined,
-        afterPrivateAdmission: fault === "first-authorize" ? () => { fired = true; control.active = false } : undefined,
-        afterPrivateRead: fault === "last-authorize" || fault === "finish" ? async (call) => {
+        staleRequestFor: fault === "request" ? (request, call) => {
+          expect(request).toBe(access.request)
+          expect(runtime.authority.host.requestFor(call)).toBe(access.request)
+          if (!request) throw new Error("Original Request unavailable before substitution")
+          fired = true
+          const copied = new Request(request)
+          expect(copied).not.toBe(request)
+          expect(copied.url).toBe(request.url)
+          expect([...copied.headers]).toEqual([...request.headers])
+          return copied
+        } : undefined,
+        beforeStaleAuthorize: fault === "first-authorize" ? (call) => {
+          expect(runtime.authority.host.requestFor(call)).toBe(access.request)
+          fired = true
+          control.active = false
+        } : undefined,
+        afterSourceRead: fault === "last-authorize" || fault === "finish" ? async (call, locked) => {
+          if (!locked) return
+          expect(runtime.authority.host.requestFor(call)).toBe(access.request)
+          expect(access.sourceReads.at(-1)?.states).toEqual(["historical"])
           fired = true
           if (fault === "last-authorize") control.active = false
           else if (call.kind === "ui") runtime.authority.human.finish(call)
         } : undefined,
       })
+      let inner: PortResult<SfNativeRunRecord> | undefined
       try {
-        const denied = await fixture.phase(`fault.${fault}`, () => access.withRun((call) => access.store.preserveStale(run.runRef, "case-changed", output, call)))
+        const denied = await fixture.phase(`fault.${fault}`, () => access.withRun(async (call) => {
+          inner = await access.store.preserveStale(run.runRef, "case-changed", output, call)
+          return inner
+        }))
         expect(fired).toBe(true)
-        expect(denied).toEqual({ status: "denied", reason: fault === "first-authorize" || fault === "last-authorize"
-          ? "analysis-authority-unavailable" : "analysis-stale-access-unavailable" })
-        expect(access.privateCalls.every((call) => runtime.authority.host.requestFor(call) === undefined)).toBe(true)
+        expect(inner).toEqual({ status: "denied", reason: "analysis-stale-access-unavailable" })
+        // Closing the original lease also closes the enclosing run authority.
+        expect(denied).toEqual({ status: "denied", reason: fault === "request"
+          ? "analysis-stale-access-unavailable" : "analysis-authority-unavailable" })
+        expect(access.admittedCalls).toHaveLength(1)
+        expect(runtime.authority.host.requestFor(access.admittedCalls[0]!)).toBeUndefined()
+        expect(access.sourceReads.every(({ call }) => call === access.admittedCalls[0])).toBe(true)
+        expect(access.sourceReads.map(({ locked }) => locked)).toEqual(fault === "last-authorize" || fault === "finish" ? [false, true] : [])
       } finally { control.active = true }
       const saved = await runtime.authority.state.read(runtime.request(), "contributions", (state) => ({ run: state.nativeRuns?.[run.runRef], output: state.contributions[output.id] }))
       expect(saved.status === "ok" && saved.value.run).toEqual(run)
