@@ -1,6 +1,6 @@
 export * as PrivateProvider from "./private"
 
-import { AuthenticationReason, LLMClient, LLMError, type LLMRequest } from "@orchestra/llm"
+import { AuthenticationReason, LLMClient, LLMError, LLMRequest } from "@orchestra/llm"
 import { OpenAICompatibleChat } from "@orchestra/llm/protocols/openai-compatible-chat"
 import { Auth } from "@orchestra/llm/route"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
@@ -64,7 +64,18 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
       yield* owners.assertCurrent(scope)
     }).pipe(Effect.mapError(() => unavailable()))
     const original = OpenAICompatibleChat.route.transport
-    const preparedValues = new WeakSet<object>()
+    type Prepared = Parameters<typeof original.frames>[0]
+    const preparedValues = new WeakMap<object, Readonly<{
+      request: LLMRequest; privateValue: Prepared; signature: string
+    }>>()
+    const bodyCodec = OpenAICompatibleChat.route.body.schema.annotate({ parseOptions: { onExcessProperty: "error" } })
+    const encodeBody = Schema.encodeSync(Schema.fromJsonString(bodyCodec))
+    const signature = (value: Prepared) => {
+      const outgoing = value.request
+      if (outgoing.body._tag !== "Uint8Array") return undefined
+      return JSON.stringify([outgoing.method, outgoing.url, outgoing.urlParams.params, outgoing.hash, outgoing.headers,
+        outgoing.body.contentType, Buffer.from(outgoing.body.body).toString("base64")])
+    }
     const expectedHeaders: Readonly<Record<string, string>> = Object.freeze({
       "x-session-affinity": sessionID, "x-session-id": sessionID,
       ...(parentID ? { "x-parent-session-id": parentID } : {}),
@@ -72,6 +83,8 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
     const transport: typeof original = Object.freeze({
       id: "private-openai-chat",
       prepare: (input: Parameters<typeof original.prepare>[0]) => Effect.gen(function* () {
+        // Copy the provider body before the first external await; caller-owned objects never become transport state.
+        const supplied = yield* Effect.try(() => encodeBody(Schema.decodeUnknownSync(bodyCodec)(input.body)))
         yield* verify()
         if (input.request.model !== model || input.request.model.route !== route ||
           input.request.http?.query && Object.keys(input.request.http.query).length > 0 ||
@@ -81,22 +94,45 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
           input.request.generation?.maxTokens !== undefined && (!Number.isSafeInteger(input.request.generation.maxTokens) ||
             input.request.generation.maxTokens < 1 || input.request.generation.maxTokens > definition.limit.output))
           return yield* unavailable()
-        const value = yield* original.prepare(input)
-        if (value.request.method !== "POST" || value.request.url !== expectedURL ||
-          value.request.urlParams.params.length !== 0 || value.request.hash._tag !== "None" ||
-          Buffer.byteLength(input.encodeBody(input.body), "utf8") > 8 * 1024 * 1024)
+        const canonical = LLMRequest.update(input.request, {
+          generation: { ...input.request.generation, maxTokens: input.request.generation?.maxTokens ?? definition.limit.output },
+        })
+        const body = yield* route.body.from(canonical).pipe(Effect.flatMap(Schema.decodeUnknownEffect(bodyCodec)))
+        const encoded = encodeBody(body)
+        if (encoded !== supplied || Buffer.byteLength(encoded, "utf8") > 8 * 1024 * 1024)
           return yield* unavailable()
-        preparedValues.add(value)
-        return value
+        // Only the retained native protocol supplies codecs, endpoint, auth and framing.
+        const value = yield* original.prepare({
+          body, request: canonical, endpoint: route.endpoint, auth: Auth.none, encodeBody,
+          headers: () => ({ ...expectedHeaders }),
+        })
+        if (value.request.method !== "POST" || value.request.url !== expectedURL ||
+          value.request.urlParams.params.length !== 0 || value.request.hash._tag !== "None")
+          return yield* unavailable()
+        const fingerprint = signature(value)
+        if (fingerprint === undefined) return yield* unavailable()
+        const privateRequest = HttpClientRequest.post(expectedURL).pipe(
+          HttpClientRequest.setHeaders({ ...value.request.headers }),
+          HttpClientRequest.setUrlParams([]),
+          HttpClientRequest.bodyText(encoded, "application/json"),
+        )
+        const framing = Object.freeze({ ...value.framing })
+        const exposed = Object.freeze({ request: value.request, framing })
+        preparedValues.set(exposed, Object.freeze({
+          request: input.request, privateValue: Object.freeze({ request: privateRequest, framing }), signature: fingerprint,
+        }))
+        return exposed
       }).pipe(Effect.mapError(() => unavailable())),
       frames: (prepared: Parameters<typeof original.frames>[0], request: Parameters<typeof original.frames>[1]) => {
-        if (!preparedValues.has(prepared) || request.model !== model || request.model.route !== route)
+        const retained = preparedValues.get(prepared)
+        if (!retained || retained.request !== request || signature(prepared) !== retained.signature ||
+          prepared.framing !== retained.privateValue.framing || request.model !== model || request.model.route !== route)
           return Stream.fail(unavailable())
         return Stream.unwrap(Effect.gen(function* () {
           const lifetime = yield* Scope.Scope
           const execute = (outgoing: HttpClientRequest.HttpClientRequest) => Effect.gen(function* () {
             yield* verify()
-            if (outgoing !== prepared.request || outgoing.method !== "POST" || outgoing.url !== expectedURL ||
+            if (outgoing !== retained.privateValue.request || outgoing.method !== "POST" || outgoing.url !== expectedURL ||
               Object.keys(outgoing.headers).some((name) => !["content-type", "accept", ...Object.keys(expectedHeaders)].includes(name.toLowerCase())))
               return yield* unavailable()
             const stored = yield* vault.read(binding.connection)
@@ -105,6 +141,8 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
             const credential = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(KeyValue))(stored.encodedValue)
               .pipe(Effect.mapError(() => unavailable()))
             yield* verify()
+            if (signature(prepared) !== retained.signature || prepared.framing !== retained.privateValue.framing ||
+              request.model !== model || request.model.route !== route) return yield* unavailable()
             const secured = HttpClientRequest.setHeader(outgoing, "authorization", "Bearer " + credential.key)
             // Corporate provider calls make exactly one attempt. The response lives only as long as this stream.
             const response = yield* HttpClient.withScope(http).execute(secured).pipe(
@@ -116,7 +154,7 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
             yield* verify()
             return response
           }).pipe(Effect.mapError(() => unavailable()))
-          return original.frames(prepared, request, { http: { execute } }).pipe(
+          return original.frames(retained.privateValue, request, { http: { execute } }).pipe(
             Stream.mapEffect((frame) => verify().pipe(Effect.as(frame))),
             // Provider error bodies and headers are not part of this public failure surface.
             Stream.mapError(() => unavailable()),

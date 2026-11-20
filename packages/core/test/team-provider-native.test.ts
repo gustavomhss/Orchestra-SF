@@ -3,7 +3,7 @@ import { Effect, Exit, Layer, Schema, Stream } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
 import { LLM, LLMClient, Model } from "@orchestra/llm"
 import { OpenAICompatibleChat } from "@orchestra/llm/protocols/openai-compatible-chat"
-import { Auth } from "@orchestra/llm/route"
+import { Auth, RequestExecutor } from "@orchestra/llm/route"
 import { ProviderAccess } from "@orchestra/schema/provider-access"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { SessionAccess } from "@orchestra/schema/session-access"
@@ -13,6 +13,7 @@ import { LocationServiceMap } from "../src/location-service-map"
 import { ModelV2 } from "../src/model"
 import { SessionV2 } from "../src/session"
 import { SessionOwner } from "../src/session/owner"
+import { SessionExecution } from "../src/session/execution"
 import { SessionRunnerModel } from "../src/session/runner/model"
 import { createTeamProfileHttp } from "../../../modules/sucafina/Sucafinav1/runtime/team-profile-http"
 import { productGrant } from "../../../modules/sucafina/Sucafinav1/test/teams-profile/product-fixture"
@@ -80,7 +81,7 @@ async function fixture(options: { bindings?: boolean; key?: boolean } = {}) {
     return fetch(url, { ...init, tls: { ca: certificate, serverName: "pinned.example", rejectUnauthorized: true } })
   }, { preconnect: fetch.preconnect })
   const f = await teamSessionFixture({
-    grants, extraNodes: [LayerNodePlatform.llmClient, LocationServiceMap.node],
+    grants, extraNodes: [LayerNodePlatform.llmClient, LayerNodePlatform.requestExecutor, LocationServiceMap.node, SessionExecution.node],
     replacements: [[LayerNodePlatform.httpClient,
       FetchHttpClient.layer.pipe(Layer.provide(Layer.succeed(FetchHttpClient.Fetch, tlsFetch)))]],
   }).catch(async (error) => { await server.stop(true); throw error })
@@ -315,5 +316,39 @@ test("private-provider-08: closing the native stream aborts its real HTTPS respo
     yield* Effect.promise(() => f.cancelled).pipe(Effect.timeout(1000))
     expect(f.seen).toHaveLength(1)
     expect(f.hooks.release).toBeUndefined()
+  })))
+}, 30000)
+
+test("private-provider-09: direct Route preparation cannot replace the canonical model/body/budget or mutate a retained request", async () => {
+  await using f = await fixture()
+  await f.run(f.admitted(f.businessRequest(), Effect.gen(function* () {
+    const session = yield* f.seed("ses_private_provider_route")
+    const executor = yield* RequestExecutor.Service
+    const model = yield* Effect.gen(function* () {
+      const resolver = yield* SessionRunnerModel.Service
+      return yield* resolver.resolve(session)
+    }).pipe(Effect.provide(LocationServiceMap.Service.get(f.location)))
+    const route: typeof OpenAICompatibleChat.route = model.route
+    const request = LLM.request({ model, prompt: "Only this body", generation: { maxTokens: 512 } })
+    const body = yield* OpenAICompatibleChat.route.body.from(request)
+    for (const substituted of [
+      { ...body, model: "another-model" },
+      { ...body, max_tokens: 513 },
+      { ...body, messages: [{ role: "user" as const, content: "A substituted request" }] },
+    ]) {
+      const result = yield* route.prepareTransport(substituted, request).pipe(Effect.exit)
+      expect(Exit.isFailure(result)).toBe(true)
+    }
+    const prepared = yield* route.prepareTransport(body, request)
+    const otherRequest = LLM.request({ model, prompt: "Only this body", generation: { maxTokens: 512 } })
+    expect(Exit.isFailure(yield* route.streamPrepared(prepared, otherRequest, { http: executor }).pipe(
+      Stream.runCollect, Effect.exit,
+    ))).toBe(true)
+    if (prepared.request.body._tag !== "Uint8Array") throw new Error("Actual native HTTP body required")
+    prepared.request.body.body[0] = 0
+    expect(Exit.isFailure(yield* route.streamPrepared(prepared, request, { http: executor }).pipe(
+      Stream.runCollect, Effect.exit,
+    ))).toBe(true)
+    expect(f.seen).toHaveLength(0)
   })))
 }, 30000)
