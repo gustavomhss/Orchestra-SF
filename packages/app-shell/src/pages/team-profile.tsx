@@ -206,7 +206,6 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
     if (teams.status === "denied") return "sf.teams.teamDenied"
     if (teams.status === "revoked") return "sf.teams.teamRevoked"
     if (teams.status === "unavailable") return teams.reason === "consent-required" ? "sf.teams.consentRequired" :
-      teams.reason === "capability-disabled" ? "sf.teams.notConfigured" :
       teams.reason === "forbidden" ? "sf.teams.forbidden" :
       teams.reason === "rate-limited" ? "sf.teams.rateLimited" :
       teams.reason === "incomplete" ? "sf.teams.incomplete" : "sf.teams.teamUnavailable"
