@@ -124,6 +124,7 @@ test("installed focus refreshes a reconciled discussion without replaying its re
     window.dispatchEvent(new Event("focus")); await turn()
     expect(requests).toHaveLength(closedCount)
   } finally {
+    probeReply?.resolve(new Response("closed probe", { status: 503 }))
     window.dispatchEvent(new Event("pagehide"))
     fetcher.mockRestore(); meta.remove(); main.remove(); dom.happyDOM.setURL(originalUrl)
   }
