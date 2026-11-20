@@ -36,7 +36,7 @@ export function createTeamProfileMigrationHttp(input: { origin: string; mount: s
         if (expired) return response({ status: "invalid" }, 408)
         if (next.done) break
         total += next.value.byteLength
-        if (total > MAX_BYTES) { await reader.cancel(); return response({ status: "invalid" }, 413) }
+        if (total > MAX_BYTES) { void reader.cancel().catch(() => {}); return response({ status: "invalid" }, 413) }
         chunks.push(next.value)
       }
       if (announced !== null && Number(announced) !== total) return response({ status: "invalid" }, 400)

@@ -232,3 +232,45 @@ Esta fonte fechada ainda não qualifica execução de modelo, credenciais
 pessoais, MCP, plugins, hooks ou tarefas agendadas. Essas fronteiras precisam
 de seus próprios vínculos e verificações de proprietário antes da ativação
 corporativa. Nenhum documento legado é importado ou adotado automaticamente.
+
+## Conexões pessoais vinculadas à Team
+
+A política privada Microsoft pode declarar `connectionActions` com
+`read`, `create`, `update` e `remove`, e `connectionResources` como uma
+lista fechada de `{ category: "integration" | "mcp", resourceId: "..." }`.
+Os dois campos ausentes significam listas vazias. Uma operação precisa do
+verbo e do recurso exatos, além da pessoa, Team, sessão, geração e direitos
+de negócio atuais. O grupo supremo, um papel financeiro, a escolha de Team
+e a permissão de modelo não preenchem esses campos.
+
+O armazenamento privado separa cada registro por instalação, tenant, Team,
+pessoa, categoria, recurso e identificador. Metadados de listagem contêm
+somente chave, rótulo, revisão e estado; os valores são consumidos
+internamente pelos adaptadores de credenciais. Cada escrita compara a
+revisão corrente e grava registro, auditoria e revisão global na mesma
+transação. Remover deixa um tombstone sem o valor cifrado. Uma repetição com
+revisão antiga não substitui um registro novo.
+
+O cifrador v1 deriva uma chave separada da chave de sessão privada já
+provisionada, e vincula a autenticação do ciphertext ao proprietário
+completo e aos metadados do registro. A instalação confere versão e
+fingerprint; ausência, mudança de chave, corrupção ou lacuna de auditoria
+causam indisponibilidade, sem gerar uma chave substituta nem regravar
+segredos antigos. A restauração física integral requer o procedimento
+separado de migração e recuperação; a verificação local não é prova contra
+a reposição integral de banco e controle.
+
+Credenciais antigas do Core, herança de outra instalação e o arquivo global
+`mcp-auth.json` permanecem preservados e em quarentena no fluxo corporativo.
+Não são adotados por nome de servidor, caminho, ID técnico ou escolha de
+Team. Conexões do ambiente do processo não são listadas nem resolvidas por
+uma Integration corporativa. A configuração compartilhada continua sem
+segredos e sem definições de servidores MCP. O armazenamento de estado MCP
+não autoriza conexão, execução de ferramenta ou OAuth externo: sem um
+contrato privado concreto para esse servidor, esses caminhos permanecem
+fechados. O AISDK corporativo também recusa a criação e o uso de um SDK sem
+uma definição privada de provedor admitida, mesmo que exista um nome de
+modelo compartilhado ou uma chave no ambiente. Essa suspensão explícita
+não é a conclusão da integração LLM/MCP. O ramo técnico mantém os hooks e
+provedores existentes. Esta fatia não declara um provedor ou tenant real
+qualificado.

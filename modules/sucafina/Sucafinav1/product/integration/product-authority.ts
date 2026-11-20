@@ -1,4 +1,8 @@
 import { Effect, Schema } from "effect"
+import { ConnectionAccess } from "@orchestra/schema/connection-access"
+import { CredentialVault } from "@orchestra/core/credential/vault"
+import type { TeamConnectionAccess, TeamConnectionStore } from "../../runtime/team-connection-store.ts"
+import type { TeamConnectionKey } from "../../runtime/team-connection-crypto.ts"
 import { SessionAccess } from "@orchestra/schema/session-access"
 import { Session } from "@orchestra/schema/session"
 import type { SessionOwner } from "@orchestra/core/session/owner"
@@ -24,7 +28,7 @@ import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
 
-export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[]; migrationActions?: readonly ("map" | "cut" | "recover")[] }>
+export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[]; migrationActions?: readonly ("map" | "cut" | "recover")[]; connectionActions?: readonly ConnectionAccess.Action[]; connectionResources?: readonly ConnectionAccess.Resource[] }>
 
 /** Private verified resolver; the transport supplies only a sealed selection intent. */
 export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
@@ -64,6 +68,7 @@ export function createSfProductAuthority(input: {
   /** Current private installation policy. A failed read never falls back to construction-time grants. */
   readGrants?: () => Promise<readonly SfProductGrant[]>
   teamProfiles?: SfProductTeams
+  teamConnections?: Readonly<{ store: TeamConnectionStore; readKey: () => Promise<TeamConnectionKey> }>
   createId: () => string
   now: () => number
   commandIdentity: (request: Request, operation: string, inputDigest: string) => Promise<string | undefined>
@@ -86,6 +91,7 @@ export function createSfProductAuthority(input: {
 }) {
   const grants = productGrants(input.grants)
   const readGrants = input.readGrants
+  const teamConnections = input.teamConnections ? Object.freeze({ ...input.teamConnections }) : undefined
   const teamProfiles = input.teamProfiles ? Object.freeze({ ...input.teamProfiles }) : undefined
   if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) ||
       new URL(input.origin).origin !== input.origin || teamProfiles && !readGrants)
@@ -180,7 +186,10 @@ export function createSfProductAuthority(input: {
       roles, roleMaps: mapped, scopes: scoped, canWrite,
       grant: grant ? { namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(),
         humanActions: [...grant.humanActions ?? []].toSorted(), sessionActions: [...grant.sessionActions ?? []].toSorted(),
-        referenceActions: [...grant.referenceActions ?? []].toSorted(), migrationActions: [...grant.migrationActions ?? []].toSorted() } : null,
+        referenceActions: [...grant.referenceActions ?? []].toSorted(), migrationActions: [...grant.migrationActions ?? []].toSorted(),
+        connectionActions: [...grant.connectionActions ?? []].toSorted(),
+        connectionResources: [...grant.connectionResources ?? []].map((resource) => ({ ...resource }))
+          .toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))) } : null,
       policyVersion: input.policyVersion,
     })
     return { principalRef, policyVersion: input.policyVersion, accessRevision, canWrite, grant, roles, profile,
@@ -529,6 +538,61 @@ export function createSfProductAuthority(input: {
         owner: Object.freeze({ profile: Object.freeze({ ...binding.owner.profile }), principal: Object.freeze({ ...binding.owner.principal }) }),
         revisions: Object.freeze({ ...binding.revisions }),
       }),
+      connections: (fence: () => Effect.Effect<boolean>) => Effect.promise(async () => {
+        if (!teamConnections || typeof fence !== "function" || !same(await resolve(request).catch(() => undefined))) return undefined
+        const authorize: TeamConnectionAccess["authorize"] = async (action, resources) => {
+          if (!(await Effect.runPromise(fence()))) return false
+          const current = await resolve(request).catch(() => undefined)
+          if (!(await Effect.runPromise(fence()))) return false
+          return !!current && same(current) && ConnectionAccess.Actions.some((known) => known === action) &&
+            !!current.grant.connectionActions?.includes(action) && (action === "read" || current.canWrite) &&
+            resources.every((resource) => current.grant.connectionResources?.some((allowed) =>
+              allowed.category === resource.category && allowed.resourceId === resource.resourceId))
+        }
+        const access = async (): Promise<TeamConnectionAccess> => ({
+          owner: binding.owner, key: await teamConnections.readKey(), authorize, signal: request.signal,
+        })
+        const run = <A>(work: () => Promise<A>): Effect.Effect<A, CredentialVault.Denied> => Effect.tryPromise({
+          try: work,
+          catch: (error) => new CredentialVault.Denied({ reason:
+            error instanceof Error && error.message === "SF_TEAM_CONNECTION_CONFLICT" ? "conflict" :
+            error instanceof Error && error.message === "SF_TEAM_CONNECTION_FORBIDDEN" ? "forbidden" : "unavailable" }),
+        })
+        const client: CredentialVault.Interface = {
+          owner: Object.freeze({ profile: Object.freeze({ ...binding.owner.profile }), principal: Object.freeze({ ...binding.owner.principal }) }),
+          check: (action, resource) => {
+            const selectedAction = Schema.decodeUnknownSync(ConnectionAccess.Action)(action)
+            const selectedResource = Object.freeze({ ...Schema.decodeUnknownSync(ConnectionAccess.Resource)(resource) })
+            return run(async () => {
+              if (!(await authorize(selectedAction, Object.freeze([selectedResource]))))
+                throw new Error("SF_TEAM_CONNECTION_FORBIDDEN")
+            })
+          },
+          list: (category, resourceId) => {
+            const selected = Schema.decodeUnknownSync(ConnectionAccess.Category)(category)
+            const resources = resourceId === undefined
+              ? Object.freeze((initial.grant.connectionResources ?? []).filter((resource) => resource.category === selected)
+                .map((resource) => Object.freeze({ ...resource })))
+              : Object.freeze([Object.freeze({ category: selected, resourceId: Schema.decodeUnknownSync(ConnectionAccess.Identifier)(resourceId) })])
+            return run(async () => teamConnections.store.list(await access(), resources))
+          },
+          read: (key) => {
+            const selected = Object.freeze({ ...Schema.decodeUnknownSync(ConnectionAccess.Key)(key) })
+            return run(async () => teamConnections.store.read(await access(), selected))
+          },
+          write: (value) => {
+            const decoded = Schema.decodeUnknownSync(ConnectionAccess.Write)(value)
+            const command = Object.freeze({ ...decoded, key: Object.freeze({ ...decoded.key }) })
+            return run(async () => teamConnections.store.write(await access(), command))
+          },
+          remove: (value) => {
+            const decoded = Schema.decodeUnknownSync(ConnectionAccess.Remove)(value)
+            const command = Object.freeze({ ...decoded, key: Object.freeze({ ...decoded.key }) })
+            return run(async () => teamConnections.store.remove(await access(), command))
+          },
+        }
+        return Object.freeze(client)
+      }),
       configuration: () => Effect.promise(async () => {
         const held = initial.profile?.admission
         if (!held || !teamProfiles.readConfiguration || !same(await resolve(request).catch(() => undefined))) return undefined
@@ -590,7 +654,11 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
           grant.referenceActions.some((action: unknown) => action !== "list")) ||
         grant.migrationActions !== undefined && (!Array.isArray(grant.migrationActions) ||
           new Set(grant.migrationActions).size !== grant.migrationActions.length ||
-          grant.migrationActions.some((action: unknown) => action !== "map" && action !== "cut" && action !== "recover"))))
+          grant.migrationActions.some((action: unknown) => action !== "map" && action !== "cut" && action !== "recover")) ||
+        grant.connectionActions !== undefined && (!Array.isArray(grant.connectionActions) ||
+          new Set(grant.connectionActions).size !== grant.connectionActions.length ||
+          grant.connectionActions.some((action: unknown) => !ConnectionAccess.Actions.some((known) => known === action))) ||
+        grant.connectionResources !== undefined && !Schema.is(ConnectionAccess.Resources)(grant.connectionResources)))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
   return Object.freeze(value.map((grant: SfProductGrant) => Object.freeze({
     principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
@@ -599,5 +667,8 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
     sessionActions: Object.freeze([...grant.sessionActions ?? []].toSorted()),
     referenceActions: Object.freeze([...grant.referenceActions ?? []].toSorted()),
     migrationActions: Object.freeze([...grant.migrationActions ?? []].toSorted()),
+    connectionActions: Object.freeze([...grant.connectionActions ?? []].toSorted()),
+    connectionResources: Object.freeze([...grant.connectionResources ?? []].map((resource) => Object.freeze({ ...resource }))
+      .toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))),
   })).toSorted((left, right) => left.principalRef.localeCompare(right.principalRef)))
 }

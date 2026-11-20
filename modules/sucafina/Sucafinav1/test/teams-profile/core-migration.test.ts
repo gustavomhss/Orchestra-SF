@@ -75,8 +75,10 @@ async function fixture() {
     return { ...services, close }
   }
   const graph = await openGraph()
-  const parent = await graph.run(SessionV2.Service.use((service) => service.create({ location, title: "PRIVATE-PARENT-CONTENT" })))
-  const child = await graph.run(SessionV2.Service.use((service) => service.create({ location, parentID: parent.id, title: "PRIVATE-CHILD-CONTENT" })))
+  const parent = await graph.run(SessionV2.Service.use((service) => service.create({ location })))
+  const child = await graph.run(SessionV2.Service.use((service) => service.create({ location, parentID: parent.id })))
+  await graph.run(SessionV2.Service.use((service) => service.rename({ sessionID: parent.id, title: "PRIVATE-PARENT-CONTENT" })))
+  await graph.run(SessionV2.Service.use((service) => service.rename({ sessionID: child.id, title: "PRIVATE-CHILD-CONTENT" })))
   await chmod(filename, 0o600)
   const storageId = graph.database.storageID
   if (!storageId) throw new Error("Actual Core storage identity required")
@@ -232,6 +234,8 @@ test("core migration: unsupported persisted categories are not silently claimed 
 test("core migration: an old data checkpoint never resets the current control authority", async () => {
   const f = await fixture(), engine = f.engine(), prepared = await engine.prepare(f.request(), f.mapping())
   await engine.cut(f.request(), prepared.planDigest)
+  await f.admitted(f.businessRequest(profileA), SessionV2.Service.use((sessions) => sessions.rename({ sessionID: f.parent.id, title: "CONFIRMED-POST-CUT-EFFECT" })))
+  expect(f.files.business.all("SELECT title FROM session WHERE id = ?", [f.parent.id])).toEqual([{ title: "CONFIRMED-POST-CUT-EFFECT" }])
   const saved = path.join(f.filename + ".teams-checkpoints", prepared.planDigest + ".sqlite")
   const bytes = await readFile(saved)
   const controlBefore = f.files.control.all("SELECT * FROM sf_control_store")
@@ -273,3 +277,37 @@ test("core migration HTTP: only the original Microsoft admin request reaches the
     throw new Error("Actual prepared plan digest required")
   expect((await http(request({ action: "cut", planDigest: payload.value.planDigest })))?.status).toBe(200)
 }, 30000)
+
+test("core migration HTTP: oversized body does not await an uncooperative producer cancellation", async () => {
+  let reached = 0, cancelled = 0
+  const http = createTeamProfileMigrationHttp({ origin: "https://migration.invalid", mount: "/sf", runtime: () => {
+    reached++; throw new Error("No runtime is admitted by oversized transport input")
+  } })
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) { controller.enqueue(new Uint8Array(8 * 1024 * 1024 + 1)) },
+    cancel() { cancelled++; return new Promise<void>(() => {}) },
+  })
+  const response = await http(new Request("https://migration.invalid/sf/api/ui/team-profile-migration", {
+    method: "POST", headers: { origin: "https://migration.invalid", "content-type": "application/json" }, body: stream,
+  }))
+  expect(response?.status).toBe(413)
+  expect(cancelled).toBe(1)
+  expect(reached).toBe(0)
+}, 10000)
+
+test("core migration HTTP: a valid JSON prefix without EOF still expires at the existing body deadline", async () => {
+  let reached = 0, cancelled = 0
+  const http = createTeamProfileMigrationHttp({ origin: "https://migration.invalid", mount: "/sf", runtime: () => {
+    reached++; throw new Error("No runtime is admitted before body EOF")
+  } })
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) { controller.enqueue(new TextEncoder().encode('{"action":"census"}')) },
+    cancel() { cancelled++ },
+  })
+  const response = await http(new Request("https://migration.invalid/sf/api/ui/team-profile-migration", {
+    method: "POST", headers: { origin: "https://migration.invalid", "content-type": "application/json" }, body: stream,
+  }))
+  expect(response?.status).toBe(408)
+  expect(cancelled).toBe(1)
+  expect(reached).toBe(0)
+}, 10000)

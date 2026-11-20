@@ -194,6 +194,7 @@ export async function createConfiguredInstallation(
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
     ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId, readGrants: microsoft.readGrants, teamProfiles: teamBoundary?.profiles } : {}),
     ...(migrationAuthority ? { migrationAuthority } : {}),
+    ...(microsoft && driver.teamConnections ? { teamConnections: { store: driver.teamConnections, readKey: microsoft.readConnectionKey } } : {}),
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
     nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),

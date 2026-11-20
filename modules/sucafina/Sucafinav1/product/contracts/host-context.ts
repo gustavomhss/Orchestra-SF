@@ -138,6 +138,8 @@ export type CreateSfHostRuntime = (input: {
   /** Server-only resolver capabilities preserve the original admission object across awaits. */
   teamProfiles?: Parameters<typeof createSfProductAuthority>[0]["teamProfiles"]
   readGrants?: () => Promise<readonly SfProductGrant[]>
+  /** Host-only personal connection store and provisioned key reader; never shared Team settings. */
+  teamConnections?: Parameters<typeof createSfProductAuthority>[0]["teamConnections"]
   /** Original-Request migration authority, never serialized or inferred from Team selection. */
   migrationAuthority?: ReturnType<typeof createTeamProfileMigrationAuthority>
   /** Same original Request; bool only, no person or credential leaves this callback. */

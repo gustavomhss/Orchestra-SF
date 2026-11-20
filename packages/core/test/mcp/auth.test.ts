@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { setTimeout as sleep } from "node:timers/promises"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
-import { Effect, Exit, Layer } from "effect"
+import { Context, Effect, Exit, Layer } from "effect"
 import { systemError } from "effect/PlatformError"
 import { FSUtil } from "@orchestra/core/fs-util"
 import { McpAuth } from "@orchestra/core/mcp/auth"
@@ -66,8 +66,9 @@ function authFile(initial = "") {
 }
 
 function authService(fsLayer: Layer.Layer<FSUtil.Service>) {
-  return McpAuth.Service.use((auth) => Effect.succeed(auth)).pipe(
-    Effect.provide(AppNodeBuilder.build(McpAuth.node, [[FSUtil.node, fsLayer]])),
+  // The production service now owns a database-backed Owner guard; retain that graph in the test's live scope.
+  return Layer.build(AppNodeBuilder.build(McpAuth.node, [[FSUtil.node, fsLayer]])).pipe(
+    Effect.map((context) => Context.get(context, McpAuth.Service)),
   )
 }
 
@@ -92,7 +93,7 @@ test("serializes concurrent auth file updates across service instances", async (
       expect(entry?.clientInfo?.clientId).toBe("client-id")
       expect(entry?.serverUrl).toBe("https://mcp.posthog.com/mcp")
       expect(() => JSON.parse(file.raw())).not.toThrow()
-    }),
+    }).pipe(Effect.scoped),
   )
 })
 
@@ -110,7 +111,7 @@ test("seals the auth file and reads a plaintext file written before encryption",
       yield* auth.updateTokens("posthog", { accessToken: "new-token" })
       expect(file.raw()).not.toContain("new-token")
       expect((yield* auth.get("posthog"))?.tokens?.accessToken).toBe("new-token")
-    }),
+    }).pipe(Effect.scoped),
   )
 })
 
@@ -128,7 +129,7 @@ test("moves a corrupt auth file aside instead of overwriting it", async () => {
       expect([...file.aside.values()]).toEqual([corrupt])
       expect([...file.aside.keys()][0]).toMatch(/mcp-auth\.json\.corrupt-\d+$/)
       expect((yield* auth.get("linear"))?.tokens?.accessToken).toBe("fresh")
-    }),
+    }).pipe(Effect.scoped),
   )
 })
 
@@ -148,6 +149,6 @@ test("leaves an auth file sealed under a key it cannot load in place and never o
       expect(Exit.isFailure(write)).toBe(true)
       expect(file.raw()).toBe(sealed)
       expect(file.aside.size).toBe(0)
-    }),
+    }).pipe(Effect.scoped),
   )
 })
