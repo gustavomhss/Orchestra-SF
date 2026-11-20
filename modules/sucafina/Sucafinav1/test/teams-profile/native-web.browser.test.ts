@@ -100,8 +100,13 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     }
     const waitState = (page: Page, state: string) => page.waitForFunction((expected) =>
       document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state") === expected, state)
-    const waitTeam = (page: Page, id: string) => page.waitForFunction((expected) =>
-      document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected") === expected, id)
+    const waitTeam = (page: Page, id: string) => page.waitForFunction((expected) => {
+      const picker = document.querySelector<HTMLSelectElement>(".sf-team-picker-wide [data-sf-team-picker]")
+      // The admitted context publishes before the guarded history commit. Wait
+      // for the whole user action to settle, then assert the URL separately.
+      return document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected") === expected &&
+        !!picker && !picker.disabled
+    }, id)
     const picker = (page: Page) => page.locator(".sf-team-picker-wide [data-sf-team-picker]")
     const signIn = async (page: Page, fixture: NonNullable<typeof f>) => {
       await waitState(page, "unauthenticated")
