@@ -14,7 +14,9 @@ Changing a filter or selection removes the previous result. You can clear the se
 
 Use **Open original source** on a displayed measure to resolve its exact original value and evidence digest. Authorized source links open the corresponding native Sucafina page for the same server, project and installation. The destination is authorized and read again by that page.
 
-Returning to Analytics within the same owner preserves only the human filters, version choices, currency and measure focus. Analytics checks current access and reads both the options and data again before showing the result and restoring focus. A previous projection or source link is never replayed as a current result.
+When a measure depends on several original sources, each source has its own button, identified by its original record and reference. Choose the source you want to inspect; the application resolves that exact value and evidence digest without choosing a comparison side for you.
+
+Returning to Analytics within the same owner preserves only the human filters, version choices, currency and measure/source focus. Analytics checks current access and reads both the options and data again before showing the result and restoring focus. A previous projection or source link is never replayed as a current result.
 
 ## Access changes and sign-out
 

@@ -1,5 +1,6 @@
 import { For, Show, createMemo } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
+import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { sfBiChartModel, sfBiEvidenceRef, sfBiKey, sfBiPeriodLabel } from "./model"
 import { SfChartFrame } from "../../shared/frame"
 import { useSfPresentation } from "../../shared/frame/presentation"
@@ -12,6 +13,13 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
   const fmt = (n: number | null) => n === null ? t(sfBiKey(props.copy + ".missing")) :
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
   const assigned = () => new Map(props.projection.projection.values.map((value) => [value.id, value]))
+  const origins = (valueId: string) => {
+    const value = assigned().get(valueId)
+    return value ? [...(value.drilldown ? [value.drilldown] : []), ...value.sourceRefs]
+      .filter((source) => source.refId && /^[a-f0-9]{64}$/.test(source.refDigest))
+      .filter((source, index, references) => references.findIndex((item) =>
+        item.refId === source.refId && item.refDigest === source.refDigest) === index) : []
+  }
   const waterfall = () => props.viewId === "BI02" ? props.projection.presentation.waterfall : undefined
   const timeline = () => props.viewId === "BI08" ? props.projection.presentation.timeline : undefined
 
@@ -85,11 +93,17 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                   </For>
                 </svg>
                 <div class="sf-bi-source-actions">
-                  <For each={rows().filter((row) => row.evidenceRef)}>
-                    {(row) => <button class="mx-btn" type="button" data-sf-bi-focus={row.id}
-                      onClick={() => row.evidenceRef && props.onOpenSource(row.evidenceRef)}>
-                      {t(sfBiKey(props.copy + ".openSource"))}: {row.label} · {row.period}
-                    </button>}
+                  <For each={rows()}>
+                    {(row) => <For each={origins(row.id)}>
+                      {(source) => <button class="mx-btn" type="button" data-sf-bi-focus={row.id}
+                        data-sf-bi-origin={source.refDigest}
+                        onClick={() => props.onOpenSource(source.refId as SfRef, {
+                          valueId: row.id, referenceDigest: source.refDigest,
+                        })}>
+                        {t(sfBiKey(props.copy + ".openSource"))}: {row.label} · {row.period} · {source.kind === "record" ? source.target.recordId : source.refId}
+                        <code>{source.refId}</code>
+                      </button>}
+                    </For>}
                   </For>
                 </div>
               </figure>

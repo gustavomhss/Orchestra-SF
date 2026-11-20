@@ -8,7 +8,7 @@ import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
 export type SfBiHumanSelection = Readonly<{
   viewId: string; start: string; end: string; choice: string
   baseRef: string; candidateRef: string; currency: string
-  focus: string; requested: boolean
+  focus: string; focusOrigin?: string; requested: boolean
 }>
 type Retention = { fence: string; routes: Map<string, SfBiHumanSelection> }
 const retained = new WeakMap<SfContextHandle, Retention>()
