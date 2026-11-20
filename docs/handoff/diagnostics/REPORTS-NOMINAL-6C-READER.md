@@ -207,3 +207,44 @@ All times are inclusive retained observations and may include teardown
 settlement. Do not sum parent and child spans or compare elapsedMs origins
 across transport attachments. This reader closes no product gate and
 authorizes no retry.
+
+
+## Supplemental retained UI metadata: prepared, not executed
+
+The first reader located the initial Ask wait but retained no network observer
+for the browser's subsequent preflights. The existing error-context markdown
+may distinguish a suspended preflight, an intent already retained, or an
+unresponsive control. A second, changed CI-only reader is prepared for that
+specific question; no product test or retry is proposed.
+
+The only reader addition selects error-context markdown through actual
+attachments of RPT-02 and RPT-04. A directly referenced attachment must have
+`text/markdown` content type and the exact error-context name or filename.
+If that direct attachment is absent, the reader can use the actual directory
+of the result's `trace` attachment (`application/zip`, filename `trace.zip`)
+to select its sibling `error-context.md`. Only the trace attachment metadata
+is inspected; no trace entry is extracted or decompressed.
+Inline contents are allowed only for that identified attachment. Otherwise
+the archive entry must equal the actual reference or share its complete
+hierarchical suffix; no scenario slug, title-to-folder guess or loose basename
+lookup is used. Multiple matching retained copies must be byte-identical.
+If a reference is absent or unresolved, the reader emits only that availability
+reason and sanitized attachment names/types. It does not read arbitrary files.
+
+Primary JSON and retained HTML attachment references are inspected independently
+and labeled by source. The same artifact, run, snapshot, byte count and SHA256
+pins remain unchanged. No trace or full DOM snapshot is emitted.
+
+The status extraction and known-button disabled flags are copied from the
+qualified 8d42 reader, lines 107-113, retaining the same sanitizer. The sole
+additional known button is `Reconcile discussion`, whose actual creation is
+`modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts:248-250`
+at product6c630 (blob `2286a1c4fcaf6c08c3fa708302ee12dc5429ec98`).
+It distinguishes the suspended no-intent branch from `Reconcile action`
+at line 254. No textbox value, question, recipient, request payload, header,
+cookie or raw error-context text is printed.
+
+All previously qualified parser, transport selection, scenario metadata,
+step-tree selection, workflow and request behavior remain unchanged.
+The supplemental reader awaits cold review and authorization; there is no
+additional run ID yet.

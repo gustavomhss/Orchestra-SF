@@ -132,6 +132,54 @@ function safeTransport(value) {
     method: entry.method, resource: entry.resource, status: entry.status,
     codes: entry.codes, categories: entry.categories })) }
 }
+function retainedUi(bytes, scenario, result, source) {
+  if (!/^RPT-0[24]\b/.test(scenario.title)) return
+  const attachments = result.attachments ?? []
+  const direct = attachments.filter((item) => item.contentType === "text/markdown" &&
+    (item.name === "error-context" || (typeof item.path === "string" && path.basename(item.path) === "error-context.md")))
+  const contexts = direct.length
+    ? direct.map((attachment) => ({ attachment, reference: attachment.path, body: attachment.body, folderReference: false }))
+    : attachments.filter((item) => item.name === "trace" && item.contentType === "application/zip" &&
+      typeof item.path === "string" && path.basename(item.path) === "trace.zip")
+      .map((attachment) => ({ attachment,
+        reference: path.posix.dirname(attachment.path.replaceAll("\\", "/")) + "/error-context.md",
+        body: undefined, folderReference: true }))
+  const missing = (reason) => emit("UI_MISSING", { title: safe(scenario.title), source, reason,
+    attachments: attachments.map((item) => ({ name: safe(item.name), contentType: safe(item.contentType) })) })
+  if (!contexts.length) { missing("no-error-context-or-test-result-folder-reference"); return }
+  for (const candidate of contexts) {
+    const attachment = candidate.attachment
+    let content, folder, association
+    if (candidate.body) {
+      content = Buffer.from(candidate.body, "base64")
+      assert.ok(content.length < 64 * 1024 * 1024, "Retained UI attachment bounded")
+      association = "inline-attachment"
+    } else {
+      if (typeof candidate.reference !== "string") { missing("error-context-has-no-reference"); continue }
+      const reference = candidate.reference.replaceAll("\\", "/").replace(/^\.\//, "")
+      const found = archive(bytes, (entry) => {
+        const name = entry.replaceAll("\\", "/").replace(/^\.\//, "")
+        return name === reference || (name.includes("/") && reference.endsWith("/" + name)) ||
+          (reference.includes("/") && name.endsWith("/" + reference))
+      })
+      if (!found.length) { missing("error-context-reference-unresolved"); continue }
+      assert.ok(found.every((entry) => entry.bytes.equals(found[0].bytes)), "Referenced UI copies are byte-identical")
+      content = found[0].bytes
+      folder = safe(path.basename(path.dirname(found[0].name)))
+      association = candidate.folderReference ? "retained-test-result-folder" : "retained-attachment-reference"
+    }
+    const context = content.toString("utf8")
+    const controls = ["Ask about this review", "Reconcile discussion", "Reconcile action", "Retry same action", "Send reply", "Review this answer"]
+    emit("UI", { title: safe(scenario.title), source, association, folder,
+      attachment: { name: safe(attachment.name), contentType: safe(attachment.contentType) },
+      location: scenario.location ? { file: path.basename(scenario.location.file ?? ""),
+        line: scenario.location.line, column: scenario.location.column } : undefined,
+      statuses: context.split("\n").filter((line) => /^\s*-\s*status\b/.test(line)).map(safe),
+      controls: controls.map((name) => ({ name, nodes: context.split("\n")
+        .filter((line) => line.includes('button "' + name + '"')).map((line) => ({ disabled: line.includes("[disabled]") })) })) })
+  }
+}
+
 test("read the exact retained Reports nominal without executing product tests", async () => {
   const bytes = await retainedArtifact()
   const primary = archive(bytes, (name) => path.basename(name) === "playwright-runtime.json")
@@ -174,6 +222,7 @@ test("read the exact retained Reports nominal without executing product tests", 
     select(scenario, scenario.result)
     emit("SCENARIO", { title: safe(scenario.title), location: scenario.location, status: scenario.result.status,
       duration: scenario.result.duration, retry: scenario.result.retry ?? 0, errors: (scenario.result.errors ?? []).map(codes) })
+    retainedUi(bytes, scenario, scenario.result, "runtime-json")
     for (const attachment of scenario.result.attachments ?? []) {
       if (attachment.contentType !== "application/json") continue
       const transport = typeof attachment.name === "string" && attachment.name.startsWith("reports-") && attachment.name.endsWith("-transport")
@@ -210,7 +259,10 @@ test("read the exact retained Reports nominal without executing product tests", 
         if (!value || typeof value !== "object") return
         if (Array.isArray(value)) { value.forEach((item) => visit(item, depth + 1)); return }
         if (Array.isArray(value.results) && typeof value.title === "string" && /^RPT-0[1-4]\b/.test(value.title)) {
-          for (const result of value.results) if (Array.isArray(result.steps) && result.steps.length) select(value, result)
+          for (const result of value.results) if (Array.isArray(result.steps) && result.steps.length) {
+            select(value, result)
+            retainedUi(bytes, value, result, "retained-html")
+          }
           return
         }
         for (const [key, item] of Object.entries(value)) if (!["attachments", "body", "errors", "error", "steps"].includes(key)) visit(item, depth + 1)
