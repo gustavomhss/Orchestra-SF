@@ -53,8 +53,9 @@ export function protectSfReviewReads(input: {
     (defaultReaders || residentSnapshotReaders?.() === true)
   // Resident portfolio/native dependencies retain their original producer path.
   const supported = (review: PreservedReview) => snapshotBoundReview(review) && (defaultReaders || localRecordReview(review))
-  const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => scope.open && localReaders() && reviews.read === protectedRead &&
-    execution.getStore() === scope && host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
+  const activeScope = (scope: ReadScope, call: TrustedDomainContext) => scope.open && execution.getStore() === scope &&
+    !scope.request.signal.aborted && host.requestFor(call) === scope.request
+  const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => activeScope(scope, call) && localReaders() && reviews.read === protectedRead &&
     digestSfValue([call.kind, call.binding]) === binding
   const receiptDigest = (state: Readonly<SfProductState>, id: string, digest: string) => {
     if (!state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
@@ -126,9 +127,11 @@ export function protectSfReviewReads(input: {
   const legacyRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
     const trace = (stage: string) => { if (process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage) }
     trace("LEGACY_ENTER")
+    const scope = execution.getStore()
     const request = host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
-    const pinned = () => !!request && host.requestFor(call) === request && !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
+    const pinned = () => (!scope || activeScope(scope, call)) && !!request && host.requestFor(call) === request &&
+      !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
     const currentAccess = async () => pinned() && await host.revalidate(call) && pinned()
     try {
       if (!request || !await currentAccess()) return denied()
@@ -171,7 +174,9 @@ export function protectSfReviewReads(input: {
   }
   const protectedRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
     const scope = execution.getStore()
-    if (!scope || !localReaders()) return legacyRead(id, call)
+    if (!scope) return legacyRead(id, call)
+    if (!activeScope(scope, call)) return denied()
+    if (!localReaders()) return legacyRead(id, call)
     const dependencyPin = captureDependencies?.()
     if (captureDependencies && !dependencyPin) return legacyRead(id, call)
     const dependencies = dependencyPin ?? (() => true)
@@ -222,7 +227,8 @@ export function protectSfReviewReads(input: {
     current: () => compositionCurrent() && reviews.read === protectedRead,
     run: async <Value>(request: Request, work: () => Promise<Value>): Promise<Value> => {
       const current = execution.getStore()
-      if (current?.open && current.request === request) return work()
+      if (current && (!current.open || current.request.signal.aborted)) throw new Error("SF_REVIEW_READ_SCOPE_CLOSED")
+      if (current?.request === request) return work()
       const scope: ReadScope = { request, open: true, calls: new WeakMap(), delegated: new WeakMap() }
       return execution.run(scope, async () => { try { return await work() } finally { scope.open = false } })
     },
@@ -231,7 +237,9 @@ export function protectSfReviewReads(input: {
      * result is borrowed: the current C08 receipt and full producer run again. */
     revalidate: async (id: string, digest: string, call: TrustedDomainContext): Promise<ReviewResult> => {
       const scope = execution.getStore()
-      if (!scope || !localReaders()) return legacyRead(id, call)
+      if (!scope) return legacyRead(id, call)
+      if (!activeScope(scope, call)) return denied()
+      if (!localReaders()) return legacyRead(id, call)
       if (!scope.calls.get(call)?.has(id)) return scope.delegated.get(call)?.has(id)
         ? legacyRead(id, call) : denied()
       const dependencyPin = captureDependencies?.()
