@@ -487,12 +487,13 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                           setStore({ choice: event.currentTarget.value, baseRef: "", candidateRef: "", currency: "" })
                           remember()
                         }}>
-                        <option value="">{t(sfBiKey("sf.u21.chooseSelection"))}</option>
+                        {/* Recreated options must retain the current human choice even when its value did not change. */}
+                        <option value="" selected={store.choice === ""}>{t(sfBiKey("sf.u21.chooseSelection"))}</option>
                         <Show when={store.viewId && isFinancial(store.viewId) && options().versions.length}>
-                          <option value="planner">{t(sfBiKey("sf.u21.plannerComparison"))}</option>
+                          <option value="planner" selected={store.choice === "planner"}>{t(sfBiKey("sf.u21.plannerComparison"))}</option>
                         </Show>
                         <For each={options().choices}>
-                          {(item) => <option value={item.selectionRef}>{item.label}</option>}
+                          {(item) => <option value={item.selectionRef} selected={store.choice === item.selectionRef}>{item.label}</option>}
                         </For>
                       </select>
                     </label>
@@ -504,16 +505,16 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                       <select value={store.baseRef} data-sf-field="base-version" onChange={(event) => {
                         selectionChanged(); setStore("baseRef", event.currentTarget.value); remember()
                       }}>
-                        <option value="">{t(sfBiKey("sf.u21.chooseVersion"))}</option>
-                        <For each={options().versions}>{(version) => <option value={version.ref}>{version.label}</option>}</For>
+                        <option value="" selected={store.baseRef === ""}>{t(sfBiKey("sf.u21.chooseVersion"))}</option>
+                        <For each={options().versions}>{(version) => <option value={version.ref} selected={store.baseRef === version.ref}>{version.label}</option>}</For>
                       </select>
                     </label>
                     <label>{t(sfBiKey("sf.u21.candidateVersion"))}
                       <select value={store.candidateRef} data-sf-field="candidate-version" onChange={(event) => {
                         selectionChanged(); setStore("candidateRef", event.currentTarget.value); remember()
                       }}>
-                        <option value="">{t(sfBiKey("sf.u21.chooseVersion"))}</option>
-                        <For each={options().versions}>{(version) => <option value={version.ref}>{version.label}</option>}</For>
+                        <option value="" selected={store.candidateRef === ""}>{t(sfBiKey("sf.u21.chooseVersion"))}</option>
+                        <For each={options().versions}>{(version) => <option value={version.ref} selected={store.candidateRef === version.ref}>{version.label}</option>}</For>
                       </select>
                     </label>
                     <label>{t(sfBiKey("sf.u21.comparisonCurrency"))}
