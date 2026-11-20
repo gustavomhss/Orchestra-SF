@@ -44,17 +44,23 @@ export function assertStaticOwnership(workflow: string, prerequisite: (needs: un
   requirement: "typecheck" | "guards" | "both" = "both") {
   const parsed: unknown = Bun.YAML.parse(workflow)
   const document = object(parsed, "workflow")
+  assert.deepEqual(object(document.env, "workflow environment"),
+    { CI: "true", FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true" },
+    "SF_CI_STATIC_OWNERSHIP: workflow environment changed")
   const jobs = object(document.jobs, "jobs")
   const owner = object(jobs.static, "static")
   const verify = object(jobs.verify, "verify")
   if (document.defaults !== undefined || owner.defaults !== undefined || verify.defaults !== undefined) fail("implicit proof defaults changed")
   if (owner.if !== undefined) fail("static owner must be unconditional")
   for (const job of [owner, verify]) {
+    if (job.env !== undefined) fail("owner environment changed")
     if (job["continue-on-error"] !== undefined && job["continue-on-error"] !== false) fail("ignored owner failure")
   }
   if (owner.name !== "sf/static-and-contracts") fail("static owner identity changed")
   if (requirement !== "guards") {
-    const script = lines(requiredStep(named(owner, "Typecheck runtime, host, product and app")))
+    const step = named(owner, "Typecheck runtime, host, product and app")
+    if (step.env !== undefined) fail("typecheck environment changed")
+    const script = lines(requiredStep(step))
     assert.deepEqual(script, ["set -euo pipefail",
       ...["modules/atlas/boundary", "modules/sucafina", "packages/core", "packages/server", "packages/client", "apps/cli", "packages/app-shell"]
         .map((directory) => "(cd " + directory + " && bun run typecheck)"),
@@ -62,11 +68,14 @@ export function assertStaticOwnership(workflow: string, prerequisite: (needs: un
   }
   if (requirement !== "typecheck") {
     const step = named(owner, "Security and dependency guards with both original and PR bases")
+    if (step.if !== "${{ !cancelled() }}") fail("guards must remain independent of earlier failure")
     const script = requiredStep(step, true)
     const environment = object(step.env, "guard environment")
-    if (environment.SF_PR_BASE !== "${{ github.event.pull_request.base.sha }}" ||
-      environment.GH_READ_TOKEN !== "${{ github.token }}" ||
-      environment.GUARDRAIL_APPROVED !== "${{ contains(github.event.pull_request.labels.*.name, 'guardrail-approved') && 'protected-paths' || '' }}") fail("guard base or approval binding changed")
+    assert.deepEqual(environment, {
+      SF_PR_BASE: "${{ github.event.pull_request.base.sha }}",
+      GH_READ_TOKEN: "${{ github.token }}",
+      GUARDRAIL_APPROVED: "${{ contains(github.event.pull_request.labels.*.name, 'guardrail-approved') && 'protected-paths' || '' }}",
+    }, "SF_CI_STATIC_OWNERSHIP: guard environment changed")
     if (createHash("sha256").update(script.replaceAll("\r\n", "\n")).digest("hex") !== GUARD_SCRIPT_SHA256) fail("reviewed guard script changed")
   }
   if (verify.if !== "always()" && verify.if !== "${{ always() }}") fail("verify must observe every conclusion")
@@ -83,7 +92,9 @@ export function assertStaticOwnership(workflow: string, prerequisite: (needs: un
     "node script/sf-ci/gate.mjs verify",
   ], "SF_CI_STATIC_OWNERSHIP: final verification script changed")
   for (const step of [precheck, final]) {
-    if (object(step.env, "verifier environment").SF_NEEDS_JSON !== "${{ toJSON(needs) }}") fail("verifier lost actual job conclusions")
+    assert.deepEqual(object(step.env, "verifier environment"),
+      { SF_NEEDS_JSON: "${{ toJSON(needs) }}" },
+      "SF_CI_STATIC_OWNERSHIP: verifier environment changed")
   }
   // Synthetic inputs exercise the actual gate. They are not execution evidence.
   const allSuccess = Object.fromEntries(needs.map((name) => [name, { result: "success" }]))

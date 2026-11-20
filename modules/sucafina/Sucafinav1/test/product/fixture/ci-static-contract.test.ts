@@ -2,6 +2,14 @@ import { expect, test } from "bun:test"
 import { assertStaticOwnership, readStaticProof } from "./ci-static-contract.ts"
 
 const mutations: [string, string, string][] = [
+  ["injected workflow shell environment","env:\n  CI: \"true\"","env:\n  BASH_ENV: /tmp/ci-bypass\n  CI: \"true\""],
+  ["injected static shell environment","  static:\n","  static:\n    env:\n      BASH_ENV: /tmp/ci-bypass\n"],
+  ["injected verifier Node environment","  verify:\n","  verify:\n    env:\n      NODE_OPTIONS: --require=/tmp/ci-bypass\n"],
+  ["injected typecheck Node environment","      - name: Typecheck runtime, host, product and app\n        run:","      - name: Typecheck runtime, host, product and app\n        env:\n          NODE_OPTIONS: --require=/tmp/ci-bypass\n        run:"],
+  ["injected guard command path","        env:\n          SF_PR_BASE:","        env:\n          PATH: /tmp/ci-bypass\n          SF_PR_BASE:"],
+  ["injected precheck shell environment","      - name: Diagnose upstream gates before downloading suite artifacts\n        env:","      - name: Diagnose upstream gates before downloading suite artifacts\n        env:\n          BASH_ENV: /tmp/ci-bypass"],
+  ["injected final verifier Node environment","      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA\n        env:","      - name: Fail closed on every missing/failed suite, skipped job or mismatched SHA\n        env:\n          NODE_OPTIONS: --require=/tmp/ci-bypass"],
+  ["guard independence removed","      - name: Security and dependency guards with both original and PR bases\n        if: ${{ !cancelled() }}\n","      - name: Security and dependency guards with both original and PR bases\n"],
   ["missing Sucafina typecheck","          (cd modules/sucafina && bun run typecheck)\n",""],
   ["narrowed package typechecks","          (cd packages/server && bun run typecheck)\n",""],
   ["swallowed typecheck failure","          (cd modules/sucafina && bun run typecheck)","          (cd modules/sucafina && bun run typecheck) || true"],
