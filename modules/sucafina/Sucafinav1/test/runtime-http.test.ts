@@ -147,11 +147,16 @@ test("HTTP request boundaries retain host routes and retire console HTML GET/HEA
 
 test("Chrome submits a real form and preserves unsaved edits after blur until reload", async () => {
   expectSpawn(import.meta.path)
+  const started = performance.now()
+  const phase = (stage: string) => console.info("SF_NATIVE_RUNTIME_STAGE",
+    JSON.stringify({ stage, elapsedMs: Math.round(performance.now() - started) }))
+  phase("build native fixture")
   const [{ createNativeDashboardFixture }, { launchBrowserDriver }] = await Promise.all([
     import("./product/wp02/native-browser-fixture.ts"),
     import("./product/wp02/browser-driver-fixture.ts"),
   ])
   const native = await createNativeDashboardFixture()
+  phase("launch native browser")
   const browserDriver = await launchBrowserDriver("wp05-renderer").catch(async (error) => {
     await native.close()
     throw error
@@ -169,7 +174,9 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
         writes.push(request.postDataJSON())
     })
     const riskPage = native.origin + "/orchestra/sf-operations/risks"
+    phase("open real risk page")
     expect((await page.goto(riskPage))?.ok()).toBe(true)
+    phase("open new risk editor")
     await page.getByRole("button", { name: "New risk", exact: true }).click()
     const editor = page.locator("form.sf-u30-editor")
     const cell = editor.getByLabel("Risk description", { exact: true })
@@ -178,6 +185,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     await editor.getByLabel("Probability", { exact: true }).selectOption("2")
     await editor.getByLabel("Status", { exact: true }).selectOption("open")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+    phase("submit reviewed risk")
     const created = page.waitForResponse((response) => response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/sucafina/dashboard")
     await page.getByRole("button", { name: "Save", exact: true }).click()
@@ -189,6 +197,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     if (typeof riskId !== "string" || !riskId) throw new Error("The original risk command did not return a stored record")
     expect(stored.versions["risks:" + riskId]?.version).toBe(1)
     const edit = page.locator('tr[data-sf-row="' + riskId + '"] button[data-sf-action="edit"]')
+    phase("edit persisted risk")
     await edit.click()
     const filters = page.locator(".sf-u30-filters")
     await filters.getByLabel("Status", { exact: true }).selectOption("open")
@@ -202,6 +211,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
         values: { name: "Remote edit", impact: 4, probability: 2, status: "open" } },
     })
     expect(remote.status()).toBe(200)
+    phase("observe remote edit while focused")
     const focusedRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13" &&
       new URL(response.url()).searchParams.get("status") === "open")
     // Dispatch the existing public control without moving focus out of the
@@ -211,6 +221,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     expect(focused.status()).toBe(200)
     expect(object(object(await focused.json()).value).versions).toMatchObject({ ["risks:" + riskId]: 2 })
     expect(await cell.inputValue()).toBe("Unsaved typing")
+    phase("observe remote edit after blur")
     await cell.blur()
     await filters.getByLabel("Status", { exact: true }).selectOption("")
     const blurredRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13" &&
@@ -218,6 +229,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     await filters.getByRole("button", { name: "Apply filters", exact: true }).click()
     expect((await blurredRead).status()).toBe(200)
     expect(await cell.inputValue()).toBe("Unsaved typing")
+    phase("reject stale review")
     // The native controller retains CAS 1 despite seeing source version 2.
     // Attempting the reviewed save must block before dispatch, not adopt CAS 2.
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
@@ -227,6 +239,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     expect(writes).toHaveLength(1)
     expect(await native.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
       value: snapshot.versions["risks:" + riskId]?.version }))).toBe(2)
+    phase("reload and confirm current CAS")
     const reloadRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP13")
     await page.reload()
     const reloaded = await reloadRead
@@ -236,6 +249,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     expect(await cell.inputValue()).toBe("Remote edit")
     // Verify that the fresh editor really binds the restored source's CAS 2.
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+    phase("submit fresh reviewed CAS")
     const freshSave = page.waitForResponse((response) => response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/sucafina/dashboard")
     const freshRead = page.waitForResponse((response) => response.request().method() === "GET" &&
@@ -255,6 +269,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
 
     // Preserve the original checkbox → submit → refreshed configuration UI
     // guarantee on its admitted native administration surface.
+    phase("configure summaries")
     expect((await page.goto(native.origin + "/orchestra/sf-home/administration"))?.ok()).toBe(true)
     const configuration = page.locator("form[data-sf-summary-form]")
     await configuration.getByLabel("IT Risks", { exact: true }).check()
@@ -272,6 +287,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     // forwarding the decommissioned console's global selectors to CAP03.
     const period = async (path: string, capability: "CAP01" | "CAP03" | "CAP11",
       query: "execYear" | "year" | "opsYear", year: number, action?: "back" | "reload") => {
+      phase("verify period " + capability + " " + year + " " + (action ?? "navigate"))
       const result = page.waitForResponse((response) => {
         const url = new URL(response.url())
         return url.pathname === "/sucafina/api/ui/pages/" + capability && url.searchParams.get(query) === String(year)
@@ -293,6 +309,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     await period("/orchestra/sf-dashboard/executive?year=2027", "CAP01", "execYear", 2027)
     await period("/orchestra/sf-operations/service?year=2024", "CAP11", "opsYear", 2024)
     await period("/orchestra/sf-dashboard/budget?year=2026", "CAP03", "year", 2026)
+    phase("change budget year")
     const changedPeriod = page.waitForResponse((response) => {
       const url = new URL(response.url())
       return url.pathname === "/sucafina/api/ui/pages/CAP03" && url.searchParams.get("year") === "2025"
@@ -309,6 +326,7 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     await period("/orchestra/sf-dashboard/executive?year=2027", "CAP01", "execYear", 2027, "back")
     expect(errors).toEqual([])
   } finally {
+    phase("close owned browser")
     try { await browserDriver.close() } finally { await native.close() }
   }
 }, 45000)
