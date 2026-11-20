@@ -1,0 +1,11 @@
+{
+  "package": "app",
+  "runner": "playwright",
+  "config": "e2e/playwright.production.config.ts",
+  "args": [
+    "e2e/sucafina/reports-installed-profile.spec.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+  }
+}

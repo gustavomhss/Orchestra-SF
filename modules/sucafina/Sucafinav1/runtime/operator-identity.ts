@@ -1,3 +1,4 @@
+import { sfInstalledReportsDiagnostic } from "./reports-installed-diagnostic.ts"
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto"
 import type { OperatorIdentity, OperatorOptions } from "./operator-contract.ts"
 
@@ -49,6 +50,8 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
     return value.operator !== null && typeof value.operator === "object" && "id" in value.operator && value.operator.id === person.id
   }
   const session = async (request: Request) => {
+    const started = performance.now()
+    try {
     if (new URL(request.url).origin !== fixedOrigin) return false
     const id = handle(request)
     if (!id || await secrets.get(slot("revoked", id), now())) return false
@@ -59,6 +62,7 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
     if (!valid(value)) return false
     // Recheck after the session read: logout may have revoked a handle while that read was pending.
     return !await secrets.get(slot("revoked", id), now())
+    } finally { sfInstalledReportsDiagnostic.session(request, started) }
   }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Local authentication unavailable", { status, headers: headers() })

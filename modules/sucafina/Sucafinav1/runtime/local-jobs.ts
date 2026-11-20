@@ -1,3 +1,4 @@
+import { sfInstalledReportsDiagnostic } from "./reports-installed-diagnostic.ts"
 import { createLocalBackups } from "./local-backups.ts"
 import { deliverNotices, queueApprovalReminders } from "./operations.ts"
 import { object, rows, text } from "./contract.ts"
@@ -260,7 +261,7 @@ export async function createLocalJobs(options: {
       if (lifecycle.active) return lifecycle.active
       cancelScheduled?.()
       cancelScheduled = undefined
-      const active = run()
+      const active = sfInstalledReportsDiagnostic.maintenance("local", run)
       lifecycle.active = active
       const release = () => {
         if (lifecycle.active !== active) return

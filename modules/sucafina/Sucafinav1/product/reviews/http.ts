@@ -1,3 +1,4 @@
+import { sfInstalledReportsDiagnostic } from "../../runtime/reports-installed-diagnostic.ts"
 import { dispatchSfCapability } from "../host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
@@ -43,7 +44,10 @@ export function createReviewHttp(input: {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
     const stamp = Date.now()
-    const trace = (stage: string) => { if (mode === "review-read" && process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage + "_" + stamp) }
+    const trace = (stage: string) => {
+      if (mode === "review-read") sfInstalledReportsDiagnostic.phase(stage)
+      if (mode === "review-read" && process.env.SF_REPORTS_TRACE === "1") console.error("SF_REPORTS_TRACE_" + stage + "_" + stamp)
+    }
     trace("HTTP_READ_ENTER")
     if (mode !== "review-thread-context" && mode !== "review-read" && mode !== "review-current-thread" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
     const json = (value: unknown, status: number) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })

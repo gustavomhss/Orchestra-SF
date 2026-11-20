@@ -1,3 +1,4 @@
+import { sfInstalledReportsDiagnostic } from "../runtime/reports-installed-diagnostic.ts"
 import path from "node:path"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { randomUUID } from "node:crypto"
@@ -273,7 +274,9 @@ export async function createConfiguredInstallation(
       },
     } } : {}),
     async handler(request: Request) {
+      return sfInstalledReportsDiagnostic.request(request, async () => {
       const url = new URL(request.url)
+      sfInstalledReportsDiagnostic.route(url.searchParams.get("sf"), request.method)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
       const postedOrigin = request.headers.get("origin")
       const foreignOrigin = postedOrigin !== config.origin
@@ -347,7 +350,9 @@ export async function createConfiguredInstallation(
       }
       const surface = url.pathname.slice(config.mount.length + 1)
       if (surface === "dashboard" || surface === "planner" || surface === "procurement") {
+        sfInstalledReportsDiagnostic.phase("entry-person-enter")
         const person = await identity.person(request)
+        sfInstalledReportsDiagnostic.phase("entry-person-done")
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
@@ -355,13 +360,17 @@ export async function createConfiguredInstallation(
       // origin, identity.handle/prepare and narrowly selected surface bootstrap.
       // Every handler receives this identical Request; no URL rewrite, body
       // clone or parallel backend. Absence of context authority fails closed.
+      sfInstalledReportsDiagnostic.phase("entry-native-enter")
       const nativeResponse = await nativeProjections(request)
+      sfInstalledReportsDiagnostic.phase("entry-native-done")
       if (nativeResponse) return nativeResponse
+      sfInstalledReportsDiagnostic.phase("entry-business-enter")
       const response = await business(request)
+      sfInstalledReportsDiagnostic.phase("entry-business-done")
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (operator && request.method === "GET" && response?.ok && response.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() === "text/html") return localChrome(response)
       return response
-
+      })
     },
     async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
   }

@@ -1,9 +1,23 @@
+import { sfInstalledReportsDiagnostic } from "../../runtime/reports-installed-diagnostic.ts"
 import { randomUUID } from "node:crypto"
 import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 
+const recordSourceCost = (stage: string, started: number) => sfInstalledReportsDiagnostic.metric("source." + stage, started)
+const timedSourceDigest = (value: unknown, stage: string) => {
+  const started = performance.now()
+  const result = digestSfValue(value)
+  recordSourceCost(stage, started)
+  return result
+}
+const timedSourceClone = <Value>(value: Value, stage: string): Value => {
+  const started = performance.now()
+  const result = structuredClone(value)
+  recordSourceCost(stage, started)
+  return result
+}
 const sanctionedIdentity = new WeakSet<Snapshot>()
 
 /** Allocate the incarnation a same-transaction correlation must name before finish() assigns it. */
@@ -57,16 +71,27 @@ export function createSfSourcePersistence(input: {
     const scope = structuredClone(requested)
     if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
     if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
-    const before = digestSfValue(snapshot)
-    if (!await authorize(snapshot)) return undefined
-    const projection = input.projectScope(surface, structuredClone(snapshot), structuredClone(scope))
+    const before = timedSourceDigest(snapshot, "full-snapshot-before-digest")
+    const firstStarted = performance.now()
+    const first = await authorize(snapshot)
+    recordSourceCost("first-authorize-inclusive", firstStarted)
+    if (!first) return undefined
+    const projectStarted = performance.now()
+    const projection = input.projectScope(surface, timedSourceClone(snapshot, "projection-snapshot-clone"), structuredClone(scope))
+    recordSourceCost("project-scope-inclusive", projectStarted)
     const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
-    if (projection === undefined || !source || !await authorize(snapshot)) return undefined
-    if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
+    if (projection === undefined || !source) return undefined
+    const secondStarted = performance.now()
+    const second = await authorize(snapshot)
+    recordSourceCost("second-authorize-inclusive", secondStarted)
+    if (!second) return undefined
+    if (timedSourceDigest(snapshot, "full-snapshot-after-digest") !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
     return { scope, projection, source, inputDigest: digestSfValue(projection) }
   }
   const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+    const observeStarted = performance.now()
     const observed = await observe(surface, snapshot, requested, authorize)
+    recordSourceCost("observe-inclusive", observeStarted)
     if (!observed) return { commit: false, value: undefined }
     const { scope, projection, source, inputDigest } = observed
     const key = digestSfValue(scope)
@@ -125,7 +150,7 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
       // Preparation receives an isolated view. Its callback cannot alter the held
       // source snapshot before observe establishes its existing mutation guard.
-      const prepared = await prepare(structuredClone(snapshot))
+      const prepared = await prepare(timedSourceClone(snapshot, "prepare-snapshot-clone"))
       if (!prepared) return { commit: false, value: undefined }
       return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize)
     }, options),

@@ -1,3 +1,4 @@
+import { sfInstalledReportsDiagnostic } from "./reports-installed-diagnostic.ts"
 import type { Database } from "bun:sqlite"
 import type { AuthHandle, AuthLimits, LocalSecrets } from "./local-contract.ts"
 
@@ -258,7 +259,7 @@ export function startAuthMaintenance(options: { secrets: LocalSecrets; now?: () 
     if (state.closed) return Promise.resolve()
     if (state.pending) return state.pending
     const at = options.now?.() ?? Date.now()
-    state.pending = authentication.collect(at).then((removed) => {
+    state.pending = sfInstalledReportsDiagnostic.maintenance("auth", () => authentication.collect(at)).then((removed) => {
       state.payloads += removed.payloads
       state.handles += removed.handles
       state.lastSuccess = at
