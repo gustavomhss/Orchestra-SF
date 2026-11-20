@@ -48,8 +48,10 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
         // its absent receipt or use apply to create one.
         expect(await createSfDashboardApplicationIntents(fixture.authority).reserve(original, admission.value)).toBe(true)
       } finally { fixture.authority.ui.finish(admission.value) }
+      const recoveryHeaders = new Headers(source.headers)
+      recoveryHeaders.delete("content-length")
       const noReceipt = await fetch(fixture.origin + "/sucafina/dashboard?sf=dashboard-hot-topic-recover", {
-        method: "POST", headers: source.headers, body: JSON.stringify(selector),
+        method: "POST", headers: recoveryHeaders, body: JSON.stringify(selector),
       })
       expect(noReceipt.status).toBe(503)
       expect(await noReceipt.json()).toEqual({ status: "unavailable", reason: "original-receipt-unavailable" })
