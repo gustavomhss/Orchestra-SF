@@ -233,6 +233,9 @@ export function createSfTransport(options: Readonly<{
         projectId: options.binding.projectId,
         hostId: options.binding.hostId,
       } : decoded.value
+      if (operation.operationId === "files.document-confirm" &&
+          Option.isNone(Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(wireInput)))
+        return failure("contract-mismatch")
       const route = operationUrl(options.binding, metadata, wireInput, operation.operationId)
       if (!route) return failure("contract-mismatch")
       const postRead = metadata.method === "POST" && (metadata.effect === "read" || metadata.effect === "preview")
@@ -254,9 +257,13 @@ export function createSfTransport(options: Readonly<{
         : undefined
       if (metadata.method === "POST" && (!key || !KEY.test(key))) return failure("contract-mismatch")
       if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
+      const documentInput = operation.operationId === "files.document-confirm" ? asJsonObject(wireInput) : undefined
       const bodyValue = metadata.method === "POST"
-        ? operation.operationId === "files.document-confirm" && asJsonObject(wireInput)
-          ? asJsonObject(wireInput)?.evidence
+        ? operation.operationId === "files.document-confirm"
+          ? documentInput && !("action" in documentInput)
+            ? documentInput.evidence
+            : documentInput?.action === "reject" || documentInput?.action === "link"
+              ? operationBody(metadata, wireInput) : undefined
           : operationBody(metadata, wireInput)
         : undefined
       if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
@@ -995,4 +1002,5 @@ async function refreshSfFileAuthority(options: Readonly<{
 }
 
 // Reuse the public, already-exported transport entry for desktop protocol and broker.
-export { sfAllowedByteMime, sfFilesSourceQuery, sfIsByteOperation, sfIsUploadOperation, SF_FILE_BYTE_LIMIT } from "./transport/files"
+export { sfAllowedByteMime, sfFilesSourceQuery, sfIsByteOperation, sfIsUploadOperation,
+  SF_FILE_ASSET_LIMIT, SF_FILE_BYTE_LIMIT, SF_FILE_IMPORT_LIMIT, SF_FILE_MULTIPART_LIMIT } from "./transport/files"
