@@ -2,7 +2,7 @@
 
 ## SHA e estado
 
-- Estado: **PARCIAL — duas leituras da evidência concluídas com success; correção causal do formato AI preparada, ainda não executada**.
+- Estado: **PARCIAL — três leituras da mesma evidência concluídas com success; parser AI corrigido e exercitado; fallback F01 identificado, predicado causal da navegação ainda não demonstrado**.
 - Branch: `sf-reports-artifact-audit`.
 - Base do leitor já executado pela integração: `12dd4126441861fb62f9306a3fa7ff0a1b47c656`.
 - Código inicial executado: `63ea031a5ed0771b0c2d0403b483154d0ed0dc2b`.
@@ -56,7 +56,7 @@ Este código não importa o produto, inicia browser/listener, faz request/replay
 - Ordem de merges deste recorte: nenhuma.
 - PRs: nenhum; o diagnóstico temporário não qualifica merge de Reports.
 - Verificação feita: leitura do diff inicial e da extensão, readback exato no GitHub, leitura dos logs do diagnóstico inicial e confirmação dos dois jobs por API.
-- Actions: root executou os diagnósticos `44664962509` e `44666329606`, ambos com success. Nenhuma Action disparada por este agente. A correção causal do formato AI ainda não foi executada; root controla uma eventual leitura posterior do mesmo artefato.
+- Actions: root executou os diagnósticos `44664962509`, `44666329606` e `44667668234`, todos com success e sem replay do produto. Nenhuma Action disparada por este agente. A correção causal do formato AI foi exercitada no terceiro diagnóstico.
 - Guards: não executados neste recorte; nenhum resultado de guards é alegado.
 - `sf-ci`: não executado; reserva de uma única corrida final continua com a integração.
 - Baseline/coverage: nenhum alterado ou fabricado.
@@ -123,7 +123,7 @@ Contagens fechadas do `Page snapshot`:
 
 Essas contagens não revelam rótulos, estado de autorização nem causa de UI50. Mesmo com 44 botões reconhecidos como nós, nenhum dos dois controles do contexto foi classificado pelo extrator anterior. Isso motivou revisar a gramática do formato usado pela versão real do Playwright, sem rodar produto.
 
-## Defeito concreto do extrator AI — correção preparada
+## Defeito concreto do extrator AI — corrigido e exercitado no terceiro diagnóstico
 
 O catálogo em `package.json` no snapshot original fixa `@playwright/test` em **1.59.1**. Na fonte oficial dessa mesma versão:
 
@@ -144,11 +144,29 @@ Foi lido `docs/handoff/HANDOFF-sf-ui-c02.md` em `sf-ui-c02@667cdefd62ddd482136f5
 
 - **unbound(packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:415:24)** no código original `4ccf99576e6886b178c5502fc02bfa41bef6730c`: UI50 não encontrada.
 - A mesma asserção preservada está em **review-flow.ts:377** no código de retenção `18e995771879cb67c144c87b61e7d17c6df9e917`. Essa correspondência foi relida; não é um novo resultado de execução.
-- Nenhum dos dois diagnósticos qualificou Reports, exportação Office ou resolveu a causa de montagem. Não há nova execução de produto autorizada por este handoff apenas para observar.
+- Nenhum dos três diagnósticos qualificou Reports ou exportação Office. O terceiro identificou o fallback F01, mas não o predicado que impediu publicar a rota. Não há nova execução de produto autorizada por este handoff apenas para observar.
+
+
+## Terceiro diagnóstico — mensagem original classificada
+
+- Run: [44667668234](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667668234), **success**, concluído em 2026-11-20T03:27:04Z.
+- Snapshot: `0c99a9ac2401c9b1d3b2e368400f4c0c0639a5a1`, parent direto `d6bf25eb698da9d4f791a0d2be64b458b46b6f73`; único arquivo adicional `.ci-run.json`.
+- Job `test (ubuntu-24.04)`: **136060833124 / success**; job `cleanup`: **136061214118 / success**.
+- Leitor Node: **1 pass / 0 fail**. Mesmo artefato **14596071954**, **365836 bytes**; digest calculado às 03:26:54.7773908Z: `2c1bb49b65772852b63c762a632ea6b12acfddf5bfd6c7088a9ae47d9a4eb488`.
+- Os quatro casos e tempos originais, fallback JSON e contagens de nós permaneceram iguais. Nenhum replay ou request de produto.
+- Marcadores reais após corrigir a gramática AI: **`route-not-admitted`, `context-toolbar`, `context-refresh-access-control`, `context-sign-out-control`**; `renderErrors: []`.
+
+A mensagem conhecida `Sucafina route not admitted` vem de `host/owner-runtime231.tsx:274` no source `4ccf99576e6886b178c5502fc02bfa41bef6730c`. O conjunto identifica o provider em seu estado renderizado ready e o fallback anterior à publicação/montagem de UI50. **Não é apenas uma ausência inferida do seletor UI50.**
+
+O mesmo fallback também aparece enquanto `view.status` é resolving: `current()` depende de `view.status === ready` (:261), e a transição assíncrona inicia em resolving (:587–605). Portanto a mensagem **não distingue, sozinha, denied, unavailable, invalid-link ou transição ainda pendente**. Não foi promovida a prova de recusa de uma capability específica. Ausência de categorias de render na whitelist também não é prova universal de ausência de exceção.
+
+A leitura estática posterior confirmou o href canônico de exportação, query vazia admitida e os três IDs nos recursos corretos: `dashboard.dashboard-review`, `reviews.report.prepare`, `files.export.review`. A grant do operador real vem da lista de operações do freeze (`local/entry.ts:167–169`), que contém os quatro IDs internos necessários aos observers; reviews/documents constam dos namespaces concedidos. CLI e módulo Sucafina declaram docx9.5.1/pptxgenjs4.0.1. Essas constatações excluem omissões estáticas simples; não provam que cada admissão/import/read tenha concluído com sucesso no request original.
+
+O próximo trabalho é ligar o estado F01 ao ramo exato de resolução/navegação na fonte original, preservando autoridade e disponibilidade. Até essa causa ser demonstrada, os pontos `review-flow.ts:415:24` original e `:377` na retenção permanecem **unbound quanto ao predicado causal**. Nenhum guard, policy, timeout, asserção, produtor ou UI foi alterado por este diagnóstico.
 
 ## Como retomar
 
-Após revisar a correção concreta do formato AI, root pode criar um snapshot `ci-run-linux-*` do novo head desta branch, acrescentando somente `.ci-run.json` com:
+Os três diagnósticos usaram o request abaixo. A correção atual já foi exercitada; não executar outra leitura idêntica apenas para observar. Qualquer nova leitura exigiria um defeito concreto adicional do leitor e coordenação de root:
 
 ```json
 {
@@ -164,6 +182,6 @@ Após revisar a correção concreta do formato AI, root pode criar um snapshot `
 }
 ```
 
-Reter as linhas `AUDIT_REPORTS_RETAINED_SOURCE`, `RESULT`, `RPT01_CONTEXT` e `SUMMARY`. A próxima leitura, se root a executar, tem a correção concreta do formato AI; lê o mesmo artefato original, sem novo Playwright ou inicialização do produto. Seu sucesso significa somente que o artefato foi lido sob as guardas declaradas. Interpretar controles e mensagens no escopo documentado; se ainda faltar informação suficiente, manter `unbound(review-flow.ts:415:24)` explícito.
+Reter as linhas `AUDIT_REPORTS_RETAINED_SOURCE`, `RESULT`, `RPT01_CONTEXT` e `SUMMARY`. As leituras realizadas usaram o mesmo artefato original, sem novo Playwright ou inicialização do produto. Seu sucesso significa somente que o artefato foi lido sob as guardas declaradas. Interpretar controles e mensagens no escopo documentado; se ainda faltar informação suficiente, manter `unbound(review-flow.ts:415:24)` explícito.
 
 Não repetir um gate idêntico de Reports por este diagnóstico. Integrar somente correções concretas com a qualificação correspondente, preservando os quatro cenários originais e a autoridade real.
