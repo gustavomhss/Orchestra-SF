@@ -143,7 +143,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         Stream.runForEach((line) => {
           tail.value = `${tail.value}\n${redact(line)}`.slice(-8192)
           const diagnostic = sfCreateReportsDiagnosticLine(line)
-          if (diagnostic) console.info(diagnostic)
+          if (diagnostic) { try { console.info(diagnostic) } catch { /* Diagnostic output cannot affect readiness. */ } }
           return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4110\/?$/.test(line.trim())
             ? Deferred.succeed(ready, undefined)
             : Effect.void
