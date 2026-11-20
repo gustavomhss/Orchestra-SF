@@ -1,58 +1,115 @@
 import { test } from "bun:test"
 import { expect } from "@playwright/test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
-import { Schema } from "effect"
+import { AppProcess } from "@orchestra/core/process"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { Effect, Schema } from "effect"
+import { ChildProcess } from "effect/unstable/process"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
-import { localBrowser } from "../fixture/local-browser.ts"
+import { mkdtemp, readdir, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import path from "node:path"
+import { projectSfDomainData } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain/projection.ts"
+import { launchBrowserDriver } from "../product/wp02/browser-driver-fixture.ts"
 
-test("native Executive shows producer-owned people measures, preserves their period and purges them on access loss", async () => {
+const buildComponent = String.raw`
+import { pathToFileURL } from "node:url"
+const [vitePath, solidPath, shellDirectory, entry, outDir] = process.argv.slice(1)
+const { build } = await import(pathToFileURL(vitePath).href)
+const { default: solid } = await import(pathToFileURL(solidPath).href)
+await build({
+  configFile: false, root: shellDirectory, publicDir: false, logLevel: "error",
+  plugins: [solid()],
+  resolve: { alias: { "@": shellDirectory + "/src" }, dedupe: ["solid-js", "@solidjs/router"] },
+  build: { target: "esnext", outDir, emptyOutDir: true, minify: false, sourcemap: false,
+    lib: { entry, formats: ["es"], fileName: () => "component.js" },
+    rollupOptions: { output: { entryFileNames: "component.js", chunkFileNames: "chunk-[hash].js", assetFileNames: "asset-[hash].[ext]" } },
+  },
+})
+console.log("SF_EXECUTIVE_COMPONENT_BUILT")
+`
+
+// This causal browser test qualifies the real CAP01 component, producer DTO,
+// formatting, CSS and provider purge. It does not qualify an installed journey.
+test("Executive component renders four canonical measures with compatible, missing and stale periods", async () => {
   expectSpawn(import.meta.path)
-  const fixture = await localBrowser({ nativePlanner: true })
+  const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-executive-component-"))
+  const cleanup: (() => Promise<unknown> | void)[] = [() => rm(root, { recursive: true, force: true })]
   try {
-    const page = fixture.page
-    const origin = new URL(page.url()).origin
+    const shellDirectory = path.resolve(import.meta.dir, "../../../../../packages/app-shell")
+    const node = Bun.which("node")
+    if (!node) throw new Error("Node is unavailable for the Executive component bundle")
+    const built = await Effect.gen(function* () {
+      const processes = yield* AppProcess.Service
+      return yield* processes.run(ChildProcess.make(node, [
+        "--input-type=module", "-e", buildComponent,
+        Bun.resolveSync("vite", shellDirectory), Bun.resolveSync("vite-plugin-solid", shellDirectory),
+        shellDirectory, path.join(import.meta.dir, "executive-people-entry.tsx"), root,
+      ], { cwd: shellDirectory, extendEnv: true }), { timeout: "20 seconds", maxOutputBytes: 8192, maxErrorBytes: 16384 })
+    }).pipe(Effect.provide(LayerNode.compile(AppProcess.node)), Effect.runPromise)
+    if (built.exitCode !== 0 || !built.stdout.toString("utf8").includes("SF_EXECUTIVE_COMPONENT_BUILT"))
+      throw new Error("Executive component bundle failed: " + built.stderr.toString("utf8"))
+    const assets = await readdir(root)
+    if (!assets.includes("component.js") || assets.some((name) => !/^[A-Za-z0-9_-]+\.(?:js|css)$/.test(name)))
+      throw new Error("Executive component bundle assets are invalid")
+    const finance = { opexOwners: [{ id: "opex", budget: 1200 }], opexEntries: [],
+      capexProjects: [{ id: "capex", budget: 600 }], capexEntries: [] }
+    const users = [{ id: "march", year: 2026, month: 3, users: 20 },
+      { id: "april", year: 2026, month: 4, users: 30 }, { id: "may", year: 2026, month: 5, users: 40 }]
+    const source = { ...finance, itUsersMonthly: users, executiveByYear: { "2026": { active: 90, departures: 20 } } }
+    const reads: { scenario: string; month: number }[] = []
+    const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => {
+      const url = new URL(request.url)
+      if (request.method !== "GET") return new Response(null, { status: 405 })
+      if (url.pathname === "/") return new Response('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+        assets.filter((name) => name.endsWith(".css")).map((name) => '<link rel="stylesheet" href="/assets/' + name + '">').join("") +
+        '</head><body><div id="root"></div><script type="module" src="/assets/component.js"></script></body></html>',
+        { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } })
+      if (url.pathname.startsWith("/assets/")) {
+        const name = url.pathname.slice("/assets/".length)
+        return assets.includes(name) ? new Response(Bun.file(path.join(root, name))) : new Response(null, { status: 404 })
+      }
+      if (url.pathname !== "/fixture/read") return new Response(null, { status: 404 })
+      const scenario = url.searchParams.get("scenario") ?? "current"
+      const month = Number(url.searchParams.get("month"))
+      if (!["current", "legacy", "stale", "missing", "zero"].includes(scenario) || !Number.isInteger(month) || month < 1 || month > 12)
+        return new Response(null, { status: 400 })
+      reads.push({ scenario, month })
+      const selected = scenario === "missing" ? {} : scenario === "zero"
+        ? { opexOwners: [], opexEntries: [], capexProjects: [], capexEntries: [], itUsersMonthly: users,
+          executive: { active: 90, departures: 0 } } : source
+      // Legacy omission and deliberately mismatched producer period are separate
+      // valid DTO scenarios. No display value is replaced in the fixture.
+      const data = projectSfDomainData("CAP01", selected, 2026, scenario === "legacy" ? undefined : scenario === "stale" ? 3 : month)
+      const body = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP01"].output)({
+        status: "ok", value: { capabilityId: "CAP01", selection: { year: 2026, month },
+          data, versions: { "itUsersMonthly:march": 0, "itUsersMonthly:april": 0, "itUsersMonthly:may": 0 }, allowedActionIds: [] },
+      })
+      return Response.json(body)
+    } })
+    cleanup.push(() => server.stop(true))
+    const driver = await launchBrowserDriver("dashboard-monthly")
+    cleanup.push(async () => { await driver.close(); driver.report() })
+    const page = await driver.browser.newPage()
     page.setDefaultTimeout(10000)
     page.setDefaultNavigationTimeout(10000)
-    // Fixture setup uses the original admitted durable commands with the real
-    // enrolled operator. No snapshot, projection, response or grant is substituted.
-    for (const command of [
-      { page: "OPEX Detail", action: "save", values: { name: "Executive OPEX", budget: 1200 } },
-      { page: "CAPEX Projects", action: "save", values: { name: "Executive CAPEX", budget: 600 } },
-      { page: "Executive Dashboard", action: "save-users", values: { year: 2026, month: 1, value: 20 } },
-      { page: "Executive Dashboard", action: "save-users", values: { year: 2026, month: 2, value: 40 } },
-    ]) {
-      const response = await page.request.post(origin + "/sucafina/dashboard", {
-        headers: { Origin: origin }, data: { ...command, version: 0 }, timeout: 10000,
-      })
-      expect(response.status()).toBe(200)
-      expect(await response.json()).toMatchObject({ ok: true })
+    const errors: string[] = []
+    page.on("pageerror", (error) => errors.push(error.message))
+    const open = async (scenario: string) => {
+      expect((await page.goto(server.url.origin + "/?scenario=" + scenario))?.status()).toBe(200)
+      await expect(page.locator('[data-sf-surface="CAP01"] [data-sf-state="ready"]')).toBeVisible()
     }
-    const matches = (response: { url(): string }, month: number) => {
-      const url = new URL(response.url())
-      return url.origin === origin && url.pathname === "/sucafina/api/ui/pages/CAP01" &&
-        url.searchParams.get("execYear") === "2026" && url.searchParams.get("executiveMonth") === String(month)
-    }
-    const [first, document] = await Promise.all([
-      page.waitForResponse((response) => matches(response, 1), { timeout: 10000 }),
-      page.goto(origin + "/orchestra/sf-dashboard/executive?year=2026&month=1"),
-    ])
-    expect(document?.status()).toBe(200)
-    expect(first.status()).toBe(200)
-    const initial = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP01"].output)(await first.json())
-    expect(initial.status).toBe("ok")
-    if (initial.status !== "ok") throw new Error("Original Executive source was not admitted")
-    expect(initial.value.data.people).toEqual({
-      year: 2026, month: 1, users: 20, opexCostPerUser: 60, totalCostPerUser: 90, attritionYtd: null,
-    })
-    const dashboard = page.locator('[data-sf-surface="CAP01"]')
-    await expect(dashboard.locator('[data-sf-state="ready"]')).toBeVisible()
-    const cards = dashboard.locator(".sf-u02-people-metrics [data-sf-metric]")
+    const cards = page.locator(".sf-u02-people-metrics [data-sf-metric]")
+    const missing = "Not available from this source"
+    await open("current")
     await expect(cards).toHaveCount(4)
     await expect(cards.locator("dt")).toHaveText([
       "Total IT users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD",
     ])
-    await expect(cards.locator("dd")).toHaveText(["20", "60", "90", "Not available from this source"])
-    await expect(dashboard.locator('[data-sf-metric="benchmark"]')).toBeVisible()
+    await expect(cards.locator("dd")).toHaveText(["30", "40", "60", "20.00%"])
+    await expect(page.locator('[data-sf-metric="benchmark"]')).toBeVisible()
+    await expect(page.locator('[aria-labelledby="sf-u02-delivery"] [data-sf-metric="active"] dd')).toHaveText("90")
+    await expect(page.locator(".sf-u02-financial-metrics [data-sf-metric]")).toHaveCount(3)
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 })
       const boxes = await cards.evaluateAll((nodes) => nodes.map((node) => {
@@ -67,26 +124,24 @@ test("native Executive shows producer-owned people measures, preserves their per
       expect(Math.min(...boxes.map((box) => box.height))).toBeGreaterThanOrEqual(100)
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
     }
-    const [second] = await Promise.all([
-      page.waitForResponse((response) => matches(response, 2), { timeout: 10000 }),
-      dashboard.getByLabel("Month", { exact: true }).selectOption("2"),
-    ])
-    expect(second.status()).toBe(200)
-    const changed = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP01"].output)(await second.json())
-    expect(changed.status).toBe("ok")
-    if (changed.status !== "ok") throw new Error("Changed Executive period was not admitted")
-    expect(changed.value.data.people).toEqual({
-      year: 2026, month: 2, users: 40, opexCostPerUser: 30, totalCostPerUser: 45, attritionYtd: null,
-    })
-    await expect(cards.locator("dd")).toHaveText(["40", "30", "45", "Not available from this source"])
-    // A real session loss must remove values from this mounted page on refresh.
-    await page.context().clearCookies()
-    await page.getByRole("button", { name: "Refresh access", exact: true }).click()
-    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-provider-state", "unauthenticated")
-    await expect(page.locator('[data-sf-metric]')).toHaveCount(0)
-    expect(fixture.errors).toEqual([])
+    await page.getByLabel("Month", { exact: true }).selectOption("5")
+    await expect(cards.locator("dd")).toHaveText(["40", "30", "45", "20.00%"])
+    expect(reads).toContainEqual({ scenario: "current", month: 5 })
+    await open("legacy")
+    await expect(cards.locator("dd")).toHaveText(["30", missing, missing, missing])
+    await open("stale")
+    await expect(cards.locator("dd")).toHaveText([missing, missing, missing, missing])
+    await open("missing")
+    await expect(cards.locator("dd")).toHaveText([missing, missing, missing, missing])
+    await open("zero")
+    await expect(cards.locator("dd")).toHaveText(["30", "0", "0", "0.00%"])
+    await page.getByRole("button", { name: "Invalidate fixture access", exact: true }).click()
+    await expect(page.locator("[data-fixture-context]")).not.toHaveText("ready")
+    await expect(page.locator("[data-sf-metric]")).toHaveCount(0)
+    expect(errors).toEqual([])
   } finally {
-    await fixture.dispose()
-    console.info("SF Executive people physical browser closure", fixture.report())
+    const failures: unknown[] = []
+    for (const close of cleanup.reverse()) await Promise.resolve().then(close).catch((error) => failures.push(error))
+    if (failures.length) throw new AggregateError(failures, "Executive component cleanup failed")
   }
 }, 90000)
