@@ -15,8 +15,9 @@ export async function inspectReport(file: string, format: "docx" | "pptx", saved
   if (format === "docx") expect(entries.map((entry) => entry.name)).toEqual(["word/document.xml"])
   if (format === "pptx") expect(entries.length, "More than one slide must carry the complete selected corpus").toBeGreaterThan(1)
   const physicalRows = entries.flatMap((entry) => xmlTableRows(entry.xml, format, entry.name))
-  const expectedRows = saved.sections.flatMap((section) => projection(section.content).values.map((value) => ({
+  const expectedRows = saved.sections.flatMap((section) => projection(section.content).values.map((value, index) => ({
     sectionRef: section.id,
+    sectionRow: index + 1,
     valueId: value.id,
     cells: [
       `${value.id}: ${value.value === null ? "unavailable" : String(value.value)}${value.unit ? ` ${value.unit}` : ""}${value.currency ? ` ${value.currency}` : ""}`,
@@ -72,8 +73,9 @@ function normalize(value: string) { return value.replace(/\s+/g, " ").trim() }
 function displayText(value: string) { return normalize(value.replace(/\r\n|\r|\n/g, " ↵ ")) }
 
 type Cells = [string, string, string]
-type PhysicalRow = { part: string; row: number; cells: Cells }
-type ExpectedRow = { sectionRef: string; valueId: string; cells: Cells }
+type CellParagraphs = [string[], string[], string[]]
+type PhysicalRow = { part: string; row: number; cells: Cells; paragraphs: CellParagraphs }
+type ExpectedRow = { sectionRef: string; sectionRow: number; valueId: string; cells: Cells }
 
 /** Tables retain cell boundaries; a source found elsewhere cannot satisfy a row. */
 function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): PhysicalRow[] {
@@ -82,14 +84,39 @@ function xmlTableRows(xml: string, format: "docx" | "pptx", part: string): Physi
   const rows = new RegExp(`<${namespace}:tr(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tr>`, "g")
   return [...xml.matchAll(rows)].flatMap((row, index) => {
     const cells = new RegExp(`<${namespace}:tc(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${namespace}:tc>`, "g")
-    const values = [...row[1]!.matchAll(cells)].map((cell) => xmlParagraphs(cell[1]!, format).join(""))
-    expect(values, `${format}: ${part} table row ${index + 1} must have value, period and sources cells`).toHaveLength(3)
+    const paragraphs = [...row[1]!.matchAll(cells)].map((cell) => xmlParagraphs(cell[1]!, format))
+    expect(paragraphs, `${format}: ${part} table row ${index + 1} must have value, period and sources cells`).toHaveLength(3)
+    const values = paragraphs.map((cell) => cell.join(""))
     if (values.map(normalize).join("\u0000") === ["Captured value", "Period", "Sources"].join("\u0000")) return []
-    return [{ part, row: index + 1, cells: values as Cells }]
+    return [{ part, row: index + 1, cells: values as Cells, paragraphs: paragraphs as CellParagraphs }]
   })
 }
 
-/** PPTX splits long cells into successive physical rows, including across slides. */
+/** Word continuation labels occupy a separate first paragraph in every continued cell. */
+function docxValueCells(fragment: PhysicalRow, wanted: ExpectedRow, previous: { part: string; row: number } | undefined): Cells {
+  const context = `docx: ${wanted.valueId} in ${fragment.part} row ${fragment.row}`
+  if (!previous) {
+    for (const cell of fragment.paragraphs)
+      expect(cell, context + ": the first value row has one content paragraph per cell").toHaveLength(1)
+    return fragment.cells
+  }
+  expect(fragment.part, context + ": continuation belongs to the same document").toBe(previous.part)
+  expect(fragment.row, context + ": continuation must immediately follow its value row").toBe(previous.row + 1)
+  const labels = [
+    `Record ${wanted.sectionRow} · ${wanted.valueId} (continued)`,
+    `Period: ${wanted.cells[1]} (continued)`,
+    "Sources (continued from the same captured record)",
+  ]
+  return fragment.paragraphs.map((cell, column) => {
+    expect(cell.length, context + ": every continued cell begins with its own label").toBeGreaterThanOrEqual(1)
+    expect(cell.length, context + ": only the label and optional content paragraph are admitted").toBeLessThanOrEqual(2)
+    expect(normalize(cell[0]!), context + ": exact " + ["record identity", "period", "source continuation"][column])
+      .toBe(normalize(labels[column]!))
+    return cell[1] ?? ""
+  }) as Cells
+}
+
+/** Both formats split long cells into successive physical rows; PPTX also crosses slides. */
 function reassembleValueRows(actual: PhysicalRow[], expected: ExpectedRow[], format: "docx" | "pptx") {
   let cursor = 0
   const result = expected.map((wanted) => {
@@ -98,10 +125,11 @@ function reassembleValueRows(actual: PhysicalRow[], expected: ExpectedRow[], for
     do {
       expect(cursor, `${format}: missing captured value row ${wanted.valueId}`).toBeLessThan(actual.length)
       const fragment = actual[cursor++]!
-      expect(fragment.cells.some((cell) => normalize(cell).length > 0), `${format}: empty continuation for ${wanted.valueId}`).toBe(true)
+      const values = format === "docx" ? docxValueCells(fragment, wanted, fragments.at(-1)) : fragment.cells
+      expect(values.some((cell) => normalize(cell).length > 0), `${format}: empty continuation for ${wanted.valueId}`).toBe(true)
       fragments.push({ part: fragment.part, row: fragment.row })
       for (const column of [0, 1, 2] as const) {
-        cells[column] += fragment.cells[column]
+        cells[column] += values[column]
         expect(wanted.cells[column].startsWith(normalize(cells[column])),
           `${format}: ${wanted.valueId}, ${["value", "period", "sources"][column]} differs in ${fragment.part} row ${fragment.row}`).toBe(true)
       }
