@@ -55,12 +55,21 @@ test("native Members download withholds original workbook bytes when the owner c
   expect(original.sheets["All Members"]).toHaveLength(1)
   expect(original.sheets["All Members"]![0]).toMatchObject({ Name: "Exported fixture member", Status: "Active" })
   const persisted = structuredClone(f.storage.state.dashboard)
+  // The original export audits each authorized member read before producing
+  // bytes. Egress revocation must preserve that real audit, not suppress it.
+  const memberRead = {
+    who: "actor", name: undefined, at: "2026-11-20T12:00:00Z",
+    record: "members:member-1", was: null, became: { read: true, member: "member-1" },
+  }
+  expect(persisted.audit).toEqual([memberRead])
   f.authority.revokeAfterProducer = true
   await downloadTalentMembers({ transport: f.transport, signal: controller.signal,
     current: () => f.authority.current, downloadResponse })
   expect(f.observed.sourceReads).toBe(2)
   expect(f.observed.downloaded).toHaveLength(1)
-  expect(f.storage.state.dashboard).toEqual(persisted)
+  expect(f.storage.state.dashboard).toEqual({
+    ...persisted, audit: [...persisted.audit, memberRead],
+  })
 })
 
 test("native Members download terminates an unfinished platform stream after owner revocation", async () => {
