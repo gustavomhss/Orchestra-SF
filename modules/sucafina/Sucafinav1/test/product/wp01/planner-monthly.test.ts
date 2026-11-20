@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import type { Response as BrowserResponse } from "@playwright/test"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
+import { observeNativeResponses } from "../../fixture/native-response-capture.ts"
 import { createNativeBrowserAssets } from "../native-ui-browser/browser-assets.ts"
 import { createNativeBrowserHost } from "../native-ui-browser/host.ts"
 import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
@@ -55,6 +56,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
     const driver = await launchBrowserDriver("planner-monthly")
     const errors: string[] = []
     let primaryFailure: { error: unknown } | undefined
+    let disposeResponseCapture: (() => void) | undefined
     try {
       const context = await driver.browser.newContext({ viewport: { width: 1440, height: 1000 } })
       context.setDefaultTimeout(5000)
@@ -68,9 +70,14 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       await browserExpect(forecast).toBeVisible()
       await forecast.click()
       await browserExpect(forecast).toHaveAttribute("data-active", "true")
+      const responses = await observeNativeResponses(tab, origin)
+      disposeResponseCapture = responses.dispose
       const monthlyResponse = (action: string) => (response: BrowserResponse) =>
         response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-planner" &&
         object(response.request().postDataJSON()).action === action
+      const previewCopy = responses.begin([
+        { label: "monthly preview", method: "POST", pathname: "/sucafina/planner", query: { sf: "workbench-planner" } },
+      ], 5000)
       const [preview, paste] = await Promise.all([
         tab.waitForResponse(monthlyResponse("preview")),
         // Keep the ClipboardEvent and its DataTransfer in the grid's own frame;
@@ -100,12 +107,13 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       }, previewRequest.input)
       expect(inputProof).toEqual({ browserProxy: true, storeSymbols: true, originalAccepted: true, strictProxyRejected: true,
         snapshotAccepted: true, sameJson: true, extraJsonRejected: true, extraProxyJsonRejected: true })
-      const previewBody = object(await preview.json())
+      const previewBody = object(await previewCopy.json(preview))
       expect(previewBody.status).toBe("ok")
       const reviewed = tab.getByRole("region", { name: "Producer preview by row", exact: true })
       await browserExpect(reviewed.locator('.sf-s02-preview-row[data-result="ready"]')).toHaveCount(1)
       await browserExpect(reviewed.locator("pre")).toHaveText("42\t99")
       await browserExpect(reviewed.locator("code")).toHaveText(["42", "99"])
+      previewCopy.finish()
       const before = await store.transaction("planner", async (snapshot) => ({
         commit: false, value: structuredClone(snapshot.data),
       }))
@@ -113,13 +121,16 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
         snapshot.versions["v1:lines:line"] = { version: 1, by: "another" }
         return { commit: true, value: undefined }
       })
+      const applyCopy = responses.begin([
+        { label: "monthly apply", method: "POST", pathname: "/sucafina/planner", query: { sf: "workbench-planner" } },
+      ], 5000)
       const [applied] = await Promise.all([
         tab.waitForResponse(monthlyResponse("apply")),
         reviewed.getByRole("button", { name: "Apply reviewed rows", exact: true }).click(),
       ])
       expect(object(applied.request().postDataJSON())).toEqual({ action: "apply", input: previewRequest.input })
       expect(applied.status()).toBe(200)
-      const appliedBody = object(await applied.json())
+      const appliedBody = object(await applyCopy.json(applied))
       expect(appliedBody.status).toBe("ok")
       expect(rows(object(appliedBody.value).rows)).toEqual([
         expect.objectContaining({ draft: expect.objectContaining({ rowId: "line", revision: 0 }),
@@ -128,6 +139,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       await browserExpect(reviewed.locator('.sf-s02-preview-row[data-result="conflict"]')).toHaveCount(1)
       await browserExpect(reviewed.locator("pre")).toHaveText("42\t99")
       await browserExpect(reviewed.locator("code")).toHaveText(["42", "99"])
+      applyCopy.finish()
       const after = await store.transaction("planner", async (snapshot) => ({
         commit: false, value: { data: structuredClone(snapshot.data), version: snapshot.versions["v1:lines:line"] },
       }))
@@ -139,6 +151,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       if (errors.length) console.error("SF_PLANNER_NATIVE_PAGE_ERRORS", JSON.stringify(errors))
       throw error
     } finally {
+      disposeResponseCapture?.()
       try { await driver.close() }
       catch (cleanupError) {
         if (primaryFailure)
