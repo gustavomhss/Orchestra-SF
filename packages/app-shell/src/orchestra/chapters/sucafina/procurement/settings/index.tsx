@@ -263,8 +263,9 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const bytes = new TextEncoder().encode(JSON.stringify(command))
     const hash = await crypto.subtle.digest("SHA-256", bytes)
     const digest = Array.from(new Uint8Array(hash)).map((byte) => byte.toString(16).padStart(2, "0")).join("")
-    if (disposed || view.busy || owner.generation() !== generationAtReview ||
-        owner.state().status !== "ready" || active()?.baseVersion !== command.version ||
+    if (disposed || view.busy || view.review !== action || view.reviewRef !== opRef ||
+        owner.generation() !== generationAtReview || owner.state().status !== "ready" ||
+        active()?.baseVersion !== command.version ||
         !actionAllowed(action) || !(action === "reset" ? canReset() : canReview())) return
     draft()?.setPending({
       operationRef: opRef, idempotencyKey, payloadDigest: digest, expectedVersion: command.version,
