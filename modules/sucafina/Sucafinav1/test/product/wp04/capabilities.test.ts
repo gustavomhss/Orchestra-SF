@@ -37,6 +37,7 @@ test("authorized capability reads through an issued scoped source and consumes o
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => {
       snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", status: "draft", createdBy: "a", pr: { title: "Owned", estAmount: 100 } }, version: 4, by: "a" } }, settings: { currency: "USD" }, suppliers: [], issued: { pr: ["PR-1"], po: [] } }
+      snapshot.versions["requests:PR-1"] = { version: 0, by: "a" }
       return { commit: true, value: undefined }
     })
     const request = new Request("https://local.invalid/procurement")
