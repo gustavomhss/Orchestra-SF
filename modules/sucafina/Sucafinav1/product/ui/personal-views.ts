@@ -162,10 +162,30 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
   }
   const render = () => {
     list.replaceChildren()
-    const visible = entries.filter((entry) => !(entry.view?.id || entry.id).startsWith('preferred-'))
+    const visible = entries.filter((entry) => unavailable(entry) || !entry.view.id.startsWith('preferred-'))
     visible.forEach((entry) => {
       const row = document.createElement('li')
-      if (unavailable(entry)) { row.textContent = 'A saved view is unavailable.'; list.append(row); return }
+      if (unavailable(entry)) {
+        // The host returned only opaque identity/version. Never retain the old
+        // private title, destination, filters, or an open link in this placeholder.
+        row.dataset.viewUnavailable = ''
+        if (entry.id.startsWith('preferred-')) { const heading = document.createElement('strong'); heading.textContent = 'Unavailable starting page'; row.append(heading) }
+        const message = document.createElement('p'); message.textContent = 'A saved reference is no longer available.'; row.append(message)
+        const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Remove unavailable view'
+        remove.addEventListener('click', () => { if (!closed && !pending && !busy) begin('remove', 'remove', { id: entry.id, expectedVersion: entry.version }) })
+        row.append(remove)
+        if (context && form && title && density) {
+          const replace = document.createElement('button'); replace.type = 'button'; replace.textContent = 'Replace with this page'
+          replace.addEventListener('click', () => {
+            if (closed || pending || busy || !form.reportValidity()) return
+            let filters
+            try { filters = capture() } catch { status.textContent = 'This page contains a filter that cannot yet be saved. Your view name is preserved.'; return }
+            begin('replace', 'save', { view: { id: entry.id, title: title.value.trim(), surface: context.surface, page: context.page, density: density.value, ...(Object.keys(filters).length ? { filters } : {}) }, expectedVersion: entry.version })
+          })
+          row.append(replace)
+        }
+        list.append(row); return
+      }
       const button = document.createElement('button'); button.type = 'button'; button.textContent = entry.view.title
       button.addEventListener('click', () => { void open(entry.view.id) })
       const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Remove'; remove.setAttribute('aria-label', 'Remove ' + entry.view.title)
@@ -178,7 +198,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     present()
     return visible.length
   }
-  const load = async () => {
+  const load = async (preserveStatus = false) => {
     if (closed || pending || busy) return
     const epoch = generation, sequence = ++listSequence, opening = openSequence, editing = editRevision
     try {
@@ -186,7 +206,8 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
       if (!current(epoch) || sequence !== listSequence || pending) return
       if (!Array.isArray(value) || value.some((entry) => !validRecord(entry) && !unavailable(entry))) throw new Error('invalid')
       entries = value
-      status.textContent = render() ? '' : 'No saved views yet.'
+      const count = render()
+      if (!preserveStatus) status.textContent = count ? '' : 'No saved views yet.'
       const currentId = new URL(location.href).searchParams.get('view')
       if (context && currentId && density) {
         try {
@@ -206,12 +227,13 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
         if (starting && (starting.view.page !== context.page || starting.view.filters || starting.view.period || starting.view.currency || starting.view.density)) await open(starting.view.id)
       }
     } catch {
-      if (current(epoch) && sequence === listSequence && !pending) { entries = []; list.replaceChildren(); status.textContent = 'Saved views are unavailable.' }
+      if (current(epoch) && sequence === listSequence && !pending && !preserveStatus) { entries = []; list.replaceChildren(); status.textContent = 'Saved views are unavailable.' }
     }
   }
   const mutate = async () => {
     if (!pending || busy || closed) return
     const attempt = pending, epoch = generation
+    let confirmed = false
     busy = true; restoreFrozen(); present()
     status.textContent = 'Saving the view change…'
     try {
@@ -225,11 +247,12 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
       entries = entries.filter((entry) => (entry.view?.id || entry.id) !== id)
       if (attempt.action === 'save') entries.push(value)
       listSequence++; openSequence++
-      if (attempt.kind === 'save' && form && title) { title.value = ''; delete form.dataset.dirty }
+      if (['save', 'replace'].includes(attempt.kind) && form && title) { title.value = ''; delete form.dataset.dirty }
       attempt.body = ''; attempt.input = undefined
       pending = undefined; frozen.clear()
       render()
-      status.textContent = attempt.kind === 'remove' ? 'Saved view removed.' : attempt.kind === 'preferred' ? 'Starting page saved.' : 'View saved.'
+      status.textContent = attempt.kind === 'remove' ? 'Saved view removed.' : attempt.kind === 'preferred' ? 'Starting page saved.' : attempt.kind === 'replace' ? 'Saved view replaced with the current page and filters.' : 'View saved.'
+      confirmed = true
     } catch (error) {
       if (!current(epoch) || pending !== attempt) return
       if (error.message === 'rejected' && !attempt.uncertain) {
@@ -240,7 +263,12 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
         status.textContent = 'The previous change is unconfirmed. Retry the same request to reconcile it before editing.'
       }
     } finally {
-      if (current(epoch)) { busy = false; present() }
+      if (current(epoch)) {
+        busy = false; present()
+        // The typed acknowledgement is already visible. A current list refresh
+        // cannot hold that confirmation hostage to a later incomplete body.
+        if (confirmed) void load(true)
+      }
     }
   }
   const begin = (kind, action, input) => {
