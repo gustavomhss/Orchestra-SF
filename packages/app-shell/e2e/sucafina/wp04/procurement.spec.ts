@@ -20,9 +20,7 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
   const response = await page.request.get(enrollment, { maxRedirects: 0 })
   expect(response.status()).toBe(303)
-  const nativeOrigin = new URL(selected.baseURL)
-  nativeOrigin.port = "3000"
-  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", nativeOrigin).href)
+  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
   // UNBOUND: the Requests chapter does not expose the C02 provenance anchors.
@@ -47,9 +45,7 @@ function responseFor(page: Page, action: string, id?: string) {
 }
 
 async function createDraft(page: Page, account: Account, title: string) {
-  const nativeOrigin = new URL(account.baseURL)
-  nativeOrigin.port = "3000"
-  await page.goto(new URL("/orchestra/sf-procurement/requests/new", nativeOrigin).href)
+  await page.goto(new URL("/orchestra/sf-procurement/requests/new", account.baseURL).href)
   const form = page.locator("article.sf-u11-detail").locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
@@ -86,7 +82,6 @@ async function openRecord(page: Page, account: Account, id: string) {
   expect(id).toMatch(/^PR-2026-\d+$/)
   const encoded = encodeSfRouteRef(id)
   const nativeOrigin = new URL(account.baseURL)
-  nativeOrigin.port = "3000"
   await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, nativeOrigin).href)
   await expect(page).toHaveURL((url) => url.origin === nativeOrigin.origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const row = page.locator(`tr[data-sf-row="${id}"]`)
