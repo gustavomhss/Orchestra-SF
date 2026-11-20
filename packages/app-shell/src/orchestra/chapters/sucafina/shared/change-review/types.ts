@@ -1,5 +1,5 @@
-import type { SfIntentRef, SfOperationRef, SfRef, SfVersion } from "../../../../../../../schema/src/sucafina/context"
-import type { SfOperationId } from "../../../../../../../schema/src/sucafina/common"
+import type { SfIntentRef, SfOperationRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
+import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import type {
   SfCopyKey, SfCoverage, SfDisplayValue, SfMessage, SfSource,
   SfText, SfUiState,
