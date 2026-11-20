@@ -38,6 +38,10 @@ export const SF_U39_COPY = {
   "sf.u39.saveLabel": "Save",
   "sf.u39.filter": "Name",
   "sf.u39.cancel": "Cancel",
+  "sf.u39.loadCurrent": "Load current version and keep my edits",
+  "sf.u39.savedLater": "Submitted changes saved. Later edits are still unsaved.",
+  "sf.u39.savedReadPending": "The save was confirmed. Read the current source before continuing.",
+  "sf.u39.yearAmountInvalid": "Enter a nonnegative year amount or clear the field.",
 } as const
 
 export const SF_U39_COPY_BR: Record<keyof typeof SF_U39_COPY, string> = {
@@ -78,4 +82,8 @@ export const SF_U39_COPY_BR: Record<keyof typeof SF_U39_COPY, string> = {
   "sf.u39.saveLabel": "Save",
   "sf.u39.filter": "Name",
   "sf.u39.cancel": "Cancel",
+  "sf.u39.loadCurrent": "Carregar versão atual e manter minhas alterações",
+  "sf.u39.savedLater": "Alterações enviadas salvas. Edições posteriores ainda não foram salvas.",
+  "sf.u39.savedReadPending": "O salvamento foi confirmado. Leia a fonte atual antes de continuar.",
+  "sf.u39.yearAmountInvalid": "Informe um valor anual não negativo ou limpe o campo.",
 }
