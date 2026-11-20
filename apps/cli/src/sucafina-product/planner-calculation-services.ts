@@ -146,6 +146,7 @@ export function createSfPlannerCalculationServices(input: {
   const issueObserved = async <Value>(runId: string, call: TrustedDomainContext,
     finish: (reference: Calculation, observed: SfCalculationObservedReads | undefined) => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
+    if (!readRoot.allows(call)) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
     // Bound the selector admission too: canonical readers may resolve ancestors
     // before the producer's own replay guard starts.
     const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), parent = replaying.getStore()
@@ -165,7 +166,7 @@ export function createSfPlannerCalculationServices(input: {
         // turn a precise scope refusal into a generic unavailable request.
         return await input.withCalculationCase<Value>(call, selected.value.stored.caseRef, async () => {
           if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
-          let preparedRoot: Awaited<ReturnType<typeof readRoot>> | undefined
+          let preparedRoot: Awaited<ReturnType<typeof readRoot.prepare>> | undefined
           // A direct issue keeps its existing concurrency and observation order.
           // Ancestry selects this physical optimization; it never grants access.
           if (call.kind === "ui" && parent?.open && parent.call === call && parent.request === request &&
@@ -178,19 +179,22 @@ export function createSfPlannerCalculationServices(input: {
             if (preparedInput.ok && records) {
               const stateReader = rootState.read, resultReader = rootResults.readForCalculation
               const selectedDigest = digestSfValue(selected.value)
-              const sameReaders = () => current() && parent.open && parent.call === call && parent.request === request &&
+              const sameOwner = () => scope.open && !request.signal.aborted && input.host.requestFor(call) === request &&
+                requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding &&
+                parent.open && parent.call === call && parent.request === request &&
                 parent.requestDigest === requestDigest && parent.binding === binding && input.host === rootHost &&
                 input.state === rootState && input.results === rootResults && input.sources === rootSources &&
                 rootState.read === stateReader && rootResults.readForCalculation === resultReader &&
                 rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader &&
                 digestSfValue(selected.value) === selectedDigest
+              const sameReaders = () => current() && sameOwner()
               // Materializing readers finish before the original witness takes
               // its baseline. An existing C08 root skips this preparation.
-              preparedRoot = await readRoot(call, async () => {
+              preparedRoot = await readRoot.prepare(call, async () => {
                 if (!await freshRecordSources(records, call) || !sameReaders()) return false
-                const coverage = await coverageReader.call(rootSources, preparedInput.value.baseRef, call)
+                const coverage = await coverageReader(preparedInput.value.baseRef, call)
                 return coverage.status === "ok" && sameReaders()
-              }, sameReaders)
+              }, sameReaders, sameOwner)
               if (!preparedRoot) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
             }
           }
