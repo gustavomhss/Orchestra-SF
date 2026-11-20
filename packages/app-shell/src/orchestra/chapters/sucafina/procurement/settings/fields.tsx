@@ -165,7 +165,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                 <input id={id("level", "threshold", index())} type="number" step="any"
                   value={numberText(row.threshold)} disabled={props.disabled}
                   onInput={(event) => changeLevel(index(), {
-                    threshold: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                    threshold: numericInput(event.currentTarget.value),
                   })} />
               </div>
               <div class="sf-n21-field">
@@ -202,7 +202,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                 <input id={id("fx", "rate", index())} type="number" step="any"
                   value={numberText(rate.rate)} disabled={props.disabled}
                   onInput={(event) => changeRate(index(), {
-                    rate: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                    rate: numericInput(event.currentTarget.value),
                   })} />
               </div>
               {removeButton("fxRates", index())}
@@ -229,7 +229,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                   <input id={id(group, "weight", index())} type="number" step="any"
                     disabled={props.disabled} value={numberText(criterion.weight)}
                     onInput={(event) => changeCriterion(group, index(), {
-                      weight: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                      weight: numericInput(event.currentTarget.value),
                     })} />
                 </div>
                 <Show when={group === "commCriteria" && ("auto" in criterion)}>
