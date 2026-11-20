@@ -1,4 +1,4 @@
-import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+import { requireApplicationAttempts } from "../application-attempt-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -169,7 +169,7 @@ test("portfolio handoff prepares two WP11 changes and resumes after pre-dispatch
     if (partial.status !== "ok") return
     expect(partial.value.case.state).toBe("partially-applied")
     expect(await amounts()).toEqual([40, 50])
-    const beforeDispatch = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }))
+    const beforeDispatch = await state.read(admittedRequest, "cases", (productState, authority) => requireApplicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, authority))
     expect(beforeDispatch.status).toBe("ok")
     expect(beforeDispatch.status === "ok" && beforeDispatch.value).toEqual([])
     domain.procurementFails = false
@@ -182,10 +182,10 @@ test("portfolio handoff prepares two WP11 changes and resumes after pre-dispatch
     const completed = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(completed.status).toBe("ok")
     if (completed.status === "ok") expect(completed.value.case.state).toBe("applied")
-    const durable = await state.read(admittedRequest, "receipts", (productState) => ({
+    const durable = await state.read(admittedRequest, "receipts", (productState, authority) => ({
       receipts: Object.values(productState.receipts),
       proofs: saved.value!.preparedChanges.map((change) => productState.transactions[receiptProofTransactionKey("principal", change.target.id, change.idempotencyKey)]),
-      attempts: saved.value!.preparedChanges.map((change) => applicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value!.version }, changeId: change.id, choiceId: choice.id })),
+      attempts: saved.value!.preparedChanges.map((change) => requireApplicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value!.version }, changeId: change.id, choiceId: choice.id }, authority)),
       choice: productState.cases[decision.id]?.choices[0],
     }))
     expect(durable.status).toBe("ok")

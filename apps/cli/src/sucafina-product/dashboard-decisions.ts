@@ -408,7 +408,7 @@ export function createSfDashboardDecisions(input: {
         return decision && decision.incarnation === request.caseRef.incarnation && decision.participants.includes(authority.principalRef) && prior ? { ambiguous: false as const, prior, decision } : undefined
       })
       if (previous.status === "ok" && previous.value?.ambiguous) return { status: "unavailable", reason: "hot-topic-preparation-provenance-unavailable" }
-      if (previous.status === "ok" && previous.value) {
+      if (previous.status === "ok" && previous.value?.ambiguous === false) {
         if (previous.value.prior.commandDigest !== digestSfValue(request)) return { status: "conflict", reason: "idempotency-content-changed" }
         const saved = object(previous.value.prior.value)
         const savedRef = object(saved.caseRef)

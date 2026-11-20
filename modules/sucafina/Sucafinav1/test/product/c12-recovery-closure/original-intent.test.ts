@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
-import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+import { requireApplicationAttempts } from "../application-attempt-fixture.ts"
 import { openPlannerRecoveryFixture } from "./planner-fixture.ts"
 
 test("C12 recovery refuses material or choice replacement even when the original claimed digests and keys are retained", async () => {
@@ -80,7 +80,7 @@ test("C12 a lost reservation without a receipt remains indeterminate and never r
     fixture.faults.afterReservationCommit = () => { throw new Error("C12_LOST_RESERVATION_ACK_BEFORE_DOMAIN_DISPATCH") }
     expect(await fixture.apply(ready.original)).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
     const reserved = await fixture.observe()
-    expect(applicationAttempts(reserved.state, ready.request)).toHaveLength(1)
+    expect(await fixture.readProduct((state, authority) => requireApplicationAttempts(state, ready.request, authority))).toHaveLength(1)
     expect(reserved.domain).toEqual(initial.domain)
     expect(reserved.decision).toEqual(initial.decision)
     expect(Object.values(reserved.state.receipts)).toHaveLength(0)

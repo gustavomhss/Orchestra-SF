@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+import { requireApplicationAttempts } from "../application-attempt-fixture.ts"
 import { receiptProofTransactionKey } from "../../../product/decisions/receipt-review-binding.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { openPlannerRecoveryFixture } from "./planner-fixture.ts"
@@ -26,7 +26,7 @@ test("C12 original domain receipt survives lost response, authority reopen and u
     const version = rows(committed.domain.data.versions).find((value) => value.id === "v1")!
     expect((object(rows(version.lines)[0]).f as number[])[0]).toBe(42)
     expect(fixture.counters).toMatchObject({ dispatch: 1, domainExecutions: 1, receiptCommits: 1, reservationCommits: 1, caseReconciliations: 0 })
-    expect(applicationAttempts(committed.state, ready.request)).toHaveLength(1)
+    expect(await fixture.readProduct((state, authority) => requireApplicationAttempts(state, ready.request, authority))).toHaveLength(1)
     const originalProof = committed.state.transactions[receiptProofTransactionKey("finance", ready.change.target.id, ready.change.idempotencyKey)]!
     expect(originalProof.value).toEqual(original)
     const oldContext = await fixture.admitApply(ready.original)

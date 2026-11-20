@@ -78,7 +78,7 @@ export function createSfReviewCollaboration(input: {
     if (!request || !snapshots || snapshots.call(host.persistence) || !localRecordReview(review) || !isReviewThreadContext(pin) ||
       digestSfValue(review) !== pin.reviewDigest || !current() || !await revalidate.call(host, call)) return unavailable()
     const snapshot = async () => {
-      const checked = await readState.call(state, request, "reviews", async (_state, actor) => {
+      const checked = await readState(request, "reviews", async (_state, actor) => {
         if (!current() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
           actor.policyVersion !== call.binding.policyVersion) return undefined
         const held = snapshots.call(host.persistence)

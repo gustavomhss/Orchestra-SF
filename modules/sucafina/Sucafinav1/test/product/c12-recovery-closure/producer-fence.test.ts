@@ -40,10 +40,10 @@ test("C12 direct producer requires private review admission and replays only its
     expect(fixture.counters.receiptCommits).toBe(1)
     expect(fixture.counters.caseReconciliations).toBe(0)
     // These are read-only challenges to a real C08 proof, not fabricated receipts.
-    expect(receiptProofMatches(after.state, ready.change.target, receipt, "finance")).toBe(true)
-    expect(receiptProofMatches(after.state, { ...ready.change.target, id: "v0" }, receipt, "finance")).toBe(false)
-    expect(receiptProofMatches(after.state, { ...ready.change.target, incarnation: "recreated-target" }, receipt, "finance")).toBe(false)
-    expect(receiptProofMatches(after.state, ready.change.target, receipt, "other")).toBe(false)
+    expect(await fixture.readProduct((state, authority) => receiptProofMatches(state, ready.change.target, receipt, authority), "finance")).toBe(true)
+    expect(await fixture.readProduct((state, authority) => receiptProofMatches(state, { ...ready.change.target, id: "v0" }, receipt, authority), "finance")).toBe(false)
+    expect(await fixture.readProduct((state, authority) => receiptProofMatches(state, { ...ready.change.target, incarnation: "recreated-target" }, receipt, authority), "finance")).toBe(false)
+    expect(await fixture.readProduct((state, authority) => receiptProofMatches(state, ready.change.target, receipt, authority), "other")).toBe(false)
 
     expect(await fixture.producer.executePrepared(ready.request, await fixture.admitApply(ready.original, "finance", "fresh-authentic-retry")))
       .toEqual(applied)
@@ -93,7 +93,7 @@ test("C12 direct producer refuses a genuine domain receipt committed by C08 unde
     expect(proofs).toHaveLength(1)
     expect(proofs[0]!.value).toEqual(receipts[0])
     expect(proofs[0]!.scopeDigest).toBe(digestSfValue({ namespaces: ["receipts"], domainSurface: "planner" }))
-    expect(receiptProofMatches(committed.state, ready.change.target, receipts[0]!, "finance")).toBe(false)
+    expect(await fixture.readProduct((state, authority) => receiptProofMatches(state, ready.change.target, receipts[0]!, authority), "finance")).toBe(false)
     expect(committed.domain.versions["v1:lines:line"]?.version).toBe(1)
     expect(committed.domain.audit.length).toBe(before.domain.audit.length + 1)
     expect(committed.decision!.receipts).toHaveLength(0)
