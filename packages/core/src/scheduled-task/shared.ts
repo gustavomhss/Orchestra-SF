@@ -1,6 +1,6 @@
 export * as ScheduledTaskShared from "./shared"
 
-import { and, desc, eq, inArray } from "drizzle-orm"
+import { and, desc, eq, inArray, isNull, ne, or } from "drizzle-orm"
 import { Effect, Schema } from "effect"
 import type { ScheduledTask } from "@orchestra/schema/scheduled-task"
 import type { Database } from "../database/database"
@@ -44,6 +44,8 @@ export type Outcome =
   | { type: "void" }
 
 export const LEGACY = eq(ScheduledTaskTable.policy, "legacy-browser")
+// A removed capability keeps its immutable task identity and reservations outside active operations.
+export const ACTIVE = or(isNull(ScheduledTaskTable.disabled_reason), ne(ScheduledTaskTable.disabled_reason, "removed"))
 
 export type Store = ReturnType<typeof store>
 
@@ -88,7 +90,7 @@ export function store(db: Database.Interface["db"], lease: string) {
     db
       .update(ScheduledTaskTable)
       .set({ ...set, time_updated: now })
-      .where(eq(ScheduledTaskTable.id, task.id))
+      .where(and(eq(ScheduledTaskTable.id, task.id), ACTIVE))
       .run()
 
   const claim = Effect.fn("ScheduledTask.claim")(function* (

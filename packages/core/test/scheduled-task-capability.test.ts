@@ -415,7 +415,20 @@ describe("ScheduledTask capability voided and revoked claims", () => {
       yield* tasks.tick
       yield* db.run(sql.raw("DROP TRIGGER pause_on_claim")).pipe(Effect.orDie)
       expect(yield* inputs).toHaveLength(0)
-      expect(yield* runRows).toEqual([])
+      // CHANGE_EXPECTATION: Teams Profile WP4 preserves effect-frontier reservations.
+      // The old empty-ledger assertion permitted this exact slot to be dispatched again.
+      expect((yield* runRows).map((row) => [row.slot, row.state])).toEqual([[slot, "revoked"]])
+      expect(yield* sessions.get(slotIDs(created.id, 0, slot).session).pipe(Effect.flip)).toBeInstanceOf(
+        SessionV2.NotFoundError,
+      )
+      // Simulate a stale scheduler view restoring this already-reserved slot. The ledger,
+      // independently of the display schedule, must still prevent a Session or prompt.
+      yield* db.update(ScheduledTaskTable).set({ enabled: true, next: slot })
+        .where(eq(ScheduledTaskTable.id, created.id)).run().pipe(Effect.orDie)
+      yield* tasks.tick
+      expect(yield* inputs).toHaveLength(0)
+      expect(wakes).toEqual([])
+      expect((yield* runRows).map((row) => [row.slot, row.state])).toEqual([[slot, "revoked"]])
       expect(yield* sessions.get(slotIDs(created.id, 0, slot).session).pipe(Effect.flip)).toBeInstanceOf(
         SessionV2.NotFoundError,
       )
@@ -545,6 +558,96 @@ describe("ScheduledTask capability isolation", () => {
         ["scheduled_task_run_manual_idx", 1],
         ["scheduled_task_run_slot_idx", 1],
       ])
+    }),
+  )
+})
+
+describe("ScheduledTask permanent capability ledger", () => {
+  it.effect("keeps more than twenty manual reservations and never redispatches the first key, even after Session deletion", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(start)
+      const tasks = yield* ScheduledTask.Service
+      const sessions = yield* SessionV2.Service
+      const owner = yield* ownerSession()
+      const created = yield* tasks.capability.create(owner, hourly)
+      const results: { sessionID: SessionV2.ID; reused: boolean }[] = []
+      for (let index = 0; index < 26; index++) {
+        results.push(yield* tasks.capability.run(owner, created.id, "permanent-" + index))
+        yield* TestClock.adjust(1)
+      }
+      const first = results[0]
+      if (!first) throw new Error("First admitted run required")
+      expect((yield* runRows).length).toBe(26)
+      expect((yield* inputs).length).toBe(26)
+      expect(wakes.length).toBe(26)
+      expect(yield* tasks.capability.run(owner, created.id, "permanent-0"))
+        .toEqual({ sessionID: first.sessionID, reused: true })
+      yield* sessions.remove(first.sessionID)
+      expect(yield* tasks.capability.run(owner, created.id, "permanent-0"))
+        .toEqual({ sessionID: first.sessionID, reused: true })
+      expect(wakes.length).toBe(26)
+      expect((yield* runRows).length).toBe(26)
+      expect((yield* runRows).find((row) => row.manual_key === "permanent-0")?.session_id).toBe(first.sessionID)
+      expect(yield* sessions.get(first.sessionID).pipe(Effect.flip)).toBeInstanceOf(SessionV2.NotFoundError)
+    }),
+  )
+
+  it.effect("removal after prompt admission retains the honest receipt and leaves the task tombstone immutable", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(start)
+      const tasks = yield* ScheduledTask.Service
+      const { db } = yield* Database.Service
+      const owner = yield* ownerSession()
+      const created = yield* tasks.capability.create(owner, hourly)
+      let removed: typeof ScheduledTaskTable.$inferSelect | undefined
+      hook.onWake = Effect.gen(function* () {
+        yield* tasks.capability.remove(owner, created.id)
+        removed = yield* db.select().from(ScheduledTaskTable).where(eq(ScheduledTaskTable.id, created.id)).get().pipe(Effect.orDie)
+      }).pipe(Effect.orDie)
+      const result = yield* tasks.capability.run(owner, created.id, "admitted-before-removal")
+      expect(result.reused).toBe(false)
+      expect(wakes).toEqual([result.sessionID])
+      expect((yield* inputs).map((row) => row.session_id)).toEqual([result.sessionID])
+      if (!removed) throw new Error("Removal must retain the original task")
+      expect(removed).toMatchObject({ id: created.id, owner, enabled: false, disabled_reason: "removed", revision: 1 })
+      expect(yield* db.select().from(ScheduledTaskTable).where(eq(ScheduledTaskTable.id, created.id)).get().pipe(Effect.orDie))
+        .toEqual(removed)
+      expect((yield* runRows).map((row) => [row.manual_key, row.state, row.session_id]))
+        .toEqual([["admitted-before-removal", "started", result.sessionID]])
+      expect(yield* tasks.capability.list(owner)).toEqual([])
+      expect(yield* tasks.capability.placed(owner)).toEqual([])
+      const deniedCalls: readonly Effect.Effect<unknown, ScheduledTask.NotFoundError | ScheduledTask.InvalidError | ScheduledTask.RunError>[] = [
+        tasks.capability.get(owner, created.id),
+        tasks.capability.resume(owner, created.id),
+        tasks.capability.update(owner, created.id, { name: "Must not revive" }),
+        tasks.capability.run(owner, created.id, "admitted-before-removal"),
+        tasks.capability.run(owner, created.id, "new-key-after-removal"),
+      ]
+      for (const denied of deniedCalls) expect(yield* denied.pipe(Effect.flip)).toBeInstanceOf(ScheduledTask.NotFoundError)
+      expect(wakes).toEqual([result.sessionID])
+    }),
+  )
+
+  it.effect("an actual edit before manual admission retains the key forever while a new invocation can still run", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(start)
+      const tasks = yield* ScheduledTask.Service
+      const owner = yield* ownerSession()
+      const created = yield* tasks.capability.create(owner, hourly)
+      hook.beforeResolve = tasks.capability.update(owner, created.id, { name: "Edited before admission" }).pipe(Effect.asVoid, Effect.orDie)
+      expect(yield* tasks.capability.run(owner, created.id, "revoked-manual").pipe(Effect.flip))
+        .toBeInstanceOf(ScheduledTask.RunError)
+      expect(yield* inputs).toEqual([])
+      expect(wakes).toEqual([])
+      expect((yield* runRows).map((row) => [row.manual_key, row.state])).toEqual([["revoked-manual", "revoked"]])
+      expect(yield* tasks.capability.run(owner, created.id, "revoked-manual").pipe(Effect.flip))
+        .toBeInstanceOf(ScheduledTask.RunError)
+      expect(yield* inputs).toEqual([])
+      expect(wakes).toEqual([])
+      const fresh = yield* tasks.capability.run(owner, created.id, "different-invocation")
+      expect(fresh.reused).toBe(false)
+      expect(wakes).toEqual([fresh.sessionID])
+      expect((yield* runRows).map((row) => row.state).sort()).toEqual(["revoked", "started"])
     }),
   )
 })

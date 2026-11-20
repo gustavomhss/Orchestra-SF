@@ -23,15 +23,16 @@ export type ID = ScheduledTask.ID
 export const Info = ScheduledTask.Info
 export type Info = ScheduledTask.Info
 
-// A running claim older than this belongs to a process that stopped mid-dispatch. Dispatch is a few local
-// writes, so a live process settles long before.
+// Recovery timing for a proven technical store only. Expiry is not corporate
+// authority or evidence that an external effect did not occur.
 export const LEASE = 120_000
 export const TICK = Duration.seconds(15)
 const TICK_MILLIS = Duration.toMillis(TICK)
 // The daemon never sleeps longer than this while something is scheduled, so a clock that jumped or a machine that
 // slept is noticed within a minute.
 const SLEEP_LIMIT = 60_000
-// Settled runs kept per task. Only the latest is shown; a slot can no longer run once the task moved past it.
+// Display history retained for the technical legacy policy only. Capability intent
+// reservations are permanent; pruning them would allow an old invocation to dispatch again.
 const KEEP = 20
 
 export const NotFoundError = ScheduledTaskShared.NotFoundError
@@ -206,10 +207,15 @@ const layer = Layer.effect(
               .set({ state: "started", session_id: outcome.sessionID, error: null, time_settled: now })
               .where(eq(ScheduledTaskRunTable.id, run.id))
               .run()
-          // Gone with its task, taken over after the lease ended (the new lease settles it), or revoked by an edit.
+          // Legacy task deleted, claim taken over (the current holder settles it), or revoked by an edit.
           if (run?.state !== "running" || run.owner !== lease) return
-          if (outcome.type === "void")
+          if (outcome.type === "void") {
+            if (claimed.task.policy === "capability")
+              return yield* db.update(ScheduledTaskRunTable)
+                .set({ state: "revoked", error: "reservation retained without admission", owner: null, time_settled: now })
+                .where(eq(ScheduledTaskRunTable.id, run.id)).run()
             return yield* db.delete(ScheduledTaskRunTable).where(eq(ScheduledTaskRunTable.id, run.id)).run()
+          }
           yield* db
             .update(ScheduledTaskRunTable)
             .set({
@@ -222,8 +228,11 @@ const layer = Layer.effect(
             .run()
           const task = yield* find(claimed.task.id)
           if (!task) return
-          if (task.policy === "capability")
-            yield* advance(task, ScheduledTaskCapability.settledCapability(task, run, outcome), now)
+          if (task.policy === "capability") {
+            if (task.disabled_reason !== "removed")
+              yield* advance(task, ScheduledTaskCapability.settledCapability(task, run, outcome), now)
+            return
+          }
           if (legacy(task)) {
             // The task still points at (or before) the served slot unless it was rescheduled while the run
             // started; then the run counts as an extra run and the task keeps its new time.
@@ -275,8 +284,9 @@ const layer = Layer.effect(
     })
 
     // Only a claim whose prompt was admitted happened. It is finished with the exact retry a client would send,
-    // which reconciles the admitted prompt and wakes the Session. A claim that never reached admission is void,
-    // and its slot is planned again.
+    // which reconciles the admitted prompt and wakes the Session. Capability reservations
+    // without observed admission remain terminal. Removed tasks reconcile durable admission
+    // without waking or dispatching again; legacy device slots retain their old retry policy.
     const takeOver = Effect.fn("ScheduledTask.takeOver")(function* (stale: RunRow, now: number) {
       const claimed = yield* immediate(
         Effect.gen(function* () {
@@ -301,6 +311,10 @@ const layer = Layer.effect(
       if (!claimed) return
       const admitted = yield* SessionInput.find(db, claimed.messageID)
       if (!admitted) return yield* settle(claimed, { type: "void" })
+      if (admitted.sessionID !== claimed.sessionID)
+        return yield* Effect.die(new Error("Scheduled task admission conflicts with its retained reservation"))
+      if (claimed.task.policy === "capability" && claimed.task.disabled_reason === "removed")
+        return yield* settle(claimed, { type: "started", sessionID: admitted.sessionID })
       const retried = yield* dispatch(claimed, true)
       if (retried.type !== "started") yield* Effect.logWarning("Scheduled run retry failed", retried)
       yield* settle(claimed, { type: "started", sessionID: admitted.sessionID })
@@ -318,7 +332,7 @@ const layer = Layer.effect(
       const due = yield* db
         .select({ id: ScheduledTaskTable.id })
         .from(ScheduledTaskTable)
-        .where(and(eq(ScheduledTaskTable.enabled, true), lte(ScheduledTaskTable.next, now)))
+        .where(and(eq(ScheduledTaskTable.enabled, true), lte(ScheduledTaskTable.next, now), ScheduledTaskShared.ACTIVE))
         .all()
         .pipe(Effect.orDie)
       yield* Effect.forEach(due, (task) => serve(task.id, now).pipe(Effect.catchCause(logFailure)), { discard: true })
@@ -332,7 +346,7 @@ const layer = Layer.effect(
       const next = yield* db
         .select({ at: min(ScheduledTaskTable.next) })
         .from(ScheduledTaskTable)
-        .where(eq(ScheduledTaskTable.enabled, true))
+        .where(and(eq(ScheduledTaskTable.enabled, true), ScheduledTaskShared.ACTIVE))
         .get()
         .pipe(Effect.orDie)
       const claimed = yield* db

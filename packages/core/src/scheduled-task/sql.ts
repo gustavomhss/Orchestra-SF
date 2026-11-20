@@ -32,7 +32,7 @@ export const ScheduledTaskTable = sqliteTable(
     repeat_limit: integer(),
     // Slots never run because a later slot overtook them or the catch-up policy skipped them.
     skipped: integer().notNull().default(0),
-    disabled_reason: text().$type<"exhausted" | "owner-missing">(),
+    disabled_reason: text().$type<"exhausted" | "owner-missing" | "removed">(),
     ...Timestamps,
   },
   (table) => [
