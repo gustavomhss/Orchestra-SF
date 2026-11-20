@@ -64,7 +64,7 @@ export async function seedLegacyChange(fixture: Fixture, amount: number) {
   const version = (await fixture.material()).version.version
   const operation: PreparedCommand = {
     id: "legacy-operation", target, expectedVersion: version, idempotencyKey: "legacy-operation",
-    command: { page: "Requests", action: "save", id: target.id, version, values: { pr: { estAmount: amount } } },
+    command: { page: "Requests", action: "save", id: target.id, version, confirmed: false, values: { pr: { estAmount: amount } } },
     commandDigest: digestSfValue({ fixture: "legacy-ignored-pr-intent", target, amount, version }), requiredAuthority: ["procurement:write"],
     preview: { ...projection.value, values: projection.value.values.map((value) => ({ ...value, evidenceState: value.value === null ? "absent" as const : "hypothetical" as const })) },
   }
