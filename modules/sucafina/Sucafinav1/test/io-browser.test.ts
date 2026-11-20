@@ -11,14 +11,17 @@ import { expect } from "@playwright/test"
 import type { Locator, Page, Response } from "@playwright/test"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
+import { observeNativeResponses } from "./fixture/native-response-capture.ts"
 
 test("browser previews/applies Planner XLSX and exports persisted monthly values and totals", async () => {
   expectSpawn(import.meta.path)
   console.info("browser IO: opening private native installation")
   const fixture = await localBrowser({ nativePlanner: true })
+  let responses: Awaited<ReturnType<typeof observeNativeResponses>> | undefined
   try {
     const page = fixture.page
     const origin = new URL(page.url()).origin
+    responses = await observeNativeResponses(page, origin)
     page.setDefaultTimeout(10000)
     page.on("dialog", (dialog) => dialog.accept())
     const nativePage = (response: Response, capability: string) => {
@@ -31,6 +34,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
       return response.request().method() === method && url.origin === origin &&
         url.pathname === "/sucafina/planner" && url.searchParams.get("sf") === mode
     }
+    const contextScope = responses.begin([
+      { label: "Planner owner context", method: "GET", pathname: "/sucafina/api/ui/context" },
+    ])
     const [contextResponse, document] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -41,12 +47,13 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     ])
     expect(document?.status()).toBe(200)
     expect(contextResponse.status()).toBe(200)
-    const context = Schema.decodeUnknownSync(SfContextResult)(await contextResponse.json())
+    const context = Schema.decodeUnknownSync(SfContextResult)(await contextScope.json(contextResponse))
     expect(context.status).toBe("ok")
     if (context.status !== "ok") throw new Error("Original local operator context was not admitted")
     expect(context.value.authMode).toBe("local-operator")
     expect(context.value.stamp.principalRef).toBe(fixture.actorId)
     await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
+    contextScope.finish()
     const versions = page.locator('[data-sf-surface="CAP23"]')
     const create = versions.getByRole("button", { name: "Create first version", exact: true })
     await expect(create).toBeVisible()
@@ -55,6 +62,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const confirm = versions.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Confirm", exact: true })
     await expect(confirm).toBeVisible()
     await expect(confirm).toBeEnabled()
+    const saveScope = responses.begin([
+      { label: "Versions save", method: "POST", pathname: "/sucafina/planner", query: { page: "Versions" } },
+    ])
     const [saved] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -66,13 +76,17 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
       confirm.click(),
     ])
     expect(saved.status()).toBe(200)
-    expect(await saved.json()).toMatchObject({ ok: true })
+    expect(await saveScope.json(saved)).toMatchObject({ ok: true })
+    saveScope.finish()
     await page.reload()
+    const initialScope = responses.begin([
+      { label: "Planner before import", method: "GET", pathname: "/sucafina/api/ui/pages/CAP18" },
+    ])
     const [initialResponse] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP18"), { timeout: 10000 }),
       page.goto(origin + "/orchestra/sf-planner/opex"),
     ])
-    const initial = await plannerIoProjection(initialResponse)
+    const initial = await plannerIoProjection(initialResponse, () => initialScope.json(initialResponse))
     expect(initial.data.selectedVersion).toBeDefined()
     const versionId = initial.data.selectedVersion!.id
     const book = new Workbook()
@@ -83,15 +97,19 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     // original INSTREAM/PING/EICAR fixture stays in localBrowser; this is not AV qualification.
     const importLink = page.getByRole("link", { name: "Import workbook", exact: true })
     await expect(importLink).toBeVisible()
+    initialScope.finish()
     await importLink.click()
     const imports = page.locator('.sf-files[data-sf-surface="UI55"]')
     await expect(imports).toBeVisible()
+    const targetsScope = responses.begin([
+      { label: "Planner import destinations", method: "GET", pathname: "/sucafina/planner", query: { sf: "import-targets" } },
+    ])
     const [targetResponse] = await Promise.all([
       page.waitForResponse((response) => fileResponse(response, "import-targets", "GET"), { timeout: 10000 }),
       imports.getByRole("button", { name: "Find destinations", exact: true }).click(),
     ])
     expect(targetResponse.status()).toBe(200)
-    const targets = Schema.decodeUnknownSync(SfFiles.operations["files.import-targets"].output)(await targetResponse.json())
+    const targets = Schema.decodeUnknownSync(SfFiles.operations["files.import-targets"].output)(await targetsScope.json(targetResponse))
     expect(targets.status).toBe("ok")
     if (targets.status !== "ok") throw new Error("Original Planner import destinations were not admitted")
     expect(targets.value).toHaveLength(1)
@@ -99,6 +117,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(target.surface).toBe("planner")
     expect(target.label).toBe(initial.data.selectedVersion!.name)
     await imports.getByLabel("Destination", { exact: true }).selectOption(target.selectionRef)
+    targetsScope.finish()
     const plannerBytes = Buffer.from(await book.xlsx.writeBuffer())
     const plannerFile = path.join(fixture.root, "browser-opex.xlsx")
     await Bun.write(plannerFile, plannerBytes)
@@ -106,6 +125,11 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const previewControl = imports.getByRole("button", { name: "Generate preview", exact: true })
     await expect(previewControl).toBeVisible()
     await expect(previewControl).toBeEnabled()
+    const previewScope = responses.begin([
+      { label: "Planner workbook admission", method: "POST", pathname: "/sucafina/planner", query: { sf: "import-admit" } },
+      { label: "Planner workbook preview", method: "POST", pathname: "/sucafina/planner", query: { sf: "import-preview" } },
+      { label: "Planner preview reference", method: "GET", pathname: "/sucafina/planner", query: { sf: "import-reference" } },
+    ])
     const [admittedResponse, previewResponse, referenceResponse] = await Promise.all([
       page.waitForResponse((response) => fileResponse(response, "import-admit", "POST"), { timeout: 10000 }),
       page.waitForResponse((response) => fileResponse(response, "import-preview", "POST"), { timeout: 10000 }),
@@ -115,9 +139,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(admittedResponse.status()).toBe(200)
     expect(previewResponse.status()).toBe(200)
     expect(referenceResponse.status()).toBe(200)
-    const admitted = Schema.decodeUnknownSync(SfFiles.operations["files.import-admit"].output)(await admittedResponse.json())
-    const preview = Schema.decodeUnknownSync(SfFiles.operations["files.import-preview"].output)(await previewResponse.json())
-    const reference = Schema.decodeUnknownSync(SfFiles.operations["files.import-reference"].output)(await referenceResponse.json())
+    const admitted = Schema.decodeUnknownSync(SfFiles.operations["files.import-admit"].output)(await previewScope.json(admittedResponse))
+    const preview = Schema.decodeUnknownSync(SfFiles.operations["files.import-preview"].output)(await previewScope.json(previewResponse))
+    const reference = Schema.decodeUnknownSync(SfFiles.operations["files.import-reference"].output)(await previewScope.json(referenceResponse))
     expect(admitted.status).toBe("ok")
     expect(preview.status).toBe("ok")
     expect(reference.status).toBe("ok")
@@ -147,6 +171,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
       has: page.locator(".sf-files-change").filter({ hasText: "Browser OPEX fixture" }),
     }).locator("summary").click()
     await expect(previewLine).toBeVisible()
+    previewScope.finish()
     // Independently re-read the same authorized projection. Preview must not have
     // changed the stored plan; the browser still owns the real review and Apply.
     const beforeApply = await plannerIoProjection(await page.request.get(initialResponse.url(), { timeout: 10000 }))
@@ -154,23 +179,30 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const apply = imports.getByRole("button", { name: "Apply reviewed import", exact: true })
     await expect(apply).toBeVisible()
     await expect(apply).toBeEnabled()
+    const applyScope = responses.begin([
+      { label: "Planner reviewed apply", method: "POST", pathname: "/sucafina/planner", query: { sf: "import-apply" } },
+    ])
     const [appliedResponse] = await Promise.all([
       page.waitForResponse((response) => fileResponse(response, "import-apply", "POST"), { timeout: 10000 }),
       apply.click(),
     ])
     expect(appliedResponse.status()).toBe(200)
-    const applied = Schema.decodeUnknownSync(SfFiles.operations["files.import-apply"].output)(await appliedResponse.json())
+    const applied = Schema.decodeUnknownSync(SfFiles.operations["files.import-apply"].output)(await applyScope.json(appliedResponse))
     expect(applied.status).toBe("ok")
     if (applied.status !== "ok") throw new Error("The original Planner import was not committed")
     expect(applied.value).toMatchObject({ id: preview.value.id, sourceDigest, state: "applied", domainApplied: true })
     expect(applied.value.receipts).toHaveLength(1)
     await expect(imports).toHaveAttribute("data-sf-phase", "receipt")
+    applyScope.finish()
     await page.reload()
+    const persistedScope = responses.begin([
+      { label: "Planner persisted import", method: "GET", pathname: "/sucafina/api/ui/pages/CAP18" },
+    ])
     const [persistedResponse] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP18"), { timeout: 10000 }),
       page.goto(origin + "/orchestra/sf-planner/opex"),
     ])
-    const persisted = await plannerIoProjection(persistedResponse)
+    const persisted = await plannerIoProjection(persistedResponse, () => persistedScope.json(persistedResponse))
     expect(persisted.data.selectedVersion?.id).toBe(versionId)
     const persistedLines = persisted.data.grid?.rows.filter((row) => row.label === "Browser OPEX fixture")
     expect(persistedLines).toHaveLength(1)
@@ -188,6 +220,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     await expect(forecasts).toHaveCount(12)
     await expect(forecasts.locator(".sf-s02-cell-amount")).toHaveText(Array(12).fill("125.00"))
     await expect(forecasts.locator(".sf-s02-cell-source")).toHaveText(Array(12).fill("Inherited value"))
+    persistedScope.finish()
     // The native label is generic; the observed original projection above proves
     // these twelve forecast cells specifically inherit budget.
     await page.goto(origin + "/orchestra/sf-imports/exports")
@@ -195,6 +228,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const exportControl = page.getByRole("button", { name: "Export", exact: true })
     await expect(exportControl).toBeVisible()
     await expect(exportControl).toBeEnabled()
+    const exportScope = responses.begin([
+      { label: "Planner XLSX export", method: "GET", pathname: "/sucafina/planner", query: { download: "xlsx" }, body: "bytes" },
+    ])
     const [exportResponse, downloaded] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
@@ -213,7 +249,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const plannerDownload = Bun.file(downloadPath)
     expect(await plannerDownload.exists()).toBe(true)
     const downloadedBytes = await plannerDownload.arrayBuffer()
-    expect(Buffer.from(downloadedBytes)).toEqual(await exportResponse.body())
+    expect(Buffer.from(downloadedBytes)).toEqual(await exportScope.body(exportResponse))
     const exported = new Workbook()
     await exported.xlsx.load(downloadedBytes)
     const exportedOpex = exported.getWorksheet("OPEX")
@@ -224,6 +260,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(budget).toBeDefined()
     expect(budget!.slice(9, 21)).toEqual(Array.from({ length: 12 }, () => 125))
     expect(budget![21]).toMatchObject({ formula: expect.stringMatching(/^SUM\(J\d+:U\d+\)$/), result: 1500 })
+    exportScope.finish()
     await page.goto(origin + "/orchestra/sf-planner/opex")
     await expect(projectedLine).toBeVisible()
     await page.screenshot({ path: path.join(import.meta.dir, "artifacts/browser-business-opex.png"), fullPage: true, timeout: 10000, animations: "disabled" })
@@ -232,6 +269,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     console.error("browser IO: failed before cleanup", error)
     throw error
   } finally {
+    responses?.dispose()
     console.info("browser IO: cleanup starting")
     await fixture.dispose()
     console.info("browser IO: cleanup complete")
@@ -660,9 +698,12 @@ async function membersIoProjection(response: Pick<Response, "status" | "json">) 
 }
 
 
-async function plannerIoProjection(response: Pick<Response, "status" | "json">) {
+async function plannerIoProjection(
+  response: Pick<Response, "status" | "json">,
+  read: () => Promise<unknown> = () => response.json(),
+) {
   expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(Schema.toType(SfPlanner.operations["domain.page.CAP18"].output), { onExcessProperty: "error" })(await response.json())
+  const body = Schema.decodeUnknownSync(Schema.toType(SfPlanner.operations["domain.page.CAP18"].output), { onExcessProperty: "error" })(await read())
   expect(body.status).toBe("ok")
   if (body.status !== "ok") throw new Error("The original authorized Planner projection was unavailable")
   return body.value
