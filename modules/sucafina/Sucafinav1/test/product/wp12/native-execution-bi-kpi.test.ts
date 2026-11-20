@@ -309,7 +309,9 @@ async function readSourceLinks(context: Wp12NativeMissionContext, selectionRef: 
   const body = object(await response.json())
   expect(response.status).toBe(200)
   const links = Array.isArray(body.links) ? body.links.map(object) : []
-  expect(links.some((entry) => String(entry.url).includes("Budget+Overview") || String(entry.url).includes("Budget%20Overview"))).toBe(true)
+  // The authorized Budget source opens the native destination with its exact year.
+  const budgetUrl = new URL(`/orchestra/sf-dashboard/budget?year=${period.start.slice(0, 4)}`, context.request().url).href
+  expect(links.some((link) => link.url === budgetUrl)).toBe(true)
   return links
 }
 

@@ -53,7 +53,7 @@ export async function createC12Consumer() {
   } catch (error) { await server.stop(true); await fixture?.dispose(); throw error }
 }
 
-export function interleaveC12CaseEdit(fixture: Awaited<ReturnType<typeof createC12Fixture>>) {
+export function interleaveC12CaseEdit(fixture: Awaited<ReturnType<typeof createC12Fixture>>, afterEdit?: () => void) {
   fixture.afterReceiptCommit(async () => {
     const current = await fixture.storedCase()
     const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit" }
@@ -62,6 +62,8 @@ export function interleaveC12CaseEdit(fixture: Awaited<ReturnType<typeof createC
       return { commit: true, value: true }
     })
     if (saved.status !== "ok") throw new Error("Concurrent real case edit failed")
+    // A failure here occurs after both actual commits, never inside a rollback.
+    afterEdit?.()
   })
 }
 
