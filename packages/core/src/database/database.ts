@@ -1,13 +1,14 @@
 export * as Database from "./database"
 
 import { EffectDrizzleSqlite } from "@orchestra/effect-drizzle-sqlite"
-import { layer as sqliteLayer } from "#sqlite"
+import { layer as sqliteLayer, readAuthorityMarker } from "#sqlite"
 import { Context, Effect, Layer, Option } from "effect"
 import { SqlClient } from "effect/unstable/sql/SqlClient"
-import { createHash, randomUUID } from "crypto"
+import { AuthorityGeneration } from "../session/authority-generation"
+import { Sqlite } from "./sqlite"
 import { Global } from "../global"
 import { Flag } from "../flag/flag"
-import { isAbsolute, join, resolve } from "path"
+import { isAbsolute, join } from "path"
 import { DatabaseMigration } from "./migration"
 import { makeGlobalNode } from "../effect/app-node"
 
@@ -18,6 +19,10 @@ export interface Interface {
   db: DatabaseShape
   /** Stable store namespace; in-memory databases intentionally receive independent identities. */
   storageID?: string
+  /** Private store placement; never a Team selector or ownership key. */
+  filename?: string
+  /** Reads the durable marker from this physical connection. */
+  authorityMarker?: () => import("./authority-sql-fence").AuthoritySqlFence.Marker | undefined
   /** Captures this database's actual SQL client's ambient transaction key. */
   inTransaction?: Effect.Effect<boolean>
 }
@@ -41,9 +46,10 @@ const layer = Layer.effect(
     yield* DatabaseMigration.apply(db)
 
     const filename = yield* Filename
-    return { db, inTransaction: Effect.serviceOption(client.transactionService).pipe(Effect.map(Option.isSome)),
-      storageID: filename === ":memory:" ? randomUUID()
-      : createHash("sha256").update(resolve(filename)).digest("hex") }
+    const native = yield* Sqlite.Native
+    if (!native || typeof native !== "object") throw new Error("SQLite connection unavailable")
+    return { db, filename, authorityMarker: () => readAuthorityMarker(native), inTransaction: Effect.serviceOption(client.transactionService).pipe(Effect.map(Option.isSome)),
+      storageID: AuthorityGeneration.storageID(native, filename) }
   }).pipe(Effect.orDie),
 )
 
