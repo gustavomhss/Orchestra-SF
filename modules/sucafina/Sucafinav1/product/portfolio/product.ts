@@ -10,6 +10,7 @@ import type { createPortfolioResultBindings } from "../decisions/portfolio-bindi
 import { encodeCaseRef, parseCaseRef } from "../decisions/case-port.ts"
 import { decisionCoverageRef } from "../decisions/coverage-access.ts"
 import { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
+import { observePlannerSensitivity, type PlannerReadObservation } from "../planner/sensitivity-observation.ts"
 import { createPlannerResultPersistence } from "../planner/persistence.ts"
 import { comparePlannerPreview } from "../planner/preview-comparison.ts"
 import type { PlannerScenarioHost } from "../planner/scenario-comparison-port.ts"
@@ -41,11 +42,17 @@ export function createPortfolioProduct(input: {
   caseFor: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
   exactThreshold?: Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]
+  observePlannerRead?: PlannerReadObservation
   resolveCoverageAuthority?: Parameters<typeof createPortfolioCoveragePreview>[0]["resolveAuthority"]
   reconciliation?: PortfolioReconciliationHost
 }) {
-  const units = createPlannerSensitivityUnits({ host: input.host, cases: input.cases, scenarios: input.planner.scenarios, store: input.results, evidence: input.evidence, rules: input.rules })
-  const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host: input.host, sources: input.planner.sources, scenarios: input.planner.scenarios, planner: input.planner.planner }, request, context)
+  const { units, preview } = observePlannerSensitivity({
+    units: createPlannerSensitivityUnits({ host: input.host, cases: input.cases, scenarios: input.planner.scenarios,
+      store: input.results, evidence: input.evidence, rules: input.rules }),
+    preview: (request, context) => comparePlannerPreview({ host: input.host, sources: input.planner.sources,
+      scenarios: input.planner.scenarios, planner: input.planner.planner }, request, context),
+    observe: input.observePlannerRead,
+  })
   const coveragePreview = input.resolveCoverageAuthority ? createPortfolioCoveragePreview({ units, preview, resolveAuthority: input.resolveCoverageAuthority }) : undefined
   const sensitivity = createPlannerSensitivity({ results: input.results, resolve: units.resolve, revalidate: units.revalidate, preview, coveragePreview, exactThreshold: input.exactThreshold, idempotencyKey: input.idempotencyKey })
   const analysis = createPortfolioAnalysis({ planner: input.planner.planner, results: input.results, bindings: input.comparisonBindings, persist: createPlannerResultPersistence({ store: input.results, scenarios: input.planner.scenarios, comparisonBindings: input.comparisonBindings, replay: input.planner.planner, resolveCase: input.caseFor }), select: createPortfolioSelectionResolver({ selection: input.selection, results: input.results, caseFor: input.caseFor }), idempotencyKey: input.idempotencyKey })

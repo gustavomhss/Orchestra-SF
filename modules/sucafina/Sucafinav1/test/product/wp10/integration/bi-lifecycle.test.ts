@@ -328,7 +328,7 @@ test("native BI independently polls authority while awaiting a held result and r
     await page.getByRole("button", { name: "View data", exact: true }).click()
     expect((await deadline.phase("hold-real-data", () => success.reached.promise)).status).toBe(200)
     const beforeAuthority = world.count("native-context")
-    const cookies = await world.context.cookies(world.origin)
+    const cookies = await world.context.cookies(new URL(`${world.mount}/auth/logout`, world.origin).href)
     const revoked = await fetch(new URL(`${world.mount}/auth/logout`, world.origin).href, { method: "POST", signal: deadline.signal,
       headers: { origin: world.origin, cookie: cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ") }, redirect: "manual" })
     expect(revoked.status).toBe(204)
