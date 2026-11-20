@@ -162,7 +162,7 @@ function fixture() {
   const dispose = render(() => withBrowserPlatform(() => createComponent(LanguageProvider, { locale: "en",
     get children() { return createComponent(Router, {
       get children() { return createComponent(Route, { path: "*", component: () =>
-        createComponent(SfContextProvider, { selection: selected, dependencies,
+        createComponent(SfContextProvider, { selection: () => ({ ...selected() }), dependencies,
           get children() { return createComponent(child, {}) } }) }) },
     }) },
   })), node)
