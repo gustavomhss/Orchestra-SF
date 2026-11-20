@@ -6,8 +6,9 @@ import type { DomainPortHost, PortResult, PreparedApplyPort } from "../contracts
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateResult } from "../contracts/state.ts"
 import { caseApplicationState, reconcileDomainReceipt } from "./receipts.ts"
-import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
-import { applicationAttempt, applicationAttemptKey, applicationAttempts } from "./application-attempt.ts"
+import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, receiptProofKey, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
+import { applicationAbort, applicationAbortKey, applicationAttempt, applicationAttempts, applicationDispatchAttempt, applicationDispatchKey, applicationDispatchState, applicationReservation } from "./application-attempt.ts"
+import { appendSfTransactionAbort } from "../host-binding/state-provider.ts"
 
 /** Explicit human application; each domain commits its own receipt before the case is reconciled. */
 export function createPreparedExecution(input: {
@@ -69,10 +70,12 @@ export function createPreparedExecution(input: {
     }
     if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
     if (lookup.value.state === "not-found" && change.receipt) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
+    const dispatch: { attempt?: ReturnType<typeof applicationAttempt>; ordinal?: number; reservation?: SfProductState["transactions"][string]; decision?: DecisionCase } = {}
     if (lookup.value.state === "not-found") {
-      const attempted = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationAttempts(state, request).length > 0 : undefined).catch(() => undefined)
+      const attempt = { ...applicationAttempt(request, change, reviewDigest, context.binding.principalRef, operation), originalIntent: preparedOriginalIntent(request, change, choices[0]!, reviewDigest, context) }
+      const attempted = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationDispatchState(state, request, attempt, change) : undefined).catch(() => undefined)
       if (!attempted || attempted.status !== "ok" || attempted.value === undefined) return { status: "unavailable", reason: "application-attempt-unavailable" }
-      if (attempted.value) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
+      if (attempted.value.state !== "new" && attempted.value.state !== "aborted") return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
       if (value.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
       const proof = await input.revalidateProducer(request, context).catch(() => undefined)
       if (!proof || proof.status !== "ok" || proof.value.reviewDigest !== reviewDigest) return proof && proof.status !== "ok" ? proof : { status: proof ? "stale" : "unavailable", reason: proof ? "review-proof-mismatch" : "review-producer-unavailable" }
@@ -83,25 +86,55 @@ export function createPreparedExecution(input: {
       const currentChange = fresh?.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
       if (!fresh || fresh.incarnation !== value.incarnation || fresh.version !== value.version || !fresh.participants.includes(context.binding.principalRef) || fresh.preparedChanges.filter((item) => item.id === change.id).length !== 1 || digestSfValue(fresh.choices.filter((choice) => choice.id === request.choiceId)) !== choiceDigest || !currentChange || currentChange.state !== "planned" || digestSfValue(currentChange) !== digestSfValue(change)) return { status: "stale", reason: "case-changed" }
       if (!await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, currentChange, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
-      const attempt = { ...applicationAttempt(request, currentChange, reviewDigest, context.binding.principalRef, operation), originalIntent: preparedOriginalIntent(request, currentChange, fresh.choices.filter((choice) => choice.id === request.choiceId)[0]!, reviewDigest, context) }
-      // Persist before crossing the domain boundary. A crash before dispatch is
-      // conservatively unresolved; absence of a receipt never grants a new dispatch.
+      const ordinal = attempted.value.state === "new" ? 0 : attempted.value.ordinal + 1
+      const reservationValue = attempted.value.state === "new" ? attempt : applicationDispatchAttempt(request, attempt, ordinal, digestSfValue(attempted.value.abort))
+      // Persist every dispatch ordinal before crossing the domain boundary. A
+      // crash or missing authenticated abort journal remains indeterminate.
       const reservation = { createdHere: false }
-      const reserved = await input.state.transaction<typeof attempt | null>(source, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: applicationAttemptKey(request), commandDigest: digestSfValue(attempt) }, async (state, authority) => {
+      const reserved = await input.state.transaction<typeof reservationValue | null>(source, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: applicationDispatchKey(request, ordinal), commandDigest: digestSfValue(reservationValue) }, async (state, authority) => {
         const actual = state.cases[value.id]
-        if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || applicationAttempts(state, request).length) return { commit: false, value: null }
+        if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision ||
+          digestSfValue(applicationDispatchState(state, request, attempt, currentChange)) !== digestSfValue(attempted.value)) return { commit: false, value: null }
         // A provider may return a prior transaction without invoking this callback.
-        // Only this invocation's successful commit may perform the first dispatch.
+        // Only this invocation's successful CAS may perform this dispatch.
         reservation.createdHere = true
-        return { commit: true, value: attempt }
+        return { commit: true, value: reservationValue }
       }).catch(() => undefined)
       if (!reserved || reserved.status !== "ok" || !reserved.value || !reservation.createdHere) {
         const recorded = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationAttempts(state, request).length > 0 : undefined).catch(() => undefined)
         return { status: "unavailable", reason: recorded?.status === "ok" && recorded.value ? "application-indeterminate-reconciliation-required" : "application-attempt-unavailable" }
       }
       if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
+      dispatch.attempt = attempt
+      dispatch.ordinal = ordinal
+      dispatch.reservation = applicationReservation(request, context.binding.principalRef, reservationValue, reserved)
+      dispatch.decision = fresh
     }
-    const observed = structuredClone(lookup.value.state === "found" ? { status: "ok" as const, value: lookup.value.receipt } : await callDomain(() => input.apply.executePrepared(request, context)))
+    const domainResult = lookup.value.state === "found" ? { status: "ok" as const, value: lookup.value.receipt } : await callDomain(() => input.apply.executePrepared(request, context))
+    if (domainResult.status === "unavailable" && dispatch.attempt && dispatch.ordinal !== undefined && dispatch.reservation && dispatch.decision) {
+      const { attempt, ordinal, reservation, decision } = dispatch
+      // Inspect the actual producer result before cloning. Plain fields, copied
+      // errors, post-COMMIT failures and reused observations cannot append here.
+      await appendSfTransactionAbort({
+        state: input.state, request: source, result: domainResult,
+        expected: { namespace: "receipts", domainSurface: change.target.surface, targetRef: change.target.id,
+          targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: receiptReviewBinding(change, reviewDigest) },
+        expectedStorageVersion: reservation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation,
+        idempotencyKey: applicationAbortKey(request, ordinal), value: applicationAbort(request, attempt, ordinal, reservation),
+        validate: (state, authority, proof) => {
+          const currentDispatch = applicationDispatchState(state, request, attempt, change)
+          return input.host.requestFor(context) === source && !source.signal.aborted &&
+            authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision &&
+            currentDispatch.state === "pending" && currentDispatch.ordinal === ordinal && digestSfValue(currentDispatch.reservation) === digestSfValue(reservation) &&
+            digestSfValue(state.cases[value.id]) === digestSfValue(decision) && proof.envelope.incarnation === reservation.incarnation &&
+            proof.envelope.versions.cases === reservation.storageVersion && proof.envelope.aggregateRevision >= reservation.aggregateRevision &&
+            !state.transactions[receiptProofTransactionKey(context.binding.principalRef, change.target.id, change.idempotencyKey)] &&
+            !Object.values(state.receipts).some((receipt) => receipt.surface === change.target.surface && receipt.targetIncarnation === change.target.incarnation &&
+              receipt.idempotencyKey === change.idempotencyKey && receipt.principalRef === context.binding.principalRef)
+        },
+      }).catch(() => undefined)
+    }
+    const observed = structuredClone(domainResult)
     // A choice replaced after the domain receipt commits fails retention as
     // receipt-authority-changed. That is the material conflict, not a lost receipt.
     if (observed.status === "unavailable" && observed.reason === "receipt-authority-changed") {

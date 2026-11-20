@@ -7,6 +7,7 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
 import { isReviewDigest, preparedOriginalIntentState, receiptProofKey, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
 import { applicationAttempts } from "./application-attempt.ts"
+import { forwardSfTransactionAbort } from "../host-binding/state-provider.ts"
 
 /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
 export function createSfPreparedApply(input: {
@@ -136,7 +137,13 @@ export function createSfPreparedApply(input: {
         return { status: "ok", value: receipt }
       }
       if (applied?.status === "preview" && applied.value && "failure" in applied.value && applied.value.failure) return { status: applied.value.failure, reason: "domain-application-rejected" }
-      if (!applied || applied.status !== "ok" || !applied.value || "failure" in applied.value || "existing" in applied.value) return { status: applied?.status === "conflict" ? "conflict" : "unavailable", reason: "domain-application-unavailable" }
+      if (!applied || applied.status !== "ok" || !applied.value || "failure" in applied.value || "existing" in applied.value) {
+        const failure = { status: applied?.status === "conflict" ? "conflict" as const : "unavailable" as const, reason: "domain-application-unavailable" }
+        forwardSfTransactionAbort({ state: input.state, request: source, from: applied, to: failure,
+          expected: { namespace: "receipts", domainSurface: change.target.surface, targetRef: change.target.id,
+            targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding } })
+        return failure
+      }
       if (!await input.authorizeCase(decision, context).catch(() => false) || !await input.confirmHuman(request, change, context).catch(() => false) || !await input.authorizeReceipt(applied.value, { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "receipt-authority-changed" }
       if (!await retainReceipt(applied.value)) return { status: "unavailable", reason: "receipt-authority-changed" }
       return { status: "ok", value: applied.value }
