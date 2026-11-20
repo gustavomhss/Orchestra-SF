@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { DomainProjection } from "../contracts/context.ts"
@@ -63,7 +64,12 @@ export function createDecisionBaselineCoverage(input: {
       if (!source || !operation || !Number.isSafeInteger(request.expectedVersion) || request.expectedVersion < 0 || request.source.kind !== "record" || request.source.target.surface !== "planner" || request.source.refDigest !== digestSfEvidenceRef(request.source) || request.source.installationId !== context.binding.installationId || request.source.projectId !== context.binding.projectId || !await input.authorizeCoverage(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
       const key = activeKey(request.caseRef, request.source.refId)
-      const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { active: state.preferences[key], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `baseline-coverage:${operation}`])] } : undefined)
+      const preferences = await input.state.read(source, "preferences", (state, authority) => {
+        if (!(sameAuthority(authority, context))) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.caseRef.id, idempotencyKey: `baseline-coverage:${operation}` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { active: state.preferences[key], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+      })
       if (current.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
       if (preferences.value.prior) {
         if (preferences.value.prior.commandDigest !== digestSfValue(request) || preferences.value.prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }

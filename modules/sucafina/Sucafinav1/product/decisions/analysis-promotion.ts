@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { ContributionEnvelope } from "../contracts/resident-ai.ts"
@@ -35,7 +36,12 @@ export function createAnalysisAlternativePromotion(input: {
       const source = input.host.requestFor(context)
       const operation = input.operationIdentity(context)
       if (context.kind !== "ui" || !source || !operation || !request.outputRef.trim() || !request.runRef.trim() || !request.rationale.trim() || !/^[a-f0-9]{64}$/.test(request.outputDigest) || !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "analysis-promotion-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? { decision: state.cases[request.caseRef.id], results: state.decisionResults, prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${operation}:promote-analysis`])] } : undefined)
+      const current = await input.state.read(source, "cases", (state, authority) => {
+        if (!(authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision)) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `${operation}:promote-analysis` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { decision: state.cases[request.caseRef.id], results: state.decisionResults, prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+      })
       if (current.status !== "ok" || !current.value?.decision || current.value.decision.incarnation !== request.caseRef.incarnation || !current.value.decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value.decision, context)) return { status: "denied", reason: "analysis-promotion-access-unavailable" }
       const decision = current.value.decision
       if (current.value.prior) {

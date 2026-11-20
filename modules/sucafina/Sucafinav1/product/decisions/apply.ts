@@ -4,10 +4,10 @@ import type { DecisionCase, PreparedChange } from "../contracts/decisions.ts"
 import type { CommandReceipt } from "../contracts/context.ts"
 import type { DomainPortHost, PortResult, PreparedApplyPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { SfProductState, SfProductStatePort, SfStateResult } from "../contracts/state.ts"
+import type { SfProductState, SfProductStatePort, SfStateResult, SfStateAuthority } from "../contracts/state.ts"
 import { caseApplicationState, reconcileDomainReceipt } from "./receipts.ts"
-import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
-import { applicationAttempt, applicationAttemptKey, applicationAttempts } from "./application-attempt.ts"
+import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, receiptProofMatches, receiptProofLookup, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
+import { applicationAttempt, applicationAttemptKey, applicationAttempts, hasApplicationAttempt } from "./application-attempt.ts"
 
 /** Explicit human application; each domain commits its own receipt before the case is reconciled. */
 export function createPreparedExecution(input: {
@@ -49,14 +49,18 @@ export function createPreparedExecution(input: {
       if (expectedCase.preparedChanges.filter((item) => item.receipt?.id === receipt.id).length !== 1 || expectedCase.preparedChanges.find((item) => item.receipt?.id === receipt.id)?.id !== change.id || expectedCase.receipts.filter((item) => item.id === receipt.id).length !== 1 || digestSfValue(expectedCase.receipts.find((item) => item.id === receipt.id)) !== digestSfValue(receipt)) return false
       // This is a consistency fence for a receipt already authorized by its
       // canonical reader, never a substitute for that reader's authority.
-      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context)).catch(() => undefined)
+      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context, authority)).catch(() => undefined)
       return input.host.requestFor(context) === source && !source.signal.aborted && retained?.status === "ok" && retained.value
     }
     if (lookup.value.state === "found") {
-      const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? {
-        proof: state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)],
-        intent: preparedOriginalIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, applicationAttempts(state, request)),
-      } : undefined).catch(() => undefined)
+      const bound = await input.state.read(source, "receipts", (state, authority) => {
+        if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+        const proof = receiptProofLookup(state, authority, change.target.id, change.idempotencyKey)
+        const attempts = applicationAttempts(state, request, authority)
+        if (proof.status !== "found" || attempts.status === "ambiguous") return undefined
+        return { proof: proof.receipt,
+          intent: preparedOriginalIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, attempts) }
+      }).catch(() => undefined)
       if (!bound || bound.status !== "ok" || !bound.value?.proof) return { status: "unavailable", reason: "review-proof-unbound" }
       if (bound.value.proof.commandDigest !== receiptReviewBinding(change, reviewDigest) || digestSfValue(bound.value.proof.value) !== digestSfValue(lookup.value.receipt)) return { status: "conflict", reason: "review-proof-mismatch" }
       if (bound.value.intent !== "matched") return { status: bound.value.intent === "missing" ? "unavailable" : "conflict", reason: bound.value.intent === "missing" ? "original-intent-unverifiable" : "original-intent-mismatch" }
@@ -70,7 +74,7 @@ export function createPreparedExecution(input: {
     if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
     if (lookup.value.state === "not-found" && change.receipt) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
     if (lookup.value.state === "not-found") {
-      const attempted = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationAttempts(state, request).length > 0 : undefined).catch(() => undefined)
+      const attempted = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? hasApplicationAttempt(state, request, authority) : undefined).catch(() => undefined)
       if (!attempted || attempted.status !== "ok" || attempted.value === undefined) return { status: "unavailable", reason: "application-attempt-unavailable" }
       if (attempted.value) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
       if (value.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
@@ -89,14 +93,14 @@ export function createPreparedExecution(input: {
       const reservation = { createdHere: false }
       const reserved = await input.state.transaction<typeof attempt | null>(source, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: applicationAttemptKey(request), commandDigest: digestSfValue(attempt) }, async (state, authority) => {
         const actual = state.cases[value.id]
-        if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || applicationAttempts(state, request).length) return { commit: false, value: null }
+        if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || hasApplicationAttempt(state, request, authority)) return { commit: false, value: null }
         // A provider may return a prior transaction without invoking this callback.
         // Only this invocation's successful commit may perform the first dispatch.
         reservation.createdHere = true
         return { commit: true, value: attempt }
       }).catch(() => undefined)
       if (!reserved || reserved.status !== "ok" || !reserved.value || !reservation.createdHere) {
-        const recorded = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationAttempts(state, request).length > 0 : undefined).catch(() => undefined)
+        const recorded = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? hasApplicationAttempt(state, request, authority) : undefined).catch(() => undefined)
         return { status: "unavailable", reason: recorded?.status === "ok" && recorded.value ? "application-indeterminate-reconciliation-required" : "application-attempt-unavailable" }
       }
       if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
@@ -150,7 +154,7 @@ export function createPreparedExecution(input: {
     const reconciledCase: DecisionCase = { ...fresh, version: fresh.version + 1, preparedChanges: changes, receipts: fresh.receipts.some((receipt) => receipt.id === observed.value.id) ? fresh.receipts : [...fresh.receipts, observed.value], sourceRefs: [...fresh.sourceRefs, result.evidence].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index), state: caseApplicationState(changes) }
     const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: reconciliation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
       const actual = state.cases[value.id]
-      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || !receiptSnapshotMatches(state, request, change, observed.value, reviewDigest, context)) return { commit: false, value: false }
+      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || !receiptSnapshotMatches(state, request, change, observed.value, reviewDigest, context, authority)) return { commit: false, value: false }
       state.cases[value.id] = reconciledCase
       return { commit: true, value: true }
     }).catch(() => undefined)
@@ -163,11 +167,13 @@ export function createPreparedExecution(input: {
   }
 }
 
-function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext) {
-  const proof = state.transactions[receiptProofTransactionKey(context.binding.principalRef, change.target.id, change.idempotencyKey)]
+function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext, authority: SfStateAuthority) {
+  const selected = receiptProofLookup(state, authority, change.target.id, change.idempotencyKey)
+  if (selected.status !== "found") return false
+  const proof = selected.receipt
   const choices = state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? []
-  return receiptProofMatches(state, change.target, receipt, context.binding.principalRef) && proof?.commandDigest === receiptReviewBinding(change, reviewDigest) &&
-    preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request)) === "matched"
+  return receiptProofMatches(state, change.target, receipt, authority) && proof?.commandDigest === receiptReviewBinding(change, reviewDigest) &&
+    preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request, authority)) === "matched"
 }
 
 async function callDomain<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {

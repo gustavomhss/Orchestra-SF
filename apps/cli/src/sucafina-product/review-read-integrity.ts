@@ -1,9 +1,10 @@
+import { sfTransactionIdentity, sfTransactionProfileMatches } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
-import type { SfProductState } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+import type { SfProductState, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { createReviewPort } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
@@ -29,9 +30,9 @@ export function protectSfReviewReads(input: {
   const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => scope.open &&
     execution.getStore() === scope && host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
     digestSfValue([call.kind, call.binding]) === binding
-  const receiptDigest = (state: Readonly<SfProductState>, id: string, digest: string) => {
+  const receiptDigest = (state: Readonly<SfProductState>, id: string, digest: string, actor: SfStateAuthority) => {
     if (!state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
-    const receipts = Object.values(state.transactions).filter((receipt) => {
+    const entries = Object.entries(state.transactions).filter(([, receipt]) => {
       if (receipt.namespace !== "reviews" || !receipt.principalRef.trim() || receipt.targetRef !== authority.creationTarget.ref ||
         receipt.targetIncarnation !== authority.creationTarget.incarnation || !receipt.value || typeof receipt.value !== "object" || Array.isArray(receipt.value)) return false
       const value = receipt.value
@@ -39,7 +40,12 @@ export function protectSfReviewReads(input: {
         "reviewRef" in value && value.reviewRef === id && "reviewDigest" in value && value.reviewDigest === digest
       return "id" in value && value.id === id && digestSfValue(value) === digest
     })
-    return receipts.length ? digestSfValue(receipts) : undefined
+    if (!entries.length || entries.some(([key, receipt]) => {
+      const identity = sfTransactionIdentity(key)
+      return !identity || identity.principalRef !== receipt.principalRef || identity.namespace !== receipt.namespace ||
+        identity.targetRef !== receipt.targetRef || !sfTransactionProfileMatches(actor.profile, key)
+    })) return undefined
+    return digestSfValue(entries.map(([, receipt]) => receipt))
   }
   const denied = (): ReadFailure => ({ status: "denied", reason: "review-integrity-unavailable" })
   const unavailable = (): ReadFailure => ({ status: "unavailable", reason: "review-integrity-unavailable" })
@@ -55,7 +61,7 @@ export function protectSfReviewReads(input: {
         const review = state.reviews[id]
         if (!review || review.id !== id) return denied()
         if (!snapshots) return unavailable()
-        const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
+        const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest, actor)
         if (!receipt) return denied()
         // Reauthenticate the actual domain principals as well as the C08 reader.
         // Full snapshots include unversioned case/body/receipt changes and source metadata.
@@ -98,7 +104,7 @@ export function protectSfReviewReads(input: {
           if (!pinned() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
             !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return denied()
           // The original writer may differ from the current authorized reader.
-          const receipt = receiptDigest(state, id, digest)
+          const receipt = receiptDigest(state, id, digest, actor)
           return receipt ? { status: "ok", value: receipt } : denied()
         })
         if (!pinned()) return denied()

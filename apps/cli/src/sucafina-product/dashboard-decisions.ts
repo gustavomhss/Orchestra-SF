@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { randomUUID } from "node:crypto"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object, rows } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -401,9 +402,12 @@ export function createSfDashboardDecisions(input: {
       const previous = await state.read(source, "cases", (stored, authority) => {
         if (!sameAuthority(authority, context)) return undefined
         const decision = stored.cases[request.caseRef.id]
-        const prior = stored.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `dashboard-prepare:${operationIdentity}`])]
-        return decision && decision.incarnation === request.caseRef.incarnation && decision.participants.includes(authority.principalRef) && prior ? { prior, decision } : undefined
+        const savedIntent = sfTransactionLookup(stored, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `dashboard-prepare:${operationIdentity}` })
+        if (savedIntent.status === "ambiguous") return { ambiguous: true as const }
+        const prior = savedIntent.status === "found" ? savedIntent.receipt : undefined
+        return decision && decision.incarnation === request.caseRef.incarnation && decision.participants.includes(authority.principalRef) && prior ? { ambiguous: false as const, prior, decision } : undefined
       })
+      if (previous.status === "ok" && previous.value?.ambiguous) return { status: "unavailable", reason: "hot-topic-preparation-provenance-unavailable" }
       if (previous.status === "ok" && previous.value) {
         if (previous.value.prior.commandDigest !== digestSfValue(request)) return { status: "conflict", reason: "idempotency-content-changed" }
         const saved = object(previous.value.prior.value)
