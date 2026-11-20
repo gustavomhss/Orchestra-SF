@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { c17RootCount, c17RootStart, c17RootEnd } from "../../../../modules/sucafina/Sucafinav1/runtime/audit-c17-root-profile.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -12,6 +13,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
   const unavailable = () => ({ status: "unavailable", reason: "calculation-read-root-unavailable" } as const)
   const prepare = async (call: TrustedDomainContext, initialize: () => Promise<boolean>,
     unchanged: () => boolean, ownerCurrent: () => boolean = unchanged): Promise<Prepared | undefined> => {
+    const c17Prepare = c17RootStart("root.prepare")
     try {
       let used = false
       const once = (run: Prepared["run"]): Prepared => ({ run: async <Value>(work: () => Promise<PortResult<Value>>) => {
@@ -22,22 +24,24 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const parent = roots.getStore()
       if (parent) {
         if (!parent.current(call) || !unchanged()) return undefined
+        c17RootCount("root.route.join")
         return once(async (work) => {
           // The root is already prepared. This descendant executes its complete
           // producer and cannot survive or publish beyond the owner's callback.
           if (!parent.current(call) || !unchanged()) return unavailable()
           parent.children++
+          const c17Work = c17RootStart("root.work.join")
           try {
             const result = await work()
             return parent.current(call) && unchanged() ? result : unavailable()
-          } finally { parent.children-- }
+          } finally { parent.children--; c17RootEnd("root.work.join", c17Work) }
         })
       }
       const host = input.host, persistence = host.persistence
       const root = persistence.readSnapshotRoot, snapshots = persistence.currentSnapshots
       // Older adapters keep the complete original producer, without preparation
       // or a claim that an owned root protected its observation.
-      if (!root || !snapshots) return once((work) => work())
+      if (!root || !snapshots) { c17RootCount("root.route.legacy"); return once((work) => work()) }
       const transaction = persistence.transaction, transactionAll = persistence.transactionAll
       const currentSnapshot = persistence.currentSnapshot
       const requestFor = host.requestFor, revalidate = host.revalidate
@@ -63,6 +67,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         // A pre-existing C08 owner (including Memory preflight/commit) keeps its
         // original route. Do not prepare sources, open a root or borrow ownership.
         if (!inherited || typeof inherited !== "object") return undefined
+        c17RootCount("root.route.foreign")
         // Snapshot metadata does not report a swallowed nested write. An actual
         // readonly driver operation checks poison at its exit. These extra
         // observations test health now; they do not accept the foreign root.
@@ -78,7 +83,10 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         if (!await healthy()) return undefined
         return once(async (work) => {
           if (!await healthy()) return unavailable()
-          const result = await work()
+          const c17Work = c17RootStart("root.work.foreign")
+          let result: Awaited<ReturnType<typeof work>>
+          try { result = await work() }
+          finally { c17RootEnd("root.work.foreign", c17Work, request.signal.aborted) }
           return await healthy() ? result : unavailable()
         })
       }
@@ -86,19 +94,26 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         snapshots.call(persistence) !== undefined) return undefined
       // The caller opens its original full C08/source witness only after this
       // preparation returns. No prepared observation is accepted as evidence.
+      c17RootCount("root.route.new")
       return once(async <Value>(work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
         if (!current() || snapshots.call(persistence) !== undefined) return unavailable()
         let invocations = 0, completed = false
         let staged: PortResult<Value> | undefined
-        const accepted = await root.call(persistence, async () => {
+        const c17Physical = c17RootStart("root.physical")
+        let accepted: unknown
+        try { accepted = await root.call(persistence, async () => {
           invocations++
+          c17RootCount("root.callback")
           if (invocations !== 1 || !current() || !live()) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && live() }
           try {
             return await roots.run(owner, async () => {
               if (!owner.current(call) || !current() || !await revalidate.call(host, call) || !owner.current(call) || !current()) return false
-              const result = await work()
+              const c17Work = c17RootStart("root.work.owned")
+              let result: PortResult<Value>
+              try { result = await work() }
+              finally { c17RootEnd("root.work.owned", c17Work, request.signal.aborted) }
               if (!owner.current(call) || !current() || owner.children || !await revalidate.call(host, call) ||
                 !owner.current(call) || !current() || owner.children) return false
               // The adapter receives only the Boolean. The product value remains
@@ -108,7 +123,8 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
               return true
             })
           } finally { owner.open = false }
-        }, { signal: request.signal })
+        }, { signal: request.signal }) }
+        finally { c17RootEnd("root.physical", c17Physical, request.signal.aborted) }
         if (accepted !== true || !completed || invocations !== 1 || !staged || !current() ||
           snapshots.call(persistence) !== undefined) return unavailable()
         return staged
@@ -116,7 +132,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
     } catch {
       // Poison, abort or adapter refusal never selects an alternative path.
       return undefined
-    }
+    } finally { c17RootEnd("root.prepare", c17Prepare) }
   }
   return {
     prepare,

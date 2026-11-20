@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { c17RootStart, c17RootEnd } from "../../../../modules/sucafina/Sucafinav1/runtime/audit-c17-root-profile.ts"
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -155,11 +156,16 @@ export function createSfPlannerCalculationServices(input: {
     const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
     if (ancestors.has(runId) || ancestors.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
     const scope: ReplayScope = { call, request, requestDigest, binding, runId, runs: new Set([...ancestors, runId]), open: true }
+    const c17Route = ancestors.size ? "ancestral" : parent ? "invalid-parent" : "direct"
+    const c17Total = c17RootStart("service.total." + c17Route)
     const current = () => scope.open && replaying.getStore() === scope && input.host.requestFor(call) === request && !request.signal.aborted &&
       requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding
     return replaying.run(scope, async (): Promise<PortResult<Value>> => {
       try {
-        const selected = await readScope.select(runId, call)
+        const c17Select = c17RootStart("service.select." + c17Route)
+        let selected: Awaited<ReturnType<typeof readScope.select>>
+        try { selected = await readScope.select(runId, call) }
+        finally { c17RootEnd("service.select." + c17Route, c17Select, request.signal.aborted) }
         if (selected.status !== "ok") return selected
         if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
         // Enter the actual persisted case before request-store callbacks can
@@ -190,17 +196,28 @@ export function createSfPlannerCalculationServices(input: {
               const sameReaders = () => current() && sameOwner()
               // Materializing readers finish before the original witness takes
               // its baseline. An existing C08 root skips this preparation.
-              preparedRoot = await readRoot.prepare(call, async () => {
-                if (!await freshRecordSources(records, call) || !sameReaders()) return false
-                const coverage = await coverageReader(preparedInput.value.baseRef, call)
+              const c17Prepare = c17RootStart("service.prepare." + c17Route)
+              try { preparedRoot = await readRoot.prepare(call, async () => {
+                const c17Sources = c17RootStart("service.prepare.sources")
+                let fresh: boolean
+                try { fresh = await freshRecordSources(records, call) }
+                finally { c17RootEnd("service.prepare.sources", c17Sources, request.signal.aborted) }
+                if (!fresh || !sameReaders()) return false
+                const c17Coverage = c17RootStart("service.prepare.coverage")
+                let coverage: Awaited<ReturnType<typeof coverageReader>>
+                try { coverage = await coverageReader(preparedInput.value.baseRef, call) }
+                finally { c17RootEnd("service.prepare.coverage", c17Coverage, request.signal.aborted) }
                 return coverage.status === "ok" && sameReaders()
-              }, sameReaders, sameOwner)
+              }, sameReaders, sameOwner) }
+              finally { c17RootEnd("service.prepare." + c17Route, c17Prepare, request.signal.aborted) }
               if (!preparedRoot) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
             }
           }
           const eligible = call.kind === "ui" && plannerCalculationClosure(selected.value.stored)
           if (eligible) {
-            scope.observation = await readScope.open(selected.value, call, current)
+            const c17Witness = c17RootStart("service.witness.open." + c17Route)
+            try { scope.observation = await readScope.open(selected.value, call, current) }
+            finally { c17RootEnd("service.witness.open." + c17Route, c17Witness, request.signal.aborted) }
             if (!scope.observation) return { status: "unavailable", reason: "calculation-observation-unavailable" }
           }
           const parsed = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
@@ -209,18 +226,29 @@ export function createSfPlannerCalculationServices(input: {
           const produce = () => (recordOnly ? recordCalculation : calculation).issue(runId, call)
           // Stage the value until the physical root is accepted. The original
           // completed/finish/final witness below still run after this boundary.
-          const issued = preparedRoot ? await preparedRoot.run(produce) : await produce()
+          const c17ProducerLabel = "service.producer." + c17Route + (recordOnly ? ".record" : ".mixed") + (preparedRoot ? ".prepared" : ".original")
+          const c17Producer = c17RootStart(c17ProducerLabel)
+          let issued: Awaited<ReturnType<typeof produce>>
+          try { issued = preparedRoot ? await preparedRoot.run(produce) : await produce() }
+          finally { c17RootEnd(c17ProducerLabel, c17Producer, request.signal.aborted) }
           if (issued.status !== "ok") return issued
-          const observed = scope.observation?.completed()
+          const c17Completed = c17RootStart("service.witness.completed." + c17Route)
+          let observed: SfCalculationObservedReads | undefined
+          try { observed = scope.observation?.completed() }
+          finally { c17RootEnd("service.witness.completed." + c17Route, c17Completed, request.signal.aborted) }
           if (scope.observation && !observed) return { status: "unavailable", reason: "calculation-observation-incomplete" }
           return finish(issued.value, observed)
         }, async (result) => {
           if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
-          return result.status !== "ok" || !scope.observation ? result : await scope.observation.verify()
-            ? result : { status: "unavailable", reason: "calculation-observation-changed" }
+          if (result.status !== "ok" || !scope.observation) return result
+          const c17Verify = c17RootStart("service.witness.verify." + c17Route)
+          let valid: boolean
+          try { valid = await scope.observation.verify() }
+          finally { c17RootEnd("service.witness.verify." + c17Route, c17Verify, request.signal.aborted) }
+          return valid ? result : { status: "unavailable", reason: "calculation-observation-changed" }
         })
       } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
-      finally { scope.observation?.close(); scope.open = false }
+      finally { scope.observation?.close(); scope.open = false; c17RootEnd("service.total." + c17Route, c17Total, request.signal.aborted) }
     })
   }
   const issue: typeof calculation.issue = (runId, call) => issueObserved(runId, call, async (value) => ({ status: "ok", value }))

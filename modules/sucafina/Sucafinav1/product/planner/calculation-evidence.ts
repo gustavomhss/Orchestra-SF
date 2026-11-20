@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { c17RootStart, c17RootEnd } from "../../runtime/audit-c17-root-profile.ts"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { ScenarioResult } from "../contracts/decisions.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
@@ -43,11 +44,17 @@ export function createPlannerCalculationEvidence(input: {
         for (const ref of evidenceGraph(complete)) {
           if (ref.kind === "calculation") {
             if (ref.target.runId === value.resultRef || ref.target.calculationId !== "planner:scenario" || ref.target.engineVersion !== "planner-runtime-v1") return false
-            const issued = await issue(ref.target.runId, context)
+            const c17Local = c17RootStart("factory.verify.localIssue")
+            let issued: PortResult<CalculationEvidence>
+            try { issued = await issue(ref.target.runId, context) }
+            finally { c17RootEnd("factory.verify.localIssue", c17Local, http.signal.aborted) }
             if (issued.status !== "ok" || digestSfValue(issued.value) !== digestSfValue(ref)) return false
             continue
           }
-          const resolved = structuredClone(await input.nested.evidence.resolve(structuredClone(ref), context))
+          const c17Bcs = c17RootStart("factory.verify.bcs")
+          let resolved: BusinessEvidenceResolution
+          try { resolved = structuredClone(await input.nested.evidence.resolve(structuredClone(ref), context)) }
+          finally { c17RootEnd("factory.verify.bcs", c17Bcs, http.signal.aborted) }
           if (resolved.state !== "fresh" || resolved.accessRevision !== context.binding.accessRevision || !resolved.currentRef || !resolved.authorizedProjection || digestSfValue(resolved.ref) !== digestSfValue(ref) || digestSfValue(resolved.currentRef) !== digestSfValue(ref)) return false
         }
         return !http.signal.aborted && await input.host.revalidate(context)
@@ -69,26 +76,41 @@ export function createPlannerCalculationEvidence(input: {
     const http = input.host.requestFor(context)
     if (!http || http.signal.aborted || !runId.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "calculation-authority-unavailable" }
     if (!input.readForCalculation || !input.loadRecordOnlyRequest || !input.replayRecordOnly) return { status: "unavailable", reason: "calculation-safe-replay-unavailable" }
-    const binding = structuredClone(await input.loadRecordOnlyRequest(runId, context))
+    const c17Binding = c17RootStart("factory.binding.first")
+    let binding: Awaited<ReturnType<typeof input.loadRecordOnlyRequest>>
+    try { binding = structuredClone(await input.loadRecordOnlyRequest(runId, context)) }
+    finally { c17RootEnd("factory.binding.first", c17Binding, http.signal.aborted) }
     if (binding.status !== "ok") return binding
     if (binding.value.resultRef !== runId || binding.value.engineVersion !== "planner-runtime-v1") return { status: "unavailable", reason: "calculation-binding-unavailable" }
     if (!binding.value.request || !Array.isArray(binding.value.request.assumptions) || !Array.isArray(binding.value.request.operations) || !input.nested && (binding.value.request.assumptions.length || binding.value.request.operations.some((operation) => !operation || operation.replacementRef))) return { status: "unavailable", reason: "calculation-nested-evidence-unavailable" }
     if (!decodeSfOperationInput("sf_scenario_simulate", binding.value.request).ok) return { status: "unavailable", reason: "calculation-request-invalid" }
-    const stored = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context))
+    const c17Stored = c17RootStart("factory.result.first")
+    let stored: Awaited<ReturnType<typeof input.readForCalculation>>
+    try { stored = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context)) }
+    finally { c17RootEnd("factory.result.first", c17Stored, http.signal.aborted) }
     if (stored.status !== "ok") return stored
     if (stored.value.kind !== "scenario" || !sourceClosure(stored.value.result, stored.value.sourceRefs, context, !!input.nested)) return { status: "unavailable", reason: "calculation-source-closure-invalid" }
     if (stored.value.resultRef !== runId || stored.value.requestDigest !== digestSfValue(binding.value.request) || stored.value.resultDigest !== digestSfValue(stored.value.result) || !stored.value.sourceRefs.length) return { status: "stale", reason: "calculation-binding-changed" }
-    if (input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context)) return { status: "unavailable", reason: "calculation-nested-evidence-unproven" }
-    const simulate = input.nested?.replayScenario ?? input.replayRecordOnly
-    const reproduced = structuredClone(await simulate(structuredClone(binding.value.request), context))
-    if (reproduced.status !== "ok") return reproduced
-    if (!sourceClosure(reproduced.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(reproduced.value) !== plannerScenarioDigest(stored.value.result)) return { status: "stale", reason: "calculation-replay-changed" }
-    const latestBinding = structuredClone(await input.loadRecordOnlyRequest(runId, context))
-    const latest = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context))
-    const replayAgain = structuredClone(await simulate(structuredClone(binding.value.request), context))
-    if (latestBinding.status !== "ok" || digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || replayAgain.status !== "ok" || !sourceClosure(replayAgain.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(replayAgain.value) !== plannerScenarioDigest(reproduced.value) || input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "calculation-or-authority-changed" }
-    const value: CalculationEvidence = { schema: "sf-evidence-v1", kind: "calculation", refId: `planner-calculation:${encodeURIComponent(runId)}`, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "proposal", target: { calculationId: "planner:scenario", runId, engineVersion: binding.value.engineVersion, inputDigest: stored.value.requestDigest, resultDigest: stored.value.resultDigest, sourceRefs: stored.value.sourceRefs, period: stored.value.result.horizon, currency: stored.value.result.currency } }
-    return { status: "ok", value: { ...value, refDigest: digestSfEvidenceRef(value) } }
+    const c17Tail = c17RootStart("factory.tail")
+    try {
+      if (input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context)) return { status: "unavailable", reason: "calculation-nested-evidence-unproven" }
+      const simulate = input.nested?.replayScenario ?? input.replayRecordOnly
+      const reproduced = structuredClone(await simulate(structuredClone(binding.value.request), context))
+      if (reproduced.status !== "ok") return reproduced
+      if (!sourceClosure(reproduced.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(reproduced.value) !== plannerScenarioDigest(stored.value.result)) return { status: "stale", reason: "calculation-replay-changed" }
+      const c17LatestBinding = c17RootStart("factory.binding.last")
+      let latestBinding: Awaited<ReturnType<typeof input.loadRecordOnlyRequest>>
+      try { latestBinding = structuredClone(await input.loadRecordOnlyRequest(runId, context)) }
+      finally { c17RootEnd("factory.binding.last", c17LatestBinding, http.signal.aborted) }
+      const c17Latest = c17RootStart("factory.result.last")
+      let latest: Awaited<ReturnType<typeof input.readForCalculation>>
+      try { latest = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context)) }
+      finally { c17RootEnd("factory.result.last", c17Latest, http.signal.aborted) }
+      const replayAgain = structuredClone(await simulate(structuredClone(binding.value.request), context))
+      if (latestBinding.status !== "ok" || digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || replayAgain.status !== "ok" || !sourceClosure(replayAgain.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(replayAgain.value) !== plannerScenarioDigest(reproduced.value) || input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "calculation-or-authority-changed" }
+      const value: CalculationEvidence = { schema: "sf-evidence-v1", kind: "calculation", refId: `planner-calculation:${encodeURIComponent(runId)}`, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "proposal", target: { calculationId: "planner:scenario", runId, engineVersion: binding.value.engineVersion, inputDigest: stored.value.requestDigest, resultDigest: stored.value.resultDigest, sourceRefs: stored.value.sourceRefs, period: stored.value.result.horizon, currency: stored.value.result.currency } }
+      return { status: "ok", value: { ...value, refDigest: digestSfEvidenceRef(value) } }
+    } finally { c17RootEnd("factory.tail", c17Tail, http.signal.aborted) }
   }
   const issue = async (runId: string, context: TrustedDomainContext): Promise<PortResult<CalculationEvidence>> => {
     if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
@@ -97,8 +119,11 @@ export function createPlannerCalculationEvidence(input: {
     const runs = parent?.binding === key ? parent.runs : new Set<string>()
     if (runs.has(runId) || runs.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
     return ancestry.run({ binding: key, runs: new Set([...runs, runId]), checks: parent?.binding === key ? parent.checks : new Set<string>() }, async (): Promise<PortResult<CalculationEvidence>> => {
+      const c17Label = runs.size ? "factory.issue.with-parent" : "factory.issue.without-parent"
+      const c17Issue = c17RootStart(c17Label)
       try { return await replay(runId, context) }
       catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
+      finally { c17RootEnd(c17Label, c17Issue) }
     })
   }
   const resolve = async (reference: string, context: TrustedDomainContext): Promise<PortResult<CalculationEvidence>> => {
