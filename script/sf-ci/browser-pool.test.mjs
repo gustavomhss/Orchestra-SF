@@ -322,3 +322,34 @@ test("a deferred source callback cannot collect out of order", () => {
     native.native, (_name, callback) => { queue.push(callback) })
   assert.throws(queue[1], /source collection order changed/)
 })
+
+test("a hook-shaped missing consumer still reaches named finalization and remains incomplete", async () => {
+  const input = registration(), visited = []
+  for (const [file, title] of [[POOL_STARTUP, "start"], [source, "consumer"], [POOL_FINALIZER, "close"]]) {
+    input.register(file, (test) => test(title, () => { visited.push(title) }))
+  }
+  input.registry.seal()
+  await input.native.records[0].fn()
+  // Bun omits this scope's consumer when its beforeAll fails.
+  await input.native.records[2].fn()
+  assert.deepEqual(visited, ["start", "close"])
+  assert.equal(input.events.some((item) => item.type === "case-incomplete"), true)
+  assert.throws(() => input.registry.complete(), /incomplete execution/)
+})
+test("a timed-out pending body cannot prevent named cleanup or yield a complete receipt", async () => {
+  const input = registration(), visited = []
+  let resume
+  input.register(POOL_STARTUP, (test) => test("startup", () => {}))
+  input.register(source, (test) => test("pending", async () => { await new Promise((resolve) => { resume = resolve }); visited.push("late") }))
+  input.register(POOL_FINALIZER, (test) => test("finalizer", () => { visited.push("close") }))
+  input.registry.seal()
+  await input.native.records[0].fn()
+  const pending = input.native.records[1].fn()
+  await input.native.records[2].fn()
+  assert.deepEqual(visited, ["close"])
+  assert.throws(() => input.registry.complete(), /incomplete execution/)
+  resume()
+  await pending
+  assert.deepEqual(visited, ["close", "late"])
+  assert.throws(() => input.registry.complete(), /incomplete execution/)
+})

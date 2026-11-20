@@ -141,9 +141,23 @@ export function createPoolRegistry(sources, emit) {
   unique(sources, "duplicate registry sources")
   if (sources[0] !== POOL_STARTUP || sources.at(-1) !== POOL_FINALIZER) fail("lifecycle registration order changed")
   const cases = [], queued = [], registered = [], seen = new Set(), outcomes = []
-  let sealed = false, current = null, cursor = 0
+  const startedIds = new Set()
+  let sealed = false, current = null, cursor = 0, incomplete = false
   const invoke = async (record, fn, args) => {
-    if (!sealed || current || cases[cursor]?.id !== record.id) fail("case started out of order, twice, or before complete registration")
+    if (!sealed || startedIds.has(record.id)) fail("case started out of order, twice, or before complete registration")
+    // A failed beforeAll can omit consumer bodies; a Bun timeout can leave a
+    // promise pending. The original finalizer must still attempt shutdown.
+    // Record that breach explicitly: it can never produce a complete receipt.
+    if (record.source === POOL_FINALIZER && record.id === cases.at(-1)?.id &&
+        (current || cases[cursor]?.id !== record.id)) {
+      incomplete = true
+      emit({ type: "case-incomplete", activeCase: current?.id ?? null,
+        missingCases: cases.slice(cursor, -1).map((item) => item.id) })
+      current = null
+      cursor = cases.length - 1
+    }
+    if (current || cases[cursor]?.id !== record.id) fail("case started out of order, twice, or before complete registration")
+    startedIds.add(record.id)
     current = record
     cursor++
     emit({ type: "case-start", id: record.id })
@@ -156,7 +170,7 @@ export function createPoolRegistry(sources, emit) {
       outcomes.push({ id: record.id, bodyStatus: "threw" })
       emit({ type: "case-finish", id: record.id, bodyStatus: "threw" })
       throw error
-    } finally { current = null }
+    } finally { if (current?.id === record.id) current = null }
   }
   return {
     register(source, register, nativeTest, describe) {
@@ -215,6 +229,7 @@ export function createPoolRegistry(sources, emit) {
       if (!sealed || current?.source !== POOL_STARTUP || cursor !== 1) fail("browser startup is outside its named fully registered case")
     },
     complete() {
+      if (incomplete) fail("incomplete execution required forced finalization")
       if (!sealed || current || cursor !== cases.length || outcomes.length !== cases.length) fail("missing, active or unexecuted cases")
       same(outcomes.map((item) => item.id), cases.map((item) => item.id), "case completion order changed")
       if (outcomes.some((item) => item.bodyStatus !== "returned")) fail("a case body failed")
