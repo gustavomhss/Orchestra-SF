@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import { SfFilesOperationBindings } from "../../../src/sucafina/files/codecs"
+import { SfNativeOperationBindings } from "../../../src/sucafina/bindings"
 import {
   sfAllowedByteMime, sfFilesSourceQuery, sfIsByteOperation, sfIsUploadOperation,
   sfUploadSlot, SF_FILE_IMPORT_LIMIT, SF_FILE_ASSET_LIMIT, SF_FILE_BYTE_LIMIT,
@@ -9,14 +10,18 @@ import {
 
 // Structural source-compatibility tests only. No fake principal, success grant,
 // provider, Request, live file or claimed server acceptance is generated here.
+// Decode through the same aggregate passed by owner-runtime231 to F02.
 describe("226 A06/F02 source-locked file transport", () => {
-  test("28 source schemas each have exactly one frozen route and codec", () => {
+  test("all 28 source file codecs are installed unchanged in the native owner binding", () => {
     const ids = Object.keys(SfFiles.operations)
     expect(ids.length).toBe(28)
     expect(new Set(ids).size).toBe(28)
     for (const id of ids) {
       expect(SfOperationRegistry[id as keyof typeof SfOperationRegistry]).toBeDefined()
       expect(SfFilesOperationBindings[id as keyof typeof SfFilesOperationBindings]).toBeDefined()
+      expect(SfNativeOperationBindings[id as keyof typeof SfNativeOperationBindings]).toBeDefined()
+      expect(SfNativeOperationBindings[id as keyof typeof SfNativeOperationBindings])
+        .toBe(SfFilesOperationBindings[id as keyof typeof SfFilesOperationBindings])
     }
   })
 
@@ -29,14 +34,14 @@ describe("226 A06/F02 source-locked file transport", () => {
     ])
     for (const id of ids) {
       expect(SfOperationRegistry[id as keyof typeof SfOperationRegistry].responseMode).toBe("bytes")
-      expect(SfFilesOperationBindings[id as keyof typeof SfFilesOperationBindings]!.decodeOutput({})).toEqual({ status: "invalid" })
+      expect(SfNativeOperationBindings[id as keyof typeof SfFilesOperationBindings]!.decodeOutput({})).toEqual({ status: "invalid" })
     }
     expect(sfIsByteOperation("files.asset.link")).toBe(false)
     expect(SF_FILE_BYTE_LIMIT).toBe(32 * 1024 * 1024)
   })
 
   test("original import nesting/false and asset zero version survive JSON metadata binding", () => {
-    const admitted = SfFilesOperationBindings["files.import-admit"]!.decodeInput({
+    const admitted = SfNativeOperationBindings["files.import-admit"]!.decodeInput({
       surface: "planner", selectionRef: "selection-1",
       options: { newVersion: false, removeMissing: false, preview: {} },
       fileName: "budget.xlsx", mediaType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -45,7 +50,7 @@ describe("226 A06/F02 source-locked file transport", () => {
     if (admitted.status !== "ok") return
     expect(admitted.value).toHaveProperty("options.newVersion", false)
     expect(admitted.value).toHaveProperty("options.removeMissing", false)
-    const asset = SfFilesOperationBindings["files.asset.upload"]!.decodeInput({
+    const asset = SfNativeOperationBindings["files.asset.upload"]!.decodeInput({
       surface: "dashboard", upload: "contract", record: "contract-1",
       recordVersion: 0, name: "evidence.pdf", page: "Vendor Contracts",
       mediaType: "application/pdf",
@@ -56,7 +61,7 @@ describe("226 A06/F02 source-locked file transport", () => {
   })
 
   test("untrusted URL/path/header and duplicate ref fields cannot enter wire codec", () => {
-    const codec = SfFilesOperationBindings["files.asset.link"]!
+    const codec = SfNativeOperationBindings["files.asset.link"]!
     expect(codec.decodeInput({ surface: "dashboard", assetId: "a", url: "https://evil.invalid" }))
       .toEqual({ status: "invalid" })
     expect(codec.decodeInput({ surface: "dashboard", assetId: "a", headers: { Cookie: "bad" } }))
@@ -79,14 +84,14 @@ describe("226 A06/F02 source-locked file transport", () => {
       { surface: "procurement", request: "PR-42", url: "https://evil.invalid" },
     ]) {
       expect(sfFilesSourceQuery("files.export.po", input)).toBeUndefined()
-      expect(SfFilesOperationBindings["files.export.po"]!.decodeInput(input))
+      expect(SfNativeOperationBindings["files.export.po"]!.decodeInput(input))
         .toEqual({ status: "invalid" })
     }
-    expect(SfFilesOperationBindings["files.export.po"]!.decodeInput({
+    expect(SfNativeOperationBindings["files.export.po"]!.decodeInput({
       surface: "procurement", request: "PR-42",
     }).status).toBe("ok")
-    expect(SfFilesOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: ref, url: "https://evil.invalid" })).toEqual({ status: "invalid" })
-    expect(SfFilesOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: "report:xyz" })).toEqual({ status: "invalid" })
+    expect(SfNativeOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: ref, url: "https://evil.invalid" })).toEqual({ status: "invalid" })
+    expect(SfNativeOperationBindings["files.export.review"]!.decodeInput({ surface: "dashboard", artifactRef: "report:xyz" })).toEqual({ status: "invalid" })
   })
 
   test("two fixed upload slots reject MIME confusion, empty/oversize and binary-path diversion", () => {
