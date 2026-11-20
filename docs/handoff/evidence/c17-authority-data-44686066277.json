@@ -1,0 +1,893 @@
+{
+  "schemaVersion": 1,
+  "status": "qualification-incomplete",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "runtime": "53faf8db0f015431b80722f457bc1018aff17ebe",
+    "candidate": "8d7cb85f068d877c8e808206627ca0dc8993d39f",
+    "candidateChange": "nine matcher expected arrays copied with spread; runtime unchanged",
+    "tree": "351c5a1a7d476e313832aaf7443f946709cb60a0"
+  },
+  "functional": {
+    "runId": 44686066277,
+    "jobId": 136120565459,
+    "cleanupJobId": 136124232394,
+    "attempt": 1,
+    "conclusion": "failure",
+    "snapshot": "9ddbf78ef3451a5380b727ace584dea6283aacb5",
+    "parent": "53faf8db0f015431b80722f457bc1018aff17ebe",
+    "tree": "59f082920b56943ab931ba1ad981e32a8b0119ec",
+    "requestBlob": "92f1538a75748b8849d25e8377c790f59aa6d3d5",
+    "request": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/local-authority-data.test.ts",
+        "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "summary": {
+      "pass": 83,
+      "fail": 6,
+      "expectCalls": 546,
+      "tests": 89,
+      "files": 7,
+      "durationSeconds": 533.41
+    },
+    "byFile": {
+      "Sucafinav1/test/local-authority-data.test.ts": {
+        "pass": 16,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts": {
+        "pass": 23,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts": {
+        "pass": 0,
+        "fail": 1
+      },
+      "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts": {
+        "pass": 14,
+        "fail": 1
+      },
+      "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts": {
+        "pass": 10,
+        "fail": 4
+      },
+      "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts": {
+        "pass": 5,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/wp10/integration/product-authority.test.ts": {
+        "pass": 15,
+        "fail": 0
+      }
+    },
+    "failures": [
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "reason": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+        "durationMs": 105009.77,
+        "unchangedTest": true
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "line": 172,
+        "reason": "test timed out after 120000ms",
+        "durationMs": 161499.05,
+        "unchangedTest": true,
+        "barrierDiagnosis": "not established by this run"
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "line": 58,
+        "reason": "baseline admission authentication sequence repeated",
+        "expected": [
+          "dashboard",
+          "planner",
+          "procurement"
+        ],
+        "received": [
+          "dashboard",
+          "planner",
+          "procurement",
+          "dashboard",
+          "planner",
+          "procurement"
+        ],
+        "newTest": true
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "line": 132,
+        "reason": "opaque persistence getter count",
+        "expected": 2,
+        "received": 4,
+        "newTest": true
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "line": 176,
+        "innerLine": 173,
+        "reason": "inner authentication-count assertion masks final poison fence assertion",
+        "expectedError": "Nested local write attempted",
+        "receivedError": "expect(received).toEqual(expected)",
+        "expectedAuthenticationCount": 3,
+        "receivedAuthenticationCount": 6,
+        "newTest": true
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "line": 246,
+        "reason": "inherited roleMap getter observation sequence repeated",
+        "expected": [
+          "dashboard",
+          "dashboard",
+          "dashboard",
+          "planner",
+          "planner",
+          "planner",
+          "procurement",
+          "procurement",
+          "procurement"
+        ],
+        "received": [
+          "dashboard",
+          "dashboard",
+          "dashboard",
+          "planner",
+          "planner",
+          "planner",
+          "procurement",
+          "procurement",
+          "procurement",
+          "dashboard",
+          "dashboard",
+          "dashboard",
+          "planner",
+          "planner",
+          "planner",
+          "procurement",
+          "procurement",
+          "procurement"
+        ],
+        "newTest": true
+      }
+    ],
+    "phases": [
+      {
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "calculation-ancestry-composition",
+        "phase": "initialize",
+        "state": "started",
+        "elapsedMs": 2
+      },
+      {
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "calculation-ancestry-composition",
+        "phase": "initialize",
+        "state": "returned",
+        "phaseMs": 42,
+        "elapsedMs": 45,
+        "aborted": false
+      },
+      {
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-inner",
+        "state": "started",
+        "elapsedMs": 45
+      },
+      {
+        "marker": "SF_CALCULATION_ANCESTRY",
+        "phase": "produce-inner",
+        "elapsedMs": 2408,
+        "canonicalResultReads": 14,
+        "canonicalResultReadsCompleted": 14,
+        "aborted": false
+      },
+      {
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-inner",
+        "state": "returned",
+        "phaseMs": 2409,
+        "elapsedMs": 2453,
+        "aborted": false
+      },
+      {
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-outer",
+        "state": "started",
+        "elapsedMs": 2459
+      },
+      {
+        "marker": "SF_CALCULATION_ANCESTRY",
+        "phase": "produce-outer",
+        "elapsedMs": 102547,
+        "canonicalResultReads": 961,
+        "canonicalResultReadsCompleted": 961,
+        "aborted": true
+      },
+      {
+        "marker": "SF_COMPOSITION_PHASE",
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-outer",
+        "state": "returned",
+        "phaseMs": 102547,
+        "elapsedMs": 105006,
+        "aborted": true
+      }
+    ],
+    "cases": [
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "readonly authority copies match the codec, preserve absence and never expose the private root",
+        "status": "pass",
+        "durationMs": 21.68
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "only the actual store or unchanged source-factory composition can project",
+        "status": "pass",
+        "durationMs": 6.55
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "changing currentSnapshots cannot retain a projected store or source observation",
+        "status": "pass",
+        "durationMs": 5.18
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "changing currentSnapshot cannot retain a projected store or source observation",
+        "status": "pass",
+        "durationMs": 5.48
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "changing transaction cannot retain a projected store or source observation",
+        "status": "pass",
+        "durationMs": 7.11
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "changing transactionAll cannot retain a projected store or source observation",
+        "status": "pass",
+        "durationMs": 5.13
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "changing readSnapshotRoot cannot retain a projected store or source observation",
+        "status": "pass",
+        "durationMs": 5.35
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "an opaque source input is not registered and inspecting it adds no getter invocation",
+        "status": "pass",
+        "durationMs": 4.79
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "inherited roleMap preserves the full receiver and later inheritance invalidates a read",
+        "status": "pass",
+        "durationMs": 7.28
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "inherited access preserves the full receiver and later inheritance invalidates a read",
+        "status": "pass",
+        "durationMs": 7.51
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "poison keeps snapshot observation callbacks but still rejects root publication",
+        "status": "pass",
+        "durationMs": 5.45
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "abort and escaped descendants cannot become an unsupported fallback",
+        "status": "pass",
+        "durationMs": 5.72
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "dispose drains an admitted readonly root without changing its observation lifetime",
+        "status": "pass",
+        "durationMs": 5.8
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "inherited descriptor.value cannot disguise an admitted driver accessor",
+        "status": "pass",
+        "durationMs": 4.78
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "inherited descriptor.value cannot disguise an admitted source input accessor",
+        "status": "pass",
+        "durationMs": 5.16
+      },
+      {
+        "file": "Sucafinav1/test/local-authority-data.test.ts",
+        "name": "inherited descriptor.value cannot disguise an admitted source method accessor",
+        "status": "pass",
+        "durationMs": 4.84
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "cold readonly root supplies no mutable target and detaches every surface observation",
+        "status": "pass",
+        "durationMs": 19.55
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "warm readonly root supplies no mutable target and detaches every surface observation",
+        "status": "pass",
+        "durationMs": 16.02
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed commit and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 30.33
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed transaction-all and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 21.43
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed nested-root and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 20.61
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed blob-put and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 23.3
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed blob-remove and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 27.12
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed secret-put and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 23.65
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed secret-take and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 22.45
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly root refuses a swallowed secret-remove and leaves snapshots, blobs and secrets unchanged",
+        "status": "pass",
+        "durationMs": 19.58
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a readonly root attempted inside a mutable transaction poisons the original writer even when caught",
+        "status": "pass",
+        "durationMs": 10.79
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly roots reject pre-aborted work and a swallowed parent abort at the final fence",
+        "status": "pass",
+        "durationMs": 11.14
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a nested read abort does not revoke the still-open readonly parent",
+        "status": "pass",
+        "durationMs": 9.77
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a thrown readonly callback closes descendants and releases the store for a fresh root",
+        "status": "pass",
+        "durationMs": 13.94
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "an unjoined reader prevents readonly success and cannot observe a closed root",
+        "status": "pass",
+        "durationMs": 11.11
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "captured readonly descendants and blob capabilities expire without borrowing a later root",
+        "status": "pass",
+        "durationMs": 11.31
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "dispose drains an admitted readonly root and refuses subsequent admissions",
+        "status": "pass",
+        "durationMs": 10.25
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a transaction refused after concurrent dispose still poisons its admitted readonly root when caught",
+        "status": "pass",
+        "durationMs": 14.18
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a transaction-all refused after concurrent dispose still poisons its admitted readonly root when caught",
+        "status": "pass",
+        "durationMs": 12.32
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a secret-put refused after concurrent dispose still poisons its admitted readonly root when caught",
+        "status": "pass",
+        "durationMs": 12.37
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a secret-take refused after concurrent dispose still poisons its admitted readonly root when caught",
+        "status": "pass",
+        "durationMs": 12.81
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "a secret-remove refused after concurrent dispose still poisons its admitted readonly root when caught",
+        "status": "pass",
+        "durationMs": 17.29
+      },
+      {
+        "file": "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "name": "readonly materialization never sanitizes invalid values inserted into a later mutable target",
+        "status": "pass",
+        "durationMs": 18.52
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+        "status": "fail",
+        "durationMs": 105009.77
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an unsupported preparation preserves the complete producer without owning a root and remains one-shot",
+        "status": "pass",
+        "durationMs": 32.43
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an unsupported token refuses a foreign C08 scope that appeared after preparation",
+        "status": "pass",
+        "durationMs": 24.41
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "failed initializer false cannot become an unsupported legacy attempt",
+        "status": "pass",
+        "durationMs": 22.62
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "failed initializer throw cannot become an unsupported legacy attempt",
+        "status": "pass",
+        "durationMs": 22.09
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "failed initializer drift cannot become an unsupported legacy attempt",
+        "status": "pass",
+        "durationMs": 22.21
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "unsupported legacy work refuses revoked authority before-work",
+        "status": "pass",
+        "durationMs": 21.86
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "unsupported legacy work refuses revoked authority during-work",
+        "status": "pass",
+        "durationMs": 25.02
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an existing owned scope skips the mixed initializer entirely",
+        "status": "pass",
+        "durationMs": 22.85
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an existing foreign scope skips the mixed initializer entirely",
+        "status": "pass",
+        "durationMs": 22.78
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a mixed replay prepares an actual auxiliary source before its witness without replacing its cited source",
+        "status": "pass",
+        "durationMs": 72993.17
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "the actual mixed producer admits both calculation siblings concurrently inside one owned root",
+        "status": "fail",
+        "durationMs": 161499.05
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a real mixed request with another Planner base preserves the complete unsupported producer",
+        "status": "pass",
+        "durationMs": 5047.25
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a mixed preparation that changes its original Request cannot execute the producer as fallback",
+        "status": "pass",
+        "durationMs": 56118.61
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a poisoned mixed replay cannot retry outside its owned root or publish a result",
+        "status": "pass",
+        "durationMs": 56718.52
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a mixed replay under a foreign C08 owner keeps its full producer without another root or warmup",
+        "status": "pass",
+        "durationMs": 74170.25
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "real authority keeps all three authentications and identical admission revisions on projected and full reads",
+        "status": "fail",
+        "durationMs": 21.35
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "ACL changes between fresh roots revoke existing authority without changing other-principal semantics",
+        "status": "pass",
+        "durationMs": 25.1
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "an awaited consumer owner change denies admission without a legacy retry",
+        "status": "pass",
+        "durationMs": 17.14
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "an awaited source owner change denies admission without a legacy retry",
+        "status": "pass",
+        "durationMs": 13.42
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "an awaited driver owner change denies admission without a legacy retry",
+        "status": "pass",
+        "durationMs": 14.93
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "an awaited composite owner change denies admission without a legacy retry",
+        "status": "pass",
+        "durationMs": 14.75
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "opaque input getters and wrappers retain their actual full-copy path",
+        "status": "fail",
+        "durationMs": 16.28
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "revocation and abort during real authentication remain refusals after all three callbacks start",
+        "status": "pass",
+        "durationMs": 19.18
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "an already poisoned root still authenticates before its original publication fence rejects",
+        "status": "fail",
+        "durationMs": 17.27
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "prototype drift during authentication is refused without executing a getter on a reduced receiver",
+        "status": "pass",
+        "durationMs": 13.69
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "a changed provider cannot recover the same in-flight observation by restoring its method",
+        "status": "pass",
+        "durationMs": 14.82
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "the final identity callback cannot replace the authority input owner before egress",
+        "status": "pass",
+        "durationMs": 13.95
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "an inherited role map uses the real full data receiver on the original fallback",
+        "status": "fail",
+        "durationMs": 21.56
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+        "name": "inherited descriptor.value cannot disguise the consumer input accessor during authentication",
+        "status": "pass",
+        "durationMs": 16.69
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+        "name": "source incarnation survives reopen and deletion/recreation gets a new identity",
+        "status": "pass",
+        "durationMs": 21.27
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+        "name": "preview, thrown callback and cancellation leave lifecycle unchanged",
+        "status": "pass",
+        "durationMs": 13.77
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+        "name": "dataset replacement renews identity and retains the trusted protected product namespace",
+        "status": "pass",
+        "durationMs": 18.27
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+        "name": "authorized projection revisions persist and ignore restricted changes while observing intermediate writes",
+        "status": "pass",
+        "durationMs": 44.17
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+        "name": "resolving an old scoped incarnation refuses deletion and recreation between lookup and observation",
+        "status": "pass",
+        "durationMs": 22.2
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "product authority revalidates current surfaces without opening a nested transaction",
+        "status": "pass",
+        "durationMs": 12.88
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "human writes require their own action grant and cannot borrow a consumed read lease",
+        "status": "pass",
+        "durationMs": 10.86
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "human command admission binds exact action and payload and revokes on authority change",
+        "status": "pass",
+        "durationMs": 8.68
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "private collaboration reads admit a viewer with an explicit grant and bind exact payload",
+        "status": "pass",
+        "durationMs": 10.74
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "the read-only exception does not grant unconfigured private reads",
+        "status": "pass",
+        "durationMs": 6.77
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "dashboard roles alone do not grant C08 or a business operation",
+        "status": "pass",
+        "durationMs": 5.81
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "collaboration read leases require the exact operation and all namespaces without granting writes",
+        "status": "pass",
+        "durationMs": 16
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "private grants narrow namespaces and operations; role changes revoke existing UI authority",
+        "status": "pass",
+        "durationMs": 9.74
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "write requires current write authority and document targets do not accept unverified identifiers",
+        "status": "pass",
+        "durationMs": 6.3
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "native binding cannot be invented without a current stored run",
+        "status": "pass",
+        "durationMs": 9.92
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "a real C08 run and case still cannot bind a missing native Session",
+        "status": "pass",
+        "durationMs": 23.54
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "assignment and domain revocation invalidate authority without incorporating other principals",
+        "status": "pass",
+        "durationMs": 16.73
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "workspace target is limited to explicit creation namespaces and still requires current grant and write access",
+        "status": "pass",
+        "durationMs": 13.05
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "identity mutation during authentication is denied",
+        "status": "pass",
+        "durationMs": 8
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "name": "product authority captures only missing surfaces before authentication and retains legacy and explicit snapshot paths",
+        "status": "pass",
+        "durationMs": 11.56
+      }
+    ],
+    "omni": {
+      "verdict": "not applicable",
+      "reason": "focused: no declaring test ran",
+      "spawned": false,
+      "delegated": false,
+      "nativeWitness": false
+    },
+    "cleanup": "success"
+  },
+  "compilers": [
+    {
+      "runId": 44686072921,
+      "jobId": 136120586996,
+      "cleanupJobId": 136121617658,
+      "attempt": 1,
+      "snapshot": "35f0ffe9a3f6231bdf4064a499708cde6f662247",
+      "product": "53faf8db0f015431b80722f457bc1018aff17ebe",
+      "tree": "6fa5a2d8c1cdcb552093cbb19869a7028d22cb16",
+      "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+      "harnessBlob": "a7920cc9ea1d64d70bf9ed6920c29eb9dc361ed4",
+      "summary": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "durationMs": 58804.099126
+      },
+      "sucafina": {
+        "status": "failure",
+        "durationMs": 30986.282527,
+        "diagnostics": [
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 58,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 116,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 134,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 149,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 163,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 173,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 194,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 228,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          },
+          {
+            "code": "TS2769",
+            "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+            "line": 247,
+            "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+          }
+        ]
+      },
+      "cli": {
+        "status": "success",
+        "durationMs": 27748.683851
+      },
+      "cleanup": "success"
+    },
+    {
+      "runId": 44686875780,
+      "jobId": 136123190406,
+      "cleanupJobId": 136123923264,
+      "attempt": 1,
+      "snapshot": "95051efd810de12d1dc23a1f7596c9ded6390196",
+      "product": "8d7cb85f068d877c8e808206627ca0dc8993d39f",
+      "tree": "b299d48ec36d0cdcc75b10c840d2ba23abeaf66f",
+      "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+      "harnessBlob": "036f1608e9e582853e059204a4a0bafdeb157f2d",
+      "summary": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "cancelled": 0,
+        "durationMs": 29564.485399
+      },
+      "sucafina": {
+        "status": "success",
+        "durationMs": 29523.495411
+      },
+      "cleanup": "success"
+    }
+  ],
+  "limitations": [
+    "No sf-ci, integration, browser nominal or identical functional rerun was performed.",
+    "Four new test expectations require contract diagnosis before any change; this evidence does not classify them as a runtime regression.",
+    "C17 and mixed siblings retain their original red deadlines; no performance closure is claimed.",
+    "Phase and test durations are elapsed measurements, not additive CPU profiles."
+  ]
+}
