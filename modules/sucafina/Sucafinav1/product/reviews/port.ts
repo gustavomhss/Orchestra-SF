@@ -1,4 +1,4 @@
-import { types } from "node:util"
+import { pinReviewReadProperties } from "./read-identity.ts"
 import { createHash } from "node:crypto"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
@@ -67,7 +67,7 @@ export function sfReviewReadValidation(port: object): ReviewReadValidation | und
   return descriptor && "value" in descriptor && descriptor.value === registered?.read ? registered.validation : undefined
 }
 
-export function createReviewPort(host: ReviewHost, readDependenciesCurrent?: () => boolean) {
+export function createReviewPort(host: ReviewHost, readDependenciesCurrent?: () => boolean | undefined) {
   const validateBody = async (id: string, value: PreservedReview, binding: TrustedDomainContext, current: () => Promise<boolean>, unchanged: () => boolean): Promise<PortResult<PreservedReview>> => {
     if (!unchanged()) return { status: "denied", reason: "binding-unavailable" } as const
     if (value.id !== id) return { status: "denied", reason: "review-target-changed" } as const
@@ -204,26 +204,18 @@ export function createReviewPort(host: ReviewHost, readDependenciesCurrent?: () 
       }
     },
   }
-  // Opaque/accessor hosts retain their complete original read. Inspect only
-  // own data descriptors; do not invoke a getter while recognizing a factory.
-  if (types.isProxy(host) || Object.getPrototypeOf(host) !== Object.prototype) return reviews
-  const names = ["state", "requestFor", "revalidateReadAccess", "revalidate", "revalidateReadEvidence", "revalidateEvidence",
-    "authorizeSections", "authorizeComments", "authorizeOutcomeComparison", "authorizeOutcome", "authorizeDecision", "authorizeSensitivity"] as const
-  const methods = names.map((name) => [name, Object.getOwnPropertyDescriptor(host, name)] as const)
-  if (methods.some(([, descriptor]) => descriptor && !("value" in descriptor))) return reviews
-  const state = host.state
-  if (types.isProxy(state) || Object.getPrototypeOf(state) !== Object.prototype) return reviews
-  const readState = Object.getOwnPropertyDescriptor(state, "read")
-  if (!readState || !("value" in readState)) return reviews
+  // Opaque/accessor/inherited hosts retain their complete original read.
+  const methods = pinReviewReadProperties(host, ["state", "requestFor", "revalidateReadAccess", "revalidate",
+    "revalidateReadEvidence", "revalidateEvidence", "authorizeSections", "authorizeComments",
+    "authorizeOutcomeComparison", "authorizeOutcome", "authorizeDecision", "authorizeSensitivity"])
+  const state = methods && pinReviewReadProperties(methods.values.state, ["read"])
+  if (!methods || !state || readDependenciesCurrent && readDependenciesCurrent() !== true) return reviews
   // Identity is only an admission/egress fence. Every dependency callback above
   // still runs on every validation, including callbacks with mutable closures.
-  const currentDependencies = () => methods.every(([name, prior]) => {
-    const current = Object.getOwnPropertyDescriptor(host, name)
-    return prior ? !!current && "value" in current && current.value === prior.value : current === undefined
-  }) && Object.getOwnPropertyDescriptor(state, "read")?.value === readState.value && (!readDependenciesCurrent || readDependenciesCurrent())
+  const currentDependencies = () => methods.current() && state.current() && (!readDependenciesCurrent || readDependenciesCurrent() === true)
   const validation: ReviewReadValidation = Object.freeze({
     current: currentDependencies,
-    validate: async (id, value, binding, unchanged) => {
+    validate: async (id: string, value: PreservedReview, binding: TrustedDomainContext, unchanged: () => boolean): Promise<PortResult<PreservedReview>> => {
       const request = host.requestFor(binding)
       const current = async () => currentDependencies() && unchanged() && !!request && host.requestFor(binding) === request &&
         await (host.revalidateReadAccess ? host.revalidateReadAccess(binding) : host.revalidate(binding, [])) &&

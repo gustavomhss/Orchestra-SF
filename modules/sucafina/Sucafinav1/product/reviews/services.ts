@@ -1,3 +1,4 @@
+import { pinReviewReadProperties } from "./read-identity.ts"
 import { canonicalSfValue, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
@@ -24,17 +25,15 @@ export function createReviewServices(input: {
   now: () => string
 }) {
   if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !input.creationTarget.ref.trim() || !input.creationTarget.incarnation.trim()) throw new Error("SF_REVIEW_STORAGE_CONFIG_INVALID")
-  const owners = { state: input.state, host: input.host, evidence: input.evidence, selection: input.selection }
-  const methods = [
-    [owners.host, "requestFor", owners.host.requestFor], [owners.host, "revalidate", owners.host.revalidate],
-    [owners.evidence, "resolve", owners.evidence.resolve],
-    ...(["authorizeSections", "authorizeComments", "authorizeOutcomeComparison", "authorizeOutcome", "authorizeDecision", "authorizeSensitivity", "revalidate"] as const)
-      .map((name) => [owners.selection, name, owners.selection[name]] as const),
-  ] as const
-  // These pins reject composition swaps; validation still calls every method.
-  const readDependenciesCurrent = () => Object.entries(owners).every(([name, value]) =>
-    Object.getOwnPropertyDescriptor(input, name)?.value === value) && methods.every(([owner, name, value]) =>
-      Object.getOwnPropertyDescriptor(owner, name)?.value === value)
+  const owners = pinReviewReadProperties(input, ["state", "host", "evidence", "selection"])
+  const reader = owners && pinReviewReadProperties(owners.values.host, ["requestFor", "revalidate"])
+  const evidence = owners && pinReviewReadProperties(owners.values.evidence, ["resolve"])
+  const selection = owners && pinReviewReadProperties(owners.values.selection,
+    ["authorizeSections", "authorizeComments", "authorizeOutcomeComparison", "authorizeOutcome", "authorizeDecision", "authorizeSensitivity", "revalidate"])
+  // Opaque composition retains the original callbacks without additional getter
+  // or proxy observations. These pins only reject swaps, never authorize a body.
+  const readDependenciesCurrent = () => !owners || !reader || !evidence || !selection ? undefined :
+    owners.current() && reader.current() && evidence.current() && selection.current()
   const reviews = createReviewPort({
     state: input.state,
     creationTarget: input.creationTarget,

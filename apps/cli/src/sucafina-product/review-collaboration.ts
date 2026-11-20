@@ -97,7 +97,8 @@ export function createSfReviewCollaboration(input: {
     if (!current() || first.status !== "ok" || digestSfValue(first.value) !== pin.reviewDigest) return unavailable()
     const before = await snapshot()
     const sourceCheck = { owner: host, request, current }
-    const secondObservation = await withSfScopedSourceChecks(sourceCheck, () => read.call(reviews, pin.reviewRef, call))
+    const secondObservation = await withSfScopedSourceChecks(sourceCheck, () => read.call(reviews, pin.reviewRef, call)).catch(() => undefined)
+    if (!secondObservation) return unavailable()
     const second = secondObservation.value
     const after = await snapshot()
     if (!before || before !== after || !current() || !secondObservation.current() || second.status !== "ok" || digestSfValue(second.value) !== pin.reviewDigest ||
@@ -111,7 +112,8 @@ export function createSfReviewCollaboration(input: {
       // structure/owners; transaction consumers await this source fence first.
       const observation = await withSfScopedSourceChecks(sourceCheck, () => readScope && revalidateReview
         ? revalidateReview.call(readScope, pin.reviewRef, pin.reviewDigest, call)
-        : read.call(reviews, pin.reviewRef, call))
+        : read.call(reviews, pin.reviewRef, call)).catch(() => undefined)
+      if (!observation) return false
       sourceCurrent = observation.current
       const observed = observation.value
       return observed.status === "ok" && digestSfValue(observed.value) === pin.reviewDigest &&

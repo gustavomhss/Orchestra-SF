@@ -1,3 +1,4 @@
+import { pinReviewReadProperties } from "../../../../modules/sucafina/Sucafinav1/product/reviews/read-identity.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -102,20 +103,18 @@ export function createSfReviewServices(input: {
   const readers = input.readers
   const recognizedReaders = sfResidentReviewSnapshotReaders(readers, host)
   const residentSnapshotReaders = recognizedReaders ? () => input.readers === readers && recognizedReaders() : undefined
-  const persistence = input.persistence, context = business.context, agenda = input.agenda
-  const evidenceOwner = business.evidence, evidenceCurrent = evidenceOwner.current
-  const sourceMethods = (["resolveScopedSource", "readScopedSource", "readScopedSourcePrepared", "checkScopedSource"] as const)
-    .map((name) => [name, Object.getOwnPropertyDescriptor(persistence, name)] as const)
-  const resolveEvidence = context.resolve, agendaEvidence = agenda?.resolveEvidence
-  // These pins detect owner/method swaps; successful reuse still invokes all
-  // evidence/source callbacks, so a stable function's closure can revoke access.
-  const dependenciesCurrent = () => input.authority === authority && input.business === business && authority.host === host &&
-    input.persistence === persistence && input.readers === readers && business.context === context && context.resolve === resolveEvidence &&
-    business.evidence === evidenceOwner && evidenceOwner.current === evidenceCurrent && input.agenda === agenda && agenda?.resolveEvidence === agendaEvidence &&
-    sourceMethods.every(([name, descriptor]) => {
-      const current = Object.getOwnPropertyDescriptor(persistence, name)
-      return descriptor ? "value" in descriptor && !!current && "value" in current && current.value === descriptor.value : current === undefined
-    })
+  const owners = pinReviewReadProperties(input, ["authority", "business", "persistence", "readers", "agenda"])
+  const businessReader = owners && pinReviewReadProperties(owners.values.business, ["context", "evidence"])
+  const context = businessReader && pinReviewReadProperties(businessReader.values.context, ["resolve"])
+  const evidencePin = businessReader && pinReviewReadProperties(businessReader.values.evidence, ["current"])
+  const sources = owners && pinReviewReadProperties(owners.values.persistence,
+    ["resolveScopedSource", "readScopedSource", "readScopedSourcePrepared", "checkScopedSource"])
+  const agenda = owners?.values.agenda && pinReviewReadProperties(owners.values.agenda, ["resolveEvidence"])
+  // The same functions may revoke through their closures, so validation invokes
+  // them again. Descriptor pins only prevent crossing a composition replacement.
+  const dependenciesCurrent = () => !owners || !businessReader || !context || !evidencePin || !sources || owners.values.agenda && !agenda ? undefined :
+    owners.current() && businessReader.current() && context.current() && evidencePin.current() && sources.current() &&
+    (!agenda || agenda.current()) && authority.host === host
   const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
     localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined),
     residentSnapshotReaders, dependenciesCurrent })

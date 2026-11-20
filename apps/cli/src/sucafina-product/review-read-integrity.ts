@@ -27,7 +27,7 @@ export function protectSfReviewReads(input: {
   /** Live recognition supplied only by the registered resident reader factory. */
   residentSnapshotReaders?: () => boolean
   /** Consumer owners/methods only; never a substitute for their callbacks. */
-  dependenciesCurrent?: () => boolean
+  dependenciesCurrent?: () => boolean | undefined
 }) {
   const { authority, reviews } = input
   const host = authority.host
@@ -38,8 +38,9 @@ export function protectSfReviewReads(input: {
   const defaultReaders = input.localSnapshotReaders === true
   const residentSnapshotReaders = input.residentSnapshotReaders
   const compositionCurrent = () => input.dependenciesCurrent === dependenciesCurrent && input.residentSnapshotReaders === residentSnapshotReaders &&
-    (!dependenciesCurrent || dependenciesCurrent()) && (!validation || validation.current())
-  const localReaders = () => !!validation && compositionCurrent() && (defaultReaders || residentSnapshotReaders?.() === true)
+    (!dependenciesCurrent || dependenciesCurrent() !== false) && (!validation || validation.current())
+  const localReaders = () => !!validation && compositionCurrent() && (!dependenciesCurrent || dependenciesCurrent() === true) &&
+    (defaultReaders || residentSnapshotReaders?.() === true)
   // Resident portfolio/native dependencies retain their original producer path.
   const supported = (review: PreservedReview) => snapshotBoundReview(review) && (defaultReaders || localRecordReview(review))
   const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => scope.open && localReaders() && reviews.read === protectedRead &&

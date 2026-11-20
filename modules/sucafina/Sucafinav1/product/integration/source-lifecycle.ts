@@ -34,7 +34,7 @@ export type SfScopedSourcePort = {
   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
-type ScopedSourceCheckScope = { owner: object; request: Request; open: boolean; failed: boolean; pins: Set<() => boolean>; producers: WeakSet<object> }
+type ScopedSourceCheckScope = { owner: object; request: Request; open: boolean; failed: boolean; pins: Set<() => boolean>; producers: WeakMap<object, (() => boolean) | null> }
 const scopedSourceChecks = new AsyncLocalStorage<ScopedSourceCheckScope>()
 const currentSourceChecks = (scope: ScopedSourceCheckScope) => {
   try { return !scope.failed && !scope.request.signal.aborted && [...scope.pins].every((pin) => pin()) } catch { return false }
@@ -48,7 +48,9 @@ const requireSourceChecks = (scope: ScopedSourceCheckScope) => {
 
 /** Reobserve sources under the current authenticated read/commit group. This
  * never supplies source authority: observe invokes the actual projector and
- * both authorizations. The returned current check pins owners/methods only;
+ * both authorizations. Opaque factories keep their original read/materialization;
+ * the real enclosing C08 still rejects nested writes. An admitted factory can
+ * never fall back after its identity changes. The returned check pins identity;
  * the asynchronous producer must run again for each dependency authorization. */
 export async function withSfScopedSourceChecks<Value>(binding: { owner: object; request: Request; current: () => boolean },
   work: () => Promise<Value>): Promise<{ value: Value; current: () => boolean }> {
@@ -67,7 +69,7 @@ export async function withSfScopedSourceChecks<Value>(binding: { owner: object; 
     requireSourceChecks(inherited)
     return { value, current: () => currentSourceChecks(inherited) }
   }
-  const scope: ScopedSourceCheckScope = { owner, request, open: true, failed: false, pins: new Set([pin]), producers: new WeakSet() }
+  const scope: ScopedSourceCheckScope = { owner, request, open: true, failed: false, pins: new Set([pin]), producers: new WeakMap() }
   return scopedSourceChecks.run(scope, async () => {
     try {
       requireSourceChecks(scope)
@@ -98,36 +100,37 @@ export function createSfSourcePersistence(input: {
   purpose?: "business-restore"
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
 }): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+  const admitSourceChecks = (scope: ScopedSourceCheckScope) => {
+    if (scope.producers.has(input)) return scope.producers.get(input) !== null
+    const opaque = () => { scope.producers.set(input, null); return false }
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return opaque()
+    const inputPrototype = Object.getPrototypeOf(input)
+    const descriptors = (["persistence", "projectScope"] as const)
+      .map((name) => [name, Object.getOwnPropertyDescriptor(input, name)] as const)
+    if (descriptors.some(([, descriptor]) => !descriptor || !("value" in descriptor))) return opaque()
+    const persistence = input.persistence
+    if (!persistence || types.isProxy(persistence) || Object.getPrototypeOf(persistence) !== Object.prototype) return opaque()
+    const driverPrototype = Object.getPrototypeOf(persistence)
+    const methods = (["transaction", "transactionAll", "currentSnapshots", "currentSnapshot", "readSnapshotRoot"] as const)
+      .map((name) => [name, Object.getOwnPropertyDescriptor(persistence, name)] as const)
+    if (methods.some(([name, descriptor]) => descriptor ? !("value" in descriptor) : name in persistence)) return opaque()
+    const pin = () => Object.getPrototypeOf(input) === inputPrototype && Object.getPrototypeOf(persistence) === driverPrototype &&
+      descriptors.every(([name, descriptor]) => {
+        const live = Object.getOwnPropertyDescriptor(input, name)
+        return !!live && "value" in live && live.value === descriptor?.value
+      }) && methods.every(([name, descriptor]) => {
+        const live = Object.getOwnPropertyDescriptor(persistence, name)
+        return descriptor ? !!live && "value" in live && live.value === descriptor.value : live === undefined && !(name in persistence)
+      })
+    scope.producers.set(input, pin)
+    scope.pins.add(pin)
+    return true
+  }
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
     const checking = scopedSourceChecks.getStore()
-    if (checking) requireSourceChecks(checking)
-    if (checking && !checking.producers.has(input)) {
-      // A factory with opaque configuration stays fail-closed in this lexical
-      // mode. Outside it the original callbacks and materialization remain.
-      if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) {
-        checking.failed = true
-        throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE")
-      }
-      const names = ["persistence", "projectScope"] as const
-      const descriptors = names.map((name) => [name, Object.getOwnPropertyDescriptor(input, name)] as const)
-      if (descriptors.some(([, descriptor]) => !descriptor || !("value" in descriptor))) {
-        checking.failed = true
-        throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE")
-      }
-      const persistence = input.persistence
-      if (types.isProxy(persistence)) { checking.failed = true; throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE") }
-      const methods = (["transaction", "transactionAll", "currentSnapshots", "currentSnapshot"] as const)
-        .map((name) => [name, Object.getOwnPropertyDescriptor(persistence, name)] as const)
-      if (methods.some(([, descriptor]) => descriptor && !("value" in descriptor))) {
-        checking.failed = true
-        throw new Error("SF_SOURCE_CHECK_PRODUCER_OPAQUE")
-      }
-      checking.pins.add(() => descriptors.every(([name, descriptor]) =>
-        Object.getOwnPropertyDescriptor(input, name)?.value === descriptor?.value) && methods.every(([name, descriptor]) => {
-          const live = Object.getOwnPropertyDescriptor(persistence, name)
-          return descriptor ? !!live && "value" in live && live.value === descriptor.value : live === undefined
-        }))
-      checking.producers.add(input)
+    if (checking) {
+      requireSourceChecks(checking)
+      admitSourceChecks(checking)
       requireSourceChecks(checking)
     }
     requireSourceIdentities(snapshot)
@@ -151,7 +154,7 @@ export function createSfSourcePersistence(input: {
     if (checkScope) requireSourceChecks(checkScope)
     if (!observed) return { commit: false, value: undefined }
     const { scope, projection, source, inputDigest } = observed
-    if (checkScope) {
+    if (checkScope && admitSourceChecks(checkScope)) {
       // The same physical/scoped identity and projection must already exist.
       // Return the newly observed projection, never a cached projection or grant.
       const current = sfScopedSourceIdentity(snapshot, scope)
@@ -191,13 +194,13 @@ export function createSfSourcePersistence(input: {
   }
   const readCheckScope = () => {
     const scope = scopedSourceChecks.getStore()
-    if (scope) requireSourceChecks(scope)
+    if (scope) { requireSourceChecks(scope); admitSourceChecks(scope); requireSourceChecks(scope) }
     return scope
   }
   const checkReadCommit = (scope: ScopedSourceCheckScope | undefined, commit: boolean) => {
     if (!scope) return
     requireSourceChecks(scope)
-    if (commit) { scope.failed = true; throw new Error("SF_SOURCE_CHECK_WRITE_FORBIDDEN") }
+    if (commit && admitSourceChecks(scope)) { scope.failed = true; throw new Error("SF_SOURCE_CHECK_WRITE_FORBIDDEN") }
   }
   const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => { readCheckScope(); return input.persistence.currentSnapshots!() } } : {}),
