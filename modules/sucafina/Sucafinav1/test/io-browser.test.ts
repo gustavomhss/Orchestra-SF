@@ -178,7 +178,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await policy.getByLabel("Attachment limit (bytes)", { exact: true }).fill("1048576")
     await policy.locator("#sf-u36-level-holder-0").selectOption(fixture.actorId)
     await policy.locator("#sf-u36-level-holder-1").selectOption(fixture.actorId)
-    await policy.getByRole("button", { name: "Review", exact: true }).click()
+    await policy.getByRole("button", { name: "Review changes", exact: true }).click()
     await confirmProcurement(page, origin,
       settings.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Save", exact: true }),
       { page: "Settings", action: "save" })
@@ -290,7 +290,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(importsUrl.searchParams.get("server")).toBeTruthy()
     expect(importsUrl.searchParams.get("project")).toBe(context.value.stamp.projectId)
     expect(importsUrl.searchParams.get("installation")).toBe(context.value.stamp.installationId)
-    await imports.getByLabel("Source", { exact: true }).selectOption("dashboard")
+    await imports.getByLabel("source", { exact: true }).selectOption("dashboard")
     const [targetsResponse] = await Promise.all([
       page.waitForResponse((response) => dashboardFile(response, "import-targets", "GET"), { timeout: 10000 }),
       imports.getByRole("button", { name: "Find destinations", exact: true }).click(),
