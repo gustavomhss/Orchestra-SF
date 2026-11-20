@@ -120,8 +120,10 @@ export async function createC12Fixture(scenario: string, origin: string, retaine
   const proposalCoverageWrites = new WeakSet<object>()
   const procurementEvidenceWrites = new WeakSet<object>()
   const mounted: { business?: ReturnType<typeof createSfBusinessServices> } = {}
+  const installationIdentity = Object.freeze({ installationId: "i", hostId: "procurement-integration", projectId: "p",
+    location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) })
   const authority = createSfProductAuthority({
-    identity: () => ({ installationId: "i", hostId: "procurement-integration", projectId: "p", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), installationId: "i", origin, policyVersion: "p1", persistence, authenticate, environment,
+    identity: () => installationIdentity, installationId: "i", origin, policyVersion: "p1", persistence, authenticate, environment,
     grants: ["alice", "bob"].map((principalRef): SfProductGrant => ({ principalRef, namespaces: ["cases", "preferences", "confirmations", "receipts", "threads", "relations"], operations: ["sf_work_list", "sf_request_read", "sf_case_draft", "sf_case_read", "sf_context_read", "sf_sourcing_compare"], humanActions: ["collaboration.confirmation.confirm", "decisions.prepare-changes", "decisions.portfolio.read", "decisions.apply"] })),
     createId: randomUUID, now: Date.now, commandIdentity: async (value, operation) => {
       // Exact CLI host-context.ts contract at 8e23e592: read identities are fresh,
@@ -157,7 +159,9 @@ export async function createC12Fixture(scenario: string, origin: string, retaine
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
   business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256, manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
   const product = createProcurementDecisionHttp({ origin, mount: "/sf", runtime: () => ({ human: authority.human, decisions: business.procurementDecisions, withCase: business.withCase }) })
-  const application = createApplication("/sf", { authenticate, environment, persistence, maxJsonBytes: 131072, domains: { dashboard: [], planner: [], procurement: [] }, product })
+  const applicationOptions: Application = { authenticate, environment, persistence, maxJsonBytes: 131072,
+    domains: { dashboard: [], planner: [], procurement: [] }, product }
+  const application = createApplication("/sf", applicationOptions)
   const ui = async (operation: string, payload: unknown, actor = "alice") => {
     const admitted = await authority.ui.admit(request(actor), operation, digestSfValue(payload))
     if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, operation, digestSfValue(payload))) throw new Error(`real UI admission failed: ${operation}/${actor}`)
@@ -189,7 +193,9 @@ export async function createC12Fixture(scenario: string, origin: string, retaine
     if (value.status !== "ok" || !value.value) throw new Error("fixture case storage unavailable")
     return { storageVersion: value.storageVersion, value: value.value }
   }
-  return { directory, caseId, authority, business, persistence, application, request, ui, select, storedCase, evidence: source.value.evidence, receiptCommits, receiptReads, intentCommits,
+  return { directory, caseId, authority, business, persistence, application, applicationOptions, installationIdentity,
+    proposalCoverageWrites, procurementEvidenceWrites, request, ui, select, storedCase,
+    evidence: source.value.evidence, receiptCommits, receiptReads, intentCommits,
     afterReceiptCommit: (work: () => Promise<void>) => { scheduling.afterReceipt = work },
     afterApplyTargetCaptured: (work: () => Promise<void>) => { scheduling.afterCaptured = work },
     afterReceiptRead: (work: () => void | Promise<void>, count = 1) => { scheduling.afterReceiptRead = { remaining: count, work } },
