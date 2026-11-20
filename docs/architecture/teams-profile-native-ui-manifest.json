@@ -1,11 +1,11 @@
 {
-  "version": 2,
+  "version": 3,
   "status": "WIP integration; G02 and performance comparison are not yet qualified",
   "base": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
-  "source": "e5d429ac2f9c240d069db78810921e363133c931",
-  "tree": "5278f27ebd608836f792a88820b310e367906f55",
-  "productSource": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
-  "note": "Product bytes match productSource. The subsequent source only adds complete before evidence and corrects a guide control label. This manifest intentionally does not contain its own path or blob.",
+  "source": "9dcc77f904ed5e61de40e205aed1e0a88dd2b67e",
+  "tree": "f68dea1aa4abe00ad045b7d4d29a6000b89d551a",
+  "productSource": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
+  "note": "Product bytes match productSource. The subsequent source only records partial after-performance evidence and exact observed setup versions. The manifest intentionally excludes its own path/blob. Import only entries plus the one exact official generated blob; preserve newer root/Core/Shell sources.",
   "entries": [
     {
       "path": "apps/web/src/entry.tsx",
@@ -15,13 +15,13 @@
     },
     {
       "path": "docs/architecture/teams-profile-native-ui-performance.json",
-      "sha": "c9c01a7800e5ccdfbb771c28ccc36f866f0c6bbf",
+      "sha": "e61b59f21c7a027ea4560cbbbbc4e73d631fe7e9",
       "status": "added",
       "mode": "100644"
     },
     {
       "path": "docs/guides/sucafina-teams-workspace.md",
-      "sha": "52016b0706eeea319951f321b54364d691b3c4a9",
+      "sha": "d5661f09e42ef74054e6c7b93ef8f46fadcc8298",
       "status": "added",
       "mode": "100644"
     },
@@ -63,7 +63,7 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/teams-profile/native-web.browser.test.ts",
-      "sha": "3c86b6eb839e3bce6b4b1e064083495d420faaad",
+      "sha": "b2bc22900664c2a874c93db6cfbe0b7c5f5fca72",
       "status": "added",
       "mode": "100644"
     },
@@ -141,7 +141,7 @@
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-teams.ts",
-      "sha": "2b5171238ffe866b803154391f11e18526ef8b8d",
+      "sha": "a9cdf9eec3aea8cd971d5e7aa6ee0a32edf7300b",
       "status": "added",
       "mode": "100644"
     },
@@ -471,7 +471,7 @@
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/team-configuration-state.ts",
-      "sha": "38141de26ba5fc00c080e4bd30a0f978635f40c5",
+      "sha": "f5af199927c6cbdba930a988003e27d00779d9bf",
       "status": "added",
       "mode": "100644"
     },
@@ -483,7 +483,7 @@
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/team-profiles.tsx",
-      "sha": "17383adeb6bcf5f79613874bf352a2d96c01db46",
+      "sha": "5ef0b21ffee90facb15ec69b3da744f3b3dce935",
       "status": "added",
       "mode": "100644"
     },
@@ -657,7 +657,7 @@
     },
     {
       "path": "packages/app-shell/src/pages/team-profile.tsx",
-      "sha": "dde8dbee2bdcd5454d3c47a3f7664d695beccaa2",
+      "sha": "22927498db35ef7b4fc729aab7a1a849bf707982",
       "status": "added",
       "mode": "100644"
     },
@@ -699,7 +699,7 @@
     },
     {
       "path": "packages/app-shell/test-browser/sucafina-native/team-configuration.test.ts",
-      "sha": "e660e1c1516cdc58a393d043ec29db253ec05c26",
+      "sha": "7650c9218290ca62258ea83f09703bfe48652b6f",
       "status": "added",
       "mode": "100644"
     },
@@ -808,30 +808,37 @@
     "packages/server/src/handlers/sucafina.ts"
   ],
   "qualification": {
-    "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+    "source": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
     "app": {
-      "snapshot": "80c42eb8a4f47381aa391a40bcccc5e29fc6222a",
-      "run": 44720291866,
-      "job": 136234029904,
-      "tests": 73,
-      "passed": 73,
+      "source": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
+      "snapshot": "673bfd3458c83d3c512ca5ce410a951ce4daa345",
+      "run": 44722950069,
+      "job": 136243178984,
+      "tests": 76,
+      "passed": 76,
       "failed": 0,
       "skipped": 0,
       "files": 9,
-      "assertions": 628,
+      "assertions": 680,
       "runners": [
         {
           "runner": "Bun unit",
           "tests": 37,
-          "files": 4
+          "files": 4,
+          "assertions": 286
         },
         {
           "runner": "Bun + HappyDOM",
-          "tests": 36,
-          "files": 5
+          "tests": 39,
+          "files": 5,
+          "assertions": 394
         }
       ],
       "notChromium": true,
+      "nodeSetupSequence": [
+        "24.15.0",
+        "24.22.2"
+      ],
       "nodeLastObservedSetup": "24.22.2",
       "bun": "1.3.14"
     },
@@ -846,7 +853,8 @@
       "files": 2,
       "assertions": 128,
       "nodeLastObservedSetup": "24.22.3",
-      "bun": "1.3.14"
+      "bun": "1.3.14",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218"
     },
     "static": {
       "run": 44720308128,
@@ -859,7 +867,9 @@
         "godfile-waivers.json",
         "script/spawn-allowlist.json"
       ],
-      "note": "Both inherited protected-path approval findings; guard-pr-base and all generators, compilers and Web build passed."
+      "note": "Both inherited protected-path approval findings; guard-pr-base and all generators, compilers and Web build passed.",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "scope": "Before the seven-path be15 administrative recovery change; combined current-source static verification remains required."
     },
     "generatorTests": {
       "source": "f19f05e5468ccceb4bd4d8a702c8dfd6d77cd133",
@@ -931,14 +941,56 @@
           "assertions": 6
         }
       ],
-      "next": "Await qualified corporate catalog/vault fix, then run complete browser scenarios including shared configuration. No retries, startup warming or increased budgets."
+      "next": "Import qualified actual corporate boot fix, then run complete browser scenarios including shared configuration and a response lost after its real commit. Keep all original budgets and assertions. No retries or startup warming."
     },
     "performance": {
       "path": "docs/architecture/teams-profile-native-ui-performance.json",
       "beforeSource": "531aad70b4c6f2c2d686c4254c812b2f8395f9ad",
       "beforePassed": 18,
       "afterSource": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
-      "comparison": "pending"
+      "comparison": "partial; after closed partition remains in progress",
+      "afterPassed": 12
+    },
+    "priorApp": {
+      "snapshot": "80c42eb8a4f47381aa391a40bcccc5e29fc6222a",
+      "run": 44720291866,
+      "job": 136234029904,
+      "tests": 73,
+      "passed": 73,
+      "failed": 0,
+      "skipped": 0,
+      "files": 9,
+      "assertions": 628,
+      "runners": [
+        {
+          "runner": "Bun unit",
+          "tests": 37,
+          "files": 4
+        },
+        {
+          "runner": "Bun + HappyDOM",
+          "tests": 36,
+          "files": 5
+        }
+      ],
+      "notChromium": true,
+      "nodeLastObservedSetup": "24.22.2",
+      "bun": "1.3.14",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218"
+    },
+    "administrativeRecovery": {
+      "source": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
+      "metadata": [
+        "full owner (installation + tenant + principal + Team)",
+        "window id",
+        "expected config revision",
+        "whole-command SHA-256",
+        "document SHA-256"
+      ],
+      "restore": "Only after current administration admission and a successful current configuration GET; matching hashes establish observed state, never original POST authorship/success.",
+      "privateContentPersisted": false,
+      "automaticRetry": false,
+      "storageFailure": "No POST is sent if the original-owner uncertainty reference cannot be retained."
     }
   }
 }
