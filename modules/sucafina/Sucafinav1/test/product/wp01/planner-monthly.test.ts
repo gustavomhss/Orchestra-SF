@@ -91,6 +91,15 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
           { measure: "forecast", month: 1, text: "42" }, { measure: "forecast", month: 2, text: "99" },
         ] },
       ] } })
+      const inputProof = await tab.evaluate(async (input) => {
+        const asset = "/__sf-native-fixture/client.js"
+        const module: unknown = await import(asset)
+        if (!module || typeof module !== "object" || !("proveNativeMonthlyDraft" in module) ||
+          typeof module.proveNativeMonthlyDraft !== "function") throw new Error("Native monthly input proof unavailable")
+        return module.proveNativeMonthlyDraft(input)
+      }, previewRequest.input)
+      expect(inputProof).toEqual({ browserProxy: true, storeSymbols: true, originalAccepted: true, strictProxyRejected: true,
+        snapshotAccepted: true, sameJson: true, extraJsonRejected: true, extraProxyJsonRejected: true })
       const previewBody = object(await preview.json())
       expect(previewBody.status).toBe("ok")
       const reviewed = tab.getByRole("region", { name: "Producer preview by row", exact: true })
@@ -108,6 +117,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
         tab.waitForResponse(monthlyResponse("apply")),
         reviewed.getByRole("button", { name: "Apply reviewed rows", exact: true }).click(),
       ])
+      expect(object(applied.request().postDataJSON())).toEqual({ action: "apply", input: previewRequest.input })
       expect(applied.status()).toBe(200)
       const appliedBody = object(await applied.json())
       expect(appliedBody.status).toBe("ok")

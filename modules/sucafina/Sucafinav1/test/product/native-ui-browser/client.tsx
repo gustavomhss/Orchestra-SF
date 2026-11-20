@@ -1,3 +1,4 @@
+export { proveNativeMonthlyDraft } from "./monthly-input-proof"
 export { proveNativePrivateDraft } from "./private-draft-model-proof"
 import { Route, Router } from "@solidjs/router"
 import { render } from "solid-js/web"

@@ -231,6 +231,26 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     stage = "browser.enrollment"
     await enrollNativeBrowser(context, origin, () => identity.enroll())
     signal.throwIfAborted()
+    // The domain seeds above do not initialize C08. Bootstrap its empty state
+    // through the same authenticated transaction producer used by the host;
+    // the native observer then performs its own fresh cases reads.
+    stage = "product.initialize"
+    const cookie = (await context.cookies(origin + mount)).map((entry) => entry.name + "=" + entry.value).join("; ")
+    expect(cookie.length).toBeGreaterThan(0)
+    const bootstrap = new Request(origin + mount + "/dashboard?sf=bi-options", {
+      method: "POST", signal, headers: { cookie, origin, "content-type": "application/json", "idempotency-key": randomUUID() },
+      body: JSON.stringify({ viewId: "BI01", period: { start: "2026-01-01", end: "2026-12-31" } }),
+    })
+    const initialized = await authority.state.transaction(bootstrap, {
+      namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref,
+      targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "bi-lifecycle-initialize",
+      commandDigest: digestSfValue({ fixture: "bi-lifecycle", action: "initialize-empty-cases" }),
+    }, async () => ({ commit: true, value: true }))
+    expect(initialized.status).toBe("ok")
+    const initialState = await authority.state.read(bootstrap, "cases", (state) => state.cases)
+    expect(initialState.status).toBe("ok")
+    if (initialState.status === "ok") expect(initialState.value).toEqual({})
+    signal.throwIfAborted()
     // The exact owner triplet is the native route selector, never a grant.
     const destination = new URL("/orchestra/sf-bi", origin)
     destination.search = new URLSearchParams({ server: origin, project: binding.projectId,
@@ -239,7 +259,11 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     expect((await page.goto(destination.href))?.status()).toBe(200)
     await page.locator('[data-sf-host="owner-runtime231"][data-sf-provider-state="ready"]').waitFor()
     const catalog = page.locator('[data-sf-catalog="UI45"]')
-    await catalog.waitFor()
+    await catalog.waitFor().catch((error: unknown) => {
+      console.error("SF_BI_NATIVE_MOUNT", JSON.stringify({ pageErrors: failures,
+        responses: observations.map(({ mode, method, status }) => ({ mode, method, status })) }))
+      throw error
+    })
     await page.locator('[data-sf-field="view"]').selectOption("BI01")
     await page.locator('[data-sf-field="start"]').fill("2026-01-01")
     await page.locator('[data-sf-field="end"]').fill("2026-12-31")
