@@ -41,7 +41,8 @@ async function fixture(activate = true) {
       const result = yield* effect
       yield* command("COMMIT")
       return result
-    }).pipe(Effect.ensuring(Effect.sync(() => { if (business.inTransaction()) business.execute("ROLLBACK") })))
+    }).pipe(Effect.ensuring(Effect.suspend(() => business.inTransaction()
+      ? command("ROLLBACK").pipe(Effect.asVoid) : Effect.void)))
   return {
     filename, business, old, prepared, controlDriver, control, storage, marker, generation, guarded, command, transaction,
     async [Symbol.asyncDispose]() {
