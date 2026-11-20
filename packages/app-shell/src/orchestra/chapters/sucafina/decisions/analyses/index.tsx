@@ -1,5 +1,6 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
+import { SfAnalysisOutput } from "./output"
 import { useLanguage } from "@/context/language"
 import { SF_U37_COPY } from "@/i18n/orchestra-chapters/sf-u37"
 import { createSfAnalysesClient } from "@orchestra/client/sucafina/analyses"
@@ -537,13 +538,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 ? "sf.common.loading" : "sf.common.unavailable")}
                 onRetryRead={() => void readOutput()}>
                 <Show when={view.output}>{(output) => (
-                  <section class="sf-analyses-section" data-sf-analysis-output>
-                    <h2>{t("sf.u37.output")}</h2>
-                    <p>{t("sf.u37.untrustedHTML")}</p>
-                    <pre class="sf-analyses-original">{output().html}</pre>
-                    <Show when={output().review}><p>{t("sf.u37.reviewAvailable")}</p></Show>
-                    <Show when={output().reviewUnavailable}><p>{t("sf.u37.reviewUnavailable")}</p></Show>
-                  </section>
+                  <SfAnalysisOutput output={output()} owner={props.route.ownerSelection} />
                 )}</Show>
               </SfStatePanel>
             </Show>
