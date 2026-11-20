@@ -136,3 +136,41 @@ O censo real de dados/atores, o ledger final de resíduos, o ambiente Azure desc
 A integração concorrente foi reobservada em `9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6`, 158 commits à frente do pin, sendo 29 após a primeira observação em `3910a644…`. Esses patches não foram misturados silenciosamente; a reconciliação antes de promoção continua obrigatória.
 
 O [ledger estruturado](./TEAMS-PROFILE-EXECUTION.json) registra requests, SHAs de fonte/snapshot, todos os casos observados, deltas e bloqueios. Este documento é um checkpoint de execução, não um handoff de conclusão.
+
+## Checkpoint de integração: Session, SDK e manutenção técnica
+
+Fonte integrada: [`e00e7c20`](https://github.com/gustavomhss/Orchestra-SF/commit/e00e7c20f5a0a486cd20024110aa0f03b72d11b3).
+Os 58 caminhos desta integração incluem o namespace canônico, o HTTP sobre o mesmo grafo do host,
+o SDK gerado pelo comando oficial, a inspeção atual de política e a ligação ao Request original no entry instalado.
+O operador local mantém autenticação e manutenção técnica; não recebe grants de negócio e os endpoints de negócio recusam sua sessão.
+
+| Evidência dirigida | Resultado | Run |
+|---|---:|---|
+| Core integrado anterior, 26 arquivos | 239 pass, 0 fail, 1 skip Windows preexistente | [44699164293](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44699164293) |
+| SF integrado anterior, 8 arquivos | 115 pass, 0 fail | [44699170834](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44699170834) |
+| Admissão opaca de migração, 4 arquivos | 100 pass, 0 fail | [44699894969](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44699894969) |
+| HTTP corporativo e regressões, 12 arquivos | 63 pass, 0 fail | [44701581257](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44701581257) |
+| Gerador canônico importado, 6 arquivos | 90 pass, 0 fail | [44701345189](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44701345189) |
+| Geração oficial de três arquivos | exit 0; blobs conferidos | [44701673378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44701673378) |
+| SDK instalado / técnico, execuções separadas | 7 / 4 pass, 0 fail | [44702157391](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702157391), [44702158466](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702158466) |
+| Operador técnico e manutenção SQLite | 26 pass, 0 fail | [44702250679](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702250679) |
+
+A geração preserva o filtro que impede Owner entre tenants. O modo importado é explicitamente vinculado ao ClientApi original; o modo standalone continua recusando schemas não portáveis.
+A inspeção de autorização combina perguntas na mesma fronteira sem cache entre operações assíncronas e mantém revogação, recurso e geração atuais.
+
+O pool G04 inteiro continua **RED**: 96 pass e 111 fail reportados pelo Bun,
+com 206 corpos iniciados/finalizados, 96 retornos e 110 exceções, sem finalização forçada
+([44698645708](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44698645708)).
+A correção de recibo do destinatário preserva três respostas concorrentes idênticas e confirma a mensagem exata;
+as famílias de decisão/cenário ainda estão em reparo.
+O Web real construído também continua em diagnóstico; 156 testes de unidade/HappyDOM não equivalem a G02 instalado.
+
+No static anterior, 15 verificações passaram e guard-dev recusou os dois arquivos protegidos sem aprovação
+([44699059541](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44699059541)).
+A aprovação não foi fabricada. Static e integração do novo source estão em execução.
+
+G07 agora distingue factory técnica, pacote Web/native e o tar SF de produção, com inventário e hashes do arquivo real.
+Essas alterações de pacote ainda não foram executadas na PR qualificadora. O motor de backfill/corte/restauração
+e as provas Microsoft/Azure G08/G10 continuam pendentes. Nenhum corte, restauração viva ou deploy foi realizado.
+
+A primeira rodada SF no source `e00e7c20` também passou: **149 pass, 0 fail, 13 arquivos, 1273 assertions** ([44702867050](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702867050)).
