@@ -133,6 +133,10 @@ test("WP10 Atlas fences writes and recovers a durable receipt after reopen witho
       session.id = "bob"
       const reopened = await open(false, false)
       session.evidence = false
+      // Receipt recovery still reauthorizes its sources while the scanner is offline.
+      const denied = await reopened.context.emitFromLedger(eventRef, binding("bob"))
+      expect(denied.status).toBe("unavailable")
+      session.evidence = true
       const recovered = await reopened.context.emitFromLedger(eventRef, binding("bob"))
       expect(recovered.status).toBe("already-committed")
       expect({ ...recovered, status: "committed" }).toEqual(committed)

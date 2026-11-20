@@ -35,7 +35,8 @@ export function createSfDocumentServices(input: { runtime: Parameters<CreateSfHo
     const admitted = authority.authority.receiptFor(context, operation, digest)
     if (!admitted) return { status: "denied", reason: "invalid-binding", receipt: { kind: "unbound", operation, code: "invalid-binding", at: new Date().toISOString() } }
     const result = operation === "sf_document_extract" ? await documents.extract(parsed.value as Parameters<typeof documents.extract>[0], context) : await documents.search(parsed.value as Parameters<typeof documents.search>[0], context)
-    if (result.status !== "ok") return { status: result.status === "conflict" ? "failed" : result.status, reason: result.reason, receipt: admitted }
+    // A stored candidate conflict requires a refreshed selection, not an infrastructure retry.
+    if (result.status !== "ok") return { status: result.status === "conflict" ? "stale" : result.status, reason: result.reason, receipt: admitted }
     const output = decodeSfOperationOutput(operation, result.value)
     if (!output.ok || !await authority.host.revalidate(context)) return { status: "unavailable", reason: "document-result-unavailable", receipt: admitted }
     const receipt = authority.authority.receiptFor(context, operation, digest, digestSfValue(output.value))

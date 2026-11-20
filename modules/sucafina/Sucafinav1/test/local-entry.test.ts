@@ -116,11 +116,20 @@ test("enrolled operator authenticates when the serving process cannot resolve th
     const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
     expect(enrolled?.status).toBe(303)
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
-    const dashboard = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
-    expect(dashboard?.status).toBe(200)
-    const html = await dashboard!.text()
-    expect(html).toContain("Homologação local")
-    expect(html).toContain(name)
+    const saved = await installation.handler(new Request(`${origin}/sucafina/dashboard?page=IT%20Risks`, {
+      method: "POST", headers: { cookie, origin, "content-type": "application/json" },
+      body: JSON.stringify({ page: "IT Risks", action: "save", version: 0, values: { name: "Recorded operator proof", impact: 3, probability: 2 } }),
+    }))
+    expect(saved?.status).toBe(200)
+    expect(await saved!.json()).toMatchObject({ ok: true })
+    const status = await installation.handler(new Request(`${origin}/sucafina/status`))
+    expect(await status!.json()).toMatchObject({ login: "local-operator" })
+    await f.store.transaction("dashboard", async (snapshot) => {
+      expect(snapshot.audit).toHaveLength(1)
+      expect(snapshot.audit[0]).toMatchObject({ who: `macos:${f.operator.installationId}:${f.operator.uid}`, name })
+      return { commit: false, value: undefined }
+    })
+    expect((await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } })))?.status).toBe(404)
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 

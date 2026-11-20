@@ -31,13 +31,14 @@ const section = {
 }
 
 describe("A07 closed schema / source equivalence", () => {
-  test("frozen operations and the source-backed prepare extension, no generic dispatcher", () => {
+  test("frozen operations and source-backed prepare and preserved-review extensions, no generic dispatcher", () => {
     expect(Object.keys(SfReviews).sort()).toEqual([
       "dashboard.dashboard-agenda", "dashboard.dashboard-capture",
       "dashboard.dashboard-history", "dashboard.dashboard-review",
       "dashboard.dashboard-review-preserve", "projection.review",
       "reviews.export.docx", "reviews.export.pptx", "reviews.report.prepare", "reviews.review-source",
-      "reviews.review-update",
+      "reviews.review-thread-context", "reviews.review-update",
+      "reviews.review-read", "reviews.review-agenda-options", "reviews.review-agenda", "reviews.review-preserve",
     ].sort())
   })
 

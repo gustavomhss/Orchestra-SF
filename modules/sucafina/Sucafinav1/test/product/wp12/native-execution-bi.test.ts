@@ -82,7 +82,10 @@ for (const route of [
       const presentation = await readPresentation(context, dashboardSelection.selectionRef)
       expect(presentation.values).toEqual(artifact.projection.values)
       const sourceLinks = await readSourceLinks(context, dashboardSelection.selectionRef, datedId)
-      expect(sourceLinks.some((entry) => String(entry.url).includes("Portfolio+Dashboard") || String(entry.url).includes("Portfolio%20Dashboard"))).toBe(true)
+      expect(sourceLinks).toEqual([{
+        label: `dashboard · ${issued.value.evidence.target.recordId} · v${issued.value.evidence.target.version} · ${period.start} a ${period.end}`,
+        url: new URL(`/orchestra/sf-portfolio/overview?year=${period.start.slice(0, 4)}`, context.origin).href,
+      }])
       for (const selection of [
         { ...incoming.selection, viewId: "BI99" },
         { ...incoming.selection, filters: [{ field: "period", values: ["2026-01-01", "2026-12-31"] }] },

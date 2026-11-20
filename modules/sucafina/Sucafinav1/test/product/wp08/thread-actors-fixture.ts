@@ -79,7 +79,8 @@ export async function createThreadActorsFixture(options: Pick<Parameters<typeof 
   const observer = createDashboardConfirmationObserver({ host, scopedSources: base.persistence, readProjection: (selection, context) => selection.recordType === "dashboard-page" ? dashboard.read({ selectionRef: selection.reference, fields: selection.fields, period: selection.period }, context) : records.read(selection.reference, context) })
   const currentIssuer = createDashboardConfirmationIssuer({ host, scopedSources: base.persistence })
   const issueForActor: NonNullable<Parameters<typeof createCollaborationHost>[0]["issueForActor"]> = (target, context) => currentIssuer({ recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
-  const historical = { allowed: false }
+  // Archive unavailability and an explicit revoked grant are different facts.
+  const historical = { allowed: false, revoked: false }
   const archived = new Map<string, { ref: BusinessEvidenceRef; projection: DomainProjection }>()
   const historicalAccess = async (ref: BusinessEvidenceRef, context: TrustedDomainContext) => {
     if (ref.kind !== "record") return false
@@ -90,11 +91,13 @@ export async function createThreadActorsFixture(options: Pick<Parameters<typeof 
     const fresh = ref.kind === "record" && ref.target.surface === "dashboard" ? await records.resolve(ref.refId, context) : undefined
     if (fresh?.status === "ok" && digestSfValue(fresh.value) === digestSfValue(ref)) return { state: "fresh", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
     const original = archived.get(ref.refDigest)
-    if (!historical.allowed || !original || digestSfValue(original.ref) !== digestSfValue(ref) || ref.kind !== "record") return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
+    if (!original || digestSfValue(original.ref) !== digestSfValue(ref) || ref.kind !== "record") return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
+    if (historical.revoked) return { state: "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
+    if (!historical.allowed) return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
     const current = await refresh(ref, context)
     return current.status === "ok" && await historicalAccess(ref, context) ? { state: "historical", ref, currentRef: current.value, authorizedProjection: original.projection, differences: [], accessRevision: context.binding.accessRevision, checkedAt: at } : { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
   }, proveContinuity: async (original, current, context) => {
-    if (!historical.allowed || !archived.has(original.refDigest) || original.kind !== "record") return false
+    if (!historical.allowed || historical.revoked || !archived.has(original.refDigest) || original.kind !== "record") return false
     const refreshed = await refresh(original, context)
     return refreshed.status === "ok" && digestSfValue(refreshed.value) === digestSfValue(current) && await historicalAccess(original, context)
   }, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })

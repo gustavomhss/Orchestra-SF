@@ -567,10 +567,60 @@ export const SfDomainCommandCap16DeleteSub = {
   output: SfDomainLegacyResult,
 } as const
 
+// The wire enum is the original Dashboard summary selection from src/nav.ts.
+// The host still validates every page against that current source at execution.
+const summaryPage = Schema.Literals([
+  "Executive Dashboard", "Hot Topics & Actions", "Budget Overview", "OPEX Detail",
+  "CAPEX Projects", "Headcount Overview", "Team Structure", "Talent Review",
+  "Portfolio Dashboard", "All Projects", "IT Operations", "IT Security KPIs",
+  "IT Risks", "Vendor Contracts", "Stakeholder Management", "IT Performance Contract",
+])
+export const SfLocalSummaryRead = {
+  operationId: "local-admin.summary-read",
+  input: Schema.Struct({}),
+  output: Schema.Union([
+    Schema.Struct({
+      status: Schema.Literal("ok"),
+      context: SfContextStamp,
+      value: Schema.Struct({
+        pages: Schema.Array(summaryPage),
+        availablePages: Schema.Array(summaryPage),
+        version: NonNegativeInt,
+        canConfigure: Schema.Boolean,
+      }),
+    }),
+    pageFailure,
+  ]),
+} as const
+
+export const SfLocalSummaryConfigure = {
+  operationId: "local-admin.summary-configure",
+  input: Schema.Struct({
+    // Equality fence only; the original request's current principal authorizes.
+    context: SfContextStamp,
+    version: NonNegativeInt,
+    pages: Schema.Array(summaryPage),
+  }),
+  output: Schema.Union([SfDomainLegacyResult, pageFailure]),
+} as const
+
 export const SfProjectionLocalAdmin = {
   operationId: "projection.local-admin",
   input: Schema.Struct({}),
   output: localAdminOutput,
+} as const
+
+
+export const SfDashboardDashboardDraftRead = {
+  operationId: "dashboard.dashboard-draft-read",
+  input: SfDomainDashboardInputs.draftRead,
+  output: SfDomainDashboardOutput,
+} as const
+
+export const SfDashboardDashboardHotTopicDraftOutcome = {
+  operationId: "dashboard.dashboard-hot-topic-draft-outcome",
+  input: SfDomainDashboardInputs.draftOutcome,
+  output: SfDomainDashboardOutput,
 } as const
 
 export const SfDashboardDashboardWorkbench = {
@@ -673,6 +723,10 @@ export const SfDomain = {
     "domain.command.CAP16.save-sub": SfDomainCommandCap16SaveSub,
     "domain.command.CAP16.delete-sub": SfDomainCommandCap16DeleteSub,
     "projection.local-admin": SfProjectionLocalAdmin,
+    "local-admin.summary-read": SfLocalSummaryRead,
+    "local-admin.summary-configure": SfLocalSummaryConfigure,
+    "dashboard.dashboard-draft-read": SfDashboardDashboardDraftRead,
+    "dashboard.dashboard-hot-topic-draft-outcome": SfDashboardDashboardHotTopicDraftOutcome,
     "dashboard.dashboard-workbench": SfDashboardDashboardWorkbench,
     "dashboard.dashboard-hot-topic-source": SfDashboardDashboardHotTopicSource,
     "dashboard.dashboard-hot-topic-draft": SfDashboardDashboardHotTopicDraft,

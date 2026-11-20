@@ -162,7 +162,9 @@ async function forward(client) {
   await opened.promise
   const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
   // The async iterator pauses incoming reads while the WebSocket is backpressured.
-  for await (const chunk of client) {
+  // EOF closes only the input half. Keep the writable half for WebSocket replies
+  // until the clean close handshake and queued write callbacks complete below.
+  for await (const chunk of client.iterator({ destroyOnReturn: false })) {
     if (failure) throw failure
     if (pending.length + chunk.length > limits.maxQueuedBytes) throw new Error("Browser bridge input exceeded its bound")
     pending = Buffer.concat([pending, chunk])
@@ -287,7 +289,7 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
 
 /** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed.
  * A caller's shorter acquisition deadline cancels the owned process scope, not only its await. */
-export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
+export async function launchBrowserDriver(consumer: "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
   const launchTimeout = startup?.timeoutMs ?? 15000
   const launchCeilingMs = consumer === "wp01-shared-pool" ? 30000 : 15000
   if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > launchCeilingMs) throw new Error("Invalid browser driver startup deadline")

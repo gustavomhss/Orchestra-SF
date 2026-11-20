@@ -1,9 +1,74 @@
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
+import { consumeLocalTransactionAbort, observeLocalTransactionAbort } from "../../runtime/local-store.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfProductStateAdditiveFields } from "../contracts/state-layout.ts"
+
+
+type SfAbortCommand = Pick<SfStateMutation, "namespace" | "domainSurface" | "targetRef" | "targetIncarnation" | "idempotencyKey" | "commandDigest">
+export type SfConfirmedTransactionAbort = {
+  storageIdentity: string
+  transactionId: string
+  command: SfStateMutation
+  envelope: { incarnation: string; aggregateRevision: number; versions: SfProductState["versions"] }
+}
+const transactionAborts = new WeakMap<object, { state: SfProductStatePort; request: Request; proof: SfConfirmedTransactionAbort }>()
+const abortJournalWrites = new WeakSet<object>()
+const abortJournalPrefix = "decision-application-abort:"
+
+function matchesAbortCommand(command: SfStateMutation, expected: SfAbortCommand) {
+  return command.namespace === expected.namespace && command.domainSurface === expected.domainSurface &&
+    command.targetRef === expected.targetRef && command.targetIncarnation === expected.targetIncarnation &&
+    command.idempotencyKey === expected.idempotencyKey && command.commandDigest === expected.commandDigest
+}
+
+/** Transfer the private observation along the actual producer result, never through serialized data. */
+export function forwardSfTransactionAbort(input: { state: SfProductStatePort; request: Request; expected: SfAbortCommand; from: unknown; to: object }) {
+  if (!input.from || typeof input.from !== "object") return
+  const observed = transactionAborts.get(input.from)
+  if (!observed || observed.state !== input.state || observed.request !== input.request || !matchesAbortCommand(observed.proof.command, input.expected)) return
+  transactionAborts.delete(input.from)
+  transactionAborts.set(input.to, observed)
+}
+
+/** Append one authenticated rollback observation. Public C08 callbacks cannot create this journal. */
+export async function appendSfTransactionAbort(input: {
+  state: SfProductStatePort
+  request: Request
+  result: object
+  expected: SfAbortCommand
+  expectedStorageVersion: number
+  targetRef: string
+  targetIncarnation: string
+  idempotencyKey: string
+  value: Record<string, unknown>
+  validate: (state: Readonly<SfProductState>, authority: SfStateAuthority, proof: SfConfirmedTransactionAbort) => boolean | Promise<boolean>
+}): Promise<SfStateResult<unknown>> {
+  const observed = transactionAborts.get(input.result)
+  if (!observed || observed.state !== input.state || observed.request !== input.request ||
+    !input.idempotencyKey.startsWith(abortJournalPrefix) || !matchesAbortCommand(observed.proof.command, input.expected))
+    return { status: "unavailable", reason: "transaction-abort-unproven" }
+  // A failed or ambiguous journal write cannot reuse a capability. A retry is
+  // admitted only from the durable journal, never from a retained error object.
+  transactionAborts.delete(input.result)
+  const value = { ...structuredClone(input.value), rollback: structuredClone(observed.proof) }
+  const work = async (state: SfProductState, authority: SfStateAuthority) => ({
+    commit: await input.validate(structuredClone(state), structuredClone(authority), structuredClone(observed.proof)),
+    value,
+  })
+  abortJournalWrites.add(work)
+  try {
+    return await input.state.transaction(input.request, {
+      namespace: "cases", expectedStorageVersion: input.expectedStorageVersion,
+      targetRef: input.targetRef, targetIncarnation: input.targetIncarnation,
+      idempotencyKey: input.idempotencyKey, commandDigest: digestSfValue(value),
+    }, work)
+  } finally {
+    abortJournalWrites.delete(work)
+  }
+}
 
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
 const storedNamespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "transactions"] as const
@@ -36,8 +101,8 @@ export function selectSfCaseHealth(context: Pick<SfStateAuthority, "principalRef
 }
 
 /** Trusted metadata-only selector for the original C08 namespace. */
-export function selectSfNamespaceHealth(namespace: "cases" | "reviews" | "documents" | "atlas" | "outbox", context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">, mode: "read" | "write" = "read") {
-  if (!["cases", "reviews", "documents", "atlas", "outbox"].includes(namespace) || !["read", "write"].includes(mode)) throw new Error("SF_STATE_HEALTH_SELECTOR_INVALID")
+export function selectSfNamespaceHealth(namespace: "cases" | "reviews" | "documents" | "atlas" | "outbox" | "preferences" | "receipts", context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">, mode: "read" | "write" = "read") {
+  if (!["cases", "reviews", "documents", "atlas", "outbox", "preferences", "receipts"].includes(namespace) || !["read", "write"].includes(mode)) throw new Error("SF_STATE_HEALTH_SELECTOR_INVALID")
   const expected = Object.freeze({ principalRef: context.principalRef, policyVersion: context.policyVersion, accessRevision: context.accessRevision })
   const select = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
     if (!sameAuthority(expected, authority)) return undefined
@@ -158,7 +223,7 @@ export function createSfProductState(input: {
   procurementEvidenceWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string, command: SfStateMutation) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
-  return {
+  const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
       input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
         const candidate = readinessReads.get(read)
@@ -189,6 +254,9 @@ export function createSfProductState(input: {
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
       }, { signal: request.signal }),
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
+      if (command.idempotencyKey.startsWith(abortJournalPrefix) && !abortJournalWrites.has(work))
+        return Promise.resolve({ status: "denied", reason: "transaction-abort-writer-required" })
+      const rollback: { observation?: object; command?: SfStateMutation; envelope?: SfConfirmedTransactionAbort["envelope"] } = {}
       const run = async (snapshot: Snapshot, domain: Snapshot): Promise<{ commit: boolean; value: SfStateResult<T> }> => {
         const authority = await input.authorize(request, snapshot, command.namespace, "write")
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
@@ -237,6 +305,11 @@ export function createSfProductState(input: {
         if (all.some((entry) => state.versions[entry.namespace] !== entry.expectedStorageVersion))
           return { commit: false, value: { status: "conflict", reason: "product-state-changed" } }
         const staged = structuredClone(state)
+        if (command.namespace === "receipts" && command.domainSurface) {
+          rollback.observation = observeLocalTransactionAbort(snapshot)
+          rollback.command = structuredClone(command)
+          rollback.envelope = { incarnation: state.incarnation, aggregateRevision: state.revision, versions: structuredClone(state.versions) }
+        }
         const result = await work(staged, authority, domain)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await Promise.all(admitted.map((entry) => input.authorize(request, snapshot, entry.namespace, "write")))
@@ -294,11 +367,18 @@ export function createSfProductState(input: {
       if (command.sourceFence === "all" || command.namespace === "documents" || command.additionalNamespaces?.some((entry) => entry.namespace === "documents") || command.checkNamespaces?.some((entry) => entry.namespace === "documents") || command.domainSurface) {
         if (!input.persistence.transactionAll) return Promise.resolve({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
         const surface = command.domainSurface ?? "dashboard"
-        return input.persistence.transactionAll((snapshots) => run(snapshots.dashboard, snapshots[surface]), { signal: request.signal })
+        return input.persistence.transactionAll((snapshots) => run(snapshots.dashboard, snapshots[surface]), { signal: request.signal }).catch((error: unknown): SfStateResult<T> => {
+          const proof = rollback.observation && consumeLocalTransactionAbort(rollback.observation, error)
+          if (!proof || !rollback.command || !rollback.envelope || digestSfValue(rollback.command) !== digestSfValue(command)) throw error
+          const result = { status: "unavailable" as const, reason: "transaction-rolled-back" }
+          transactionAborts.set(result, { state: port, request, proof: { ...proof, command: rollback.command, envelope: rollback.envelope } })
+          return result
+        })
       }
       return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
     },
   }
+  return port
 }
 
 function sameAuthority(expected: SfStateAuthority, current: SfStateAuthority | undefined) {

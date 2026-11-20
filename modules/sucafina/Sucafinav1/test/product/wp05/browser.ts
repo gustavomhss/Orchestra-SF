@@ -1,11 +1,24 @@
 import type { Page } from "@playwright/test"
-import { localBrowser } from "../../fixture/local-browser.ts"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 
-/** Keep browser waits inside the test lifetime so the shared listener is always released. */
+/** Keep browser waits and the owned Node/Chrome transport inside the test lifetime. */
 export async function inspectWp05Browser(label: string, inspect: (page: Page, phase: (name: string) => void) => Promise<void>) {
   const startedAt = Date.now()
   console.info("WP05 browser phase", { label, phase: "fixture-setup", elapsedMs: 0 })
-  const fixture = await localBrowser().catch((error: unknown) => {
+  // This harness mounts a pure renderer on about:blank. Its canonical Planner
+  // ports run in the caller; no installation, session or legacy console is used.
+  // Node owns Chrome's DevTools descriptors through the existing bounded
+  // driver. Repeated renderer probes must not recycle those pipes through Bun.
+  const fixture = await launchBrowserDriver("wp05-renderer").then(async (driver) => {
+    try {
+      const page = await driver.browser.newPage({ viewport: { width: 1440, height: 1000 } })
+      return { browser: driver.browser, page, dispose: driver.close, report: driver.report }
+    } catch (error) {
+      try { await driver.close() }
+      catch (cleanupError) { throw new AggregateError([error, cleanupError], `WP05 browser ${label} setup and cleanup failed`) }
+      throw error
+    }
+  }).catch((error: unknown) => {
     console.error("WP05 browser fixture setup failed", { label, phase: "fixture-setup", elapsedMs: Date.now() - startedAt }, error)
     throw error
   })
@@ -31,7 +44,7 @@ export async function inspectWp05Browser(label: string, inspect: (page: Page, ph
       }, deadline.milliseconds)
     })
     const body = async () => {
-      // Reuse the fixture's enrolled page instead of leaving it alive in a second context.
+      // The renderer receives one blank page; all source/authority checks stay in the caller.
       const page = fixture.page
       phase("navigate")
       if (page.isClosed() || !fixture.browser.isConnected()) throw new Error(`WP05 browser ${label} returned a closed fixture before navigation`)
@@ -59,4 +72,5 @@ export async function inspectWp05Browser(label: string, inspect: (page: Page, ph
     }
   }
   if (outcome.failed) throw outcome.error
+  fixture.report()
 }

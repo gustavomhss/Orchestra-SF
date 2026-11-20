@@ -31,7 +31,7 @@ const at = "2026-11-13T08:00:00.000Z"
 const sensitive = "Restricted development assessment: promotion discussion"
 
 /** Real encrypted login, current role resolution, C08 and scoped evidence over SQLite. */
-export async function sourceFixture(options: { role?: Role; handoffGrant?: boolean } = {}) {
+export async function sourceFixture(options: { role?: Role; handoffGrant?: boolean; atomicCreate?: boolean; revokeBeforeCommit?: boolean } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "ui-source-identity-"))
   await chmod(directory, 0o700)
   const origin = "http://127.0.0.1:43127", installationId = randomUUID(), group = "fixture-operator-group"
@@ -78,8 +78,13 @@ export async function sourceFixture(options: { role?: Role; handoffGrant?: boole
       emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "record-only-consumer" }) })
     const mutationFence = createCollaborationMutationFence(authority.host)
     const admitted = new WeakMap<TrustedDomainContext, { action: SfHumanAction; payload: unknown }>()
-    const topics = createHotTopicPort(createCollaborationHotTopicHost({ host: authority.host, state: authority.state, evidence, creationTarget: authority.creationTarget, mutationFence,
-      authorizeMutation: async (context) => { const active = admitted.get(context); return !!active && authority.human.authorize(context, active.action, active.payload) } }))
+    const topicHost = createCollaborationHotTopicHost({ host: authority.host, state: authority.state, evidence, creationTarget: authority.creationTarget, mutationFence,
+      authorizeMutation: async (context) => {
+        const active = admitted.get(context)
+        if (options.revokeBeforeCommit && context.kind === "ui") authority.human.finish(context)
+        return !!active && authority.human.authorize(context, active.action, active.payload)
+      } })
+    const topics = createHotTopicPort(options.atomicCreate === false ? { transact: topicHost.transact } : topicHost)
     const read = async <T>(payload: unknown, work: (context: TrustedDomainContext) => Promise<T>) => {
       const digest = digestSfValue(payload), access = await authority.ui.admit(request(payload), "sf_dashboard_read", digest)
       if (access.status !== "ok") throw new Error(`Read admission failed: ${access.status}`)

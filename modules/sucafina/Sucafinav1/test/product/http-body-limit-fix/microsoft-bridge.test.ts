@@ -76,14 +76,21 @@ test("The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, C
         expect(session).toContain("HttpOnly")
         expect(session).toContain("SameSite=Lax")
         const cookie = session.split(";")[0]!
-        const authenticated = await request("/sucafina/dashboard", { headers: { cookie } })
-        expect(authenticated.status).toBe(401) // Authenticated guest, with no initialized product role map.
+        for (const surface of ["dashboard", "planner", "procurement"]) {
+          const legacy = await request("/sucafina/" + surface, { headers: { cookie } })
+          expect(legacy.status).toBe(404)
+          expect(await legacy.text()).toBe("legacy console decommissioned — use /")
+        }
+        // This fixture grants Dashboard viewer and Procurement requester, but no Planner role.
+        const authorizedDownload = "/sucafina/planner?download=xlsx"
+        const authenticated = await request(authorizedDownload, { headers: { cookie } })
+        expect(authenticated.status).toBe(401) // The authenticated guest has no configured Planner role.
         await authenticated.arrayBuffer()
 
         const rejectedLogout = await request("/sucafina/auth/logout", { method: "POST", headers: { cookie, origin: "https://forged.example" } })
         expect(rejectedLogout.status).toBe(403)
         await rejectedLogout.arrayBuffer()
-        const stillAuthenticated = await request("/sucafina/dashboard", { headers: { cookie } })
+        const stillAuthenticated = await request(authorizedDownload, { headers: { cookie } })
         expect(stillAuthenticated.status).toBe(401)
         await stillAuthenticated.arrayBuffer()
 
@@ -115,7 +122,7 @@ test("The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, C
         const cleared = logout.headers.getSetCookie()
         expect(cleared).toHaveLength(2)
         expect(cleared.every((value) => value.includes("Max-Age=0") && /(?:^|;\s*)Secure(?:;|$)/.test(value) && value.includes("HttpOnly"))).toBe(true)
-        const signedOut = await request("/sucafina/dashboard", { headers: { cookie } })
+        const signedOut = await request(authorizedDownload, { headers: { cookie } })
         expect(signedOut.status).toBe(303)
         expect(signedOut.headers.get("location")).toStartWith("/sucafina/auth/login")
         expect(spans).toHaveLength(0)

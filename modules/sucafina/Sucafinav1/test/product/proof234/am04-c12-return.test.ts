@@ -75,7 +75,13 @@ test("proof234 AM04 distinguishes denied unreviewed apply from a lost committed 
     fixture.revoke("alice")
     const revoked = await fixture.http("decision-recover", recovery, "alice", "proof234-revoked")
     expect(revoked.response.status).not.toBe(200)
-    expect(await observeC12(fixture)).toEqual(reconciled)
+    // Bob retains the fixture's existing read grant after Alice is revoked.
+    const receiptsAfterRevocation = await fixture.authority.state.read(fixture.request("bob"), "receipts", (state) => Object.values(state.receipts))
+    const caseAfterRevocation = await fixture.authority.state.read(fixture.request("bob"), "cases", (state) => state.cases[fixture.caseId])
+    expect(receiptsAfterRevocation.status).toBe("ok")
+    expect(caseAfterRevocation.status).toBe("ok")
+    if (receiptsAfterRevocation.status !== "ok" || caseAfterRevocation.status !== "ok" || !caseAfterRevocation.value) throw new Error("Authorized post-revocation observation unavailable")
+    expect({ domain: await fixture.material(), decision: caseAfterRevocation.value, receipts: receiptsAfterRevocation.value }).toEqual(reconciled)
     console.info("SF_PROOF234_AM04_COMPONENT", JSON.stringify({
       originalReceiptId: original.id, c12DraftCommand: "Procurement Requests.save",
       sqliteReopen: true, domainEffects: 1, duplicateEffect: false,

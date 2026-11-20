@@ -9,6 +9,97 @@ export type PreservedValue = ReviewProjection["values"][number]
 export type PreservedComponent = ReviewProjection["components"][number]
 export type PreservedSourceRef = PreservedSection["sourceRefs"][number]
 
+const bindingKeys = ["reviewThread", "reviewMessage", "reviewIncarnation", "reviewVersion"] as const
+
+export type ReviewLocationBinding = Readonly<{
+  reviewThread?: string
+  reviewMessage?: string
+  reviewIncarnation?: string
+  reviewVersion?: string
+}>
+
+/** URL bindings the installed review discussion asserts. Bodies never enter the query. */
+export function reviewLocationBinding(): ReviewLocationBinding {
+  if (typeof location === "undefined") return {}
+  const params = new URLSearchParams(location.search)
+  const thread = params.get("reviewThread") ?? undefined
+  const message = params.get("reviewMessage") ?? undefined
+  const incarnation = params.get("reviewIncarnation") ?? undefined
+  const version = params.get("reviewVersion") ?? undefined
+  return {
+    ...(thread ? { reviewThread: thread } : {}),
+    ...(message ? { reviewMessage: message } : {}),
+    ...(incarnation ? { reviewIncarnation: incarnation } : {}),
+    ...(version ? { reviewVersion: version } : {}),
+  }
+}
+
+export function bindReviewLocation(next: ReviewLocationBinding) {
+  if (typeof history === "undefined" || typeof location === "undefined") return
+  const url = new URL(location.href)
+  for (const key of bindingKeys) {
+    const value = next[key]
+    if (value) url.searchParams.set(key, value)
+    else url.searchParams.delete(key)
+  }
+  history.replaceState(history.state, "", url)
+}
+
+export function preservedRecordSources(section: PreservedSection) {
+  const projection = readPreservedProjection(section.content)
+  if (!projection) return []
+  const records = projection.values.flatMap((value) => value.sourceRefs.filter((ref) => ref.kind === "record"))
+  return [...new Map(records.map((ref) => [ref.refId, ref])).values()]
+}
+
+/** Basis for the source the operator selected. Evidence stays the producer value's own refs. */
+export function preservedSourceBasis(section: PreservedSection, sourceRef: string) {
+  const projection = readPreservedProjection(section.content)
+  if (!projection || !sourceRef) return undefined
+  const value = projection.values.find((entry) => entry.sourceRefs.some((ref) => ref.kind === "record" && ref.refId === sourceRef))
+  const source = value?.sourceRefs.find((ref) => ref.kind === "record" && ref.refId === sourceRef)
+  if (!value || !source || source.kind !== "record" || source.target.version < 1) return undefined
+  return {
+    sourceRef: source.refId,
+    sourceIncarnation: source.target.incarnation,
+    observedVersion: source.target.version,
+    period: section.period,
+    evidenceRefs: value.sourceRefs,
+  }
+}
+
+/** Captured meeting line. Literal producer fields only; no client total or FX. */
+export function preservedMeetingLine(value: PreservedValue) {
+  const shown = value.value === null ? "unavailable" : String(value.value)
+  const unit = value.unit ? ` ${value.unit}` : ""
+  const currency = value.currency ? ` ${value.currency}` : ""
+  const sources = value.sourceRefs.map((ref) => ref.refId).join(", ") || "source unavailable"
+  return `${value.id}: ${shown}${unit}${currency} · ${value.period.start} – ${value.period.end} · ${sources}`
+}
+
+/** The record basis the C05 producer will re-read. Empty when the section has no single covering record. */
+export function preservedAnswerBasis(section: PreservedSection) {
+  const projection = readPreservedProjection(section.content)
+  if (!projection) return undefined
+  const value = projection.values.find((entry) => {
+    const records = entry.sourceRefs.filter((ref) => ref.kind === "record" && covers(ref.target.period, section.period))
+    return records.length === 1 && entry.sourceRefs.filter((ref) => ref.refId === records[0]!.refId).length === 1
+  })
+  const source = value?.sourceRefs.find((ref) => ref.kind === "record" && covers(ref.target.period, section.period))
+  if (!value || !source || source.kind !== "record" || source.target.version < 1) return undefined
+  return {
+    sourceRef: source.refId,
+    sourceIncarnation: source.target.incarnation,
+    observedVersion: source.target.version,
+    period: section.period,
+    evidenceRefs: value.sourceRefs,
+  }
+}
+
+function covers(period: { start: string; end: string } | undefined, section: { start: string; end: string }) {
+  return !!period && period.start <= section.start && period.end >= section.end
+}
+
 /** Public review content is a producer-owned JSON value, not an editable or numeric model. */
 export function readPreservedProjection(content: unknown): ReviewProjection | undefined {
   const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(content)

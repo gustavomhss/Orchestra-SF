@@ -209,8 +209,9 @@ test("C06 real authority and source replacement cannot revive a previous observa
       expect(await lockedFence(f, currentScope, current, context)).toBe(false)
       expect(original).toEqual(originalBefore)
     })
-    const other = await f.page("Hot Topics & Actions", "other")
+    const other = await f.exportJson("other")
     expect(other.status).toBe(200)
+    expect(other.headers.get("content-type")).toContain("application/json")
     expect(await other.text()).toContain("Unrelated action")
   } finally { await f.close() }
 })

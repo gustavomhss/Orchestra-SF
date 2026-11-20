@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { HotTopicIntent } from "../../../../product/dashboard/hot-topics.ts"
-import { sfSourceIdentity } from "../../../../product/integration/source-lifecycle.ts"
+import { bindCreatedSourceIdentity, sfSourceIdentity } from "../../../../product/integration/source-lifecycle.ts"
 import { sourceFixture } from "./source-fixture.ts"
 
 type Fixture = Awaited<ReturnType<typeof sourceFixture>>
@@ -54,7 +54,7 @@ async function seedReceipt(f: Fixture, request: HotTopicIntent, id: string, targ
 }
 
 test("CREATE without an atomic lifecycle seam refuses before any durable effect, including exact retry and reopen", async () => {
-  const f = await sourceFixture()
+  const f = await sourceFixture({ atomicCreate: false })
   try {
     const request = await intent(f, "atomic-create-unavailable"), before = await f.runtime.inspect(), other = await f.runtime.otherSurfaces()
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -138,5 +138,77 @@ test("UPDATE binds once and returns its original receipt after reopen; replaceme
     expect(await f.runtime.update(update)).toMatchObject({ status: "denied", reason: "source-access-unavailable" })
     expect(await f.runtime.inspect()).toEqual(revoked)
     console.log("UI_SOURCE_UPDATE", JSON.stringify({ domainEffects: 1, receiptCount: 1, reopened: true, original: original.incarnation, replacement: replacement.incarnation, aba: "REFUSED", revokedSource: "REFUSED" }))
+  } finally { await f.close() }
+}, 60000)
+
+test("CREATE atomically persists its real source incarnation and correlation through retry and reopen", async () => {
+  const f = await sourceFixture()
+  try {
+    const request = await intent(f, "atomic-create-bound")
+    const before = await f.runtime.inspect(), other = await f.runtime.otherSurfaces()
+    const created = await f.runtime.create(request)
+    expect(created.status).toBe("ok")
+    if (created.status !== "ok") throw new Error(created.reason)
+    expect(created.value.state).toBe("created")
+    expect(created.value.topic).toMatchObject({ action: fields.action, owner: fields.owner, due: fields.due, status: "open", version: 1 })
+    const id = created.value.topic.id, original = await identity(f, id)
+    const saved = await f.runtime.inspect()
+    expect(saved.topics).toHaveLength(1)
+    expect(saved.topics[0]!.id).toBe(id)
+    expect(saved.relations[`sf:hot-topic:${digestSfValue({ correlationKey: request.correlationKey })}`])
+      .toMatchObject({ id, targetIncarnation: original.incarnation, result: created.value.topic })
+    expect(saved.budget).toEqual(before.budget)
+    expect(await f.runtime.otherSurfaces()).toBe(other)
+    const repeated = { status: "ok" as const, value: { state: "existing" as const, topic: created.value.topic } }
+    expect(await f.runtime.create(request)).toEqual(repeated)
+    expect(await f.runtime.inspect()).toEqual(saved)
+    await f.reopen()
+    expect(await identity(f, id)).toEqual(original)
+    expect(await f.runtime.create(request)).toEqual(repeated)
+    expect(await f.runtime.inspect()).toEqual(saved)
+    expect(await f.runtime.create({ ...request, notes: "Changed intent" })).toMatchObject({ status: "conflict", reason: "correlation-reused" })
+    expect(await f.runtime.inspect()).toEqual(saved)
+  } finally { await f.close() }
+}, 60000)
+
+test("withdrawn human admission rolls back the new action, reserved incarnation and correlation together", async () => {
+  const f = await sourceFixture({ revokeBeforeCommit: true })
+  try {
+    const request = await intent(f, "atomic-create-revoked")
+    const before = await f.runtime.inspect(), other = await f.runtime.otherSurfaces()
+    expect(await f.runtime.create(request)).toMatchObject({ status: "denied" })
+    expect(await f.runtime.inspect()).toEqual(before)
+    await f.reopen()
+    expect(await f.runtime.inspect()).toEqual(before)
+    expect(await f.runtime.otherSurfaces()).toBe(other)
+  } finally { await f.close() }
+}, 60000)
+
+test("an atomic creation reservation cannot authorize metadata tampering, changed content or an expired snapshot", async () => {
+  const f = await sourceFixture()
+  try {
+    const before = await f.runtime.inspect()
+    await expect(f.runtime.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.hotTopics = [{ id: "reserved-action", ...fields, status: "open" }]
+      bindCreatedSourceIdentity(snapshot, "hotTopics", "reserved-action")
+      const project = snapshot.sfSources!.records[JSON.stringify(["projects", "project-1"])]!
+      project.version++
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("SF_SOURCE_IDENTITY_MUTATION")
+    expect(await f.runtime.inspect()).toEqual(before)
+    await expect(f.runtime.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.hotTopics = [{ id: "reserved-action", ...fields, status: "open" }]
+      bindCreatedSourceIdentity(snapshot, "hotTopics", "reserved-action")
+      snapshot.data.hotTopics = [{ id: "reserved-action", ...fields, action: "Changed after binding", status: "open" }]
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("SF_SOURCE_CREATION_CHANGED")
+    expect(await f.runtime.inspect()).toEqual(before)
+    await expect(f.runtime.persistence.transaction("dashboard", async (snapshot) => {
+      bindCreatedSourceIdentity(snapshot, "projects", "project-1")
+      return { commit: false, value: undefined }
+    })).rejects.toThrow("SF_SOURCE_CREATION_ALREADY_EXISTS")
+    const expired = await f.runtime.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
+    expect(() => bindCreatedSourceIdentity(expired, "hotTopics", "reserved-action")).toThrow("SF_SOURCE_CREATION_OUTSIDE_TRANSACTION")
+    expect(await f.runtime.inspect()).toEqual(before)
   } finally { await f.close() }
 }, 60000)

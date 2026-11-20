@@ -1,4 +1,5 @@
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
+import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
@@ -668,9 +669,40 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <p>{t("sf.u11.remaining.identity")}: {ref}</p>
           <p>{t("sf.u11.remaining.status")}: {current?.status}</p>
           <p>{t("sf.u11.remaining.version")}: {version() ?? "—"}</p>
+          <Show when={current?.requestSummary}>
+            <p data-request-summary={ref}>{current?.requestSummary}</p>
+          </Show>
+          <Show when={current?.moneySentence}>
+            <p data-request-money={ref}>{current?.moneySentence}</p>
+          </Show>
         </Show>
         <Show when={current}>
           <p>{t("sf.u11.remaining.stage")}: {stage()}</p>
+        </Show>
+        <Show when={current?.poEstimate}><p role="status">{current?.poEstimate}</p></Show>
+        <Show when={current?.orderDifference}><p role="status">{current?.orderDifference}</p></Show>
+        <Show when={current?.po?.supplierId && stage() !== "po"}>
+          <p>{t("sf.u11.remaining.field.supplierId")}: {current!.po?.supplierId}</p>
+        </Show>
+        <Show when={current?.status === "sourcing" || current?.status === "src_pending"}>
+          <section>
+            <Show when={current?.po}>
+              <fieldset disabled>
+                <label>{t("sf.u11.remaining.field.supplier")}
+                  <input type="text" value={current?.po?.supplier ?? ""} disabled />
+                </label>
+                <label>{t("sf.u11.remaining.field.currency")}
+                  <input type="text" value={current?.po?.currency ?? ""} disabled />
+                </label>
+                <label>{t("sf.u11.remaining.field.unitPrice")}
+                  <input type="number" step="any" value={displayScalar(current?.po?.lines?.[0]?.unitPrice)} disabled />
+                </label>
+              </fieldset>
+            </Show>
+            <button type="button" disabled={!stageAllowed("submit_po")} onClick={() => reviewAction("submit_po")}>
+              {t("sf.u11.remaining.submitPo")}
+            </button>
+          </section>
         </Show>
       </header>
       <Show when={current && ref}>
@@ -692,6 +724,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       </Show>
       <Show when={activePr() && (creating() || isPrWritable(current!))}>
         <section class="sf-u11-stage" data-stage="pr">
+          <Dynamic component={creating() ? "form" : "div"}
+            {...(creating() ? { "data-command": "create", "data-page": "Requests", "data-record": "", "data-version": "0" } : {})}>
           <Show when={current && !creating()}>
             <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
             {/* The W19 title editor is a separate source-locked intent/draft. */}
@@ -720,6 +754,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
               disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
               onClick={() => prDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
           </div>
+          </Dynamic>
         </section>
       </Show>
       <Show when={current && stage() === "pr" && !canPr()}>
@@ -752,6 +787,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
                 onClick={() => poDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
             </div>
           </Show>
+          <Show when={current?.po?.supplierId}><p>{t("sf.u11.remaining.field.supplierId")}: {current!.po?.supplierId}</p></Show>
           <Show when={current?.po?.contractRef}><p>{t("sf.u11.remaining.field.contractRef")}: {current!.po?.contractRef}</p></Show>
           <Show when={current?.po?.quoteRef}><p>{t("sf.u11.remaining.selectedQuote")}: {current!.po?.quoteRef}</p></Show>
           <Show when={stageAllowed("issue")}>

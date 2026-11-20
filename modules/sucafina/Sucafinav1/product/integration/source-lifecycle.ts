@@ -3,6 +3,16 @@ import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 
+// An identity reservation exists only while the source producer owns this snapshot.
+const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
+
+/** Reserve a real source incarnation without allowing a caller to mutate source metadata. */
+export function bindCreatedSourceIdentity(snapshot: Snapshot, recordType: string, recordId: string) {
+  const bind = creationBinders.get(snapshot)
+  if (!bind) throw new Error("SF_SOURCE_CREATION_OUTSIDE_TRANSACTION")
+  return bind(recordType, recordId)
+}
+
 export type SfSourceScope = NonNullable<NonNullable<Snapshot["sfSources"]>["scopes"]>[string]["scope"]
 export type SfScopedSourcePort = {
   resolveScopedSource: (surface: Surface, incarnation: string, authorize: (snapshot: Snapshot, scope: SfSourceScope) => Promise<boolean>) => Promise<{ scope: SfSourceScope; projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
@@ -59,19 +69,56 @@ export function createSfSourcePersistence(input: {
     const auditStart = snapshot.audit.length
     const auditPrefix = digestSfValue(snapshot.audit)
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
-    return () => {
+    const reserved = new Map<string, { incarnation: string; inputDigest: string }>()
+    const previous = creationBinders.get(snapshot)
+    const bind = (recordType: string, recordId: string) => {
       requireSourceIdentities(snapshot)
-      if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
-      if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
-      const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
-      if (input.purpose === "business-restore") {
-        if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
-        if (productState === undefined) delete snapshot.data.__sfProductV1
-        if (productState !== undefined) snapshot.data.__sfProductV1 = productState
+      if (input.purpose === "business-restore" || before !== digestSfValue(snapshot.sfSources))
+        throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+      if (!recordType.trim() || !recordId.trim()) throw new Error("SF_SOURCE_INPUT_INVALID")
+      const key = JSON.stringify([recordType, recordId])
+      if (snapshot.sfSources!.records[key]?.alive) throw new Error("SF_SOURCE_CREATION_ALREADY_EXISTS")
+      const entries = input.enumerate(surface, snapshot).filter((entry) => entry.recordType === recordType && entry.recordId === recordId)
+      if (entries.length !== 1 || !/^[a-f0-9]{64}$/.test(entries[0]!.inputDigest))
+        throw new Error("SF_SOURCE_CREATION_UNAVAILABLE")
+      const prior = reserved.get(key)
+      if (prior) {
+        if (prior.inputDigest !== entries[0]!.inputDigest) throw new Error("SF_SOURCE_CREATION_CHANGED")
+        return prior.incarnation
       }
-      synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, replacement)
-      synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
-      requireSourceIdentities(snapshot)
+      const incarnation = createScopedIncarnation(snapshot, input.createId)
+      if ([...reserved.values()].some((entry) => entry.incarnation === incarnation))
+        throw new Error("SF_SOURCE_INCARNATION_INVALID")
+      reserved.set(key, { incarnation, inputDigest: entries[0]!.inputDigest })
+      return incarnation
+    }
+    creationBinders.set(snapshot, bind)
+    return {
+      finish: () => {
+        requireSourceIdentities(snapshot)
+        if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+        if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
+        const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
+        if (input.purpose === "business-restore") {
+          if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
+          if (productState === undefined) delete snapshot.data.__sfProductV1
+          if (productState !== undefined) snapshot.data.__sfProductV1 = productState
+        }
+        const entries = input.enumerate(surface, snapshot)
+        for (const [key, identity] of reserved) {
+          const matches = entries.filter((entry) => JSON.stringify([entry.recordType, entry.recordId]) === key)
+          if (replacement || matches.length !== 1 || matches[0]!.inputDigest !== identity.inputDigest)
+            throw new Error("SF_SOURCE_CREATION_CHANGED")
+        }
+        synchronizeSources(snapshot, entries, input.createId, replacement, reserved)
+        synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
+        requireSourceIdentities(snapshot)
+      },
+      dispose: () => {
+        if (creationBinders.get(snapshot) !== bind) return
+        if (previous) creationBinders.set(snapshot, previous)
+        else creationBinders.delete(snapshot)
+      },
     }
   }
   const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
@@ -125,25 +172,28 @@ export function createSfSourcePersistence(input: {
     }),
     transaction: (surface, work, options) => input.persistence.transaction(surface, async (snapshot, blobs) => {
       requireSourceIdentities(snapshot)
-      const finish = guard(surface, snapshot)
-      const result = await work(snapshot, blobs)
-      if (!result.commit) return result
-      finish()
-      return result
+      const guarded = guard(surface, snapshot)
+      try {
+        const result = await work(snapshot, blobs)
+        if (result.commit) guarded.finish()
+        return result
+      } finally { guarded.dispose() }
     }, options),
     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) =>
       input.persistence.transactionAll!(async (snapshots) => {
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const original = surfaces.map((surface) => snapshots[surface])
         const before = surfaces.map((surface) => digestSfValue(snapshots[surface]))
-        const finish = surfaces.map((surface) => guard(surface, snapshots[surface]))
-        const result = await work(snapshots)
-        if (result.commit) {
-          if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
-            throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
-          surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) finish[index]!() })
-        }
-        return result
+        const guarded = surfaces.map((surface) => guard(surface, snapshots[surface]))
+        try {
+          const result = await work(snapshots)
+          if (result.commit) {
+            if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
+              throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
+            surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) guarded[index]!.finish() })
+          }
+          return result
+        } finally { guarded.forEach((entry) => entry.dispose()) }
       }, options) } : {}),
   }
   return persistence
@@ -165,7 +215,7 @@ export function sfScopedSourceIdentity(snapshot: Snapshot, scope: SfSourceScope)
     : undefined
 }
 
-function synchronizeSources(snapshot: Snapshot, entries: readonly SfSourceIdentityInput[], createId: () => string, replacement: boolean) {
+function synchronizeSources(snapshot: Snapshot, entries: readonly SfSourceIdentityInput[], createId: () => string, replacement: boolean, reserved?: ReadonlyMap<string, { incarnation: string; inputDigest: string }>) {
   const keys = entries.map((entry) => JSON.stringify([entry.recordType, entry.recordId]))
   if (new Set(keys).size !== keys.length || entries.some((entry) => !entry.recordType.trim() || !entry.recordId.trim() || !/^[a-f0-9]{64}$/.test(entry.inputDigest))) throw new Error("SF_SOURCE_INPUT_INVALID")
   const records = snapshot.sfSources!.records
@@ -173,7 +223,7 @@ function synchronizeSources(snapshot: Snapshot, entries: readonly SfSourceIdenti
   entries.forEach((entry, index) => {
     const prior = records[keys[index]!]
     if (!prior || !prior.alive || replacement) {
-      const incarnation = createId()
+      const incarnation = reserved?.get(keys[index]!)?.incarnation ?? createId()
       if (!incarnation.trim() || Object.values(records).some((identity) => identity.incarnation === incarnation)) throw new Error("SF_SOURCE_INCARNATION_INVALID")
       records[keys[index]!] = { incarnation, version: 1, alive: true, inputDigest: entry.inputDigest }
       return

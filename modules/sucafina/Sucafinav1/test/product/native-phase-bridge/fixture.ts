@@ -90,6 +90,7 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
     const trace: Trace = { requests: [], issuers: [], holdChild: false, childStarted: yield* Deferred.make<void>() }
     yield* Effect.promise(async () => {
       await mkdir(path.join(temporary.path, ".global"), { recursive: true })
+      await mkdir(path.join(temporary.path, ".data"), { recursive: true })
       await Bun.write(path.join(temporary.path, ".global", "orchestra.json"), JSON.stringify({ trusted_projects: [directory] }))
       await mkdir(path.join(directory, ".orchestra", "skills", "maestro-run-governed"), { recursive: true })
       const entry = path.resolve(import.meta.dir, "../../../../../maestro/coordination/playbooks/maestro-run/governed/SKILL.md")
@@ -144,7 +145,8 @@ export function withPhaseFixture<A, E>(use: (fixture: PhaseFixture) => Effect.Ef
     }) }
     const application = AppNodeBuilder.build(LayerNode.group([
       Database.node, EventV2.node, SessionStore.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node,
-    ]), [[SessionExecution.node, SessionExecutionLocal.node], [ToolSafety.node, safety], [TaskGovernance.node, governance],
+    ]), [[Database.node, Database.layerFromPath(path.join(temporary.path, ".data", "orchestra.db"))],
+      [SessionExecution.node, SessionExecutionLocal.node], [ToolSafety.node, safety], [TaskGovernance.node, governance],
       ...(prepared.bridge.contribution.replacements ?? []),
       [LayerNodePlatform.llmClient, Layer.succeed(LLMClient.Service, client)], [Snapshot.node, Snapshot.noopLayer],
       [Global.node, Global.layerWith({ home: temporary.path, config: path.join(temporary.path, ".global"), data: path.join(temporary.path, ".data") })]],
@@ -157,7 +159,8 @@ const setup = Effect.fn("PhaseFixture.setup")(function* (directory: string, prep
   const sessions = yield* SessionV2.Service, execution = yield* SessionExecution.Service
   const database = yield* Database.Service, events = yield* EventV2.Service, store = yield* SessionStore.Service
   const locations = yield* LocationServiceMap.Service
-  const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
+  // Match SessionInfo.fromRow: absent and explicit undefined keys are distinct LayerMap keys.
+  const location = Location.Ref.make({ directory: AbsolutePath.make(directory), workspaceID: undefined })
   const opened = yield* locations.contextEffect(location)
   const nativeLocation = Context.get(opened, Location.Service), registry = Context.get(opened, ToolRegistry.Service)
   // Nonexecuting names are NOT native governance evidence. The deterministic provider calls only real core Task.

@@ -14,6 +14,7 @@ import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
+import { isPoWritable } from "../requests/model"
 import {
   editableSourcing, editableStages, quoteIsPersisted, recordedFx, requestRevision, sourcingSourceFields,
   requestVersion, uniqueRequest, type Cap25PageOk, type QuoteEdit, type SourcingAction,
@@ -96,13 +97,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     unknownOperation:string|null
     lastError:SfUiState|null
     sourceWarnings:readonly string[]
+    fieldErrors:readonly {field:string;message:string}[]
     sort: "source"|"supplier"|"currency"
     search:string
     layoutMode:"single"|"split"|"split-context"
   }>({
     token:null,page:null,state:"loading",selected:null,quoteChoice:"",
     stage:"sourcing",phase:"idle",sending:false,review:null,unknownOperation:null,lastError:null,
-    sourceWarnings:[],sort:"source",search:"",layoutMode:"split",
+    sourceWarnings:[],fieldErrors:[],sort:"source",search:"",layoutMode:"split",
   })
   let readController:AbortController|undefined
   let commandController:AbortController|undefined
@@ -141,6 +143,17 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
         resource.state!=="denied"&&resource.state!=="unavailable"&&
         resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25."+action&&
+          operation.state==="ready"&&operation.operational))
+  }
+  const poSubmitOpen=()=>{
+    const current=page(),ready=host.ready(),row=request()
+    if(!current||!ready||!row||!isPoWritable(row))return false
+    return ready.context.destinations.some((destination)=>destination.capabilityId==="CAP25"&&
+        destination.canRead&&destination.allowedActionIds.includes("submit_po"))&&
+      current.value.allowedActionIds.includes("submit_po")&&
+      ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
+        resource.state!=="denied"&&resource.state!=="unavailable"&&
+        resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25.submit_po"&&
           operation.state==="ready"&&operation.operational))
   }
   const read=async(token:string,requestRef:string|undefined,signal:AbortSignal):Promise<PageRead>=>{
@@ -196,7 +209,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     commandController=undefined
     setUi({token,page:null,state:token?"loading":"session-expired",
       selected:wanted,quoteChoice:"",stage:props.route.kind==="quotes"?"quotes":"sourcing",
-      phase:"idle",sending:false,review:null,unknownOperation:null,lastError:null,sourceWarnings:[]})
+      phase:"idle",sending:false,review:null,unknownOperation:null,lastError:null,sourceWarnings:[],fieldErrors:[]})
     if(token)void refresh(token,wanted??undefined)
     onCleanup(()=>{readController?.abort();commandController?.abort()})
   })
@@ -477,8 +490,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       if(response.status!==200||!response.body.ok){
         const code=response.body.ok?response.status:response.body.status
-        setUi("sourceWarnings",response.body.ok?[]:response.body.fieldErrors?.map((error)=>
-          error.field+": "+error.message)??response.body.errors??[])
+        const fieldErrors=response.body.ok?[]:response.body.fieldErrors??[]
+        setUi("fieldErrors",fieldErrors)
+        setUi("sourceWarnings",response.body.ok?[]:fieldErrors.length?fieldErrors.map((error)=>
+          error.field+": "+error.message):response.body.errors??[])
         if(response.status===409&&!response.body.ok&&response.body.status===409)controllerDraft.rejectSave({status:409,operation:pending})
         else if(response.status===422&&!response.body.ok&&response.body.status===422)controllerDraft.rejectSave({status:422,operation:pending})
         else controllerDraft.setPhase("failed")
@@ -491,6 +506,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       setUi("review",null)
       setUi("sourceWarnings",response.body.warnings??[])
+      setUi("fieldErrors",[])
       setUi("phase","verifying")
       // The producer returned an explicit success, not a receipt. Close the
       // exact pending draft fence only with that acknowledgement, and use a
@@ -542,12 +558,23 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     return <fieldset class="sf-u12-quote">
       <legend>{t("sf.u12.quotes")} {index+1} · {quote.id??t("sf.u12.missing")}</legend>
       <div class="sf-u12-fields">
-        <For each={fields}>{([name,key])=><label>{t(key)}
-          <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
-            step={["total","qty","unitPrice"].includes(name)?"any":undefined}
-            value={asString(quote[name])}
-            onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
-        </label>}</For>
+        <For each={fields}>{([name,key])=>{
+          const refusal=name==="currency"?ui.fieldErrors.find((error)=>error.field==="sourcing.quotes."+index+".currency"):undefined
+          const described=refusal?"sf-u12-currency-"+index:undefined
+          return <>
+            <label>{t(key)}
+              <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
+                step={["total","qty","unitPrice"].includes(name)?"any":undefined}
+                value={asString(quote[name])}
+                aria-invalid={refusal?"true":undefined}
+                aria-describedby={described}
+                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+            </label>
+            <Show when={refusal}>
+              <span id={described}>{refusal?.message}</span>
+            </Show>
+          </>
+        }}</For>
         <label>{t("sf.u12.quoteSupplierId")}
           <select value={quote.supplierId??""}
             onChange={(event)=>updateQuote(index,"supplierId",event.currentTarget.value||null)}>
@@ -659,6 +686,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(!row)return <SfStatePanel state="not-found" messageKey={k("sf.u12.notFound")}/>
     const recorded=row.sourcing?.quotes??[]
     const fx=recordedFx(row)
+    const facts=row.sourcing?.comparison??null
+    const limited=!!facts&&facts.eligibleCount<2
+    const fxRow=(quote:QuoteEdit)=>{
+      const id=quote.id
+      if(!id||!facts)return null
+      const matches=facts.quotes.filter((item)=>item.id===id)
+      return matches.length===1?matches[0]!:null
+    }
     const scoreCopy=(quote:QuoteEdit,kind:"scores"|"cscores")=>
       quote[kind]===undefined?"—":Array.isArray(quote[kind])
         ? quote[kind].map((x)=>asString(x)).join(", ")
@@ -683,8 +718,22 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         getRowKey={(quote)=>(quote.id??"") as SfRef}
         columns={[
           {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:120,weight:2},render:(quote)=><>{quote.supplier??""}</>},
+          {id:"eligibility",labelKey:k("sf.u12.eligibility"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:240},render:(quote)=><>{fxRow(quote)?.eligibility??""}</>},
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
           {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{asString(quote.total)||t("sf.u12.missing")}</>},
+          {id:"baseFx",labelKey:k("sf.u12.baseFx"),align:"end",widthPolicy:{kind:"content",minPx:220,maxPx:360},render:(quote)=><>{fxRow(quote)?.baseFxText??t("sf.u12.missing")}</>},
+          {id:"technical",labelKey:k("sf.u12.technical"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.technicalText??""}</>},
+          {id:"price",labelKey:k("sf.u12.price"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.priceText??""}</>},
+          {id:"commercial",labelKey:k("sf.u12.commercial"),align:"end",widthPolicy:{kind:"content",minPx:88,maxPx:140},render:(quote)=><>{fxRow(quote)?.commercialText??""}</>},
+          {id:"overall",labelKey:k("sf.u12.overall"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.overallText??""}</>},
+          {id:"rank",labelKey:k("sf.u12.rank"),align:"end",widthPolicy:{kind:"content",minPx:56,maxPx:88},render:(quote)=>{
+            const rank=fxRow(quote)?.rank
+            return <>{typeof rank==="number"?String(rank):""}</>
+          }},
+          {id:"excluded",labelKey:k("sf.u12.excludedReason"),align:"start",widthPolicy:{kind:"content",minPx:140,maxPx:360},render:(quote)=>{
+            const reason=fxRow(quote)?.excludedReason
+            return <>{typeof reason==="string"?reason:""}</>
+          }},
           {id:"qty",labelKey:k("sf.u12.quoteQty"),align:"end",widthPolicy:{kind:"content",minPx:85,maxPx:140},render:(quote)=><>{asString(quote.qty)||t("sf.u12.missing")}</>},
           {id:"unitPrice",labelKey:k("sf.u12.quotePrice"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:160},render:(quote)=><>{asString(quote.unitPrice)||t("sf.u12.missing")}</>},
           {id:"scores",labelKey:k("sf.u12.quoteScores"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:260},render:(quote)=><>{scoreCopy(quote,"scores")}</>},
@@ -699,8 +748,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         captionKey={k("sf.u12.quotes")} density="comfortable"
         state={recorded.length===0?"empty":quotes().length===0?"filtered-empty":"ready"}
       />
-      <p role="status">{t("sf.u12.rankUnavailable")}</p>
-      <p>{t("sf.u12.fxUnavailable")}</p>
+      <Show when={facts?.rankLine}>{(line)=><p role="status">{line()}</p>}</Show>
+      <Show when={facts?.premiumLine}>{(line)=><p role="status">{line()}</p>}</Show>
+      <Show when={facts?.rankingUnavailable}>{(line)=><p role="status">{line()}</p>}</Show>
+      <Show when={!facts}>
+        <p role="status">{t("sf.u12.rankUnavailable")}</p>
+        <p>{t("sf.u12.fxUnavailable")}</p>
+      </Show>
+      <Show when={!!facts&&!limited&&!facts.rankLine}><p role="status">{t("sf.u12.rankUnavailable")}</p></Show>
       <Show when={fx}><dl>{Object.entries(fx??{}).map(([currency,rate])=>
         <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):asString(rate)}</dd></div>)}</dl></Show>
       <p>{t("sf.u12.selectedSaved")}</p>
@@ -754,7 +809,35 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           <header class="sf-u12-heading">
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
             <p>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            <Show when={request()?.requestSummary}>
+              <p data-request-summary={request()?.number}>{request()?.requestSummary}</p>
+            </Show>
+            <Show when={request()?.moneySentence}>
+              <p data-request-money={request()?.number}>{request()?.moneySentence}</p>
+            </Show>
           </header>
+          <Show when={request()?.status==="sourcing"||request()?.po}>
+            <section>
+              <Show when={request()?.po}>
+                <fieldset disabled>
+                  <label>{t("sf.u12.quoteSupplier")}
+                    <input type="text" value={request()?.po?.supplier??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quoteCurrency")}
+                    <input type="text" value={request()?.po?.currency??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quotePrice")}
+                    <input type="number" step="any" value={asString(request()?.po?.lines?.[0]?.unitPrice)} disabled/>
+                  </label>
+                </fieldset>
+              </Show>
+              <Show when={request()?.poEstimate}><p role="status">{request()?.poEstimate}</p></Show>
+              <Show when={request()?.orderDifference}><p role="status">{request()?.orderDifference}</p></Show>
+              <Show when={request()?.status==="sourcing"||request()?.status==="src_pending"}>
+                <button type="button" disabled={!poSubmitOpen()}>{language.t("sf.u11.remaining.submitPo")}</button>
+              </Show>
+            </section>
+          </Show>
           <div class="sf-u12-switch">
             <button type="button" aria-pressed={ui.stage==="sourcing"} class="mx-btn"
               onClick={()=>setUi("stage","sourcing")}>{t("sf.u12.sourcing")}</button>

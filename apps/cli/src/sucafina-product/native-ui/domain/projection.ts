@@ -127,10 +127,12 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
         throw new Error("Malformed authorized budget line scope")
       data.budgetLineIds = source.budgetLineIds.filter((line): line is string => line.startsWith(`${owners}:`))
     }
-    if (has(source, "deviations")) data.deviations = Object.fromEntries(
+    // The original authorized Budget view omits this map until the first write.
+    // Publish its canonical empty state without accepting a present malformed map.
+    data.deviations = has(source, "deviations") ? Object.fromEntries(
       Object.entries(requiredRecord(source.deviations)).filter(([key]) => key.startsWith(`${own}-`))
         .map(([key, value]) => [key, pick(requiredRecord(value), ["flag", "text"])]),
-    )
+    ) : {}
     if (has(source, "budgetYtd") && has(requiredRecord(source.budgetYtd), own))
       data.budgetYtd = { [own]: Object.fromEntries(
         Object.entries(requiredRecord(requiredRecord(source.budgetYtd)[own]))

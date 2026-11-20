@@ -43,8 +43,12 @@ export type SfOwnerSelection = Readonly<{
  * returnTo must already be a same-owner internal href validated by F01.
  */
 export type SfResolvedQuery = Readonly<{
+  /** Prefills only the native agenda source; discovery remains an explicit action. */
+  sourcePage?: string
   year?: number
   month?: number
+  /** CAP01 presentation priorities only; never forwarded as a producer input or authority. */
+  signalPriority?: readonly string[]
   period?: string
   version?: SfRef
   status?: string
@@ -63,6 +67,8 @@ export type SfResolvedQuery = Readonly<{
   supplier?: SfRef
   previousReview?: SfRef
   currentReview?: SfRef
+  /** Selects only an original section in an authorized preserved review. */
+  sectionRef?: SfRef
 }>
 export type SfNoParams = Readonly<Record<string, never>>
 export type SfResolvedRouteMap = {

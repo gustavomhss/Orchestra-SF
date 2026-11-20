@@ -3,6 +3,7 @@ import { SfDomain, SfDomainPageCap01, SfDomainPageCap03, SfDomainPageCap04, SfDo
 import { SfDomainPageCap02 } from "@orchestra/schema/sucafina/people"
 import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
+import { parseSfSignalPriorities } from "../dashboard/executive/signals"
 
 const selectors = ["server", "project", "installation"] as const
 const schemas = { CAP01: SfDomainPageCap01.input, CAP02: SfDomainPageCap02.input,
@@ -26,8 +27,11 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   if (!["entry", "new", "detail", "edit"].includes(candidate.kind)) return
   const keys = [...params.keys()]
   const allowed = [...selectors, "year", ...(candidate.surfaceId === "CAP04" || candidate.surfaceId === "CAP05" ? [] : ["month"]),
-    ...(candidate.surfaceId === "CAP02" ? ["status"] : [])]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
+    ...(candidate.surfaceId === "CAP02" ? ["status"] : []), ...(candidate.surfaceId === "CAP01" ? ["signalPriority"] : [])]
+  const unique = keys.filter((key) => key !== "signalPriority")
+  if (new Set(unique).size !== unique.length || keys.some((key) => !allowed.includes(key))) return
+  const priorities = parseSfSignalPriorities(params.getAll("signalPriority"))
+  if (!priorities) return
   const selected = selectors.map((key) => params.get(key))
   if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
   const year = params.get("year"), month = params.get("month"), status = params.get("status")
@@ -37,7 +41,8 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   const schema = schemas[candidate.surfaceId as keyof typeof schemas]
   const sourceInput = candidate.surfaceId === "CAP02" && status !== null ? { ...input, topicStatus: status } : input
   if (Option.isNone(Schema.decodeUnknownOption(schema, { onExcessProperty: "error" })(sourceInput))) return
-  return { ...input, ...(status === null ? {} : { status }) }
+  return { ...input, ...(status === null ? {} : { status }),
+    ...(priorities.length ? { signalPriority: priorities } : {}) }
 }
 
 /** CAP destinations and live operation readiness are prerequisites, not write grants. */

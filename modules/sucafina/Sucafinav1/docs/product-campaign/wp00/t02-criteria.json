@@ -1,0 +1,1197 @@
+{
+  "schema": "sf-wp00-t02-criteria-v1",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "observed_seed": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+  "count": 23,
+  "qualification": "Status segue criterion-map.json e seus pins/runs: contratos W8 85 PASS; consumidores W8 44 PASS/16 FAIL com 39 exports e seis fences aditivos independentes. Check W10: 144 herdados/zero próprios, UI typecheck PASS. Flows UI W8 continuam bloqueados por C15 com zero observações/1260 cancelamentos; zoom real independente W10 passou. Definição, capacidade do browser e aceite integrado permanecem distintos.",
+  "criteria": [
+    {
+      "criterion_id": "WP00.T02.CHK.01",
+      "text": "Consumidores compilam contra o contrato sem importar a implementação privada de outro WP.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "bun typecheck (modules/sucafina)",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "O check W10 terminou com 144 diagnósticos herdados e zero próprios; typecheck oficial UI de seis fontes passou. A compilação integral de consumidores continua bloqueada, e o run W8 de consumidores executou 44 PASS/16 FAIL, incluindo seis exports de rotinas ausentes.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43522928224",
+        "43537543232",
+        "43538370444",
+        "43538629884",
+        "43539548039"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "typecheck",
+        "contract_decoders",
+        "consumer_exports",
+        "typecheck_current",
+        "consumer_exports_current",
+        "consumer_tests_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001",
+        "S055",
+        "S056"
+      ],
+      "remaining_gaps": [
+        "Persistem 144 diagnósticos herdados, incluindo a dependência do contrato host-context em routines/factory ausente.",
+        "Revisar consumo dos contratos públicos pelos produtores; testes que importam implementações para exercitá-las não comprovam essa fronteira."
+      ],
+      "next_action": {
+        "owners": [
+          "S0",
+          "WP09",
+          "owners dos diagnósticos de typecheck"
+        ],
+        "action": "Compor o produtor routines/factory.ts e corrigir os diagnósticos pelos owners; executar bun typecheck no candidato exato e revisar imports públicos dos consumidores."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.02",
+      "text": "Exemplos rejeitam período ausente, soma de moedas incompatíveis, referência inventada e campo restrito em projeção pública.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contracts.test.ts",
+        "test/product/wp00/contract-boundaries.test.ts",
+        "test/product/wp00/envelope.test.ts"
+      ],
+      "evidence_scope": "Os exemplos executados recusam período ausente, total de moedas USD/EUR válidas sem conversão, referência sintaticamente válida porém inexistente e campo IBAN existente/restrito na projeção pública. Controles positivos mantêm origem, moeda/FX e campo público utilizáveis.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "contract_decoders",
+        "envelope",
+        "baseline_real_consumers",
+        "contract_boundaries"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.03",
+      "text": "Para cada formato importável e cada estado novo persistido, apontar exatamente um produtor e o consumidor real; nenhum aparece como responsabilidade genérica da integração.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md",
+        "docs/product-campaign/wp00/state-consumer-matrix.json",
+        "docs/product-campaign/wp00/state-consumer-matrix.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts",
+        "Auditoria estática pinada de 255 fontes de produto e 26 da composição CLI; matriz completa com oito lacunas explícitas."
+      ],
+      "evidence_scope": "O inventário está completo: 14 famílias de formatos têm produtor/consumidor concreto; 46 famílias de estado foram auditadas, com 38 pares encontrados. Quatro famílias persistidas não têm leitor de negócio e quatro campos declarados não têm produtor nem consumidor no source pinado. Por essas oito lacunas concretas, o critério continua PARTIAL.",
+      "run_refs": [
+        "43514166596",
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "contract_docs",
+        "freeze_state",
+        "state_consumer_matrix"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001",
+        "S053",
+        "S054"
+      ],
+      "remaining_gaps": [
+        "WP11: preferences.baseline-coverage-history, preferences.coverage-classification-history e preferences.criterion-rule-history têm writer, mas nenhum leitor de negócio encontrado.",
+        "WP10: preferences.native-token-receipts tem inicialização/validação/append, mas nenhum consumidor autorizado dos recibos salvos encontrado.",
+        "WP11: claimBindings, commandProposals e compositeScenarios permanecem apenas no contrato, sem produtor/consumidor nas 281 fontes inspecionadas.",
+        "WP05, com namespace/migração WP10: biArtifacts permanece apenas no contrato, sem produtor/consumidor encontrado.",
+        "A matriz separa ainda quatro obrigações C07 sem implementação: admissão, recibo de run, correlação e binding Schedule; owners WP09 e composição WP10/S0."
+      ],
+      "next_action": {
+        "owners": [
+          "WP11",
+          "WP10",
+          "WP05",
+          "WP09",
+          "S0"
+        ],
+        "action": "Implementar leitores de histórico/recibos e produtores/consumidores dos campos ausentes nos respectivos prefixes; compor os estados C07 exigidos e atualizar a matriz com endpoints reais. WP00 já concluiu o inventário; provider C08 e qualificação nativa têm seus próprios gates."
+      },
+      "mapping_inventory_status": "COMPLETE_WITH_EIGHT_CONCRETE_GAPS"
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.10",
+      "text": "Os 5/18/8 têm IDs únicos, profile↔skill↔operation↔schema↔consumer↔proof sem órfão; cada produtor tem path no ownership.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "IDs e ligações 5/18/8/39/6 têm fechamento declarativo; paths de produtores pertencem ao ownership correspondente. Este PASS é da matriz congelada.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "ownership",
+        "contract_docs"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Existência/execução dos handlers continua bloqueada no gate de consumidores; AMs são assignments, não provas executadas."
+      ],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.11",
+      "text": "C15 runtime exige bytes/digests de implementação; um plano sem digest inventado não se confunde com prova de carga.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "evidence_scope": "C15 e loader exigem bytes e digests e distinguem plano de carga. O positivo de consumo está bloqueado pelo asset distribuído divergente.",
+      "run_refs": [
+        "43514166596",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "consumer_c15",
+        "contract_docs",
+        "execution_registry",
+        "consumer_c15_current",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "AlternativeDraft diverge entre normativa e assets distribuídos.",
+        "Recibos sintéticos dos testes registry não comprovam carga observada."
+      ],
+      "next_action": {
+        "owners": [
+          "WP12",
+          "WP10"
+        ],
+        "action": "Integrar assets C15 compatíveis e obter loader positivo; registrar carga nativa e digests observados para a qualificação correspondente."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.12",
+      "text": "Business template mappings passam validators reais no build; owners não são seats/PRs fictícios.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp14/atlas-projection.test.ts (three tests PASS at runs 43514166596 and 43538370444)",
+        "ATLAS-PACKAGE (required, NOT_RUN)"
+      ],
+      "evidence_scope": "Os três testes de tradução Atlas passaram novamente no run W8 de consumidores com validators reais e owners de negócio. O build/empacotamento ATLAS-PACKAGE completo não foi qualificado.",
+      "run_refs": [
+        "43514166596",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "atlas_mapping",
+        "contract_docs",
+        "native_qualification",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "ATLAS-PACKAGE não executado; typecheck do candidato permanece vermelho.",
+        "Nenhuma prova de scanner, append, durabilidade ou recall pode ser associada a esse teste."
+      ],
+      "next_action": {
+        "owners": [
+          "WP10",
+          "WP14"
+        ],
+        "action": "Acrescentar prova ATLAS-PACKAGE/build com validators reais, preservando os três testes de tradução já aprovados."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CHK.60",
+      "text": "Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "evidence_scope": "Rotas 39/39, receipt em chamada direta, preview-only e HostBoundEntryMode continuam congelados. O novo gate verificou todos os 39 exports individualmente: 33 presentes e seis handlers de rotina ausentes. C15 e C08 continuam incompatíveis, sem cadeia nativa de import/admissão/consumidor no mesmo candidato.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "consumer_exports",
+        "consumer_c15",
+        "execution_registry",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "consumer_support_current",
+        "consumer_c08_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Seis operações de rotina não têm handler no seed; C15 do candidato não carrega.",
+        "Não houve chamada nativa de import preview ou rotina admitida no mesmo candidato."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.01",
+      "text": "Os quatorze contratos possuem produtores, consumidores, erros, versionamento e exemplos de compatibilidade definidos.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "Os C01–C17 possuem produtores/consumidores, versão/compatibilidade, política de erros e exemplos admitidos/recusados documentados e congelados; o texto legado quatorze não foi usado para retirar C15–C17.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_exports",
+        "freeze_bytes",
+        "contract_docs"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "PASS de definição; exemplos textuais não são afirmação de que todos os consumidores passaram."
+      ],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.10",
+      "text": "C15–C17 e manifestos completos são aceitos por WP10/WP12/WP06/WP14 antes de construir dependência.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "evidence_scope": "Não existe aceite integral dos consumidores WP10/WP12/WP06/WP14; preservar essa dependência aberta.",
+      "run_refs": [
+        "43514166596",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "consumer_c08",
+        "consumer_c15",
+        "atlas_mapping",
+        "contract_docs",
+        "consumer_c08_current",
+        "consumer_c15_current",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "WP10 C08 incompatível, WP12 assets divergentes; nenhum recibo composto completo de WP06/WP14."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.DOD.60",
+      "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "evidence_scope": "AM02/AM06 não foram executadas; freeze verde e testes de seams sintéticos não satisfazem este DoD.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "execution_registry",
+        "private_mcp",
+        "native_qualification",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Integração real de producers/consumers bloqueada.",
+        "AM02 e AM06 ausentes."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.INV.01",
+      "text": "C02 não se torna um segundo motor financeiro; C06 não cria outra fonte de tarefas; C07 não concede aprovação de negócio.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "O delta de contrato é declarativo; não introduz motor financeiro, fonte alternativa de tarefas ou aprovação de negócio. Testes usam os domínios originais.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "contract_docs",
+        "freeze_state",
+        "baseline_real_consumers"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Revisão de escopo é a prova deste invariante do delta; não constitui aceite de todas as rotinas existentes."
+      ],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.INV.10",
+      "text": "Não retirar produto/autoridade/critério; nenhum ID de perfil vira principal ou seat técnico.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "Nenhum contrato/operação/requisito foi removido para esconder drift. Todos os 39 permanecem; profile/skill não passam a principal ou seat técnico. Baseline/requisitos são preservados.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "contract_decoders",
+        "baseline_real_consumers",
+        "contract_docs"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Autenticação empresarial/nativa continua a depender dos gates de consumidor e AMs."
+      ],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.INV.60",
+      "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)",
+        "test/product/wp00/corpus-reconciliation.test.ts (domain/import coverage only; not native preview/admission)"
+      ],
+      "evidence_scope": "Interseção C16 e recusas permanecem obrigatórias. O registry real recusa receipt totalmente ausente antes da autoridade, com controle positivo; o corpus executa preview/apply e stale preview reais. Revogação empresarial em instalação real, paridade do consumidor de preview nativo e rotina governada continuam sem prova.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43537536421",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "execution_registry",
+        "private_mcp",
+        "consumer_c08",
+        "contract_boundaries",
+        "corpus_reconciliation",
+        "consumer_tests_current",
+        "consumer_c08_current",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001",
+        "S047",
+        "S055"
+      ],
+      "remaining_gaps": [
+        "Registry usa recibos/auth sintéticos; não demonstra skill carregada numa Session real.",
+        "W8 confirmou violações C08 de namespaces/migração/read fences e quatro dos seis fences aditivos; os resultados agora são individuais.",
+        "A reimportação de corpus não qualifica a operação nativa preview-only nem admissão Relay."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.01",
+      "text": "Interfaces pequenas correspondem a necessidades presentes e não antecipam um framework empresarial.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md",
+        "product/contracts/canonical.ts"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts",
+        "test/product/wp00/evidence-source-maps.test.ts"
+      ],
+      "evidence_scope": "Contratos pequenos cobrem necessidades presentes: o layout declara campos existentes e o helper de evidência vincula versões/incarnations a digests originais com validação. Não introduzem framework empresarial, store ou runtime paralelo.",
+      "run_refs": [
+        "43522589708",
+        "43537536421"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "contract_docs",
+        "freeze_state",
+        "evidence_source_maps_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001",
+        "S058",
+        "S057"
+      ],
+      "remaining_gaps": [],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.10",
+      "text": "Contrato nomeia producer/export/path/consumidor e falhas observáveis, sem 'binding futuro' indefinido.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "O freeze nomeia producerTask/handlerPath/handlerExport/consumerTasks, schemas, efeitos e falhas. Deltas dos owners têm pins/exports concretos; a indisponibilidade não foi escondida como binding futuro indefinido.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_exports",
+        "freeze_matrix",
+        "contract_docs"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Nomear o path não prova que ele existe no candidato; isso continua sendo consumer_exports BLOCKED."
+      ],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.QLT.60",
+      "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "evidence_scope": "Há divergência concreta no candidato entre normativa e assets C15, além de C08 incompatível e handlers de rotina ausentes. Não há prova de estado visível na UI.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43522985791",
+        "43538370444",
+        "43537760359"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "consumer_c15",
+        "consumer_c08",
+        "consumer_exports",
+        "ui_bootstrap",
+        "consumer_exports_current",
+        "consumer_c08_current",
+        "consumer_c15_current",
+        "ui_bootstrap_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Manifesto/profile/skill distribuídos não concordam.",
+        "Testes private-MCP passam validators fictícios true e handler sintético; não demonstram concordância schema/wrapper/UI.",
+        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.01",
+      "text": "Incluir leitura, escrita, conflito, importação, revisão, relações, rotinas e composição real.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts",
+        "test/product/wp00/corpus-reconciliation.test.ts (domain/import coverage only; not native preview/admission)"
+      ],
+      "evidence_scope": "Leitura, escrita, CAS, preview/apply de XLSX e renderizadores reais estão exercitados; a reimportação conserva identidades/valores/estado após reabrir SQLite. A composição integral de revisão/relações/rotina, incluindo admissão real, continua indisponível.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43537536421",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "contract_docs",
+        "freeze_matrix",
+        "contract_decoders",
+        "baseline_real_consumers",
+        "consumer_c08",
+        "corpus_reconciliation",
+        "consumer_c08_current",
+        "consumer_exports_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001",
+        "S047"
+      ],
+      "remaining_gaps": [
+        "Os seis exports C07 de rotina falharam individualmente no run W8; host/admissão governada continuam indisponíveis.",
+        "Importação e export de corpus executados não demonstram a cadeia composta de review/relações/rotina do produto."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.02",
+      "text": "Congelar C01–C17, assinaturas mínimas, enumerações de estado, identidade/escopo, exemplos válidos e negativos, export names e mapa produtor/consumidor. A qualificação nativa é paralela.",
+      "status": "PASS",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "C01–C17 e suas assinaturas/tipos, identidade/escopo, estados, exemplos e exports/mapa estão congelados. O próprio critério deixa qualificação nativa paralela; ela permanece aberta sem rebaixar o contrato.",
+      "run_refs": [
+        "43522589708"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_bytes",
+        "freeze_exports",
+        "freeze_matrix",
+        "contract_docs"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "PASS não vale para qualificação nativa ou consumidor. Typecheck global segue bloqueado."
+      ],
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.10",
+      "text": "5 perfis,18 skills,8 packs,39 operações,6 provas e empacotamento Atlas têm fechamento rastreável.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "test/product/wp00/contract-consumers.test.ts"
+      ],
+      "evidence_scope": "A matriz completa e os nove paths Atlas têm rastreabilidade declarativa, mas fechamento exige também o pacote e provas reais.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "freeze_matrix",
+        "ownership",
+        "atlas_mapping",
+        "native_qualification",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "ATLAS-PACKAGE não executado; AM01–AM06 são assignments, não recibos.",
+        "Bundle C15 não carrega e rotina faltante."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.CMP.60",
+      "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "PARTIAL",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)",
+        "test/product/wp00/corpus-reconciliation.test.ts (domain/import coverage only; not native preview/admission)"
+      ],
+      "evidence_scope": "Receipt totalmente ausente é recusado no registry real com controle positivo; preview/apply reais e prévia antiga recusada foram executados no corpus. Faltam revogação empresarial real, concordância da operação nativa preview-only e admissão governada pertinentes.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43537536421",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "execution_registry",
+        "private_mcp",
+        "consumer_c08",
+        "contract_decoders",
+        "freeze_matrix",
+        "contract_boundaries",
+        "corpus_reconciliation",
+        "consumer_c08_current",
+        "consumer_support_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001",
+        "S047"
+      ],
+      "remaining_gaps": [
+        "Revogação de generation/cancelamento sintéticos não equivale a revogação empresarial real.",
+        "O consumidor nativo preview-only e a admissão Relay não foram qualificados; não confundir o import de corpus executado com essa cadeia."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00 qualifier independente",
+          "WP10",
+          "WP09",
+          "WP06"
+        ],
+        "action": "Preservar o negativo de receipt vazio já aprovado; qualificar revogação empresarial real, import preview-only e rotina com/sem admissão nos caminhos AM02/AM06 pertinentes."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.01",
+      "text": "Duas frentes conseguem trocar uma saída pelos contratos sem coordenar edição no mesmo arquivo.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "evidence_scope": "A separação de ownership e os contratos permitem construção paralela, porém a troca de contribuição entre duas frentes reais no candidato não foi demonstrada.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43538370444"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "ownership",
+        "contract_docs",
+        "consumer_c15",
+        "baseline_real_consumers",
+        "consumer_c15_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Teste de WP00 consumindo source do domínio não é automaticamente um segundo fluxo real de produto.",
+        "Producers remotos reconciliados não estão integrados no seed."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.10",
+      "text": "Builder consegue produzir código compatível e consumidor consegue rejeitar substitutos sem uso real.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-consumers.test.ts",
+        "GNATIVE/AM01 (required native load and output consumption, NOT_RUN)"
+      ],
+      "evidence_scope": "Schema e loader recusam substitutos e o gate detecta incompatibilidades, mas o builder não tem compilação/consumo integrado positivos no W.",
+      "run_refs": [
+        "43514166596",
+        "43522589708",
+        "43522928224",
+        "43538370444",
+        "43538629884",
+        "43539548039"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "contract_decoders",
+        "consumer_c15",
+        "consumer_exports",
+        "typecheck",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "typecheck_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Rejeitar o candidato incompatível não basta para demonstrar um produtor compatível em uso real."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    },
+    {
+      "criterion_id": "WP00.T02.SUC.60",
+      "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Congelar operation_call_routes 39/39, SkillLoadReceipt em chamadas diretas, imports preview-only e HostBoundEntryMode de rotina, sem exceção à interseção C16.",
+      "status": "BLOCKED",
+      "implementation": [
+        "product/contracts/freeze-v1.json",
+        "product/contracts/state-layout.ts",
+        "docs/product-campaign/wp00/contracts-v1.md"
+      ],
+      "consumers": [
+        "WP10",
+        "WP12",
+        "WP06",
+        "WP14"
+      ],
+      "proofs": [
+        "test/product/wp00/contract-freeze.test.ts",
+        "AM02 (required native parity, NOT_RUN)",
+        "AM06 (required native routine, NOT_RUN)"
+      ],
+      "evidence_scope": "Nenhuma prova mostra a pessoa usando a contribuição e abrindo seu resultado real. Os gates mantêm a ausência visível.",
+      "run_refs": [
+        "43514166596",
+        "43522985791",
+        "43538370444",
+        "43537760359"
+      ],
+      "current_criterion_map": "criterion-map.json",
+      "evidence_refs": [
+        "consumer_c15",
+        "consumer_exports",
+        "native_qualification",
+        "ui_bootstrap",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "ui_bootstrap_current"
+      ],
+      "source_refs": [
+        "S007",
+        "S008",
+        "S001"
+      ],
+      "remaining_gaps": [
+        "Sem UI real, host/modelo real, AM02/AM06 ou resultado aberto.",
+        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
+      ],
+      "next_action": {
+        "owners": [
+          "WP00",
+          "WP09",
+          "WP10",
+          "WP12",
+          "S0"
+        ],
+        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+      }
+    }
+  ],
+  "assessment_candidate": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+  "counts": {
+    "BLOCKED": 8,
+    "PARTIAL": 7,
+    "PASS": 8
+  }
+}

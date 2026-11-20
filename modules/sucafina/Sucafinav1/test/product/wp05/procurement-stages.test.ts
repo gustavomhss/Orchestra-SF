@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -196,6 +197,7 @@ test("real request commands traverse every open procurement stage without histor
 }, 60000)
 
 test("approver opens the oldest proven request while a missing age stays visible", async () => {
+  expectSpawn(import.meta.path)
   const fixture = await procurementFixture()
   try {
     const older = await fixture.execute("requester", "create", undefined, { pr: requisition }, "2026-01-01T00:00:00Z")

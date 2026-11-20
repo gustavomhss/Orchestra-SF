@@ -11,7 +11,7 @@ import {
   SfContextBar, SfPageFrame, type SfAction, type SfCopyKey, type SfDisplayValue,
   type SfMessage, type SfUiState,
 } from "../../shared/frame"
-import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
+import { SfDisplayValueText, sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfSort } from "../../shared/table"
 import { SfRecordDetail } from "../../shared/detail"
@@ -22,7 +22,7 @@ import {
 import { SfReceiptView } from "../../shared/receipt"
 import { encodeSfRouteRef } from "../../navigation-state"
 import {
-  readBudgetPage, writeBudgetPage,
+  readBudgetPage, writeBudgetPage, budgetDeviationSourceMatches,
   type BudgetCapability, type BudgetCommand, type BudgetCommandName,
   type BudgetEntry, type BudgetForm, type BudgetOwner, type BudgetPage,
 } from "./model"
@@ -46,6 +46,7 @@ const LABELS = [
   "save", "source", "missing", "entry", "yearHintStale", "import",
   "sourceVersion", "monthly", "nameHeading", "ownerScope", "projectScope",
   "record", "year", "select", "status", "saveLabel", "filter", "cancel",
+  "loadCurrent", "savedLater", "savedReadPending", "yearAmountInvalid",
 ] as const
 type Label = typeof LABELS[number]
 type Editing = Readonly<{
@@ -59,6 +60,7 @@ type Editing = Readonly<{
   versionKey: string
   operationRef: SfOperationRef
   draft: SfPublicDraftController<BudgetForm>
+  returnFocus: HTMLElement | undefined
 }>
 const entryCollection = (capability: BudgetCapability) => capability === "CAP04" ? "opexEntries" : "capexEntries"
 const ownerCollection = (capability: BudgetCapability) => capability === "CAP04" ? "opexOwners" : "capexProjects"
@@ -92,6 +94,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     busy: false, confirmDiscard: false,
   })
   const [editing, setEditing] = createSignal<Editing>()
+  const [laterEdits, setLaterEdits] = createSignal<Partial<BudgetForm>>({})
+  const [reviewedCurrent, setReviewedCurrent] = createSignal<Readonly<{ version: number; value: BudgetForm }>>()
+  let confirmedOperation: SfOperationRef | undefined
   const [layoutMode, setLayoutMode] = createSignal<"single" | "split" | "split-context">("single")
   let activeSubmissionRef: SfOperationRef | undefined
   const rememberView = (partial: Partial<{ filter: string; sort: SfSort }>) => {
@@ -261,6 +266,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (prior !== undefined && generation !== prior) {
       // Old outstanding mutations must not update the successor owner.
       activeSubmissionRef = undefined
+      confirmedOperation = undefined
+      setLaterEdits({})
+      setReviewedCurrent(undefined)
       setEditing(undefined)
       setView("busy", false)
       setView("confirmDiscard", false)
@@ -270,15 +278,15 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     return generation
   })
 
-  const entryFor = (owner: BudgetOwner, month: number): BudgetEntry | undefined =>
-    view.page?.entries?.find((entry) =>
+  const entryFor = (owner: BudgetOwner, month: number, page = view.page): BudgetEntry | undefined =>
+    page?.entries?.find((entry) =>
       String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === String(owner.id) &&
       entry.year === year() && entry.month === month,
     )
-  const deviationFor = (owner: BudgetOwner, month: number) =>
-    view.page?.deviations?.[kind(props.capability) + "-" + String(owner.id) + "-" + year() + "-" + month]
-  const hintFor = (owner: BudgetOwner) => view.page?.ytd?.[year() + ":" + String(owner.id)]
-  const formFor = (owner: BudgetOwner | undefined, entry: BudgetEntry | undefined, month: number): BudgetForm => ({
+  const deviationFor = (owner: BudgetOwner, month: number, page = view.page) =>
+    page?.deviations?.[kind(props.capability) + "-" + String(owner.id) + "-" + year() + "-" + month]
+  const hintFor = (owner: BudgetOwner, page = view.page) => page?.ytd?.[year() + ":" + String(owner.id)]
+  const formFor = (owner: BudgetOwner | undefined, entry: BudgetEntry | undefined, month: number, page = view.page): BudgetForm => ({
     name: owner?.name ?? "",
     budget: raw(entry ? entry.budget : owner?.budget),
     month,
@@ -286,9 +294,9 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     forecast: raw(entry?.forecast),
     annual: "",
     field: "budget",
-    amount: owner ? raw(hintFor(owner)?.amount) : "",
-    flag: owner ? (deviationFor(owner, month)?.flag ?? "") : "",
-    text: owner ? (deviationFor(owner, month)?.text ?? "") : "",
+    amount: owner ? raw(hintFor(owner, page)?.amount) : "",
+    flag: owner ? (deviationFor(owner, month, page)?.flag ?? "") : "",
+    text: owner ? (deviationFor(owner, month, page)?.text ?? "") : "",
   })
   const versionKey = (action: BudgetCommandName, owner: BudgetOwner | undefined, entry: BudgetEntry | undefined, month: number) => {
     if (action === "year-amount") return "budgetYtd"
@@ -340,13 +348,20 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         actionIds: [action],
       },
     })
+    if (sourcePresent && existingVersion !== undefined)
+      draft.receiveRemote({ baseVersion: existingVersion, value: base })
     setView("confirmDiscard", false)
     setView("error", undefined)
+    setView("message", undefined)
+    setLaterEdits({})
+    setReviewedCurrent(undefined)
+    confirmedOperation = undefined
     setEditing({
       action, owner, entry, month, parentId: owner ? String(owner.id) : null, recordId,
       version: existingVersion ?? 0, versionKey: keyValue,
       operationRef: crypto.randomUUID() as SfOperationRef,
       draft,
+      returnFocus: document.activeElement instanceof HTMLElement ? document.activeElement : undefined,
     })
   }
 
@@ -363,8 +378,13 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const editor = editing()
     const snapshot = editor?.draft.snapshot()
     if (!editor || !snapshot || snapshot.availability !== "active") return
-    const next = { ...snapshot.value, [field]: field === "month" ? Number(value) : value }
-    editor.draft.edit(next as BudgetForm)
+    const change = { [field]: field === "month" ? Number(value) : value }
+    if (snapshot.pendingOperation) {
+      // The submitted draft and its digest stay immutable. Later typing belongs
+      // to this mounted editor only until the known reply and a fresh source read.
+      if (snapshot.phase !== "submitting" || !allowsLaterEdits(editor)) return
+      setLaterEdits((prior) => ({ ...prior, ...change }))
+    } else editor.draft.edit({ ...snapshot.value, ...change } as BudgetForm)
     setView("error", undefined)
   }
   const validate = (editor: Editing): string | undefined => {
@@ -376,9 +396,13 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (editor.action === "save" && (!fields.name.trim() || !numberPresent(fields.budget))) return t(sfCommonKey("sf.common.fieldErrorSummary"))
     if (editor.action === "save-entry" && ![fields.budget, fields.actual, fields.forecast].every(numberPresent)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
     if (editor.action === "annual-entry" && !numberPresent(fields.annual)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
-    if (editor.action === "year-amount" && fields.amount.trim() !== "" && (!numberPresent(fields.amount) || Number(fields.amount) < 0)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
+    if (editor.action === "year-amount" && fields.amount.trim() !== "" && (!numberPresent(fields.amount) || Number(fields.amount) < 0)) return t(key("yearAmountInvalid"))
     if (editor.action !== "save" && editor.action !== "save-entry" && editor.action !== "annual-entry" && editor.action !== "year-amount" && editor.action !== "save-deviation" && editor.action !== "delete") return t(sfCommonKey("sf.common.invalidLink"))
-    if (editor.recordId !== undefined && view.page?.versions[editor.versionKey] !== editor.version && editor.action !== "save-entry") return t(sfCommonKey("sf.common.stale"))
+    if (editor.action === "save-deviation" && !budgetDeviationSourceMatches(
+      view.page, props.capability, year(), { ...editor, sourcePresent: state.base !== null },
+    )) return t(sfCommonKey("sf.common.stale"))
+    if (editor.recordId !== undefined && view.page?.versions[editor.versionKey] !== editor.version &&
+        editor.action !== "save-entry" && editor.action !== "save-deviation") return t(sfCommonKey("sf.common.stale"))
     if (!allowed(editor.action)) return t(sfCommonKey("sf.common.noAccess"))
     return undefined
   }
@@ -410,8 +434,27 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (editing()?.owner && String(editing()!.owner!.id) === ref) setEditing(undefined)
     if (props.route.kind === "detail" || props.route.kind === "edit") navigate(listHref("entry"))
   })
+  const restoreEditorFocus = (editor: Editing) => {
+    const ready = contextReady()
+    queueMicrotask(() => {
+      if (!ready || contextReady() !== ready) return
+      if (editor.returnFocus?.isConnected) { editor.returnFocus.focus(); return }
+      if (editor.action === "save-entry" || editor.action === "save-deviation") {
+        document.querySelector<HTMLButtonElement>(
+          '.sf-budget-detail tr[data-sf-month="' + editor.month + '"] button[data-sf-action="' + editor.action + '"]',
+        )?.focus()
+      }
+    })
+  }
   const closeEditor = () => {
     if (view.busy) return
+    const editor = editing()
+    const snapshot = editor?.draft.snapshot()
+    if (snapshot?.availability === "active" && snapshot.pendingOperation) return
+    if (editor) restoreEditorFocus(editor)
+    setLaterEdits({})
+    setReviewedCurrent(undefined)
+    confirmedOperation = undefined
     setEditing(undefined)
     setView("confirmDiscard", false)
     setView("error", undefined)
@@ -475,6 +518,101 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     }
   }
 
+  const allowsLaterEdits = (editor: Editing) =>
+    editor.parentId !== null && (editor.action === "save-entry" || editor.action === "save-deviation")
+  const currentEditorSource = (editor: Editing, page: BudgetPage) => {
+    const owner = page.owners?.find((item) => String(item.id) === editor.parentId)
+    if (!owner) return
+    const entry = editor.action === "save-entry" ? entryFor(owner, editor.month, page) : undefined
+    if (editor.action === "save-entry" && (!entry ||
+        editor.recordId !== undefined && String(entry.id) !== editor.recordId)) return
+    const keyValue = versionKey(editor.action, owner, entry, editor.month)
+    const version = page.versions[keyValue]
+    if (version === undefined) return
+    return {
+      owner, entry, versionKey: keyValue, version,
+      recordId: editor.action === "save-entry" ? String(entry!.id) : String(owner.id),
+      value: formFor(owner, entry, editor.month, page),
+    }
+  }
+  const publishPage = (page: BudgetPage) => {
+    setView("page", page)
+    setView("state", page.owners === undefined || page.entries === undefined ? "partial" : "ready")
+  }
+  const finishConfirmed = (editor: Editing, page: BudgetPage) => {
+    const snapshot = editor.draft.snapshot()
+    if (confirmedOperation !== editor.operationRef || snapshot.availability !== "active" ||
+        snapshot.pendingOperation?.operationRef !== editor.operationRef) return false
+    const later = laterEdits()
+    if (Object.keys(later).length) {
+      const current = currentEditorSource(editor, page)
+      // A stale/absent projection cannot become the base of an unsent draft.
+      if (!current || current.version <= editor.version) return false
+      editor.draft.confirmSave({ kind: "projected", operationRef: editor.operationRef,
+        baseVersion: current.version, value: current.value })
+      editor.draft.edit({ ...current.value, ...later })
+      publishPage(page)
+      setLaterEdits({})
+      setReviewedCurrent({ version: current.version, value: current.value })
+      setEditing({ ...editor, ...current, operationRef: crypto.randomUUID() as SfOperationRef })
+      setView("message", key("savedLater"))
+    } else {
+      // The reply confirms the command; the separate authorized read refreshes
+      // the screen. Neither is fabricated from the submitted values.
+      const current = currentEditorSource(editor, page)
+      if (current && current.version > editor.version)
+        editor.draft.confirmSave({ kind: "projected", operationRef: editor.operationRef,
+          baseVersion: current.version, value: current.value })
+      else editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef: editor.operationRef, resultVersion: null })
+      publishPage(page)
+      setView("message", sfCommonKey("sf.common.saved"))
+      setEditing(undefined)
+      setReviewedCurrent(undefined)
+      restoreEditorFocus(editor)
+      if (editor.action === "delete" || props.route.kind === "new") navigate(listHref("entry"))
+      else if (props.route.kind === "edit" && editor.parentId) navigate(listHref("detail", editor.parentId))
+    }
+    confirmedOperation = undefined
+    return true
+  }
+  const loadCurrent = async (editor: Editing) => {
+    const ready = contextReady(), snapshot = editor.draft.snapshot()
+    if (!ready || view.busy || editing() !== editor || snapshot.availability !== "active" ||
+        (snapshot.pendingOperation && confirmedOperation !== editor.operationRef)) return
+    const abort = new AbortController()
+    setView("busy", true)
+    try {
+      const result = await readBudgetPage(ready.transport, props.capability, year(), ready.context.stamp, abort.signal)
+      if (contextReady() !== ready || editing() !== editor) return
+      if (result.state !== "ready") { setView("error", t(messageFor(result.state))); return }
+      if (confirmedOperation === editor.operationRef) {
+        if (!finishConfirmed(editor, result.page)) setView("error", t(key("savedReadPending")))
+        return
+      }
+      const current = currentEditorSource(editor, result.page)
+      if (!current || !result.page.allowedActionIds.includes(editor.action)) {
+        setView("error", t(sfCommonKey("sf.common.stale"))); return
+      }
+      const retained = editor.draft.snapshot()
+      if (retained.availability !== "active" || retained.pendingOperation) return
+      // This explicit action adopts only a newly authenticated source version.
+      // Keep every unsent value, then require a new review before any command.
+      editor.draft.receiveRemote({ baseVersion: current.version, value: current.value })
+      editor.draft.discard()
+      editor.draft.edit(retained.value)
+      publishPage(result.page)
+      setReviewedCurrent({ version: current.version, value: current.value })
+      setEditing({ ...editor, ...current, operationRef: crypto.randomUUID() as SfOperationRef })
+      setView("error", undefined)
+    } catch {
+      console.error("SF budget current-source read failed")
+      if (contextReady() === ready && editing() === editor)
+        setView("error", t(sfCommonKey("sf.common.unavailable")))
+    } finally {
+      abort.abort()
+      if (contextReady() === ready) setView("busy", false)
+    }
+  }
   const confirmReview = async () => {
     const editor = editing()
     const ready = contextReady()
@@ -483,77 +621,73 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (!editor || !ready || !page || !snapshot || snapshot.availability !== "active" || validate(editor) || view.busy) return
     if (context.state().status !== "ready" || page.context.accessRevision !== ready.context.stamp.accessRevision) return
     const input: BudgetCommand = {
-      action: editor.action,
-      recordId: editor.action === "save-entry" ? editor.recordId : editor.recordId,
-      parentId: editor.parentId,
-      year: year(),
-      version: editor.version,
-      versions: page.versions,
-      form: snapshot.value,
+      action: editor.action, recordId: editor.recordId, parentId: editor.parentId,
+      year: year(), version: editor.version, versions: page.versions, form: snapshot.value,
     }
     const abort = new AbortController()
     const operationRef = editor.operationRef
     const idempotencyKey = crypto.randomUUID()
     const bytes = new TextEncoder().encode(JSON.stringify(input))
     const fingerprint = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
-    if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor)) return
+    const current = editor.draft.snapshot()
+    if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor) ||
+        current.availability !== "active" || current.value !== snapshot.value) return
     const payloadDigest = Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
     const pendingSnapshot = editor.draft.snapshot()
     if (pendingSnapshot.availability !== "active" || pendingSnapshot.pendingOperation?.operationRef !== operationRef) return
     editor.draft.setPhase("submitting")
     activeSubmissionRef = operationRef
+    setLaterEdits({})
     setView("busy", true)
     setView("error", undefined)
+    setView("message", undefined)
     try {
       const result = await writeBudgetPage(ready.transport, props.capability, input, {
-        signal: abort.signal,
-        idempotencyKey,
+        signal: abort.signal, idempotencyKey,
       } satisfies SfCallOptions & { idempotencyKey: string })
       if (context.ready() !== ready || editing() !== editor) return
       if (result.kind !== "response") {
-        // A transport loss after dispatch is outcome-unknown, not failure/retry.
         editor.draft.setPhase("outcome-unknown")
         setView("error", t(sfCommonKey("sf.common.operationUnknown")))
         return
       }
       if (!result.body.ok) {
         if (result.body.status === 409 || result.body.status === 422) {
-          // A definite rejection is not an unknown outcome; release the pending operation via the draft contract.
           editor.draft.rejectSave({ status: result.body.status, operation: { operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version } })
-          if (result.body.status === 409) setView("error", t(sfCommonKey("sf.common.conflict")))
-          else setView("error", result.body.errors?.join("; ") ?? t(sfCommonKey("sf.common.fieldErrorSummary")))
+          const later = laterEdits()
+          if (Object.keys(later).length) {
+            const retained = editor.draft.snapshot()
+            if (retained.availability === "active" && !retained.pendingOperation)
+              editor.draft.edit({ ...retained.value, ...later })
+          }
+          setLaterEdits({})
+          editor.draft.setPhase(result.body.status === 409 ? "conflict" : "validation-error")
+          setView("error", result.body.status === 409 ? t(sfCommonKey("sf.common.conflict")) :
+            result.body.errors?.join("; ") ?? t(sfCommonKey("sf.common.fieldErrorSummary")))
+        } else if (result.body.status === 403) {
+          context.invalidate("revoked")
         } else {
-          editor.draft.setPhase("failed")
-          setView("error", t(sfCommonKey(result.body.status === 403 ? "sf.common.noAccess" : "sf.common.unavailable")))
+          editor.draft.setPhase("outcome-unknown")
+          setView("error", t(sfCommonKey("sf.common.operationUnknown")))
         }
         return
       }
-      // The legacy producer returns {ok:true} without a record projection.
-      // Refetch is mandatory before exposing new values or claiming a clean base.
+      confirmedOperation = operationRef
       const postRead = await readBudgetPage(ready.transport, props.capability, year(), ready.context.stamp, abort.signal)
       if (context.ready() !== ready || editing() !== editor) return
-      editor.draft.confirmSave({ kind: "confirmed-without-projection", operationRef, resultVersion: null })
-      setView("message", sfCommonKey("sf.common.saved"))
-      setEditing(undefined)
-      if (postRead.state === "ready") {
-        setView("page", postRead.page)
-        setView("state", postRead.page.owners === undefined || postRead.page.entries === undefined ? "partial" : "ready")
-      } else {
-        setView("page", undefined)
-        setView("state", postRead.state)
+      if (postRead.state !== "ready" || !finishConfirmed(editor, postRead.page)) {
+        editor.draft.setPhase("outcome-unknown")
+        setView("error", t(key("savedReadPending")))
       }
-      if (editor.action === "delete" || props.route.kind === "new") navigate(listHref("entry"))
-      else if (props.route.kind === "edit" && editor.parentId) navigate(listHref("detail", editor.parentId))
     } catch {
+      console.error("SF budget save or confirmation read failed")
       if (context.ready() === ready && editing() === editor) {
         editor.draft.setPhase("outcome-unknown")
-        setView("error", t(sfCommonKey("sf.common.operationUnknown")))
+        setView("error", t(confirmedOperation === operationRef ? key("savedReadPending") : sfCommonKey("sf.common.operationUnknown")))
       }
     } finally {
       abort.abort()
-      // A late response/finally from a previous owner or an older intent
-      // cannot clear the successor command's busy state.
       if (activeSubmissionRef === operationRef) {
         activeSubmissionRef = undefined
         if (context.ready() === ready) setView("busy", false)
@@ -590,10 +724,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         <Show when={allowed("save-entry") || allowed("save-deviation")}>
           <td class="sf-budget-row-actions">
             <Show when={allowed("save-entry")}>
-              <button type="button" class="mx-btn" disabled={view.busy} onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
+              <button type="button" class="mx-btn" disabled={view.busy} data-sf-action="save-entry" onClick={() => startEdit("save-entry", owner, month)}>{t(key("saveMonth"))}</button>
             </Show>
             <Show when={allowed("save-deviation")}>
-              <button type="button" class="mx-btn" disabled={view.busy} onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
+              <button type="button" class="mx-btn" disabled={view.busy} data-sf-action="save-deviation" onClick={() => startEdit("save-deviation", owner, month)}>{t(key("saveDeviation"))}</button>
             </Show>
           </td>
         </Show>
@@ -669,94 +803,85 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     />
   )
 
-  const editorView = (editor: Editing) => {
-    const snapshot = editor.draft.snapshot()
-    if (snapshot.availability !== "active") {
-      return <SfStatePanel state={snapshot.availability === "quarantined" ? "session-expired" : "denied"} messageKey={sfCommonKey("sf.common.noAccess")} />
+  const BudgetEditor = (editorProps: Readonly<{ editor: Editing }>): JSX.Element => {
+    const editor = editorProps.editor
+    const active = () => {
+      const snapshot = editor.draft.snapshot()
+      return snapshot.availability === "active" ? snapshot : undefined
     }
-    const form = snapshot.value
-    if (snapshot.phase === "outcome-unknown") {
-      return <SfReceiptView
-        operationRef={editor.operationRef}
-        producerStatus={{ kind: "pending" }}
-        effects={[]} receipts={[]} state="outcome-unknown"
-        onReconcileRead={() => setView("reload", (v) => v + 1)}
-      />
-    }
-    if (snapshot.phase === "reviewing" || snapshot.phase === "submitting" || editor.action === "delete") {
-      const base = reviewBase(editor)
-      return <>
-        <Show when={snapshot.phase === "submitting"}>
-          <p class="sf-budget-status" role="status" aria-live="polite">
-            {t(sfCommonKey("sf.common.loading"))}
-          </p>
-        </Show>
-        <SfChangeReview
-        operation={{ ref: editor.operationRef, label: { key: editor.action === "delete" ? key("delete") : key("save") }, scope: { kind: "data", text: editor.owner?.name ?? t(primaryKey()) } }}
-        base={base} current={base}
-        proposed={reviewProposed(editor)}
-        effects={[]}
-        coverage={{ state: "complete", summary: { key: sfCommonKey("sf.common.currentSource") }, reasons: [], knownCount: null, expectedCount: null }}
-        blockingReasons={[]}
-        confirmation={reviewConfirmation(editor)}
-        state={view.state === "stale" ? "stale" : "ready"}
-        onConfirm={() => { void confirmReview() }}
-        onRevise={() => { editor.draft.setPhase("dirty"); setView("error", undefined) }}
-        onCancel={closeEditor}
-        onReconcile={() => setView("reload", (v) => v + 1)}
-        />
-      </>
-    }
-    return (
+    const phase = () => active()?.phase
+    const form = (): BudgetForm => ({ ...active()!.value, ...laterEdits() })
+    const fieldsLocked = () => Boolean(active()?.pendingOperation) && !allowsLaterEdits(editor)
+    return <Show when={Boolean(active())} fallback={
+      <SfStatePanel state={editor.draft.snapshot().availability === "quarantined" ? "session-expired" : "denied"}
+        messageKey={sfCommonKey("sf.common.noAccess")} />
+    }>
+      <Show when={phase() === "outcome-unknown"} fallback={
+        <Show when={phase() === "reviewing" || editor.action === "delete"} fallback={
       <form class="sf-budget-form mx-card" aria-label={t(key("record"))} onSubmit={(event) => { event.preventDefault(); beginReview() }}>
         <h2>{editor.action === "save" ? t(key("save")) : editor.action === "save-entry" ? t(key("saveMonth")) : editor.action === "save-deviation" ? t(key("saveDeviation")) : editor.action === "annual-entry" ? t(key("applyAnnual")) : t(key("applyYear"))}</h2>
         <p>{t(key("year"))}: {year()} · {t(key("sourceVersion"))}: {editor.version}</p>
+        <Show when={phase() === "submitting"}>
+          <p role="status" aria-live="polite">{t(sfCommonKey("sf.common.loading"))}</p>
+        </Show>
+        <Show when={reviewedCurrent()}>
+          {(current) => <section class="sf-budget-current" data-sf-current-version={current().version}
+            aria-label={t(sfCommonKey("sf.common.currentSource"))}>
+            <h3>{t(sfCommonKey("sf.common.currentSource"))}</h3>
+            <dl><For each={draftFields(editor, current().value)}>{(field) =>
+              <div><dt>{t(field.label.key)}</dt><dd><SfDisplayValueText value={field.value} /></dd></div>
+            }</For></dl>
+          </section>}
+        </Show>
         <Show when={editor.action === "save"}>
           <label for={formId + "-name"}>{t(key("name"))}</label>
-          <input id={formId + "-name"} required type="text" value={form.name} onInput={(event) => updateField("name", event.currentTarget.value)} />
+          <input id={formId + "-name"} required type="text" value={form().name} disabled={fieldsLocked()} onInput={(event) => updateField("name", event.currentTarget.value)} />
           <label for={formId + "-budget"}>{t(key("annualBudget"))}</label>
-          <input id={formId + "-budget"} required type="number" step="any" value={form.budget} onInput={(event) => updateField("budget", event.currentTarget.value)} />
+          <input id={formId + "-budget"} required type="number" step="any" value={form().budget} disabled={fieldsLocked()} onInput={(event) => updateField("budget", event.currentTarget.value)} />
         </Show>
         <Show when={editor.action === "save-entry"}>
           <label for={formId + "-month"}>{t(key("month"))}</label>
-          <input id={formId + "-month"} type="number" value={form.month} readOnly />
+          <input id={formId + "-month"} type="number" value={form().month} readOnly />
           <For each={["budget", "actual", "forecast"] as const}>{(field) => (
             <>
               <label for={formId + "-" + field}>{t(key(field))}</label>
-              <input id={formId + "-" + field} required type="number" step="any" value={form[field]} onInput={(event) => updateField(field, event.currentTarget.value)} />
+              <input id={formId + "-" + field} required type="number" step="any" value={form()[field]} disabled={fieldsLocked()} onInput={(event) => updateField(field, event.currentTarget.value)} />
             </>
           )}</For>
         </Show>
         <Show when={editor.action === "save-deviation"}>
           <label for={formId + "-month"}>{t(key("month"))}</label>
-          <input id={formId + "-month"} type="number" value={form.month} readOnly />
+          <input id={formId + "-month"} type="number" value={form().month} readOnly />
           <label for={formId + "-flag"}>{t(key("flag"))}</label>
-          <select id={formId + "-flag"} value={form.flag} onChange={(event) => updateField("flag", event.currentTarget.value)}>
+          <select id={formId + "-flag"} value={form().flag} disabled={fieldsLocked()} onChange={(event) => updateField("flag", event.currentTarget.value)}>
             <option value=""></option>
             <option value="dev-green">dev-green</option>
             <option value="dev-amber">dev-amber</option>
             <option value="dev-red">dev-red</option>
           </select>
           <label for={formId + "-notes"}>{t(key("notes"))}</label>
-          <textarea id={formId + "-notes"} value={form.text} onInput={(event) => updateField("text", event.currentTarget.value)} />
+          <textarea id={formId + "-notes"} value={form().text} disabled={fieldsLocked()} onInput={(event) => updateField("text", event.currentTarget.value)} />
         </Show>
         <Show when={editor.action === "annual-entry"}>
           <label for={formId + "-annual"}>{t(key("annual"))}</label>
-          <input id={formId + "-annual"} required type="number" step="any" value={form.annual} onInput={(event) => updateField("annual", event.currentTarget.value)} />
+          <input id={formId + "-annual"} required type="number" step="any" value={form().annual} disabled={fieldsLocked()} onInput={(event) => updateField("annual", event.currentTarget.value)} />
           <label for={formId + "-field"}>{t(key("field"))}</label>
-          <select id={formId + "-field"} value={form.field} onChange={(event) => updateField("field", event.currentTarget.value)}>
+          <select id={formId + "-field"} value={form().field} disabled={fieldsLocked()} onChange={(event) => updateField("field", event.currentTarget.value)}>
             <option value="budget">budget</option><option value="actual">actual</option><option value="forecast">forecast</option>
           </select>
         </Show>
         <Show when={editor.action === "year-amount"}>
           <label for={formId + "-amount"}>{t(key("yearAmount"))}</label>
-          <input id={formId + "-amount"} type="number" step="any" value={form.amount} onInput={(event) => updateField("amount", event.currentTarget.value)} />
+          <input id={formId + "-amount"} type="number" step="any" value={form().amount} disabled={fieldsLocked()} onInput={(event) => updateField("amount", event.currentTarget.value)} />
         </Show>
         <Show when={view.error}><p role="alert" class="sf-budget-error">{view.error}</p></Show>
         <div class="sf-budget-actions">
           <button class="mx-btn primary" type="submit" disabled={view.busy}>{t(sfCommonKey("sf.common.review"))}</button>
-          <button class="mx-btn" type="button" onClick={closeEditor}>{t(key("cancel"))}</button>
-          <Show when={hasDraft()}>
+          <button class="mx-btn" type="button" disabled={view.busy || Boolean(active()?.pendingOperation)} onClick={closeEditor}>{t(key("cancel"))}</button>
+          <Show when={phase() === "conflict"}>
+            <button class="mx-btn" type="button" disabled={view.busy} onClick={() => { void loadCurrent(editor) }}>{t(key("loadCurrent"))}</button>
+          </Show>
+          <Show when={hasDraft() && !active()?.pendingOperation}>
             <button class="mx-btn" type="button" onClick={() => setView("confirmDiscard", true)}>{t(sfCommonKey("sf.common.discard"))}</button>
           </Show>
         </div>
@@ -768,7 +893,32 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
           </div>
         </Show>
       </form>
-    )
+        }>
+          <SfChangeReview
+            operation={{ ref: editor.operationRef, label: { key: editor.action === "delete" ? key("delete") : key("save") }, scope: { kind: "data", text: editor.owner?.name ?? t(primaryKey()) } }}
+            base={reviewBase(editor)} current={reviewBase(editor)}
+            proposed={reviewProposed(editor)}
+            effects={[]}
+            coverage={{ state: "complete", summary: { key: sfCommonKey("sf.common.currentSource") }, reasons: [], knownCount: null, expectedCount: null }}
+            blockingReasons={[]}
+            confirmation={reviewConfirmation(editor)}
+            state={view.state === "stale" ? "stale" : "ready"}
+            onConfirm={() => { void confirmReview() }}
+            onRevise={() => { editor.draft.setPhase("dirty"); setView("error", undefined) }}
+            onCancel={closeEditor}
+            onReconcile={() => { void loadCurrent(editor) }}
+          />
+        </Show>
+      }>
+        <Show when={view.error}><p role="status">{view.error}</p></Show>
+        <SfReceiptView
+          operationRef={editor.operationRef}
+          producerStatus={{ kind: "pending" }}
+          effects={[]} receipts={[]} state="outcome-unknown"
+          onReconcileRead={() => { void loadCurrent(editor) }}
+        />
+      </Show>
+    </Show>
   }
 
   return (
@@ -850,7 +1000,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
           </div>
         </SfStatePanel>
         <Show when={context.state().status === "ready" && view.page && editing() ? editing() : undefined} keyed>
-          {(editor) => <section class="sf-budget-editor" data-sf-action={editor.action} data-sf-draft-phase={editPhase(editor)}>{editorView(editor)}</section>}
+          {(editor) => <section class="sf-budget-editor" data-sf-action={editor.action} data-sf-version={editor.version}
+            data-sf-draft-phase={editPhase(editor)} data-sf-draft-dirty={hasDraft()}>
+            <BudgetEditor editor={editor} />
+          </section>}
         </Show>
       </SfPageFrame>
     </div>

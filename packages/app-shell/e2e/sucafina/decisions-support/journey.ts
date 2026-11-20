@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
+import { Schema } from "effect"
+import { SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
 export const draft = {
   objective: "CI Decisions — annual service decision",
@@ -51,7 +54,7 @@ export async function withInstallation(page: Page, info: TestInfo,
   page.on("pageerror", onPageError)
   page.on("framenavigated", onNavigated)
   try {
-    await page.context().addCookies([installation.cookie])
+    await installation.signIn(page)
     await action(installation, observations)
     body.completed = true
   } finally {
@@ -77,26 +80,32 @@ function receiptDiagnostic(value: string) {
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
-  await page.goto(`${origin}/sucafina/dashboard`)
+  expect(new URL(origin).port, "Native Decisions must use the production shell").toBe("3000")
+  const response = await page.goto(new URL("/orchestra/sf-decisions", origin).href)
+  expect(response?.status()).toBe(200)
+  await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/orchestra/sf-decisions")
   await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
-  const link = page.getByRole("link", { name: "Workbench", exact: true })
-  await expect(link).toHaveCount(1)
-  await link.click()
-  await expect(page).toHaveURL(`${origin}/sucafina/dashboard?sf=workbench`)
   await expect(page.getByRole("heading", { name: "Decisions", exact: true })).toBeVisible()
-  await expect(page.locator("form[data-decision-create]")).toHaveAttribute("data-sf-create-ready", "true")
+  await expect(page.getByRole("button", { name: "New case", exact: true })).toBeEnabled()
 }
 
 export async function fillDecision(page: Page, objective: string) {
-  const form = page.locator("form[data-decision-create]")
-  await page.getByText("Create a decision", { exact: true }).click()
+  await page.getByRole("button", { name: "New case", exact: true }).click()
+  const form = page.locator("section.sf-n24-create form")
   await expect(form).toHaveCount(1)
+  await expect(form.getByLabel("Decision objective", { exact: true })).toBeEnabled()
   await form.getByLabel("Decision objective", { exact: true }).fill(objective)
   await form.getByLabel("Start", { exact: true }).fill(draft.horizon.start)
   await form.getByLabel("End", { exact: true }).fill(draft.horizon.end)
   await form.getByLabel("Currency", { exact: true }).fill(draft.currency)
   await form.getByLabel("Criteria, one per line", { exact: true }).fill(draft.criteria.join("\n"))
-  await expect(form.getByRole("button", { name: "Create decision", exact: true })).toBeEnabled()
+  const review = form.getByRole("button", { name: "Review creation", exact: true })
+  await expect(review).toBeEnabled()
+  await review.click()
+  const proposed = form.getByRole("group", { name: "Review creation", exact: true })
+  await expect(proposed).toContainText(objective)
+  for (const criterion of draft.criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
+  await expect(form.getByRole("button", { name: "Confirm this decision creation", exact: true })).toBeEnabled()
   return form
 }
 
@@ -167,28 +176,58 @@ async function checkedReply(record: { mode: string | null; httpStatus: number; c
   return result
 }
 
+export async function readCase(page: Page, reference: string) {
+  const url = new URL("/sucafina/api/ui/projections/case", page.url())
+  url.searchParams.set("caseRef", reference)
+  const response = await page.request.get(url.href)
+  expect(response.status()).toBe(200)
+  expect(response.headers()["content-type"]).toContain("application/json")
+  const result = Schema.decodeUnknownSync(Schema.toType(SfProjectionCase.output), { onExcessProperty: "error" })(await response.json())
+  if (result.status !== "ok") throw new Error("The original case projection was not admitted")
+  expect(result.value.projection.case).toMatchObject(caseIdentity(reference))
+  return result.value.projection.case
+}
+
 export async function assertCase(page: Page, reference: string, objective: string, version: number) {
   const identity = caseIdentity(reference)
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
-  const decision = page.getByRole("region", { name: "Decision", exact: true })
-  await expect(decision, "WP10 must provide the real case-port verifier before the saved case can be read").toBeVisible()
-  await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
-  await expect(decision.locator("header > p")).toHaveText(`draft · Version ${version} · ${draft.horizon.start} – ${draft.horizon.end} · ${draft.currency}`)
-  for (const criterion of draft.criteria) await expect(decision.getByText(`${criterion} (required)`, { exact: true })).toBeVisible()
-  const context = asRecord(JSON.parse((await page.locator("form[data-decision-edit]").getAttribute("data-context"))!))
-  expect(context.caseRef).toEqual({ ...identity, version })
+  await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions/" + encodeSfRouteRef(reference))
+  const decision = page.locator('[data-sf-surface="UI34"]')
+  await expect(decision, "The real native case projection must be available under the current owner").toBeVisible()
+  await expect(decision).toHaveAttribute("data-sf-case-ref", reference)
+  await expect(decision).toHaveAttribute("data-sf-case-version", String(version))
+  const original = await readCase(page, reference)
+  expect(original).toMatchObject({ ...identity, version, objective, state: "draft",
+    horizon: draft.horizon, currency: draft.currency })
+  expect(original.criteria.map((criterion) => ({ description: criterion.description, required: criterion.required })))
+    .toEqual(draft.criteria.map((description) => ({ description, required: true })))
+  await expect(decision.getByRole("region", { name: "Question", exact: true }).getByText(objective, { exact: true })).toBeVisible()
+  await expect(decision.locator(".sf-n24-metadata > span")).toHaveText([
+    `Current version: ${version}`, "State: draft",
+    `Period: ${draft.horizon.start} – ${draft.horizon.end}`, draft.currency,
+  ])
+  const criteria = decision.getByRole("region", { name: "Criteria", exact: true })
+  for (const criterion of draft.criteria)
+    await expect(criteria.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion + " · Required")
   await expect(decision.getByText("No alternatives recorded.", { exact: true })).toBeVisible()
   await expect(decision.getByText("No changes prepared.", { exact: true })).toBeVisible()
+  expect(original.alternatives).toEqual([])
+  expect(original.preparedChanges).toEqual([])
   await expect(page.getByRole("button", { name: "Record choice", exact: true })).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
   return decision
 }
 
 export async function reopenCase(page: Page, reference: string, objective: string) {
-  await page.getByRole("link", { name: "Workbench", exact: true }).click()
-  const link = page.getByRole("link", { name: objective, exact: true })
-  await expect(link, "The persisted case must be discoverable under the current operator authority").toHaveCount(1)
+  if (new URL(page.url()).pathname === "/orchestra/sf-decisions")
+    await page.getByRole("button", { name: "Refresh case list", exact: true }).click()
+  else await page.getByRole("link", { name: "Back to decisions", exact: true }).click()
+  const list = page.getByRole("region", { name: "Authorized decision cases", exact: true })
+  const row = list.getByRole("listitem").filter({ has: page.getByText(reference, { exact: true }) })
+  await expect(row, "The persisted case must be discoverable under the current operator authority").toHaveCount(1)
+  await expect(row.getByText(objective, { exact: true })).toBeVisible()
+  const link = row.getByRole("link", { name: "Open decision", exact: true })
+  await expect(link).toHaveCount(1)
   const target = new URL((await link.getAttribute("href"))!, page.url())
-  expect(target.searchParams.get("caseRef")).toBe(reference)
+  expect(target.pathname).toBe("/orchestra/sf-decisions/" + encodeSfRouteRef(reference))
   await link.click()
 }

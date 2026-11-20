@@ -19,7 +19,7 @@ const key = (value: Key): SfCopyKey => value as SfCopyKey
 /** U02 — CAP03. Financial values are producer projections, never browser sums. */
 export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
   const { t, locale } = useSfPresentation()
-  const read = useU02Projection<BudgetData>("CAP03", props.route, "domain.page.CAP03",
+  const read = useU02Projection<BudgetData>("CAP03", () => props.route, "domain.page.CAP03",
     (transport, selection, signal) => createSfDomainClient(transport)["domain.page.CAP03"]({
       ...(selection.year === undefined ? {} : { year: selection.year }),
       ...(selection.month === undefined ? {} : { month: selection.month }),
@@ -129,10 +129,15 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
         <Show when={!admitted("save-month") && !admitted("save-revenue")}>
           <p role="status">{t(sfCommonKey("sf.common.readOnly"))}</p>
         </Show>
+        <SfBudgetReportLink />
       </SfStatePanel>
     </div>
   </SfPageFrame>
 }
 
-// Frozen U02 entrypoint consumed by I00/current integrator125.
+/** Reports and backup is the real reviews chapter, never a local form stub. */
+function SfBudgetReportLink() {
+  return <p><a href="/orchestra/sf-reviews/agenda">Reports and backup</a></p>
+}
+
 export { SfBudgetOverview as SfDashboardBudgetView }

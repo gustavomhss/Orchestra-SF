@@ -200,10 +200,26 @@ export function createSfDomainClient(transport: SfTransport) {
       input: typeof SfDomain.operations["domain.command.CAP16.delete-sub"]["input"]["Type"],
       options: SfCallOptions,
     ) => transport.execute(SfDomain.operations["domain.command.CAP16.delete-sub"], input, options),
+    "local-admin.summary-read": (
+      input: typeof SfDomain.operations["local-admin.summary-read"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["local-admin.summary-read"], input, options),
+    "local-admin.summary-configure": (
+      input: typeof SfDomain.operations["local-admin.summary-configure"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["local-admin.summary-configure"], input, options),
     "projection.local-admin": (
       input: typeof SfDomain.operations["projection.local-admin"]["input"]["Type"],
       options: SfCallOptions,
     ) => transport.execute(SfDomain.operations["projection.local-admin"], input, options),
+    "dashboard.dashboard-draft-read": (
+      input: typeof SfDomain.operations["dashboard.dashboard-draft-read"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["dashboard.dashboard-draft-read"], input, options),
+    "dashboard.dashboard-hot-topic-draft-outcome": (
+      input: typeof SfDomain.operations["dashboard.dashboard-hot-topic-draft-outcome"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["dashboard.dashboard-hot-topic-draft-outcome"], input, options),
     "dashboard.dashboard-workbench": (
       input: typeof SfDomain.operations["dashboard.dashboard-workbench"]["input"]["Type"],
       options: SfCallOptions,

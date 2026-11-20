@@ -11,6 +11,7 @@ import { createReviewThreadContext, isReviewThreadContext } from "../../../produ
 import { createReviewHttp } from "../../../product/reviews/http.ts"
 import { threadMessageContext } from "../../../product/collaboration/thread-context.ts"
 import type { ThreadSourceContext } from "../../../product/collaboration/thread-context.ts"
+import type { PrepareReviewThreadFence } from "../../../product/collaboration/review-source-fence.ts"
 import { isThread } from "../../../product/collaboration/threads.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
 import { object } from "../../../runtime/contract.ts"
@@ -24,11 +25,7 @@ import { available } from "../wp08/relations-fixture.ts"
 test("a question on C05 keeps its original review and source basis through current data changes and denies revoked review access", async () => {
   let reviewContext: ReturnType<typeof createReviewThreadContext> | undefined
   const access = { review: true, revokeAfterFirstRead: false, reads: 0 }
-  const f: Awaited<ReturnType<typeof createThreadActorsFixture>> = await createThreadActorsFixture({ authorizeReviewThreadContext: async (pin, basis, context) => {
-    const allowed = !!reviewContext && await reviewContext.authorize(pin, basis, context)
-    if (access.revokeAfterFirstRead && ++access.reads === 1) access.review = false
-    return allowed
-  }, prepareReviewThreadFence: async (basis, context) => {
+  const prepareThreadFence: PrepareReviewThreadFence = async (basis, context) => {
     const pin = basis.reviewContext
     if (!reviewContext || !pin) return undefined
     const captured = await reviewContext.read(pin, basis, context)
@@ -47,7 +44,52 @@ test("a question on C05 keeps its original review and source basis through curre
       const stored = snapshot && object(object(snapshot.data.__sfProductV1).reviews)[capturedPin.reviewRef]
       return !!snapshot && access.review && digestSfValue(stored) === capturedPin.reviewDigest && digestSfValue(f.actors[context.binding.principalRef]) === actorDigest && await f.host.revalidate(context) && (await Promise.all(grants.map((grant) => grant.status === "ok" ? grant.value.fence() : false))).every(Boolean)
     }
-  } })
+  }
+  const recipientLeases = new Map<string, { snapshotDigest: string; reviewDigest: string; actorDigest: string }>()
+  const recipientKey = (id: string, basis: ThreadSourceContext, context: TrustedDomainContext) =>
+    digestSfValue({ id, basis, caller: context.binding })
+  function sourceFingerprint() {
+    const snapshots = f.persistence.currentSnapshots?.()
+    return snapshots ? digestSfValue(Object.entries(snapshots).map(([surface, snapshot]) =>
+      [surface, { ...snapshot, data: Object.fromEntries(Object.entries(snapshot.data).filter(([name]) => name !== "__sfProductV1")) }])) : undefined
+  }
+  const f: Awaited<ReturnType<typeof createThreadActorsFixture>> = await createThreadActorsFixture({
+    authorizeReviewThreadContext: async (pin, basis, context) => {
+      const allowed = !!reviewContext && await reviewContext.authorize(pin, basis, context)
+      if (access.revokeAfterFirstRead && ++access.reads === 1) access.review = false
+      return allowed
+    },
+    prepareReviewThreadFence: prepareThreadFence,
+    // Replies require a current recipient lease even when the author replies to
+    // their own question. No other directory member receives a grant here.
+    reviewRecipientAuthority: {
+      authorize: async (id, basis, context) => {
+        const pin = basis.reviewContext
+        if (id !== context.binding.principalRef || !pin || !access.review ||
+          !f.actors[id]?.enabled || !await f.host.revalidate(context)) return false
+        const fence = await prepareThreadFence(basis, context)
+        if (!fence) return false
+        const actorDigest = digestSfValue(f.actors[id])
+        const snapshotDigest = await f.persistence.transactionAll!(async () => ({
+          commit: false, value: await fence() ? sourceFingerprint() : undefined,
+        }))
+        if (!snapshotDigest || !access.review || digestSfValue(f.actors[id]) !== actorDigest ||
+          !await f.host.revalidate(context)) return false
+        recipientLeases.set(recipientKey(id, basis, context), { snapshotDigest, reviewDigest: pin.reviewDigest, actorDigest })
+        return true
+      },
+      checkAtCommit: (id, basis, context) => {
+        const lease = recipientLeases.get(recipientKey(id, basis, context))
+        const snapshot = f.persistence.currentSnapshots?.()?.dashboard
+        const stored = snapshot && basis.reviewContext &&
+          object(object(snapshot.data.__sfProductV1).reviews)[basis.reviewContext.reviewRef]
+        return id === context.binding.principalRef && !!lease && access.review &&
+          f.actors[id]?.enabled === true && f.actors[id]!.access === context.binding.accessRevision &&
+          digestSfValue(f.actors[id]) === lease.actorDigest && sourceFingerprint() === lease.snapshotDigest &&
+          digestSfValue(stored) === lease.reviewDigest
+      },
+    },
+  })
   try {
     const port = f.port
     if (!port.recipientActions || !port.threadHistory || !port.answerReuse) throw new Error("Review thread consumers unavailable")

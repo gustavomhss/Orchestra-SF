@@ -197,6 +197,10 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       if (!current || current.value.tokens.expiresAt > now() + 60000) return
       const pending = refreshing.get(current.handle)
       if (pending) return pending
+      // Collected session generations do not free refresh calls still waiting on the provider.
+      // Reuse the installation cap and keep each pending call counted until its finally runs.
+      const limit = options.secrets.authentication?.limits.maxRecords
+      if (limit !== undefined && refreshing.size >= limit) return
       const work = (async () => {
         if (!current.value.tokens.refreshToken) return
         const refreshed = await options.client.refresh(current.value.tokens.refreshToken).catch(() => undefined)
@@ -205,7 +209,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         if (!validPerson(person) || person.id !== current.value.person.id) return
         if (!await session(request)) return
         const value: Session = { ...current.value, person, tokens: { ...refreshed, refreshToken: refreshed.refreshToken ?? current.value.tokens.refreshToken, idToken: refreshed.idToken ?? current.value.tokens.idToken } }
-        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt)
+        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt, now())
         // Keep the durable marker authoritative even when logout wins between the check and put.
         if (!await session(request)) await options.secrets.remove(slot("session", current.handle))
       })().finally(() => refreshing.delete(current.handle))

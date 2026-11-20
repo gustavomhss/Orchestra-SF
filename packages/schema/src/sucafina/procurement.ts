@@ -71,8 +71,38 @@ const Requisition = Schema.Struct({
   category: Schema.optional(Schema.String),
   requesterName: Schema.optional(Schema.String),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const QuoteComparison = Schema.Struct({
+  id: Schema.NullOr(Schema.String),
+  index: NonNegativeInteger,
+  baseAmount: Schema.NullOr(Schema.Finite),
+  baseCurrency: Schema.NullOr(Schema.String),
+  fxRate: Schema.NullOr(Schema.Finite),
+  fxBasis: Schema.NullOr(Schema.Literals(["base", "submitted FX", "current FX"])),
+  baseFxText: Schema.String,
+  rank: Schema.NullOr(Schema.Finite),
+  premiumAmount: Schema.NullOr(Schema.Finite),
+  premiumPercent: Schema.NullOr(Schema.Finite),
+  excludedReason: Schema.NullOr(Schema.String),
+  eligibility: Schema.optional(Schema.NullOr(Schema.String)),
+  technical: Schema.optional(Schema.NullOr(Schema.Finite)),
+  price: Schema.optional(Schema.NullOr(Schema.Finite)),
+  commercial: Schema.optional(Schema.NullOr(Schema.Finite)),
+  overall: Schema.optional(Schema.NullOr(Schema.Finite)),
+  technicalText: Schema.optional(Schema.NullOr(Schema.String)),
+  priceText: Schema.optional(Schema.NullOr(Schema.String)),
+  commercialText: Schema.optional(Schema.NullOr(Schema.String)),
+  overallText: Schema.optional(Schema.NullOr(Schema.String)),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SourcingComparison = Schema.Struct({
+  eligibleCount: NonNegativeInteger,
+  quotes: Schema.Array(QuoteComparison),
+  rankLine: Schema.NullOr(Schema.String),
+  premiumLine: Schema.NullOr(Schema.String),
+  rankingUnavailable: Schema.optional(Schema.NullOr(Schema.String)),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Sourcing = Schema.Struct({
   quotes: Schema.optional(Schema.Array(Quote)),
+  comparison: Schema.optional(SourcingComparison),
   evaluator: Schema.optional(Schema.String),
   selectedId: Schema.optional(Schema.NullOr(Schema.String)),
   fewQuotesJustification: Schema.optional(Schema.String),
@@ -136,6 +166,14 @@ export const SfProcurementRequest = Schema.Struct({
     bytes: NonNegativeInteger, size: NonNegativeInteger,
   }).annotate({ parseOptions: { onExcessProperty: "error" } }))),
   value: Schema.optional(Amount),
+  monetaryState: Schema.optional(Schema.NullOr(Schema.String)),
+  sourceRef: Schema.optional(Schema.NullOr(Schema.String)),
+  sourceDigest: Schema.optional(Schema.NullOr(Schema.String)),
+  sourceVersion: Schema.optional(Schema.NullOr(PositiveInteger)),
+  moneySentence: Schema.optional(Schema.NullOr(Schema.String)),
+  poEstimate: Schema.optional(Schema.NullOr(Schema.String)),
+  orderDifference: Schema.optional(Schema.NullOr(Schema.String)),
+  requestSummary: Schema.optional(Schema.NullOr(Schema.String)),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const BankField = Schema.String
 const SupplierContact = Schema.Struct({
@@ -166,6 +204,11 @@ export const SfProcurementSupplier = Schema.Struct({
   validatedAt: Schema.optional(Schema.NullOr(Schema.String)),
   validatedBy: Schema.optional(Schema.NullOr(Schema.String)),
   history: Schema.optional(Schema.Array(Schema.Struct({ field: Schema.String }))),
+  attachments: Schema.optional(Schema.Array(Schema.Struct({
+    id: Schema.optional(Schema.Union([Schema.String, NonNegativeInteger])),
+    name: Schema.optional(Schema.String), type: Schema.optional(Schema.String),
+    bytes: Schema.optional(NonNegativeInteger), size: Schema.optional(NonNegativeInteger),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }))),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Level = Schema.Struct({
   id: Schema.String, name: Schema.String, threshold: NumericInput,

@@ -5,7 +5,10 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { pathToFileURL } from "node:url"
 import type { IncomingMessage } from "node:http"
-import { Effect, Layer } from "effect"
+import { Effect, Layer, Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+import { createSfHostRuntime } from "../../../../../../apps/cli/src/sucafina-product/host-context.ts"
+import { microsoftNativeHost } from "../../microsoft-login/native-host.ts"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { withListener79, markIncoming79 } from "./listener79.ts"
 import { prepareLocalConfiguration } from "../../../runtime/local-configuration.ts"
@@ -127,9 +130,13 @@ test("M79 real local operator Versions save crosses body auth dispatch persisten
     await withListener79({
       hostname: "localhost", port: 4110, compose: composeSfInstallation,
       create: async (origin) => {
-        const installation = await createLocalInstallation({ origin }, file, environment)
+        const installation = await createLocalInstallation({ origin, createHostRuntime: createSfHostRuntime }, file, environment)
         if (!installation.mount.startsWith("/")) throw new Error("M79 installation mount is not a path")
-        return { ...installation, mount: installation.mount as `/${string}` }
+        const host = await microsoftNativeHost({ root: directory, directory, environment }, installation)
+          .catch(async (error) => { await installation.dispose(); throw error })
+        return { ...installation, mount: installation.mount as `/${string}`, dispose: async () => {
+          try { await host.dispose() } finally { await installation.dispose() }
+        } }
       },
       run: async ({ listener, capture }) => {
         const enrolled = await fetch(JSON.parse(enrollmentMatch[1]), { redirect: "manual", headers: { connection: "close", "x-m79-probe-id": "enrollment" }, signal: AbortSignal.timeout(1800) })
@@ -137,9 +144,15 @@ test("M79 real local operator Versions save crosses body auth dispatch persisten
         const session = readOperatorSessionCookie(enrolled.headers)
         const cookie = `${session.name}=${session.value}`
         await enrolled.arrayBuffer()
-        const get = await request79(`${listener}/sucafina/planner?page=Versions`, { headers: { cookie, connection: "close", "x-m79-probe-id": "versions-get" } }, capture)
+        const legacy = await request79(`${listener}/sucafina/planner?page=Versions`, { headers: { cookie, connection: "close", "x-m79-probe-id": "versions-legacy" } }, capture)
+        expect(legacy.status).toBe(404)
+        expect(legacy.text).toBe("legacy console decommissioned — use /")
+        const get = await request79(`${listener}/sucafina/api/ui/pages/CAP23`, { headers: { cookie, connection: "close", "x-m79-probe-id": "versions-get" } }, capture)
         expect(get.status).toBe(200)
-        expect(get.text).toContain("Create first version")
+        const before = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(JSON.parse(get.text))
+        expect(before.status).toBe("ok")
+        if (before.status !== "ok") throw new Error("M79_NATIVE_VERSIONS_NOT_ADMITTED")
+        expect(before.value.data.versions).toEqual([])
         // Match the first-version form and A62: undefined id is omitted; confirmed is explicit.
         const body = JSON.stringify({ page: "Versions", action: "save", version: 0, values: {}, confirmed: false })
         expect(Buffer.byteLength(body)).toBe(77)
@@ -152,18 +165,24 @@ test("M79 real local operator Versions save crosses body auth dispatch persisten
         if (!readRoot) throw new Error("local store read root unavailable")
         const state = await readRoot(() => observer.transaction("planner", async (snapshot) => ({ commit: false, value: {
           versions: Array.isArray(snapshot.data.versions) ? snapshot.data.versions.length : 0,
+          versionIds: Array.isArray(snapshot.data.versions) ? snapshot.data.versions.map((entry) => entry.id) : [],
           auditCount: snapshot.audit.length,
         } }))).finally(() => observer.dispose())
-        const after = await request79(`${listener}/sucafina/planner?page=Versions`, { headers: { cookie, connection: "close", "x-m79-probe-id": "versions-after" } }, capture)
+        const after = await request79(`${listener}/sucafina/api/ui/pages/CAP23`, { headers: { cookie, connection: "close", "x-m79-probe-id": "versions-after" } }, capture)
         console.log("M79_OBSERVATION " + JSON.stringify({ case: "versions", bodyBytes: Buffer.byteLength(body), mutationCount: 1,
-          get: { status: get.status }, post: { ...post, text: undefined }, after: { status: after.status, firstVersionForm: after.text.includes("Create first version") }, state, traces: capture.take() }))
+          get: { status: get.status }, post: { ...post, text: undefined }, after: { status: after.status }, state, traces: capture.take() }))
         expect(post.timedOut).toBe(false)
         expect(post.status).toBe(200)
         expect(JSON.parse(post.text).ok).toBe(true)
         expect(state.versions).toBe(1)
         expect(state.auditCount).toBe(2)
         expect(after.status).toBe(200)
-        expect(after.text).not.toContain("Create first version")
+        const reread = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(JSON.parse(after.text))
+        expect(reread.status).toBe("ok")
+        if (reread.status !== "ok") throw new Error("M79_NATIVE_VERSIONS_REREAD_NOT_ADMITTED")
+        expect(reread.value.data.versions).toHaveLength(1)
+        expect(reread.value.data.versions.map((version) => version.id)).toEqual(state.versionIds)
+        expect(reread.value.selection.year).toBe(before.value.selection.year)
       },
     })
   } finally { await rm(directory, { recursive: true, force: true }) }

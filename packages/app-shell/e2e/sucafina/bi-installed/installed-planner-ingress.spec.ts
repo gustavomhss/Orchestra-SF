@@ -1,5 +1,9 @@
 import { expect, test, type Request, type Response } from "@playwright/test"
 import { randomUUID } from "node:crypto"
+import { Schema } from "effect"
+import { SfPlanner } from "@orchestra/schema/sucafina/planner"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { asRecord } from "../decisions-support/journey"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
 
 // R2 stopped before BI: the first Planner save never produced an observable
@@ -18,7 +22,9 @@ test("BI62 installed Planner first save exposes its real HTTP outcome before BI 
   const lifecycle: { outcome?: { state: "finished" | "failed"; request: Request } } = {}
   let commandCount = 0
   let problem: unknown
-  const url = `${installation.origin}/sucafina/planner?page=Versions`
+  const url = "/orchestra/sf-planner/versions/new"
+  const sourceUrl = `${installation.origin}/sucafina/api/ui/pages/CAP23`
+  const initial: { version?: number; ids: string[] } = { ids: [] }
   const describe = (request: Request) => {
     const target = new URL(request.url())
     if (target.origin !== installation.origin || !target.pathname.startsWith("/sucafina/") || target.pathname.includes("/auth/")) return undefined
@@ -70,34 +76,53 @@ test("BI62 installed Planner first save exposes its real HTTP outcome before BI 
   page.on("pageerror", (error) => observations.push({ event: "page-error", elapsedMs: Date.now() - began, message: redact(error.message) }))
 
   try {
-    await page.context().addCookies([installation.cookie])
+    await installation.signIn(page)
     await test.step("open the real empty Planner and submit Create first version once", async () => {
       const opened = await page.goto(url)
       expect(opened?.status()).toBe(200)
       await expect(page.getByRole("heading", { name: "Versions", exact: true, level: 1 })).toBeVisible()
-      const form = page.locator('form[data-page="Versions"][data-command="save"][data-record=""]')
-      await expect(form).toHaveCount(1)
-      await expect(form).toHaveAttribute("data-bound", "true")
-      const button = form.getByRole("button", { name: "Create first version", exact: true })
+      const surface = page.locator('[data-sf-surface="CAP23"]')
+      await expect(surface).toHaveCount(1)
+      const source = await page.request.get(sourceUrl)
+      expect(source.status()).toBe(200)
+      const envelope = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await source.json())
+      expect(envelope.status).toBe("ok")
+      if (envelope.status !== "ok") throw new Error("The initial Planner collection is unavailable")
+      const projection = envelope.value
+      expect(projection.data.versions).toEqual([])
+      initial.ids = projection.data.versions.map((record) => record.id)
+      const version = projection.versions["versions:first"]?.version ?? 0
+      expect(typeof version).toBe("number")
+      expect(Number.isSafeInteger(version) && Number(version) >= 0).toBe(true)
+      initial.version = Number(version)
+      const button = surface.getByRole("button", { name: "Create first version", exact: true })
       await expect(button).toBeEnabled()
       await button.click()
-      // The shipped shell aborts its own save at 10s. Observe completion OR
-      // failure, instead of waiting for a response to an already aborted request.
+      const review = surface.locator('[data-component="sf-change-review"]')
+      await expect(review).toHaveCount(1)
+      await expect(review).toHaveAttribute("data-state", "ready")
+      await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+      expect(commandCount, "Opening a native review must not submit the command").toBe(0)
+      const confirm = review.getByRole("button", { name: "Confirm", exact: true })
+      await expect(confirm).toBeEnabled()
+      await confirm.click()
+      // Observe completion or failure of the one confirmed native command;
+      // never resend an uncertain mutation.
       try { await expect.poll(() => lifecycle.outcome?.state ?? "pending", { message: "first Planner save finishes or fails at the real HTTP boundary", timeout: 15_000 }).toMatch(/^(finished|failed)$/) }
       catch (error) { problem = error; observations.push({ event: "first-save-outcome-not-observed", elapsedMs: Date.now() - began }) }
       observations.push({ event: "rendered-outcome", commandCount, state: lifecycle.outcome?.state ?? "not-observed",
-        notice: redact(await page.locator("#notice").innerText()),
-        savedViews: redact(await page.locator("[data-personal-views]").getByRole("status").innerText()),
-        uncertain: await form.evaluateAll((forms) => forms[0]?.getAttribute("data-result-uncertain") ?? null),
-        knownVersionIds: await page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])').evaluateAll((forms) => forms.map((element) => element.getAttribute("data-record"))) })
+        notices: (await surface.locator(".sf-u46-alert").allTextContents()).map(redact),
+        uncertain: await review.evaluateAll((reviews) => reviews.map((element) => element.getAttribute("data-state"))),
+        knownVersionIds: await surface.locator("tr[data-sf-row]").evaluateAll((rows) => rows.map((element) => element.getAttribute("data-sf-row"))) })
     })
 
     await test.step("read current state without resending the save", async () => {
       try {
-        const current = await page.request.get(url, { timeout: 10_000 })
-        const text = await current.text()
+        const current = await page.request.get(sourceUrl, { timeout: 10_000 })
+        const envelope = asRecord(await current.json())
+        const versions = asRecord(asRecord(envelope.value).data).versions
         observations.push({ event: "read-only-current-Planner", status: current.status(), contentType: current.headers()["content-type"] ?? null,
-          knownVersionIds: [...text.matchAll(/<form data-command="save" data-page="Versions" data-record="([^"]*)"/g)].map((match) => match[1]).filter(Boolean) })
+          resultStatus: envelope.status, knownVersionIds: Array.isArray(versions) ? versions.map((version) => asRecord(version).id) : null })
       } catch (error) { observations.push({ event: "read-only-current-Planner-failed", error: redact(String(error)) }) }
       // Personal views uses POST for its read-only list, so this records whether
       // the same real body-bearing ingress also answers its normal read command.
@@ -118,18 +143,55 @@ test("BI62 installed Planner first save exposes its real HTTP outcome before BI 
     expect(lifecycle.outcome?.state, "The installed first-save request must complete, not fail in browser transport").toBe("finished")
     const response = lifecycle.outcome ? responses.get(lifecycle.outcome.request) : undefined
     expect(response, "The completed first save must have HTTP response headers").toBeDefined()
+    const submitted = asRecord(response!.request().postDataJSON())
+    expect(submitted).toMatchObject({ page: "Versions", action: "save", version: initial.version, confirmed: true })
+    expect(submitted.values).toEqual({})
+    expect(submitted.id).toBeUndefined()
     expect(response!.status()).toBe(200)
     expect(response!.headers()["content-type"]).toContain("application/json")
     const body: { ok?: unknown; value?: unknown } = await response!.json()
     observations.push({ event: "first-save-result", ok: body.ok, recordId: typeof body.value === "string" ? body.value : null })
     expect(body.ok).toBe(true)
-    expect(typeof body.value).toBe("string")
-    const row = page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${String(body.value)}"]`) })
+    // The mounted producer intentionally returns only ok/warnings. The exact
+    // new identity and fields are read through its authorized CAP23 boundary.
+    const saved = await page.request.get(sourceUrl)
+    expect(saved.status()).toBe(200)
+    const read = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await saved.json())
+    if (read.status !== "ok") throw new Error("The saved Planner collection is unavailable")
+    expect(read.value.data.versions).toHaveLength(initial.ids.length + 1)
+    const created = read.value.data.versions.filter((record) => !initial.ids.includes(record.id))
+    expect(created).toHaveLength(1)
+    const record = created[0]!
+    expect(record.id).toMatch(/\S+/)
+    expect(record.name).toMatch(/\S+/)
+    expect(Number.isInteger(record.year) && record.year > 2000 && record.year < 2100).toBe(true)
+    await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions")
+    expect(new URL(page.url()).searchParams.get("year")).toBe(String(record.year))
+    const row = page.locator('tr[data-sf-row="' + record.id + '"]')
+    await expect(row).toHaveCount(1)
     await expect(row).toBeVisible()
+    await expect(row).toContainText(record.name)
+    await expect(row).toContainText(String(record.year))
+    await row.locator('button[data-sf-action="select"]').click()
+    await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(record.id))
+    await expect(page.locator("#sf-u46-name")).toBeEnabled()
+    await expect(page.locator("#sf-u46-name")).toHaveValue(record.name)
+    await expect(page.locator("#sf-u46-year")).toHaveValue(String(record.year))
+    expect(new URL(page.url()).searchParams.get("year")).toBe(String(record.year))
+    await page.reload()
+    await expect(page).toHaveURL((current) => current.pathname === "/orchestra/sf-planner/versions/" + encodeSfRouteRef(record.id))
+    await expect(page.locator("#sf-u46-name")).toHaveValue(record.name)
+    await expect(page.locator("#sf-u46-year")).toHaveValue(String(record.year))
+    expect(commandCount).toBe(1)
+    observations.push({ event: "first-save-authorized-identity", recordId: record.id, year: record.year })
+  } catch (error) {
+    problem = error
+    throw error
   } finally {
     // Preserve transport/UI observations while the live page and host still
     // exist. The unchanged shared fixture then emits its redacted CLI log.
     try {
+      if (commandCount !== 1 || problem) console.info("SF_PLANNER_INGRESS", JSON.stringify({ commandCount, observations }))
       await info.attach("bi62-first-save-http.json", { body: JSON.stringify({ snapshot: process.env.GITHUB_SHA ?? null,
         commandCount, observations, boundary: "Real CLI/factory/enrollment/Planner UI; one save attempt; subsequent requests only read current state. No route, body, authority or domain result is replaced." }, null, 2), contentType: "application/json" })
       await info.attach("bi62-first-save.png", { body: await page.screenshot(), contentType: "image/png" })

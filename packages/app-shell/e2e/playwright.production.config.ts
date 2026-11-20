@@ -8,7 +8,30 @@ const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
 // The existing CI runner supplies an exact filename regex. This only starts the
 // declared real Procurement fixture; it changes no grep, selector or CI allowlist.
 const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
+// Reports owns its CLI fixture; select its existing loopback listener without
+// starting the separate WP04 fixture or changing the selected test filenames.
+const sfReports = process.argv.slice(2).some((argument) => {
+  const filename = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+  return [
+    "e2e/sucafina/reports.spec.ts",
+    "e2e/sucafina/reports-ingress.spec.ts",
+    "e2e/sucafina/reports-support/agenda-transport.spec.ts",
+  ].some((selected) => filename.endsWith(selected) || filename.endsWith(selected + "$"))
+})
+// These exact journeys share startPlannerInstallation and its owned listener.
+const sfPlannerInstallation = process.argv.slice(2).some((argument) => {
+  const filename = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+  return [
+    "e2e/sucafina/decisions.spec.ts",
+    "e2e/sucafina/decisions-native-authoring.spec.ts",
+    "e2e/sucafina/wp03/native-ingress.spec.ts",
+    "e2e/sucafina/wp03/planner-mounted.spec.ts",
+    "e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+  ].some((selected) => filename.endsWith(selected) || filename.endsWith(selected + "$"))
+})
 const sfNative = nativeSpecSelected(process.argv.slice(2))
+const sfInstalled = process.argv.slice(2).some((argument) =>
+  argument.replaceAll("[\\\\/]", "/").replaceAll("\\", "/").includes("e2e/sucafina/"))
 // I00 starts the real host before collection; no synthetic webServer or legacy WP04 substitution.
 if (sfNative && (process.env.GITHUB_ACTIONS !== "true" ||
     !process.env.SF_NATIVE_INSTALLED_MANIFEST || !process.env.SF_NATIVE_CANDIDATE_SHA)) {
@@ -34,6 +57,10 @@ export default defineConfig({
     cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
     command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
     reuseExistingServer: false,
+    ...(sfInstalled ? { env: {
+      VITE_ORCHESTRA_SERVER_HOST: "", VITE_ORCHESTRA_SERVER_PORT: "",
+      ORCHESTRA_SF_E2E_UPSTREAM: wp04 || sfReports || sfPlannerInstallation ? "http://127.0.0.1:4174" : "http://localhost:4110",
+    } } : {}),
   }, ...(wp04 ? [{
     command: "bun e2e/sucafina/wp04/host.ts",
     cwd: path.resolve(import.meta.dirname, ".."),

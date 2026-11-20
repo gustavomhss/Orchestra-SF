@@ -59,7 +59,7 @@ export async function verifyFactoryPackageReceipt(directory: string, expected: F
     receipt.authenticatedDashboardStatus !== 404 || receipt.authenticatedCurrentChoiceStatus !== 200 ||
     receipt.authenticatedCurrentChoiceState !== "ok" ||
     receipt.currentChoiceEndpoint !== "/sucafina/dashboard?sf=current-choice&format=json" ||
-    receipt.origin !== "http://localhost:4110" || receipt.extractedOutsideCheckout !== true)
+    receipt.origin !== "http://localhost:4120" || receipt.extractedOutsideCheckout !== true)
     fail("QUALIFICATION_FIELDS_INVALID")
   const web = receipt.web
   if (!object(web) || !Number.isSafeInteger(web.originalFileCount) ||

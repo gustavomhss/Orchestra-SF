@@ -1,6 +1,7 @@
 import { object, rows, text } from "../../runtime/contract.ts"
 import { requestValue } from "../../src/procurement-screen.ts"
 import type { RequestView } from "../../src/procurement-screen.ts"
+import { requestStageGuidance } from "../../src/requests.ts"
 
 export const PROCUREMENT_MONETARY_RULE_VERSION = "procurement-money-v3"
 
@@ -48,4 +49,47 @@ export function procurementMonetaryFacts(record: Record<string, unknown>, baseCu
   const currencyDependency = { currencyInput, baseCurrency }
   const fxDependency = { ...currencyDependency, frozen, submittedBase: frozen ? submittedBase ?? null : null, rate: rate ?? null }
   return { original, explicitCurrency, currency, validRate, baseAmount, submittedCurrency, submittedAmount, submittedFxRate, monetaryState, moneyEvidence, fxSource: validRate == null ? null : !explicitCurrency ? "base-default" : currency === baseCurrency ? "base" : frozen ? "submitted" : "current", amountInput, currencyDependency, fxDependency, submittedDependency: { amount: submittedApproval.amount ?? null, fxRate: submittedApproval.fxRate ?? null, submittedCurrency, snapshot: snapshot ?? null } }
+}
+
+/** The request money sentence already used by the procurement page. Callers publish this string; the browser does not assemble it. */
+export function procurementMoneySentence(facts: ReturnType<typeof procurementMonetaryFacts>, baseCurrency: string) {
+  const current = facts.original == null || !facts.currency ? "Unavailable" : `${facts.original} ${facts.currency}`
+  const base = facts.baseAmount == null || !/^[A-Z]{3}$/.test(baseCurrency) ? "Unavailable" : `${Number(facts.baseAmount.toPrecision(15))} ${baseCurrency}`
+  const fx = facts.validRate == null ? "Unavailable" : `${facts.validRate} (${facts.fxSource ?? "unavailable"})`
+  return `Current request value: ${current}; base value: ${base}; FX: ${fx}.`
+}
+
+/** PO estimate and order-difference sentences. Callers publish these strings; the browser does not assemble them. */
+export function procurementOrderPresentation(record: Record<string, unknown>, baseCurrency: string, formSettings?: unknown) {
+  const status = text(record.status)
+  const sourcing = object(record.sourcing)
+  const po = object(record.po)
+  const lines = rows(po.lines)
+  const orderMoney = record.po == null || (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status) &&
+    (!Array.isArray(po.lines) || !lines.length || lines.length !== po.lines.length)) ? undefined : procurementMonetaryFacts(
+    { ...record, status: ["sourcing", "src_pending", "src_rejected"].includes(status) ? "po_draft" : status },
+    baseCurrency,
+    formSettings,
+  )
+  const poMoneyState = status === "po_approved" ? "Approved" : status === "po_issued" ? "Issued internally" : status === "po_pending" ? "Pending approval" : status === "po_draft" ? "PO draft" : status === "po_rejected" ? "PO rejected" : status === "cancelled" ? "Cancelled" : "Estimate"
+  const estimate = `${poMoneyState} value: ${orderMoney?.original == null || !orderMoney.currency ? "Unavailable" : `${orderMoney.original} ${orderMoney.currency}`}; base value: ${orderMoney?.baseAmount == null ? "Unavailable" : `${Number(orderMoney.baseAmount.toPrecision(15))} ${baseCurrency}`}; FX: ${orderMoney?.validRate == null ? "Unavailable" : `${orderMoney.validRate} (${orderMoney.fxSource ?? "unavailable"})`}.`
+  const approvedSourcing = object(sourcing.approval).amount
+  const orderValue = orderMoney?.baseAmount
+  const difference = record.po == null || sourcing.approval == null ? null
+    : !/^[A-Z]{3}$/.test(text(sourcing.approvalBaseCurrency)) || sourcing.approvalBaseCurrency !== baseCurrency
+      ? "Order and approved sourcing values cannot be compared because the submitted base currency is missing or changed."
+      : typeof approvedSourcing !== "number" || !Number.isFinite(approvedSourcing) || orderValue == null
+        ? "Order and approved sourcing values cannot be compared because an amount or applicable FX is unavailable."
+        : Math.abs(orderValue - approvedSourcing) > 0.005
+          ? `Order value ${Number(orderValue.toPrecision(15))} ${baseCurrency}; approved sourcing value ${Number(approvedSourcing.toPrecision(15))} ${baseCurrency}. Review the difference.`
+          : null
+  return { estimate, difference }
+}
+
+/** Stage, next step and version summary. The value suffix is the published base amount, not a browser total. */
+export function procurementRequestSummary(record: Record<string, unknown>, baseCurrency: string, version: number, formSettings?: unknown) {
+  const guidance = requestStageGuidance(text(record.status))
+  const money = procurementMonetaryFacts(record, baseCurrency, formSettings)
+  const value = money.baseAmount == null ? "Value unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${baseCurrency}`
+  return `${guidance.stage} · ${guidance.next} · Version ${version} · ${value}`
 }

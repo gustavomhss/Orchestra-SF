@@ -1,8 +1,16 @@
-import { expect, test } from "bun:test"
-import { createModule } from "../index.ts"
+import { afterAll, beforeAll, expect, test } from "bun:test"
+import { Schema } from "effect"
+import { SfDomain } from "@orchestra/schema/sucafina/domain"
+import { SfOperations } from "@orchestra/schema/sucafina/operations"
+import { localNative } from "./fixture/local-native.ts"
+import { contributions, createModule } from "../index.ts"
 import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../src/nav.ts"
 import { empty, testPersistence } from "./fixture/persistence.ts"
 import { object } from "../runtime/contract.ts"
+
+let native: Awaited<ReturnType<typeof localNative>>
+beforeAll(async () => { native = await localNative() })
+afterAll(async () => { await native?.dispose() })
 
 function fixture() {
   const state = empty()
@@ -56,25 +64,26 @@ function fixture() {
   return { ...storage, handler, post }
 }
 
-test("the composed module renders every required page with operating controls and no added sidebar pages", async () => {
+test("the composed module preserves every registered domain page and retires its old HTML routes", async () => {
   const app = fixture()
   for (const [surface, pages] of [
     ["dashboard", DASHBOARD_PAGES],
     ["planner", PLANNER_TABS],
     ["procurement", PROCUREMENT_NAV],
   ] as const) {
+    const registered = contributions[surface].flatMap((domain) => domain.pages)
+    expect(registered).toHaveLength(pages.length)
+    expect(new Set(registered).size).toBe(pages.length)
+    expect(new Set(registered)).toEqual(new Set(pages))
     for (const page of pages) {
-      const response = await app.handler(
-        new Request(`https://installation.example/sucafina/${surface}?page=${encodeURIComponent(page)}`),
-      )
-      expect(response?.status, `${surface}: ${page}`).toBe(200)
-      const html = await response!.text()
-      expect(html).toContain(`data-page="${page.replace(/&/g, "&amp;")}"`)
-      const main = html.slice(html.indexOf("<main"), html.indexOf("</main>"))
-      expect(main.length).toBeGreaterThan(100)
-      expect(main).toMatch(/<form|<table|class="metric"/)
-      const nav = html.slice(html.indexOf("<nav aria-label="), html.indexOf("</nav>"))
-      expect((nav.match(/data-index=/g) ?? []).length).toBe(pages.length)
+      const url = `https://installation.example/sucafina/${surface}?page=${encodeURIComponent(page)}`
+      const response = await app.handler(new Request(url))
+      expect(response?.status, `${surface}: ${page}`).toBe(404)
+      expect(response?.headers.get("content-type")).toBe("text/plain; charset=utf-8")
+      expect(await response!.text()).toBe("legacy console decommissioned — use /")
+      const head = await app.handler(new Request(url, { method: "HEAD" }))
+      expect(head?.status).toBe(404)
+      expect(await head!.text()).toBe("")
     }
   }
 })
@@ -205,32 +214,40 @@ test("parallel HTTP requisitions keep unique retained PR numbers and isolate oth
   expect(app.state.dashboard).toEqual(beforeDashboard)
 })
 
-test("dashboard year selectors keep sidebar, executive, operations and security parameters separate", async () => {
-  const app = fixture()
-  const executive = await app.handler(
-    new Request(
-      "https://installation.example/sucafina/dashboard?page=Executive%20Dashboard&year=2024&execYear=2025&executiveMonth=7",
-    ),
-  )
+test("native dashboard projections keep executive, operations and security period selections independent", async () => {
+  const executive = await native.read("/sucafina/api/ui/pages/CAP01?year=2024&execYear=2025&executiveMonth=7")
   expect(executive?.status).toBe(200)
-  const html = await executive!.text()
-  expect(html).toContain('<input type="hidden" name="year" value="2024">')
-  expect(html).toMatch(/name="execYear"[^>]*>[\s\S]*?<option value="2025" selected>/)
-  expect(html).toMatch(/name="executiveMonth"[^>]*>[\s\S]*?<option value="7" selected>/)
-  expect(html).toMatch(/data-year="sidebar" data-query="year">[\s\S]*?<option value="2024" selected>/)
-  for (const [page, yearKey, monthKey] of [
-    ["IT Operations", "opsYear", "operationsMonth"],
-    ["IT Security KPIs", "secYear", "securityMonth"],
-  ]) {
-    const response = await app.handler(
-      new Request(
-        `https://installation.example/sucafina/dashboard?page=${encodeURIComponent(page!)}&year=2024&${yearKey}=2027&${monthKey}=3`,
-      ),
-    )
+  const executiveBody = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP01"].output)(await executive!.json())
+  expect(executiveBody.status).toBe("ok")
+  if (executiveBody.status !== "ok") throw new Error("NATIVE_EXECUTIVE_PROJECTION_NOT_ADMITTED")
+  expect(executiveBody.value.selection).toMatchObject({ year: 2025, month: 7, execYear: 2025, executiveMonth: 7 })
+  for (const [cap, yearKey, monthKey] of [
+    ["CAP11", "opsYear", "operationsMonth"],
+    ["CAP12", "secYear", "securityMonth"],
+  ] as const) {
+    const response = await native.read(`/sucafina/api/ui/pages/${cap}?year=2024&${yearKey}=2027&${monthKey}=3`)
     expect(response?.status).toBe(200)
-    const content = await response!.text()
-    expect(content).toMatch(new RegExp(`data-year="own" data-query="${yearKey}">[\\s\\S]*?<option selected>2027`))
-    expect(content).toContain(`data-month="own" data-query="${monthKey}"`)
-    expect(content).toMatch(/data-year="sidebar" data-query="year">[\s\S]*?<option value="2024" selected>/)
+    const content = await response!.json()
+    const body = cap === "CAP11"
+      ? Schema.decodeUnknownSync(SfOperations.operations["domain.page.CAP11"].output)(content)
+      : Schema.decodeUnknownSync(SfOperations.operations["domain.page.CAP12"].output)(content)
+    expect(body.status).toBe("ok")
+    if (body.status !== "ok") throw new Error("NATIVE_OPERATIONS_PROJECTION_NOT_ADMITTED")
+    expect(body.value.selection).toMatchObject({ year: 2027, month: 3, [yearKey]: 2027, [monthKey]: 3 })
+    const fallback = await native.read(`/sucafina/api/ui/pages/${cap}?year=2024&month=6`)
+    expect(fallback?.status).toBe(200)
+    const fallbackContent = await fallback!.json()
+    const fallbackBody = cap === "CAP11"
+      ? Schema.decodeUnknownSync(SfOperations.operations["domain.page.CAP11"].output)(fallbackContent)
+      : Schema.decodeUnknownSync(SfOperations.operations["domain.page.CAP12"].output)(fallbackContent)
+    expect(fallbackBody.status).toBe("ok")
+    if (fallbackBody.status !== "ok") throw new Error("NATIVE_OPERATIONS_FALLBACK_NOT_ADMITTED")
+    expect(fallbackBody.value.selection).toMatchObject({ year: 2024, month: 6 })
   }
+  const reread = await native.read("/sucafina/api/ui/pages/CAP01?year=2024&execYear=2025&executiveMonth=7")
+  expect(reread?.status).toBe(200)
+  const rereadBody = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP01"].output)(await reread!.json())
+  expect(rereadBody.status).toBe("ok")
+  if (rereadBody.status !== "ok") throw new Error("NATIVE_EXECUTIVE_REREAD_NOT_ADMITTED")
+  expect(rereadBody.value.selection).toEqual(executiveBody.value.selection)
 })

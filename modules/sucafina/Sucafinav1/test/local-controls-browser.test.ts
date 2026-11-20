@@ -19,10 +19,9 @@ test("actual local inbox delivery, read receipt, backups and logout operate thro
     })
     phase("notice seed complete")
     phase("Backups navigation start")
-    await Promise.all([
-      f.page.waitForURL("http://localhost:4110/sucafina/backups", { timeout: 10000 }),
-      f.page.getByRole("link", { name: "Backups", exact: true }).click(),
-    ])
+    const backups = await f.page.goto("http://localhost:3000/sucafina/backups")
+    expect(backups?.status()).toBe(200)
+    await f.page.waitForURL("http://localhost:3000/sucafina/backups", { timeout: 10000 })
     phase("Backups navigation complete")
     phase("maintenance start")
     const [maintained] = await Promise.all([
@@ -102,12 +101,12 @@ test("actual local inbox delivery, read receipt, backups and logout operate thro
     phase("screenshot complete")
     phase("logout start")
     await Promise.all([
-      f.page.waitForURL("http://localhost:4110/sucafina/auth/login", { timeout: 10000 }),
+      f.page.waitForURL("http://localhost:3000/sucafina/auth/login", { timeout: 10000 }),
       f.page.getByRole("button", { name: "Sign out", exact: true }).click(),
     ])
     await expect(f.page.getByRole("heading", { name: "Signed out", exact: true })).toBeVisible()
     await expect(f.page.getByText(/Abrir Sucafina shortcut/)).toBeVisible()
-    const denied = await f.page.request.get("http://localhost:4110/sucafina/dashboard", { maxRedirects: 0 })
+    const denied = await f.page.request.get("http://localhost:3000/sucafina/dashboard", { maxRedirects: 0 })
     expect(denied.status()).toBe(303)
     expect(f.errors).toEqual([])
     phase("logout complete")

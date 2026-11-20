@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import path from "node:path"
 import type { Page } from "@playwright/test"
 import { inspectWp05Browser } from "./browser.ts"
@@ -24,6 +25,7 @@ const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [],
 const initial = (): Snapshot => ({ data: { roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }], versions: [72000, 84000].map((license, index) => ({ id: `v${index}`, year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000], a: [null, 0, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null], f: [null, null, null, null, null, null, null, null, null, 38000, 40000 + license, 40000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} })) }, versions: {}, sequences: {}, audit: [], notices: [] })
 
 test("real planner projection reaches BI with distinct missing and zero values", async () => {
+  expectSpawn(import.meta.path)
   const storage = testPersistence({ planner: initial() })
   const refs = ["v0", "v1"].map((id): Extract<BusinessEvidenceRef, { kind: "record" }> => {
     const projection = projectPlannerSource(storage.state.planner, actor, id)!
@@ -100,6 +102,7 @@ test("real planner projection reaches BI with distinct missing and zero values",
 
 
 test("real planner comparison supplies the same reconciled waterfall to BI and dispatcher", async () => {
+  expectSpawn(import.meta.path)
   const initialState = initial()
   const versions = initialState.data.versions as { lines: { a: (number | null)[] }[] }[]
   versions.forEach((version) => { version.lines[0]!.a[0] = 40000; version.lines[0]!.a[1] = 40000 })
@@ -172,6 +175,7 @@ test("real planner comparison supplies the same reconciled waterfall to BI and d
 
 
 for (const role of ["finance", "viewer"] as const) test(`real planner capacity preserves aligned filtered panels and personal-data absence for ${role}`, async () => {
+  expectSpawn(import.meta.path)
   const data = initial()
   data.data.roleMap = [{ surface: "planner", role, entra: "finance-group", version: 1, by: "admin" }]
   const scopedActor = { ...actor, roles: [role], canWrite: role === "finance" }

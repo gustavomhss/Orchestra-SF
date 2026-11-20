@@ -159,7 +159,9 @@ test("portfolio handoff prepares two WP11 changes and resumes after pre-dispatch
     } })
     const firstChange = saved.value.preparedChanges[0]!
     const secondChange = saved.value.preparedChanges[1]!
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    const firstRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value.version }, changeId: firstChange.id, choiceId: choice.id }
+    const firstExecution = await execution(firstRequest, binding)
+    expect(firstExecution.status).toBe("ok")
     const afterFirst = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(afterFirst.status).toBe("ok")
     if (afterFirst.status !== "ok") return
@@ -173,7 +175,8 @@ test("portfolio handoff prepares two WP11 changes and resumes after pre-dispatch
     expect(beforeDispatch.status).toBe("ok")
     expect(beforeDispatch.status === "ok" && beforeDispatch.value).toEqual([])
     domain.procurementFails = false
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
+    expect(await execution(firstRequest, binding)).toEqual(firstExecution)
     const beforeResume = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
     expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, binding)).status).toBe("ok")

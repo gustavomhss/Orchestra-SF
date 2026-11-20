@@ -10,6 +10,7 @@ import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared
 import type { SfNativeNavigationState, SfNativeTransitionResult } from "../navigation-state"
 import type { SfExecutiveLink, SfExecutiveSourceRoute } from "../cross-links"
 import type { SfTodayResumePort } from "../home"
+import type { SfBudgetPeriodPort } from "../navigation-state/budget-period"
 
 export type {
   SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
@@ -97,6 +98,8 @@ export type SfContextHandle = Readonly<{
   invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void
   /** Canonical source ref -> fresh F01 authorization -> source re-read -> commit. */
   followExecutiveLink?: (from: SfExecutiveSourceRoute, target: SfExecutiveLink) => Promise<SfNativeTransitionResult["status"]>
+  /** Canonical CAP03 period changes commit through the same live F01 owner. */
+  changeBudgetPeriod?: SfBudgetPeriodPort
   /** Only installed with the real F01 navigation; no optimistic fallback. */
   resumeCase?: SfTodayResumePort["resumeCase"]
   /** Consumes an owner/access-scoped returnRef once after Home renders. */

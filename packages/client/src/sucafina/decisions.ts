@@ -39,6 +39,9 @@ export function createSfDecisionsClient(transport: SfTransport) {
     "decisions.current-choice-promote": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.current-choice-promote"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.current-choice-promote"], input, options),
 
+    "decisions.decision-edit": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.decision-edit"]["input"]>, options: SfCallOptions) =>
+      transport.execute(SfDecisions.operations["decisions.decision-edit"], input, options),
+
     "decisions.controls.read": (input: Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.controls.read"]["input"]>, options: SfCallOptions) =>
       transport.execute(SfDecisions.operations["decisions.controls.read"], input, options),
 

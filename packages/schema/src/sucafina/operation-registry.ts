@@ -20,6 +20,70 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Original configure-summaries source: a bounded native port preserves admin/CAS/audit.
+  "local-admin.summary-read": {"method":"GET","pathTemplate":"{mount}/api/ui/local-admin/summary-settings","effect":"read","responseMode":"json"},
+  "local-admin.summary-configure": {"method":"POST","pathTemplate":"{mount}/api/ui/local-admin/configure-summaries","effect":"mutation","responseMode":"json","maxRequestBytes":16384},
+  // Original Dashboard C08 reads; outcome uses the first save's command identity.
+  "dashboard.dashboard-draft-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-draft-read"}},
+  "dashboard.dashboard-hot-topic-draft-outcome": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-hot-topic-draft-outcome"}},
+  // Closed Collaboration inputs use the original dashboard adapter (host-context/http-routes).
+  "collaboration.answer-confirm": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-confirm"}},
+  "collaboration.answer-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-prepare"}},
+  "collaboration.answer-prepare-message": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-prepare-message"}},
+  "collaboration.answer-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-read"}},
+  "collaboration.confirmation-confirm": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-confirmation-confirm"}},
+  "collaboration.confirmation-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-confirmation-prepare"}},
+  "collaboration.confirmation-project": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-confirmation-project"}},
+  "collaboration.cycle-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-cycle-read"}},
+  "collaboration.handoff-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-handoff-create"}},
+  "collaboration.handoff-link": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-handoff-link"}},
+  "collaboration.handoff-update": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-handoff-update"}},
+  "collaboration.question-consume": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-question-consume"}},
+  "collaboration.question-output": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-question-output"}},
+  "collaboration.recipients": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-recipients"}},
+  "collaboration.relation-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-relation-create"}},
+  "collaboration.relation-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-relation-read"}},
+  "collaboration.relation-remove": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-relation-remove"}},
+  "collaboration.selection-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-selection-create"}},
+  "collaboration.selection-list": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-selection-list"}},
+  "collaboration.selection-version": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-selection-version"}},
+  "collaboration.storage-version": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-storage-version"}},
+  "collaboration.thread-create": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-create"}},
+  "collaboration.thread-edit": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-edit"}},
+  "collaboration.thread-history": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-history"}},
+  "collaboration.thread-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-read"}},
+  "collaboration.thread-reply": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-reply"}},
+  "collaboration.thread-resolve": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-thread-resolve"}},
+  "collaboration.work-destination": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-work-destination"}},
+  "collaboration.work-list": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-work-list"}},
+  // Original Workbench/current-choice/domain/portfolio adapters admit the closed Decisions envelopes.
+  "decisions.decision-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-promote"}},
+  "decisions.decision-choose": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-choose"}},
+  "decisions.decision-edit": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-edit"},"maxRequestBytes":262144},
+  "decisions.choice.read": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"current-choice","format":"json"}},
+  "decisions.command.sf_case_draft": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-command"},"fixedBodyDiscriminator":{"operation":"sf_case_draft"},"maxRequestBytes":65536},
+  "decisions.command.sf_change_prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-command"},"fixedBodyDiscriminator":{"operation":"sf_change_prepare"},"maxRequestBytes":65536},
+  "decisions.command.sf_question_prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"workbench-command"},"fixedBodyDiscriminator":{"operation":"sf_question_prepare"},"maxRequestBytes":65536},
+  "decisions.controls.read": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-controls","format":"json"}},
+  "decisions.current-choice-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"current-choice-prepare"}},
+  "decisions.current-choice-promote": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"current-choice-promote"}},
+  "decisions.decision-add-question": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-add-question"}},
+  "decisions.decision-answer-question": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-answer-question"}},
+  "decisions.decision-condition": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-condition"}},
+  "decisions.decision-coverage": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-coverage"}},
+  "decisions.decision-criteria": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-criteria"}},
+  "decisions.decision-select-portfolio": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-select-portfolio"}},
+  // C12 stays on the original procurement adapter; no surface or purpose is invented in a payload.
+  "decisions.decision-prepare-changes": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"decision-prepare-changes"}},
+  "decisions.decision-review": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"read","responseMode":"json","fixedQuery":{"sf":"decision-review"}},
+  "decisions.decision-apply": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-apply"}},
+  "decisions.decision-recover": {"method":"POST","pathTemplate":"{mount}/procurement","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"decision-recover"}},
+  // Original review read accepts all preserved domain sources under current C08/ACL fences.
+  "reviews.review-read": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-read"}},
+  // Original review-agenda GET/POST and human review-preserve; the producer retains all admission.
+  "reviews.review-agenda-options": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-agenda"}},
+  "reviews.review-agenda": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"preview","responseMode":"json","fixedQuery":{"sf":"review-agenda"},"maxRequestBytes":262144},
+  "reviews.review-preserve": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"review-preserve"},"maxRequestBytes":262144},
   "files.export.members": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"members"}},
   // Original procurement download(kind="po") requires one authorized request selector.
   "files.export.po": {"method":"GET","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"bytes","fixedQuery":{"download":"po"}},
@@ -27,7 +91,7 @@ export const SfOperationExtensions = Object.freeze({
   "reviews.report.prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"prepare","responseMode":"json","fixedQuery":{"sf":"review-report"},"maxRequestBytes":65536},
 } as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)
 
-export const SfOperationRegistry = Object.freeze({
+const SfFrozenOperationRoutes = Object.freeze({
   "bi.bi-data": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-data"}},
   "bi.bi-decision": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-decision"}},
   "bi.bi-options": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"bi-options"}},
@@ -318,6 +382,7 @@ export const SfOperationRegistry = Object.freeze({
   "reviews.export.docx": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"page":"Generate Report","download":"docx"}},
   "reviews.export.pptx": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"page":"Generate Report","download":"pptx"}},
   "reviews.review-source": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-source"}},
+  "reviews.review-thread-context": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-thread-context"},"maxRequestBytes":65536},
   "reviews.review-update": {"method":"GET","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"review-update"}},
   "routines.catalog": {"method":"POST","pathTemplate":"{mount}/api/ui/routines/catalog","effect":"read","responseMode":"json","maxRequestBytes":65536},
   "routines.prepare-admission": {"method":"POST","pathTemplate":"{mount}/api/ui/routines/prepare-admission","effect":"prepare","responseMode":"json","maxRequestBytes":65536},
@@ -334,5 +399,11 @@ export const SfOperationRegistry = Object.freeze({
   "views.open": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"read","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"open"},"maxRequestBytes":65536},
   "views.remove": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"remove"},"maxRequestBytes":65536},
   "views.save": {"method":"POST","pathTemplate":"{mount}/{surface}","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"workbench-views"},"fixedBodyDiscriminator":{"action":"save"},"maxRequestBytes":65536},
+} as const satisfies Readonly<Partial<Record<SfOperationId, SfNativeOperationRoute>>>)
+
+// Compose source-backed adapter overrides separately from the frozen catalog.
+// This preserves exact route literal types without duplicate property diagnostics.
+export const SfOperationRegistry = Object.freeze({
+  ...SfFrozenOperationRoutes,
   ...SfOperationExtensions,
 } as const satisfies Readonly<Record<SfOperationId, SfNativeOperationRoute>>)

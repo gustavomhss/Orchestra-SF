@@ -45,6 +45,12 @@ export const SfDomainDashboardInputs = {
     expectedVersion: NonNegativeInt,
     draftRef: optional(Schema.String),
   }),
+  draftRead: Schema.Struct({
+    caseRef: SfDomainProductCaseRef,
+    targetEvidence: draftEvidence,
+    draftRef: optional(Schema.String),
+  }),
+  draftOutcome: Schema.Struct({ caseRef: SfDomainProductCaseRef }),
   drafts: Schema.Struct({
     id: Schema.String, incarnation: Schema.String, version: NonNegativeInt,
   }),
