@@ -1,5 +1,6 @@
 import { expect } from "bun:test"
 import type { Page, Route } from "@playwright/test"
+import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
 import type { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
 
 type BrowserRequest = ReturnType<Route["request"]>
@@ -9,10 +10,9 @@ type BrowserResponse = NonNullable<Awaited<ReturnType<BrowserRequest["response"]
  * This seam does not qualify TCP hosting, installed identity, native AI or global E2E.
  */
 export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; reviewAsset: () => Promise<string>; url: string; privateText: string; signal: AbortSignal }) {
-  const { chromium } = await import("@playwright/test")
-  const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
   input.signal.throwIfAborted()
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
+  const driver = await launchBrowserDriver("wp10-review-access", { signal: input.signal, timeoutMs: 15_000 })
+  const browser = driver.browser
   const pending = { release: () => {}, settled: () => {} }
   const release = new Promise<void>((resolve) => { pending.release = resolve })
   const settled = new Promise<void>((resolve) => { pending.settled = resolve })
@@ -59,7 +59,6 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       },
     }
   }
-  let closeBrowser: (() => Promise<void>) | undefined
   let closed = false, held = false
   let focusPage: Page | undefined
   const pageName = (page: Page) => page === focusPage ? "focus" : "source"
@@ -106,11 +105,10 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       const error = new Error("WP10_REVIEW_BROWSER_CLOSED")
       watch.sent.reject(error); watch.handled.reject(error); watch.response.reject(error)
     }
-    if (closeBrowser) await closeBrowser()
-    else await browser.close()
+    await driver.close()
+    driver.report()
   }
   try {
-    closeBrowser = await captureChromiumCleanup(browser)
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, serviceWorkers: "block" })
     context.setDefaultTimeout(10_000)
     context.setDefaultNavigationTimeout(15_000)
@@ -235,10 +233,16 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
           const sourceStatus = (await source.response()).status()
           expect(sourceStatus).toBe(403)
           const checkEmpty = async (page: Page) => {
-            await page.waitForFunction(() => document.querySelector("[data-sf-review-workspace]")?.textContent === "O acesso mudou. Reabra uma revisão autorizada.")
-            const workspace = page.locator("[data-sf-review-workspace]")
-            expect(await workspace.locator("table, a, button, [data-sf-review-selected-section]").count()).toBe(0)
-            expect(await workspace.textContent()).not.toContain(input.privateText)
+            // The real access handler first clears the workspace and then
+            // detaches the entire previous view. Require its completed terminal
+            // state, including an explicit recovery action and no private DOM.
+            await page.getByRole("heading", { name: "Your access has changed", exact: true }).waitFor()
+            expect(await page.locator("[data-sf-review-workspace], [data-sf-review-selected-section]").count()).toBe(0)
+            expect(await page.locator("body table, body a, body input, body textarea, body select").count()).toBe(0)
+            expect(await page.locator("body").textContent()).not.toContain(input.privateText)
+            expect(await page.getByRole("status").textContent()).toBe("The previous view was removed. Reload to continue with your current permissions.")
+            expect(await page.getByRole("button").count()).toBe(1)
+            expect(await page.getByRole("button", { name: "Reload access", exact: true }).count()).toBe(1)
             expect(await page.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
           }
           stage = "revoked.private-dom"
