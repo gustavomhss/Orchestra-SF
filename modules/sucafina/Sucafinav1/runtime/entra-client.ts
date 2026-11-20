@@ -1,6 +1,6 @@
 import { createLocalJWKSet, jwtVerify } from "jose"
 import { emptyMap } from "../src/identity.ts"
-import type { EntraClient, EntraOptions, EntraTokens } from "./local-contract.ts"
+import type { EntraClient, EntraOptions, EntraTeamsInput, EntraTeamsResult, EntraTokens } from "./local-contract.ts"
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const graph = "https://graph.microsoft.com/v1.0"
@@ -14,7 +14,11 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const profile = options.profile === undefined ? "local-public" : options.profile
   const clientSecret = options.clientSecret
   if (!["local-public", "web-confidential"].includes(profile) || (profile === "web-confidential" ? typeof clientSecret !== "function" : clientSecret !== undefined)) throw new Error("Invalid Entra client profile")
-  const scopes = profile === "web-confidential" ? "openid profile offline_access User.Read" : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
+  const teams = options.teams
+  if (teams !== undefined && (teams !== "direct" || profile !== "web-confidential")) throw new Error("Invalid Teams capability")
+  const scopes = profile === "web-confidential"
+    ? `openid profile offline_access User.Read${teams === "direct" ? " Team.ReadBasic.All" : ""}`
+    : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
   const authority = `https://login.microsoftonline.com/${tenant}`
   const issuer = `${authority}/v2.0`
   const now = options.now ?? (() => new Date())
@@ -22,29 +26,31 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   const limit = options.directoryLimit ?? 10000
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 10000) throw new Error("Invalid directory limit")
 
-  async function request(url: string, init?: RequestInit) {
-    const signal = AbortSignal.timeout(requestTimeout)
+  async function request(url: string, init?: RequestInit, deadline?: AbortSignal, budget?: { bytes: number }) {
+    const signal = deadline ?? AbortSignal.timeout(requestTimeout)
+    if (signal.aborted) throw new EntraProviderFailure("timeout", "Entra provider request timed out")
     const aborted = Promise.withResolvers<never>()
-    const abort = () => aborted.reject(new Error("Entra provider request timed out"))
+    const abort = () => aborted.reject(new EntraProviderFailure("timeout", "Entra provider request timed out"))
     signal.addEventListener("abort", abort, { once: true })
     try {
       // An injected transport may ignore abort; the race still bounds its caller.
-      return await Promise.race([readResponse(url, signal, init), aborted.promise])
+      return await Promise.race([readResponse(url, signal, init, budget), aborted.promise])
     } finally {
       signal.removeEventListener("abort", abort)
     }
   }
 
-  async function readResponse(url: string, signal: AbortSignal, init?: RequestInit) {
+  async function readResponse(url: string, signal: AbortSignal, init?: RequestInit, budget?: { bytes: number }) {
     const response = await Promise.resolve().then(() => send(new Request(url, { ...init, redirect: "error", signal }))).catch(() => {
-      throw new Error("Entra provider request failed")
+      throw new EntraProviderFailure(signal.aborted ? "timeout" : "provider_unavailable", "Entra provider request failed")
     })
     if (signal.aborted || !response.ok || response.redirected) {
       void response.body?.cancel().catch(() => undefined)
-      throw new Error("Entra provider request rejected")
+      const reason = signal.aborted ? "timeout" : response.redirected ? "invalid_response" : response.status === 401 ? "unauthenticated" : response.status === 403 ? "forbidden" : response.status === 429 ? "throttled" : "provider_unavailable"
+      throw new EntraProviderFailure(reason, "Entra provider request rejected", response.status === 429 ? retryAfter(response.headers.get("retry-after"), now().getTime()) : undefined)
     }
     const reader = response.body?.getReader()
-    if (!reader) throw new Error("Empty Entra response")
+    if (!reader) throw new EntraProviderFailure("invalid_response", "Empty Entra response")
     const cancel = () => { void reader.cancel().catch(() => undefined) }
     signal.addEventListener("abort", cancel, { once: true })
     const chunks: Uint8Array[] = []
@@ -52,18 +58,20 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     try {
       while (true) {
         const chunk = await reader.read()
-        if (signal.aborted) throw new Error("Entra provider request timed out")
+        if (signal.aborted) throw new EntraProviderFailure("timeout", "Entra provider request timed out")
         if (chunk.done) break
         size.value += chunk.value.byteLength
-        if (size.value > bodyLimit) throw new Error("Response exceeds limit")
+        if (budget) budget.bytes += chunk.value.byteLength
+        if (size.value > bodyLimit || (budget && budget.bytes > bodyLimit)) throw new EntraProviderFailure("limit_exceeded", "Response exceeds limit")
         chunks.push(chunk.value)
       }
       const bytes = new Uint8Array(size.value)
       const offset = { value: 0 }
       chunks.forEach((chunk) => { bytes.set(chunk, offset.value); offset.value += chunk.byteLength })
       return record(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)))
-    } catch {
-      throw new Error("Invalid Entra provider response")
+    } catch (error) {
+      if (error instanceof EntraProviderFailure) throw error
+      throw new EntraProviderFailure(signal.aborted ? "timeout" : "invalid_response", "Invalid Entra provider response")
     } finally {
       signal.removeEventListener("abort", cancel)
       cancel()
@@ -79,20 +87,87 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     return { authorize, token, jwks }
   }
 
-  async function graphRequest(accessToken: string, url: string, body?: { groupIds: string[] }) {
+  async function graphRequest(accessToken: string, url: string, body?: { groupIds: string[] }, deadline?: AbortSignal, budget?: { bytes: number }) {
     if (!accessToken || /[\x00-\x20\x7f]/.test(accessToken)) throw new Error("Invalid access token")
     if (!URL.canParse(url)) throw new Error("Invalid Graph endpoint")
     const target = new URL(url)
-    if (target.origin !== "https://graph.microsoft.com" || !["/v1.0/me", "/v1.0/users", "/v1.0/groups", "/v1.0/me/checkMemberGroups"].includes(target.pathname) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
+    if (target.origin !== "https://graph.microsoft.com" || !["/v1.0/me", "/v1.0/users", "/v1.0/groups", "/v1.0/me/checkMemberGroups", ...(teams === "direct" ? ["/v1.0/me/joinedTeams"] : [])].includes(target.pathname) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
+    if (body && target.pathname !== "/v1.0/me/checkMemberGroups") throw new Error("Invalid Graph method")
     return request(url, {
       method: body ? "POST" : "GET",
       headers: { Authorization: `Bearer ${accessToken}`, ...(body ? { "Content-Type": "application/json" } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}),
-    })
+    }, deadline, budget)
   }
 
-  async function person(accessToken: string) {
-    return directoryPerson(await graphRequest(accessToken, `${graph}/me?$select=id,displayName`))
+  async function person(accessToken: string, deadline?: AbortSignal, budget?: { bytes: number }) {
+    return directoryPerson(await graphRequest(accessToken, `${graph}/me?$select=id,displayName`, undefined, deadline, budget))
+  }
+
+  async function joinedTeams(input: EntraTeamsInput): Promise<EntraTeamsResult> {
+    if (teams !== "direct") return Object.freeze({ state: "unavailable", reason: "capability_disabled" })
+    // The caller supplies the verified session principal, never a selector/header identity.
+    const tenantId = input.principal.tenantId.toLowerCase()
+    const principalObjectId = input.principal.principalObjectId.toLowerCase()
+    const tokens = { accessToken: input.tokens.accessToken, expiresAt: input.tokens.expiresAt, grantedScopes: [...(input.tokens.grantedScopes ?? [])] }
+    if (!uuid.test(tenantId) || tenantId !== tenant || !uuid.test(principalObjectId)) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
+    if (!Number.isSafeInteger(tokens.expiresAt) || tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+    if (!tokens.grantedScopes.some((scope) => ["Team.ReadBasic.All", "https://graph.microsoft.com/Team.ReadBasic.All", "https%3A%2F%2Fgraph.microsoft.com%2FTeam.ReadBasic.All"].includes(scope))) return Object.freeze({ state: "unavailable", reason: "consent_required" })
+    if (!tokens.accessToken || /[\x00-\x20\x7f]/.test(tokens.accessToken)) return Object.freeze({ state: "unavailable", reason: "unauthenticated" })
+    // One operation owns the timer across all pages and completed request listeners.
+    const controller = new AbortController()
+    const deadline = controller.signal
+    const timeout = setTimeout(() => controller.abort(), requestTimeout)
+    const budget = { bytes: 0 }
+    const found: { teamObjectId: string; name: string; archived: boolean }[] = []
+    const visited = new Set<string>()
+    const identities = new Set<string>()
+    const expected: { count?: number } = {}
+    const page = { url: `${graph}/me/joinedTeams` }
+    try {
+      if ((await person(tokens.accessToken, deadline, budget)).id !== principalObjectId) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
+      while (true) {
+        if (tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+        if (!URL.canParse(page.url) || /[\\\x00-\x20\x7f]/.test(page.url) || page.url.length > 16384) throw new EntraProviderFailure("invalid_response", "Invalid Teams pagination")
+        const url = new URL(page.url)
+        const parameters = [...url.searchParams]
+        if (url.origin !== "https://graph.microsoft.com" || url.pathname !== "/v1.0/me/joinedTeams" || url.username || url.password || url.hash || parameters.some(([key, value]) => !["$skiptoken", "$skip"].includes(key) || !value) || new Set(parameters.map(([key]) => key)).size !== parameters.length || visited.has(url.href)) throw new EntraProviderFailure("invalid_response", "Invalid Teams pagination")
+        if (visited.size >= 100) throw new EntraProviderFailure("limit_exceeded", "Teams page limit exceeded")
+        visited.add(url.href)
+        const data = await graphRequest(tokens.accessToken, url.href, undefined, deadline, budget)
+        if (!Array.isArray(data.value)) throw new EntraProviderFailure("invalid_response", "Invalid Teams response")
+        if (found.length + data.value.length > limit) throw new EntraProviderFailure("limit_exceeded", "Teams count limit exceeded")
+        for (const entry of data.value) {
+          const team = record(entry)
+          if (typeof team.id !== "string" || !uuid.test(team.id) || typeof team.tenantId !== "string" || !uuid.test(team.tenantId) || team.tenantId.toLowerCase() !== tenant || typeof team.displayName !== "string" || !team.displayName.trim() || typeof team.isArchived !== "boolean" || (team["@odata.type"] !== undefined && team["@odata.type"] !== "#microsoft.graph.team") || team.membershipType !== undefined) throw new EntraProviderFailure("invalid_response", "Invalid Teams identity")
+          const teamObjectId = team.id.toLowerCase()
+          if (identities.has(teamObjectId)) throw new EntraProviderFailure("invalid_response", "Duplicate Teams identity")
+          identities.add(teamObjectId)
+          found.push({ teamObjectId, name: team.displayName, archived: team.isArchived })
+        }
+        if (data["@odata.count"] !== undefined) {
+          const count = data["@odata.count"]
+          if (typeof count !== "number" || !Number.isSafeInteger(count) || count < found.length || count > limit || (expected.count !== undefined && expected.count !== count)) throw new EntraProviderFailure("invalid_response", "Invalid Teams count")
+          expected.count = count
+        }
+        if (data["@odata.nextLink"] === undefined) {
+          // joinedTeams does not support a requested $count; absent count is legal.
+          // If Graph supplied a total, exhausting nextLink must account for every row.
+          if (expected.count !== undefined && expected.count !== found.length) throw new EntraProviderFailure("incomplete", "Incomplete Teams pagination")
+          if ((await person(tokens.accessToken, deadline, budget)).id !== principalObjectId) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
+          if (tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+          return Object.freeze({ state: "complete", tenantId, principalObjectId, source: "joinedTeams", membership: "direct", teams: Object.freeze(found.map((team) => Object.freeze(team))) })
+        }
+        if (found.length >= limit) throw new EntraProviderFailure("limit_exceeded", "Incomplete Teams pagination within configured limit")
+        if (typeof data["@odata.nextLink"] !== "string" || !data["@odata.nextLink"]) throw new EntraProviderFailure("invalid_response", "Invalid Teams pagination")
+        page.url = data["@odata.nextLink"]
+      }
+    } catch (error) {
+      if (error instanceof EntraProviderFailure) return Object.freeze({ state: "unavailable", reason: error.reason, ...(error.retryAfterMs === undefined ? {} : { retryAfterMs: error.retryAfterMs }) })
+      return Object.freeze({ state: "unavailable", reason: "invalid_response" })
+    } finally {
+      clearTimeout(timeout)
+    }
   }
 
   async function redeem(url: string, fields: Record<string, string>) {
@@ -108,9 +183,15 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     if (data.refresh_token !== undefined && (typeof data.refresh_token !== "string" || !data.refresh_token.trim())) throw new Error("Invalid refresh token response")
     if (data.id_token !== undefined && (typeof data.id_token !== "string" || !data.id_token.trim())) throw new Error("Invalid identity token response")
     if ((profile === "web-confidential" || data.token_type !== undefined) && data.token_type !== "Bearer") throw new Error("Invalid Entra token type")
+    // Microsoft may omit scope on code redemption when it retains the initial requested scopes.
+    // A refresh token alone does not prove that initial set; missing refresh scopes stay unavailable.
+    // An old credential without this field is not upgraded by the reader.
+    const grantedScopes = data.scope === undefined ? teams === "direct" && fields.grant_type === "authorization_code" ? scopes.split(" ") : undefined : typeof data.scope === "string" && data.scope.trim() && !/[\x00-\x1f\x7f]/.test(data.scope) ? data.scope.split(" ").filter(Boolean) : null
+    if (grantedScopes === null || (grantedScopes && new Set(grantedScopes).size !== grantedScopes.length)) throw new Error("Invalid Entra token scope")
     const tokens: EntraTokens = {
       accessToken: data.access_token,
       expiresAt: now().getTime() + data.expires_in * 1000,
+      ...(grantedScopes === undefined ? {} : { grantedScopes: Object.freeze(grantedScopes) }),
       ...(typeof data.refresh_token === "string" ? { refreshToken: data.refresh_token } : {}),
       ...(typeof data.id_token === "string" ? { idToken: data.id_token } : {}),
     }
@@ -122,6 +203,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     tenantId: tenant,
     clientId,
     profile,
+    ...(teams === undefined ? {} : { teams, joinedTeams }),
     async authorization(input) {
       const metadata = await discovery()
       const url = new URL(metadata.authorize)
@@ -238,3 +320,15 @@ function endpoint(value: unknown, paths: string[]) {
   return url.href
 }
 
+
+class EntraProviderFailure extends Error {
+  constructor(readonly reason: Extract<EntraTeamsResult, { state: "unavailable" }>["reason"], message: string, readonly retryAfterMs?: number) {
+    super(message)
+  }
+}
+
+function retryAfter(value: string | null, at: number) {
+  if (!value) return undefined
+  const delay = /^\d+$/.test(value) ? Number(value) * 1000 : Date.parse(value) - at
+  return Number.isSafeInteger(delay) && delay >= 0 && delay <= 86400000 ? delay : undefined
+}
