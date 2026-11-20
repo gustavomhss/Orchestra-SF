@@ -1,6 +1,6 @@
 import { createLocalJWKSet, jwtVerify } from "jose"
 import { emptyMap } from "../src/identity.ts"
-import type { EntraClient, EntraOptions, EntraTeamsInput, EntraTeamsResult, EntraTokens } from "./local-contract.ts"
+import type { EntraClient, EntraGroupMembershipInput, EntraGroupMembershipResult, EntraOptions, EntraTeamInput, EntraTeamResult, EntraTeamsInput, EntraTeamsResult, EntraTokens } from "./local-contract.ts"
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const graph = "https://graph.microsoft.com/v1.0"
@@ -91,7 +91,8 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     if (!accessToken || /[\x00-\x20\x7f]/.test(accessToken)) throw new Error("Invalid access token")
     if (!URL.canParse(url)) throw new Error("Invalid Graph endpoint")
     const target = new URL(url)
-    if (target.origin !== "https://graph.microsoft.com" || !["/v1.0/me", "/v1.0/users", "/v1.0/groups", "/v1.0/me/checkMemberGroups", ...(teams === "direct" ? ["/v1.0/me/joinedTeams"] : [])].includes(target.pathname) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
+    const teamLookup = teams === "direct" && /^\/v1\.0\/teams\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(target.pathname) && target.search === "?$select=id,displayName,isArchived,tenantId"
+    if (target.origin !== "https://graph.microsoft.com" || (!teamLookup && !["/v1.0/me", "/v1.0/users", "/v1.0/groups", "/v1.0/me/checkMemberGroups", ...(teams === "direct" ? ["/v1.0/me/joinedTeams"] : [])].includes(target.pathname)) || target.username || target.password || target.hash) throw new Error("Invalid Graph endpoint")
     if (body && target.pathname !== "/v1.0/me/checkMemberGroups") throw new Error("Invalid Graph method")
     return request(url, {
       method: body ? "POST" : "GET",
@@ -112,7 +113,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     const tokens = { accessToken: input.tokens.accessToken, expiresAt: input.tokens.expiresAt, grantedScopes: [...(input.tokens.grantedScopes ?? [])] }
     if (!uuid.test(tenantId) || tenantId !== tenant || !uuid.test(principalObjectId)) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
     if (!Number.isSafeInteger(tokens.expiresAt) || tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
-    if (!tokens.grantedScopes.some((scope) => ["Team.ReadBasic.All", "https://graph.microsoft.com/Team.ReadBasic.All", "https%3A%2F%2Fgraph.microsoft.com%2FTeam.ReadBasic.All"].includes(scope))) return Object.freeze({ state: "unavailable", reason: "consent_required" })
+    if (!hasGraphScope(tokens.grantedScopes, "Team.ReadBasic.All")) return Object.freeze({ state: "unavailable", reason: "consent_required" })
     if (!tokens.accessToken || /[\x00-\x20\x7f]/.test(tokens.accessToken)) return Object.freeze({ state: "unavailable", reason: "unauthenticated" })
     // One operation owns the timer across all pages and completed request listeners.
     const controller = new AbortController()
@@ -170,6 +171,63 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     }
   }
 
+  // Both narrow reads share the verified principal, token generation, bounded transport and expiry fence.
+  // The caller must obtain that principal/token pair from local identity, never from request selectors.
+  async function directoryObservation<T extends object>(input: EntraTeamsInput, scope: string, observe: (accessToken: string, deadline: AbortSignal, budget: { bytes: number }) => Promise<T>): Promise<(Readonly<{ state: "complete"; tenantId: string; principalObjectId: string }> & Readonly<T>) | Extract<EntraTeamsResult, { state: "unavailable" }>> {
+    const tenantId = typeof input.principal.tenantId === "string" ? input.principal.tenantId.toLowerCase() : ""
+    const principalObjectId = typeof input.principal.principalObjectId === "string" ? input.principal.principalObjectId.toLowerCase() : ""
+    const tokens = { accessToken: input.tokens.accessToken, expiresAt: input.tokens.expiresAt, grantedScopes: Array.isArray(input.tokens.grantedScopes) ? [...input.tokens.grantedScopes] : [] }
+    if (!uuid.test(tenantId) || tenantId !== tenant || !uuid.test(principalObjectId)) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
+    if (!Number.isSafeInteger(tokens.expiresAt) || tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+    if (!hasGraphScope(tokens.grantedScopes, scope)) return Object.freeze({ state: "unavailable", reason: "consent_required" })
+    if (typeof tokens.accessToken !== "string" || !tokens.accessToken || /[\x00-\x20\x7f]/.test(tokens.accessToken)) return Object.freeze({ state: "unavailable", reason: "unauthenticated" })
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), requestTimeout)
+    const budget = { bytes: 0 }
+    try {
+      if ((await person(tokens.accessToken, controller.signal, budget)).id !== principalObjectId) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
+      if (tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+      const observed = await observe(tokens.accessToken, controller.signal, budget)
+      if (tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+      if ((await person(tokens.accessToken, controller.signal, budget)).id !== principalObjectId) return Object.freeze({ state: "unavailable", reason: "identity_mismatch" })
+      if (tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
+      return Object.freeze({ state: "complete", tenantId, principalObjectId, ...observed })
+    } catch (error) {
+      if (error instanceof EntraProviderFailure) return Object.freeze({ state: "unavailable", reason: error.reason, ...(error.retryAfterMs === undefined ? {} : { retryAfterMs: error.retryAfterMs }) })
+      return Object.freeze({ state: "unavailable", reason: "invalid_response" })
+    } finally {
+      clearTimeout(timeout)
+    }
+  }
+
+  async function checkGroupMembership(input: EntraGroupMembershipInput): Promise<EntraGroupMembershipResult> {
+    if (profile !== "web-confidential") return Object.freeze({ state: "unavailable", reason: "capability_disabled" })
+    if (typeof input.groupObjectId !== "string" || !uuid.test(input.groupObjectId)) return Object.freeze({ state: "unavailable", reason: "invalid_response" })
+    const groupObjectId = input.groupObjectId.toLowerCase()
+    return directoryObservation(input, "User.Read", async (accessToken, deadline, budget) => {
+      // /me/checkMemberGroups requires only delegated User.Read and checks transitive membership.
+      // See learn.microsoft.com/graph/api/directoryobject-checkmembergroups (v1.0).
+      const data = await graphRequest(accessToken, `${graph}/me/checkMemberGroups`, { groupIds: [groupObjectId] }, deadline, budget)
+      if (!Array.isArray(data.value) || data.value.length > 1 || data.value.some((id) => typeof id !== "string" || !uuid.test(id) || id.toLowerCase() !== groupObjectId) || data["@odata.nextLink"] !== undefined || data["@odata.deltaLink"] !== undefined || data.error !== undefined || (data["@odata.count"] !== undefined && data["@odata.count"] !== data.value.length)) throw new EntraProviderFailure("invalid_response", "Invalid group membership response")
+      // An empty result also covers groups Graph cannot evaluate (including hidden membership).
+      // Only an explicit matching ID confirms membership; no absence ever grants authority.
+      return { groupObjectId, source: "checkMemberGroups" as const, membership: "transitive" as const, member: data.value.length === 1 }
+    })
+  }
+
+  async function team(input: EntraTeamInput): Promise<EntraTeamResult> {
+    if (teams !== "direct") return Object.freeze({ state: "unavailable", reason: "capability_disabled" })
+    if (typeof input.teamObjectId !== "string" || !uuid.test(input.teamObjectId)) return Object.freeze({ state: "unavailable", reason: "invalid_response" })
+    const teamObjectId = input.teamObjectId.toLowerCase()
+    return directoryObservation(input, "Team.ReadBasic.All", async (accessToken, deadline, budget) => {
+      // A supreme product administrator still needs actual Microsoft permission to read this Team.
+      // /teams/{id} supports Team.ReadBasic.All and does not imply the caller is a Team member.
+      const data = await graphRequest(accessToken, `${graph}/teams/${teamObjectId}?$select=id,displayName,isArchived,tenantId`, undefined, deadline, budget)
+      if (typeof data.id !== "string" || !uuid.test(data.id) || data.id.toLowerCase() !== teamObjectId || typeof data.tenantId !== "string" || !uuid.test(data.tenantId) || data.tenantId.toLowerCase() !== tenant || typeof data.displayName !== "string" || !data.displayName.trim() || typeof data.isArchived !== "boolean" || (data["@odata.type"] !== undefined && data["@odata.type"] !== "#microsoft.graph.team") || data.membershipType !== undefined || data["@odata.nextLink"] !== undefined || data["@odata.deltaLink"] !== undefined || data["@odata.count"] !== undefined || data.value !== undefined || data.error !== undefined) throw new EntraProviderFailure("invalid_response", "Invalid Team identity")
+      return { source: "team" as const, team: Object.freeze({ teamObjectId, name: data.displayName, archived: data.isArchived }) }
+    })
+  }
+
   async function redeem(url: string, fields: Record<string, string>) {
     // Read only inside the server-side redemption boundary. Provider errors never escape.
     const secret = clientSecret ? await Promise.resolve().then(clientSecret).catch(() => undefined) : undefined
@@ -186,7 +244,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     // Microsoft may omit scope on code redemption when it retains the initial requested scopes.
     // A refresh token alone does not prove that initial set; missing refresh scopes stay unavailable.
     // An old credential without this field is not upgraded by the reader.
-    const grantedScopes = data.scope === undefined ? teams === "direct" && fields.grant_type === "authorization_code" ? scopes.split(" ") : undefined : typeof data.scope === "string" && data.scope.trim() && !/[\x00-\x1f\x7f]/.test(data.scope) ? data.scope.split(" ").filter(Boolean) : null
+    const grantedScopes = data.scope === undefined ? profile === "web-confidential" && fields.grant_type === "authorization_code" ? scopes.split(" ") : undefined : typeof data.scope === "string" && data.scope.trim() && !/[\x00-\x1f\x7f]/.test(data.scope) ? data.scope.split(" ").filter(Boolean) : null
     if (grantedScopes === null || (grantedScopes && new Set(grantedScopes).size !== grantedScopes.length)) throw new Error("Invalid Entra token scope")
     const tokens: EntraTokens = {
       accessToken: data.access_token,
@@ -203,7 +261,8 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     tenantId: tenant,
     clientId,
     profile,
-    ...(teams === undefined ? {} : { teams, joinedTeams }),
+    ...(profile === "web-confidential" ? { checkGroupMembership } : {}),
+    ...(teams === undefined ? {} : { teams, joinedTeams, team }),
     async authorization(input) {
       const metadata = await discovery()
       const url = new URL(metadata.authorize)
@@ -325,6 +384,10 @@ class EntraProviderFailure extends Error {
   constructor(readonly reason: Extract<EntraTeamsResult, { state: "unavailable" }>["reason"], message: string, readonly retryAfterMs?: number) {
     super(message)
   }
+}
+
+function hasGraphScope(scopes: readonly string[], scope: string) {
+  return scopes.some((granted) => [scope, `https://graph.microsoft.com/${scope}`, `https%3A%2F%2Fgraph.microsoft.com%2F${scope}`].includes(granted))
 }
 
 function retryAfter(value: string | null, at: number) {
