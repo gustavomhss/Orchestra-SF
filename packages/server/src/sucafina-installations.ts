@@ -1,12 +1,14 @@
-import { Context } from "effect"
-import type {
-  SfInstallationDescriptor, SfInstallationList, SfInstallationSelector,
+import { Context, Option, Schema } from "effect"
+import {
+  SfInstallationDescriptor, SfInstallationSelector, type SfInstallationList,
 } from "@orchestra/schema/sucafina/context"
 
 type SfInstalledRuntime = Readonly<{
   publicOrigin: string
   mount: string
   authMode: "microsoft" | "local-operator"
+  /** Immutable configured resource tenant; never inferred from a project or request. */
+  tenantId?: string
   /** Must return the identity of this particular already-loaded runtime, never a fresh project lookup. */
   identity(): Readonly<{ installationId: string; projectId: string; hostId: string }> | undefined
 }>
@@ -34,11 +36,17 @@ export function parseSfInstallationSelector(url: string): SfInstallationSelector
   const pairs = new URLSearchParams(query)
   const entries = [...pairs.entries()]
   const seen = new Set<string>()
-  const allowed = new Set(["select", "installationId", "projectId", "location[directory]", "location[workspace]"])
+  const allowed = new Set(["select", "contractRevision", "installationId", "tenantId", "projectId", "location[directory]", "location[workspace]"])
   if (entries.some(([key]) => !allowed.has(key) || seen.has(key) || !seen.add(key)))
     throw new SfInvalidInstallationSelector()
   const choice = pairs.get("select")
   const present = (key: string) => pairs.has(key) && Boolean(pairs.get(key))
+  if (choice === "installation" && entries.length === 4 &&
+      entries.every(([key]) => ["select", "contractRevision", "installationId", "tenantId"].includes(key))) {
+    const decoded = Schema.decodeUnknownOption(SfInstallationSelector)(Object.fromEntries(entries))
+    if (Option.isSome(decoded) && decoded.value.select === "installation") return decoded.value
+    throw new SfInvalidInstallationSelector()
+  }
   if (choice === "ids" && entries.length === 3 &&
       present("installationId") && present("projectId") &&
       !pairs.has("location[directory]") && !pairs.has("location[workspace]")) {
@@ -73,15 +81,17 @@ function toDescriptor(runtime: SfInstalledRuntime): SfInstallationDescriptor | u
       !canonicalOrigin(runtime.publicOrigin, runtime.authMode) ||
       !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(runtime.mount))
     return undefined
-  return Object.freeze({
+  const decoded = Schema.decodeUnknownOption(SfInstallationDescriptor)({
     installationId: identity.installationId,
     projectId: identity.projectId,
     hostId: identity.hostId,
     publicOrigin: runtime.publicOrigin,
     mount: runtime.mount,
-    contractRevision: "sf-native-ui/1" as const,
+    contractRevision: runtime.authMode === "microsoft" ? "sf-team-profile/1" : "sf-native-ui/1",
     authMode: runtime.authMode,
+    ...(runtime.authMode === "microsoft" ? { tenantId: runtime.tenantId } : {}),
   })
+  return Option.isSome(decoded) ? Object.freeze(decoded.value) : undefined
 }
 
 export async function readSfInstallations(
@@ -90,11 +100,19 @@ export async function readSfInstallations(
   signal: AbortSignal,
 ): Promise<SfInstallationList> {
   if (signal.aborted) return { installations: [] }
+  if (selector.select === "installation") {
+    const loaded = await source.current(signal)
+    const descriptor = loaded && toDescriptor(loaded)
+    if (!descriptor || signal.aborted || descriptor.contractRevision !== "sf-team-profile/1" ||
+      descriptor.installationId !== selector.installationId || descriptor.tenantId !== selector.tenantId)
+      return { installations: [] }
+    return { installations: [descriptor] }
+  }
   if (selector.select === "ids") {
     // No LocationMiddleware, stored Location, first server, cwd or alternate runtime.
     const loaded = await source.current(signal)
     const descriptor = loaded && toDescriptor(loaded)
-    if (!descriptor || signal.aborted ||
+    if (!descriptor || signal.aborted || descriptor.authMode !== "local-operator" ||
         descriptor.installationId !== selector.installationId ||
         descriptor.projectId !== selector.projectId) return { installations: [] }
     return { installations: [descriptor] }
@@ -104,7 +122,7 @@ export async function readSfInstallations(
   const installations: SfInstallationDescriptor[] = []
   for (const runtime of admitted) {
     const descriptor = toDescriptor(runtime)
-    if (!descriptor) continue
+    if (!descriptor || descriptor.authMode !== "local-operator") continue
     const exists = installations.some((existing) =>
       existing.installationId === descriptor.installationId &&
       existing.projectId === descriptor.projectId && existing.hostId === descriptor.hostId)
