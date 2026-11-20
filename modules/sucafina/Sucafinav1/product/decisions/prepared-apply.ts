@@ -35,7 +35,8 @@ export function createSfPreparedApply(input: {
         const proof = receiptProofLookup(state, authority, request.targetRef, request.idempotencyKey)
         if (proof.status === "ambiguous") return undefined
         const receipts = Object.values(state.receipts).filter((item) => item.surface === request.surface && item.targetIncarnation === request.targetIncarnation && item.idempotencyKey === request.idempotencyKey && item.principalRef === context.binding.principalRef)
-        if (proof.status === "found" && !receipts.length) return undefined
+        // A scoped intent proof is not the authoritative domain receipt.
+        // Raw absence stays not-found; durable application reservations prevent redispatch.
         return receipts
       }).catch(() => undefined)
       if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "receipt-unavailable" }
