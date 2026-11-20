@@ -4,6 +4,8 @@ import { FetchHttpClient } from "effect/unstable/http"
 import { LLM, LLMClient, Model } from "@orchestra/llm"
 import { OpenAICompatibleChat } from "@orchestra/llm/protocols/openai-compatible-chat"
 import { Auth, RequestExecutor } from "@orchestra/llm/route"
+import { ClaudeCodeHost } from "@orchestra/engine-claude-code/v2/host"
+import { createSfTokenGate } from "../../../apps/cli/src/sucafina-product/token-gate"
 import { ProviderAccess } from "@orchestra/schema/provider-access"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { SessionAccess } from "@orchestra/schema/session-access"
@@ -30,7 +32,7 @@ const data = (text: string, finish = false) => "data: " + JSON.stringify({
 }) + "\n\n" + (finish ? "data: [DONE]\n\n" : "")
 
 /** Real HTTPS and native OpenAI protocol. SessionExecution itself remains the fixture's explicitly recording-only service. */
-async function fixture(options: { bindings?: boolean; key?: boolean } = {}) {
+async function fixture(options: { bindings?: boolean; key?: boolean; tokenGate?: boolean } = {}) {
   const certificate = await Bun.file(new URL("./fixture/pinned-example-cert.pem", import.meta.url)).text()
   const tlsKey = await Bun.file(new URL("./fixture/pinned-example-key.pem", import.meta.url)).text()
   const seen: { authorization: string | null; path: string; body: unknown }[] = []
@@ -80,10 +82,16 @@ async function fixture(options: { bindings?: boolean; key?: boolean } = {}) {
     url.hostname = "127.0.0.1"
     return fetch(url, { ...init, tls: { ca: certificate, serverName: "pinned.example", rejectUnauthorized: true } })
   }, { preconnect: fetch.preconnect })
+  const gate = options.tokenGate ? createSfTokenGate({
+    upstream: ClaudeCodeHost.node,
+    // This negative takes the no-SF-header branch. Unexpected lineage reads fail closed.
+    isSfOwned: () => Effect.die("The unclassified native model must not request SF lineage"),
+  }) : undefined
   const f = await teamSessionFixture({
     grants, extraNodes: [LayerNodePlatform.llmClient, LayerNodePlatform.requestExecutor, LocationServiceMap.node, SessionExecution.node],
     replacements: [[LayerNodePlatform.httpClient,
-      FetchHttpClient.layer.pipe(Layer.provide(Layer.succeed(FetchHttpClient.Fetch, tlsFetch)))]],
+      FetchHttpClient.layer.pipe(Layer.provide(Layer.succeed(FetchHttpClient.Fetch, tlsFetch)))],
+      ...gate?.contribution.replacements ?? []],
   }).catch(async (error) => { await server.stop(true); throw error })
   try {
     const admin = createTeamProfileHttp({ ...f.binding, resolver: f.resolver })
@@ -349,6 +357,23 @@ test("private-provider-09: direct Route preparation cannot replace the canonical
     expect(Exit.isFailure(yield* route.streamPrepared(prepared, request, { http: executor }).pipe(
       Stream.runCollect, Effect.exit,
     ))).toBe(true)
+    expect(f.seen).toHaveLength(0)
+  })))
+}, 30000)
+
+test("private-provider-10: the installed C15 token-gate replacement cannot send an inline model without an SF header through its other branch", async () => {
+  await using f = await fixture({ tokenGate: true })
+  await f.run(f.admitted(f.businessRequest(), Effect.gen(function* () {
+    yield* f.seed("ses_private_provider_gate")
+    const llm = yield* LLMClient.Service
+    const forged = OpenAICompatibleChat.route.with({
+      provider: "approved-provider", endpoint: { baseURL: f.endpoint },
+      auth: Auth.bearer(Auth.value("synthetic-inline-must-not-dispatch")),
+    }).model({ id: selected.id })
+    const request = LLM.request({ model: forged, prompt: "No SF header is no bypass" })
+    expect(request.http?.headers).toBeUndefined()
+    const result = yield* llm.stream(request).pipe(Stream.runCollect, Effect.exit)
+    expect(Exit.isFailure(result)).toBe(true)
     expect(f.seen).toHaveLength(0)
   })))
 }, 30000)

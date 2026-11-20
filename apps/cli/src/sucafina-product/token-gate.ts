@@ -184,11 +184,11 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
   })
   const clientNode = makeGlobalNode({
     service: LLMClient.Service,
-    deps: [LayerNodePlatform.requestExecutor, LayerNodePlatform.httpClient, SessionStore.node],
+    deps: [LayerNodePlatform.requestExecutor, LayerNodePlatform.httpClient, SessionStore.node, SessionOwner.node],
     layer: Layer.effect(LLMClient.Service, Effect.gen(function* () {
       const store = yield* SessionStore.Service
       const base = yield* HttpClient.HttpClient
-      const context = yield* Layer.build(LLMClient.layer)
+      const context = yield* Layer.build(LayerNodePlatform.llmClient.implementation)
       const original = Context.get(context, LLMClient.Service)
       mount.current = true
       yield* Effect.addFinalizer(() => Effect.sync(() => {

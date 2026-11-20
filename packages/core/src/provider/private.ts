@@ -84,7 +84,9 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
       id: "private-openai-chat",
       prepare: (input: Parameters<typeof original.prepare>[0]) => Effect.gen(function* () {
         // Copy the provider body before the first external await; caller-owned objects never become transport state.
-        const supplied = yield* Effect.try(() => encodeBody(Schema.decodeUnknownSync(bodyCodec)(input.body)))
+        const supplied = yield* Effect.try({
+          try: () => encodeBody(Schema.decodeUnknownSync(bodyCodec)(input.body)), catch: () => unavailable(),
+        })
         yield* verify()
         if (input.request.model !== model || input.request.model.route !== route ||
           input.request.http?.query && Object.keys(input.request.http.query).length > 0 ||
