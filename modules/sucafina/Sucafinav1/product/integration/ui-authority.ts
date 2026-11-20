@@ -34,9 +34,9 @@ export function createSfUiAuthority(input: {
       return undefined
     }
     if (at < admission.expiresAt) return admission
-    // An unused lease expires. A consumed command keeps its identity so a still-valid grant
-    // can be rechecked instead of being reported as a changed authority.
-    if (!admission.consumed) {
+    // Downloads have a fixed disclosure window, including after consumption.
+    // Other consumed commands keep their identity for current reauthorization.
+    if (!admission.consumed || admission.operation === "sf_artifact_get") {
       admissions.delete(context)
       return undefined
     }
@@ -48,7 +48,8 @@ export function createSfUiAuthority(input: {
     const identity = await input.authorize(admission.request, admission.operation, admission.inputDigest)
     const at = input.now()
     const still = held(context)
-    const valid = Number.isFinite(at) && still === admission && !!identity && Object.keys(identity).length === identityFields.length &&
+    const withinLifetime = admission.operation !== "sf_artifact_get" || at < admission.expiresAt
+    const valid = Number.isFinite(at) && withinLifetime && still === admission && !!identity && Object.keys(identity).length === identityFields.length &&
       identityFields.every((key) => context.binding[key] === identity[key])
     if (!valid) {
       admissions.delete(context)

@@ -125,3 +125,91 @@ test("finite expiry preserves a consumed command identity for current reauthoriz
     callId: f.context.binding.requestId, principalRef: f.context.binding.principalRef,
   })
 })
+
+for (const boundary of ["before", "during"] as const)
+for (const offset of [0, 1])
+test("consumed artifact lease expires " + boundary + " authorization at deadline plus " + offset + "ms", async () => {
+  const initial = Date.parse("2026-11-13T04:01:10Z")
+  const clock = { at: initial, afterAuthorization: undefined as number | undefined }
+  let serial = 0
+  const request = new Request("https://example.test/sucafina/dashboard?sf=review-download&artifactRef=report:" + "b".repeat(64))
+  const ui = createSfUiAuthority({
+    authorize: async (received) => {
+      await Promise.resolve()
+      if (clock.afterAuthorization !== undefined) {
+        clock.at = clock.afterAuthorization
+        clock.afterAuthorization = undefined
+      }
+      return received === request
+        ? { installationId: "installation", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }
+        : undefined
+    },
+    commandIdentity: async (received) => received === request ? "download-command" : undefined,
+    createId: () => "request-" + ++serial,
+    now: () => clock.at,
+  })
+  const operation = "sf_artifact_get", digest = "a".repeat(64)
+  const admitted = await ui.admit(request, operation, digest)
+  if (admitted.status !== "ok") throw new Error("initial artifact admission unavailable")
+  expect(await ui.validate(admitted.value, operation, digest)).toBe(true)
+  const deadline = Date.parse(admitted.value.binding.expiresAt)
+  expect(deadline).toBe(initial + 5 * 60 * 1000)
+  clock.at = deadline - 1
+  expect(ui.requestFor(admitted.value)).toBe(request)
+  expect(await ui.revalidate(admitted.value)).toBe(true)
+  expect(ui.receiptFor(admitted.value, operation, digest)).toBeDefined()
+  if (boundary === "before") {
+    clock.at = deadline + offset
+    expect(ui.requestFor(admitted.value)).toBeUndefined()
+  } else clock.afterAuthorization = deadline + offset
+  expect(await ui.revalidate(admitted.value)).toBe(false)
+  // A later clock correction cannot resurrect the discarded disclosure lease.
+  clock.at = initial
+  expect(ui.requestFor(admitted.value)).toBeUndefined()
+  expect(ui.matchesIntent(admitted.value, operation, digest)).toBe(false)
+  expect(ui.receiptFor(admitted.value, operation, digest)).toBeUndefined()
+  expect(ui.operationIdentity(admitted.value)).toBeUndefined()
+  expect(await ui.revalidate(admitted.value)).toBe(false)
+  const fresh = await ui.admit(request, operation, digest)
+  if (fresh.status !== "ok") throw new Error("fresh artifact admission unavailable")
+  expect(fresh.value.binding.requestId).not.toBe(admitted.value.binding.requestId)
+  expect(await ui.validate(fresh.value, operation, digest)).toBe(true)
+  expect(ui.requestFor(fresh.value)).toBe(request)
+  ui.finish(fresh.value)
+})
+
+test("a consumed command still renews when its clock crosses expiry during authorization", async () => {
+  const initial = Date.parse("2026-11-13T04:01:10Z")
+  const clock = { at: initial, afterAuthorization: undefined as number | undefined }
+  let serial = 0
+  const request = new Request("https://example.test/sucafina/planner", { method: "POST" })
+  const ui = createSfUiAuthority({
+    authorize: async (received) => {
+      await Promise.resolve()
+      if (clock.afterAuthorization !== undefined) {
+        clock.at = clock.afterAuthorization
+        clock.afterAuthorization = undefined
+      }
+      return received === request
+        ? { installationId: "installation", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }
+        : undefined
+    },
+    commandIdentity: async (received) => received === request ? "original-command" : undefined,
+    createId: () => "request-" + ++serial,
+    now: () => clock.at,
+  })
+  const operation = "sf_forecast_compare", digest = "a".repeat(64)
+  const admitted = await ui.admit(request, operation, digest)
+  if (admitted.status !== "ok") throw new Error("initial command admission unavailable")
+  expect(await ui.validate(admitted.value, operation, digest)).toBe(true)
+  const deadline = Date.parse(admitted.value.binding.expiresAt)
+  clock.at = deadline - 1
+  clock.afterAuthorization = deadline
+  expect(await ui.revalidate(admitted.value)).toBe(true)
+  expect(ui.requestFor(admitted.value)).toBe(request)
+  expect(ui.operationIdentity(admitted.value)).toBe("original-command")
+  expect(ui.receiptFor(admitted.value, operation, digest)).toMatchObject({
+    callId: admitted.value.binding.requestId, principalRef: admitted.value.binding.principalRef,
+  })
+  ui.finish(admitted.value)
+})
