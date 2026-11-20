@@ -11,7 +11,7 @@ test("business polling reflects another session without replacing unsaved edits 
   let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   let page: Page | undefined
   const errors: string[] = []
-  const held: { release?: () => void } = {}
+  const held: { release?: () => void; closing: boolean } = { closing: false }
   let phase = "browser"
   let failed: unknown
   try {
@@ -68,7 +68,10 @@ test("business polling reflects another session without replacing unsaved edits 
       // Retain the actual authorized response from before the save. Its release
       // must not certify the later POST or replace the retained local draft.
       const previous = await route.fetch()
-      await new Promise<void>((resolve) => { held.release = resolve })
+      await new Promise<void>((resolve) => {
+        held.release = resolve
+        if (held.closing) resolve()
+      })
       await route.fulfill({ response: previous })
     })
     phase = "held-poll-and-coalesced-refresh"
@@ -104,6 +107,7 @@ test("business polling reflects another session without replacing unsaved edits 
     console.error("CAP28 parity browser failure", { phase, pageErrors: errors,
       url: page?.url(), editorCount: page ? await page.locator(".sf-n21-settings-form").count().catch(() => -1) : 0 }, error)
   } finally {
+    held.closing = true
     held.release?.()
     const cleanup: unknown[] = []
     try { await page?.unrouteAll({ behavior: "wait" }) } catch (error) { cleanup.push(error) }
