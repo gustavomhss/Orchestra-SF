@@ -25,7 +25,8 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   let f: Awaited<ReturnType<typeof nativeTeamWebFixture>> | undefined
   let admin: Awaited<ReturnType<typeof nativeTeamWebFixture>> | undefined
   let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
-  const contexts: BrowserContext[] = [], errors: string[] = []
+  const contexts: BrowserContext[] = [], errors: string[] = [], runtimeErrors: string[] = []
+  const contextReplies: { status: string; teams?: string; bound: boolean }[] = []
   const observed: { fixture: "business" | "admin"; path: string; method: string; cookie: boolean; basic: boolean; selector: string | null; status: number }[] = []
   let passed = false, phase = "build", holdLogout = false
   const logoutEntered = Promise.withResolvers<void>(), logoutRelease = Promise.withResolvers<void>(), logoutHandled = Promise.withResolvers<void>()
@@ -42,7 +43,13 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       const browser = await driver!.browser.newContext({ offline: true, serviceWorkers: "block", locale: "en-US", viewport: { width: 1360, height: 900 } })
       browser.setDefaultTimeout(7000)
       contexts.push(browser)
-      browser.on("page", (page) => page.on("pageerror", (error) => errors.push(error.message)))
+      browser.on("page", (page) => {
+        page.on("pageerror", (error) => errors.push(error.message))
+        page.on("console", (message) => {
+          if (message.type() === "error" && /^(Teams |Microsoft sign-out)/.test(message.text()))
+            runtimeErrors.push(message.text())
+        })
+      })
       await browser.route("**/*", async (route) => {
         const wire = route.request(), url = new URL(wire.url())
         if (url.href.startsWith(authority + "/oauth2/v2.0/authorize?")) {
@@ -65,6 +72,18 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
           }
           const response = url.pathname.startsWith(fixture.binding.mount + "/") || url.pathname.startsWith("/api/")
             ? await fixture.handle(request) : await built!.asset(request) ?? new Response(null, { status: 404 })
+          if (url.pathname.endsWith("/api/ui/context")) {
+            const decoded: unknown = await response.clone().json()
+            if (decoded && typeof decoded === "object" && "status" in decoded && typeof decoded.status === "string") {
+              const value = "value" in decoded && decoded.value && typeof decoded.value === "object" ? decoded.value : undefined
+              const profile = value && "profile" in value && value.profile && typeof value.profile === "object" ? value.profile : undefined
+              const teams = profile && "teams" in profile && profile.teams && typeof profile.teams === "object" ? profile.teams : undefined
+              const stamp = value && "stamp" in value && value.stamp && typeof value.stamp === "object" ? value.stamp : undefined
+              contextReplies.push({ status: decoded.status,
+                teams: teams && "status" in teams && typeof teams.status === "string" ? teams.status : undefined,
+                bound: !!stamp && "team" in stamp })
+            }
+          }
           observed.push({ fixture: name, path: url.pathname, method: request.method,
             cookie: request.headers.has("cookie"), basic: request.headers.has("authorization"),
             selector: request.headers.get("x-sf-team-profile"), status: response.status })
@@ -259,8 +278,20 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     passed = true
   } finally {
     logoutRelease.resolve()
-    if (!passed) console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ phase, errors,
-      calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
+    if (!passed) {
+      const pages = await Promise.allSettled(contexts.flatMap((context) => context.pages().map((page) => page.evaluate(() => ({
+        path: location.pathname,
+        state: document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-teams-state"),
+        selected: document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected"),
+        status: document.querySelector("[data-sf-team-status]")?.textContent,
+        notices: [...document.querySelectorAll(".sf-team-notice")].map((element) => element.textContent),
+        pickers: [...document.querySelectorAll<HTMLSelectElement>("[data-sf-team-picker]")]
+          .map((element) => ({ value: element.value, disabled: element.disabled })),
+      })))))
+      console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ phase, errors, runtimeErrors, contextReplies,
+        pages: pages.map((page) => page.status === "fulfilled" ? page.value : { inaccessible: true }),
+        calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
+    }
     const browserClosed = await Promise.allSettled(contexts.map((context) => context.close()))
     const driverClosed = await Promise.allSettled([driver?.close()])
     const fixturesClosed = await Promise.allSettled([f?.close(), admin?.close()])
