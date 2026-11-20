@@ -1,48 +1,17 @@
 import { afterEach, expect, test } from "bun:test"
 import { Schema } from "effect"
 import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
-import { createSfContextHandler } from "../../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
-import { createSfLiveContext, sfContextDestinationsFromPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { oid, tenant } from "../microsoft-login/oidc-fixture.ts"
 import { profileA, profileB } from "./installation-fixture.ts"
-import { teamProductFixture } from "./product-fixture.ts"
+import { teamContextFixture } from "./context-fixture.ts"
 
 const cleanups: (() => Promise<void>)[] = []
 afterEach(async () => { for (const close of cleanups.splice(0)) await close() })
 
-async function fixture(input: Parameters<typeof teamProductFixture>[0] = {}) {
-  const f = await teamProductFixture(input)
+async function fixture(input: Parameters<typeof teamContextFixture>[0] = {}) {
+  const f = await teamContextFixture(input)
   cleanups.push(f.close)
-  const calls: Request[] = []
-  const hooks: { operational?: () => Promise<void> } = {}
-  const current = { technical: f.technical }
-  const live = createSfLiveContext({
-    origin: f.binding.origin, mount: f.binding.mount, currentBinding: () => current.technical,
-    admit: async (request) => {
-      const admitted = await f.authority.readContextAdmission(request)
-      if (admitted.status !== "ok") return admitted
-      const destinations = sfContextDestinationsFromPages(admitted.pages)
-      return destinations ? { status: "ok", stamp: admitted.stamp, authMode: "microsoft", destinations }
-        : { status: "unavailable", reason: "contract-mismatch" }
-    },
-    teams: {
-      tenantId: tenant,
-      admit: async (request) => {
-        calls.push(request)
-        const admitted = await f.authority.readTeamContextAdmission(request)
-        if (admitted.status !== "ok") return admitted
-        const destinations = admitted.binding ? sfContextDestinationsFromPages(admitted.pages) : []
-        return destinations ? { ...admitted, destinations } : { status: "unavailable", reason: "contract-mismatch" }
-      },
-    },
-    operational: async () => { await hooks.operational?.(); return [] },
-  })
-  const services = { nativeUiProducts: live }
-  const runtime = { services }
-  const handler = createSfContextHandler({
-    origin: f.binding.origin, mount: f.binding.mount, runtime: () => runtime.services,
-  })
-  return { ...f, handler, live, calls, hooks, current, runtime }
+  return f
 }
 
 async function context(response: Response) {
