@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test"
+import type { SessionActiveOutput } from "../v2-wire"
 import { authFromToken, authTokenFromCredentials, createApiForServer } from "./server"
 
 describe("authFromToken", () => {
@@ -64,7 +65,7 @@ describe("technical active-session adapter", () => {
     }
   })
   test("returns only the running IDs through the real generated Client", async () => {
-    const data = { ses_running: { type: "running" } }
+    const data = { ses_running: { type: "running" } } satisfies SessionActiveOutput
     await withActiveResponse({ data }, async (api, requests) => {
       const active = await api.session.active()
       expect(active).toEqual(data)
