@@ -186,3 +186,38 @@ test("native Settings keeps missing, contradictory and unauthorized reset source
   expect(f.commits.every((commit) => commit === false)).toBe(true)
 })
 
+test("native Supplier attachment projection preserves names while fencing upload separately from Save", async () => {
+  const f = fixture()
+  expect(domain.execute(f.state, { ...admin, roles: ["buyer"] }, {
+    page: "Suppliers", action: "create", version: 0, values: { supplier: { legalName: "Fixture supplier" } },
+  }, environment).ok).toBe(true)
+  const stored = rows(object(f.state.data.store).suppliers)[0]!
+  // Extra source fields are deliberate privacy sentinels, not admitted bytes,
+  // scanner verdicts, signed links or authorization created by this fixture.
+  stored.attachments = [{ id: "private-document-ref", name: "document.txt",
+    storagePath: "/private/storage/document", bearer: "private-reference-sentinel", bytes: 1234 }]
+  const before = structuredClone(f.state)
+  for (const [role, writable, uploadAllowed] of [
+    ["admin", true, true], ["supplier admin", true, true], ["buyer", true, false],
+    ["viewer", false, false], ["admin", false, false],
+  ] as const) {
+    f.controls.role = role
+    f.controls.writable = writable
+    const projected = await suppliers(await f.read("CAP27"))
+    expect(projected.value.data.canUploadAttachment).toBe(uploadAllowed)
+    expect(projected.value.data.suppliers).toHaveLength(1)
+    expect(projected.value.data.suppliers[0]!.attachments).toEqual([{ id: "private-document-ref", name: "document.txt" }])
+    expect(JSON.stringify(projected)).not.toContain("private-reference-sentinel")
+    expect(JSON.stringify(projected)).not.toContain("/private/storage/document")
+    if (role === "buyer") expect(projected.value.allowedActionIds).toContain("save")
+    expect(f.state).toEqual(before)
+  }
+  f.controls.role = "admin"
+  f.controls.writable = true
+  f.controls.endFence = "denied"
+  const revoked = await f.read("CAP27")
+  expect(revoked.status).toBe(403)
+  expect(await revoked.json()).toEqual({ status: "denied", reason: "procurement-context-changed" })
+  expect(f.state).toEqual(before)
+  expect(f.commits.every((commit) => commit === false)).toBe(true)
+})
