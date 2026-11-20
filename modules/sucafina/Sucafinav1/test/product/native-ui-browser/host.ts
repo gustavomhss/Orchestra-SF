@@ -9,6 +9,7 @@ import { createSfActionSource } from "../../../../../../apps/cli/src/sucafina-pr
 import { createSfDomainProjectionHandlers } from "../../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
+import { createSfProcurementProjectionHandlers } from "../../../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
 import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
 import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
 import { observeSfDashboardPages } from "../../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
@@ -81,6 +82,7 @@ export function createNativeBrowserHost(input: NativeBrowserHostInput) {
     ...createSfDomainProjectionHandlers(dependencies),
     ...createSfPeopleProjectionHandlers(dependencies),
     ...createSfPlannerProjectionHandlers(dependencies),
+    ...createSfProcurementProjectionHandlers(dependencies),
     ...createSfWorkProjectionHandlers(dependencies),
     ...createSfDecisionsProjectionHandlers(dependencies),
     ...(input.additionalHandlers?.(dependencies) ?? []),

@@ -16,6 +16,10 @@ import { contributions, createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
+import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
+import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createDecisionCapabilities } from "../../../product/decisions/capabilities.ts"
@@ -31,6 +35,10 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-workbench-http-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
+  const at = "2026-11-13T08:00:00Z"
+  const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID,
+    projectScope: createSfSourceScopeProjector(() => at) })
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   const serverState: { handle?: (request: Request) => Promise<Response | undefined> } = {}
   const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 404 }) })
   const origin = server.url.origin
@@ -38,18 +46,22 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
   const person = `macos:${operator.installationId}:${operator.uid}`
   const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
   const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
-  const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
+  const environment = async (request: Request) => ({ at, id: randomUUID, directory: await identity.directory(request) })
   const binding = { installationId: operator.installationId, projectId: "project", hostId: "host", location }
-  const authority = createSfProductAuthority({ identity: () => binding, installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate: identity.authenticate, isAuthenticated: async (request) => Boolean(await identity.person(request)), environment, grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+  const authority = createSfProductAuthority({ identity: () => binding, installationId: operator.installationId, origin, policyVersion: "policy", persistence, authenticate: identity.authenticate, isAuthenticated: async (request) => Boolean(await identity.person(request)), environment, grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list", "sf_request_read"] }], createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
   const evidence = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: async (ref, context) => ({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: new Date().toISOString() }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" } }) })
   const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), verifyScenarioOperations: async (value) => !value.preparedChanges.length && value.alternatives.every((item) => !item.scenario.operations.length) && value.choices.every((item) => !item.scenario.operations.length), evidence, createId: randomUUID, now: () => "2026-11-13T08:00:00Z" })
   const descriptors = createDecisionCapabilities({ cases, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: authority.authority.receiptFor })
   const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors, authority: authority.authority,
     validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
     validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok) })
-  const services = { ...authority, dispatch } as SfHostServices
+  // The native Procurement entry consumes its original scoped collection reader.
+  // Its real authority grants sf_request_read; readiness is still derived by F01.
+  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet<object>() })
+  const services = { ...authority, dispatch, productView: business.procurementQueueView } as SfHostServices
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const application = { persistence: store, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 }
+  const application = { persistence, authenticate: identity.authenticate, environment, product,
+    productView: business.procurementQueueView, maxJsonBytes: 100000 }
   const app = createModule("/sucafina", application)
   const native = createNativeBrowserHost({ origin, mount: "/sucafina", directory, identity: () => binding,
     application: { ...application, domains: contributions }, authority, services: () => services,
@@ -60,16 +72,34 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
         if (operation !== "decisions.command.sf_case_draft") return undefined
         const draft = descriptors.filter((descriptor) => descriptor.id === "sf_case_draft")
         if (draft.length !== 1 || draft[0]?.handlerExport !== "draftCase") return undefined
-        return { producer: product, dependencies: [services.dispatch, draft[0], cases, cases.draft, store] }
+        return { producer: product, dependencies: [services.dispatch, draft[0], cases, cases.draft, persistence] }
       },
     }, request, stamp),
   })
   serverState.handle = async (request) => await identity.handle(request) ??
     assets.handle(request, { directory, mode: "component" }) ?? await native.handle(request) ?? await app(request)
   try {
+    // Discovery precedes the product session and is confined to this transport
+    // and its exact admitted Location; product context still requires identity.
+    const discovery = (selectedDirectory: string, headers?: HeadersInit) => native.handle(new Request(
+      `${origin}/api/sucafina/installations?${new URLSearchParams({ select: "location", "location[directory]": selectedDirectory })}`,
+      { headers }))
+    const discovered = await discovery(directory)
+    expect(discovered?.status).toBe(200)
+    expect(await discovered!.json()).toEqual({ installations: [native.descriptor()] })
+    expect(await (await discovery(path.join(directory, "other")))!.json()).toEqual({ installations: [] })
+    expect((await discovery(directory, { "sec-fetch-site": "cross-site" }))?.status).toBe(403)
+    const anonymousContext = await native.handle(new Request(`${origin}/sucafina/api/ui/context?${new URLSearchParams({
+      installationId: binding.installationId, projectId: binding.projectId, hostId: binding.hostId,
+    })}`))
+    expect(anonymousContext?.status).toBe(401)
     const enrollment = await identity.enroll()
     const authenticated = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${enrollment}`))
     const cookie = authenticated!.headers.get("set-cookie")!.split(";")[0]!
+    const readProcurement = () => native.handle(new Request(`${origin}/sucafina/api/ui/pages/CAP25`, { headers: { cookie } }))
+    const procurement = await readProcurement()
+    expect(procurement?.status).toBe(200)
+    expect(await procurement!.json()).toMatchObject({ status: "ok", value: { capabilityId: "CAP25" } })
     const payload = { operation: "sf_case_draft", input: { objective: "Review renewal", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Cost"], sourceRefs: [] } }
     const post = (requestOrigin: string) => app(new Request(`${origin}/sucafina/dashboard?sf=workbench-command`, { method: "POST", headers: { cookie, origin: requestOrigin, "content-type": "application/json", "idempotency-key": "decision-intent-1" }, body: JSON.stringify(payload) }))
     expect((await post("https://other.example"))?.status).toBe(403)
@@ -163,5 +193,6 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
     } finally { await driver.close(); driver.report() }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect((await read())?.status).toBe(403)
-  } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+    expect((await readProcurement())?.status).toBe(403)
+  } finally { business.dispose(); await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)
