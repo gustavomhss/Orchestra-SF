@@ -200,6 +200,14 @@ export function createSfDomainClient(transport: SfTransport) {
       input: typeof SfDomain.operations["domain.command.CAP16.delete-sub"]["input"]["Type"],
       options: SfCallOptions,
     ) => transport.execute(SfDomain.operations["domain.command.CAP16.delete-sub"], input, options),
+    "local-admin.summary-read": (
+      input: typeof SfDomain.operations["local-admin.summary-read"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["local-admin.summary-read"], input, options),
+    "local-admin.summary-configure": (
+      input: typeof SfDomain.operations["local-admin.summary-configure"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["local-admin.summary-configure"], input, options),
     "projection.local-admin": (
       input: typeof SfDomain.operations["projection.local-admin"]["input"]["Type"],
       options: SfCallOptions,

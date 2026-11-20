@@ -20,6 +20,21 @@ describe("home context, search and administration", () => {
     expect(homePagesRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [{ ...context.availability[0]!.operations[0]!, operational: false }] }] }, candidate)).toBe(false)
     expect(homePagesRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
   })
+  test("administration admits only an actually operational local summary reader", () => {
+    const candidate = matchSfNativeRoutePath("/orchestra/sf-home/administration")!
+    const context = { destinations: sourceDestinations, availability: [{ family: "domain-read", resource: "local-admin", state: "partial", operations: [
+      { operationId: "projection.local-admin", state: "unavailable", operational: false, reason: "local-operator-reader-not-bound" },
+      { operationId: "local-admin.summary-read", state: "ready", operational: true, reason: null },
+    ] }] } as unknown as SfContext
+    expect(homePagesRouteAvailable(context, candidate)).toBe(true)
+    expect(homePagesRouteAvailable({ ...context, availability: [] }, candidate)).toBe(false)
+    expect(homePagesRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [
+      { operationId: "local-admin.summary-configure", state: "ready", operational: true, reason: null },
+    ] }] }, candidate)).toBe(false)
+    expect(homePagesRouteAvailable({ ...context, availability: [{ ...context.availability[0]!, operations: [
+      { operationId: "local-admin.summary-read", state: "unavailable", operational: false, reason: "source-unavailable" },
+    ] }] }, candidate)).toBe(false)
+  })
   test("pre-login context status never borrows a mismatched or partial owner", () => {
     const selected = { serverKey: "s" as SfServerKey, projectId: "p" as SfRef, installationId: "i" as SfRef }
     expect(homeContextStatusRoute("/orchestra/sf-home/context", "", selected)?.surfaceId).toBe("UI67")
