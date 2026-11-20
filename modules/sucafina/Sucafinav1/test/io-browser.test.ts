@@ -612,8 +612,10 @@ async function confirmProcurement(page: Page, origin: string, control: Locator,
   const [saved] = await Promise.all([
     page.waitForResponse((response) => {
       const url = new URL(response.url())
-      return response.request().method() === "POST" && url.origin === origin &&
-        url.pathname === "/sucafina/procurement" && !url.search
+      if (response.request().method() !== "POST" || url.origin !== origin ||
+        url.pathname !== "/sucafina/procurement" || url.searchParams.size !== 1 || url.searchParams.get("page") !== command.page) return false
+      const body = response.request().postDataJSON()
+      return body?.page === command.page && body?.action === command.action
     }, { timeout: 10000 }),
     control.click(),
   ])
