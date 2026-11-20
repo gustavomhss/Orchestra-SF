@@ -10,6 +10,9 @@ import { Credential } from "@orchestra/core/credential"
 import { Integration } from "@orchestra/core/integration"
 import { Database } from "@orchestra/core/database/database"
 import { DatabaseMigration } from "@orchestra/core/database/migration"
+import { Sqlite } from "@orchestra/core/database/sqlite"
+import { AuthorityGeneration } from "@orchestra/core/session/authority-generation"
+import { layer as ownedSqliteLayer, readAuthorityMarker } from "../src/database/sqlite.bun"
 import migration from "@orchestra/core/database/migration/20261012134025_session_subagent_models"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
@@ -340,9 +343,12 @@ describe("SessionSubagentModels", () => {
           Effect.provide(EffectDrizzleSqlite.DefaultServices),
         )
         yield* DatabaseMigration.apply(db)
-        return Database.Service.of({ db })
+        const native = yield* Sqlite.Native
+        if (!native || typeof native !== "object") throw new Error("Actual SQLite connection required")
+        return Database.Service.of({ db, filename: ":memory:", storageID: AuthorityGeneration.storageID(native, ":memory:"),
+          authorityMarker: () => readAuthorityMarker(native) })
       }),
-    ).pipe(Layer.provide(SqliteClient.layer({ filename: ":memory:", disableWAL: true })))
+    ).pipe(Layer.provide(ownedSqliteLayer({ filename: ":memory:" })))
     await Effect.runPromise(
       Effect.gen(function* () {
         yield* seed

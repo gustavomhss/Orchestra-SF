@@ -110,6 +110,18 @@ export default {
         );
       `)
       yield* tx.run(`
+        CREATE TABLE \`session_owner\` (
+          \`session_id\` text PRIMARY KEY,
+          \`installation_id\` text NOT NULL,
+          \`tenant_id\` text NOT NULL,
+          \`team_object_id\` text NOT NULL,
+          \`principal_object_id\` text NOT NULL,
+          \`generation\` integer NOT NULL,
+          CONSTRAINT "session_owner_id_required" CHECK("session_id" IS NOT NULL),
+          CONSTRAINT "session_owner_generation" CHECK("generation" >= 1)
+        );
+      `)
+      yield* tx.run(`
         CREATE TABLE \`account_state\` (
           \`id\` integer PRIMARY KEY,
           \`active_account_id\` text,
@@ -999,6 +1011,9 @@ export default {
         `CREATE INDEX \`meeting_segment_meeting_start_idx\` ON \`meeting_segment\` (\`meeting_id\`,\`start_ms\`);`,
       )
       yield* tx.run(`CREATE INDEX \`meeting_session_idx\` ON \`meeting\` (\`session_id\`);`)
+      yield* tx.run(
+        `CREATE INDEX \`session_owner_principal_team_idx\` ON \`session_owner\` (\`installation_id\`,\`tenant_id\`,\`principal_object_id\`,\`team_object_id\`);`,
+      )
       yield* tx.run(
         `CREATE UNIQUE INDEX \`actions_operation_location_binding_client_idx\` ON \`actions_operation\` (\`location_key\`,\`binding_id\`,\`client_id\`);`,
       )

@@ -371,6 +371,7 @@
     "./session": "./src/session.ts",
     "./session-process": "./src/session-process.ts",
     "./session/activity": "./src/session/activity.ts",
+    "./session/authority-generation": "./src/session/authority-generation.ts",
     "./session/compaction": "./src/session/compaction.ts",
     "./session/error": "./src/session/error.ts",
     "./session/event": "./src/session/event.ts",
@@ -381,6 +382,8 @@
     "./session/input": "./src/session/input.ts",
     "./session/message": "./src/session/message.ts",
     "./session/message-updater": "./src/session/message-updater.ts",
+    "./session/owner": "./src/session/owner.ts",
+    "./session/owner.sql": "./src/session/owner.sql.ts",
     "./session/projector": "./src/session/projector.ts",
     "./session/prompt": "./src/session/prompt.ts",
     "./session/run-coordinator": "./src/session/run-coordinator.ts",
@@ -485,7 +488,11 @@
     "./vcs": "./src/vcs.ts",
     "./workspace": "./src/workspace.ts",
     "./test/actions/gitlab-command-fixture": "./test/actions/gitlab-command-fixture.ts",
-    "./test/fixture/location": "./test/fixture/location.ts"
+    "./test/fixture/location": "./test/fixture/location.ts",
+    "./session/authority-generation-runtime": "./src/session/authority-generation-runtime.ts",
+    "./database/authority-control": "./src/database/authority-control.ts",
+    "./database/authority-sql-fence": "./src/database/authority-sql-fence.ts",
+    "./database/team-profile-census": "./src/database/team-profile-census.ts"
   },
   "imports": {
     "#sqlite": {

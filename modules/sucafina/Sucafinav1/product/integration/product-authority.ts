@@ -1,4 +1,7 @@
-import { Schema } from "effect"
+import { Effect, Schema } from "effect"
+import { SessionAccess } from "@orchestra/schema/session-access"
+import { Session } from "@orchestra/schema/session"
+import type { SessionOwner } from "@orchestra/core/session/owner"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { createTeamProfileResolver, TeamProfileResolution } from "../../runtime/team-profile-resolver.ts"
 import type { SessionSchema } from "@orchestra/core/session/schema"
@@ -21,7 +24,7 @@ import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
 
-export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[] }>
+export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[]; migrationActions?: readonly ("map" | "cut" | "recover")[] }>
 
 /** Private verified resolver; the transport supplies only a sealed selection intent. */
 export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
@@ -175,7 +178,8 @@ export function createSfProductAuthority(input: {
         configRevision: profile.configRevision } : {}),
       roles, roleMaps: mapped, scopes: scoped, canWrite,
       grant: grant ? { namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(),
-        humanActions: [...grant.humanActions ?? []].toSorted() } : null,
+        humanActions: [...grant.humanActions ?? []].toSorted(), sessionActions: [...grant.sessionActions ?? []].toSorted(),
+        referenceActions: [...grant.referenceActions ?? []].toSorted(), migrationActions: [...grant.migrationActions ?? []].toSorted() } : null,
       policyVersion: input.policyVersion,
     })
     return { principalRef, policyVersion: input.policyVersion, accessRevision, canWrite, grant, roles, profile,
@@ -455,7 +459,91 @@ export function createSfProductAuthority(input: {
       commit: false, value: await readAdmittedContext(),
     }), { signal: request.signal })
   }
-  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readTeamContextAdmission }
+
+  /**
+   * Corporate Core permissions are explicit private grants. Eligibility/roles
+   * alone never authorize a conversation, and a serialized Binding cannot enter
+   * this closure. Native C15 run/selection/model/receipt checks still follow.
+   */
+  const readCoreSessionAdmission = async (request: Request): Promise<SessionOwner.Admission | undefined> => {
+    const initial = await resolve(request).catch(() => undefined)
+    if (!teamProfiles || !initial?.profile?.admission) return undefined
+    const binding = Schema.decodeUnknownSync(TeamProfile.Binding)({
+      owner: { profile: initial.profile.admission.profile, principal: initial.profile.principal },
+      revisions: { configRevision: initial.profile.configRevision, accessRevision: initial.accessRevision },
+    })
+    const same = (actor: Awaited<ReturnType<typeof resolve>>) => !!actor &&
+      actor.principalRef === initial.principalRef && actor.accessRevision === initial.accessRevision &&
+      actor.policyVersion === initial.policyVersion &&
+      digestSfValue(actor.profile?.admission?.profile) === digestSfValue(binding.owner.profile) &&
+      digestSfValue(actor.identity) === digestSfValue(initial.identity) && !request.signal.aborted
+
+    const exclusions = (actor: NonNullable<Awaited<ReturnType<typeof resolve>>>, snapshot: Snapshot) => {
+      const raw = snapshot.data.__sfProductV1
+      if (raw !== undefined && (!raw || typeof raw !== "object" || Array.isArray(raw))) return undefined
+      const stored = object(raw)
+      if (stored.nativeRuns !== undefined &&
+        (!stored.nativeRuns || typeof stored.nativeRuns !== "object" || Array.isArray(stored.nativeRuns))) return undefined
+      const denied = new Set<SessionSchema.ID>()
+      const runs = new Map<SessionSchema.ID, number>()
+      for (const value of Object.values(object(stored.nativeRuns))) {
+        if (!value || typeof value !== "object" || Array.isArray(value)) return undefined
+        const run = object(value)
+        if (run.native === undefined) continue
+        if (!run.native || typeof run.native !== "object" || Array.isArray(run.native)) return undefined
+        const native = object(run.native)
+        const sessionID = Schema.decodeUnknownOption(Session.ID)(native.sessionID).valueOrUndefined
+        if (!sessionID || typeof run.principalRef !== "string") return undefined
+        runs.set(sessionID, (runs.get(sessionID) ?? 0) + 1)
+        if (run.principalRef !== actor.principalRef) continue
+        const ref = object(run.caseRef)
+        const currentCase = typeof ref.id === "string" ? object(object(stored.cases)[ref.id]) : {}
+        if (!actor.grant.namespaces.includes("cases") || !actor.grant.namespaces.includes("contributions") ||
+          !currentCase.id || currentCase.id !== ref.id || currentCase.incarnation !== ref.incarnation ||
+          !Array.isArray(currentCase.participants) || !currentCase.participants.includes(actor.principalRef))
+          denied.add(sessionID)
+      }
+      for (const [sessionID, count] of runs) if (count !== 1) denied.add(sessionID)
+      return Schema.decodeUnknownOption(SessionAccess.ExcludedSessions)([...denied].toSorted()).valueOrUndefined
+    }
+    const observe = async () => {
+      if (!input.persistence.currentSnapshots) return undefined
+      const read = async (snapshot: Snapshot) => {
+        const actor = await principal(request, snapshot)
+        if (!actor || !same(actor)) return undefined
+        const excluded = exclusions(actor, snapshot)
+        if (!excluded) return undefined
+        const current = await principal(request, snapshot)
+        return current && same(current) ? { actor: current, excluded } : undefined
+      }
+      const current = input.persistence.currentSnapshots()
+      if (current) return read(current.dashboard)
+      return input.persistence.transaction("dashboard", async (snapshot) => ({
+        commit: false, value: await read(snapshot),
+      }), { signal: request.signal })
+    }
+    return Object.freeze({
+      binding: Object.freeze({
+        owner: Object.freeze({ profile: Object.freeze({ ...binding.owner.profile }), principal: Object.freeze({ ...binding.owner.principal }) }),
+        revisions: Object.freeze({ ...binding.revisions }),
+      }),
+      verifyCurrent: () => Effect.promise(async () => same(await resolve(request).catch(() => undefined))),
+      authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.promise(async () => {
+        if (!SessionAccess.Actions.some((known) => known === action) ||
+          sessionID === undefined && action !== "read" && action !== "create") return false
+        const current = await observe().catch(() => undefined)
+        return !!current && !!current.actor.grant.sessionActions?.includes(action) &&
+          (action === "read" || current.actor.canWrite) &&
+          (sessionID === undefined || !current.excluded.includes(sessionID))
+      }),
+      excludedSessions: () => Effect.promise(async () => {
+        const current = await observe()
+        if (!current || !current.actor.grant.sessionActions?.includes("read")) throw new Error("SF_SESSION_RESOURCE_POLICY_UNAVAILABLE")
+        return current.excluded
+      }),
+    })
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission, readTeamContextAdmission, readCoreSessionAdmission }
 }
 
 
@@ -470,11 +558,23 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
         grant.operations.some((operation: unknown) => typeof operation !== "string" || !operation.trim()) ||
         grant.humanActions !== undefined && (!Array.isArray(grant.humanActions) ||
           new Set(grant.humanActions).size !== grant.humanActions.length ||
-          grant.humanActions.some((action: unknown) => !sfHumanActions.some((known) => known === action)))))
+          grant.humanActions.some((action: unknown) => !sfHumanActions.some((known) => known === action))) ||
+        grant.sessionActions !== undefined && (!Array.isArray(grant.sessionActions) ||
+          new Set(grant.sessionActions).size !== grant.sessionActions.length ||
+          grant.sessionActions.some((action: unknown) => !SessionAccess.Actions.some((known) => known === action))) ||
+        grant.referenceActions !== undefined && (!Array.isArray(grant.referenceActions) ||
+          new Set(grant.referenceActions).size !== grant.referenceActions.length ||
+          grant.referenceActions.some((action: unknown) => action !== "list")) ||
+        grant.migrationActions !== undefined && (!Array.isArray(grant.migrationActions) ||
+          new Set(grant.migrationActions).size !== grant.migrationActions.length ||
+          grant.migrationActions.some((action: unknown) => action !== "map" && action !== "cut" && action !== "recover"))))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
-  return Object.freeze(value.map((grant) => Object.freeze({
+  return Object.freeze(value.map((grant: SfProductGrant) => Object.freeze({
     principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
     operations: Object.freeze([...grant.operations].toSorted()),
     humanActions: Object.freeze([...grant.humanActions ?? []].toSorted()),
+    sessionActions: Object.freeze([...grant.sessionActions ?? []].toSorted()),
+    referenceActions: Object.freeze([...grant.referenceActions ?? []].toSorted()),
+    migrationActions: Object.freeze([...grant.migrationActions ?? []].toSorted()),
   })).toSorted((left, right) => left.principalRef.localeCompare(right.principalRef)))
 }

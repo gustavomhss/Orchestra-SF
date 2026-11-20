@@ -29,6 +29,9 @@ import { SessionTable } from "@orchestra/core/session/sql"
 import sessionMetadataMigration from "@orchestra/core/database/migration/20260511173437_session-metadata"
 import type { SqlClient as SqlClientService } from "effect/unstable/sql/SqlClient"
 import { Database } from "@orchestra/core/database/database"
+import { Sqlite } from "@orchestra/core/database/sqlite"
+import { AuthorityGeneration } from "@orchestra/core/session/authority-generation"
+import { layer as ownedSqliteLayer, readAuthorityMarker } from "../src/database/sqlite.bun"
 import { SessionProjector } from "@orchestra/core/session/projector"
 import { SessionEvent } from "@orchestra/schema/session-event"
 import { tmpdir } from "./fixture/tmpdir"
@@ -38,6 +41,11 @@ const run = <A, E>(effect: Effect.Effect<A, E, SqlClientService>) =>
   Effect.runPromise(
     effect.pipe(Effect.provide(SqliteClient.layer({ filename: ":memory:", disableWAL: true })), Effect.scoped),
   )
+
+// This fixture composes the production Owner/Generation graph after migration.
+// Retain the actual adapter connection so the technical absence check is real.
+const runOwned = <A, E>(effect: Effect.Effect<A, E, SqlClientService | Sqlite.Native>) =>
+  Effect.runPromise(effect.pipe(Effect.provide(ownedSqliteLayer({ filename: ":memory:" })), Effect.scoped))
 
 const makeDb = EffectDrizzleSqlite.makeWithDefaults()
 
@@ -388,7 +396,7 @@ describe("DatabaseMigration", () => {
   })
 
   test("preserves canonical legacy state and restarts its event stream", async () => {
-    await run(
+    await runOwned(
       Effect.gen(function* () {
         const db = yield* makeDb
         yield* db.run(sql`PRAGMA foreign_keys = ON`)
@@ -424,7 +432,12 @@ describe("DatabaseMigration", () => {
         yield* db.run(sql`DELETE FROM migration WHERE id = ${simplifySessionInputMigration.id}`)
         yield* DatabaseMigration.applyOnly(db, [simplifySessionInputMigration])
 
-        const database = Layer.succeed(Database.Service, { db })
+        const native = yield* Sqlite.Native
+        if (!native || typeof native !== "object") throw new Error("Actual SQLite connection required")
+        const database = Layer.succeed(Database.Service, Database.Service.of({
+          db, filename: ":memory:", storageID: AuthorityGeneration.storageID(native, ":memory:"),
+          authorityMarker: () => readAuthorityMarker(native),
+        }))
         yield* EventV2.Service.use((service) =>
           service.publish(SessionEvent.Renamed, {
             sessionID: SessionSchema.ID.make("session"),
