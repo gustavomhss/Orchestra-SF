@@ -77,7 +77,10 @@ export function createSfPortfolioCoverageAuthority(input: {
           digestSfValue(alternative.scenario) !== stored.value.requestDigest || digestSfValue(alternative.result) !== stored.value.resultDigest ||
           digestSfValue(baseline.scenario) !== baselineStored.value.requestDigest || digestSfValue(baseline.result) !== baselineStored.value.resultDigest)
           return { status: "unavailable", reason: "portfolio-coverage-alternatives-unbound" }
-        const [resolved, baselineResolved] = await resolvePlannerScenarioBatch(scenarios, [request.scenarioRef, baselineRef], call)
+        const pair = await business.withPlannerObservation({ scenarioRefs: [request.scenarioRef, baselineRef], criteria: [] }, call,
+          async () => ({ status: "ok" as const, value: await resolvePlannerScenarioBatch(scenarios, [request.scenarioRef, baselineRef], call) }))
+        if (pair.status !== "ok") return pair
+        const [resolved, baselineResolved] = pair.value
         if (resolved.status !== "ok") return resolved
         if (baselineResolved.status !== "ok") return baselineResolved
         if (digestSfValue(resolved.value.result) !== stored.value.resultDigest || digestSfValue(baselineResolved.value.result) !== baselineStored.value.resultDigest)
