@@ -170,7 +170,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
           model: Model.Ref.pipe(Schema.optional),
           location: Location.Ref.pipe(Schema.optional),
         }),
-        success: Schema.Struct({ data: Session.Info, namespace: Schema.optional(TeamProfile.SessionNamespace) }),
+        success: Schema.Struct({ data: Session.Info }),
         error: SessionNotFoundError,
       }).annotateMerge(
         OpenApi.annotations({
@@ -195,7 +195,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
     .add(
       HttpApiEndpoint.get("session.get", "/api/session/:sessionID", {
         params: { sessionID: Session.ID },
-        success: Schema.Struct({ data: Session.Info, namespace: Schema.optional(TeamProfile.SessionNamespace) }),
+        success: Schema.Struct({ data: Session.Info }),
         error: SessionNotFoundError,
       })
         .middleware(sessionLocationMiddleware)
@@ -406,7 +406,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
       HttpApiEndpoint.post("session.fork", "/api/session/:sessionID/fork", {
         params: { sessionID: Session.ID },
         payload: Schema.Struct({ messageID: SessionMessage.ID.pipe(Schema.optional) }),
-        success: Schema.Struct({ data: Session.Info, namespace: Schema.optional(TeamProfile.SessionNamespace) }),
+        success: Schema.Struct({ data: Session.Info }),
         error: [SessionNotFoundError, MessageNotFoundError],
       })
         .middleware(sessionLocationMiddleware)

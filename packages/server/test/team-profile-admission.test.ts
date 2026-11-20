@@ -294,7 +294,7 @@ test("http-owner-13: admitted empty collections and Session responses label the 
     const bytes = JSON.stringify(f.business.all("SELECT * FROM event"))
     const read = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + created.id)))
     const info = yield* decode(read, Info)
-    expect(info.namespace).toEqual(expected)
+    expect(info.data.namespace?.owner).toEqual(expected.owner)
     expect(info.data.namespace).toEqual(expected)
     const messages = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + created.id + "/message")))
     expect((yield* decode(messages, Messages)).namespace).toEqual(expected)
@@ -310,7 +310,7 @@ test("http-owner-13: admitted empty collections and Session responses label the 
   await f.run((http) => Effect.gen(function* () {
     const response = yield* Effect.promise(() => http.mounted(f.request("/api/session/ses_http_namespace")))
     const info = yield* decode(response, Info)
-    expect(info.namespace?.authorityGeneration).toBe(2)
+    expect(info.data.namespace?.owner.profile).toEqual(profileA)
     expect(info.data.namespace?.authorityGeneration).toBe(2)
   }))
 })

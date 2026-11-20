@@ -171,7 +171,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
               .pipe(typedNotFound)
           yield* verifySessionAccess(owners, access, "session.create", data.id)
           const namespace = yield* sessionNamespace(owners, access)
-          return { data: { ...data, namespace }, namespace }
+          return { data: { ...data, namespace } }
         }),
       )
       .handle(
@@ -204,7 +204,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
               ),
             )
           const namespace = yield* sessionNamespace(owners, access)
-          return { data: { ...data, namespace }, namespace }
+          return { data: { ...data, namespace } }
         }),
       )
       .handle(
@@ -338,7 +338,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
               }),
             )
           const namespace = yield* sessionNamespace(owners, access)
-          return { data: { ...data, namespace }, namespace }
+          return { data: { ...data, namespace } }
         }),
       )
       .handle(

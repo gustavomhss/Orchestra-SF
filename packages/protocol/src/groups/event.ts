@@ -57,7 +57,7 @@ const event = make(EventManifest.ServerDefinitions)
 export const EventGroup = event.group
 export const OrchestraEvent = event.schema
 export type OrchestraEvent = typeof OrchestraEvent.Type
-export type OrchestraEventEncoded = typeof OrchestraEvent.Encoded
+export type OrchestraEventEncoded = typeof event.transport.Encoded
 
 /** Namespace labels are added at the admitted HTTP boundary, outside canonical event payloads. */
 export const OrchestraEventTransport = event.transport
