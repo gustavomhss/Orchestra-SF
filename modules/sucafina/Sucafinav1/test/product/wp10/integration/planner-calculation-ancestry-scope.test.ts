@@ -431,13 +431,21 @@ test("the public Planner preview keeps its two real BCS admissions and closes th
 }, 120000)
 
 test("a current persisted scenario request keeps both canonical outer reads and only the completed leaf proof within its read suffix", async () => {
-  const fixture = await ancestryProofFixture()
+  const phase = async <Value>(name: string, work: () => Promise<Value>, counts?: () => Readonly<Record<string, number>>): Promise<Value> => {
+    const started = performance.now()
+    console.info("SF_CALCULATION_REQUEST_PHASE", JSON.stringify({ phase: name, state: "started", counts: counts?.() }))
+    try { return await work() } finally {
+      console.info("SF_CALCULATION_REQUEST_PHASE", JSON.stringify({ phase: name, state: "returned",
+        elapsedMs: Math.round(performance.now() - started), counts: counts?.() }))
+    }
+  }
+  const fixture = await phase("fixture.initialize", ancestryProofFixture)
   try {
-    const produced = await fixture.ui("sf_scenario_simulate", (call) => fixture.business.withCase(call, fixture.caseRef, {}, async () => {
-      const simulated = await fixture.business.planner.simulateScenario(fixture.incoming, call)
+    const produced = await phase("outer.produce", () => fixture.ui("sf_scenario_simulate", (call) => fixture.business.withCase(call, fixture.caseRef, {}, async () => {
+      const simulated = await phase("outer.preview", () => fixture.business.planner.simulateScenario(fixture.incoming, call), () => fixture.counts)
       if (simulated.status !== "ok") return simulated
-      return fixture.business.calculations.persist({ kind: "scenario", request: fixture.incoming, result: simulated.value }, "request-read-outer", call)
-    }))
+      return phase("outer.persist", () => fixture.business.calculations.persist({ kind: "scenario", request: fixture.incoming, result: simulated.value }, "request-read-outer", call), () => fixture.counts)
+    })), () => fixture.counts)
     expect(produced.status).toBe("ok")
     if (produced.status !== "ok") throw new Error("The real outer calculation was not persisted")
     const outer = produced.value.resultRef
@@ -456,7 +464,7 @@ test("a current persisted scenario request keeps both canonical outer reads and 
       reads.length = 0
       return fixture.business.calculations.requests.read(outer, call)
     })
-    const first = await read()
+    const first = await phase("request.read.first", read, () => fixture.counts)
     expect(first.status).toBe("ok")
     if (first.status !== "ok") throw new Error("The canonical scenario request was not returned")
     expect(first.value.resultRef).toBe(outer)
@@ -473,7 +481,7 @@ test("a current persisted scenario request keeps both canonical outer reads and 
     expect(fixture.counts.sources).toBeGreaterThan(0)
     expect(fixture.counts.coverage).toBeGreaterThan(0)
     expect(await fixture.capture()).toEqual(before)
-    const second = await read()
+    const second = await phase("request.read.second", read, () => fixture.counts)
     expect(second).toEqual(first)
     expect(reads.filter((reference) => reference === outer)).toHaveLength(2)
     expect(reads.filter((reference) => reference === fixture.leaf.target.runId)).toHaveLength(6)

@@ -534,7 +534,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     procurementProof: createSfScenarioProcurementProofScope({ host, state: input.authority.state, selection: selectedPeriod,
       readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences }),
     recordedPlanner: createSfRecordedPlannerOperationAccess({ host, state: input.authority.state, resolveEvidence: context.resolve }) })
-  const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
+  const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase,
+    observeScenarioRead: (value, call, work) => calculationRead.current ? calculationRead.current(value, call, work) : work() })
   const calculationProducer = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
     writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
     readerIdentity: () => [forecastCoverage.current, decisionDomain.current,

@@ -100,12 +100,15 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
         const issued = await business.plannerProduct.issueSource("v0", call)
         if (issued.status !== "ok") return issued
         const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
+        trace("public-preview-started")
         const simulated = await business.planner.simulateScenario(input, call)
         trace("public-preview-returned")
         if (simulated.status !== "ok") return simulated
+        trace("persistence-started")
         const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
         trace("persistence-returned")
         if (saved.status !== "ok") return saved
+        trace("explicit-issuance-started")
         const calculation = await business.calculations.issue(saved.value.resultRef, call)
         trace("explicit-issuance-returned")
         return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
