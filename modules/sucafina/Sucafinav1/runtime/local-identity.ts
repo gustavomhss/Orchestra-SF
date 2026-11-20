@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
-import type { DirectoryPerson, EntraClient, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import type { DirectoryPerson, EntraClient, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 
 type Session = { person: DirectoryPerson; tokens: EntraTokens; expiresAt: number; createdAt: number; login: string }
 type Login = { nonce: string; verifier: string; returnTo: string; expiresAt: number }
@@ -216,6 +216,34 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       refreshing.set(current.handle, work)
       await work
     },
+    ...(binding[0] !== "microsoft" || !options.client.joinedTeams ? {} : {
+      async teamDirectory(request: Request): Promise<EntraTeamsSessionResult> {
+        const current = await ready(request)
+        if (!current) return { state: "unauthenticated" }
+        const reader = options.client.joinedTeams
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        // The browser supplies only its scoped opaque session cookie. Neither
+        // query/header IDs nor a directory selection identify this principal.
+        const principal = { tenantId: binding[1], principalObjectId: current.value.person.id.toLowerCase() }
+        const observed = await reader({ tokens: current.value.tokens, principal })
+          .catch((): EntraTeamsSessionResult => ({ state: "unavailable", reason: "provider_unavailable" }))
+        const latest = await ready(request)
+        // Logout, a replaced login or refreshed token fences the old read even
+        // when the provider ignores cancellation and eventually returns data.
+        if (!latest || latest.handle !== current.handle ||
+            latest.value.person.id !== current.value.person.id ||
+            latest.value.tokens.accessToken !== current.value.tokens.accessToken ||
+            latest.value.tokens.expiresAt !== current.value.tokens.expiresAt ||
+            JSON.stringify(latest.value.tokens.grantedScopes) !== JSON.stringify(current.value.tokens.grantedScopes))
+          return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        // This is a fresh directory observation, not profile admission, a role
+        // or a resource grant. The installation resolver owns those decisions.
+        return observed
+      },
+    }),
     async authenticate(request, context) {
       const current = await ready(request)
       if (!current || !context) return null
@@ -237,7 +265,11 @@ function validPerson(value: unknown): value is DirectoryPerson {
   return value !== null && typeof value === "object" && "id" in value && typeof value.id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.id) && "name" in value && typeof value.name === "string" && Boolean(value.name.trim())
 }
 function validTokens(value: unknown): value is EntraTokens {
-  return value !== null && typeof value === "object" && "accessToken" in value && typeof value.accessToken === "string" && Boolean(value.accessToken) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt) && (!("refreshToken" in value) || value.refreshToken === undefined || typeof value.refreshToken === "string") && (!("idToken" in value) || value.idToken === undefined || typeof value.idToken === "string")
+  return value !== null && typeof value === "object" && "accessToken" in value && typeof value.accessToken === "string" && Boolean(value.accessToken) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isFinite(value.expiresAt) && (!("refreshToken" in value) || value.refreshToken === undefined || typeof value.refreshToken === "string") && (!("idToken" in value) || value.idToken === undefined || typeof value.idToken === "string") &&
+    (!("grantedScopes" in value) || value.grantedScopes === undefined ||
+      (Array.isArray(value.grantedScopes) && value.grantedScopes.length <= 100 &&
+        value.grantedScopes.every((scope: unknown) => typeof scope === "string" && scope.length > 0 && scope.length <= 256 && !/[\x00-\x20\x7f]/.test(scope)) &&
+        new Set(value.grantedScopes).size === value.grantedScopes.length))
 }
 function validSession(value: unknown): value is Session {
   return value !== null && typeof value === "object" && "person" in value && validPerson(value.person) && "tokens" in value && validTokens(value.tokens) && "expiresAt" in value && typeof value.expiresAt === "number" && Number.isSafeInteger(value.expiresAt) && "createdAt" in value && typeof value.createdAt === "number" && Number.isSafeInteger(value.createdAt) && value.expiresAt > value.createdAt && "login" in value && typeof value.login === "string" && /^[a-f0-9]{64}$/.test(value.login)
