@@ -92,6 +92,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       await waitState(page, "unauthenticated")
       const link = page.locator("[data-sf-microsoft-login]")
       expect(await link.getAttribute("href")).toBe(f!.binding.origin + f!.binding.mount + "/auth/login?returnTo=%2F")
+      expect(await link.getAttribute("target")).toBe("_self")
       await link.click()
       await waitState(page, "authenticated")
       expect(new URL(page.url()).pathname).toBe("/")

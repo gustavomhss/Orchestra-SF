@@ -258,7 +258,7 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
           <p role="status" data-sf-team-status>{language.t(statusKey())}</p>
           <Show when={loginUrl() && (runtime.state().status === "unauthenticated" ||
             profile()?.teams.status === "unavailable" && (profile()!.teams as Extract<TeamProfile.TeamState, { status: "unavailable" }>).reason === "consent-required")}>
-            <a class="mx-btn" data-sf-microsoft-login href={loginUrl()!}>{language.t("sf.teams.signIn")}</a>
+            <a class="mx-btn" data-sf-microsoft-login href={loginUrl()!} target="_self">{language.t("sf.teams.signIn")}</a>
           </Show>
           <button type="button" class="mx-btn" data-sf-refresh-access disabled={ui.busy}
             onClick={() => { void act(() => runtime.refresh()) }}>{language.t("sf.ui67.refreshAccess")}</button>
