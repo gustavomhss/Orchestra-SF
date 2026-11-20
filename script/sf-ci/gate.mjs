@@ -3,6 +3,7 @@ import { createHash } from "node:crypto"
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, statSync, lstatSync, realpathSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
+import { parseShardCosts, planShards } from "./shard-plan.mjs"
 
 export const REQUIRED = [
   "CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS",
@@ -86,30 +87,16 @@ export function browserPoolConsumers(files, root = process.cwd()) {
   return new Set(files.map((file) => path.resolve(root, file)).filter((file) => reaching.has(file)))
 }
 
-/** A suite that drops the ordered-pool files must prove none of the rest needs them. */
-function assertNoOrderedPoolConsumers(files, root) {
-  const consumers = browserPoolConsumers(files, root)
-  if (consumers.size) {
-    fail("ordered browser pool file is still selected: " + [...consumers][0])
-  }
-}
+const shardCosts = parseShardCosts(JSON.parse(
+  readFileSync(new URL("../../sf/ci/shard-costs.json", import.meta.url), "utf8"),
+))
 
-/** Stable hash partition: every accepted file lands in exactly one part. */
+/** Historical costs distribute the complete selection; they never select files. */
 export function shardFiles(files, index, count) {
   if (!Number.isSafeInteger(count) || count < 1 || !Number.isSafeInteger(index) || index < 1 || index > count) {
     fail("invalid shard index/count")
   }
-  const sorted = [...files].sort()
-  const buckets = Array.from({ length: count }, () => [])
-  for (const file of sorted) {
-    buckets[Number(BigInt("0x" + digest(file).slice(0, 16)) % BigInt(count))].push(file)
-  }
-  const union = buckets.flat().sort()
-  if (union.length !== sorted.length || new Set(union).size !== sorted.length ||
-      JSON.stringify(union) !== JSON.stringify(sorted)) {
-    fail("shard partition is not a complete disjoint cover")
-  }
-  return buckets[index - 1]
+  return planShards(files, count, shardCosts)[index - 1].files
 }
 function shardRequest(suiteId) {
   const count = SHARDED[suiteId]
@@ -218,13 +205,16 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
     ensureContained(root, name, "file")
     if (!isTestFile(name) || !files.includes(name)) fail("harness-owned file is outside admitted selection: " + name)
   }
-  files = files.filter((name) => !harnessOwned.includes(name))
+  // All roots share one graph; membership still proves both exclusion directions.
+  const consumers = browserPoolConsumers(files, root)
   for (const name of harnessOwned) {
-    if (browserPoolConsumers([name], root).size === 0) {
+    if (!consumers.has(path.resolve(root, name))) {
       fail("harness-owned file does not reach the ordered pool: " + name)
     }
   }
-  assertNoOrderedPoolConsumers(files, root)
+  files = files.filter((name) => !harnessOwned.includes(name))
+  const remaining = files.find((name) => consumers.has(path.resolve(root, name)))
+  if (remaining) fail("ordered browser pool file is still selected: " + path.resolve(root, remaining))
   const excluded = selection.releaseOnlyFiles || []
   if (!Array.isArray(excluded) || new Set(excluded).size !== excluded.length) fail("invalid release-only inventory")
   for (const name of excluded) {
@@ -599,6 +589,22 @@ function cli() {
   const suites = validateManifest(manifest)
   if (command === "manifest") {
     console.log("SF_CI_MANIFEST_OK " + suites.length + " suites, 6 independent AM proofs; Linux X64")
+    return
+  }
+  if (command === "plan") {
+    const id = process.argv[3]
+    const count = SHARDED[id]
+    if (!count) fail("plan requires a sharded suite ID")
+    const files = selectSuiteFiles(manifest, id)
+    const shards = planShards(files, count, shardCosts).map((part, index) => ({
+      index: index + 1, files: part.files, historicalLoadSeconds: part.loadSeconds,
+      unprofiledFiles: part.unprofiledFiles,
+    }))
+    console.log(JSON.stringify({
+      schemaVersion: 1, suiteId: id, algorithm: "LPT",
+      profileStatus: "HISTORICAL_RED_OR_PARTIAL", fallbackSeconds: shardCosts.fallbackSeconds,
+      selectedFiles: files.length, selectedFilesSha256: sha256Lines(files), shards,
+    }, null, 2))
     return
   }
   const meta = realRunMeta()
