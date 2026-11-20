@@ -47,6 +47,8 @@ export type SfResolvedQuery = Readonly<{
   sourcePage?: string
   year?: number
   month?: number
+  /** CAP01 presentation priorities only; never forwarded as a producer input or authority. */
+  signalPriority?: readonly string[]
   period?: string
   version?: SfRef
   status?: string
