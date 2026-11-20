@@ -254,3 +254,47 @@ for (const target of ["driver", "source input", "source method"] as const) test(
     })
   })
 })
+
+for (const root of ["single", "all"] as const) for (const inherited of ["value", "getter"] as const)
+  test(`inherited readOnly ${inherited} cannot project an exposed ${root} transaction target`, async () => {
+    await fixture(async (store) => {
+      const observed: { supported: boolean; markerGets: number; opaqueGets: number; fullError: unknown; fallbackError: unknown } =
+        { supported: true, markerGets: 0, opaqueGets: 0, fullError: undefined, fallbackError: undefined }
+      const observe = (data: Record<string, unknown>) => {
+        const previous = Object.getOwnPropertyDescriptor(Object.prototype, "readOnly")
+        Object.defineProperty(data, "opaque", { configurable: true, enumerable: true, get() { observed.opaqueGets++; return "must not run" } })
+        const full = () => root === "single" ? store.currentSnapshot!("dashboard") : store.currentSnapshots!()?.dashboard
+        try {
+          Object.defineProperty(Object.prototype, "readOnly", inherited === "value" ?
+            { configurable: true, value: true } :
+            { configurable: true, get() { observed.markerGets++; return true } })
+          const projected = currentLocalReadonlyAuthorityData(store, surfaces)
+          observed.supported = projected !== undefined
+          try { full() } catch (error) { observed.fullError = error }
+          try { projected?.snapshots.dashboard ?? full() } catch (error) { observed.fallbackError = error }
+        } finally {
+          if (previous) Object.defineProperty(Object.prototype, "readOnly", previous)
+          else Reflect.deleteProperty(Object.prototype, "readOnly")
+          Reflect.deleteProperty(data, "opaque")
+        }
+      }
+      if (root === "single") await store.transaction("dashboard", async (snapshot) => {
+        observe(snapshot.data)
+        return { commit: false, value: undefined }
+      })
+      else {
+        if (!store.transactionAll) throw new Error("Real all-surface transaction unavailable")
+        await store.transactionAll(async (snapshots) => {
+          observe(snapshots.dashboard.data)
+          return { commit: false, value: undefined }
+        })
+      }
+      expect(observed.supported).toBe(false)
+      expect(observed.fullError).toBeInstanceOf(Error)
+      expect(observed.fullError instanceof Error ? observed.fullError.message : undefined).toBe("Unsupported snapshot accessor")
+      expect(observed.fallbackError).toBeInstanceOf(Error)
+      expect(observed.fallbackError instanceof Error ? observed.fallbackError.message : undefined).toBe("Unsupported snapshot accessor")
+      expect(observed.markerGets).toBe(0)
+      expect(observed.opaqueGets).toBe(0)
+    })
+  })

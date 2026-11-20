@@ -483,7 +483,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     // not an unsupported optimization. Poison and dispose retain their original
     // transaction/root egress checks and do not suppress authentication callbacks.
     requireScope(scope)
-    if (!scope.root.readOnly || !sameStore()) return undefined
+    if (!Object.hasOwn(scope.root, "readOnly") || scope.root.readOnly !== true || !sameStore()) return undefined
     const fields = ["roleMap", "access"] as const
     const observed = surfaces.map((surface) => {
       const snapshot = scope.root.snapshots[surface]
