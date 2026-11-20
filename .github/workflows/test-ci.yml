@@ -306,10 +306,10 @@ jobs:
           import { writeFileSync } from 'node:fs'
           import path from 'node:path'
           const source = {
-            repository: 'gustavomhss/Orchestra-SF', run: 44660375065, artifact: 14596071954,
-            snapshot: '4cdba6118ff547d9ed23cd5cdb284e55e218d675',
-            digest: 'sha256:2c1bb49b65772852b63c762a632ea6b12acfddf5bfd6c7088a9ae47d9a4eb488',
-            name: 'playwright-ubuntu-24.04-1', bytes: 365836,
+            repository: 'gustavomhss/Orchestra-SF', run: 44668834875, artifact: 14598804475,
+            snapshot: 'cf75dc20a4e42b6945ef4beadffcfc903a323ab3',
+            digest: 'sha256:da103f3cb2af36383236a38fc21af5b169f7db049fc201276de6710bebd1c5fa',
+            name: 'playwright-ubuntu-24.04-1', bytes: 361100,
           }
           try {
             const response = await fetch('https://api.github.com/repos/' + source.repository + '/actions/artifacts/' + source.artifact, {
@@ -334,8 +334,8 @@ jobs:
         if: steps.request.outputs.reports_artifact_audit == 'true'
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          run-id: 44660375065
-          artifact-ids: 14596071954
+          run-id: 44668834875
+          artifact-ids: 14598804475
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/audit-reports-evidence
 

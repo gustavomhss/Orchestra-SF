@@ -6,12 +6,12 @@ import { inflateRawSync } from "node:zlib"
 // Temporary retained-evidence reader. No product imports, browser, network, process spawn or replay.
 const source = Object.freeze({
   repository: "gustavomhss/Orchestra-SF",
-  run: 44660375065,
-  artifact: 14596071954,
-  snapshot: "4cdba6118ff547d9ed23cd5cdb284e55e218d675",
-  digest: "sha256:2c1bb49b65772852b63c762a632ea6b12acfddf5bfd6c7088a9ae47d9a4eb488",
+  run: 44668834875,
+  artifact: 14598804475,
+  snapshot: "cf75dc20a4e42b6945ef4beadffcfc903a323ab3",
+  digest: "sha256:da103f3cb2af36383236a38fc21af5b169f7db049fc201276de6710bebd1c5fa",
   name: "playwright-ubuntu-24.04-1",
-  bytes: 365836,
+  bytes: 361100,
 })
 const cases = new Map([["RPT-01", 26], ["RPT-02", 41], ["RPT-03", 107], ["RPT-04", 123]])
 const phases = new Set([
@@ -58,6 +58,7 @@ const paths = new Set([
   "reports-support/production-state.ts",
   "reports-support/read-reconciliation.ts",
   "reports-support/review-flow.ts",
+  "reports-support/retained-response.ts",
   "reports-support/revocation.ts",
 ].map((file) => "packages/app-shell/e2e/sucafina/" + file))
 const statuses = new Set(["passed", "failed", "timedOut", "skipped", "interrupted"])
@@ -95,6 +96,11 @@ function errorClasses(error) {
     [/Target page, context or browser has been closed/, "page-or-context-closed"],
     [/Request content was evicted from inspector cache|No resource with given identifier found|No data found for resource with given identifier/, "response-body-unavailable"],
     [/element\(s\) not found/, "expected-element-not-found"],
+    [/Original response capture: matching browser request failed or was cancelled/, "original-browser-request-cancelled"],
+    [/Original response capture: matching protocol request failed or was cancelled/, "original-protocol-request-cancelled"],
+    [/Original response capture: original request did not finish successfully/, "original-request-not-finished"],
+    [/Original response capture: could not retain and continue the original response/, "original-response-capture-failed"],
+    [/net::ERR_ABORTED/, "network-aborted"],
     [/net::ERR_CONNECTION_RESET|ECONNRESET/, "connection-reset"],
     [/net::ERR_CONNECTION_REFUSED|ECONNREFUSED/, "connection-refused"],
     [/net::ERR_TIMED_OUT|ETIMEDOUT/, "connection-timeout"],
@@ -172,12 +178,35 @@ function snapshotMarkers(snapshot) {
     ["report-source-unavailable-label", stateRoles, ["The original preserved source is not available. No report was generated.", "A origem preservada está indisponível. Nenhum relatório foi gerado."]],
     ["report-outcome-unknown-label", stateRoles, ["The producer outcome cannot be confirmed. Do not retry without reconciliation.", "O resultado do produtor não pôde ser confirmado. Não repita sem reconciliação."]],
     ["agenda-heading", ["heading"], ["Meeting agenda", "Pauta da reunião"]],
+    ["agenda-source-control", ["textbox"], ["Source dashboard page", "Página de origem do dashboard"]],
+    ["agenda-discover-control", ["button"], ["Find authorized sections", "Buscar seções autorizadas"]],
+    ["agenda-available-sections", ["heading", "region"], ["Available sections", "Seções disponíveis"]],
+    ["agenda-add-control", ["button"], ["Add to agenda", "Adicionar à pauta"]],
+    ["agenda-selected-sections", ["heading", "region"], ["Agenda order and periods", "Ordem e períodos da pauta"]],
+    ["agenda-remove-control", ["button"], ["Remove from agenda", "Remover da pauta"]],
+    ["agenda-preview-control", ["button"], ["Review selected sections", "Revisar seções selecionadas"]],
+    ["agenda-preview-heading", ["heading"], ["Preservation preview", "Prévia da preservação"]],
+    ["agenda-confirm-control", ["button"], ["Confirm preservation", "Confirmar preservação"]],
+    ["agenda-revise-control", ["button"], ["Revise agenda", "Revisar pauta"]],
+    ["agenda-preserved-label", stateRoles, ["The producer confirmed that the review was preserved.", "O produtor confirmou a preservação da revisão."]],
+    ["agenda-selection-changed-label", stateRoles, ["The source selection changed. Prepare a new preview.", "A seleção de origem mudou. Prepare uma nova prévia."]],
     ["agenda-source-unavailable-label", stateRoles, ["The agenda source is unavailable. Your current selection has not been erased.", "A fonte da pauta está indisponível. Sua seleção atual não foi apagada."]],
     ["agenda-read-only-label", stateRoles, ["This selection can be read but not preserved.", "Esta seleção pode ser lida, mas não preservada."]],
     ["agenda-no-sections-label", stateRoles, ["No sections were returned by this authorized source.", "Esta fonte autorizada não retornou seções."]],
     ["agenda-filter-empty-label", stateRoles, ["No section matches this filter.", "Nenhuma seção corresponde ao filtro."]],
     ["agenda-outcome-unknown-label", stateRoles, ["Preservation was sent but its outcome is not confirmed. Do not submit it again.", "A preservação foi enviada, mas o resultado não está confirmado. Não reenvie."]],
     ["preserved-review-heading", ["heading"], ["Preserved review", "Revisão preservada"]],
+    ["preserved-present-control", ["button"], ["Present review", "Apresentar revisão"]],
+    ["preserved-section-sequence", ["heading", "region"], ["Preserved section sequence", "Sequência de seções preservadas"]],
+    ["preserved-update-control", ["button"], ["Check whether a new review can be prepared", "Verificar se é possível preparar uma nova revisão"]],
+    ["preserved-check-updates-control", ["button"], ["Check for updates"]],
+    ["preserved-prepare-revision-control", ["button"], ["Prepare current data as a new revision", "Preparar dados atuais como nova revisão"]],
+    ["preserved-revision-preview-heading", ["heading"], ["Current source preview", "Prévia das fontes atuais"]],
+    ["preserved-revision-confirm-control", ["button"], ["Preserve this review", "Preservar esta revisão"]],
+    ["preserved-revision-created-label", stateRoles, ["Review preserved. Source updates will not replace this meeting's captured values.", "Revisão preservada. Atualizações nas fontes não substituirão os valores capturados desta reunião."]],
+    ["preserved-open-revision-control", ["link"], ["Open preserved revision", "Abrir revisão preservada"]],
+    ["preserved-successor-available-label", stateRoles, ["The producer offers a new review preparation, subject to explicit selection confirmation.", "O produtor permite preparar nova revisão, sujeito à confirmação explícita das seleções."]],
+    ["preserved-successor-blocked-label", stateRoles, ["The producer cannot prepare an editable successor without explicit new source selections.", "O produtor não consegue preparar sucessora editável sem novas seleções explícitas de origem."]],
     ["compare-reviews-heading", ["heading"], ["Compare reviews", "Comparar revisões"]],
     ["preserved-review-list-unavailable-label", stateRoles, ["The producer has not published a native authorized review-list operation.", "O produtor não publicou uma operação nativa autorizada de listagem de revisões."]],
     ["preserved-review-source-unavailable-label", stateRoles, ["The original review is unavailable. No substitute snapshot was loaded.", "A revisão original está indisponível. Nenhum snapshot substituto foi carregado."]],
@@ -186,29 +215,40 @@ function snapshotMarkers(snapshot) {
     ["shell-render-error-heading", ["heading"], ["Something went wrong", "Algo deu errado"]],
     ["shell-render-error-details", ["textbox"], ["Error Details", "Detalhes do erro"]],
   ]
-  const markers = rules.filter(([, roles, labels]) => rows.some((row) => roles.includes(row.role) && labels.includes(row.label))).map(([code]) => code)
+  const markerCounts = Object.fromEntries(rules.map(([code, roles, labels]) =>
+    [code, rows.filter((row) => roles.includes(row.role) && labels.includes(row.label)).length]).filter(([, count]) => count > 0))
+  const markers = Object.keys(markerCounts)
   const renderErrors = markers.includes("shell-render-error-heading")
     ? [[/\bTypeError\b/, "type-error"], [/\bReferenceError\b/, "reference-error"],
       [/\bRangeError\b/, "range-error"], [/\bSyntaxError\b/, "syntax-error"],
       [/Maximum call stack size exceeded/, "stack-overflow"]]
       .filter(([pattern]) => pattern.test(snapshot)).map(([, code]) => code) : []
   const nodeCounts = Object.fromEntries(kinds.map((kind) => [kind, rows.filter((row) => row.role === kind).length]))
-  return { markers, renderErrors, nodeCounts }
+  return { markers, markerCounts, renderErrors, nodeCounts }
 }
 async function inspectErrorContext(root, files) {
-  const expected = "packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium/error-context.md"
-  const matching = files.filter((file) => artifactPath(root, file) === expected)
-  requireValue(matching.length <= 1, "RPT01_ERROR_CONTEXT_AMBIGUOUS")
-  if (!matching.length) {
-    emit("RPT01_CONTEXT", { case: "RPT-01", contextEvidence: "not-recorded", pageSnapshotEvidence: "not-recorded",
-      markers: [], renderErrors: [], qualification: "none" })
-    return
+  // Exact paths were recorded by the pinned product job; no attachment-path discovery or arbitrary DOM output.
+  const contexts = new Map([
+    ["RPT-01", "sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium"],
+    ["RPT-02", "sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium"],
+    ["RPT-03", "sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium"],
+    ["RPT-04", "sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium"],
+  ])
+  for (const [id, directory] of contexts) {
+    const expected = "packages/app-shell/e2e/test-results/" + directory + "/error-context.md"
+    const matching = files.filter((file) => artifactPath(root, file) === expected)
+    requireValue(matching.length <= 1, "CASE_ERROR_CONTEXT_AMBIGUOUS")
+    if (!matching.length) {
+      emit("CASE_CONTEXT", { case: id, contextEvidence: "not-recorded", pageSnapshotEvidence: "not-recorded",
+        markers: [], markerCounts: {}, renderErrors: [], qualification: "none" })
+      continue
+    }
+    const snapshot = pageSnapshot(await readBounded(matching[0], 2 * 1024 * 1024))
+    emit("CASE_CONTEXT", { case: id, contextEvidence: "recorded",
+      pageSnapshotEvidence: snapshot === undefined ? "not-recorded" : "recorded",
+      ...(snapshot === undefined ? { markers: [], markerCounts: {}, renderErrors: [] } : snapshotMarkers(snapshot)),
+      meaning: "observed-source-owned-labels-only", absentMarkerIsNotProof: true, qualification: "none" })
   }
-  const snapshot = pageSnapshot(await readBounded(matching[0], 2 * 1024 * 1024))
-  emit("RPT01_CONTEXT", { case: "RPT-01", contextEvidence: "recorded",
-    pageSnapshotEvidence: snapshot === undefined ? "not-recorded" : "recorded",
-    ...(snapshot === undefined ? { markers: [], renderErrors: [] } : snapshotMarkers(snapshot)),
-    meaning: "observed-source-owned-labels-only", absentMarkerIsNotProof: true, qualification: "none" })
 }
 
 async function inventory(root, depth = 0, output = []) {
@@ -362,7 +402,7 @@ function runtimeResults(report) {
   return detailed
 }
 
-test("inspect only retained Reports2 report evidence", async () => {
+test("inspect only retained Reports cancellation evidence", async () => {
   try {
     requireValue(typeof process.env.RUNNER_TEMP === "string" && path.isAbsolute(process.env.RUNNER_TEMP), "RUNNER_TEMP_REQUIRED")
     const root = path.join(process.env.RUNNER_TEMP, "audit-reports-evidence")
