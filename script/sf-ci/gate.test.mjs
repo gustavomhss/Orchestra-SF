@@ -2,7 +2,8 @@ import { test } from "node:test"
 import { assertWorkflowManifestSelection } from "./workflow-contract.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
+import { spawnSync } from "node:child_process"
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, copyFileSync, existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
@@ -239,6 +240,137 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
   assert.match(workflow, /--max-failures=2/)
   assert.doesNotMatch(workflow, /--pass-with-no-tests|continue-on-error: true|--retry\s+[1-9]/)
 })
+
+// These are unit fixtures, never product evidence: run the real workflow tail
+// against the real gate CLI, with no browser, upload service or accepted baseline.
+function uiEvidenceSteps() {
+  const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
+  const ui = workflow.match(/^  ui:\n([\s\S]*?)(?=^  [a-z][\w-]*:\s*$)/m)?.[1]
+  assert.ok(ui, "installed UI job must exist")
+  const steps = ui.split(/^      - name: /m).slice(1)
+  const journeys = steps.filter((step) => /^        id: ui_journey$/m.test(step))
+  const candidates = steps.filter((step) => /^          name: sf-baseline-candidate-/m.test(step))
+  assert.equal(journeys.length, 1, "one UI step owns the minimization output")
+  assert.equal(candidates.length, 1, "one separate candidate artifact is retained")
+  const run = journeys[0].match(/^        run: \|\n((?:^ {10}.*\n|^\n)*)/m)?.[1]
+  assert.ok(run, "UI journey must expose its actual bash script")
+  return { script: run.split("\n").map((line) => line.slice(10)).join("\n"), candidate: candidates[0] }
+}
+
+test("UI baseline candidate upload requires a failed journey and a minimized report", () => {
+  const { candidate } = uiEvidenceSteps()
+  const condition = candidate.match(/^        if: \$\{\{\s*(.*?)\s*\}\}$/m)?.[1]
+  assert.ok(condition, "candidate upload needs an explicit failure condition")
+  assert.deepEqual(condition.split(/\s*&&\s*/).sort(), [
+    "failure()",
+    "steps.ui_journey.outcome == 'failure'",
+    "steps.ui_journey.outputs.minimized == 'true'",
+  ].sort())
+  assert.match(candidate, /^        uses: actions\/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02$/m)
+  assert.match(candidate, /^          name: sf-baseline-candidate-\$\{\{ matrix.id \}\}-\$\{\{ github.sha \}\}-\$\{\{ github.run_attempt \}\}$/m)
+  // A single scalar path prevents broadening the candidate to raw logs or receipts.
+  assert.match(candidate, /^          path: sf-ci-evidence\/\$\{\{ matrix.id \}\}\/report.json$/m)
+  assert.equal((candidate.match(/^          path:/gm) || []).length, 1)
+  assert.match(candidate, /^          if-no-files-found: error$/m)
+  assert.doesNotMatch(candidate, /receipt\.json|run\.log|test-results|sf-evidence-/)
+})
+
+for (const scenario of [
+  { name: "failed original tests", status: "7", baseline: "PENDING_REAL_COMPLETE_RUN", malformed: false, minimized: false, receipt: false },
+  { name: "invalid report", status: "0", baseline: "PENDING_REAL_COMPLETE_RUN", malformed: true, minimized: false, receipt: false },
+  { name: "pending baseline", status: "0", baseline: "PENDING_REAL_COMPLETE_RUN", malformed: false, minimized: true, receipt: false },
+  { name: "valid unit fixture baseline", status: "0", baseline: "HISTORIC_SUCCESSFUL_ARTIFACT", malformed: false, minimized: true, receipt: true },
+]) {
+  test("real UI postprocessing preserves failure and privacy: " + scenario.name, () => {
+    const lines = uiEvidenceSteps().script.split("\n")
+    const start = lines.findIndex((line) => line === 'test "$status" -eq 0')
+    assert.ok(start >= 0, "original test exit status must guard the postprocessing tail")
+    const root = mkdtempSync(path.join(tmpdir(), "sf-ui-evidence-unit-"))
+    try {
+      const unitManifest = structuredClone(manifest)
+      const suite = unitManifest.suites.find((entry) => entry.id === "CI-UI-REPORTS")
+      suite.coverageBaseline.status = scenario.baseline
+      const spec = path.join(root, suite.directory, suite.specFile)
+      const evidence = path.join(root, "sf-ci-evidence", suite.id)
+      mkdirSync(path.join(root, "sf/ci"), { recursive: true })
+      mkdirSync(path.join(root, "script/sf-ci"), { recursive: true })
+      mkdirSync(path.dirname(spec), { recursive: true })
+      mkdirSync(evidence, { recursive: true })
+      writeFileSync(path.join(root, "sf/ci/suites.json"), JSON.stringify(unitManifest))
+      writeFileSync(spec, "// Unit fixture only; no product tests or accepted baseline.\n")
+      copyFileSync(new URL("./gate.mjs", import.meta.url), path.join(root, "script/sf-ci/gate.mjs"))
+      const git = (...args) => {
+        const result = spawnSync("git", ["-C", root, ...args], { encoding: "utf8", timeout: 10_000 })
+        assert.equal(result.status, 0, result.stderr || String(result.error))
+        return result.stdout.trim()
+      }
+      git("init", "--quiet")
+      git("add", "sf/ci/suites.json", "script/sf-ci/gate.mjs", suite.directory)
+      git("-c", "user.name=SF gate unit fixture", "-c", "user.email=sf-gate-unit@example.invalid",
+        "commit", "--quiet", "-m", "Unit fixture only")
+      const unitSha = git("rev-parse", "HEAD")
+      const unitTree = git("rev-parse", "HEAD^{tree}")
+      const secret = "PRIVATE_UNIT_FIXTURE_MUST_NOT_REACH_BASELINE_CANDIDATE"
+      const raw = JSON.parse(playwright(suite).toString("utf8"))
+      raw.metadata = { token: secret }
+      raw.suites[0].title = secret
+      raw.suites[0].specs[0].tests[0].results[0].stdout = [secret]
+      raw.suites[0].specs[0].tests[0].results[0].attachments = [{ name: secret, body: secret }]
+      const reportFile = path.join(evidence, "report.json")
+      const outputFile = path.join(root, "step-output")
+      writeFileSync(reportFile, scenario.malformed ? "{invalid unit fixture JSON" : JSON.stringify(raw))
+      writeFileSync(outputFile, "")
+      const result = spawnSync("bash", ["--noprofile", "--norc", "-euo", "pipefail", "-c", lines.slice(start).join("\n")], {
+        cwd: root,
+        encoding: "utf8",
+        timeout: 10_000,
+        env: {
+          ...process.env,
+          root,
+          status: scenario.status,
+          GITHUB_WORKSPACE: root,
+          GITHUB_OUTPUT: outputFile,
+          GITHUB_SHA: unitSha,
+          GITHUB_RUN_ID: runId,
+          GITHUB_RUN_ATTEMPT: attempt,
+          SF_CHECKOUT_TREE_SHA: unitTree,
+          SF_SUITE_ID: suite.id,
+          RUNNER_OS: "Linux",
+          RUNNER_ARCH: "X64",
+        },
+      })
+      assert.equal(result.error, undefined)
+      assert.equal(result.status, scenario.receipt ? 0 : 1, result.stderr)
+      assert.equal(readFileSync(outputFile, "utf8"), scenario.minimized ? "minimized=true\n" : "")
+      assert.equal(existsSync(path.join(evidence, "receipt.json")), scenario.receipt)
+      if (!scenario.minimized) {
+        assert.doesNotMatch(result.stdout, /SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED|SF_CI_SUITE_PASS/)
+        return
+      }
+      const minimized = readFileSync(reportFile, "utf8")
+      assert.equal(minimized.includes(secret), false)
+      assert.equal(minimized.includes("attachments"), false)
+      assert.equal(countPlaywrightReport(minimized, suite.specFile), 1)
+      assert.deepEqual(playwrightCoverageIdentity(minimized, suite.specFile),
+        playwrightCoverageIdentity(JSON.stringify(raw), suite.specFile))
+      assert.match(result.stdout, /SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED CI-UI-REPORTS/)
+      if (!scenario.receipt) {
+        assert.match(result.stderr, /coverage baseline requires authentic successful run and independent review: CI-UI-REPORTS/)
+        assert.doesNotMatch(result.stdout, /SF_CI_SUITE_PASS/)
+        return
+      }
+      const receipt = JSON.parse(readFileSync(path.join(evidence, "receipt.json"), "utf8"))
+      assert.equal(receipt.status, "PASS")
+      assert.equal(receipt.sourceSha, unitSha)
+      assert.equal(receipt.treeSha, unitTree)
+      assert.equal(receipt.reportSha256, createHash("sha256").update(minimized).digest("hex"))
+      assert.match(result.stdout, /SF_CI_SUITE_PASS CI-UI-REPORTS 1 tests/)
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+}
+
 // A6 consumes this test-defined wiring contract in .github/workflows/sf-ci.yml.
 // The positive fixture is intentionally independent from the live workflow:
 // negative mutations must pass even while A6's YAML still needs updating.
