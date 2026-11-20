@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { Schema } from "effect"
-import { SfContext, type SfEditScopeKey, type SfOwnerKey, type SfRef } from "@orchestra/schema/sucafina/context"
+import { SfContext, type SfEditScopeKey, type SfOperationRef, type SfOwnerKey, type SfRef } from "@orchestra/schema/sucafina/context"
 import { SfProcurementRequest } from "@orchestra/schema/sucafina/procurement"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContextDependencies, SfOwnerIdentity } from "../../src/orchestra/chapters/sucafina/context/contracts"
@@ -143,4 +143,88 @@ test("deleted optional values and nested rows conflict without revoking or reusi
     drafts.registry.discard(selection)
     expect(drafts.registry.peek(selection)).toBeUndefined()
   }
+})
+
+test("only opted-in drafts retain later edits across their exact submitted save", () => {
+  for (const allowPendingEdits of [false, true]) {
+    const original = { description: "Recorded scope" }
+    const submitted = { description: "Submitted scope" }
+    const later = { description: "Later unsaved scope" }
+    const draft = createSfDraft({ ownerKey: owner.key, surfaceId: "CAP25",
+      identity: { kind: "record", recordRef: "PR-1" as SfRef }, editScopeKey: "pr.details" as SfEditScopeKey,
+      baseVersion: 1, base: original, value: original, ...(allowPendingEdits ? { allowPendingEdits: true } : {}) })
+    const operation = { operationRef: "save-1" as SfOperationRef, idempotencyKey: "key-1", payloadDigest: "digest-1", expectedVersion: 1 }
+    draft.edit(submitted)
+    draft.setPhase("reviewing")
+    draft.setPending(operation)
+    draft.edit({ description: "Unreviewed change before dispatch" })
+    expect(draft.snapshot()).toMatchObject({ value: submitted, pendingOperation: operation })
+    draft.setPhase("submitting")
+    draft.edit(later)
+    expect(draft.snapshot()).toMatchObject({ phase: "submitting", value: allowPendingEdits ? later : submitted, pendingOperation: operation })
+    draft.confirmSave({ kind: "projected", operationRef: "different-save" as SfOperationRef, baseVersion: 2, value: submitted })
+    expect(draft.snapshot()).toMatchObject({ baseVersion: 1, pendingOperation: operation })
+    draft.confirmSave({ kind: "projected", operationRef: operation.operationRef, baseVersion: 2, value: submitted })
+    expect(draft.snapshot()).toMatchObject({
+      availability: "active", phase: allowPendingEdits ? "dirty" : "clean",
+      baseVersion: 2, base: submitted, value: allowPendingEdits ? later : submitted,
+      dirty: allowPendingEdits, pendingOperation: null, conflict: null,
+    })
+    draft.discard()
+    expect(draft.snapshot()).toMatchObject({ value: submitted, baseVersion: 2, dirty: false })
+  }
+})
+
+test("422 releases the submitted fence, while unknown outcomes and revoked owners remain closed", () => {
+  const original = { description: "Recorded scope" }
+  const draft = createSfDraft({ ownerKey: owner.key, surfaceId: "CAP25",
+    identity: { kind: "record", recordRef: "PR-1" as SfRef }, editScopeKey: "pr.details" as SfEditScopeKey,
+    baseVersion: 1, base: original, value: original, allowPendingEdits: true })
+  const operation = { operationRef: "save-1" as SfOperationRef, idempotencyKey: "key-1", payloadDigest: "digest-1", expectedVersion: 1 }
+  draft.edit({ description: "Submitted scope" })
+  draft.setPending(operation)
+  draft.setPhase("submitting")
+  draft.edit({ description: "Later scope" })
+  draft.rejectSave({ status: 422, operation })
+  expect(draft.snapshot()).toMatchObject({ phase: "validation-error", value: { description: "Later scope" }, pendingOperation: null })
+  const retry = { ...operation, operationRef: "save-2" as SfOperationRef, idempotencyKey: "key-2", payloadDigest: "digest-2" }
+  draft.edit({ description: "Reviewed correction" })
+  draft.setPending(retry)
+  draft.setPhase("submitting")
+  draft.confirmSave({ kind: "projected", operationRef: retry.operationRef, baseVersion: 2, value: { description: "Reviewed correction" } })
+  expect(draft.snapshot()).toMatchObject({ phase: "clean", dirty: false, pendingOperation: null, baseVersion: 2 })
+  const unknown = { ...retry, operationRef: "save-3" as SfOperationRef, expectedVersion: 2 }
+  draft.setPending(unknown)
+  draft.setPhase("submitting")
+  draft.edit({ description: "Preserved before connection loss" })
+  draft.setPhase("outcome-unknown")
+  draft.edit({ description: "Must not replace unknown intent" })
+  draft.rejectSave({ status: 422, operation: unknown })
+  expect(draft.snapshot()).toMatchObject({ phase: "outcome-unknown", value: { description: "Preserved before connection loss" }, pendingOperation: unknown })
+  draft.revoke("access-revoked")
+  draft.confirmSave({ kind: "projected", operationRef: unknown.operationRef, baseVersion: 3, value: original })
+  expect(draft.snapshot()).toEqual({ availability: "revoked", reason: "access-revoked" })
+})
+
+test("a confirmed save without projection keeps later entries behind an explicit source conflict", () => {
+  const original = { description: "Recorded scope" }
+  const submitted = { description: "Submitted scope" }
+  const later = { description: "Later unsaved scope" }
+  const draft = createSfDraft({ ownerKey: owner.key, surfaceId: "CAP25",
+    identity: { kind: "record", recordRef: "PR-1" as SfRef }, editScopeKey: "pr.details" as SfEditScopeKey,
+    baseVersion: 1, base: original, value: original, allowPendingEdits: true })
+  const operation = { operationRef: "save-1" as SfOperationRef, idempotencyKey: "key-1", payloadDigest: "digest-1", expectedVersion: 1 }
+  draft.edit(submitted)
+  draft.setPending(operation)
+  draft.setPhase("submitting")
+  draft.edit(later)
+  draft.confirmSave({ kind: "confirmed-without-projection", operationRef: operation.operationRef, resultVersion: null })
+  expect(draft.snapshot()).toMatchObject({ availability: "active", phase: "conflict", value: later, baseVersion: 1, dirty: true, pendingOperation: null })
+  expect(sfDraftForEdit(draft.snapshot(), 1)).toBeUndefined()
+  draft.receiveRemote({ baseVersion: 2, value: submitted })
+  expect(draft.snapshot()).toMatchObject({ baseVersion: 1, value: later, conflict: { currentVersion: 2, current: submitted } })
+  // An explicit choice is required to adopt the read CAS and keep local entries.
+  draft.discard()
+  draft.edit(later)
+  expect(draft.snapshot()).toMatchObject({ baseVersion: 2, base: submitted, value: later, dirty: true, conflict: null })
 })

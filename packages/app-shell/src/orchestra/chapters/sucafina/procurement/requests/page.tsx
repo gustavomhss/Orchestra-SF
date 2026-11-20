@@ -1,10 +1,10 @@
-import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
+import { batch, createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
-import type { SfSurfaceProps } from "../../context/contracts"
+import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
@@ -14,8 +14,8 @@ import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../..
 import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
-import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
-import { SF_U11_REMAINING_COPY } from "./copy"
+import { SfRequisitionForm, SfPurchaseOrderForm, type SfRequestFieldError } from "./forms"
+import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
 import {
   decodeRequestsPage, displayScalar, isPoWritable, isPrWritable, poFromRecord, postedPoLine, prFromRecord,
   requestRef, requestVersion, uiCommandAction, validatePo, validatePr,
@@ -26,6 +26,16 @@ import "./requests.css"
 type Key = keyof typeof SF_U11_REMAINING_COPY
 type Ready = Extract<SfRequestsRead, { kind: "ready" }>
 type EditKind = "pr" | "po"
+type Conflict = Readonly<{
+  kind: EditKind
+  ref: SfRef
+  action: SfRequestCommand
+  currentVersion: number | undefined
+  phase: "unreviewed" | "loading" | "reviewed" | "unavailable"
+  ownerKey: string
+  epoch: number
+  read?: Ready
+}>
 type Review = Readonly<{
   action: SfRequestCommand
   ref: SfRef | undefined
@@ -129,6 +139,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     refresh: 0,
     layoutMode: "split" as "single" | "split" | "split-context",
     reviewing: undefined as Review | undefined,
+    conflict: undefined as Conflict | undefined,
+    fieldErrors: [] as readonly SfRequestFieldError[],
     reason: "",
     sending: false,
     outcomeUnknown: false,
@@ -136,7 +148,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     newIntentRef: crypto.randomUUID() as SfIntentRef,
   })
   let inFlight: AbortController | undefined
-  const t = (key: Key) => language.t(key as Parameters<typeof language.t>[0])
+  let prForm: HTMLElement | undefined
+  let poForm: HTMLElement | undefined
+  const t = (key: Key) => sfU11Label(key, language.locale(), language.t(key as Parameters<typeof language.t>[0]))
   const routeRef = () => props.route.kind !== "entry" && props.route.kind !== "new"
     ? props.route.params.requestRef : undefined
   const selectedRef = () => routeRef() ?? view.selected
@@ -181,7 +195,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const epoch = sf.generation()
     const targetRef = routeRef()
     void view.refresh
-    setView({ read: undefined, state: "loading", reviewing: undefined, sending: false, notice: undefined })
+    setView({ read: undefined, state: "loading", reviewing: undefined, conflict: undefined, fieldErrors: [], sending: false, notice: undefined })
     if (owner.status !== "ready" || !ready) {
       setView("state", owner.status === "denied" ? "denied" :
         owner.status === "unauthenticated" ? "session-expired" : "unavailable")
@@ -240,6 +254,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     return sfRetainDraft<SfPrEdit>(ready.drafts, {
       ...selection,
       baseVersion: creating() ? null : currentVersion!,
+      allowPendingEdits: true,
       base: creating() ? null : original,
       value: original,
       revalidation: {
@@ -264,6 +279,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     return sfRetainDraft<SfPoEdit>(ready.drafts, {
       ...selection,
       baseVersion: currentVersion,
+      allowPendingEdits: true,
       base: original,
       value: original,
       revalidation: {
@@ -287,12 +303,41 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const poConflict = () => sfDraftConflicted(poDraft()?.snapshot(), version())
   const prPending = () => { const state = prDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const poPending = () => { const state = poDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
-  const editPr = (next: SfPrEdit) => {
-    if (activePr() && !view.sending && !view.reviewing && !view.outcomeUnknown) prDraft()?.edit(next)
+  const prState = () => {
+    const snapshot = prDraft()?.snapshot()
+    return snapshot?.availability === "active" ? snapshot : undefined
   }
-  const editPo = (next: SfPoEdit) => {
-    if (activePo() && !view.sending && !view.reviewing && !view.outcomeUnknown) poDraft()?.edit(next)
+  const poState = () => {
+    const snapshot = poDraft()?.snapshot()
+    return snapshot?.availability === "active" ? snapshot : undefined
   }
+  const editingPending = (kind: EditKind) => view.sending &&
+    view.reviewing?.action === (kind === "pr" ? "save-pr" : "save-po") &&
+    (kind === "pr" ? prState() : poState())?.phase === "submitting"
+  const editingBlocked = (kind: EditKind) => view.outcomeUnknown ||
+    ((view.sending || !!view.reviewing || (kind === "pr" ? prPending() : poPending())) && !editingPending(kind))
+  const clearFieldError = (field: string) => setView("fieldErrors",
+    view.fieldErrors.filter((error) => error.field !== field &&
+      !field.startsWith(error.field + ".") && !error.field.startsWith(field + ".")))
+  const editPr = (next: SfPrEdit, field: string) => {
+    if (!prState() || editingBlocked("pr")) return
+    prDraft()?.edit(next)
+    clearFieldError(field)
+  }
+  const editPo = (next: SfPoEdit, field: string) => {
+    if (!poState() || editingBlocked("po")) return
+    poDraft()?.edit(next)
+    clearFieldError(field)
+  }
+  const focusField = (kind: EditKind, invalid = false) => queueMicrotask(() => {
+    const form = kind === "pr" ? prForm : poForm
+    form?.querySelector<HTMLElement>(invalid ? '[aria-invalid="true"]' :
+      kind === "pr" ? '[name="pr.description"]' : '[name="po.contractRef"]')?.focus()
+  })
+  const focusAction = (action: SfRequestCommand) => queueMicrotask(() => {
+    const form = action === "save-pr" ? prForm : action === "save-po" ? poForm : undefined
+    form?.querySelector<HTMLElement>('[data-sf-request-action="' + action + '"]')?.focus()
+  })
   const stageAllowed = (action: SfRequestCommand, inCurrentDispatch = false) => {
     if (!sourceAvailable() || !actionAllowed(action) || view.outcomeUnknown ||
         (view.sending && !inCurrentDispatch) ||
@@ -328,7 +373,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       intentRef: crypto.randomUUID() as SfIntentRef,
       idempotencyKey: crypto.randomUUID(),
     }
-    setView({ reviewing: review, notice: undefined })
+    setView({ reviewing: review, fieldErrors: [], notice: undefined })
     if (pr) prDraft()?.setPhase("reviewing")
     if (po) poDraft()?.setPhase("reviewing")
   }
@@ -344,8 +389,121 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       editScopeKey: kind === "pr" ? prScope : poScope }
     ready.drafts.discard(selection)
     if (ready.drafts.peek(selection)) return
-    setView({ read: undefined, state: "loading", reviewing: undefined })
+    setView({ read: undefined, state: "loading", reviewing: undefined, conflict: undefined, fieldErrors: [] })
     refresh()
+  }
+  const reviewConflict = async (kind: EditKind) => {
+    const owner = sf.state(), ready = sf.ready(), ref = selectedRef()
+    const snapshot = kind === "pr" ? prState() : poState()
+    if (owner.status !== "ready" || !ready || !ref || !snapshot || snapshot.pendingOperation ||
+        view.sending || view.outcomeUnknown || !(kind === "pr" ? prConflict() : poConflict())) return
+    const conflict: Conflict = {
+      kind, ref, action: view.conflict?.kind === kind ? view.conflict.action : kind === "pr" ? "save-pr" : "save-po",
+      currentVersion: view.conflict?.kind === kind ? view.conflict.currentVersion : snapshot.conflict?.currentVersion,
+      phase: "loading", ownerKey: owner.ownerKey, epoch: sf.generation(),
+    }
+    setView("conflict", conflict)
+    const abort = new AbortController()
+    inFlight = abort
+    try {
+      const result = await createSfProcurementClient(ready.transport)["domain.page.CAP25"](
+        { request: ref }, { signal: abort.signal },
+      )
+      if (abort.signal.aborted || !ownerMatches(conflict.ownerKey, conflict.epoch) || selectedRef() !== ref) return
+      if (result.kind === "response" && (result.status === 401 || result.status === 403)) {
+        setView({ read: undefined, conflict: undefined, fieldErrors: [],
+          state: result.status === 401 ? "session-expired" : "denied" })
+        if (result.status === 403) sf.invalidate("revoked")
+        else void sf.reload()
+        return
+      }
+      const next = result.kind === "response" && result.status === 200
+        ? decodeRequestsPage(result.body, ready.context.stamp) : { kind: "unavailable" as const }
+      const current = next.kind === "ready" ? next.records.find((record) => requestRef(record) === ref) : undefined
+      const currentVersion = next.kind === "ready" ? requestVersion(next, ref) : undefined
+      if (next.kind !== "ready" || !current || currentVersion === undefined ||
+          conflict.currentVersion !== undefined && currentVersion < conflict.currentVersion) {
+        setView("conflict", { ...conflict, phase: "unavailable" })
+        return
+      }
+      if (kind === "pr") prDraft()?.receiveRemote({ baseVersion: currentVersion, value: prFromRecord(current) })
+      else poDraft()?.receiveRemote({ baseVersion: currentVersion, value: poFromRecord(current) })
+      const writable = next.actionIds.includes(uiCommandAction(conflict.action)) &&
+        (kind === "pr" ? isPrWritable(current) : isPoWritable(current))
+      setView("conflict", { ...conflict, currentVersion, read: next,
+        phase: writable && currentVersion > (snapshot.baseVersion ?? -1) ? "reviewed" : "unavailable" })
+    } catch (error) {
+      if (!abort.signal.aborted && ownerMatches(conflict.ownerKey, conflict.epoch) && selectedRef() === ref) {
+        console.error("CAP25 conflict source read failed", error)
+        setView("conflict", { ...conflict, phase: "unavailable" })
+      }
+    } finally {
+      if (inFlight === abort) inFlight = undefined
+    }
+  }
+  const useReviewedVersion = (kind: EditKind) => {
+    const conflict = view.conflict
+    if (!conflict || conflict.kind !== kind || conflict.phase !== "reviewed" || !conflict.read ||
+        conflict.currentVersion === undefined || selectedRef() !== conflict.ref ||
+        !ownerMatches(conflict.ownerKey, conflict.epoch) || view.sending || view.outcomeUnknown) return
+    const adopt = <Value,>(controller: SfPublicDraftController<Value> | undefined) => {
+      const snapshot = controller?.snapshot()
+      if (!controller || snapshot?.availability !== "active" || snapshot.pendingOperation ||
+          snapshot.conflict?.currentVersion !== conflict.currentVersion) return false
+      // The explicit choice adopts the authorized comparison base, then restores
+      // the entries the operator chose to retain. This does not send a command.
+      controller.discard()
+      controller.edit(snapshot.value)
+      return true
+    }
+    batch(() => {
+      if (!(kind === "pr" ? adopt(prDraft()) : adopt(poDraft()))) return
+      setView({ read: conflict.read, state: "ready", conflict: undefined, notice: undefined, fieldErrors: [] })
+      focusField(kind)
+    })
+  }
+  const renderConflict = (kind: EditKind) => {
+    const snapshot = () => kind === "pr" ? prState() : poState()
+    const conflict = () => view.conflict?.kind === kind ? view.conflict : undefined
+    const fieldValue = (value: SfPrEdit | SfPoEdit | null | undefined, field: string) => {
+      const entry = Object.entries(value ?? {}).find(([key]) => key === field)?.[1]
+      return entry === undefined || entry === null ? "—" : typeof entry === "object" ? JSON.stringify(entry) : String(entry)
+    }
+    const fields = kind === "pr" ? PR_FIELDS.filter((field) => field !== "title") : [...PO_FIELDS, "lines"]
+    return <section class="sf-u11-stage sf-u11-conflict" data-draft-conflict={kind}
+      aria-label={t("sf.u11.remaining.conflictRegion")}>
+      <h3 tabIndex={-1} ref={(element) => queueMicrotask(() => element.focus())}>
+        {t("sf.u11.remaining.conflictTitle")}
+      </h3>
+      <p role="alert">{language.t("sf.common.conflict")}</p>
+      <Show when={conflict()?.currentVersion !== undefined}>
+        <p data-current-version-cas>{t("sf.u11.remaining.version")}: {conflict()?.currentVersion}</p>
+      </Show>
+      <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || conflict()?.phase === "loading"}
+        onClick={() => { void reviewConflict(kind) }}>{t("sf.u11.remaining.reviewCurrent")}</button>
+      <Show when={conflict()?.read}>
+        <table>
+          <caption>{t("sf.u11.remaining.conflictTitle")}</caption>
+          <thead><tr><th>{t("sf.u11.remaining.field")}</th><th>{language.t("sf.s03.base")}</th>
+            <th>{language.t("sf.common.currentSource")}</th><th>{language.t("sf.common.yourDraft")}</th></tr></thead>
+          <tbody><For each={fields}>{(field) => <tr>
+            <th scope="row">{t(("sf.u11.remaining.field." + field) as Key)}</th>
+            <td>{fieldValue(snapshot()?.base, field)}</td>
+            <td>{fieldValue(snapshot()?.conflict?.current, field)}</td>
+            <td>{fieldValue(snapshot()?.value, field)}</td>
+          </tr>}</For></tbody>
+        </table>
+      </Show>
+      <Show when={conflict()?.phase === "reviewed"}>
+        <button type="button" class="mx-btn primary" ref={(element) => queueMicrotask(() => element.focus())}
+          onClick={() => useReviewedVersion(kind)}>{t("sf.u11.remaining.useReviewed")}</button>
+      </Show>
+      <Show when={conflict()?.phase === "unavailable"}>
+        <p role="status">{t("sf.u11.remaining.conflictUnavailable")}</p>
+      </Show>
+      <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown}
+        onClick={() => discardConflict(kind)}>{t("sf.u11.remaining.discard")}</button>
+    </section>
   }
   const cancelReview = () => {
     if (view.sending) return
@@ -508,13 +666,19 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         prController?.rejectSave({ status: 409, operation: pending })
         poController?.rejectSave({ status: 409, operation: pending })
         setView({ sending: false, reviewing: undefined, state: prController || poController ? "ready" : "stale",
+          conflict: review.ref && (prController || poController) ? {
+            kind: poController ? "po" : "pr", ref: review.ref, action: review.action,
+            currentVersion: result.body.currentVersionCAS, phase: "unreviewed", ownerKey, epoch,
+          } : undefined,
           notice: "sf.u11.remaining.missingVersion" })
         return
       }
       if (result.status === 422 && !result.body.ok && result.body.status === 422) {
         prController?.rejectSave({ status: 422, operation: pending })
         poController?.rejectSave({ status: 422, operation: pending })
-        setView({ sending: false, reviewing: undefined, notice: po ? "sf.u11.remaining.invalidPo" : "sf.u11.remaining.invalidPr" })
+        setView({ sending: false, reviewing: undefined, fieldErrors: [...(result.body.fieldErrors ?? [])],
+          notice: po ? "sf.u11.remaining.invalidPo" : "sf.u11.remaining.invalidPr" })
+        focusField(po ? "po" : "pr", true)
         return
       }
       if (result.status < 200 || result.status >= 300 || result.body.ok !== true) {
@@ -546,7 +710,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           kind: "projected", operationRef: review.operationRef,
           baseVersion: updatedVersion, value: poFromRecord(updated),
         })
-        setView({ selected: review.ref, creating: false, notice: "sf.u11.remaining.saved" })
+        const prSaved = prController?.snapshot(), poSaved = poController?.snapshot()
+        const laterEdits = prSaved?.availability === "active" && prSaved.dirty ||
+          poSaved?.availability === "active" && poSaved.dirty
+        setView({ selected: review.ref, creating: false, fieldErrors: [], conflict: undefined,
+          notice: laterEdits ? "sf.u11.remaining.laterEdits" : "sf.u11.remaining.saved" })
       } else {
         // A successful command may not carry a canonical newly created ID.
         // Missing from the list is not enough to claim a deleted record.
@@ -559,6 +727,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         setView("notice", review.action === "create" ? "sf.u11.remaining.noReturn" : "sf.u11.remaining.accepted")
       }
       setView({ sending: false, reviewing: undefined })
+      focusAction(review.action)
     } catch (error) {
       if (ownerMatches(ownerKey, epoch)) {
         console.error("CAP25 unknown command result", error)
@@ -723,83 +892,98 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         </nav>
       </Show>
       <Show when={prPending() || poPending()}><p role="alert">{t("sf.u11.remaining.unknown")}</p></Show>
-      <Show when={prConflict()}>
-        <section class="sf-u11-stage" data-draft-conflict="pr">
-          <p role="alert">{language.t("sf.common.conflict")}</p>
-          <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || prPending()}
-            onClick={() => discardConflict("pr")}>{t("sf.u11.remaining.discard")}</button>
-        </section>
-      </Show>
-      <Show when={activePr() && (creating() || isPrWritable(current!))}>
+      <Show when={view.fieldErrors.length > 0}><p role="alert">{language.t("sf.common.fieldErrorSummary")}</p></Show>
+      <Show when={creating() || current?.pr || prState()}>
         <section class="sf-u11-stage" data-stage="pr">
-          <Dynamic component={creating() ? "form" : "div"}
-            {...(creating() ? { "data-command": "create", "data-page": "Requests", "data-record": "", "data-version": "0" } : {})}>
+          <Dynamic component={creating() ? "form" : "div"} ref={(element: HTMLElement) => { prForm = element }}
+            data-sf-pr-form data-version={creating() ? 0 : prState()?.baseVersion ?? currentVersion}
+            data-dirty={prState()?.dirty === true ? "true" : "false"}
+            {...(creating() ? { "data-command": "create", "data-page": "Requests", "data-record": "" } : {})}>
+          <Show when={prConflict()}>{renderConflict("pr")}</Show>
           <Show when={current && !creating()}>
             <p>{t("sf.u11.remaining.noTitleMutation")}: {current?.pr?.title ?? ""}</p>
             {/* The W19 title editor is a separate source-locked intent/draft. */}
             <SfRequestTitleEdit {...props} requestRef={selectedRef()} onConfirmed={refresh} />
           </Show>
-          <SfRequisitionForm value={activePr()!.value} creating={creating()}
-            disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
+          <SfRequisitionForm value={prState()?.value ?? prFromRecord(current)} creating={creating()}
+            fieldErrors={view.fieldErrors}
+            disabled={!prState() || !creating() && !canPr() || editingBlocked("pr")}
             onEdit={editPr} />
           <div class="sf-u11-actions">
-            <Show when={creating() && stageAllowed("create")}>
-              <button type="button" class="mx-btn primary" onClick={() => reviewAction("create")}>
+            <Show when={creating() && actionAllowed("create")}>
+              <button type="button" class="mx-btn primary" disabled={!stageAllowed("create") || !!view.reviewing}
+                data-sf-request-action="create" onClick={() => reviewAction("create")}>
                 {t("sf.u11.remaining.new")}
               </button>
             </Show>
-            <Show when={!creating() && canPr()}>
-              <button type="button" class="mx-btn" onClick={() => reviewAction("save-pr")}>
+            <Show when={!creating() && actionAllowed("save-pr")}>
+              <button type="button" class="mx-btn" disabled={!stageAllowed("save-pr") || !!view.reviewing}
+                data-sf-request-action="save-pr" onClick={() => reviewAction("save-pr")}>
                 {t("sf.u11.remaining.savePr")}
               </button>
             </Show>
-            <Show when={!creating() && stageAllowed("submit_pr")}>
-              <button type="button" class="mx-btn primary" onClick={() => reviewAction("submit_pr")}>
+            <Show when={!creating() && actionAllowed("submit_pr")}>
+              <button type="button" class="mx-btn primary" disabled={!stageAllowed("submit_pr") || !!view.reviewing}
+                data-sf-request-action="submit_pr" onClick={() => reviewAction("submit_pr")}>
                 {t("sf.u11.remaining.submitPr")}
               </button>
             </Show>
-            <button type="button" class="mx-btn"
-              disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
-              onClick={() => prDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
+            <Show when={prState()}>
+              <button type="button" class="mx-btn"
+                disabled={view.sending || !!view.reviewing || view.outcomeUnknown || prConflict()}
+                onClick={() => prDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
+            </Show>
           </div>
           </Dynamic>
         </section>
       </Show>
-      <Show when={current && stage() === "pr" && !canPr()}>
-        <section class="sf-u11-stage"><h3>{t("sf.u11.remaining.pr")}</h3>
-          <p>{current?.pr?.description ?? t("sf.u11.remaining.readonly")}</p>
-        </section>
-      </Show>
-      <Show when={current && stage() === "po"}>
+      <Show when={current?.po}>
         <section class="sf-u11-stage" data-stage="po">
           <h3>{t("sf.u11.remaining.po")}</h3>
-          <Show when={poConflict()}>
-            <div data-draft-conflict="po"><p role="alert">{language.t("sf.common.conflict")}</p>
-              <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || poPending()}
-                onClick={() => discardConflict("po")}>{t("sf.u11.remaining.discard")}</button></div>
-          </Show>
-          <Show when={canPo() && activePo()} fallback={<p>{t("sf.u11.remaining.readonly")}</p>}>
-            <SfPurchaseOrderForm value={activePo()!.value}
-              disabled={view.sending || !!view.reviewing || view.outcomeUnknown}
-              onEdit={editPo} />
+          <div ref={(element) => { poForm = element }} data-sf-po-form
+            data-version={poState()?.baseVersion ?? currentVersion} data-dirty={poState()?.dirty === true ? "true" : "false"}>
+            <Show when={poConflict()}>{renderConflict("po")}</Show>
+            <SfPurchaseOrderForm value={poState()?.value ?? poFromRecord(current!)} fieldErrors={view.fieldErrors}
+              disabled={!poState() || !canPo() || editingBlocked("po")} onEdit={editPo} />
             <div class="sf-u11-actions">
-              <button type="button" class="mx-btn" onClick={() => reviewAction("save-po")}>
-                {t("sf.u11.remaining.savePo")}
-              </button>
-              <Show when={stageAllowed("submit_po")}>
-                <button type="button" class="mx-btn primary" onClick={() => reviewAction("submit_po")}>
+              <Show when={actionAllowed("save-po")}>
+                <button type="button" class="mx-btn" disabled={!stageAllowed("save-po") || !!view.reviewing}
+                  data-sf-request-action="save-po" onClick={() => reviewAction("save-po")}>
+                  {t("sf.u11.remaining.savePo")}
+                </button>
+              </Show>
+              <Show when={actionAllowed("submit_po")}>
+                <button type="button" class="mx-btn primary" disabled={!stageAllowed("submit_po") || !!view.reviewing}
+                  data-sf-request-action="submit_po" onClick={() => reviewAction("submit_po")}>
                   {t("sf.u11.remaining.submitPo")}
                 </button>
               </Show>
-              <button type="button" class="mx-btn" disabled={view.sending || !!view.reviewing}
-                onClick={() => poDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
+              <Show when={poState()}>
+                <button type="button" class="mx-btn" disabled={view.sending || !!view.reviewing || view.outcomeUnknown || poConflict()}
+                  onClick={() => poDraft()?.discard()}>{t("sf.u11.remaining.discard")}</button>
+              </Show>
             </div>
+          </div>
+          <Show when={current?.poFieldSources}>
+            {(sources) => <section class="sf-u11-origins" aria-label={t("sf.u11.remaining.fieldOrigins")}>
+              <h4>{t("sf.u11.remaining.fieldOrigins")}</h4>
+              <p>{t("sf.u11.remaining.sourceSuggestions")}</p>
+              <p>{t("sf.u11.remaining.sourceQuote")}: {sources().sourceQuoteId ?? "—"}; {t("sf.u11.remaining.selectedQuote")}: {sources().selectedQuoteId ?? "—"}</p>
+              <table><thead><tr>
+                <th>{t("sf.u11.remaining.field")}</th><th>{language.t("sf.common.currentSource")}</th>
+                <th>{t("sf.u11.remaining.sourceCandidate")}</th><th>{t("sf.u11.remaining.fieldOrigin")}</th>
+                <th>{t("sf.u11.remaining.comparisonState")}</th>
+              </tr></thead><tbody><For each={sources().fields}>{(field) => <tr>
+                <th scope="row">{field.label}</th><td>{field.current ?? "—"}</td><td>{field.candidate ?? "—"}</td>
+                <td>{field.origin}</td><td>{field.relation}</td>
+              </tr>}</For></tbody></table>
+            </section>}
           </Show>
           <Show when={current?.po?.supplierId}><p>{t("sf.u11.remaining.field.supplierId")}: {current!.po?.supplierId}</p></Show>
           <Show when={current?.po?.contractRef}><p>{t("sf.u11.remaining.field.contractRef")}: {current!.po?.contractRef}</p></Show>
           <Show when={current?.po?.quoteRef}><p>{t("sf.u11.remaining.selectedQuote")}: {current!.po?.quoteRef}</p></Show>
           <Show when={stageAllowed("issue")}>
-            <button type="button" class="mx-btn" onClick={() => reviewAction("issue")}>
+            <button type="button" class="mx-btn" data-sf-request-action="issue" onClick={() => reviewAction("issue")}>
               {t("sf.u11.remaining.issue")}
             </button>
           </Show>
@@ -890,10 +1074,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         </div>
       </Show>
       <Show when={view.notice}>
-        {(key) => <p role={view.outcomeUnknown ? "alert" : "status"} class="sf-u11-notice">
-          {t(key())}
+        {(key) => <div class="sf-u11-notice">
+          <p data-sf-request-notice role={view.outcomeUnknown ? "alert" : "status"}>{t(key())}</p>
           <button type="button" class="mx-btn" onClick={refresh}>{t("sf.u11.remaining.retry")}</button>
-        </p>}
+        </div>}
       </Show>
     </SfPageFrame>
   </section>

@@ -20,3 +20,8 @@
 @media (max-width: 64rem) { .sf-u11-layout { grid-template-columns:minmax(0,1fr); } }
 @media (max-width: 35rem) { .sf-u11-fields { grid-template-columns:minmax(0,1fr); } .sf-u11-detail { padding:.75rem; } }
 @media (forced-colors: active) { .sf-u11-field input,.sf-u11-field textarea,.sf-u11-line { border-color:CanvasText; } }
+.sf-u11-field [data-field-error] { color:var(--v2-text-danger,#b91c1c); font-size:.9em; }
+.sf-u11-field [aria-invalid="true"] { border-color:var(--v2-text-danger,#b91c1c); }
+.sf-u11-conflict,.sf-u11-origins { overflow-x:auto; }
+.sf-u11-conflict table,.sf-u11-origins table { width:100%; border-collapse:collapse; margin-block:.75rem; }
+.sf-u11-conflict th,.sf-u11-conflict td,.sf-u11-origins th,.sf-u11-origins td { text-align:start; padding:.45rem; border-bottom:1px solid var(--v2-border-weak,currentColor); vertical-align:top; }

@@ -54,6 +54,8 @@ export type SfDraftInput<Value> = Readonly<{
   baseVersion: SfVersion | null
   base: Readonly<Value> | null
   value: Readonly<Value>
+  /** Retain subsequent editor input while this exact submitted value is in flight. */
+  allowPendingEdits?: boolean
 }>
 
 export type SfSaveConfirmation<Value> =
@@ -82,6 +84,7 @@ export type SfDraftController<Value> = Readonly<{
 export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftController<Value> {
   // This private reset baseline is explicitly dropped on revocation/confirmation.
   let initialValue: Readonly<Value> | undefined = input.value
+  let submittedValue: Readonly<Value> | undefined
   const initiallyDirty = input.identity.kind === "new" && input.base === null
   const [snapshot, publish] = createSignal<SfDraftState<Value>>({
     availability: "active",
@@ -118,9 +121,10 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
     snapshot,
     edit(value) {
       const state = active()
-      if (!state || state.pendingOperation !== null) return
+      if (!state || state.pendingOperation !== null && !(input.allowPendingEdits && state.phase === "submitting")) return
       if (Object.is(state.value, value)) return
-      publish({ ...state, value, dirty: true, phase: state.conflict ? "conflict" : "dirty" })
+      publish({ ...state, value, dirty: true,
+        phase: state.pendingOperation ? state.phase : state.conflict ? "conflict" : "dirty" })
     },
     discard() {
       const state = active()
@@ -187,6 +191,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
         return
       }
       outcomeUnknown = false
+      submittedValue = state.value
       publish({ ...state, pendingOperation: { ...operation } })
     },
     rejectSave(result) {
@@ -194,22 +199,31 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
       if ((result.status !== 409 && result.status !== 422) || !state || state.phase !== "submitting" || !pending || outcomeUnknown ||
           pending.operationRef !== operation.operationRef || pending.idempotencyKey !== operation.idempotencyKey ||
           pending.payloadDigest !== operation.payloadDigest || !Object.is(pending.expectedVersion, operation.expectedVersion)) return
+      submittedValue = undefined
       publish({ ...state, pendingOperation: null, phase: result.status === 409 ? "conflict" : "validation-error" })
     },
     confirmSave(result) {
       const state = active()
       if (!state?.pendingOperation || state.pendingOperation.operationRef !== result.operationRef) return
+      const laterEdits = input.allowPendingEdits === true && !Object.is(state.value, submittedValue)
+      submittedValue = undefined
       if (result.kind === "confirmed-without-projection") {
         suspended = undefined
         initialValue = undefined
+        // The command is confirmed, but a new CAS still requires an authorized
+        // read and an explicit choice before these later entries can be submitted.
+        if (laterEdits) {
+          publish({ ...state, phase: "conflict", dirty: true, pendingOperation: null })
+          return
+        }
         publish({ availability: "confirmed-without-projection", operationRef: result.operationRef, resultVersion: result.resultVersion })
         return
       }
       initialValue = undefined
       publish({
-        availability: "active", phase: "clean",
-        value: result.value, base: result.value, baseVersion: result.baseVersion,
-        dirty: false, conflict: null, pendingOperation: null,
+        availability: "active", phase: laterEdits ? "dirty" : "clean",
+        value: laterEdits ? state.value : result.value, base: result.value, baseVersion: result.baseVersion,
+        dirty: laterEdits, conflict: null, pendingOperation: null,
       })
     },
     quarantine() {
@@ -227,6 +241,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
       suspended = undefined
       const wasSubmitted = unresolved(previous)
       if (wasSubmitted) outcomeUnknown = true
+      if (!wasSubmitted) submittedValue = undefined
       publish({
         ...previous,
         pendingOperation: wasSubmitted ? previous.pendingOperation : null,
@@ -238,6 +253,7 @@ export function createSfDraft<Value>(input: SfDraftInput<Value>): SfDraftControl
       if (snapshot().availability === "revoked") return
       suspended = undefined
       initialValue = undefined
+      submittedValue = undefined
       fence = undefined
       publish({ availability: "revoked", reason })
     },
