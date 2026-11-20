@@ -884,13 +884,14 @@ export function parseArguments(argv) {
       if (values.sourceOnly) fail("duplicate source-only option")
       values.sourceOnly = true; continue
     }
-    if (!["--source", "--archive", "--manifest", "--output"].includes(key) ||
+    if (!["--source", "--archive", "--manifest", "--output", "--installed-release"].includes(key) ||
         values[key.slice(2)] !== undefined || !argv[index + 1] || argv[index + 1].startsWith("--"))
       fail("unknown duplicate or incomplete argument")
     values[key.slice(2)] = argv[++index]
   }
   if (!values.source || !values.manifest || !values.output || (!values.archive && !values.sourceOnly) ||
-      values.archive && values.sourceOnly) fail("exact source/archive/catalog/output selection required")
+      values.archive && values.sourceOnly || values["installed-release"] && !values.archive)
+    fail("exact source/archive/catalog/output selection required")
   return values
 }
 export async function runAudit(options, env = process.env) {
@@ -908,7 +909,7 @@ export async function runAudit(options, env = process.env) {
   const manifest = safePath(options.manifest)
   const catalogRecord = loaded.records.find((file) => file.path === manifest && file.kind === "regular")
   if (!catalogRecord) fail("catalog must be an actual tracked regular source file")
-  let archiveFiles = [], artifact
+  let archiveFiles = [], artifact, installedRelease
   if (options.archive) {
     const compressed = await outsideFile(options.archive, root, "production archive")
     const inventoryBytes = await outsideFile(env.SF_TEAMS_RESIDUE_INVENTORY_FILE, root, "archive inventory")
@@ -918,6 +919,16 @@ export async function runAudit(options, env = process.env) {
     archiveFiles = readTarArchive(compressed)
     artifact = verifyArtifact({ source, archiveFile: path.basename(options.archive), compressed, files: archiveFiles,
       inventoryBytes, receiptBytes, provenance, env })
+    const releaseRoot = options["installed-release"]
+    if (releaseRoot !== undefined) {
+      if (!path.isAbsolute(releaseRoot) || await realpath(releaseRoot) !== releaseRoot)
+        fail("canonical installed release directory required")
+      const relative = path.relative(root, releaseRoot)
+      if (relative !== ".." && !relative.startsWith(".." + path.sep))
+        fail("installed release directory must be outside checkout")
+      const { verifyTeamsInstalledRelease } = await import("./teams-installed-release.mjs")
+      installedRelease = await verifyTeamsInstalledRelease({ releaseRoot, files: archiveFiles })
+    }
   }
   const records = [...loaded.records, ...archiveFiles]
   const review = await optionalJson(env.SF_TEAMS_RESIDUE_REVIEW_FILE, root, "current-source independent review")
@@ -933,6 +944,7 @@ export async function runAudit(options, env = process.env) {
   report.source = { ...report.source, commitSha256: verified.commitSha256,
     trackedInventorySha256: verified.inventorySha256, byteBoundCount: loaded.byteBoundCount,
     contentsComplete: loaded.contentsComplete, recheckedAfter: true }
+  if (installedRelease) report.installedRelease = installedRelease
   return report
 }
 async function writeReport(filename, source, report, env) {

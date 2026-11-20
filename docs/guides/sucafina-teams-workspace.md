@@ -23,7 +23,7 @@ Cada janela mantém sua própria seleção. Abrir a mesma aplicação em outra j
 
 Ao trocar de perfil, sair da conta ou perder acesso, a interface cancela as requisições e streams do contexto anterior e remove seus dados da tela. Um retorno tardio não pode preencher a nova janela com dados do contexto anterior.
 
-A troca voluntária de perfil pede confirmação quando há rascunho. Uma revogação de acesso remove os dados imediatamente. Se uma ação tiver resultado ainda desconhecido, a interface mantém seu identificador para consulta e não repete a escrita automaticamente.
+A troca voluntária de perfil pede confirmação quando há rascunho. O seletor continua mostrando o Team original até a troca ser confirmada e autorizada. Se cancelar, você continua na mesma tela com o rascunho. Uma revogação de acesso remove os dados imediatamente. Se uma ação tiver resultado ainda desconhecido, a interface mantém seu identificador para consulta e não repete a escrita automaticamente.
 
 **Ctrl+Shift+P** abre o seletor de Team. Os controles de navegação também estão disponíveis em janelas estreitas.
 

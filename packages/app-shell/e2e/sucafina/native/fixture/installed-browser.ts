@@ -8,7 +8,7 @@ import path from "node:path"
 import { chromium } from "@playwright/test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { observeNativeBinding, readNativeManifest, requirePrivateNativeRoot } from "./readiness.ts"
-import type { NativeActor, NativeManifest } from "./readiness.ts"
+import type { NativeActor, NativeManifest, NativeTarget } from "./readiness.ts"
 
 export type InstalledBrowserSession = Readonly<{
   browser: Browser
@@ -40,8 +40,8 @@ async function privateEndpoint(rootPath: string): Promise<string> {
   return endpoint
 }
 
-function onShell(page: Page, manifest: NativeManifest) {
-  try { return new URL(page.url()).origin === manifest.target.shellOrigin }
+function onShell(page: Page, target: NativeTarget) {
+  try { return new URL(page.url()).origin === target.shellOrigin }
   catch { return false }
 }
 
@@ -63,7 +63,7 @@ export async function connectNativeInstalledBrowser(): Promise<InstalledBrowserS
     const contexts = browser.contexts()
     if (contexts.length < 3) throw new Error("F04_THREE_PREAUTHENTICATED_MICROSOFT_CONTEXTS_REQUIRED")
     for (const context of contexts) {
-      const existing = context.pages().find((page) => onShell(page, manifest))
+      const existing = context.pages().find((page) => onShell(page, manifest.target))
       if (!existing) continue
       // The *actual* cookie jar is used by the original producer; failures are
       // not converted into a login, role, grant, session or synthetic fixture.
@@ -92,13 +92,13 @@ export async function connectNativeInstalledBrowser(): Promise<InstalledBrowserS
 /** Reverify the current principal with the original producer before a test uses
  * a selected context; a private actor label is NEVER treated as a grant. */
 export async function admittedContext(
-  session: InstalledBrowserSession, actor: NativeActor,
+  session: InstalledBrowserSession, actor: NativeActor, target = session.manifest.target,
 ): Promise<BrowserContext> {
   const context = session.contexts[actor]
   if (!context) throw new Error("F04_MISSING_AUTHENTICATED_ACTOR_CONTEXT_" + actor.toUpperCase())
-  const page = context.pages().find((value) => onShell(value, session.manifest))
+  const page = context.pages().find((value) => onShell(value, target))
   if (!page) throw new Error("F04_ACTOR_SHELL_WINDOW_DISAPPEARED")
-  const live = await observeNativeBinding(page, session.manifest.target)
+  const live = await observeNativeBinding(page, target)
   if (live.authMode !== "microsoft" ||
       live.stamp.principalRef !== session.manifest.actors[actor])
     throw new Error("F04_ACTOR_AUTHORIZATION_CHANGED")

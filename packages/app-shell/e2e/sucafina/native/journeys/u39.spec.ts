@@ -1,7 +1,9 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import { armHeldResponse, armLostResponse, requestRealRevocation, nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding, requireNativeJourney } from "../fixture.ts"
+import { armHeldResponse, armLostResponse, nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding, requireNativeJourney } from "../fixture.ts"
+import { refreshRevokedNativeTeam } from "../fixture/response-faults.ts"
 import type { InstalledNativeHarness } from "../fixture.ts"
+import { nativeContextURL, nativeTeamHeaders } from "../fixture/readiness.ts"
 
 /**
  * Installed native CAP04 journey. F04/187 supplies the original authenticated
@@ -57,7 +59,7 @@ async function requireAdmittedSurface(
   }
 
   const surface = page.locator('[data-sf-budget="' + surfaceId + '"]')
-  const observed = await nativeHarness.proveWeb(surface)
+  const observed = await nativeHarness.proveWeb(surface, page)
   if (observed.candidateSha !== admitted.candidateSha ||
       observed.principalRef !== admitted.principalRef ||
       observed.installationId !== target.installationId ||
@@ -69,13 +71,7 @@ async function requireAdmittedSurface(
   // A capability grant is insufficient if the actual domain-read adapter is
   // unavailable. Re-read the original SfContext in this same browser context;
   // abort on a policy/access revision change, never infer save from a button.
-  const contextURL = new URL(target.mount + "/api/ui/context", target.publicOrigin)
-  contextURL.search = new URLSearchParams({
-    installationId: target.installationId,
-    projectId: target.projectId,
-    hostId: target.hostId,
-  }).toString()
-  const response = await page.request.get(contextURL.toString(), {
+  const response = await page.request.get(nativeContextURL(target), {
     maxRedirects: 0, maxRetries: 0,
   })
   if (response.status() !== 200) {
@@ -84,14 +80,15 @@ async function requireAdmittedSurface(
   const envelope = asRecord(await response.json())
   const context = asRecord(envelope?.value)
   const stamp = asRecord(context?.stamp)
-  if (envelope?.status !== "ok" || context?.contractRevision !== "sf-native-ui/1" ||
+  if (envelope?.status !== "ok" || context?.contractRevision !== "sf-team-profile/1" ||
       context?.authMode !== "microsoft" ||
       stamp?.installationId !== target.installationId ||
       stamp?.projectId !== target.projectId ||
       stamp?.hostId !== target.hostId ||
       stamp?.principalRef !== admitted.principalRef ||
       stamp?.policyVersion !== admitted.policyVersion ||
-      stamp?.accessRevision !== admitted.accessRevision) {
+      stamp?.accessRevision !== admitted.accessRevision ||
+      JSON.stringify(stamp?.team) !== JSON.stringify(current.stamp.team)) {
     throw new Error("F04_" + surfaceId + "_REAL_CONTEXT_STAMP_MISMATCH")
   }
 
@@ -261,7 +258,7 @@ async function originalPage(page: Page, nativeHarness: InstalledNativeHarness): 
   const live = await observeNativeBinding(page, target)
   const url = new URL(target.mount + "/api/ui/pages/" + surfaceId, target.publicOrigin)
   url.searchParams.set("year", "2026")
-  const reply = await page.request.get(url.toString(), { maxRedirects: 0, maxRetries: 0 })
+  const reply = await page.request.get(url.toString(), { headers: nativeTeamHeaders(target), maxRedirects: 0, maxRetries: 0 })
   if (reply.status() !== 200) {
     throw new Error("F04_" + surfaceId + "_ORIGINAL_PAGE_HTTP_" + reply.status())
   }
@@ -276,7 +273,8 @@ async function originalPage(page: Page, nativeHarness: InstalledNativeHarness): 
       stamp.projectId !== target.projectId || stamp.hostId !== target.hostId ||
       stamp.principalRef !== live.stamp.principalRef ||
       stamp.policyVersion !== live.stamp.policyVersion ||
-      stamp.accessRevision !== live.stamp.accessRevision) {
+      stamp.accessRevision !== live.stamp.accessRevision ||
+      !live.stamp.team || JSON.stringify(stamp.team) !== JSON.stringify(live.stamp.team)) {
     throw new Error("F04_" + surfaceId + "_ORIGINAL_PROJECTION_OWNER_OR_SCHEMA_MISMATCH")
   }
   const ytd = asRecord(data.budgetYtd)
@@ -758,8 +756,9 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     const href = new URL(page.url())
     expect(href.searchParams.get("year")).toBe("2026")
     // The route carries only the real owner selection; no copied private data.
-    expect(href.searchParams.get("project") ?? nativeHarness.manifest.target.projectId)
-      .toBe(nativeHarness.manifest.target.projectId)
+    expect(href.searchParams.getAll("installationId")).toEqual([nativeHarness.manifest.target.installationId])
+    expect(href.searchParams.getAll("tenantId")).toEqual([nativeHarness.manifest.target.tenantId])
+    expect(href.searchParams.getAll("teamObjectId")).toEqual([nativeHarness.manifest.target.teamObjectId])
     await page.goto(nativeJourneyEntryHref(nativeHarness.manifest.target, surfaceId, 2026))
     await expect(surface).toBeVisible()
     const permissions = await originalPage(page, nativeHarness)
@@ -835,31 +834,14 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     const detail = await openOwner(surface, name, String(owner.id))
     await detail.getByRole("button", { name: "Edit", exact: true }).click()
     const unpublished = budgetScenario("REVOKED_PRIVATE_DRAFT")
-    const form = surface.locator(".sf-budget-form")
-    await form.getByRole("textbox", { name: recordName }).fill(unpublished)
-    await expect(form).toContainText(recordName)
-    const driver = nativeHarness as InstalledNativeHarness & Readonly<{
-      revokeViaOriginalProducer?: (input: { capabilityId: string; principalRef: string }) => Promise<{ committed: boolean }>
-    }>
-    if (typeof driver.revokeViaOriginalProducer !== "function") {
-      throw new Error("F04_REQUIRED_" + surfaceId + "_REAL_PRIVILEGED_REVOCATION_DRIVER_199")
-    }
-    const proof = await requestRealRevocation({
-      page, manifest: nativeHarness.manifest, capabilityId: surfaceId,
-      revokeViaProducer: () => driver.revokeViaOriginalProducer!({
-        capabilityId: surfaceId, principalRef: source.principalRef,
-      }),
-    })
-    expect(["PRODUCER_ACCESS_REVOCATION_OBSERVED", "PRODUCER_AUTHENTICATION_REVOKED"])
-      .toContain(proof.phase)
-    await page.reload({ waitUntil: "domcontentloaded" })
-    await expect(page.getByText(unpublished)).toHaveCount(0)
-    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-editor')).toHaveCount(0)
-    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-owners tr[data-sf-row]'))
-      .toHaveCount(0)
-    await expect.poll(async () =>
-      page.locator('[data-sf-state="denied"], [data-sf-state="session-expired"]').count(),
-    ).toBeGreaterThan(0)
+    const input = surface.locator(".sf-budget-form").getByRole("textbox", { name: recordName })
+    await input.fill(unpublished)
+    await expect(input).toHaveValue(unpublished)
+    const proof = await nativeHarness.revokeSelectedTeam(surfaceId, source.principalRef)
+    await refreshRevokedNativeTeam(page, nativeHarness.manifest.target, proof.newAccessRevision)
+    await expect(page.locator('[data-sf-budget="' + surfaceId + '"]')).toHaveCount(0)
+    await expect(page.getByText(unpublished, { exact: true })).toHaveCount(0)
+    await expect(page.getByText(name, { exact: true })).toHaveCount(0)
   })
 
   nativeInstalledFixture("206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite", async ({ page, nativeHarness }) => {
@@ -881,19 +863,27 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     const form = surface.locator(".sf-budget-form")
     const draftName = budgetScenario("STALER")
     await form.getByRole("textbox", { name: recordName }).fill(draftName)
-    const driver = nativeHarness as InstalledNativeHarness & Readonly<{
-      advanceViaSecondAuthenticatedWriter?: (input: { capabilityId: string; recordId: string; expectedVersion: number }) =>
-        Promise<{ sourceVersion: number }>
-    }>
-    if (typeof driver.advanceViaSecondAuthenticatedWriter !== "function") {
-      throw new Error("F04_REQUIRED_" + surfaceId + "_SECOND_ORIGINAL_PRODUCER_WRITER_199")
+    const nextName = budgetScenario("CONCURRENT_EDITOR")
+    const second = await nativeHarness.openSecondEditor(surfaceId, 2026)
+    try {
+      const otherSurface = await requireAdmittedSurface(second, nativeHarness, "edit")
+      const other = await originalPage(second, nativeHarness)
+      expect(other.principalRef).not.toBe(current.principalRef)
+      expect(ownerVersion(other, ownerId)).toBe(initialVersion)
+      expect(exactOwner(other, ownerId).name).toBe(owner.name)
+      const otherDetail = await openOwner(otherSurface, String(owner.name), ownerId)
+      await otherDetail.getByRole("button", { name: "Edit", exact: true }).click()
+      await otherSurface.locator(".sf-budget-form").getByRole("textbox", { name: recordName }).fill(nextName)
+      await reviewForm(otherSurface)
+      const write = await commitReviewed(second, nativeHarness, "save")
+      expect(write.id).toBe(ownerId)
+      expect(write.version).toBe(initialVersion)
+    } finally {
+      await second.close()
     }
-    const conflict = await driver.advanceViaSecondAuthenticatedWriter({
-      capabilityId: surfaceId, recordId: ownerId, expectedVersion: initialVersion,
-    })
     const changed = await originalPage(page, nativeHarness)
-    expect(ownerVersion(changed, ownerId)).toBe(conflict.sourceVersion)
-    expect(conflict.sourceVersion).toBeGreaterThan(initialVersion)
+    expect(ownerVersion(changed, ownerId)).toBeGreaterThan(initialVersion)
+    expect(exactOwner(changed, ownerId).name).toBe(nextName)
     // A stale reviewed command must be rejected by the original producer (409)
     // or by the source-version gate; both prohibit an unversioned overwrite.
     const actions: import("@playwright/test").Request[] = []
@@ -1046,14 +1036,7 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     }
     const privateName = String(owner.name)
     await openOwner(surface, privateName, String(owner.id))
-    const wrong = nativeHarness.manifest.wrongProject
-    if (wrong.projectId === nativeHarness.manifest.target.projectId) {
-      throw new Error("F04_REQUIRED_DISTINCT_PROJECT_FOR_OWNER_CHANGE")
-    }
-    const wrongHref = new URL(nativeJourneyEntryHref(nativeHarness.manifest.target, surfaceId, 2026))
-    wrongHref.searchParams.set("server", wrong.serverKey)
-    wrongHref.searchParams.set("project", wrong.projectId)
-    wrongHref.searchParams.set("installation", wrong.installationId)
+    const wrongHref = nativeJourneyEntryHref(nativeHarness.manifest.wrongTeam, surfaceId, 2026)
     const target = nativeHarness.manifest.target
     const held = await armHeldResponse(page, {
       origin: target.publicOrigin,
@@ -1064,9 +1047,9 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     try {
       await page.reload({ waitUntil: "domcontentloaded" })
       await expect.poll(() => held.observations().attempts).toBe(1)
-      await page.goto(wrongHref.toString(), { waitUntil: "domcontentloaded" })
+      await page.goto(wrongHref, { waitUntil: "domcontentloaded" })
       held.release()
-      await expect(page).toHaveURL(wrongHref.toString())
+      await expect(page).toHaveURL(wrongHref)
       await expect(page.getByText(privateName, { exact: true })).toHaveCount(0)
       await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-editor')).toHaveCount(0)
       const sourceRows = page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-owners tr[data-sf-row]')

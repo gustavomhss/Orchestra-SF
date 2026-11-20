@@ -40,26 +40,19 @@ function nativeBinding(value, meta) {
       value.role !== meta.role || value.invocationId !== meta.invocationId) nativeFail()
 }
 function nativeCaseDeclarations(source) {
-  const pattern = /^\s*(?:test|nativeInstalledFixture)\(("(?:[^"\\]|\\.)*"),\s*async\b/gm
+  const pattern = /^([\t ]*)(?:test|nativeInstalledFixture)\(("(?:[^"\\]|\\.)*"),\s*async\b/gm
   return [...source.matchAll(pattern)].map((match) => ({
-    title: JSON.parse(match[1]),
-    line: source.slice(0, match.index + match[0].indexOf(match[0].trimStart())).split("\n").length,
+    title: JSON.parse(match[2]),
+    line: source.slice(0, match.index).split("\n").length,
+    column: match[1].length + 1,
   }))
 }
 
-/**
- * Validate and minimize one actual JSON-reporter invocation. This is deliberately
- * not an installed-host verdict: final qualification must independently admit the
- * F04 host/transport and the other gates against these exact observation hashes.
- */
-export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes, artifactBytes,
-  ledgerBytes, sourceBytes, sourceProvenance, meta, exitCode }) {
+export function buildNativeInventory({ ledgerBytes, sourceBytes, meta }) {
   nativeExact(meta, ["sha", "treeSha", "runId", "attempt", "role", "invocationId"])
   if (!isCommit(meta.sha) || !isCommit(meta.treeSha) || !/^[1-9][0-9]*$/.test(meta.runId) ||
       !/^[1-9][0-9]*$/.test(meta.attempt) || !Object.hasOwn(NATIVE_SPECS, meta.role) ||
-      !/^[a-f0-9]{32}$/.test(meta.invocationId) || exitCode !== 0) nativeFail()
-  nativeExact(sourceProvenance, ["commitSha256", "inventorySha256"])
-  if (!Object.values(sourceProvenance).every(isDigest) || !Buffer.isBuffer(sourceBytes)) nativeFail()
+      !/^[a-f0-9]{32}$/.test(meta.invocationId) || !Buffer.isBuffer(sourceBytes)) nativeFail()
   const ledger = nativeJson(ledgerBytes)
   nativeExact(ledger, ["schema", "scope", "roles"])
   if (ledger.schema !== "teams-profile-native-case-ledger.v1") nativeFail()
@@ -89,20 +82,37 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
     item.acceptanceIds.forEach((id) => acceptance.add(id))
   })
   if (role.requiredAcceptanceIds.some((id) => !acceptance.has(id))) nativeFail()
+  return {
+    schema: "teams-profile-native-inventory.v1", sourceSHA: meta.sha, sourceTreeSHA: meta.treeSha,
+    runId: meta.runId, runAttempt: meta.attempt, role: meta.role, invocationId: meta.invocationId,
+    specFile, specSha256: digest(sourceBytes), caseLedgerSha256: digest(ledgerBytes),
+    cases: role.cases.map((item, index) => ({ ...item,
+      line: declarations[index].line, column: declarations[index].column })),
+  }
+}
+
+/** Validate one report, without issuing an independent installed-host verdict. */
+export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes, artifactBytes,
+  ledgerBytes, sourceBytes, sourceProvenance, meta, exitCode }) {
+  if (exitCode !== 0) nativeFail()
+  nativeExact(sourceProvenance, ["commitSha256", "inventorySha256"])
+  if (!Object.values(sourceProvenance).every(isDigest)) nativeFail()
+  const canonical = buildNativeInventory({ ledgerBytes, sourceBytes, meta })
+  const { specFile, cases } = canonical
   const inventory = nativeJson(inventoryBytes)
   nativeExact(inventory, ["schema", "sourceSHA", "sourceTreeSHA", "runId", "runAttempt", "role",
     "invocationId", "specFile", "specSha256", "caseLedgerSha256", "cases"])
   nativeBinding(inventory, meta)
   if (inventory.schema !== "teams-profile-native-inventory.v1" || inventory.specFile !== specFile ||
       inventory.specSha256 !== digest(sourceBytes) || inventory.caseLedgerSha256 !== digest(ledgerBytes) ||
-      !Array.isArray(inventory.cases) || inventory.cases.length !== role.cases.length) nativeFail()
+      !Array.isArray(inventory.cases) || inventory.cases.length !== cases.length) nativeFail()
   const expected = new Map()
   inventory.cases.forEach((item, index) => {
     nativeExact(item, ["id", "title", "line", "column", "fixtureCase", "acceptanceIds"])
-    const planned = role.cases[index]
+    const planned = cases[index]
     if (item.id !== planned.id || item.title !== planned.title || item.fixtureCase !== planned.fixtureCase ||
         JSON.stringify(item.acceptanceIds) !== JSON.stringify(planned.acceptanceIds) ||
-        item.line !== declarations[index].line || !Number.isSafeInteger(item.column) || item.column < 1) nativeFail()
+        item.line !== planned.line || item.column !== planned.column) nativeFail()
     expected.set(item.title, item)
   })
   const artifact = nativeJson(artifactBytes)
@@ -125,7 +135,7 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
       host.expectedInventorySha256 !== digest(inventoryBytes) ||
       ![host.manifestSha256, host.selectionSha256, host.registryObservationSha256, host.installedClosureSha256].every(isDigest) ||
       !Array.isArray(host.actors) || ![3, 4].includes(host.actors.length) ||
-      !Array.isArray(host.cases) || host.cases.length !== role.cases.length) nativeFail()
+      !Array.isArray(host.cases) || host.cases.length !== cases.length) nativeFail()
   const actorRoles = new Set(), principals = new Set(), contexts = new Set()
   host.actors.forEach((actor) => {
     nativeExact(actor, ["role", "principalSha256", "contextSha256"])
@@ -138,7 +148,7 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
   const hostCases = new Set()
   host.cases.forEach((item, index) => {
     nativeExact(item, ["id", "fixtureCase", "beforeAuthoritySha256", "afterAuthoritySha256", "producerObservationSha256"])
-    if (item.id !== role.cases[index].id || item.fixtureCase !== role.cases[index].fixtureCase ||
+    if (item.id !== cases[index].id || item.fixtureCase !== cases[index].fixtureCase ||
         hostCases.has(item.id) || ![item.beforeAuthoritySha256, item.afterAuthoritySha256, item.producerObservationSha256].every(isDigest)) nativeFail()
     hostCases.add(item.id)
   })
@@ -151,7 +161,7 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
       config.projects[0]?.name !== "chromium" || config.projects[0]?.retries !== 0 || config.projects[0]?.repeatEach !== 1 ||
       !Array.isArray(config.reporter) || config.reporter.length !== 1 || config.reporter[0]?.[0] !== "json" ||
       !Array.isArray(report.errors) || report.errors.length || !Array.isArray(report.suites) ||
-      report.suites.length !== 1 || report.stats?.expected !== role.cases.length ||
+      report.suites.length !== 1 || report.stats?.expected !== cases.length ||
       report.stats?.unexpected !== 0 || report.stats?.flaky !== 0 || report.stats?.skipped !== 0) nativeFail()
   const specRelative = specFile.slice("e2e/".length), found = new Set(), ids = new Set(), safeCases = []
   const visit = (suite, inheritedFile = "", depth = 0) => {
@@ -179,7 +189,7 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
     for (const child of suite.suites || []) visit(child, file, depth + 1)
   }
   report.suites.forEach((suite) => visit(suite))
-  if (found.size !== role.cases.length) nativeFail()
+  if (found.size !== cases.length) nativeFail()
   safeCases.sort((a, b) => a.id.localeCompare(b.id))
   return {
     schema: "teams-profile-native-receipt.v1", status: "REPORT_VALIDATED",
@@ -233,4 +243,3 @@ export function readNativePrivateFile(root, filename, maximum = 16 * 1024 * 1024
     return bytes
   } finally { closeSync(descriptor) }
 }
-

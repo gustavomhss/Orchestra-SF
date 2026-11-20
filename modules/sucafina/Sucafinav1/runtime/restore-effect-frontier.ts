@@ -13,14 +13,8 @@ export function captureSfRestoreRetention(current: Snapshot, checkpoint: Snapsho
   const frontier = inspectSfProductRestoreFrontier(current)
   const before = inspectSfProductRestoreFrontier(checkpoint)
   if (before) {
-    if (!frontier || before.incarnation !== frontier.incarnation || before.revision > frontier.revision)
-      throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-    const versions = new Map(Object.entries(frontier.versions))
-    if (Object.entries(before.versions).some(([key, value]) => value > (versions.get(key) ?? -1)))
-      throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
-    const retained = new Map(frontier.transactions.map((entry) => [entry.key, entry.value]))
-    if (before.transactions.some((entry) => retained.get(entry.key) !== entry.value))
-      throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+    if (!frontier) throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+    requireFrontierDominance(frontier, before)
   }
   const keys = ["roleMap", "access", "__sfProductV1"] as const
   const retained = keys.map((key) => ({
@@ -42,4 +36,35 @@ export function captureSfRestoreRetention(current: Snapshot, checkpoint: Snapsho
       }
     },
   })
+}
+
+/**
+ * Internal, read-only preflight. The caller owns independent authentication,
+ * freshness verification and storage of the externally retained frontier.
+ * External evidence is only compared, never merged or used to recover state.
+ */
+export function captureSfCorporateRestoreRetention(
+  current: Snapshot,
+  checkpoint: Snapshot,
+  externallyRetained: ReturnType<typeof inspectSfProductRestoreFrontier>,
+) {
+  if (!externallyRetained) throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  const frontier = inspectSfProductRestoreFrontier(current)
+  if (!frontier || !inspectSfProductRestoreFrontier(checkpoint))
+    throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  requireFrontierDominance(frontier, externallyRetained)
+  return captureSfRestoreRetention(current, checkpoint)
+}
+
+type RestoreFrontier = NonNullable<ReturnType<typeof inspectSfProductRestoreFrontier>>
+
+function requireFrontierDominance(current: RestoreFrontier, evidence: RestoreFrontier) {
+  if (evidence.incarnation !== current.incarnation || evidence.revision > current.revision)
+    throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  const versions = new Map(Object.entries(current.versions))
+  if (Object.entries(evidence.versions).some(([key, value]) => value > (versions.get(key) ?? -1)))
+    throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  const transactions = new Map(current.transactions.map((entry) => [entry.key, entry.value]))
+  if (evidence.transactions.some((entry) => transactions.get(entry.key) !== entry.value))
+    throw new Error("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
 }

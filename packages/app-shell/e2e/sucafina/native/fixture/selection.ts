@@ -1,5 +1,34 @@
-import inventory from "../../../../../../sf/ci/team-profile-native-cases.json"
+import inventory from "../../../../../../sf/ci/team-profile-native-cases.json" with { type: "json" }
+import type { NativeActor } from "./manifest-contract.ts"
 import type { NativeInstalledCase, NativeInstalledSuite } from "./selected-installation.ts"
+
+const suiteRoles = { U15: "u15", U39: "u39", U40: "u40" } as const
+
+export function nativeTeamsSpecSelected(file: string) {
+  const name = file.replaceAll("\\", "/")
+  const spec = inventory.roles.teams.specFile
+  return name === spec || name.endsWith("/" + spec)
+}
+
+export function nativeIsolationActor(file: string, title: string): NativeActor | undefined {
+  const spec = "e2e/sucafina/native/isolation.spec.ts"
+  const name = file.replaceAll("\\", "/")
+  if (name !== spec && !name.endsWith("/" + spec)) return undefined
+  return (["requester", "holder", "denied"] as const).find((actor) =>
+    title === `Q01-ISO-REAL-ACTOR-${actor} must be an authentic principal`)
+}
+
+export function nativeSuiteRole(suite: NativeInstalledSuite) {
+  return suiteRoles[suite]
+}
+
+export function nativeSuiteForSpec(file: string): NativeInstalledSuite | undefined {
+  const name = file.replaceAll("\\", "/")
+  return (Object.keys(suiteRoles) as NativeInstalledSuite[]).find((suite) => {
+    const spec = inventory.roles[suiteRoles[suite]].specFile
+    return name === spec || name.endsWith("/" + spec)
+  })
+}
 
 /** Selection predicate only. A matching filename does NOT start an installed host,
  * collect a spec, or prove a real session. I00 owns shared Playwright registration.
@@ -23,7 +52,7 @@ function fixtureCase(value: string): NativeInstalledCase {
 }
 /** Exact source-versioned titles, never a prefix or a default actor selection. */
 export function nativeInventoryCases(suite: NativeInstalledSuite) {
-  const role = suite === "U15" ? "u15" : suite === "U39" ? "u39" : "u40"
+  const role = nativeSuiteRole(suite)
   const cases = inventory.roles[role].cases
   if (cases.length !== (suite === "U15" ? 6 : 22) ||
       new Set(cases.map((entry) => entry.id)).size !== cases.length ||

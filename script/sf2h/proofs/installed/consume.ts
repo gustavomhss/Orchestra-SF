@@ -8,9 +8,10 @@ import {
   admittedContext, connectNativeInstalledBrowser,
 } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
 import {
-  consumeCurrentNativeSelection, readNativeSelectedInstallation,
+  consumeCurrentNativeSelection, nativeManifestForCase, readNativeSelectedInstallation,
   u15RegisteredEnvironment,
 } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
+import { nativeSuiteRole } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selection.ts"
 import type {
   NativeInstalledSuite,
 } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
@@ -31,12 +32,15 @@ export async function consumeInstalledSuiteFromHost(suite: NativeInstalledSuite)
   const attached = await connectNativeInstalledBrowser()
   try {
     const { manifest } = attached
+    if (manifest.invocation.role !== nativeSuiteRole(suite))
+      throw new Error("F04_NATIVE_SPEC_NOT_BOUND_TO_INVOCATION")
     const bundle = await readNativeSelectedInstallation(manifest, suite)
     const cases: string[] = []
     const advanced: string[] = []
     for (const selection of bundle.selections) {
-      const actor = await admittedContext(attached, selection.actor)
-      const page = shellPage(actor.pages(), manifest.target.shellOrigin)
+      const { target } = nativeManifestForCase(manifest, selection)
+      const actor = await admittedContext(attached, selection.actor, target)
+      const page = shellPage(actor.pages(), target.shellOrigin)
       const observed = await consumeCurrentNativeSelection({
         page, manifest, bundle, caseId: selection.caseId,
       })

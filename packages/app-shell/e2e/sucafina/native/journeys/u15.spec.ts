@@ -1,7 +1,7 @@
-import { expect, type Browser, type Page, type Request, type Response } from "@playwright/test"
+import { expect, type Page, type Request, type Response } from "@playwright/test"
 import {
   armLostResponse, nativeDashboardCommandTarget, nativeInstalledFixture,
-  observeNativeBinding, requireNativeJourney, type InstalledNativeHarness,
+  requireNativeJourney, type InstalledNativeHarness,
 } from "../fixture.ts"
 
 const test = nativeInstalledFixture
@@ -114,44 +114,6 @@ function sourceRecord(
   return { id, version, vendor: record.vendor as string }
 }
 
-/** F04 does not manufacture or transfer cookies. The authorized runner must
- * retain a distinct, already Microsoft-authenticated browser context for
- * holder or dashboardAdmin in this SAME Playwright browser. No new context,
- * storageState, header, token, manual grant or API impersonation is created. */
-async function requireSecondAdmittedEditor(
-  browser: Browser, requester: Page, harness: InstalledNativeHarness,
-) {
-  let foundIdentityWithoutSave = false
-  for (const context of browser.contexts()) {
-    if (context === requester.context()) continue
-    const other = await context.newPage()
-    let binding: Awaited<ReturnType<typeof observeNativeBinding>>
-    try {
-      binding = await observeNativeBinding(other, harness.manifest.target)
-    } catch {
-      await other.close()
-      continue
-    }
-    const actor = (["holder", "dashboardAdmin"] as const).find((candidate) =>
-      harness.manifest.actors[candidate] === binding.stamp.principalRef)
-    if (!actor) {
-      await other.close()
-      continue
-    }
-    try {
-      await requireNativeJourney({
-        page: other, manifest: harness.manifest, actor, capabilityId: "CAP14", intent: "edit",
-      })
-      return { page: other, actor }
-    } catch {
-      foundIdentityWithoutSave = true
-      await other.close()
-    }
-  }
-  throw new Error(foundIdentityWithoutSave
-    ? "F04_U15_DISTINCT_REAL_ACTOR_LACKS_CAP14_SAVE_ADMISSION"
-    : "F04_U15_DISTINCT_AUTHENTICATED_EDITOR_BROWSER_CONTEXT_REQUIRED_FROM_187")
-}
 function surface(page: Page) {
   return page.locator('[data-component="sf-vendor-contracts"]')
 }
@@ -236,7 +198,7 @@ test("CAP14 real denied second actor displays no unauthorized contract values or
   expect(writes).toHaveLength(0)
 })
 
-test("CAP14 real version conflict cannot be shown saved", async ({ page, browser, nativeHarness }) => {
+test("CAP14 real version conflict cannot be shown saved", async ({ page, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "stale")
   await proveInstalledActor(page, nativeHarness, "edit")
   const target = nativeDashboardCommandTarget(nativeHarness.manifest, "CAP14")
@@ -257,12 +219,12 @@ test("CAP14 real version conflict cannot be shown saved", async ({ page, browser
   // An actual second Microsoft principal commits a different value to the SAME
   // source id/version before the original review is confirmed. A URL or local
   // client mutation alone is not a producer CAS advance.
-  const second = await requireSecondAdmittedEditor(browser, page, nativeHarness)
+  const second = await nativeHarness.openSecondEditor("CAP14")
   try {
-    const secondRead = nextAuthorizedRead(second.page, nativeHarness)
-    await second.page.goto(url)
+    const secondRead = nextAuthorizedRead(second, nativeHarness)
+    await second.goto(url)
     const secondSource = await (await secondRead).json()
-    const otherVendor = surface(second.page).locator('[data-field="vendor"] input')
+    const otherVendor = surface(second).locator('[data-field="vendor"] input')
     await expect(otherVendor).toBeEditable()
     const otherCurrent = await otherVendor.inputValue()
     const current = sourceRecord(secondSource, { vendor: otherCurrent })
@@ -271,11 +233,11 @@ test("CAP14 real version conflict cannot be shown saved", async ({ page, browser
 
     const secondValue = otherCurrent + " u15 concurrent CAS"
     await otherVendor.fill(secondValue)
-    await surface(second.page).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ }).click()
-    const secondSubmit = surface(second.page).getByRole("button", { name: /Confirm|Confirmar/ })
+    await surface(second).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ }).click()
+    const secondSubmit = surface(second).getByRole("button", { name: /Confirm|Confirmar/ })
     await expect(secondSubmit).toBeEnabled()
-    const committed = second.page.waitForResponse((response) => isContractMutation(response.request(), target))
-    const committedRead = nextAuthorizedRead(second.page, nativeHarness)
+    const committed = second.waitForResponse((response) => isContractMutation(response.request(), target))
+    const committedRead = nextAuthorizedRead(second, nativeHarness)
     await secondSubmit.click()
     const secondResponse = await committed
     expect(secondResponse.status()).toBe(200)
@@ -300,7 +262,7 @@ test("CAP14 real version conflict cannot be shown saved", async ({ page, browser
     expect(requesterPosts).toHaveLength(1)
     await expect(surface(page).getByText(/verified after saving|verificado após o salvamento/)).toHaveCount(0)
   } finally {
-    await second.page.close()
+    await second.close()
   }
 })
 

@@ -149,6 +149,34 @@ test("Teams context: current grant removal during an await publishes no stale bu
   expect(await response.json()).toEqual({ status: "unavailable", reason: "contract-mismatch" })
 })
 
+test("Teams context: official profile disable revokes the original selection without signing the user out", async () => {
+  const f = await fixture({ enabled: [profileA, profileB] })
+  const before = await context(await f.handle(f.contextRequest("team", profileA)))
+  expect(before.stamp.team?.owner.profile).toEqual(profileA)
+  expect(before.destinations.length).toBeGreaterThan(0)
+  const query = new URLSearchParams({ contractRevision: "sf-team-profile/1", installationId: profileA.installationId, tenantId: tenant })
+  const endpoint = "/api/ui/team-profiles?" + query
+  const listed = await f.handle(f.request(endpoint, f.cookie))
+  expect(listed.status).toBe(200)
+  const catalog = Schema.decodeUnknownSync(TeamProfile.AdminListResult)(await listed.json())
+  if (catalog.status !== "ok") throw new Error("Administrative profile catalog required")
+  const disabled = await f.handle(f.request(endpoint, f.cookie, {
+    method: "POST", headers: { origin: f.binding.origin, "content-type": "application/json" },
+    body: JSON.stringify({ action: "disable", profile: profileA, expectedRevision: catalog.configRevision }),
+  }))
+  expect(disabled.status).toBe(200)
+  expect(await disabled.json()).toEqual({ status: "ok", changed: true, configRevision: catalog.configRevision + 1 })
+  const after = await context(await f.handle(f.contextRequest("team", profileA)))
+  expect(after.stamp.principalRef).toBe(before.stamp.principalRef)
+  expect(after.stamp.accessRevision).not.toBe(before.stamp.accessRevision)
+  expect(after.profile.teams).toEqual({ status: "revoked" })
+  expect(after.stamp.team).toBeUndefined()
+  expect(after.destinations).toEqual([])
+  expect(after.availability).toEqual([])
+  const other = await context(await f.handle(f.contextRequest("team", profileB)))
+  expect(other.stamp.team?.owner.profile).toEqual(profileB)
+})
+
 test("Teams context: logout during an await revokes the captured real session", async () => {
   const f = await fixture()
   f.hooks.operational = async () => { await f.logout(f.cookie) }

@@ -4,7 +4,7 @@
   "roles": {
     "teams": {
       "specFile": "e2e/sucafina/native/teams-profile-linux.spec.ts",
-      "status": "NOT_IMPLEMENTED",
+      "status": "PARTIAL_SOURCE_OBLIGATIONS",
       "requiredAcceptanceIds": [
         "A01",
         "A16",
@@ -21,7 +21,50 @@
         "A44",
         "A45"
       ],
-      "cases": []
+      "cases": [
+        {
+          "id": "teams-01",
+          "title": "Two distinct Microsoft accounts enter the same installed Team with their own authority",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A01", "A37"]
+        },
+        {
+          "id": "teams-02",
+          "title": "An explicit Team switch in one window leaves the sibling window on its own Team",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A16"]
+        },
+        {
+          "id": "teams-03",
+          "title": "An authenticated account without Team access cannot open the original business chapter",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A01"]
+        },
+        {
+          "id": "teams-04",
+          "title": "A foreign installation deep link cannot inherit the current Team selection",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A18"]
+        },
+        {
+          "id": "teams-05",
+          "title": "A Microsoft configuration administrator without Teams cannot acquire business access",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A45"]
+        },
+        {
+          "id": "teams-06",
+          "title": "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A18"]
+        },
+        {
+          "id": "teams-07",
+          "title": "A Team switch keeps a canceled chat draft and discards it only on confirmation",
+          "fixtureCase": "teams",
+          "acceptanceIds": ["A16"]
+        }
+      ]
     },
     "u15": {
       "specFile": "e2e/sucafina/native/journeys/u15.spec.ts",

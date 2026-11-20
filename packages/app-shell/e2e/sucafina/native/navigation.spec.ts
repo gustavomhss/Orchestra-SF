@@ -10,13 +10,18 @@ import { createHash } from "node:crypto"
 import { readFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { expect } from "@playwright/test"
-import { nativeInstalledFixture as test } from "./fixture"
+import { expect, type Page } from "@playwright/test"
+import { Schema } from "effect"
+import { nativeInstalledFixture, type NativeTarget } from "./fixture"
+import { nativeOwnerQuery } from "./fixture/manifest-contract"
 import { decodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
-type Route = { kind: string; path: string }
-type Surface = { id: string; chapterId: string; entryRoute: string; routes: Route[] }
-type SurfaceManifest = { surfaces: Surface[]; counts: { total: number } }
+const test = nativeInstalledFixture
+const Route = Schema.Struct({ kind: Schema.String, path: Schema.String })
+const Surface = Schema.Struct({ id: Schema.String, chapterId: Schema.String, entryRoute: Schema.String,
+  routes: Schema.Array(Route) })
+type Route = typeof Route.Type
+type Surface = typeof Surface.Type
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
 const frozenFile = path.join(root,
@@ -28,7 +33,9 @@ const objectSha = createHash("sha1").update(
 if (objectSha !== "50e2993a881e207aa3b2a1cd250a7da84cea5855") {
   throw new Error("Q01_SURFACE_LOCK_DRIFT_REQUIRES_I00_RECONCILIATION")
 }
-const manifest = JSON.parse(frozenText) as SurfaceManifest
+const manifest = Schema.decodeUnknownSync(Schema.fromJsonString(Schema.Struct({
+  surfaces: Schema.Array(Surface), counts: Schema.Struct({ total: Schema.Number }),
+})))(frozenText)
 if (manifest.counts.total !== 70 || manifest.surfaces.length !== 70 ||
     new Set(manifest.surfaces.map((entry) => entry.id)).size !== 70 ||
     new Set(manifest.surfaces.map((entry) => entry.chapterId)).size !== 15 ||
@@ -42,7 +49,6 @@ for (const surface of manifest.surfaces) {
 if (chapterGroups.size !== 15) throw new Error("Q01_CHAPTER_MATRIX_INCOMPLETE")
 
 const parameter = /^:[A-Za-z][A-Za-z0-9]*$/
-const opaque = /^r_[A-Za-z0-9_-]+$/
 function matcher(template: string): RegExp {
   const special = ".*+?^$()|[]{}\\"
   const escaped = template.split("/").map((segment) => parameter.test(segment)
@@ -54,14 +60,23 @@ function matcher(template: string): RegExp {
 function caseId(surface: Surface, route: Route): string {
   return "Q01-NAV-" + surface.id + "-" + route.kind
 }
-function selector(target: { serverKey: string; projectId: string; installationId: string }): string {
-  return new URLSearchParams({
-    server: target.serverKey, project: target.projectId, installation: target.installationId,
-  }).toString()
+const contextPath = "/orchestra/sf-home/context"
+const administrationPath = "/orchestra/sf-home/administration"
+function selectedUrl(target: NativeTarget, route: string): URL {
+  const url = new URL(route, target.shellOrigin)
+  const query = nativeOwnerQuery(target)
+  // UI69 is installation-scoped, not a business Team route.
+  if (route === administrationPath) query.delete("teamObjectId")
+  url.search = query.toString()
+  return url
 }
-function selectedUrl(target: { shellOrigin: string; serverKey: string; projectId: string; installationId: string },
-                     route: string): string {
-  return target.shellOrigin + route + "?" + selector(target)
+async function expectInvalidLink(page: Page) {
+  const content = page.locator("#sf-team-content")
+  await expect(content.getByRole("alert")).toHaveText(
+    /^(This link does not identify a valid Team profile for this installation\.|Este link n\u00e3o identifica um perfil do Teams v\u00e1lido para esta instala\u00e7\u00e3o\.)$/,
+  )
+  await expect(content.locator('[data-sf-frame="page"], [data-sf-context="authorized"], [data-sf-home="authorized"]'))
+    .toHaveCount(0)
 }
 
 test.describe("Q01 complete: 15 native chapters and every registered surface/alias", () => {
@@ -93,20 +108,20 @@ test.describe("Q01 complete: 15 native chapters and every registered surface/ali
                     r.path.startsWith("/orchestra/" + chapter) && !r.path.includes(":")))?.entryRoute
                 : surface.entryRoute
               if (source && !source.includes(":")) {
-                await page.goto(selectedUrl(target, source))
+                await page.goto(selectedUrl(target, source).href)
                 await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
-                const anchorPaths = await page.getByRole("link").evaluateAll((links) =>
-                  links.flatMap((a) => {
-                    const element = a as HTMLAnchorElement
-                    try { return [new URL(element.href).pathname] } catch { return [] }
-                  }),
+                const anchorURLs = await page.locator('[data-sf-frame="page"]').getByRole("link").evaluateAll((links) =>
+                  links.flatMap((link) => link instanceof HTMLAnchorElement ? [link.href] : []),
                 )
-                const real = anchorPaths.find((candidate) => matcher(route.path).test(candidate))
+                const real = anchorURLs.map((href) => new URL(href)).find((candidate) =>
+                  candidate.origin === target.shellOrigin && matcher(route.path).test(candidate.pathname) &&
+                  [...nativeOwnerQuery(target)].every(([key, value]) =>
+                    candidate.searchParams.getAll(key).length === 1 && candidate.searchParams.get(key) === value))
                 if (real) {
-                  for (const token of real.split("/").filter((part) => part.startsWith("r_"))) {
+                  for (const token of real.pathname.split("/").filter((part) => part.startsWith("r_"))) {
                     expect(decodeSfRouteRef(token), "Only canonical UTF-8 refs may be opened").toBeDefined()
                   }
-                  pathname = real
+                  pathname = real.pathname
                 }
               }
               if (pathname.includes(":")) {
@@ -115,28 +130,31 @@ test.describe("Q01 complete: 15 native chapters and every registered surface/ali
                 pathname = pathname.replace(/:[A-Za-z][A-Za-z0-9]*/g, "r_")
               }
             }
-            const expected = new URL(selectedUrl(target, pathname))
+            const expected = selectedUrl(target, pathname)
             const actual = await page.goto(expected.href)
             expect(actual, "Native route must return a document, not silently fall back to Chat").not.toBeNull()
             await expect(page).toHaveURL(expected.href)
-            await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
-            const state = page.locator("[data-sf-state]")
-            await expect(state.first(), "Every route must show an authorized state, not blank HTML").toBeVisible()
-            if (pathname.includes("/r_")) {
-              const encodedRefs = pathname.split("/").filter((part) => part.startsWith("r_"))
-              const validOpaque = encodedRefs.every((token) => opaque.test(token) && token !== "r_")
-              if (!validOpaque) {
-                await expect(page.locator('[data-sf-state="invalid"], [data-sf-state="not-found"], [data-sf-state="denied"]')).toBeVisible()
-              }
+            const invalidRef = pathname.split("/").includes("r_")
+            if (invalidRef) await expectInvalidLink(page)
+            else if (pathname === contextPath) {
+              const shell = page.locator('[data-sf-teams-state="authenticated"]')
+              await expect(shell).toHaveAttribute("data-sf-team-selected", target.teamObjectId)
+              await expect(shell.locator("[data-sf-team-status]").and(page.getByRole("status"))).toBeVisible()
+            } else if (pathname === administrationPath) {
+              await expect(page.locator('[data-sf-team-administration]:not([data-sf-team-administration="loading"])')).toBeVisible()
+            } else {
+              const frame = page.locator('[data-sf-frame="page"]')
+              await expect(frame).toBeVisible()
+              await expect(frame.locator("[data-sf-state]").first(), "Every business route must render its route state").toBeVisible()
             }
             const url = new URL(page.url())
-            expect(url.searchParams.getAll("server")).toEqual([target.serverKey])
-            expect(url.searchParams.getAll("project")).toEqual([target.projectId])
-            expect(url.searchParams.getAll("installation")).toEqual([target.installationId])
+            expect([...url.searchParams]).toEqual([...expected.searchParams])
             expect(url.pathname).toBe(pathname)
             if (route.kind === "case-alias") {
               expect(surface.id).toBe("UI51")
-              expect(url.pathname).toMatch(/^\/orchestra\/sf-decisions\/r_[A-Za-z0-9_-]+\/relations$/)
+              expect(url.pathname).toMatch(invalidRef
+                ? /^\/orchestra\/sf-decisions\/r_\/relations$/
+                : /^\/orchestra\/sf-decisions\/r_[A-Za-z0-9_-]+\/relations$/)
             }
           })
         }
@@ -146,27 +164,29 @@ test.describe("Q01 complete: 15 native chapters and every registered surface/ali
 })
 
 test("Q01-NAV-NEGATIVE: duplicate, partial, malformed, cross-origin and cross-owner links fail closed", async ({ page, nativeHarness }) => {
-  const { target, wrongProject } = nativeHarness.manifest
+  const { target, wrongServer, wrongTeam } = nativeHarness.manifest
   await page.goto(new URL(target.chapterHref, target.shellOrigin).href)
   const observed = await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
-  expect(observed.projectId).toBe(target.projectId)
-  const route = "/orchestra/sf-home/context"
-  const good = selector(target)
+  expect(observed.teamObjectId).toBe(target.teamObjectId)
+  const good = nativeOwnerQuery(target)
+  const duplicateServer = nativeOwnerQuery(target)
+  duplicateServer.append("server", wrongServer.serverKey)
+  const duplicateTeam = nativeOwnerQuery(target)
+  duplicateTeam.append("teamObjectId", wrongTeam.teamObjectId)
+  const partial = new URLSearchParams({ server: target.serverKey, teamObjectId: target.teamObjectId })
   const hostile = [
-    route + "?" + good + "&server=" + encodeURIComponent(wrongProject.serverKey),
-    route + "?server=" + encodeURIComponent(target.serverKey) + "&project=" + encodeURIComponent(target.projectId),
-    route + "?" + good + "&project=" + encodeURIComponent(wrongProject.projectId),
-    "/orchestra/sf-procurement/requests/r_/?"+good,
-    "/orchestra/sf-decisions/r_%FF/relations?"+good,
-    "/orchestra/sf-imports/%2Fpreview?"+good,
+    contextPath + "?" + duplicateServer,
+    contextPath + "?" + partial,
+    contextPath + "?" + duplicateTeam,
+    "/orchestra/sf-procurement/requests/r_/?" + good,
+    "/orchestra/sf-decisions/r_%FF/relations?" + good,
+    "/orchestra/sf-imports/%2Fpreview?" + good,
   ]
   for (const href of hostile) {
     await test.step("Q01-NAV-INVALID-" + hostile.indexOf(href), async () => {
-      await page.goto(target.shellOrigin + href)
-      // Invalid links must not expose the previously selected owner's private
-      // projection or reinterpret a denied target as the current source.
-      await expect(page.locator('[data-sf-context="authorized"]')).toHaveCount(0)
-      await expect(page.locator('[data-sf-state="invalid"], [data-sf-state="denied"], [data-sf-state="not-found"]')).toBeVisible()
+      await page.goto(new URL(href, target.shellOrigin).href)
+      // Teams refuses malformed input before mounting a business chapter.
+      await expectInvalidLink(page)
     })
   }
   expect(new URL("https://hostile.invalid/orchestra/sf-home", target.shellOrigin).origin)

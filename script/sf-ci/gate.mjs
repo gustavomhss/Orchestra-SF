@@ -5,7 +5,7 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { parseShardCosts, planShards } from "./shard-plan.mjs"
 import { candidateSource } from "./workflow-source.mjs"
-import { NATIVE_SPECS, NATIVE_CASE_LEDGER, nativeFail, recordTeamsProfileNative,
+import { NATIVE_SPECS, NATIVE_CASE_LEDGER, buildNativeInventory, nativeFail, recordTeamsProfileNative,
   requireNativePrivateRoot, readNativePrivateFile } from "./native-evidence.mjs"
 
 export const REQUIRED = [
@@ -610,8 +610,10 @@ export function requiredSelection(manifest, id) {
   return [...selected.testFiles]
 }
 
-async function recordNativeCli() {
-  const keys = ["candidate", "tree", "role", "raw-report", "expected-inventory", "host-receipt", "artifact-receipt", "output"]
+async function nativeEvidenceCli(command) {
+  const recording = command === "record-teams-profile-native"
+  const keys = ["candidate", "tree", "role", "output",
+    ...(recording ? ["raw-report", "expected-inventory", "host-receipt", "artifact-receipt"] : [])]
   const args = process.argv.slice(3), flags = new Map()
   if (args.length !== keys.length * 2) nativeFail()
   for (let index = 0; index < args.length; index += 2) {
@@ -624,14 +626,12 @@ async function recordNativeCli() {
       process.env.SF_CHECKOUT_SHA !== run.sha || process.env.SF_NATIVE_CANDIDATE_SHA !== run.sha ||
       process.env.CI !== "true" || process.env.GITHUB_ACTIONS !== "true" ||
       process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64" || process.platform !== "linux" ||
-      process.env.ORCHESTRA_CHANNEL !== "prod" || process.env.SF_NATIVE_TEST_EXIT_CODE !== "0") nativeFail()
+      process.env.ORCHESTRA_CHANNEL !== "prod" || (recording && process.env.SF_NATIVE_TEST_EXIT_CODE !== "0")) nativeFail()
   const meta = { ...run, treeSha, role: flags.get("role"), invocationId: process.env.SF_NATIVE_INVOCATION_ID }
   const output = flags.get("output")
   const root = requireNativePrivateRoot(path.dirname(output), meta, process.env.RUNNER_TEMP)
-  const rawReport = readNativePrivateFile(root, flags.get("raw-report"))
-  const inventoryBytes = readNativePrivateFile(root, flags.get("expected-inventory"))
-  const hostBytes = readNativePrivateFile(root, flags.get("host-receipt"))
-  const artifactBytes = readNativePrivateFile(root, flags.get("artifact-receipt"))
+  if (path.resolve(output) !== output || existsSync(output) ||
+      (recording && existsSync(output + ".sha256"))) nativeFail()
   const { verifyGitSource, readSource } = await import("./team-profile-residue.mjs")
   const commit = readNativePrivateFile(root, path.join(root, "source.commit"))
   const inventory = readNativePrivateFile(root, path.join(root, "source.inventory"), 64 * 1024 * 1024)
@@ -645,6 +645,20 @@ async function recordNativeCli() {
   const sourceBytes = readFileSync(ensureContained(process.cwd(), specPath, "file"))
   const ledgerBytes = readFileSync(ensureContained(process.cwd(), NATIVE_CASE_LEDGER, "file"))
   if (digest(sourceBytes) !== specRecord.sha256 || digest(ledgerBytes) !== ledgerRecord.sha256) nativeFail()
+  if (!recording) {
+    const expected = buildNativeInventory({ sourceBytes, ledgerBytes, meta })
+    await readSource(process.cwd(), verified)
+    const bytes = Buffer.from(JSON.stringify(expected, null, 2) + "\n")
+    writeFileSync(output, bytes, { flag: "wx", mode: 0o600 })
+    console.log("SF_TEAMS_NATIVE_INVENTORY_PREPARED " + JSON.stringify({
+      role: meta.role, cases: expected.cases.length, inventorySha256: digest(bytes),
+    }))
+    return
+  }
+  const rawReport = readNativePrivateFile(root, flags.get("raw-report"))
+  const inventoryBytes = readNativePrivateFile(root, flags.get("expected-inventory"))
+  const hostBytes = readNativePrivateFile(root, flags.get("host-receipt"))
+  const artifactBytes = readNativePrivateFile(root, flags.get("artifact-receipt"))
   const receipt = recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes, artifactBytes,
     sourceBytes, ledgerBytes, sourceProvenance: { commitSha256: verified.commitSha256,
       inventorySha256: verified.inventorySha256 }, meta, exitCode: Number(process.env.SF_NATIVE_TEST_EXIT_CODE) })
@@ -667,8 +681,8 @@ async function recordNativeCli() {
 
 async function cli() {
   const command = process.argv[2]
-  if (command === "record-teams-profile-native") {
-    await recordNativeCli()
+  if (command === "prepare-teams-profile-native-inventory" || command === "record-teams-profile-native") {
+    await nativeEvidenceCli(command)
     return
   }
   const manifest = readJson("sf/ci/suites.json")

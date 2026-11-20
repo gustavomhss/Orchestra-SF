@@ -219,6 +219,9 @@ control(controlCases[6], () => {
   assert.throws(() => parseCanonicalJson(Buffer.from('{"a":1,"a":2}'), "test"), /canonical/)
   assert.throws(() => parseArguments(["--source", ".", "--manifest", "catalog.json", "--output", "/tmp/report", "--source", "other"]), /duplicate/)
   assert.throws(() => parseArguments(["--source", ".", "--manifest", "catalog.json", "--output", "/tmp/report"]), /selection/)
+  const sourceOnly = ["--source", ".", "--manifest", "catalog.json", "--output", "/tmp/report"]
+  assert.throws(() => parseArguments([...sourceOnly, "--diagnostic-source-only", "--installed-release", "/opt/release"]), /selection/)
+  assert.equal(parseArguments([...sourceOnly, "--archive", "/tmp/archive.tar.gz", "--installed-release", "/opt/release"])["installed-release"], "/opt/release")
 })
 
 control(controlCases[7], () => {

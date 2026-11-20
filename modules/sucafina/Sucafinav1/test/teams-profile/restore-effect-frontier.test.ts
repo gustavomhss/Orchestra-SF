@@ -4,7 +4,7 @@ import path from "node:path"
 import { roleMap } from "../../runtime/admin.ts"
 import { createLocalBackups } from "../../runtime/local-backups.ts"
 import { restoreBackup } from "../../runtime/operations.ts"
-import { captureSfRestoreRetention } from "../../runtime/restore-effect-frontier.ts"
+import { captureSfCorporateRestoreRetention, captureSfRestoreRetention } from "../../runtime/restore-effect-frontier.ts"
 import { createDecisionCasePort } from "../../product/decisions/case-port.ts"
 import { digestSfValue } from "../../product/contracts/canonical.ts"
 import { createSfSourcePersistence } from "../../product/integration/source-lifecycle.ts"
@@ -172,4 +172,86 @@ test("restore-frontier-05: retained product effects prevent an unclassified over
   expect(await f.store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => ({
     commit: false, value: Array.from(await blobs.get(key) ?? []),
   }))).toEqual([4, 5, 6])
+})
+
+test("restore-frontier-06: a newer current passes, but rewinding both local frontiers fails against retained effects", async () => {
+  const f = await fixture()
+  const checkpoint = await f.snapshot()
+  expect((await draft(f, randomUUID())).status).toBe("ok")
+  const externallyRetained = inspectSfProductRestoreFrontier(await f.snapshot())
+  if (!externallyRetained) throw new Error("Expected a retained product frontier")
+  expect(externallyRetained.transactions).toHaveLength(1)
+  expect((await draft(f, randomUUID())).status).toBe("ok")
+  const current = await f.snapshot()
+  const frontier = inspectSfProductRestoreFrontier(current)
+  expect(frontier?.revision).toBeGreaterThan(externallyRetained.revision)
+  expect(frontier?.transactions).toHaveLength(2)
+  const restored = { ...checkpoint, data: structuredClone(checkpoint.data) }
+  captureSfCorporateRestoreRetention(current, checkpoint, externallyRetained).apply(restored.data)
+  expect(inspectSfProductRestoreFrontier(restored)).toEqual(frontier)
+  expect(await f.snapshot()).toEqual(current)
+
+  // Simulate a durable product rewind while the independently held evidence stays fixed.
+  await f.store.transaction("dashboard", async (snapshot) => {
+    snapshot.data.__sfProductV1 = structuredClone(checkpoint.data.__sfProductV1)
+    return { commit: true, value: undefined }
+  })
+  const rewound = await f.snapshot()
+  expect(inspectSfProductRestoreFrontier(rewound)).toEqual(inspectSfProductRestoreFrontier(checkpoint))
+  expect(() => captureSfRestoreRetention(rewound, checkpoint)).not.toThrow()
+  expect(() => captureSfCorporateRestoreRetention(rewound, checkpoint, externallyRetained))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(await f.snapshot()).toEqual(rewound)
+})
+
+test("restore-frontier-07: corporate preflight requires all three explicit frontiers from one incarnation", async () => {
+  const f = await fixture()
+  const current = await f.snapshot()
+  const frontier = inspectSfProductRestoreFrontier(current)
+  if (!frontier) throw new Error("Expected an explicit product frontier")
+  const absent = empty()
+  const foreign = structuredClone(current)
+  object(foreign.data.__sfProductV1).incarnation = randomUUID()
+
+  expect(() => captureSfCorporateRestoreRetention(current, current, frontier)).not.toThrow()
+  expect(() => captureSfCorporateRestoreRetention(current, current, undefined))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(() => captureSfCorporateRestoreRetention(absent, current, frontier))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(() => captureSfCorporateRestoreRetention(current, absent, frontier))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(() => captureSfCorporateRestoreRetention(current, foreign, frontier))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+  expect(() => captureSfCorporateRestoreRetention(current, current, inspectSfProductRestoreFrontier(foreign)))
+    .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+})
+
+test("restore-frontier-08: external evidence and checkpoint must each be dominated by actual current state", async () => {
+  const f = await fixture()
+  const checkpoint = await f.snapshot()
+  expect((await draft(f, randomUUID())).status).toBe("ok")
+  const original = await f.snapshot()
+  const retained = inspectSfProductRestoreFrontier(original)
+  if (!retained) throw new Error("Expected a retained product frontier")
+  const faults: ((product: Record<string, unknown>) => void)[] = [
+    (product) => { product.revision = retained.revision - 1 },
+    (product) => { object(product.versions).cases = retained.versions.cases - 1 },
+    (product) => { product.transactions = {} },
+    (product) => { object(Object.values(object(product.transactions))[0]).commandDigest = "changed" },
+  ]
+  for (const damage of faults) {
+    await f.store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.__sfProductV1 = structuredClone(original.data.__sfProductV1)
+      damage(object(snapshot.data.__sfProductV1))
+      return { commit: true, value: undefined }
+    })
+    const current = await f.snapshot()
+    const frontier = inspectSfProductRestoreFrontier(current)
+    if (!frontier) throw new Error("Expected an explicit but damaged frontier")
+    expect(() => captureSfCorporateRestoreRetention(current, checkpoint, retained))
+      .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+    expect(() => captureSfCorporateRestoreRetention(current, original, frontier))
+      .toThrow("SF_RESTORE_EFFECT_FRONTIER_UNKNOWN")
+    expect(await f.snapshot()).toEqual(current)
+  }
 })

@@ -16,7 +16,7 @@ import { nativeTeamRef, validateNativeBoundaries, validateNativeManifest } from 
 import type { NativeBoundaries } from "./manifest-contract.ts"
 import { requireApprovedNativeConnection } from "./installed-manifest.ts"
 import type { NativeInstalledRegistration } from "./installed-manifest.ts"
-import type { NativeActor, NativeManifest } from "./readiness.ts"
+import type { NativeActor, NativeManifest, NativeTarget } from "./readiness.ts"
 
 export type NativeInstalledSuite = "U15" | "U39" | "U40"
 export type NativeInstalledCase = "list" | "editable" | "denied" | "stale" | "lost" | "entry" | "empty" | "source" | "readonly" | "revoked" | "late"
@@ -206,6 +206,24 @@ export type NativeSelectionInput = Readonly<{
   sourceRecordId?: string
 }>
 
+export function requireIsolatedNativeRevocation(
+  manifest: NativeManifest,
+  selections: readonly Pick<NativeSuiteSelection, "caseId" | "actor" | "boundaries">[],
+  authorizedInvocation = process.env.SF_NATIVE_DISPOSABLE_REVOCATION,
+) {
+  const revoked = selections.find((entry) => entry.caseId === "revoked")
+  if (!revoked) return
+  requireValue(authorizedInvocation === manifest.invocation.invocationId && manifest.actors.dashboardAdmin &&
+    revoked.actor !== "dashboardAdmin", "F04_DISPOSABLE_REVOCATION_INVOCATION_AND_DISTINCT_ADMIN_REQUIRED")
+  const target = revoked.boundaries.target
+  const otherTargets: NativeTarget[] = [manifest.target, manifest.wrongServer, manifest.wrongTeam,
+    manifest.wrongInstallation, ...selections.filter((entry) => entry !== revoked).flatMap((entry) => Object.values(entry.boundaries))]
+  requireValue(otherTargets.every((other) => other.installationId !== target.installationId &&
+    (other.publicOrigin !== target.publicOrigin || other.mount !== target.mount) &&
+    (other.tenantId !== target.tenantId || other.teamObjectId !== target.teamObjectId)),
+  "F04_REVOCATION_INSTALLATION_NOT_ISOLATED")
+}
+
 export async function registerNativeSelectedInstallation(input: Readonly<{
   manifest: NativeManifest
   browser: Browser
@@ -227,6 +245,7 @@ export async function registerNativeSelectedInstallation(input: Readonly<{
     new Set(input.selections.map((row) => row.caseId)).size === required.cases.length,
     "F04_SELECTED_SUITE_CASES_INCOMPLETE_OR_DUPLICATED")
   const contexts = new Set(input.browser.contexts())
+  requireIsolatedNativeRevocation(input.manifest, input.selections)
   const result: NativeSuiteSelection[] = []
   for (const selected of input.selections) {
     requireValue(contexts.has(selected.page.context()) &&
@@ -398,7 +417,9 @@ export async function readNativeSelectedInstallation(
         throw new Error("F04_PRIVATE_SOURCE_VERSION_RECORD_INVALID")
     }
   }
-  return bundle as unknown as NativeSelectedInstallation
+  const validated = bundle as unknown as NativeSelectedInstallation
+  requireIsolatedNativeRevocation(manifest, validated.selections)
+  return validated
 }
 
 /** Every consumer must re-check actor, source readiness, record and current CAS

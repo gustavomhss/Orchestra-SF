@@ -3,129 +3,150 @@
  * principal, an ACL result, a session cookie, or a successful revocation.
  * A runner must supply separate genuinely authenticated actor contexts.
  */
-import { randomUUID } from "node:crypto"
-import { expect } from "@playwright/test"
-import { armHeldResponse, nativeInstalledFixture as test } from "./fixture"
-import type { NativeTarget } from "./fixture/readiness"
+import { expect, type Page } from "@playwright/test"
+import { Schema } from "effect"
+import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
+import { armHeldResponse, nativeInstalledFixture, observeNativeBinding,
+  type InstalledNativeHarness, type NativeTarget } from "./fixture"
+import { nativeOwnerQuery } from "./fixture/manifest-contract"
+import { nativeContextURL } from "./fixture/readiness"
 
-function urlFor(target: NativeTarget, route = target.chapterHref): string {
-  const url = new URL(route, target.shellOrigin)
-  url.searchParams.set("server", target.serverKey)
-  url.searchParams.set("project", target.projectId)
-  url.searchParams.set("installation", target.installationId)
-  return url.href
+const test = nativeInstalledFixture
+const homePath = "/orchestra/sf-home"
+const authorized = '[data-sf-frame="page"], [data-sf-context="authorized"], [data-sf-home="authorized"]'
+const options = { maxRedirects: 0, maxRetries: 0 }
+const decodeContext = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), { onExcessProperty: "error" })
+
+function urlFor(target: NativeTarget, route = homePath): string {
+  return new URL(route + "?" + nativeOwnerQuery(target), target.shellOrigin).href
 }
-async function actualContext(page: import("@playwright/test").Page, target: NativeTarget) {
-  const url = new URL(target.mount + "/api/ui/context", target.publicOrigin)
-  url.searchParams.set("installationId", target.installationId)
-  url.searchParams.set("projectId", target.projectId)
-  url.searchParams.set("hostId", target.hostId)
-  const response = await page.request.get(url.href, { maxRedirects: 0, maxRetries: 0 })
-  const body: unknown = response.headers()["content-type"]?.includes("application/json")
-    ? await response.json() : undefined
-  return { status: response.status(), body }
+
+async function expectBlocked(page: Page, branch: "invalid" | "denied") {
+  const content = page.locator("#sf-team-content")
+  const alert = content.getByRole("alert").filter({ hasText: branch === "invalid"
+    ? /^(This link does not identify a valid Team profile for this installation\.|Este link n\u00e3o identifica um perfil do Teams v\u00e1lido para esta instala\u00e7\u00e3o\.)$/
+    : /^(This Team is not available for this account\.|Esta equipe n\u00e3o est\u00e1 dispon\u00edvel para esta conta\.)$/ })
+  const denied = page.locator('[data-sf-teams-state="denied"] [data-sf-team-status]').and(page.getByRole("status"))
+  await expect(branch === "denied" ? alert.or(denied) : alert).toBeVisible()
+  await expect(content.locator(authorized)).toHaveCount(0)
 }
-function stampOf(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== "object" || !("status" in value) || value.status !== "ok" ||
-      !("value" in value) || !value.value || typeof value.value !== "object" ||
-      !("stamp" in value.value) || !value.value.stamp ||
-      typeof value.value.stamp !== "object") throw new Error("Q01_REAL_CONTEXT_NOT_AUTHORIZED")
-  return value.value.stamp as Record<string, unknown>
-}
-async function verified(page: import("@playwright/test").Page,
-                        harness: import("./fixture").InstalledNativeHarness) {
+
+async function verified(page: Page, harness: InstalledNativeHarness) {
   await page.goto(new URL(harness.manifest.target.chapterHref, harness.manifest.target.shellOrigin).href)
   return harness.proveWeb(page.locator('[data-sf-frame="page"]'))
 }
 
 test.describe("Q01 real actor/context and stale projection fences", () => {
-  test.describe.configure({ retries: 0 })
+  test.describe.configure({ mode: "default", retries: 0 })
   for (const actor of ["requester", "holder", "denied"] as const) {
     test("Q01-ISO-REAL-ACTOR-" + actor + " must be an authentic principal", async ({ page, nativeHarness }) => {
       // F04's manifest only NAMES the expected real actors. We do not turn its
       // names into a login, token, session or proof of holder authority.
-      const identity = await verified(page, nativeHarness)
-      expect(identity.principalRef,
+      const { target, actors } = nativeHarness.manifest
+      await page.goto(new URL(target.chapterHref, target.shellOrigin).href)
+      // A genuine Microsoft principal can have no business rights; do not
+      // require a mounted chapter to observe the actor in that case.
+      const live = await observeNativeBinding(page, target)
+      await expect(page.locator('[data-sf-teams-state="authenticated"]')).toBeVisible()
+      expect(live.stamp.principalRef,
         "129 must execute this case under the real " + actor + " session; never reuse requester storageState")
-        .toBe(nativeHarness.manifest.actors[actor])
-      const actual = await actualContext(page, nativeHarness.manifest.target)
-      expect(actual.status).toBe(200)
-      const stamp = stampOf(actual.body)
-      expect(stamp.principalRef).toBe(identity.principalRef)
-      expect(stamp.projectId).toBe(identity.projectId)
-      expect(stamp.installationId).toBe(identity.installationId)
-      expect(stamp.hostId).toBe(identity.hostId)
+        .toBe(actors[actor])
+      expect(live.profile.principal.principalObjectId).toBe(actors[actor])
+      expect(live.profile.principal.tenantId).toBe(target.tenantId)
+      expect(live.stamp).toMatchObject({ installationId: target.installationId, projectId: target.projectId, hostId: target.hostId })
     })
   }
 
   test("Q01-ISO-CROSS-OWNER denies B without falling back to selected A", async ({ page, nativeHarness }) => {
-    const { target, wrongServer, wrongProject, wrongInstallation } = nativeHarness.manifest
+    const { target, wrongServer, wrongTeam, wrongInstallation } = nativeHarness.manifest
     const before = await verified(page, nativeHarness)
-    const original = await actualContext(page, target)
-    expect(original.status).toBe(200)
-    expect(stampOf(original.body).principalRef).toBe(before.principalRef)
-    for (const other of [wrongServer, wrongProject, wrongInstallation]) {
-      await test.step("Q01-ISO-BOUNDARY-" + (
-        other === wrongServer ? "SERVER" : other === wrongProject ? "PROJECT" : "INSTALLATION"
-      ), async () => {
-        await page.goto(urlFor(other, "/orchestra/sf-home/context"))
-        await expect(page.locator('[data-sf-context="authorized"]')).toHaveCount(0)
-        await expect(page.locator('[data-sf-state="denied"], [data-sf-state="invalid"], [data-sf-state="unavailable"], [data-sf-state="session-expired"]')).toBeVisible()
+    const original = await observeNativeBinding(page, target)
+    expect(original.stamp.principalRef).toBe(before.principalRef)
+    const profile = original.stamp.team?.owner.profile
+    expect(profile).toEqual({ installationId: target.installationId, tenantId: target.tenantId, teamObjectId: target.teamObjectId })
+    const boundaries = [
+      { id: "SERVER", other: wrongServer, branch: "invalid" },
+      // Retain the frozen reporting ID; the changed selector is now Team only.
+      { id: "PROJECT", other: wrongTeam, branch: "denied" },
+      { id: "INSTALLATION", other: wrongInstallation, branch: "invalid" },
+    ] as const
+    for (const { id, other, branch } of boundaries) {
+      await test.step("Q01-ISO-BOUNDARY-" + id, async () => {
+        await page.goto(urlFor(other))
+        await expectBlocked(page, branch)
         expect(page.url()).not.toContain("principalRef=")
         expect(page.url()).not.toContain("auth=")
-        const next = await actualContext(page, other)
-        // No forged host/project/installation can be accepted as A's exact stamp.
-        if (next.status === 200) {
-          const stamp = stampOf(next.body)
-          expect(
-            stamp.projectId !== target.projectId ||
-            stamp.installationId !== target.installationId ||
-            stamp.hostId !== target.hostId ||
-            stamp.principalRef !== before.principalRef,
-          ).toBe(true)
-        } else {
-          expect([400, 401, 403, 404, 409, 503]).toContain(next.status)
+        const next = await page.request.get(nativeContextURL(other), options)
+        if (next.status() === 200) {
+          const result = decodeContext(await next.json())
+          if (result.status !== "ok") throw new Error("Q01_REAL_CONTEXT_NOT_AUTHORIZED")
+          // An authenticated denial can lack a business stamp. If a stamp is
+          // returned, it cannot be the original Team A authority.
+          expect(result.value.stamp).not.toMatchObject({
+            principalRef: before.principalRef, hostId: target.hostId, projectId: target.projectId,
+            installationId: target.installationId, team: { owner: { profile } },
+          })
+          return
         }
+        expect([400, 401, 403, 404, 409, 503]).toContain(next.status())
       })
     }
   })
 
-  test("Q01-ISO-LOGOUT purges private UI and does not replay the session", async ({ page, nativeHarness }) => {
-    const { target } = nativeHarness.manifest
-    await verified(page, nativeHarness)
-    await page.goto(urlFor(target, "/orchestra/sf-home/context"))
-    await expect(page.locator('[data-sf-context="authorized"]')).toBeVisible()
-    const logout = await page.request.post(target.publicOrigin + target.mount + "/auth/logout", {
-      headers: { "Idempotency-Key": randomUUID() }, maxRedirects: 0, maxRetries: 0,
-    })
-    expect(logout.status(), "Only a real producer-confirmed logout can satisfy this check").toBe(204)
-    await page.reload()
-    await expect(page.locator('[data-sf-context="authorized"]')).toHaveCount(0)
-    await expect(page.locator('[data-sf-state="session-expired"], [data-sf-state="denied"]')).toBeVisible()
-    const after = await actualContext(page, target)
-    expect([401, 403]).toContain(after.status)
-  })
-
   test("Q01-ISO-LATE-READ cannot resurrect owner A after real owner-B transition", async ({ page, nativeHarness }) => {
-    const { target, wrongProject } = nativeHarness.manifest
+    const { target, wrongTeam } = nativeHarness.manifest
     await verified(page, nativeHarness)
+    await page.goto(urlFor(target))
+    await expect(page.locator('[data-sf-home="authorized"]')).toBeVisible()
+    const source = new URL(nativeContextURL(target))
     const fault = await armHeldResponse(page, {
-      origin: target.publicOrigin, pathname: target.mount + "/api/ui/context", method: "GET",
+      origin: source.origin, pathname: source.pathname, method: "GET", query: Object.fromEntries(source.searchParams),
     })
     try {
       // The existing producer is called; the response is held at delivery only.
-      const reloaded = await page.reload({ waitUntil: "domcontentloaded" })
+      const [heldRequest, reloaded] = await Promise.all([
+        page.waitForRequest((request) => {
+          const url = new URL(request.url())
+          return request.method() === "GET" && url.origin === source.origin && url.pathname === source.pathname &&
+            [...source.searchParams].every(([key, value]) => url.searchParams.get(key) === value)
+        }),
+        page.reload({ waitUntil: "domcontentloaded" }),
+      ])
       expect(reloaded?.ok()).toBe(true)
       await expect.poll(() => {
         try { return fault.observations().attempts }
         catch { return 0 }
       }, { message: "Real producer GET must be observed before the transition" }).toBe(1)
-      await page.goto(urlFor(wrongProject, "/orchestra/sf-home/context"), { waitUntil: "domcontentloaded" })
-      fault.release()
+      await page.goto(urlFor(wrongTeam), { waitUntil: "domcontentloaded" })
+      await expectBlocked(page, "denied")
       const observation = fault.observations()
       expect(observation.producerStatus).toBe(200)
-      await expect(page.locator('[data-sf-context="authorized"]')).toHaveCount(0)
-      await expect(page.locator('[data-sf-state="denied"], [data-sf-state="invalid"], [data-sf-state="unavailable"], [data-sf-state="session-expired"]')).toBeVisible()
+      fault.release()
+      await (await heldRequest.response())?.finished()
+      await expectBlocked(page, "denied")
     } finally { await fault.dispose() }
+  })
+
+  // Run last and with a disposable invocation: the real sign-out invalidates
+  // the host-owned requester session, not just this test page.
+  test("Q01-ISO-LOGOUT purges private UI and does not replay the session", async ({ page, nativeHarness }) => {
+    const { target } = nativeHarness.manifest
+    await verified(page, nativeHarness)
+    await page.goto(urlFor(target))
+    await expect(page.locator('[data-sf-home="authorized"]')).toBeVisible()
+    const logoutURL = new URL(target.mount + "/auth/logout", target.publicOrigin).href
+    const [logout] = await Promise.all([
+      page.waitForResponse((response) => response.url() === logoutURL && response.request().method() === "POST"),
+      page.getByRole("button").and(page.locator("[data-sf-sign-out]")).click(),
+    ])
+    expect(logout.status(), "Only a real producer-confirmed logout can satisfy this check").toBe(204)
+    const signedOut = page.locator('[data-sf-teams-state="unauthenticated"] [data-sf-team-status]').and(page.getByRole("status"))
+    await expect(signedOut).toBeVisible()
+    await expect(page.locator(authorized)).toHaveCount(0)
+    await page.goto(urlFor(target))
+    await expect(signedOut).toBeVisible()
+    await expect(page.locator(authorized)).toHaveCount(0)
+    const after = await page.request.get(nativeContextURL(target), options)
+    expect([401, 403]).toContain(after.status())
   })
 })

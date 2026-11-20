@@ -1,7 +1,7 @@
 import { test } from "node:test"
 import { assertWorkflowManifestSelection, assertWorkflowSourceSelection } from "./workflow-contract.mjs"
 import { candidateSource } from "./workflow-source.mjs"
-import { recordTeamsProfileNative, requireNativePrivateRoot, readNativePrivateFile } from "./native-evidence.mjs"
+import { buildNativeInventory, recordTeamsProfileNative, requireNativePrivateRoot, readNativePrivateFile } from "./native-evidence.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, chmodSync, linkSync } from "node:fs"
@@ -860,6 +860,41 @@ test("native receipts preserve the actual six, twenty-two and twenty-two source 
     for (const forbidden of ["PRIVATE_TEST_VALUE_DO_NOT_PUBLISH", "stdout", "stderr", "title", "https://"])
       assert.equal(output.includes(forbidden), false)
   }
+})
+
+test("native inventory producer binds exact original source positions and fails for unimplemented roles", () => {
+  for (const [role, count] of [["u15", 6], ["u39", 22], ["u40", 22]]) {
+    const data = nativeFixture(role)
+    const input = nativeInput(data)
+    const generated = buildNativeInventory(input)
+    assert.deepEqual(generated, JSON.parse(input.inventoryBytes))
+    assert.equal(generated.cases.length, count)
+    assert.equal(recordTeamsProfileNative({ ...input,
+      inventoryBytes: Buffer.from(JSON.stringify(generated, null, 2) + "\n") }).counts.executed, count)
+    assert.throws(() => buildNativeInventory({ ...input, sourceBytes: Buffer.from("") }), /invalid private native evidence/)
+    for (const unimplemented of ["teams", "recovery"]) {
+      assert.throws(() => buildNativeInventory({ ...input, meta: { ...input.meta, role: unimplemented } }),
+        /invalid private native evidence/)
+    }
+  }
+  const rebound = nativeFixture()
+  rebound.inventory.cases[0].column++
+  rebound.report.suites[0].specs[0].column++
+  assert.throws(() => recordTeamsProfileNative(nativeInput(rebound)), /invalid private native evidence/)
+})
+
+test("native qualification refuses a partial Teams spec even when its case declarations exist", () => {
+  const data = nativeInput(nativeFixture())
+  const sourceBytes = readFileSync(new URL("../../packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts", import.meta.url))
+  const meta = { ...data.meta, role: "teams" }
+  const ledger = JSON.parse(data.ledgerBytes)
+  assert.equal(ledger.roles.teams.status, "PARTIAL_SOURCE_OBLIGATIONS")
+  assert.ok(ledger.roles.teams.cases.length > 0)
+  for (const item of ledger.roles.teams.cases) assert.ok(sourceBytes.includes(JSON.stringify(item.title)))
+  assert.throws(() => buildNativeInventory({ ...data, sourceBytes, meta }), /invalid private native evidence/)
+  ledger.roles.teams.status = "IMPLEMENTED_SOURCE_OBLIGATIONS"
+  const ledgerBytes = Buffer.from(JSON.stringify(ledger, null, 2) + "\n")
+  assert.throws(() => buildNativeInventory({ ledgerBytes, sourceBytes, meta }), /invalid private native evidence/)
 })
 
 test("native report admission rejects incomplete, flaky, retried, skipped and foreign-source executions", () => {
