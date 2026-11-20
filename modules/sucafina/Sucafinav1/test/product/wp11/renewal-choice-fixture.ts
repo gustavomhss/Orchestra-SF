@@ -10,7 +10,7 @@ import { createCriterionRuleRegistry } from "../../../product/decisions/criterio
 import { classifyCoverage, supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
-import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+import { createSfProductState, selectSfCase } from "../../../product/host-binding/state-provider.ts"
 import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
 import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
@@ -46,7 +46,7 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     const checkpoint = (phase: string) => trace.checkpoint(phase, state, fixture.request)
     await checkpoint("bootstrap-complete")
     const readCase = async () => {
-      const loaded = await state.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
+      const loaded = await state.read(fixture.request, "cases", selectSfCase(fixture.caseRef.id, fixture.context))
       if (loaded.status !== "ok" || !loaded.value) throw new Error("Current decision unavailable")
       return structuredClone(loaded.value)
     }
