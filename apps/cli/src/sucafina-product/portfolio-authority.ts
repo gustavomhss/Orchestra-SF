@@ -11,6 +11,7 @@ import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafin
 import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
 import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
 import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+import { resolveStoredPlannerScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
@@ -50,11 +51,20 @@ export function createSfPortfolioAuthority(input: {
     // reopens both scenarios and validates these final snapshots before return.
     // No observation serves a resolve call or survives this metric invocation.
     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
-    const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
-      const observation = structuredClone(await scenarios.resolve(reference, context))
+    const observe = (reference: string, result: Awaited<ReturnType<typeof scenarios.resolve>>) => {
+      const observation = structuredClone(result)
       observed.set(reference, observation)
       return observation
-    } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
+    }
+    const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: {
+      resolve: async (reference, context) => observe(reference, await scenarios.resolve(reference, context)),
+      resolveMany: async (references, context) => {
+        // Preserve canonical sibling phases without bypassing a modified scalar
+        // reader. Opaque observers retain their original sequential schedule.
+        const values = await resolveStoredPlannerScenarios(scenarios, references, context, "sequential")
+        return values.map((value, index) => observe(references[index]!, value))
+      },
+    } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
     if (result.status !== "ok") return result
     const baseline = observed.get(captured.baselineRef!)
     const candidate = observed.get(captured.scenarioRef)
