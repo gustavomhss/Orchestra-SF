@@ -1,7 +1,7 @@
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionV2 } from "@orchestra/core/session"
 import { SessionOwner } from "@orchestra/core/session/owner"
-import { openSessionAccess, protectSessionCursor, readSessionCursor, verifySessionAccess } from "../session-access"
+import { openSessionAccess, protectSessionCursor, readSessionCursor, sessionNamespace, verifySessionAccess } from "../session-access"
 import { Effect, Schema } from "effect"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { Api } from "../api"
@@ -74,7 +74,9 @@ export const MessageHandler = HttpApiBuilder.group(Api, "server.message", (handl
         const first = messages[0]
         const last = messages.at(-1)
         yield* verifySessionAccess(owners, access, "session.messages", ctx.params.sessionID)
+        const namespace = yield* sessionNamespace(owners, access)
         return {
+          namespace,
           data: messages,
           cursor: {
             previous: first ? yield* protectSessionCursor(owners, "messages:" + ctx.params.sessionID, cursor.encode(first, order, "previous")) : undefined,

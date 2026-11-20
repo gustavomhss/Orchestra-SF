@@ -3,7 +3,7 @@ import { Context, Effect, Layer, Schema, Scope } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Session } from "@orchestra/schema/session"
-import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { teamSessionFixture, profileA } from "../../../core/test/fixture/team-session"
 import { applicationServices, createApiRoutesWithServices } from "../../src/routes"
 import { makeInstalledSessionHttp } from "../../src/session-http"
@@ -11,9 +11,10 @@ import type { SfTrustedInstallationSource } from "../../src/sucafina-installatio
 
 export { profileA, profileB, oid, other } from "../../../core/test/fixture/team-session"
 export const basic = "Basic " + btoa("orchestra:installed-test-secret")
-export const Info = Schema.Struct({ data: Session.Info })
+export const Info = Schema.Struct({ data: Session.Info, namespace: Schema.optional(TeamProfile.SessionNamespace) })
 export const List = Schema.Struct({
   data: Schema.Array(Session.Info),
+  namespace: Schema.optional(TeamProfile.SessionNamespace),
   cursor: Schema.Struct({ previous: Schema.optional(Schema.String), next: Schema.optional(Schema.String) }),
 })
 export const decode = <A>(response: Response, schema: Schema.Decoder<A>) =>

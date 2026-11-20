@@ -52,7 +52,10 @@ export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Ef
     const host = original.headers.get("host")
     if (url.origin !== options.origin || host !== null && host.toLowerCase() !== new URL(options.origin).host.toLowerCase() ||
       !isInstalledSessionPath(url.pathname, options.mount) ||
-      original.headers.has("authorization") || url.searchParams.has("auth_token")) return yield* unauthorized()
+      original.headers.has("authorization") || url.searchParams.has("auth_token") ||
+      original.headers.get("sec-fetch-site") === "cross-site" ||
+      original.headers.has("origin") && original.headers.get("origin") !== options.origin ||
+      !["GET", "HEAD"].includes(original.method) && original.headers.get("origin") !== options.origin) return yield* unauthorized()
     const observed: { admission?: SessionOwner.Admission } = {}
     const lease = yield* owners.capture(() => Effect.promise(() => options.readAdmission(original)).pipe(
       Effect.tap((admission) => Effect.sync(() => { observed.admission = admission })),

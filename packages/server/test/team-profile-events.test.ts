@@ -6,7 +6,7 @@ import { SessionV2 } from "@orchestra/core/session"
 import { SessionOwner } from "@orchestra/core/session/owner"
 import { Event } from "@orchestra/schema/event"
 import { SessionEvent } from "@orchestra/schema/session-event"
-import { OrchestraEvent } from "@orchestra/protocol/groups/event"
+import { OrchestraEventTransport } from "@orchestra/protocol/groups/event"
 import { encodeEvent, eventFrames, eventStream } from "../src/handlers/event"
 import { teamSessionHttpFixture, profileA, profileB, other } from "./fixture/team-session-http"
 
@@ -23,7 +23,11 @@ function reader(response: Response) {
           const frame = buffer.slice(0, delimiter)
           buffer = buffer.slice(delimiter + 2)
           const data = frame.split("\n").filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).join("\n")
-          if (data) return Schema.decodeUnknownSync(OrchestraEvent)(JSON.parse(data))
+          if (data) {
+            const decoded = Schema.decodeUnknownSync(OrchestraEventTransport)(JSON.parse(data))
+            if (!("event" in decoded)) throw new Error("Corporate stream namespace required")
+            return decoded
+          }
           continue
         }
         const chunk = await stream.read()
@@ -51,17 +55,19 @@ test("http-events-01: live HTTP subscribers see only their captured person and T
       expect(response.headers.get("content-type")).toContain("text/event-stream")
       const incoming = reader(response)
       streams.push(incoming)
-      expect((yield* Effect.promise(() => incoming.next()))?.type).toBe("server.connected")
+      expect((yield* Effect.promise(() => incoming.next()))?.event.type).toBe("server.connected")
     }
     try {
       for (const [profile, cookie, id] of identities.toReversed())
         yield* f.admitted(f.businessRequest(profile, cookie), sessions.rename({ sessionID: id, title: "private:" + id }))
       for (const [index, incoming] of streams.entries()) {
         const value = yield* Effect.promise(() => incoming.next())
-        expect(value?.type).toBe("session.next.renamed")
-        if (!value || value.type !== "session.next.renamed") throw new Error("Actual owned rename event required")
-        expect(value.data.sessionID).toBe(identities[index]![2])
-        expect(value.data.title).toBe("private:" + identities[index]![2])
+        expect(value?.event.type).toBe("session.next.renamed")
+        if (!value || value.event.type !== "session.next.renamed") throw new Error("Actual owned rename event required")
+        expect(value.event.data.sessionID).toBe(identities[index]![2])
+        expect(value.event.data.title).toBe("private:" + identities[index]![2])
+        expect(value.namespace.owner.profile).toEqual(identities[index]![0])
+        expect(value.namespace.authorityGeneration).toBe(1)
       }
     } finally {
       yield* Effect.promise(() => Promise.all(streams.map((stream) => stream.cancel())))
@@ -79,9 +85,10 @@ test("http-events-02: owner filtering precedes serialization and publisher-creat
     const scope = yield* f.admitted(f.businessRequest(), owners.open())
     const encoded: string[] = []
     const frame = eventFrames((data) => {
-      if (!data || typeof data !== "object" || !("id" in data) || typeof data.id !== "string")
+      const payload = data && typeof data === "object" && "event" in data ? data.event : data
+      if (!payload || typeof payload !== "object" || !("id" in payload) || typeof payload.id !== "string")
         throw new Error("Canonical event identifier required")
-      encoded.push(data.id)
+      encoded.push(payload.id)
       return encodeEvent(data)
     })
     const pull = yield* Stream.toPull(eventStream(events, frame, { owners, scope }))
@@ -113,7 +120,7 @@ test("http-events-03: logout closes the original HTTP subscription when a differ
     const foreign = yield* f.create(http, "ses_stream_late", profileA, secondCookie)
     const response = yield* Effect.promise(() => http.mounted(f.request("/api/event")))
     const incoming = reader(response)
-    expect((yield* Effect.promise(() => incoming.next()))?.type).toBe("server.connected")
+    expect((yield* Effect.promise(() => incoming.next()))?.event.type).toBe("server.connected")
     try {
       yield* Effect.promise(() => f.logout(f.cookie))
       yield* f.admitted(f.businessRequest(profileA, secondCookie), sessions.rename({ sessionID: foreign.id, title: "late-private" }))

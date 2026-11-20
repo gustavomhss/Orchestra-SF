@@ -4,13 +4,14 @@ import { Session } from "@orchestra/schema/session"
 import { SessionMessage } from "@orchestra/schema/session-message"
 import { SessionEvent } from "@orchestra/schema/session-event"
 import { SessionAccess } from "@orchestra/schema/session-access"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { productGrant } from "../../../modules/sucafina/Sucafinav1/test/teams-profile/product-fixture"
 import { barrier } from "../../../modules/sucafina/Sucafinav1/test/teams-profile/installation-fixture"
 import { basic, decode, Info, List, teamSessionHttpFixture, profileA, profileB, oid, other } from "./fixture/team-session-http"
 
-const Messages = Schema.Struct({ data: Schema.Array(SessionMessage.Message),
+const Messages = Schema.Struct({ data: Schema.Array(SessionMessage.Message), namespace: Schema.optional(TeamProfile.SessionNamespace),
   cursor: Schema.Struct({ previous: Schema.optional(Schema.String), next: Schema.optional(Schema.String) }) })
-const History = Schema.Struct({ data: Schema.Array(SessionEvent.Durable), hasMore: Schema.Boolean })
+const History = Schema.Struct({ data: Schema.Array(SessionEvent.Durable), hasMore: Schema.Boolean, namespace: Schema.optional(TeamProfile.SessionNamespace) })
 const ErrorBody = Schema.Struct({ _tag: Schema.String, message: Schema.String })
 
 test("http-owner-01: original Microsoft Request reaches admission and CRUD uses the configured placement", async () => {
@@ -252,5 +253,64 @@ test("http-owner-11: body/query owners and an old cookie cannot retarget a saved
     yield* Effect.promise(() => f.logout(f.cookie))
     const denied = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + id)))
     expect(denied.status).toBe(401)
+  }))
+})
+
+test("http-owner-12: mutations require the exact Origin before admission even with a valid cookie and Team selector", async () => {
+  await using f = await teamSessionHttpFixture()
+  await f.run((http) => Effect.gen(function* () {
+    for (const origin of [undefined, "https://cross-site.example.test"]) {
+      const headers = { "content-type": "application/json",
+        "x-sf-team-profile": JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: profileA }),
+        ...(origin ? { origin } : {}),
+      }
+      const response = yield* Effect.promise(() => http.mounted(f.rawRequest("/api/session", f.cookie, {
+        method: "POST", headers, body: JSON.stringify({ id: "ses_origin_required" }),
+      })))
+      expect(response.status).toBe(401)
+    }
+    const crossSite = yield* Effect.promise(() => http.mounted(f.request("/api/session", profileA, f.cookie, {
+      headers: { "sec-fetch-site": "cross-site" },
+    })))
+    expect(crossSite.status).toBe(401)
+    expect(http.originals).toEqual([])
+    expect(f.calls.projects).toBe(0)
+  }))
+  expect(f.business.all("SELECT id FROM session")).toEqual([])
+  expect(f.business.all("SELECT id FROM event")).toEqual([])
+})
+
+test("http-owner-13: admitted empty collections and Session responses label the current full owner and generation without changing durable bytes", async () => {
+  await using f = await teamSessionHttpFixture()
+  await f.run((http) => Effect.gen(function* () {
+    const expected = { version: 1, owner: { profile: profileA,
+      principal: { tenantId: profileA.tenantId, principalObjectId: oid } }, authorityGeneration: 1 }
+    const empty = yield* Effect.promise(() => http.mounted(f.request("/api/session")))
+    const listed = yield* decode(empty, List)
+    expect(listed.data).toEqual([])
+    expect(listed.namespace).toEqual(expected)
+    const created = yield* f.create(http, "ses_http_namespace")
+    expect(created.namespace).toEqual(expected)
+    const bytes = JSON.stringify(f.business.all("SELECT * FROM event"))
+    const read = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + created.id)))
+    const info = yield* decode(read, Info)
+    expect(info.namespace).toEqual(expected)
+    expect(info.data.namespace).toEqual(expected)
+    const messages = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + created.id + "/message")))
+    expect((yield* decode(messages, Messages)).namespace).toEqual(expected)
+    const history = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + created.id + "/history")))
+    const replay = yield* decode(history, History)
+    expect(replay.namespace).toEqual(expected)
+    expect(JSON.stringify(replay.data)).not.toContain("namespace")
+    const active = yield* Effect.promise(() => http.mounted(f.request("/api/session/active")))
+    expect(yield* Effect.promise(() => active.json())).toEqual({ data: {}, namespace: expected })
+    expect(JSON.stringify(f.business.all("SELECT * FROM event"))).toBe(bytes)
+  }))
+  f.advance()
+  await f.run((http) => Effect.gen(function* () {
+    const response = yield* Effect.promise(() => http.mounted(f.request("/api/session/ses_http_namespace")))
+    const info = yield* decode(response, Info)
+    expect(info.namespace?.authorityGeneration).toBe(2)
+    expect(info.data.namespace?.authorityGeneration).toBe(2)
   }))
 })

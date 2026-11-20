@@ -1,6 +1,6 @@
 import { EventV2 } from "@orchestra/core/event"
 import { SessionOwner } from "@orchestra/core/session/owner"
-import { OrchestraEvent } from "@orchestra/protocol/groups/event"
+import { OrchestraEventTransport } from "@orchestra/protocol/groups/event"
 import { Permission } from "@orchestra/schema/permission"
 import { Question } from "@orchestra/schema/question"
 import { Session } from "@orchestra/schema/session"
@@ -11,9 +11,9 @@ import { HttpServerResponse } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { Sse } from "effect/unstable/encoding"
 import { Api } from "../api"
-import { openSessionAccess } from "../session-access"
+import { openSessionAccess, sessionNamespace } from "../session-access"
 
-export const encodeEvent = (data: unknown) => JSON.stringify(Schema.encodeUnknownSync(OrchestraEvent)(data))
+export const encodeEvent = (data: unknown) => JSON.stringify(Schema.encodeUnknownSync(OrchestraEventTransport)(data))
 
 /** A memo belongs to one subscriber's admitted projection, never to the whole server. */
 export const eventFrames = (encode: (data: unknown) => string = encodeEvent) => {
@@ -78,7 +78,8 @@ export const eventStream = (events: EventV2.Interface, frame = eventFrames(), ac
         // This connected object is generated here; a publisher cannot claim a public exception.
         if (data !== connected && !(yield* readable(access, data))) return undefined
       }
-      return yield* Effect.try({ try: () => frame(data), catch: () => eventType(data) }).pipe(
+      const namespace = access ? yield* sessionNamespace(access.owners, access.scope) : undefined
+      return yield* Effect.try({ try: () => frame(namespace ? { namespace, event: data } : data), catch: () => eventType(data) }).pipe(
         Effect.catch((type) => skipped.has(type) ? Effect.succeed(undefined) :
           Effect.logWarning("event stream skipped an event the public schema cannot name", { type }).pipe(
             Effect.andThen(Effect.sync(() => skipped.add(type))), Effect.as(undefined),

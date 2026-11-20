@@ -6,7 +6,7 @@ import { SlashCommand } from "@orchestra/core/slash-command"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { Context, DateTime, Effect, Schema, Scope, Stream } from "effect"
 import { SessionOwner } from "@orchestra/core/session/owner"
-import { openSessionAccess, protectSessionCursor, readSessionCursor, sessionPlacement, verifySessionAccess } from "../session-access"
+import { openSessionAccess, protectSessionCursor, readSessionCursor, sessionPlacement, sessionNamespace, verifySessionAccess } from "../session-access"
 import { HttpApiBuilder, HttpApiSchema } from "effect/unstable/httpapi"
 import { Api } from "../api"
 import { SessionsCursor } from "@orchestra/protocol/groups/session"
@@ -127,8 +127,10 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
           const first = sessions[0]
           const last = sessions.at(-1)
           yield* verifySessionAccess(owners, access, "session.list")
+          const namespace = yield* sessionNamespace(owners, access)
           return {
-            data: sessions,
+            namespace,
+            data: sessions.map((info) => ({ ...info, namespace })),
             cursor: {
               previous: first
                 ? Schema.decodeUnknownSync(SessionsCursor)(yield* protectSessionCursor(owners, "sessions", SessionsCursor.make({
@@ -168,7 +170,8 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
               })
               .pipe(typedNotFound)
           yield* verifySessionAccess(owners, access, "session.create", data.id)
-          return { data }
+          const namespace = yield* sessionNamespace(owners, access)
+          return { data: { ...data, namespace }, namespace }
         }),
       )
       .handle(
@@ -177,7 +180,9 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
           const access = yield* openSessionAccess(owners, "session.active")
           const active = yield* session.active
           yield* verifySessionAccess(owners, access, "session.active")
+          const namespace = yield* sessionNamespace(owners, access)
           return {
+            namespace,
             data: Object.fromEntries(
               Array.from(active, (sessionID) => [sessionID, { type: "running" as const }]),
             ),
@@ -187,8 +192,8 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.get",
         Effect.fn(function* (ctx) {
-          return {
-            data: yield* session.get(ctx.params.sessionID).pipe(
+          const access = yield* openSessionAccess(owners, "session.get", ctx.params.sessionID)
+          const data = yield* session.get(ctx.params.sessionID).pipe(
               Effect.catchTag(
                 "Session.NotFoundError",
                 (error) =>
@@ -197,8 +202,9 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
                     message: `Session not found: ${error.sessionID}`,
                   }),
               ),
-            ),
-          }
+            )
+          const namespace = yield* sessionNamespace(owners, access)
+          return { data: { ...data, namespace }, namespace }
         }),
       )
       .handle(
@@ -317,8 +323,8 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.fork",
         Effect.fn(function* (ctx) {
-          return {
-            data: yield* session.fork({ sessionID: ctx.params.sessionID, messageID: ctx.payload.messageID }).pipe(
+          const access = yield* openSessionAccess(owners, "session.fork", ctx.params.sessionID)
+          const data = yield* session.fork({ sessionID: ctx.params.sessionID, messageID: ctx.payload.messageID }).pipe(
               Effect.catchTags({
                 "Session.NotFoundError": operationErrors["Session.NotFoundError"],
                 "Session.MessageNotFoundError": (error) =>
@@ -330,8 +336,9 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
                     }),
                   ),
               }),
-            ),
-          }
+            )
+          const namespace = yield* sessionNamespace(owners, access)
+          return { data: { ...data, namespace }, namespace }
         }),
       )
       .handle(
@@ -632,6 +639,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.history",
         Effect.fn(function* (ctx) {
+          const access = yield* openSessionAccess(owners, "session.history", ctx.params.sessionID)
           return yield* session
             .history({
               sessionID: ctx.params.sessionID,
@@ -639,10 +647,11 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
               limit: ctx.query.limit ?? DefaultSessionHistoryLimit,
             })
             .pipe(
-              Effect.map((page) => ({
+              Effect.flatMap((page) => Effect.map(sessionNamespace(owners, access), (namespace) => ({
                 data: page.events,
                 hasMore: page.hasMore,
-              })),
+                namespace,
+              }))),
               Effect.catchTag(
                 "Session.NotFoundError",
                 (error) =>
@@ -663,7 +672,11 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
           const access = yield* openSessionAccess(owners, "session.events", ctx.params.sessionID)
           const context = (yield* Effect.context<never>()).pipe(Context.omit(Scope.Scope))
           return session.events({ sessionID: ctx.params.sessionID, after: ctx.query.after }).pipe(
-            Stream.mapEffect((event) => verifySessionAccess(owners, access, "session.events", ctx.params.sessionID).pipe(Effect.as(event))),
+            Stream.mapEffect((event) => Effect.gen(function* () {
+              yield* verifySessionAccess(owners, access, "session.events", ctx.params.sessionID)
+              const namespace = yield* sessionNamespace(owners, access)
+              return namespace ? { namespace, event } : event
+            })),
             Stream.provideContext(context),
             Stream.orDie,
           )

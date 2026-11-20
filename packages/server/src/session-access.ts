@@ -3,7 +3,7 @@ import { Location } from "@orchestra/core/location"
 import { SessionOwner } from "@orchestra/core/session/owner"
 import { AuthorityGeneration } from "@orchestra/core/session/authority-generation"
 import { Session } from "@orchestra/schema/session"
-import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { InvalidCursorError, UnauthorizedError } from "@orchestra/protocol/errors"
 import { Context, Effect, Schema } from "effect"
 import { HttpRouter } from "effect/unstable/http"
@@ -149,3 +149,16 @@ export const readSessionCursor = (owners: SessionOwner.Interface, purpose: strin
       catch: () => new InvalidCursorError({ message: "Invalid cursor" }),
     })
   })
+
+/** A fresh public label only; this codec has no route back to a private lease. */
+export const sessionNamespace = (owners: SessionOwner.Interface, scope: SessionOwner.Scope) => Effect.gen(function* () {
+  yield* owners.verify(scope).pipe(Effect.mapError(unauthorized))
+  const owner = owners.owner(scope)
+  const generation = owners.generation(scope)
+  if (!owner) {
+    if (yield* InstalledSession) return yield* unauthorized()
+    return undefined
+  }
+  if (generation === undefined) return yield* unauthorized()
+  return Schema.decodeUnknownSync(TeamProfile.SessionNamespace)({ version: 1, owner, authorityGeneration: generation })
+})

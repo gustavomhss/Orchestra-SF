@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Session } from "@orchestra/schema/session"
 import { Ref } from "../src/sucafina/team-profile"
 import { SfInstallationSelector, SfTeamInstallationDescriptor, SfTeamContextQuery,
   SfTeamContext, SfTeamContextResult, SfContextStamp } from "../src/sucafina/context"
@@ -505,5 +506,37 @@ describe("Teams F02 public context", () => {
       expect(Schema.is(SfTeamContext)({ ...context, ...extra })).toBe(false)
     }
     expect(Schema.is(SfTeamContext)({ ...context, contractRevision: "sf-native-ui/1" })).toBe(false)
+  })
+})
+
+describe("private Session response namespaces", () => {
+  const namespace = { version: 1, owner: { profile, principal }, authorityGeneration: 2 }
+
+  test("preserves full owner and current authority generation without adding authority fields", () => {
+    const decoded = Schema.decodeUnknownSync(TeamProfile.SessionNamespace)(namespace)
+    expect(Schema.encodeSync(TeamProfile.SessionNamespace)(decoded)).toEqual(namespace)
+    expect(decoded.owner.profile).not.toHaveProperty("projectId")
+    for (const invalid of [
+      { ...namespace, version: "1" }, { ...namespace, version: 2 },
+      { ...namespace, authorityGeneration: 0 }, { ...namespace, authorityGeneration: -1 },
+      { ...namespace, authorityGeneration: 1.5 }, { ...namespace, authorityGeneration: "2" },
+      { ...namespace, authorityGeneration: Number.MAX_SAFE_INTEGER + 1 },
+      { ...namespace, owner: { profile, principal: { ...principal, tenantId: "99999999-2222-4333-8444-555555555555" } } },
+      { ...namespace, accessRevision: "claimed" }, { ...namespace, authEpoch: "claimed" },
+      { ...namespace, writerPermit: "claimed" }, { ...namespace, grants: ["read"] },
+      { ...namespace, owner: { ...namespace.owner, projectId: "claimed" } },
+    ]) expect(() => Schema.decodeUnknownSync(TeamProfile.SessionNamespace)(invalid)).toThrow()
+  })
+
+  test("Session.Info roundtrips an optional transport label while the technical form stays byte-compatible", () => {
+    const info = { id: "ses_public_namespace", projectID: "global", title: "Private Session",
+      cost: 0, tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+      time: { created: 0, updated: 0 }, location: { directory: "/synthetic-placement" } }
+    const technical = Schema.decodeUnknownSync(Session.Info)(info)
+    expect(Schema.encodeSync(Session.Info)(technical)).toEqual(info)
+    expect(technical).not.toHaveProperty("namespace")
+    const corporate = Schema.decodeUnknownSync(Session.Info)({ ...info, namespace })
+    expect(Schema.encodeSync(Session.Info)(corporate)).toEqual({ ...info, namespace })
+    expect(() => Schema.decodeUnknownSync(Session.Info)({ ...info, namespace: { ...namespace, authorityGeneration: 0 } })).toThrow()
   })
 })
