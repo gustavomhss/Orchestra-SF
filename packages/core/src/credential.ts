@@ -251,9 +251,9 @@ export const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
     return key ? yield* vault.read(key) : undefined
   })
   return Service.of({
-    all: () => use((vault) => list(vault), (service) => service.all()),
-    list: (integrationID) => use((vault) => list(vault, integrationID), (service) => service.list(integrationID)),
-    get: (id) => use((vault) => find(vault, id).pipe(Effect.flatMap(decode)), (service) => service.get(id)),
+    all: () => { const origin = new Error("DIAGNOSTIC Credential.all call").stack; return use((vault) => list(vault), (service) => service.all()).pipe(Effect.tapDefect(() => Effect.logError(origin))) },
+    list: (integrationID) => { const origin = new Error("DIAGNOSTIC Credential.list call").stack; return use((vault) => list(vault, integrationID), (service) => service.list(integrationID)).pipe(Effect.tapDefect(() => Effect.logError(origin))) },
+    get: (id) => { const origin = new Error("DIAGNOSTIC Credential.get call").stack; return use((vault) => find(vault, id).pipe(Effect.flatMap(decode)), (service) => service.get(id)).pipe(Effect.tapDefect(() => Effect.logError(origin))) },
     inheritedFrom: (id) => use((vault) => find(vault, id).pipe(Effect.as(undefined)), (service) => service.inheritedFrom(id)),
     create: (input) => {
       const encodedValue = Schema.encodeSync(Schema.fromJsonString(Value))(input.value)

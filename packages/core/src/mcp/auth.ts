@@ -227,14 +227,14 @@ export const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
   const use = <A>(
     corporate: (vault: CredentialVault.Interface) => Effect.Effect<A, CredentialVault.Denied>,
     technical: (service: Interface) => Effect.Effect<A>,
-  ): Effect.Effect<A> => Effect.gen(function* () {
+  ): Effect.Effect<A> => { const origin = new Error("DIAGNOSTIC McpAuth use call").stack; return Effect.gen(function* () {
     const scope = yield* owners.open().pipe(Effect.orDie)
     const vault = yield* owners.connections(scope).pipe(Effect.orDie)
     if (vault) return yield* corporate(vault).pipe(Effect.orDie)
     const value = yield* technical(yield* legacy)
     yield* owners.verify(scope).pipe(Effect.orDie)
     return value
-  })
+  }).pipe(Effect.tapDefect(() => Effect.logError(origin))) }
   const selected = (mcpName: string): ConnectionAccess.Key => Object.freeze({
     category: "mcp", resourceId: Schema.decodeUnknownSync(ConnectionAccess.Identifier)(mcpName), id: "primary",
   })
