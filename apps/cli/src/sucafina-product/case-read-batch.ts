@@ -43,7 +43,7 @@ export function createSfCaseReadBatch(input: {
   readerIdentity: () => BusinessContextService | undefined
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
 }, admission: {
-  kind: "planner" | "mixed"
+  kind: "planner" | "mixed" | "dashboard"
   identity: () => readonly unknown[]
   forCall: (call: TrustedDomainContext) => SfCaseReadBatchSourceScope | undefined
 }): DecisionCasePort["read"] {
