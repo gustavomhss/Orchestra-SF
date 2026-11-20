@@ -86,7 +86,47 @@ async function fixture() {
   cleanups.push(async () => files.close())
   const authority = createTeamProfileMigrationAuthority({ origin: f.binding.origin, installationId: profileA.installationId,
     tenantId: profileA.tenantId, resolver: f.resolver, microsoft: f.microsoft })
-  const engine = (using: MigrationFiles = files) => createTeamProfileCoreMigration({ files: using, authority, maintenance: graph.maintenance })
+  const mark = (stage: string) => console.info("CORE_MIGRATION_DIAGNOSTIC " + stage)
+  const engine = (using: MigrationFiles = files) => {
+    const traced: MigrationFiles = {
+      ...using,
+      business: { ...using.business, execute: (sql, params) => {
+        if (sql === "BEGIN IMMEDIATE" || sql === "COMMIT" || sql === "ROLLBACK") mark("business " + sql)
+        using.business.execute(sql, params)
+      } },
+      checkpoint: (plan) => {
+        mark("checkpoint begin")
+        const result = using.checkpoint(plan)
+        mark("checkpoint complete")
+        return result
+      },
+      verifyCheckpoint: (plan, checkpoint) => {
+        mark("verify checkpoint begin")
+        const result = using.verifyCheckpoint(plan, checkpoint)
+        mark("verify checkpoint complete")
+        return result
+      },
+    }
+    const migration = createTeamProfileCoreMigration({ files: traced, authority, maintenance: {
+      ...graph.maintenance,
+      close: Effect.sync(() => mark("maintenance close begin")).pipe(
+        Effect.andThen(graph.maintenance.close), Effect.tap(() => Effect.sync(() => mark("maintenance close complete")))),
+    } })
+    return {
+      ...migration,
+      async prepare(request: Request, rawIntent: unknown) {
+        mark("prepare begin")
+        const result = await migration.prepare(request, rawIntent)
+        mark("prepare complete")
+        return result
+      },
+      async cut(request: Request, planDigest: string) {
+        mark("cut begin")
+        try { const result = await migration.cut(request, planDigest); mark("cut complete"); return result }
+        catch (error) { mark("cut failed"); throw error }
+      },
+    }
+  }
   const request = () => f.request("/api/ui/team-profile-migration", f.cookie, { method: "POST", headers: { origin: f.binding.origin } })
   const mapping = (quarantine = false): TeamProfileCensus.Intent => {
     const report = TeamProfileCensus.inspect(files.business, storageId)
