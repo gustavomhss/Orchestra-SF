@@ -1,6 +1,7 @@
 import { Route, Router } from "@solidjs/router"
 import { render } from "solid-js/web"
 import type { JSX } from "solid-js"
+import type { ServerConnection } from "../../../../../../packages/app-shell/src/context/server-connection"
 import { LanguageProvider } from "../../../../../../packages/app-shell/src/context/language"
 import { PlatformProvider, type Platform } from "../../../../../../packages/app-shell/src/context/platform"
 import { SfOwnerRuntime231 } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231"
@@ -37,7 +38,7 @@ export function mountNativeBrowser(): () => void {
   if (!config || typeof config !== "object" || !("directory" in config) || typeof config.directory !== "string" || !config.directory)
     throw new Error("SF_NATIVE_BROWSER_DIRECTORY_MISSING")
   const directory = config.directory
-  const server = { type: "http" as const, http: { url: window.location.origin } }
+  const server = { type: "http", http: { url: window.location.origin } } satisfies ServerConnection.Http
   return renderNativeBrowser(() => <SfOwnerRuntime231 server={server} directory={directory} />)
 }
 
