@@ -1,8 +1,12 @@
 # Teams Profile — execução
 
-## Estado atual — checkpoint bb02bd52
+## Estado atual — checkpoint cf950432
 
-Implementação em andamento, sem qualificação final. A barreira real do host, a preservação dos serviços globais entre Locations e o vault pessoal foram incorporados. O prompt nativo apresentou uma regressão HTTP 500 na descoberta de providers; a correção está isolada em validação. O corte Core ainda não passou e o pool G04 continua vermelho. Os resultados novos e seus limites estão no último checkpoint deste documento e no ledger JSON.
+Implementação em andamento, sem qualificação final. A UI Web nativa, o workspace de sessões, a configuração compartilhada de Team e o adaptador técnico de sessões estão incorporados. A regressão HTTP 500 no boot corporativo foi corrigida no consumidor de Inbox; o corte dirigido de Core Sessions e a barreira real passaram após corrigir a notificação de observadores do Effect. Esses resultados têm escopo e fontes próprios: a migração continua declarando `installationComplete: false`.
+
+A jornada completa de navegador G02 ainda está vermelha no prazo original de sete segundos, com prompt e leitura de mensagens pendentes. O recorte HTTP/SSE corrigido passou em 12 testes e foi integrado; a próxima observação conjunta do navegador continua pendente. BEFORE e AFTER de desempenho têm 18 execuções completas cada, mas as medianas de troca de abas regrediram **11,4% a 24,8%**, sem causa de tempo demonstrada. O pool G04, o artefato instalado, a recuperação completa e os demais gates permanecem abertos.
+
+Fonte integrada deste checkpoint: [cf950432da102f0f6f1806f3079ea5c593187e50](https://github.com/gustavomhss/Orchestra-SF/commit/cf950432da102f0f6f1806f3079ea5c593187e50). Todos os dez gates continuam `NOT_RUN_ON_FINAL_CANDIDATE`. Os checkpoints abaixo são históricos; o novo checkpoint ao final e o ledger JSON atualizam as pendências sem reescrever os runs anteriores.
 
 ## Base e plano
 
@@ -328,3 +332,137 @@ não prova o AFTER, G02 ou os dez gates no candidato final.
 O inventário do arquivo de produção, o detector de resíduos e a composição dos gates
 na mesma fonte/árvore/arquivo continuam pendentes. Microsoft real, Azure descartável,
 aprovação de paths protegidos e release não foram presumidos.
+
+
+## Checkpoint: UI integrada, boot corrigido e corte dirigido de Core Sessions
+
+Fonte integrada: [265d3811](https://github.com/gustavomhss/Orchestra-SF/commit/265d3811d6c44ed3f62908d3b455122fbbf65b88).
+Este checkpoint preserva os 101 registros anteriores do ledger e acrescenta as observações dirigidas de UI, clientes, navegador, desempenho, boot, corte e SSE. As execuções vermelhas, incompletas e os erros de seleção/import permanecem com suas fontes originais. Contagens de recortes sobrepostos não devem ser somadas como testes únicos.
+
+### Web nativa e administração compartilhada
+
+A entrada SF usa o componente Web nativo com seleção explícita da instalação e admissão Microsoft. O workspace conserva o namespace completo de instalação, tenant, principal e Team por janela; a seleção de Team não substitui ProjectId nem vira prova de autoridade. O cliente usa o mount real, o cookie corporativo e os codecs JSON canônicos. Respostas e envelopes SSE são validados antes de entregar dados à UI; logout, revogação, troca de owner e respostas tardias retiram o estado privado correspondente.
+
+O formulário de TeamConfig lê o documento atual, preserva os campos declarativos e aplica CAS. Um POST cuja resposta se perdeu não é repetido automaticamente. A referência de incerteza guarda apenas owner completo, janela, revisão esperada e hashes do comando/documento; não guarda configuração, draft ou segredo. Depois de nova admissão e GET atual, a UI pode mostrar o estado observado. Mesmo quando hashes coincidem, isso não atribui autoria nem confirma o sucesso daquele POST.
+
+| Evidência dirigida | Resultado e escopo | Run |
+|---|---|---|
+| Workspace inicial, fonte `9b821ce5` | 37 unit + 27 HappyDOM; 64 pass, 0 fail, 527 assertions | [44714785830](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44714785830) |
+| Clientes iniciais do workspace | 12 pass, 0 fail, 91 assertions | [44714801156](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44714801156) |
+| Configuração nativa, fonte `a4e247dd` | 37 unit + 36 HappyDOM; 73 pass, 0 fail, 628 assertions | [44720291866](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44720291866) |
+| Clientes de configuração e Session | 18 pass, 0 fail, 128 assertions | [44720305051](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44720305051) |
+| Incerteza administrativa, fonte `be15d176` | 37 unit + 39 HappyDOM; 76 pass, 0 fail, 680 assertions | [44722950069](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44722950069) |
+| Cliente real sobre OIDC/Core/SQLite | 1 pass, 0 fail, 20 assertions; caso em 9.895 s de um prazo de 10 s | [44718358264](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44718358264) |
+
+Bun/HappyDOM não é Chromium. A última linha usa HTTP e cliente reais, com execução que somente registra o prompt; não executa um modelo externo. O timeout anterior de dez segundos e a margem estreita do PASS permanecem visíveis.
+
+O tipo portátil de `ClientOptions.fetch` veio da fonte do gerador e do comando oficial `bun run generate`. O run [44716387866](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44716387866) produziu o blob `4fa6d4a25d7d4cab798e147edc3cea8e6fb236e7`; os bytes foram importados sem edição manual. Os 66 testes do gerador passaram em [44717516693](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44717516693). A estática de `a4e247dd` executou os 16 comandos: 15 saíram com zero, enquanto guard-dev recusou os dois caminhos protegidos preexistentes ([44720308128](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44720308128)). Ela antecede a alteração administrativa `be15d176` e não qualifica o conjunto posterior.
+
+### Adaptador técnico: envelope Active
+
+A geração canônica passou a devolver `{ data, namespace? }` em `sessions.active()`. O adaptador técnico antigo encaminhava o envelope inteiro como mapa de IDs; o consumidor iterava suas chaves. A correção decodifica o envelope, devolve somente `data` e recusa namespace corporativo nesse caminho técnico. Não há nova autoridade, fallback de Team ou mudança manual no cliente gerado.
+
+A reprodução teve quatro testes antigos passando e quatro novos falhando ([44725841005](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725841005)). O primeiro PASS usou um spy global e fica registrado como intermediário ([44726210964](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44726210964)). A prova final usa **Bun.serve em loopback, o cliente gerado, fetch nativo e encerramento aguardado**, sem modificar globals: **8 pass, 0 fail, 24 assertions** ([44727277080](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44727277080)). Esse erro de contrato foi corrigido, mas ainda não demonstra a causa da regressão de tempo.
+
+### Navegador G02: falhas preservadas e fronteira atual
+
+A prova compilada continua com os prazos originais: 15 s para adquirir o navegador, 7 s por ação e 180 s para o caso. O ledger registra todas as tentativas nativas observadas, incluindo imports inválidos, navegação interrompida, falha de bridge/cleanup, leitura precoce do histórico e a incompatibilidade entre decoder de domínio e JSON canônico. Não foram substituídas por um único run conveniente.
+
+Na fonte integrada `452e5bbf`, o run [44725633820](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725633820) terminou antes de qualquer HTTP da aplicação: um comando `Browser.getVersion` foi enviado sem resposta, e o Chromium excedeu a parte restante do orçamento absoluto de 15 s. Node e Chrome foram observados ausentes 2.018 s depois durante cleanup. Isso prova limpeza, não inicialização normal ou sucesso da jornada.
+
+O diagnóstico autorizado seguinte manteve flags, spawn, cleanup e prazos. Somente o consumidor de Teams coletou contadores limitados de `/proc`, sem command line, ambiente ou mapas. No run [44726765097](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44726765097), o navegador ficou pronto em **11.050 s**. Foram observados **156.893.184 bytes adicionais de leitura**, **1.239 major faults adicionais** e custo máximo de **0.959 ms por amostra**. A pressão de I/O registrada é do sistema inteiro. Esses dados mostram atividade de I/O durante a largada; não identificam o arquivo responsável nem demonstram estabilidade de startup.
+
+A mesma execução chegou ao HTTP real:
+
+| Operação | Resultado observado |
+|---|---|
+| GET lista de sessões | 200 em 296 ms |
+| GET SSE global | 200 em 168 ms |
+| POST criação de sessão | 200 em 1.929 ms |
+| GET lista após evento | 200 em 610 ms |
+| POST prompt | Ainda pendente após 5.079 ms no encerramento da ação |
+| GET mensagens | Ainda pendente após 4.716 ms no encerramento da ação |
+
+O caso falhou no prazo original de sete segundos com **1 pass, 1 fail e 38 assertions**, sem resposta 500 nem erro de runtime observado. A ordem de requests é compatível com o handler de Created aguardando a lista e depois encontrando a thread recém-instalada; o tipo exato do evento não foi instrumentado e essa associação permanece uma inferência. A leitura de mensagens continua preservada. A próxima rodada deve usar o conjunto qualificado de Server/autoridade; não há retry, warming ou ampliação de prazo para procurar uma amostra verde.
+
+### Boot corporativo e inspeção pessoal
+
+Os primeiros reparos em Catalog/plugin mantiveram o prompt em 500. O baseline técnico também revelou duas falhas de grafo anteriores; a primeira tentativa introduziu uma terceira. A construção de Catalog/Integration passou a ocorrer no contexto real do nó, e o diagnóstico seguinte localizou a leitura indevida em `inbox/install.ts:117`: o boot de Location tentava consultar todas as credenciais mesmo sem operação de Inbox.
+
+O ramo corporativo agora deixa adoção, sincronização e contas globais de Inbox indisponíveis. Não converte a recusa em uma lista vazia nem amplia grants da fixture. Handles técnicos retidos também revalidam a marca corporativa. Os testes inspecionam os bytes históricos por conexão SQLite readonly independente quando o adapter corretamente se recusa a abri-los.
+
+| Evidência | Resultado | Run |
+|---|---|---|
+| Core final, fonte `3d212cb7` | 68 pass, 0 fail, 254 assertions, 10 arquivos | [44724909866](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44724909866) |
+| HTTP nativo e configuração, runtime `67326c41` | 7 pass, 0 fail, 85 assertions; prompt 200 em 6.814 s | [44723059269](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44723059269) |
+| Schemas pessoais/provider | 52 pass, 0 fail, 429 assertions | [44725691953](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725691953) |
+| Inspeção de metadata SF / Core | 9 / 7 pass, 0 fail; 76 / 92 assertions | [44725848432](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725848432), [44725864530](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725864530) |
+
+A inspeção pessoal verifica Owner, ACL, revisão, auditoria e geração sem abrir ciphertext. Um slot `active` descreve o registro armazenado; não comprova funcionamento do provider nem autoria de um POST desconhecido. O HTTP pessoal e seu painel estão em implementação. A execução positiva de provider/MCP privado ainda não está qualificada.
+
+A estática do boot final teve identidade de fonte, inventário e execução válidos, com 15 comandos passando; guard-dev manteve a recusa dos dois paths protegidos ([44724924590](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44724924590)). Nenhuma aprovação foi presumida.
+
+### Corte dirigido: causa real do bloqueio corrigida
+
+A espera do corte não foi resolvida enfraquecendo HostMaintenance. Um observador de conclusão do Effect removia a si mesmo enquanto o array era percorrido, fazendo a notificação pular outro waiter. A correção preserva a notificação de todos os observadores e a drenagem real do mesmo grafo.
+
+Na fonte `42ebfe46`, os testes de observador/barreira passaram em **5 casos, 38 assertions** ([44725029044](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725029044)). O corte/recuperação dirigido passou em **18 casos, 156 assertions** ([44725031927](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44725031927)). A prova usa administração Microsoft, grants atuais, SQLite, checkpoint físico, backfill aditivo, rollback transacional e recuperação depois de COMMIT sem repetir os mapeamentos. Escrita após revisão, revogação durante a drenagem e categorias desconhecidas continuam recusadas.
+
+O resultado permanece **`scope: "core-sessions"`, `installationComplete: false`**. Não é migração de instalação inteira, G10, recuperação Azure ou corte de dados reais.
+
+### Desempenho: comparação completa, regressão aberta
+
+A mesma divisão, seis casos por três repetições, CPU 30x, cargas, um worker, zero retries e deadlines foi preservada. O BEFORE pinado `531aad70` continua com as 18 execuções completas. O AFTER `a4e247dd` também fechou as 18:
+
+| Partição AFTER | Resultado | Run |
+|---|---|---|
+| Tabs | 6 pass, 0 fail | [44720702122](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44720702122) |
+| Timeline fechada | 6 pass, 0 fail | [44720715029](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44720715029) |
+| Timeline aberta e review | 6 pass, 0 fail | [44720731505](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44720731505) |
+
+Medianas de `firstCorrectObservedMs`, calculadas sobre as mesmas 15 observações de cada família:
+
+| Família | BEFORE | AFTER | Variação |
+|---|---:|---:|---:|
+| Cold | 111,1 ms | 123,8 ms | +11,4% |
+| Hot | 59,3 ms | 74,0 ms | +24,8% |
+| Painel fechado, cold | 105,4 ms | 128,9 ms | +22,3% |
+| Painel fechado, hot | 62,7 ms | 69,9 ms | +11,5% |
+| Painel aberto, cold | 106,1 ms | 128,3 ms | +20,9% |
+| Painel aberto, hot | 82,8 ms | 94,6 ms | +14,3% |
+
+O relato inicial abreviou o intervalo como 11,1–24,8%; os valores preservados calculam **11,43–24,79%**, arredondados acima. Nenhuma observação bruta foi alterada.
+
+As medianas de conclusão dos streams mudaram +1,91% na timeline simples fechada, −3,93% com diffs fechados e −5,13% com painel aberto. Os nove streams entregaram 160 deltas, sem pendências ou substituição do host da linha/Markdown. Esses resultados mistos não autorizam declarar ausência de regressão. O código do benchmark, os limites e as tentativas anteriores incompletas permanecem registrados no [relatório de desempenho](./teams-profile-native-ui-performance.json).
+
+O status é **OPEN_REGRESSION**. A correção do envelope Active ainda não recebeu uma nova comparação temporal completa; não se atribui a ela a regressão nem se repete o benchmark para escolher resultado melhor.
+
+### Pool G04, SSE e proveniência de fonte
+
+O pool `ab742c30` executou os 206 corpos dos 40 arquivos: **198 retornos e 8 exceções**, sem finalização forçada, 48 leases/releases. Bun reportou 198 pass e 9 fail ao incluir a recusa final do gate ([44723832160](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44723832160)). A rodada `e1bd80d8` ficou incompleta: apenas 49 corpos iniciados/finalizados, 46 retornos e 3 exceções; o beforeAll de review excedeu 35 s e gerou a cascata. Seus 146 fails agregados não são 146 corpos executados ([44726542137](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44726542137)). G04 permanece vermelho.
+
+O primeiro recorte SSE manteve 11 pass/1 fail porque a fixture de histórico não preparava o documento TeamConfig exigido ([44727058224](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44727058224)). A preparação foi corrigida pelo HTTP administrativo real, antes das leases. O source `ef695c74` passou em **12 testes, 119 assertions**, incluindo os quatro técnicos, cinco corporativos anteriores e três novos ([44728583115](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44728583115)). O listener canônico mantém duas observações atuais e o egress mantém cinco; revogação de RoleMap, expiração e namespace continuam exercitados. Isso não prova melhora de latência do prompt antes do próximo run integrado.
+
+O recorte seguinte de leitura conjunta dos RoleMaps passou em **97 testes, 945 assertions**, com 12 casos novos, 47 de sessão Microsoft, 32 de autoridade e 6 de política Core ([44729433808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44729433808)). Na medição dirigida, três mapas passaram de seis para duas chamadas Graph e a consulta parcial passou de cinco para duas, mantendo os mesmos atores. Mudança de grupos/mapas/intenção, logout, expiração e refresh continuam recusados. A estática e a integração coesa desse source ainda estavam pendentes neste checkpoint; isso não é medição de melhora do prompt completo.
+
+A estática anterior de SSE reportou `sourceValid: false`, embora 15 comandos tenham saído com zero; esse resultado permanece inválido como prova de fonte. O diagnóstico de proveniência posterior executou 160 contratos Node sem falhas, mas recusou o preflight por worktree alterado ([44728622875](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44728622875)). Bun 1.3.14 apenas reordenou duas devDependencies do lock, sem mudar versões. Os bytes observados foram importados pelo blob `5ce9c75a60184305cd294f20ed9c3eedf4eb063f`; não se revalidou artificialmente a evidência antiga. Ainda não existe PASS de artefato/G09 por esse diagnóstico.
+
+Os logs também registram a versão realmente resolvida: vários jobs Bun usaram setup Node 24.22.2 ou 24.22.3 depois do validador 24.15.0. Nos benchmarks, o setup Playwright voltou a 24.15.0. Sem um probe separado de `process.version`, a ordem observada de setup é registrada como tal.
+
+### Limites deste checkpoint
+
+Os dez gates continuam não executados no mesmo candidato final. A prova focada de Chromium é G02 de componente, não G08 instalado nem Teams LIVE. O censo real de instalação, a cobertura das categorias além de Sessions, o arquivo de produção, a recuperação Azure e a aprovação independente dos caminhos protegidos continuam pendentes. Nenhum deploy, corte de banco de usuário, aprovação ou consentimento foi realizado por este checkpoint.
+
+## Checkpoint posterior — HTTP pessoal, observação Microsoft e pacote real
+
+Fonte de produto: `cf950432da102f0f6f1806f3079ea5c593187e50`. Os 178 registros anteriores deste checkpoint foram preservados e 28 observações adicionais foram anexadas ao JSON; os101 registros da versão58184325 permanecem idênticos em dados. Nenhum gate recebeu PASS final.
+
+A observação única das três RoleMaps passou97 testes/945 asserções em quatro arquivos. A operação medida caiu de seis chamadas Graph para duas, mantendo os atores e recusando mudança de grupo/mapa/intenção, logout, expiração e renovação durante o await. A composição de produção recebeu o callback original por `CreateSfHostRuntime`; isso ainda não prova a latência da jornada completa. A fatia SSE integrada passou12 testes/119 asserções com observação independente na saída.
+
+A API pessoal usa a Request original, o proprietário completo e a geração atual. Os dez testes reais de HTTP/corpo passaram135 asserções. GET retorna apenas metadados; POST recebe chave estrita, revisão esperada e segredo somente no corpo. Remoção autorizada seguida de leitura negada retorna indisponível503: o resultado permanece incerto e não autoriza repetição automática. Tombstones e revisões não são apagados. O catálogo positivo do provedor e a UI pessoal continuam em implementação.
+
+A estática encontrou erros de tipagem em expectativas de teste (principal com marca de tipo, união de headers e literal `running`), sem apontar erro nos handlers novos. Os dados e asserções foram preservados nas correções. A rodada combinada tem snapshot `70418d919e347ce134e1ef4c42bf533d5ad6375d`; seu resultado não foi antecipado.
+
+A trilha de pacote reteve todas as falhas: contexto inválido de workflow, teste negativo do source checker, recusa por checkout alterado e import de dependência fora do workspace declarado. Os160 contratos Node passaram depois da correção do checker; o checkout só permaneceu limpo após incorporar o arquivo produzido pelo Bun1.3.14, com blob exato `5ce9c75a60184305cd294f20ed9c3eedf4eb063f`. O diff apenas ordena duas dependências e não troca versões. O primeiro produtor real compilou Omni, mas parou antes do tar por não resolver `effect` na raiz. A correção move somente o helper de processos para o workspace CLI que declara as dependências. Nenhum arquivo tar, G09 ou G07 foi creditado como aprovado.
+
+Os diagnósticos que localizaram a espera de migração e as duas tentativas inválidas do patch Effect também estão registrados. A correção final notifica um snapshot dos observadores e preserva a barreira de interrupção; os cinco testes de Core/barreira e18 de corte/autoridade passaram nas fontes registradas. O corte continua limitado a `core-sessions`, com `installationComplete:false`. Ensaio Azure, recuperação completa, contexto Microsoft instalado e todos os dez gates no mesmo candidato permanecem pendentes.
