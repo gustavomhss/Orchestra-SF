@@ -22,7 +22,7 @@ type Captured = {
   consumed: boolean
 }
 type Selection = { operation: Operation; captures: Captured[]; selected?: Captured }
-type Scope = { deadline: number; selections: Selection[]; failure?: Error }
+type Scope = { deadline: number; timeoutMs: 5000 | 10000; selections: Selection[]; failure?: Error }
 
 /**
  * Observe copies of real fetch responses before navigation can discard CDP's
@@ -93,11 +93,13 @@ export async function observeNativeResponses(page: Page, origin: string) {
   await page.addInitScript(installCapture, { origin })
   await page.evaluate(installCapture, { origin })
 
-  const begin = (operations: readonly Operation[]) => {
+  const begin = (operations: readonly Operation[], timeoutMs: 5000 | 10000 = 10000) => {
+    if (timeoutMs !== 5000 && timeoutMs !== 10000) throw new Error("Native response capture timeout must be 5000ms or 10000ms")
     if (active) throw new Error("Finish the previous native response scope before starting another")
     if (operations.length === 0) throw new Error("Native response capture needs an explicit operation")
     const scope: Scope = {
-      deadline: Date.now() + 10_000,
+      deadline: Date.now() + timeoutMs,
+      timeoutMs,
       selections: operations.map((operation) => ({ operation, captures: [] })),
     }
     active = scope
@@ -126,12 +128,12 @@ export async function observeNativeResponses(page: Page, origin: string) {
       const copy = await Promise.race([
         capture.ready,
         new Promise<never>((_, reject) => {
-          timer = setTimeout(() => reject(new Error(selection.operation.label + ": real response copy exceeded the original 10s deadline")),
+          timer = setTimeout(() => reject(new Error(selection.operation.label + ": real response copy exceeded the original " + scope.timeoutMs + "ms deadline")),
             Math.max(0, scope.deadline - Date.now()))
         }),
       ]).finally(() => clearTimeout(timer))
       requireUnique(selection, capture)
-      if (capture.completedAt! > scope.deadline) throw new Error(selection.operation.label + ": real response copy exceeded the original 10s deadline")
+      if (capture.completedAt! > scope.deadline) throw new Error(selection.operation.label + ": real response copy exceeded the original " + scope.timeoutMs + "ms deadline")
       if (copy.error) throw new Error(selection.operation.label + ": real fetch clone failed: " + copy.error)
       if (copy.document !== capture.start.document || copy.url !== response.url() || copy.status !== response.status())
         throw new Error(selection.operation.label + ": copied body does not match the original Response URL/status/document")
