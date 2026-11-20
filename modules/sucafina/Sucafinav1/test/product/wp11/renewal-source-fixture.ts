@@ -85,7 +85,10 @@ export async function createRenewalSourceFixture(training: "omitted" | "bundled"
     const decision: DecisionCase = { ...caseRef, state: "comparing", objective: "renewal", currency: "USD", horizon: wp05Horizon, criteria: [{ id: "renewal-difference", description: "Explicit known subtotal criterion", required: true }], participants: ["finance", "collaborator"], sourceRefs, alternatives: [{ id: "selected", version: 1, title: "Transition", scenario, result: selectedResult }, { id: "baseline", version: 1, title: "Renewal", scenario: baselineScenario, result: baselineResult }], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     const seeded = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "wp11-renewal-seed", commandDigest: digestSfValue(decision), targetRef: caseRef.id, targetIncarnation: caseRef.incarnation }, async (value) => { value.cases[caseRef.id] = decision; return { commit: true, value: true } })
     if (seeded.status !== "ok" || !seeded.value) throw new Error("Renewal case seed unavailable")
-    return { context, host, ui, state, store, directory, request, decision, planner, sources, sourceRefs, basis, caseRef, scenario, baselineScenario, selectedResult, baselineResult, evidence, closeStore, cleanup }
+    const observationWitness = () => ({ allowed: access.allowed, revokedSources: [...access.revokedSources].sort(), disposed: access.disposed, sourceRefs, basis })
+    return { context, host, ui, state, store, directory, request, decision, planner, sources, sourceRefs, basis, caseRef, scenario, baselineScenario, selectedResult, baselineResult, evidence, observationWitness,
+      revokeSource: (reference: string) => { if (!sourceRefs.some((ref) => ref.refId === reference)) throw new Error("Unknown fixture source"); access.revokedSources.add(reference) },
+      closeStore, cleanup }
   } catch (error) { await cleanup(); throw error }
 }
 
@@ -132,7 +135,8 @@ export async function createRenewalQuoteRevision(fixture: Awaited<ReturnType<typ
     },
   }
   const evidence: BusinessContextService = { resolve: async (ref, context) => ({ state: await currentSource(ref, context) ? "fresh" : "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: now() }), context: renewalEvidenceContext((ref, trusted) => evidence.resolve(ref, trusted)), recall: async () => [], emitFromLedger: async () => { throw new Error("No memory publication in quote revision fixture") } }
-  return { source, sourceRefs, basis, sources, evidence }
+  const observationWitness = () => ({ upstream: fixture.observationWitness(), source, sourceRefs, basis })
+  return { source, sourceRefs, basis, sources, evidence, observationWitness }
 }
 
 function pending(basis: CostCoverageBasis, alternativeId: string): CostCoverageAssessment {

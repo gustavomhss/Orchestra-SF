@@ -1,3 +1,4 @@
+import { createSfSourceFenceReader } from "../../../../../../apps/cli/src/sucafina-product/source-fence-read.ts"
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
@@ -220,14 +221,14 @@ async function persistedServices(fixture: Awaited<ReturnType<typeof createPortfo
   const exactThreshold: NonNullable<Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]> = (request, binding, context) => { calls.searches++; return fixture.exact(request, binding.baselineRef, context) }
   const evaluate = createPlannerSensitivity({ results, resolve: fixture.issuer.resolve, revalidate: fixture.issuer.revalidate, preview, coveragePreview, exactThreshold, idempotencyKey: async (digest) => `wp13-certified-samples:${training}:${digest}` })
   const sensitivity: typeof evaluate = (request, context) => { calls.evaluations++; return evaluate(request, context) }
-  const transactionAll = fixture.store.transactionAll?.bind(fixture.store)
-  if (!transactionAll) throw new Error("The C08 fixture requires durable multi-surface transaction support")
+  if (!fixture.store.transactionAll) throw new Error("The C08 fixture requires durable multi-surface transaction support")
   const sourceFences = (snapshots: Readonly<Record<"dashboard" | "planner" | "procurement", Snapshot>>) => ({ dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) })
-  const readSourceFences = async (context: TrustedDomainContext) => await revalidate(context) ? transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) })) : undefined
+  const readScopeHost = { ...fixture.host, revalidate }
+  const readSourceFences = createSfSourceFenceReader({ host: readScopeHost, persistence: fixture.store })
   const verifier = createPortfolioProofVerifier({ cases: fixture.cases, planner: fixture.plannerWithCriteria, sources: fixture.sources, evidence: fixture.evidence, results, revalidate, readSourceFences, lockedSourceFences: () => {
     const snapshots = fixture.store.currentSnapshots?.()
     return snapshots ? sourceFences(snapshots) : undefined
-  }, caseFor: async () => ({ status: "ok", value: fixture.caseRef }), idempotencyKey: async (digest) => `wp13-certified:${training}:${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "human-choice-required" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "portfolio-candidates-not-requested" }), revalidateAnalysis: async () => false, units: fixture.issuer, sensitivityPreview: preview, coveragePreview, exactThreshold })
+  }, caseFor: async () => ({ status: "ok", value: fixture.caseRef }), idempotencyKey: async (digest) => `wp13-certified:${training}:${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "human-choice-required" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "portfolio-candidates-not-requested" }), revalidateAnalysis: async () => false, units: fixture.issuer, sensitivityPreview: preview, coveragePreview, exactThreshold, sensitivityReadScope: readScopeHost })
   const bindings = createCriterionResultBindings({ state, host: fixture.host, rules: fixture.rules, results, authorizeCase: async (decision, context) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && await fixture.host.revalidate(context), verifyBinding: (binding, _rule, result, context) => verifier.verifySensitivity(binding, result, context), verifySnapshot: (snapshot, binding, _rule, context) => verifier.verifySnapshot(snapshot, binding, context), operationIdentity: () => `wp13-certified-binding:${training}`, proposalCoverageWrites: writes, now: () => "2026-11-13T00:00:00Z" })
   const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "portfolio-not-requested" }), sensitivity }, results, bindings, resolveBinding: fixture.issuer.resolve, idempotencyKey: async (digest) => `wp13-certified-result:${training}:${digest}` })
   return { state, results, bindings, verifier, sensitivity, persistent, calls, faults, readSourceFences }
