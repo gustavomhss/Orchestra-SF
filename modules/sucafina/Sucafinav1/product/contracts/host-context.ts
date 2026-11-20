@@ -128,6 +128,11 @@ export type CreateSfHostRuntime = (input: {
   mount: string
   /** Only the configured identity producer can supply this; never a URL claim. */
   authMode?: "microsoft" | "local-operator"
+  /** Configured Microsoft resource tenant; independent of technical placement. */
+  tenantId?: string
+  /** Server-only resolver capabilities preserve the original admission object across awaits. */
+  teamProfiles?: Parameters<typeof createSfProductAuthority>[0]["teamProfiles"]
+  readGrants?: () => Promise<readonly SfProductGrant[]>
   /** Same original Request; bool only, no person or credential leaves this callback. */
   isAuthenticated?: (request: Request) => Promise<boolean>
   persistence: Application["persistence"] & SfScopedSourcePort

@@ -4,12 +4,14 @@
  * Shared operation metadata/exports are installed by the sole integrator I00.
  */
 import { Option, Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type {
   SfJson, SfOperation, SfOperationBindings, SfOperationId, SfPublicHeaders,
   SfTransportFailure, SfTransportResult,
 } from "@orchestra/schema/sucafina/common"
 import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
-import { SfContextStamp, SfContextResult, SfExpectedContextBinding,
+import { SfContextStamp, SfContextResult, SfExpectedContextBinding, SfTeamContextQuery, SfTeamContextResult,
+  SfTeamInstallationDescriptor,
   type SfContext, type SfInstallationDescriptor, type SfResolvedRoute,
 } from "@orchestra/schema/sucafina/context"
 import { SfSupplierCsvExportRequest, type SfSupplierCsvExportResult } from "@orchestra/schema/sucafina/procurement"
@@ -152,11 +154,17 @@ export function createSfTransport(options: Readonly<{
   currentGeneration: () => number
   fetch: SfTransportFetch
   operations: SfOperationBindings
+  /** Immutable route intent; the server independently performs corporate admission. */
+  teamSelector?: TeamProfile.Selector
   desktop?: SfDesktopCapability
   desktopBinding?: SfDesktopBinding
 }>): SfTransport {
-  const isCurrent = () => options.generation === options.currentGeneration()
-  const validBinding = validInstallation(options.binding)
+  const installed = structuredClone(options.binding)
+  const teamSelector = options.teamSelector ? structuredClone(options.teamSelector) : undefined
+  const teamQuery = teamContextInput(installed, teamSelector)
+  const corporate = installed.contractRevision === "sf-team-profile/1"
+  const isCurrent = () => options.generation === options.currentGeneration() && sameInstallation(options.binding, installed)
+  const validBinding = validInstallation(installed) && (corporate ? !!teamQuery : teamSelector === undefined)
   const owned = options.desktop && options.desktopBinding
     ? options.desktopBinding.generation === options.generation
       && sameInstallation(options.desktopBinding.descriptor, options.binding)
@@ -178,6 +186,8 @@ export function createSfTransport(options: Readonly<{
     ): Promise<SfTransportResult<Output>> {
       if (!validBinding || !owned || !isCurrent()) return failure("contract-mismatch")
       if (call.signal.aborted) return failure("aborted")
+      // The existing desktop broker has no corporate owner/session capability.
+      if (corporate && options.desktop) return failure("contract-unavailable")
       if (!options.desktop && !webOrigin()) return failure("contract-mismatch")
       const metadata = cataloguedRoute(operation.operationId)
       if (!metadata || metadata.effect === "authentication" || operation.operationId === "ctx.installations") {
@@ -221,14 +231,21 @@ export function createSfTransport(options: Readonly<{
       // The frozen F01 signatures allow an undefined public argument, while the
       // catalog requires exactly this private three-field query; never trust an
       // alternative tuple supplied by a screen or persisted selection.
-      if (operation.operationId === "ctx.context" && decoded.value !== undefined) {
+      if (operation.operationId === "ctx.context" && corporate) {
+        if (!teamQuery || !sameTeamContextQuery(decoded.value, teamQuery)) return failure("contract-mismatch")
+      }
+      if (operation.operationId === "ctx.context" && !corporate && decoded.value !== undefined) {
         const expectation = asJsonObject(decoded.value)
         if (!expectation || Object.keys(expectation).length !== 3 ||
             expectation.installationId !== options.binding.installationId ||
             expectation.projectId !== options.binding.projectId ||
             expectation.hostId !== options.binding.hostId) return failure("contract-mismatch")
       }
-      const wireInput = operation.operationId === "ctx.context" ? {
+      if (corporate && operation.operationId !== "ctx.context" &&
+        (!stamp?.team || teamSelector?.kind !== "team" ||
+          !sameTeamProfile(stamp.team.owner.profile, teamSelector.profile)))
+        return failure("contract-unavailable")
+      const wireInput = operation.operationId === "ctx.context" && !corporate ? {
         installationId: options.binding.installationId,
         projectId: options.binding.projectId,
         hostId: options.binding.hostId,
@@ -272,7 +289,7 @@ export function createSfTransport(options: Readonly<{
       if (mutating && pending.size >= MUTATION_LIMIT && !pending.has(key!)) return failure("contract-unavailable")
       // Bind each mutation intent to the actual bytes as well as its metadata,
       // without serializing a Uint8Array or creating an optimistic retry.
-      const mutationOwner = mutating && stamp ? { ...stamp } : undefined
+      const mutationOwner = mutating && stamp ? structuredClone(stamp) : undefined
       const uploadDigest = upload ? await sha256Bytes(upload.bytes) : undefined
       if (upload && !uploadDigest) return failure("contract-unavailable")
       const digest = mutating ? await digestPayload(operation.operationId, route,
@@ -316,7 +333,7 @@ export function createSfTransport(options: Readonly<{
       }
       if (operation.operationId.startsWith("files.") && stamp &&
           !options.desktop &&
-          !await refreshSfFileAuthority(options, stamp, operation.operationId)) {
+          !await refreshSfFileAuthority({ ...options, teamSelector }, stamp, operation.operationId)) {
         if (mutating) pending.delete(key!)
         return failure("contract-unavailable")
       }
@@ -346,6 +363,7 @@ export function createSfTransport(options: Readonly<{
       } else if (body !== undefined) headers["Content-Type"] = "application/json"
       if (key) headers["Idempotency-Key"] = key
       if (ownerHeader) headers["X-SF-Native-Owner"] = ownerHeader
+      if (corporate && operation.operationId !== "ctx.context") headers["X-SF-Team-Profile"] = JSON.stringify(teamSelector)
       let dispatched = false
       const rememberIntent = () => {
         if (mutating && !humanRetry && mutationOwner && HUMAN_RETRY_OPERATIONS.has(operation.operationId))
@@ -484,14 +502,14 @@ export function createSfTransport(options: Readonly<{
           !await refreshSfFileAuthority(options, stamp, operation.operationId))
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
       if (operation.operationId === "ctx.context") {
-        if (!validContextOutcome(parsedOutput.value, options.binding, response.status)) {
+        if (!validContextOutcome(parsedOutput.value, options.binding, response.status, teamSelector)) {
           clear()
           return failure("invalid-response")
         }
         const result = parsedOutput.value
         if (typeof result === "object" && result !== null && "status" in result && result.status === "ok" && "value" in result && typeof result.value === "object" && result.value !== null && "stamp" in result.value && validContextStamp(result.value.stamp)) {
           if (stamp && !equalContextStamp(stamp, result.value.stamp)) clearIntents()
-          stamp = result.value.stamp
+          stamp = structuredClone(result.value.stamp)
         } else clear()
       }
       if (mutating) {
@@ -519,6 +537,8 @@ export function createSfTransport(options: Readonly<{
      */
     async downloadSupplierCsv(input, call): Promise<SfSupplierCsvExportResult> {
       const original = stamp
+      if (corporate && (options.desktop || teamSelector?.kind !== "team" || !original?.team ||
+        !sameTeamProfile(teamSelector.profile, original.team.owner.profile))) return { status: "unavailable" }
       if (!validBinding || !owned || !isCurrent() || (!options.desktop && !webOrigin()))
         return { status: "unavailable" }
       if (call.signal.aborted) return { status: "aborted" }
@@ -595,7 +615,7 @@ export function createSfTransport(options: Readonly<{
             cache: "no-store",
             redirect: "error",
             signal: call.signal,
-            headers: { Accept: "text/csv" },
+            headers: { Accept: "text/csv", ...(corporate ? { "X-SF-Team-Profile": JSON.stringify(teamSelector) } : {}) },
           })
           if (!isOwned()) return { status: "aborted" }
           if (response.status !== 200) return failure(response.status)
@@ -620,15 +640,13 @@ export function createSfTransport(options: Readonly<{
         if (!isOwned() || !total) return { status: isOwned() ? "invalid" : "aborted" }
         // Fresh authenticated identity/policy check after the byte read,
         // before constructing a Blob/download handle.
-        const live = await transport.execute({
-          operationId: "ctx.context",
-          input: SfExpectedContextBinding,
-          output: SfContextResult,
-        }, {
-          installationId: options.binding.installationId,
-          projectId: options.binding.projectId,
-          hostId: options.binding.hostId,
-        }, { signal: call.signal })
+        const live = corporate && teamQuery
+          ? await transport.execute({ operationId: "ctx.context", input: SfTeamContextQuery, output: SfTeamContextResult },
+              teamQuery, { signal: call.signal })
+          : await transport.execute({
+              operationId: "ctx.context", input: SfExpectedContextBinding, output: SfContextResult,
+            }, { installationId: options.binding.installationId, projectId: options.binding.projectId,
+              hostId: options.binding.hostId }, { signal: call.signal })
         if (!isCurrent() || call.signal.aborted) return { status: "aborted" }
         if (live.kind !== "response" || live.status !== 200 || live.body.status !== "ok")
           return { status: "denied" }
@@ -714,7 +732,36 @@ export function createSfAuthActions(options: Readonly<{
 function equalContextStamp(a: SfContextStamp, b: SfContextStamp) {
   return a.installationId === b.installationId && a.projectId === b.projectId &&
     a.hostId === b.hostId && a.principalRef === b.principalRef &&
-    a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
+    a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision &&
+    ((!a.team || !b.team) ? a.team === b.team :
+      sameTeamProfile(a.team.owner.profile, b.team.owner.profile) &&
+      a.team.owner.principal.tenantId === b.team.owner.principal.tenantId &&
+      a.team.owner.principal.principalObjectId === b.team.owner.principal.principalObjectId &&
+      a.team.revisions.configRevision === b.team.revisions.configRevision &&
+      a.team.revisions.accessRevision === b.team.revisions.accessRevision)
+}
+
+function sameTeamProfile(a: TeamProfile.Ref, b: TeamProfile.Ref): boolean {
+  return a.installationId === b.installationId && a.tenantId === b.tenantId && a.teamObjectId === b.teamObjectId
+}
+
+function teamContextInput(binding: SfInstallationDescriptor, selector: TeamProfile.Selector | undefined): SfTeamContextQuery | undefined {
+  if (binding.contractRevision !== "sf-team-profile/1" || !selector || !Schema.is(TeamProfile.Selector)(selector))
+    return undefined
+  const profile = selector.kind === "team" ? selector.profile : selector
+  if (profile.installationId !== binding.installationId || profile.tenantId !== binding.tenantId) return undefined
+  const parsed = Schema.decodeUnknownOption(SfTeamContextQuery)({
+    contractRevision: "sf-team-profile/1", installationId: binding.installationId,
+    tenantId: binding.tenantId, hostId: binding.hostId, kind: selector.kind,
+    ...(selector.kind === "team" ? { teamObjectId: selector.profile.teamObjectId } : {}),
+  })
+  return Option.isSome(parsed) ? parsed.value : undefined
+}
+
+function sameTeamContextQuery(value: unknown, expected: SfTeamContextQuery): boolean {
+  return Schema.is(SfTeamContextQuery)(value) && value.contractRevision === expected.contractRevision &&
+    value.installationId === expected.installationId && value.tenantId === expected.tenantId &&
+    value.hostId === expected.hostId && value.kind === expected.kind && value.teamObjectId === expected.teamObjectId
 }
 
 function validSupplierCsvHeaders(contentType: string | null | undefined, disposition: string | null | undefined) {
@@ -764,11 +811,16 @@ function operationUrl(
         else return undefined
       }
     }
-    if (operationId === "ctx.context" &&
-      (url.searchParams.size !== 3 ||
-       url.searchParams.get("installationId") !== binding.installationId ||
-       url.searchParams.get("projectId") !== binding.projectId ||
-       url.searchParams.get("hostId") !== binding.hostId)) return undefined
+    if (operationId === "ctx.context") {
+      if (binding.contractRevision === "sf-team-profile/1") {
+        const query = Schema.decodeUnknownOption(SfTeamContextQuery)(Object.fromEntries(url.searchParams))
+        if (Option.isNone(query) || query.value.installationId !== binding.installationId ||
+          query.value.tenantId !== binding.tenantId || query.value.hostId !== binding.hostId) return undefined
+      } else if (url.searchParams.size !== 3 ||
+        url.searchParams.get("installationId") !== binding.installationId ||
+        url.searchParams.get("projectId") !== binding.projectId ||
+        url.searchParams.get("hostId") !== binding.hostId) return undefined
+    }
     return url.href
   } catch { return undefined }
 }
@@ -794,7 +846,8 @@ function asJsonObject(value: SfJson | undefined): Readonly<Record<string, SfJson
 }
 
 function validInstallation(value: SfInstallationDescriptor): boolean {
-  if (!MOUNT.test(value.mount) || value.contractRevision !== "sf-native-ui/1") return false
+  if (!MOUNT.test(value.mount) || !["sf-native-ui/1", "sf-team-profile/1"].includes(value.contractRevision) ||
+    value.contractRevision === "sf-team-profile/1" && !Schema.is(SfTeamInstallationDescriptor)(value)) return false
   if (![value.hostId, value.projectId, value.installationId].every((id) => typeof id === "string" && id.trim().length > 0)) return false
   try {
     const url = new URL(value.publicOrigin)
@@ -808,17 +861,31 @@ function validInstallation(value: SfInstallationDescriptor): boolean {
 function sameInstallation(a: SfInstallationDescriptor, b: SfInstallationDescriptor): boolean {
   return a.installationId === b.installationId && a.projectId === b.projectId &&
     a.hostId === b.hostId && a.publicOrigin === b.publicOrigin && a.mount === b.mount &&
-    a.contractRevision === b.contractRevision && a.authMode === b.authMode
+    a.contractRevision === b.contractRevision && a.authMode === b.authMode &&
+    (a.contractRevision !== "sf-team-profile/1" || b.contractRevision === "sf-team-profile/1" && a.tenantId === b.tenantId)
 }
 
 function sameStampInstallation(stamp: SfContextStamp, binding: SfInstallationDescriptor): boolean {
   return stamp.installationId === binding.installationId &&
     stamp.projectId === binding.projectId && stamp.hostId === binding.hostId &&
     stamp.principalRef.trim().length > 0 && stamp.policyVersion.trim().length > 0 &&
-    stamp.accessRevision.trim().length > 0
+    stamp.accessRevision.trim().length > 0 &&
+    (binding.contractRevision !== "sf-team-profile/1" || !stamp.team ||
+      stamp.team.owner.profile.tenantId === binding.tenantId && stamp.team.owner.principal.tenantId === binding.tenantId)
 }
 
-function validContextOutcome(value: unknown, binding: SfInstallationDescriptor, httpStatus: number): boolean {
+function validContextOutcome(value: unknown, binding: SfInstallationDescriptor, httpStatus: number, selector?: TeamProfile.Selector): boolean {
+  if (binding.contractRevision === "sf-team-profile/1") {
+    if (!Schema.is(SfTeamContextResult)(value)) return false
+    if (value.status === "unauthenticated") return httpStatus === 401
+    if (value.status === "denied") return httpStatus === 403
+    if (value.status === "unavailable") return httpStatus === (value.reason === "contract-mismatch" ? 409 : 503)
+    return httpStatus === 200 && sameStampInstallation(value.value.stamp, binding) &&
+      value.value.profile.principal.tenantId === binding.tenantId &&
+      (selector?.kind !== "administration" || !value.value.stamp.team) &&
+      (selector?.kind !== "team" || value.value.profile.teams.status !== "ready" ||
+        sameTeamProfile(value.value.profile.teams.selected, selector.profile))
+  }
   if (!value || typeof value !== "object" || !("status" in value)) return false
   if (value.status === "denied") return httpStatus === 403
   if (value.status === "unauthenticated") return httpStatus === 401
@@ -956,14 +1023,17 @@ async function sha256Bytes(bytes: Uint8Array): Promise<string | undefined> {
  */
 async function refreshSfFileAuthority(options: Readonly<{
   binding: SfInstallationDescriptor; fetch: SfTransportFetch;
-  operations: SfOperationBindings;
+  operations: SfOperationBindings; teamSelector?: TeamProfile.Selector;
 }>, expected: SfContextStamp, operationId: SfOperationId): Promise<boolean> {
   const meta = cataloguedRoute("ctx.context")
   const codec = options.operations["ctx.context"]
   if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
-  const tuple = { installationId: options.binding.installationId,
-    projectId: options.binding.projectId, hostId: options.binding.hostId }
-  const route = operationUrl(options.binding, meta, tuple, "ctx.context")
+  const tuple = options.binding.contractRevision === "sf-team-profile/1"
+    ? teamContextInput(options.binding, options.teamSelector)
+    : { installationId: options.binding.installationId, projectId: options.binding.projectId, hostId: options.binding.hostId }
+  const encoded = Schema.decodeUnknownOption(Schema.Json)(tuple)
+  if (Option.isNone(encoded)) return false
+  const route = operationUrl(options.binding, meta, encoded.value, "ctx.context")
   if (!route) return false
   try {
     const reply = await options.fetch(route, {
@@ -974,7 +1044,7 @@ async function refreshSfFileAuthority(options: Readonly<{
     const wire = await readJsonBounded(reply)
     if (wire === undefined) return false
     const context = codec.decodeOutput(wire)
-    if (context.status !== "ok" || !validContextOutcome(context.value, options.binding, 200)) return false
+    if (context.status !== "ok" || !validContextOutcome(context.value, options.binding, 200, options.teamSelector)) return false
     const value = context.value
     if (!value || typeof value !== "object" || !("status" in value) ||
         value.status !== "ok" || !("value" in value) || !value.value ||
@@ -988,9 +1058,7 @@ async function refreshSfFileAuthority(options: Readonly<{
         "state" in item && "operational" in item && item.operationId === operationId &&
         item.state === "ready" && item.operational === true))
     return permitted && validContextStamp(current) && sameStampInstallation(current, options.binding) &&
-      current.principalRef === expected.principalRef &&
-      current.policyVersion === expected.policyVersion &&
-      current.accessRevision === expected.accessRevision
+      equalContextStamp(current, expected)
   } catch { return false }
 }
 

@@ -57,7 +57,8 @@ function originalUrl(request: Request, binding: Binding): URL | undefined {
   const url = new URL(request.url)
   if (url.origin !== binding.origin || url.username || url.password || url.hash ||
     !url.pathname.startsWith(binding.mount + "/") || url.search.length > 4096 ||
-    /%(?![\da-fA-F]{2})/.test(url.search)) return undefined
+    /%(?![\da-fA-F]{2})/.test(url.search) ||
+    [...url.searchParams.keys()].some((key) => url.searchParams.getAll(key).length !== 1)) return undefined
   return url
 }
 
