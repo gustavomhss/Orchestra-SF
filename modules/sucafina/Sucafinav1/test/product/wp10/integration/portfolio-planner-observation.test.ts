@@ -280,6 +280,64 @@ test("Mixed Planner and Procurement evidence retains canonical case reads and cu
   } finally { await deadline.close() }
 }, 120_000)
 
+for (const boundary of ["input", "request", "reader", "fallback"] as const) {
+  test(`Portfolio metric refuses ${boundary} drift during the real selected-case read before its producer starts`, async () => {
+    const deadline = compositionTestDeadline(`portfolio-planner-entry-${boundary}`)
+    try {
+      const fixture = await observationFixture(deadline)
+      const observe = fixture.business.withPlannerObservation, read = fixture.authority.state.read
+      const reader = fixture.business.evidence.current
+      if (!reader) throw new Error("Actual case evidence reader unavailable")
+      const baseline = fixture.request.baselineRef, candidate = fixture.request.scenarioRef
+      let entered = false, interposed = 0, invoked = 0
+      fixture.business.withPlannerObservation = (incoming, call, work) => {
+        if (incoming !== fixture.request) return observe(incoming, call, work)
+        entered = true
+        return observe(incoming, call, () => { invoked++; return work() })
+      }
+      fixture.authority.state.read = async (request, namespace, select) => {
+        const result = await read(request, namespace, select)
+        // This is selectedCase's genuine C08 selection, after withCase owns
+        // the case and before readMetricCanonical can clone the metric input.
+        if (entered && interposed === 0 && namespace === "cases" && result.status === "ok" &&
+          digestSfValue(result.value) === digestSfValue(fixture.caseRef)) {
+          interposed++
+          if (boundary === "request") {
+            const source = fixture.business.host.requestFor(fixture.call)
+            if (!source) throw new Error("Actual selected-case Request unavailable")
+            source.headers.set("x-planner-observation-entry", "changed-before-producer")
+          }
+          if (boundary === "reader") fixture.business.evidence.current = { ...reader }
+          if (boundary === "input" || boundary === "fallback") {
+            fixture.request.baselineRef = candidate
+            fixture.request.scenarioRef = baseline
+          }
+          // The real lease ends here, so selectedCase declines and the old
+          // wrapper would still invoke its fallback with the altered input.
+          if (boundary === "fallback") fixture.authority.ui.finish(fixture.call)
+        }
+        return result
+      }
+      deadline.own(() => {
+        fixture.business.withPlannerObservation = observe
+        fixture.authority.state.read = read
+        fixture.business.evidence.current = reader
+      })
+      const result = await fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
+        fixture.portfolio.readMetric(fixture.request, fixture.call))
+      expect(interposed).toBe(1)
+      expect(invoked).toBe(0)
+      expect(result.status).not.toBe("ok")
+      expect(Object.hasOwn(result, "value")).toBe(false)
+      if (boundary === "input") {
+        expect(fixture.request.baselineRef).toBe(candidate)
+        expect(fixture.request.scenarioRef).toBe(baseline)
+        expect(result).toEqual({ status: "stale", reason: "scenario-source-changed" })
+      }
+    } finally { await deadline.close() }
+  }, 120_000)
+}
+
 async function procurementSource(fixture: Awaited<ReturnType<typeof financialCompositionFixture>>,
   call: Awaited<ReturnType<typeof fixture.read>>, period: { start: string; end: string }) {
   await fixture.persistence.transaction("procurement", async (snapshot) => {
