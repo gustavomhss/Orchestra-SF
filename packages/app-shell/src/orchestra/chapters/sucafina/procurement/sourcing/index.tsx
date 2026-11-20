@@ -267,6 +267,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       if(Array.isArray(scores)){
         const values=[...scores]
+        // Unscored positions use the source schema's null value, never sparse JSON.
+        while(values.length<=criterion)values.push(null)
         values[criterion]=raw
         return {...item,[kind]:values}
       }
