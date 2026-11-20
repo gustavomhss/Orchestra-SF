@@ -22,6 +22,9 @@ export function createPlannerResultPersistence(input: {
   comparisonBindings?: Pick<ReturnType<typeof createCriterionComparisonBindings>, "proofs" | "bind" | "read">
   replay?: Replay
   resolveCase: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
+  /** A host-private readonly scenario phase. Each validation closes before publication. */
+  observeScenarioRead?: <Value>(incoming: Extract<Input, { kind: "scenario" }>, context: TrustedDomainContext,
+    work: () => Promise<PortResult<Value>>) => Promise<PortResult<Value>>
 }) {
   const persist = async (incoming: Input, callId: string, context: TrustedDomainContext, replay = input.replay): Promise<PortResult<{ resultRef: string }>> => {
     const value = structuredClone(incoming)
@@ -34,7 +37,7 @@ export function createPlannerResultPersistence(input: {
     if (value.kind === "scenario") {
       const simulate = replay?.simulateScenario
       if (!simulate) return { status: "unavailable", reason: "scenario-replay-unavailable" }
-      const validate = async (): Promise<PortResult<true>> => {
+      const validateCanonical = async (): Promise<PortResult<true>> => {
         const current = structuredClone(await simulate(structuredClone(value.request), context))
         if (current.status !== "ok") return current
         if (plannerScenarioDigest(current.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "scenario-replay-changed" }
@@ -43,6 +46,10 @@ export function createPlannerResultPersistence(input: {
         if (digestSfValue(latestCase.value) !== digestSfValue(selected.value)) return { status: "stale", reason: "scenario-case-changed" }
         return { status: "ok", value: true }
       }
+      // Both full validations run independently; no completed ancestry proof
+      // survives the intervening result write.
+      const validate = () => input.observeScenarioRead
+        ? input.observeScenarioRead(value, context, validateCanonical) : validateCanonical()
       const current = await validate()
       if (current.status !== "ok") return current
       const refs = [...value.result.sourceRefs, ...value.result.costCoverage.evaluatedSourceRefs, ...value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
