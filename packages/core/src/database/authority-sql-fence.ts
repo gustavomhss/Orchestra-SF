@@ -21,7 +21,6 @@ export function marker(driver: Driver): Marker | undefined {
   const exists = driver.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sf_authority_generation'")
   if (!exists.length) return undefined
   const rows = driver.all("SELECT id, generation, control_id, writer_permit FROM sf_authority_generation")
-  if (!rows.length) return undefined
   const row = rows[0]
   if (rows.length !== 1 || !row || row.id !== 1 || typeof row.generation !== "number" ||
       !Number.isSafeInteger(row.generation) || row.generation < 1 ||
@@ -43,9 +42,9 @@ export function install(driver: Driver, input: Marker, tables: readonly string[]
   if (!tables.length || new Set(tables).size !== tables.length ||
       tables.some((table) => !/^[a-z][a-z0-9_]*$/.test(table) || table.startsWith("sf_authority_")))
     throw new AuthorityGeneration.GenerationError("unavailable")
+  const before = marker(driver)
   driver.execute("CREATE TABLE IF NOT EXISTS sf_authority_permit_sentinel (nonce TEXT PRIMARY KEY NOT NULL CHECK (0))")
   driver.execute("CREATE TABLE IF NOT EXISTS sf_authority_generation (id INTEGER PRIMARY KEY CHECK (id = 1), generation INTEGER NOT NULL CHECK (generation >= 1), control_id TEXT NOT NULL, writer_permit TEXT REFERENCES sf_authority_permit_sentinel(nonce) DEFERRABLE INITIALLY DEFERRED)")
-  const before = marker(driver)
   if (before && (before.controlId !== input.controlId || input.generation !== before.generation + 1))
     throw new AuthorityGeneration.GenerationError("stale-generation")
   driver.execute("INSERT INTO sf_authority_generation (id, generation, control_id, writer_permit) VALUES (1, ?, ?, NULL) ON CONFLICT(id) DO UPDATE SET generation = excluded.generation, writer_permit = NULL",
@@ -75,14 +74,15 @@ export function make(driver: Driver, storageID: string) {
   let active: Readonly<{ proof: object; generation: number; permit: string }> | undefined
   const denied = () => { throw new AuthorityGeneration.GenerationError("writer-required") }
   return function execute<A>(query: string, context: Context.Context<never>, run: () => A): A {
-    const current = marker(driver)
-    if (!current) return run()
     const sql = command(query)
-    const proof = AuthorityGeneration.writerFor(context, storageID, current.generation)
-    const rollback = sql.keyword === "ROLLBACK" && /^ROLLBACK(?:\s+TRANSACTION)?$/i.test(sql.text)
-    if (rollback) {
+    // Cleanup cannot depend on a marker that became unreadable after BEGIN.
+    // ROLLBACK can only discard the pending transaction; it grants no write.
+    if (sql.keyword === "ROLLBACK" && /^ROLLBACK(?:\s+TRANSACTION)?$/i.test(sql.text)) {
       try { return run() } finally { active = undefined }
     }
+    const current = marker(driver)
+    if (!current) return run()
+    const proof = AuthorityGeneration.writerFor(context, storageID, current.generation)
     if (active && (proof !== active.proof || !driver.inTransaction())) return denied()
     if (sql.keyword === "PRAGMA") {
       // Preserve connection setup; schema/FK bypasses and arbitrary PRAGMA setters are forbidden.

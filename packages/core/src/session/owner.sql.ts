@@ -17,6 +17,7 @@ export const SessionOwnerTable = sqliteTable("session_owner", {
   principal_object_id: text().$type<TeamProfile.PrincipalObjectId>().notNull(),
   generation: integer().notNull(),
 }, (table) => [
+  check("session_owner_id_required", sql`${table.session_id} IS NOT NULL`),
   check("session_owner_generation", sql`${table.generation} >= 1`),
   index("session_owner_principal_team_idx").on(
     table.installation_id, table.tenant_id, table.principal_object_id, table.team_object_id,
@@ -35,6 +36,7 @@ export function ensureSchema(tx: Transaction): Effect.Effect<void, unknown> {
       team_object_id TEXT NOT NULL,
       principal_object_id TEXT NOT NULL,
       generation INTEGER NOT NULL,
+      CONSTRAINT session_owner_id_required CHECK (session_id IS NOT NULL),
       CONSTRAINT session_owner_generation CHECK (generation >= 1)
     )`)
     yield* tx.run(sql`CREATE INDEX IF NOT EXISTS session_owner_principal_team_idx

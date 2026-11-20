@@ -1,7 +1,7 @@
 export * as SessionArchive from "./archive"
 
 import { and, asc, desc, eq, gt, isNull, like, lt, or, sql, type SQL } from "drizzle-orm"
-import { DateTime, Effect, Layer } from "effect"
+import { DateTime, Effect, Layer, Option } from "effect"
 import { Database } from "../database/database"
 import { makeGlobalNode } from "../effect/app-node"
 import { EventV2 } from "../event"
@@ -84,11 +84,13 @@ export const query = (db: Database.Interface["db"], input: ListInput = {}, visib
 
 /** Visibility is a SQL predicate, applied before pagination rather than trimming projected pages. */
 export const list = Effect.fn("SessionArchive.list")(function* (db: Database.Interface["db"], input: ListInput = {}) {
-  const owners = yield* SessionOwner.Service
-  const scope = yield* owners.open().pipe(Effect.orDie)
-  const built = query(db, input, yield* owners.predicate(scope).pipe(Effect.orDie))
+  const owners = Option.getOrUndefined(yield* Effect.serviceOption(SessionOwner.Service))
+  const scope = owners ? yield* SessionOwner.scopeForDatabase(owners, db).pipe(Effect.orDie) : undefined
+  if (!owners) yield* SessionOwner.ensureTechnical(db)
+  const built = query(db, input, owners && scope ? yield* owners.predicate(scope).pipe(Effect.orDie) : undefined)
   const rows = yield* built.statement.all().pipe(Effect.orDie)
-  yield* owners.verify(scope).pipe(Effect.orDie)
+  if (owners && scope) yield* owners.verify(scope).pipe(Effect.orDie)
+  else yield* SessionOwner.ensureTechnical(db)
   return (built.direction === "previous" ? rows.toReversed() : rows).map(fromRow)
 })
 

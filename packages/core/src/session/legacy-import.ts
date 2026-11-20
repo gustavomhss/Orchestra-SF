@@ -33,7 +33,7 @@ const encode = Schema.encodeSync(SessionMessage.Message)
  */
 export const run = Effect.fn("SessionLegacyImport.run")(function* (db: Database.Interface["db"]) {
   const owners = Option.getOrUndefined(yield* Effect.serviceOption(SessionOwner.Service))
-  const scope = owners ? yield* owners.open().pipe(Effect.orDie) : undefined
+  const scope = owners ? yield* SessionOwner.scopeForDatabase(owners, db).pipe(Effect.orDie) : undefined
   if (owners && scope) yield* owners.authorize(scope, "replay").pipe(Effect.orDie)
   else yield* SessionOwner.ensureTechnical(db)
   const visible = owners && scope ? yield* owners.predicate(scope).pipe(Effect.orDie) : undefined

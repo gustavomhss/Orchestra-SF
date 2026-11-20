@@ -26,14 +26,17 @@ export function microsoftPolicy(value: Record<string, unknown>) {
   }
   if (!Array.isArray(value.grants) || value.grants.length > 1000) throw new Error("Explicit Microsoft product grants required")
   const grants: SfProductGrant[] = value.grants.map((entry: unknown) => {
-    if (!record(entry) || Object.keys(entry).some((key) => !["principalRef", "namespaces", "operations", "humanActions", "sessionActions"].includes(key)) || typeof entry.principalRef !== "string" || !microsoftUuid.test(entry.principalRef)) throw new Error("Resource-tenant object ID required for product grant")
+    if (!record(entry) || Object.keys(entry).some((key) => !["principalRef", "namespaces", "operations", "humanActions", "sessionActions", "referenceActions"].includes(key)) || typeof entry.principalRef !== "string" || !microsoftUuid.test(entry.principalRef)) throw new Error("Resource-tenant object ID required for product grant")
     const grantedNamespaces = strings(entry.namespaces, namespaces, "namespaces") as SfStateNamespace[]
     const operations = strings(entry.operations, freeze.operations.map((operation) => operation.operation), "operations")
     const humanActions = strings(entry.humanActions ?? [], sfHumanActions, "human actions") as typeof sfHumanActions[number][]
     const sessionActions = Schema.decodeUnknownSync(Schema.Array(SessionAccess.Action))(
       strings(entry.sessionActions ?? [], SessionAccess.Actions, "session actions"),
     )
-    return Object.freeze({ principalRef: entry.principalRef.toLowerCase(), namespaces: Object.freeze(grantedNamespaces), operations: Object.freeze(operations), humanActions: Object.freeze(humanActions), sessionActions: Object.freeze(sessionActions) })
+    const referenceActions = Schema.decodeUnknownSync(Schema.Array(Schema.Literal("list")))(
+      strings(entry.referenceActions ?? [], ["list"], "reference actions"),
+    )
+    return Object.freeze({ principalRef: entry.principalRef.toLowerCase(), namespaces: Object.freeze(grantedNamespaces), operations: Object.freeze(operations), humanActions: Object.freeze(humanActions), sessionActions: Object.freeze(sessionActions), referenceActions: Object.freeze(referenceActions) })
   })
   if (new Set(grants.map((grant) => grant.principalRef)).size !== grants.length) throw new Error("Ambiguous Microsoft product grant")
   return { groups: Object.freeze(groups), grants: Object.freeze(grants) }

@@ -29,6 +29,11 @@ function atomic<A>(driver: Driver, operation: () => A): A {
 /** This store is excluded from business checkpoints; never restore it from a data backup. */
 export function open(driver: Driver) {
   atomic(driver, () => {
+    const expected = ["sf_control_meta", "sf_control_store", "sf_control_writer", "sf_control_journal"]
+    const found = driver.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE 'sf_control_%'")
+      .map((row) => row.name)
+    if (found.length && (found.length !== expected.length || expected.some((name) => !found.includes(name))))
+      throw unavailable()
     driver.execute("CREATE TABLE IF NOT EXISTS sf_control_meta (id INTEGER PRIMARY KEY CHECK (id = 1), schema_version INTEGER NOT NULL CHECK (schema_version = 1), control_id TEXT NOT NULL)")
     driver.execute("CREATE TABLE IF NOT EXISTS sf_control_store (storage_id TEXT PRIMARY KEY NOT NULL, generation INTEGER NOT NULL CHECK (generation >= 1), mode TEXT NOT NULL CHECK (mode IN ('active', 'draining', 'suspended')), plan_hash TEXT NOT NULL)")
     driver.execute("CREATE TABLE IF NOT EXISTS sf_control_writer (id TEXT PRIMARY KEY NOT NULL, storage_id TEXT NOT NULL REFERENCES sf_control_store(storage_id), generation INTEGER NOT NULL CHECK (generation >= 1), state TEXT NOT NULL CHECK (state IN ('active', 'completed', 'failed', 'unknown')))")

@@ -4,7 +4,7 @@ import { SessionID } from "./session-id"
 export * as SessionAccess from "./session-access"
 
 /** Explicit installation policy actions. Team eligibility and surface roles never supply these grants. */
-export const Actions = ["read", "create", "fork", "move", "write", "prompt", "run", "model", "control", "replay"] as const
+export const Actions = ["read", "create", "fork", "move", "write", "prompt", "run", "model", "control"] as const
 export const Action = Schema.Literals(Actions).annotate({ identifier: "SessionAccess.Action" })
 export type Action = typeof Action.Type
 

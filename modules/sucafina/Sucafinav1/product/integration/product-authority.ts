@@ -24,7 +24,7 @@ import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
 
-export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[] }>
+export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[] }>
 
 /** Private verified resolver; the transport supplies only a sealed selection intent. */
 export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
@@ -178,7 +178,8 @@ export function createSfProductAuthority(input: {
         configRevision: profile.configRevision } : {}),
       roles, roleMaps: mapped, scopes: scoped, canWrite,
       grant: grant ? { namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(),
-        humanActions: [...grant.humanActions ?? []].toSorted(), sessionActions: [...grant.sessionActions ?? []].toSorted() } : null,
+        humanActions: [...grant.humanActions ?? []].toSorted(), sessionActions: [...grant.sessionActions ?? []].toSorted(),
+        referenceActions: [...grant.referenceActions ?? []].toSorted() } : null,
       policyVersion: input.policyVersion,
     })
     return { principalRef, policyVersion: input.policyVersion, accessRevision, canWrite, grant, roles, profile,
@@ -553,19 +554,23 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
       value.some((grant) => !grant || typeof grant.principalRef !== "string" || !grant.principalRef.trim() ||
         !Array.isArray(grant.namespaces) || !Array.isArray(grant.operations) ||
         new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length ||
-        grant.namespaces.some((namespace) => typeof namespace !== "string" || !namespace.trim()) ||
-        grant.operations.some((operation) => typeof operation !== "string" || !operation.trim()) ||
+        grant.namespaces.some((namespace: unknown) => typeof namespace !== "string" || !namespace.trim()) ||
+        grant.operations.some((operation: unknown) => typeof operation !== "string" || !operation.trim()) ||
         grant.humanActions !== undefined && (!Array.isArray(grant.humanActions) ||
           new Set(grant.humanActions).size !== grant.humanActions.length ||
-          grant.humanActions.some((action) => !sfHumanActions.some((known) => known === action))) ||
+          grant.humanActions.some((action: unknown) => !sfHumanActions.some((known) => known === action))) ||
         grant.sessionActions !== undefined && (!Array.isArray(grant.sessionActions) ||
           new Set(grant.sessionActions).size !== grant.sessionActions.length ||
-          grant.sessionActions.some((action) => !SessionAccess.Actions.some((known) => known === action)))))
+          grant.sessionActions.some((action: unknown) => !SessionAccess.Actions.some((known) => known === action))) ||
+        grant.referenceActions !== undefined && (!Array.isArray(grant.referenceActions) ||
+          new Set(grant.referenceActions).size !== grant.referenceActions.length ||
+          grant.referenceActions.some((action: unknown) => action !== "list"))))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
-  return Object.freeze(value.map((grant) => Object.freeze({
+  return Object.freeze(value.map((grant: SfProductGrant) => Object.freeze({
     principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
     operations: Object.freeze([...grant.operations].toSorted()),
     humanActions: Object.freeze([...grant.humanActions ?? []].toSorted()),
     sessionActions: Object.freeze([...grant.sessionActions ?? []].toSorted()),
+    referenceActions: Object.freeze([...grant.referenceActions ?? []].toSorted()),
   })).toSorted((left, right) => left.principalRef.localeCompare(right.principalRef)))
 }
