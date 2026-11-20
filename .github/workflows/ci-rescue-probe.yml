@@ -32,6 +32,8 @@ jobs:
         with:
           save: "true"
       - uses: ./.github/actions/omni-binaries
+        with:
+          save: "true"
       - uses: ./.github/actions/ripgrep
       - name: Gate and scheduling regressions
         if: ${{ !cancelled() }}
@@ -101,6 +103,23 @@ jobs:
         if: ${{ !cancelled() }}
         working-directory: modules/sucafina
         run: bun run typecheck
+      - name: Validate the isolated default-cache workflow syntax
+        if: ${{ !cancelled() }}
+        run: |
+          bun --eval '
+            import assert from "node:assert/strict"
+            const workflow = Bun.YAML.parse(await Bun.file(".github/workflows/sf-cache-warm.yml").text())
+            assert.equal(workflow.name, "sf-cache-warm")
+            assert.deepEqual(workflow.on.push.branches, ["dev"])
+            assert.deepEqual(workflow.permissions, { contents: "read" })
+            assert.equal(workflow.jobs.warm["runs-on"], "ubuntu-24.04")
+            assert.equal(workflow.on.workflow_dispatch.inputs.source_sha.required, true)
+            assert.deepEqual(workflow.on.workflow_dispatch.inputs.source_ref.options, ["dev", "sf-join-four", "close-final-candidate"])
+            assert.ok(workflow.jobs.warm.if.includes("github.event.repository.default_branch"))
+            assert.equal(Object.hasOwn(workflow.on, "pull_request"), false)
+            assert.equal(Object.hasOwn(workflow.on, "pull_request_target"), false)
+            console.log("Default cache writer YAML parsed; activation remains restricted to the default branch.")
+          '
       - name: Export evidence preserves bytes without binary stdout
         if: ${{ !cancelled() }}
         run: |

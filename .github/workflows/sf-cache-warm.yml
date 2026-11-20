@@ -1,0 +1,74 @@
+name: sf-cache-warm
+
+# Shared dependency caches are readable from the default branch. This is one
+# Linux writer, not product qualification and not a pull-request cache writer.
+on:
+  push:
+    branches: [dev]
+    paths:
+      - bun.lock
+      - package.json
+      - patches/**
+      - native/omni/**
+      - packages/core/src/ripgrep/release.ts
+      - .github/actions/setup-bun/**
+      - .github/actions/omni-binaries/**
+      - .github/actions/ripgrep/**
+      - .github/workflows/sf-cache-warm.yml
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Reviewed source branch whose cache inputs should be warmed
+        required: true
+        type: choice
+        default: sf-join-four
+        options: [dev, sf-join-four, close-final-candidate]
+      source_sha:
+        description: Exact reviewed 40-character head SHA of the selected source branch
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-cache-warm-default
+  cancel-in-progress: false
+
+jobs:
+  warm:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      SOURCE_REF: ${{ inputs.source_ref || github.ref_name }}
+      SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+    steps:
+      - name: Bind the default-branch writer to the reviewed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          case "$SOURCE_REF" in
+            dev|sf-join-four|close-final-candidate) ;;
+            *) echo "::error::Unadmitted cache source ref"; exit 2 ;;
+          esac
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          actual="$(git ls-remote --exit-code "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "refs/heads/$SOURCE_REF" | cut -f1)"
+          test "$actual" = "$SOURCE_SHA"
+          printf 'Cache scope=%s; reviewed source=%s@%s\n' "$GITHUB_REF" "$SOURCE_REF" "$SOURCE_SHA"
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ inputs.source_sha || github.sha }}
+          persist-credentials: false
+      - name: Verify checked-out source
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: ./.github/actions/setup-bun
+        with:
+          save: "true"
+      - uses: ./.github/actions/ripgrep
+        with:
+          save: "true"
+      - uses: ./.github/actions/omni-binaries
+        with:
+          save: "true"
