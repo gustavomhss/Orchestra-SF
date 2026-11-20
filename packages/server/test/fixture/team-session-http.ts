@@ -5,7 +5,8 @@ import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Session } from "@orchestra/schema/session"
 import { SessionV2 } from "@orchestra/core/session"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
-import { teamSessionFixture, profileA } from "../../../core/test/fixture/team-session"
+import { teamSessionFixture, profileA, profileB } from "../../../core/test/fixture/team-session"
+import { createTeamProfileHttp } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-http"
 import { applicationServices, createApiRoutesWithServices } from "../../src/routes"
 import { makeInstalledSessionHttp } from "../../src/session-http"
 import type { SfTrustedInstallationSource } from "../../src/sucafina-installations"
@@ -33,6 +34,31 @@ export async function teamSessionHttpFixture(
   transport: { genericPassword?: string | null } = {},
 ) {
   const f = await teamSessionFixture({ ...input, extraNodes: [applicationServices] })
+  // Location services read an installed Team document. Prepare it through the
+  // actual Microsoft admin endpoint before any request lease; Core's separate
+  // fixture intentionally keeps absence available for negative configuration tests.
+  const admin = createTeamProfileHttp({ ...f.binding, resolver: f.resolver })
+  try {
+    for (const profile of input.enabled ?? (input.teams === false ? [] : [profileA, profileB])) {
+      const query = new URLSearchParams({ contractRevision: "sf-team-profile/1",
+        installationId: f.binding.installationId, tenantId: f.binding.tenantId })
+      const document: TeamProfile.ConfigurationDocument = { version: 1, settings: {} }
+      const original = f.request(`/api/ui/team-profiles/configuration?${query}`, f.cookie, {
+        method: "POST", headers: { origin: f.binding.origin, "content-type": "application/json" },
+        body: JSON.stringify({ profile, expectedRevision: (await f.profiles.read()).configRevision, document }),
+      })
+      await f.identity.prepare(original)
+      const response = await admin(original)
+      if (!response || response.status !== 200) throw new Error("Actual Team configuration admission required")
+      const value: unknown = await response.json()
+      if (!value || typeof value !== "object" || !("status" in value) || value.status !== "ok")
+        throw new Error("Actual Team configuration receipt required")
+    }
+  } catch (error) {
+    try { await f[Symbol.asyncDispose]() }
+    catch (cleanup) { throw new AggregateError([error, cleanup], "HTTP configuration setup and cleanup failed") }
+    throw error
+  }
   const metadata: { mode: "ready" | "missing" | "failed"; authMode: "microsoft" | "local-operator"; locations: number } = { mode: "ready", authMode: "microsoft", locations: 0 }
   const observations: { grants: number; calls: Array<{ path: string; milliseconds: number; grants: number; graph: number }> } = { grants: 0, calls: [] }
   f.productHooks.beforeGrants = async () => { observations.grants++ }
