@@ -125,7 +125,7 @@ function pageOutput<Capability extends "CAP02" | "CAP06" | "CAP07" | "CAP08">(
   capabilityId: Capability,
   selection: typeof SfPeopleTopicSelection | typeof SfPeopleHeadcountSelection | typeof SfPeopleTalentSelection,
   data: (typeof SfPeoplePageData)[Capability],
-  allowedAction: Schema.Schema<string>,
+  allowedAction: Schema.Codec<string, string>,
 ) {
   return Schema.Union([
     Schema.Struct({
