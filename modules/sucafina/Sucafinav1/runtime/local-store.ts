@@ -307,6 +307,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           delete copies.procurement
         }
       }, transactionOptions?.signal),
+    hasCurrentSnapshots: () => {
+      const scope = context.getStore()
+      if (!scope) return false
+      requireScope(scope)
+      return true
+    },
     currentSnapshots: () => {
       const scope = context.getStore()
       if (!scope) return undefined
