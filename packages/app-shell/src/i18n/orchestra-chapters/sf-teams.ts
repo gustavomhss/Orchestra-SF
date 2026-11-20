@@ -2,6 +2,9 @@
 // and Mozilla Firefox pt-BR preferences (account, profile, select and discard).
 // Chat additions also checked against Mozilla pt-BR tabContextMenu.ftl and
 // Microsoft Windows writing-style guidance; shell is an established developer term.
+// Personal-connection terminology checked against Microsoft Learn pt-BR
+// custom-connectors/define-blank, Mozilla pt-BR saved-login management, and
+// the Michaelis pt-BR dictionary ("credencial"). API and Team remain established names.
 // Configuration terminology checked against Microsoft Copilot Studio pt-BR
 // agent templates and VS Code custom-agent documentation. Existing keys stay unchanged.
 export const SF_TEAMS_COPY = {
@@ -110,6 +113,37 @@ export const SF_TEAMS_COPY = {
   "sf.teams.configUnknown": "The change was not confirmed. Check the current configuration before continuing.",
   "sf.teams.configInvalid": "Check the model selectors, agent IDs and field limits before saving.",
   "sf.teams.configMissing": "No shared configuration has been saved for this Team. Fill in the settings this Team should use.",
+  "sf.teams.personalConnections": "Personal connections",
+  "sf.teams.personalDescription": "Manage the API key for a provider offered to this Team.",
+  "sf.teams.personalScope": "Keys belong to your account and this Team in this installation.",
+  "sf.teams.personalProvider": "Provider",
+  "sf.teams.personalChooseProvider": "Select a provider",
+  "sf.teams.personalModels": "Models declared for this provider",
+  "sf.teams.personalEmpty": "No providers are currently offered to this Team.",
+  "sf.teams.personalReloadCatalog": "Reload available providers",
+  "sf.teams.personalRead": "Read current state",
+  "sf.teams.personalReadBeforeChange": "Read the current state before making another change.",
+  "sf.teams.personalLabel": "Connection label",
+  "sf.teams.personalApiKey": "API key",
+  "sf.teams.personalSecretHelp": "Enter the key for this request. Its value is cleared after sending and is never shown again.",
+  "sf.teams.personalCreate": "Save personal key",
+  "sf.teams.personalUpdate": "Replace personal key",
+  "sf.teams.personalRemove": "Remove personal key",
+  "sf.teams.personalRemoveConfirm": "Remove the saved key for this account and Team?",
+  "sf.teams.personalActive": "Last observed state: a personal key is stored.",
+  "sf.teams.personalAbsent": "Last observed state: no personal key is stored.",
+  "sf.teams.personalAbsentRemoved": "Last observed state: the personal key was removed.",
+  "sf.teams.personalNotVerified": "A saved record does not confirm that the provider accepts the key.",
+  "sf.teams.personalSaved": "Personal key saved. Provider access has not been tested.",
+  "sf.teams.personalRemoved": "Personal key removed.",
+  "sf.teams.personalUnknown": "The request outcome is unknown. Read the current state before making a new change.",
+  "sf.teams.personalObserved": "Current state loaded. The earlier request outcome is still unknown.",
+  "sf.teams.personalUseObserved": "Continue from the observed state",
+  "sf.teams.personalConflict": "The connection changed before this request. Read the current state before continuing.",
+  "sf.teams.personalDenied": "This account cannot perform this connection action. Other authorized areas remain available.",
+  "sf.teams.personalUnavailable": "Personal connections are currently unavailable.",
+  "sf.teams.personalInvalid": "Check the connection label and enter a valid API key before saving.",
+  "sf.teams.personalJournalUnavailable": "This window could not retain the request reference. No new change was sent.",
 } as const
 
 export const SF_TEAMS_COPY_BR: Record<keyof typeof SF_TEAMS_COPY, string> = {
@@ -218,4 +252,36 @@ export const SF_TEAMS_COPY_BR: Record<keyof typeof SF_TEAMS_COPY, string> = {
   "sf.teams.configUnknown": "A alteração não foi confirmada. Verifique a configuração atual antes de continuar.",
   "sf.teams.configInvalid": "Confira os seletores de modelo, os IDs dos agentes e os limites dos campos antes de salvar.",
   "sf.teams.configMissing": "Nenhuma configuração compartilhada foi salva para este Team. Preencha as opções que este Team deverá usar.",
+  "sf.teams.personalConnections": "Conexões pessoais",
+  "sf.teams.personalDescription": "Gerencie a chave de API de um provedor disponível para este Team.",
+  "sf.teams.personalScope": "As chaves pertencem à sua conta e a este Team nesta instalação.",
+  "sf.teams.personalProvider": "Provedor",
+  "sf.teams.personalChooseProvider": "Selecione um provedor",
+  "sf.teams.personalModels": "Modelos configurados para este provedor",
+  "sf.teams.personalEmpty": "Nenhum provedor está disponível para este Team no momento.",
+  "sf.teams.personalReloadCatalog": "Atualizar provedores disponíveis",
+  "sf.teams.personalRead": "Consultar estado atual",
+  "sf.teams.personalReadBeforeChange": "Consulte o estado atual antes de fazer outra alteração.",
+  "sf.teams.personalLabel": "Nome da conexão",
+  "sf.teams.personalApiKey": "Chave de API",
+  "sf.teams.personalSecretHelp": "Digite a chave para esta solicitação. O valor é apagado após o envio e não é exibido novamente.",
+  "sf.teams.personalCreate": "Salvar chave pessoal",
+  "sf.teams.personalUpdate": "Substituir chave pessoal",
+  "sf.teams.personalRemove": "Remover chave pessoal",
+  "sf.teams.personalRemoveConfirm": "Remover a chave salva para esta conta e este Team?",
+  "sf.teams.personalActive": "Último estado observado: uma chave pessoal está armazenada.",
+  "sf.teams.personalAbsent": "Último estado observado: nenhuma chave pessoal está armazenada.",
+  "sf.teams.personalAbsentRemoved": "Último estado observado: a chave pessoal foi removida.",
+  "sf.teams.personalNotVerified": "Um registro salvo não confirma que o provedor aceita a chave.",
+  "sf.teams.personalSaved": "Chave pessoal salva. O acesso ao provedor não foi testado.",
+  "sf.teams.personalRemoved": "Chave pessoal removida.",
+  "sf.teams.personalUnknown": "O resultado da solicitação é desconhecido. Consulte o estado atual antes de fazer uma nova alteração.",
+  "sf.teams.personalObserved": "Estado atual carregado. O resultado da solicitação anterior continua desconhecido.",
+  "sf.teams.personalUseObserved": "Continuar a partir do estado observado",
+  "sf.teams.personalConflict": "A conexão mudou antes desta solicitação. Consulte o estado atual antes de continuar.",
+  "sf.teams.personalDenied": "Esta conta não pode realizar esta ação na conexão. As outras áreas autorizadas continuam disponíveis.",
+  "sf.teams.personalUnavailable": "As conexões pessoais estão indisponíveis no momento.",
+  "sf.teams.personalInvalid": "Confira o nome da conexão e digite uma chave de API válida antes de salvar.",
+  "sf.teams.personalJournalUnavailable": "Não foi possível guardar a referência da solicitação nesta janela. Nenhuma nova alteração foi enviada.",
+
 }

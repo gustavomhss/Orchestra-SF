@@ -9,6 +9,7 @@ import { extendedRouteAvailable, parseExtendedRouteQuery } from "./extended-rout
 export type SfTeamWebRoute =
   | Readonly<{ kind: "context"; profile?: TeamProfile.Ref }>
   | Readonly<{ kind: "administration" }>
+  | Readonly<{ kind: "connections"; profile: TeamProfile.Ref; href: string }>
   | Readonly<{ kind: "business"; profile: TeamProfile.Ref; href: string }>
   | Readonly<{ kind: "session"; profile: TeamProfile.Ref; sessionID?: Session.ID; href: string }>
   | Readonly<{ kind: "invalid" }>
@@ -30,6 +31,15 @@ export function sfTeamSessionHref(binding: SfTeamInstallationDescriptor, profile
   return "/orchestra/sf-sessions/" + (sessionID ?? "new") + "?" + new URLSearchParams({
     contractRevision: "sf-team-profile/1", server: binding.publicOrigin,
     installationId: profile.installationId, tenantId: profile.tenantId, teamObjectId: profile.teamObjectId,
+  })
+}
+export function sfTeamConnectionsHref(binding: SfTeamInstallationDescriptor, profile: TeamProfile.Ref): string {
+  const parsed = Schema.decodeUnknownSync(TeamProfile.Ref, { onExcessProperty: "error" })(Object.fromEntries(Object.entries(profile)))
+  if (parsed.installationId !== binding.installationId || parsed.tenantId !== binding.tenantId)
+    throw new Error("TEAM_CONNECTION_LINK_INVALID")
+  return "/orchestra/sf-home/connections?" + new URLSearchParams({
+    contractRevision: "sf-team-profile/1", server: binding.publicOrigin,
+    installationId: parsed.installationId, tenantId: parsed.tenantId, teamObjectId: parsed.teamObjectId,
   })
 }
 function installationQuery(params: URLSearchParams, binding: SfTeamInstallationDescriptor) {
@@ -57,6 +67,13 @@ export function readSfTeamWebRoute(href: string, binding: SfTeamInstallationDesc
         parsed.profile.installationId !== binding.installationId || parsed.profile.tenantId !== binding.tenantId)
       return { kind: "invalid" }
     return { kind: "context", profile: parsed.profile }
+  }
+  if (url.pathname === "/orchestra/sf-home/connections") {
+    const parsed = sfParseOwnerQuery(url.searchParams)
+    if (url.hash || url.searchParams.size !== 5 || parsed.kind !== "team" || parsed.serverKey !== binding.publicOrigin ||
+        parsed.profile.installationId !== binding.installationId || parsed.profile.tenantId !== binding.tenantId)
+      return { kind: "invalid" }
+    return { kind: "connections", profile: parsed.profile, href: url.pathname + url.search }
   }
   if (url.pathname.startsWith("/orchestra/sf-sessions/")) {
     const segment = url.pathname.slice("/orchestra/sf-sessions/".length)
