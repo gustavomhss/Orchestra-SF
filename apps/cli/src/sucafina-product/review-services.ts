@@ -17,6 +17,7 @@ import { createSfReviewHistory } from "./review-history.ts"
 import { createSfReviewHandoffs } from "./review-handoffs.ts"
 import { createSfReviewPortfolioHistory } from "./review-portfolio-history.ts"
 import { protectSfReviewReads } from "./review-read-integrity.ts"
+import { sfResidentReviewSnapshotReaders } from "./review-resident-readers.ts"
 import type { createSfReviewAgendaServices } from "./review-agenda-services.ts"
 
 type ApplicationInput = Parameters<typeof createReviewApplication>[0]
@@ -99,7 +100,8 @@ export function createSfReviewServices(input: {
     ...(input.readers?.contributions ? { contributions: input.readers.contributions } : {}),
   })
   const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
-    localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined) })
+    localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined),
+    residentSnapshotReaders: sfResidentReviewSnapshotReaders(input.readers, host) })
   const protectedApplication: typeof application & { readScope?: typeof readScope } = { ...application, readScope,
     http: (request, surface) => readScope.run(request, () => application.http(request, surface)) }
   return { application: protectedApplication, historical, portfolioHistory, handoffs, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }

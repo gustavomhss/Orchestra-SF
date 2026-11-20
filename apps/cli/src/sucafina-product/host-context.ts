@@ -1018,7 +1018,15 @@ export const createSfHostRuntimeWithRoutineNative = async (
     ? createSfReviewsProjectionHandlers({ origin: input.origin, mount: input.mount,
         authority, business, reviews: extended.reviews, persistence: input.persistence })
     : undefined
-  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
+  const collaborationRequest: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => {
+    const handler = collaborationHttp.get(surface)
+    if (!handler) return undefined
+    // C05 preparation and its final C08 fence share this original HTTP Request.
+    // Other native/analysis routes retain their own request lifetimes.
+    return extended.reviews?.readScope
+      ? extended.reviews.readScope.run(request, () => handler(request)) : handler(request)
+  }
+  const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationRequest(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
   const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
