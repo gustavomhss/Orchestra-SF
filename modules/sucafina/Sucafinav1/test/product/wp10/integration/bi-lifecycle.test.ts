@@ -347,8 +347,14 @@ test("native BI keeps its owner, refreshes on manual focus and timer, and signs 
     expect(world.count("logout") - beforeLogout).toBe(1)
     success.release.resolve(); await success.finished.promise
     expect(await page.locator("[data-sf-catalog], .sf-bi-figure").count()).toBe(0)
+    // Discovery identifies the installation independently; the original
+    // product context reports the session state after the genuine logout.
+    const signedOutContext = world.capture(page, (response) => new URL(response.url).pathname.endsWith("/api/ui/context"))
     logout.release.resolve(); await logout.finished.promise
-    await page.waitForFunction(() => document.querySelector('[data-sf-host="owner-runtime231"]')?.getAttribute("data-sf-provider-state") === "unavailable")
+    const signedOut = await signedOutContext
+    expect(signedOut.status).toBe(401)
+    expect(signedOut.body).toEqual({ status: "unauthenticated" })
+    await page.waitForFunction(() => document.querySelector('[data-sf-host="owner-runtime231"]')?.getAttribute("data-sf-provider-state") === "unauthenticated")
     expect(world.aborted).toContain("bi-data")
     expect(await page.locator("[data-sf-catalog]").count()).toBe(0)
     expect(world.count("logout") - beforeLogout).toBe(1)
