@@ -2,7 +2,7 @@
 
 ## Estado do checkpoint
 
-- Estado: IN_PROGRESS — shard 2 enumerado; shard 1 cancelado pelo limite do job; shard 3 em execução. Nenhuma correção de teste foi aplicada.
+- Estado: BASE_ENUMERATED_PARTIAL — os três runs da base encerraram. Shard2 completo; shards1/3 cancelados no limite existente de45min. Nenhuma correção de teste aplicada neste checkpoint.
 - Branch: `sf-shard-a`.
 - Base fixa de código: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
 - Escopo: CI-SF, shards 1, 2 e 3 de 8, módulo `modules/sucafina`.
@@ -35,7 +35,7 @@ Esses hashes identificam somente a seleção derivada, não uma cobertura execut
 | --- | --- | --- | --- |
 | 1 | [44646013868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646013868) | `a4bbf6b042526a0ee3f544243cfa67158236f871` | CANCELLED; 558 PASS observados, 21 marcadores FAIL + 1 falha de asserção sem footer. Sem resumo final |
 | 2 | [44646018333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646018333) | `dcb0c68d7e866b4df2153eadd26fda2eab45b266` | FAILURE; 504 pass / 10 fail / 1 skip / 1 error; 515 testes, 107 arquivos |
-| 3 | [44651344557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651344557) | `bce2f0ed56f7073254b4316853eca2ed0c0f5fcb` | Run tests em andamento; contagem pendente |
+| 3 | [44651344557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651344557) | `bce2f0ed56f7073254b4316853eca2ed0c0f5fcb` | CANCELLED; 255 pass / 21 fail observados; 66/99 arquivos iniciados; sem resumo final Bun |
 
 Os snapshots são commits filhos diretos da base, alterando apenas `.ci-run.json`; as branches temporárias são apagadas pelo próprio workflow. Cada requisição permanece legível no SHA do snapshot.
 
@@ -118,11 +118,79 @@ Arquivos não iniciados, prefixo `modules/sucafina/Sucafinav1/test/product/`:
 
 Os arquivos acima são pendência de execução, não falhas observadas nem PASS. Nenhum gate idêntico será repetido apenas para obter uma contagem.
 
+## Falhas observadas — shard 3
+
+Prefixo: `modules/sucafina/Sucafinav1/test/`. Job136006716047 cancelled; cleanup136025186224 success. São255 marcadores PASS e21 FAIL; não há resumo final, marcador skip/todo nem Unhandled error. O grande HTML/diff pertence à falha procurement-integration:180, sem falha adicional oculta.
+
+| File:line | Classe inicial | Evidência / pendência |
+| --- | --- | --- |
+| `io-browser.test.ts:26` | unbound/UI legado | ERR_CONNECTION_REFUSED em :4110; primeira jornada. |
+| `io-browser.test.ts:114` | unbound/UI legado | ERR_CONNECTION_REFUSED em :4110; segunda jornada. |
+| `visual-layout.test.ts:37` | unbound/UI legado | POST ECONNREFUSED no serviço legado; teste declarado em :15. |
+| `product/wp05/procurement-integration.test.ts:180` | contrato de projeção/UI | not.toContain falhou no HTML após revogação; causa detalhada em investigação. |
+| `product/wp13/sensitivity-units-boundary.test.ts:54` | timeout/desempenho | Timeout Bun30000ms; duração observada74999ms. |
+| `product/wp13/persistence-recovery.test.ts:21` | timeout/desempenho | Timeout Bun30000ms; duração observada31236ms. |
+| `product/operations-fixes/c12-concurrency.test.ts:34` | contrato C12 | Diferença de resultado na primeira jornada; causa detalhada em investigação. |
+| `product/operations-fixes/c12-concurrency.test.ts:103` | contrato C12 | Diferença de resultado no controle de API; causa detalhada em investigação. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso omitted: deadline cooperativo165000ms excedido. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso confirmed: deadline cooperativo165000ms excedido. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso zero: deadline cooperativo165000ms excedido. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso null: deadline cooperativo165000ms excedido. |
+| `product/wp12/native-execution-bi-kpi.test.ts:312` | contrato BI | readSourceLinks falha; causa detalhada em investigação. |
+| `product/wp12/native-execution-bi-public-selection.test.ts:326` | contrato BI | assertPresentation falha; causa detalhada em investigação. |
+| `product/bi-cost-waterfall/presentation.test.ts:17` | timeout/desempenho | Deadline cooperativo105000ms excedido; não elevar orçamento. |
+| `product/bi-cost-waterfall/presentation.test.ts:66` | timeout/desempenho | Deadline cooperativo105000ms excedido; não elevar orçamento. |
+| `product/bi-cost-waterfall/presentation.test.ts:97` | timeout/desempenho | Deadline cooperativo105000ms excedido; não elevar orçamento. |
+| `product/bi-cost-waterfall/presentation.test.ts:113` | timeout/desempenho | Deadline cooperativo105000ms excedido; não elevar orçamento. |
+| `product/bi-cost-waterfall/presentation.test.ts:133` | timeout/desempenho | Deadline cooperativo105000ms excedido; não elevar orçamento. |
+| `product/bi-cost-waterfall/presentation.test.ts:242` | timeout/desempenho | Deadline cooperativo105000ms excedido; não elevar orçamento. |
+| `product/wp00/baseline-corpus-coverage.test.ts:60` | contrato de inventário | Asserção de vínculo de requirements/journeys falha; não forjar baseline/coverage. |
+
+O último arquivo `product/wp08/review-answer-confirmation.test.ts` teve5 PASS e foi interrompido no sexto caso, `:228`, após `current-lease reply-denied-at-last-human-await`. Não contar essa interrupção como falha emitida.
+
+### Arquivos não iniciados no shard 3
+
+Caminhos relativos a `modules/sucafina/`:
+
+- `Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts`
+- `Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts`
+- `Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts`
+- `Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts`
+- `Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts`
+- `Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts`
+- `Sucafinav1/test/product/wp02/backup-consumer.test.ts`
+- `Sucafinav1/test/product/wp02/keyed-update.test.ts`
+- `Sucafinav1/test/product/wp02/kpi-comparison.test.ts`
+- `Sucafinav1/test/product/wp02/prepared.test.ts`
+- `Sucafinav1/test/product/wp02/review-completion.test.ts`
+- `Sucafinav1/test/product/wp02/signals.test.ts`
+- `Sucafinav1/test/product/wp02/workbench-recovery.test.ts`
+- `Sucafinav1/test/product/wp06/documents/resolver.test.ts`
+- `Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts`
+- `Sucafinav1/test/product/wp06/imports/end-to-end.test.ts`
+- `Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts`
+- `Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts`
+- `Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts`
+- `Sucafinav1/test/product/wp08/answer-reuse.test.ts`
+- `Sucafinav1/test/product/wp08/case-selection-cas.test.ts`
+- `Sucafinav1/test/product/wp08/collaboration-journey.test.ts`
+- `Sucafinav1/test/product/wp08/confirmation-real-dependencies.test.ts`
+- `Sucafinav1/test/product/wp08/mutation-fence.test.ts`
+- `Sucafinav1/test/product/wp08/work-presentation.test.ts`
+- `Sucafinav1/test/product/wp10/integration/browser-bundle-literals.test.ts`
+- `Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts`
+- `Sucafinav1/test/product/wp10/integration/memory-services.test.ts`
+- `Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts`
+- `Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts`
+- `Sucafinav1/test/product/wp10/integration/ui-authority.test.ts`
+- `Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts`
+- `Sucafinav1/test/product/wp10/native-host/execution-host-guard.test.ts`
+
 ## Feito / pendente
 
 Feito: branch isolada; seleção dos três shards conferida; requisição compatível; shard 2 concluído e classificado; shard 1 cancelado sem repetição; shard 3 iniciado somente após shard 2 terminar. Nunca houve mais de dois gates simultâneos.
 
-Pendente: concluir shard 3; depois aplicar duas fatias comprovadas (adapter descriptors no shard 1 e guard C08 no shard 2), com um gate completo por causa. Demais causas permanecem classificadas, com suas asserções intactas.
+Pendente: concluir a classificação detalhada do shard3; aplicar duas fatias comprovadas (adapter descriptors no shard 1 e guard C08 no shard 2), com um gate completo por causa. Demais causas permanecem classificadas, com suas asserções intactas.
 
 Asserções removidas: nenhuma até este checkpoint. Testes pulados/removidos: nenhum. Produto, projeções, fixtures e workflows: nenhuma alteração.
 
@@ -131,13 +199,13 @@ Asserções removidas: nenhuma até este checkpoint. Testes pulados/removidos: n
 - Adapter (`product/routine-native-admission/adapter-boundaries.test.ts:113`): a expectativa de array vazio para qualquer perda de binding será substituída pela lista exata de cinco IDs quando publication existir, e por array vazio somente quando publication faltar. A ausência de watch permanece coberta pela lista fechada. Será acrescentada a chamada real de `routines.readAdmission`, exigindo o erro exato de reader indisponível e contadores exatamente zero. Não é uma redução para nonempty/truthy.
 - Executive (`product/wp12/native-execution-executive.test.ts:213`): o oracle parcial `unavailable/analysis-source-unavailable` será substituído por HTTP403 e body exato `denied/case-selection-unavailable`, pois o guard C08 externo precede o produtor. Todas as asserções de digest, preservação histórica, downloads GET reais e recusa anônima permanecem.
 
-Essas propostas ainda não foram aplicadas: primeiro deve encerrar a enumeração do shard3.
+Essas propostas ainda não foram aplicadas neste checkpoint. Os três runs encerraram e suas listas de falhas foram publicadas antes de qualquer correção.
 
 ## Como retomar
 
-1. Consultar run 44651344557 e job 136006716047 (shard 3), sem repetir gate idêntico. Shards 1/2 estão encerrados.
+1. Os três runs de enumeração estão encerrados; não repetir gates idênticos. Shards1/3 têm resultados parciais por limite do job.
 2. Ler logs dos jobs 135988658580 (shard 1) e 135988673159 (shard 2). Preservar a distinção entre enumeração parcial e resumo final.
-3. Completar os três ledgers antes de qualquer correção.
+3. Os três ledgers da base foram publicados antes das correções; completar a classificação das causas do shard3 enquanto as fatias revisadas são verificadas.
 4. Fix concreto identificado: `product/wp12/native-execution-executive.test.ts:213`. A recusa acontece em `apps/cli/src/sucafina-product/business-services.ts:289–291`, antes do produtor (`analysis-host-services.ts:271`); `analysis-http.ts:102` mapeia denied para 403. Substituir o oracle interno por HTTP403 e body exato, mantendo digests e downloads reais.
 5. Corrigir apenas causas comprovadas. Manter `runtime/application.ts` intacto. Não recriar console descomissionado, não elevar timeouts nem falsificar baseline/coverage/digest/GO.
 6. Mudanças compartilhadas devem ir a PR pequeno separado com `shared:` no título; integrador faz esse merge primeiro. Nenhuma mudança compartilhada aplicada até agora.
