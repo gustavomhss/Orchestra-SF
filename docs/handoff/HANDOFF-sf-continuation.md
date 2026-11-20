@@ -189,13 +189,27 @@ Reader independente [44672368527](https://github.com/gustavomhss/Orchestra-SF/ac
 
 ## Guards
 
-[Run44675778676](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675778676), job136087129410, executou de fato `bun run check:guards --base origin/dev` no candidato anteriorc32e906a: **78rules,6260paths,0errors,2gate,211warnings; exit1 esperado**. GATEsomente `godfile-waivers.json` e `script/spawn-allowlist.json`, ambosprotected-paths herdados. Artefato14601558159,7406bytes, ZIPsha2569eb13455d050ff6c3a7d30e09667cfc5d6508bf44e8fa10e3deaf64b9a249750. Não se transfere esse recibo ao SHA3910a644: o jobstatic da corrida final executará guards após os dois merges novos; resultado final pendente.
+**Resultado no SHA final: 0 errors, 2 GATE herdados, 213 warnings.** O comando original `bun run check:guards --base origin/dev` foi executado pelo job `sf/static-and-contracts` (136089567130) do [sf-ci 44676428710](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710), após todos os merges incluídos em F.
+
+| Comando / base | Resultado real |
+|---|---|
+| `bun run check:spawn-imports` | exit 0 |
+| `bun run check:guards --base origin/dev` | exit 1; 78 regras, 6.261 paths, 0 errors, 2 GATE, 213 warnings |
+| Guards contra merge-base do PR | exit 0; 78 regras, 406 paths, 0 errors, 0 GATE, 23 warnings |
+
+Base canônica dev: `c777c057b23f40d835c2c26387954202d4bad4c4`. Merge-base: `1e37b23a27d78a9e2e6dcebf43efb9db00e470d1`. Os dois únicos GATE são `godfile-waivers.json` e `script/spawn-allowlist.json`, ambos `protected-paths`. Em workflow_dispatch não existe label de PR para aprová-los: o job estático permanece **failure esperado** nessa etapa. Geração, sete typechecks, inclusão E2E e build Web passaram.
+
+Evidência original: [artefato 14602533052](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710/artifacts/14602533052), `sf-guard-bases-3910a644c7fdab1a438c2b5b39d69afc19361709-1`, 8.597 bytes, ZIPsha256 `1a53713f2e0e7d2d6ac7346c2a99d54baf0f23adc076a6c1a21b44a318a44fb4`.
+
+O [leitor 44677479946](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677479946), job136092650953 **success**, verificou ID/SHA/run, os bytes da ZIP e os quatro checksums internos e imprimiu somente o recibo/contagens reais. **Não reexecutou nenhum comando de produto ou guard.** Recibo factual publicado no [artefato14602900764](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677479946/artifacts/14602900764), ZIPsha2567f12ab1e8e82376c351bc5f5d60ec940732894443c8d26c726a52029b749332f. O success do leitor prova a integridade da evidência; não transforma a saída1 dos guards em success.
+
+O guard anterior44675778676 no candidato c32e906a teve0errors/2GATE/211warnings. Está preservado apenas como histórico; o recibo final acima vincula3910a644.
 
 ## sf-ci — run único e resultado por job
 
 **[44676428710](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710), workflow420530405, eventworkflow_dispatch, refsf-join-four, attempt1, head3910a644c7fdab1a438c2b5b39d69afc19361709.** Único dispatch desta sessão. Driver sf-final-dispatch@dc60b94da88eb9f1d067d4c689b8e966fd3b39f0, run44676417113/job136089209667success; log confirma POSTúnico HTTP204 e ID do run. O único outro workflow_dispatch listado para esse branch era44541767066cancelled, anterior à sessão.
 
-Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já success. CI-APP-BROWSER terminou failure apesar de138testespassarem: receipt acusa inventário de baseline existente em gate.mjs300:5. Decisions terminou failure (0 pass / 2 fail / 3 não executados), primeira asserção em decisions-support/planner-sources.ts:19:24; nenhum candidato de baseline, pois falhou antes da minimização/receipt. Shards SF, Reports e static ainda sem conclusão final neste checkpoint. Tabela completa será substituída por resultados terminais; nenhuma segunda corrida será disparada.
+Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já success. CI-APP-BROWSER terminou failure apesar de138testespassarem: receipt acusa inventário de baseline existente em gate.mjs300:5. Decisions terminou failure (0 pass / 2 fail / 3 não executados), primeira asserção em decisions-support/planner-sources.ts:19:24; nenhum candidato de baseline, pois falhou antes da minimização/receipt. Operations terminou failure (0 pass / 2 fail / 3 não executados), antes dos oráculos de negócio, em operations-support/runtime.ts:32:27: esperado /wp04/first, recebido /sucafina. Static terminou failure somente nos dois GATE herdados; geração, typechecks e Web build passaram. Shards SF e Reports ainda sem conclusão final neste checkpoint. Tabela completa será substituída por resultados terminais; nenhuma segunda corrida será disparada.
 
 ## Artefato / baseline
 
