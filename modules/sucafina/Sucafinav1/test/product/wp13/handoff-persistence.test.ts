@@ -168,7 +168,8 @@ test("persisted producer: portfolio handoff prepares two WP11 changes and resume
     expect(partial.value.case.state).toBe("partially-applied")
     expect(await amounts()).toEqual([40, 50])
     domain.procurementFails = false
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
+    expect(await execution(firstRequest, binding)).toEqual({ status: "ok", value: committedReceipt.value[0] })
     const beforeResume = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
     const secondRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }
