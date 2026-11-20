@@ -1,0 +1,1117 @@
+# Handoff — sf-shard-c
+
+**Estado: PARCIAL / UNBOUND — rodada encerrada, objetivo global não atingido.** O escopo histórico completo do shard 8 está verde, com **620 pass / 0 fail**. Há merges parciais qualificados, incluindo o controle de labels 2/0 abaixo; a entrega integral mergeada e verde dos oito shards permanece pendente. Runtime, SupplierCreate de IO2 e os anuais conservam suas paradas UNBOUND. O verde do componente não altera esses resultados.
+
+| Referência | Valor |
+| --- | --- |
+| Checkpoint de código C | `8e8e82dc9790dbff6a754a5ef91e2880dba4c9d3` (join do código qualificado de labels/filtros e seus controles; conserva os candidatos e as paradas de C, sem nova execução completa do shard 7). A referência é de código e permanece verificável após a publicação documental. |
+| Base original | `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` |
+| Checkpoint de integração de código | `sf-join-four` em `83a4ad2d97417f6047cf4580fd2bdfd6a7434319`: inclui os merges anteriores e #512 `bdd80601f15496dfce3ebb31accd8c9510bb33e1`, #522 `09f9f517ccb4d8f763840b3835dec165f6d922db`, #523 `83a4ad2d97417f6047cf4580fd2bdfd6a7434319`, com o alcance causal abaixo |
+| Data do checkpoint | 2026-11-20 |
+
+Proveniência anterior de C: o merge `b9d897177245c1a58638507894588a3d069012b4` incorporou `c32e906a92193ae33d32b5106a82ee47b81c0ba4`; o pin pós-442 entrou em `5917a488021408261b59ba81106ad582dd167270` e o driver half-close em `e432400faff2cf84ac8bedb9590e14248db3653b`. C preserva a sentinela privada adicional e candidatos ainda não qualificados. Cada gate abaixo identifica sua própria fonte e snapshot.
+
+Este documento parte integralmente do handoff C em `85dc20d87dc8bee387765483ed952b564781503c`, blob `8b98e52ce32beb33252a2950606561e30136e484`, e preserva os apêndices dessa fonte. Atualiza o checkpoint documental `9062ef29a40b125c573bcb21a2d29fd6c49b7548` em uma fatia documental isolada, [#476](https://github.com/gustavomhss/Orchestra-SF/pull/476). PR principal: [#397](https://github.com/gustavomhss/Orchestra-SF/pull/397), draft de acompanhamento com candidatos e causas `UNBOUND`; não está qualificado para merge integral.
+
+## Feito
+
+Acesso exclusivamente pelo GitHub; execução somente por Actions. A enumeração original mediu shard 7 **518 pass / 12 fail** e shard 8 **618 pass / 2 fail**. Todas as falhas originais estão mapeadas, com suas linhas nos apêndices. A revalidação integral dos mesmos 115 arquivos históricos do shard 8 passou **620/0**; esse resultado vem de um novo log completo, sem subtração de gates focais. Correções de testes permanecem separadas dos PRs `shared:` de produção.
+
+### Labels e filtro canônico — 2/0 qualificado e integrado
+
+[44705613843](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44705613843) terminou **2 pass / 0 fail**, com 3 expects reportados pelo Bun, dois testes em dois arquivos e duração de 71.50 s. Fonte `ed9c0224ac7d007df77b74ed3ea09464cbfa7eae`, tree `81fbbcfef7c6d528d925b4672000c124cfdf95b1`; snapshot `9c4eb16b8a9481209d537520bf4e7aa7b68f747e`, branch `ci-run-linux-sfc-collection-labels`. Teste 136184334613 e cleanup 136185300767 terminaram com success.
+
+| Caso observado | Resultado e alcance |
+| --- | --- |
+| Componente Risks real e labels exatos | **PASS**, 16439.21 ms. Playwright seleciona Impact 3, Probability 2 e Status open; aplica o filtro Status e observa o GET canônico exato, mantendo os valores do editor. |
+| Typecheck canônico de modules/sucafina | **PASS**, 54195.54 ms, exit 0, stdout/stderr não truncados. Os três expects do footer Bun são os três asserts deste auxiliar de tipos. Os oráculos Playwright do componente não entram nesse contador. |
+
+A fixture fornece explicitamente o contexto e a resposta HTTP validada pelo schema, usando o componente, o transporte e os bindings originais. Seu authMode foi corrigido para **local-operator em HTTP loopback antes do primeiro gate**. Essa prova não estabelece admissão de uma instalação real, autenticação instalada, Save, #513, CAS, persistência ou a jornada Runtime. Os orçamentos de componente/ações e o limite original de 45 s de Runtime permanecem distintos.
+
+| Integração | Merge / postimage qualificado |
+| --- | --- |
+| [#512](https://github.com/gustavomhss/Orchestra-SF/pull/512), opcionais ausentes na leitura | `bdd80601f15496dfce3ebb31accd8c9510bb33e1`; omite somente propriedades próprias com valor undefined antes do codec JSON. O gate observa CAP13 e seu GET, sem qualificar Save de records. |
+| [#522](https://github.com/gustavomhss/Orchestra-SF/pull/522), rótulos localizados dos selects | `09f9f517ccb4d8f763840b3835dec165f6d922db`; reutiliza as chaves originais. O arquivo composto `operations/risks/collection.tsx` na integração tem blob `9810a25de7f8a8a2a44513cefa67177ac5ff8f00`, byte a byte igual à fonte do gate. |
+| [#523](https://github.com/gustavomhss/Orchestra-SF/pull/523), controle permanente | `83a4ad2d97417f6047cf4580fd2bdfd6a7434319`; integra somente os dois arquivos permanentes abaixo, ambos exatos à fonte qualificada. |
+
+Os arquivos permanentes são `modules/sucafina/Sucafinav1/test/native-ui-contract/collection-labels-browser.test.ts`, blob `f71053394486a0fb687c3463cf1e5b1e274c891f`, e `collection-labels-entry.tsx`, blob `893995dc722cc56fada6a2df51a4d5c71e8a131c`, no mesmo diretório. Eles compõem um controle de componente. O auxiliar `collection-types.test.ts`, blob `3b0e5fce9758c310896e3d643ec3901886d60927`, foi usado somente na prova e **ficou fora do merge**. Esses controles não recebem atribuição aos inventários históricos nem alteram seus recibos; não somar o 2/0 aos totais dos shards ou alegar partição LPT atual.
+
+C preserva os commits de teste `447ef1f92a904a3b0f5b970f4c2327761f4efb0f` e `1b2cca4df1622b9ee9bda5810effbe59472fcd9d`; o segundo corrige somente o modo da fixture. O join `8e8e82dc9790dbff6a754a5ef91e2880dba4c9d3` tem os parents 1b2cca4 e main 83a4ad2d, preservando o código qualificado. Nenhuma execução completa de C foi atribuída a esses commits.
+
+**Fechamento de escopo.** Os gates de produto desta sessão estão terminais. Runtime de 45 s, SupplierCreate de IO2 com duas falhas, os anuais de 105 s e as demais paradas abaixo permanecem UNBOUND; o visual de 120 s ainda carece de correção causal de custo. Não ficou outro gate de produto autorizado, sustentado por correção concreta e compatível com essas paradas. Na coordenação também foi observado [44706194930](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44706194930), branch `ci-static-sfc-teams-configuration-02`, posteriormente terminal completed/failure em 09:00:02 UTC. Seus logs e sua causa não foram auditados neste handoff, e nenhum resultado dessa execução é atribuído aos shards. Não se afirma que a fila global do repositório esteja vazia.
+
+### Integrações confirmadas — Imports e presença de snapshot
+
+| Fatia | Merge confirmado | Evidência e limite |
+| --- | --- | --- |
+| [#492](https://github.com/gustavomhss/Orchestra-SF/pull/492), continuações Imports | `480db8180eb275717e4af518493abd25ef81603e` | Owner e continuações reais, guards tipados e rótulos acessíveis. Preserva o alcance dos quatro controles Imports e dos typechecks já observados; não qualifica a jornada IO original. |
+| [#493](https://github.com/gustavomhss/Orchestra-SF/pull/493), controles Imports | `53275d8c6d323b534d352644fdba98c53deb9fa7` | Os quatro controles completos passaram no44687035682. O gate inteiro foi4/5 porque os cinco Settings repetiram o RangeError e continuam UNBOUND. |
+| [#515](https://github.com/gustavomhss/Orchestra-SF/pull/515), presença de snapshot | `82ea37a8e6f99561d0b8d210fa61772b136c3c11` | `runtime/contract.ts` blob `57e4c4826d02ce344660070db0d8e6f7791b346b` e `runtime/local-store.ts` blob `da68d150f8f388a9214f79c714e69262d95ae0bc`, ambos exatos à fonte Bddae09 do44697043402. |
+| [#521](https://github.com/gustavomhss/Orchestra-SF/pull/521), controles de presença | `f91710455792f1eb64ce2153e856fc8940670145` | `test/local-store-snapshot-presence.test.ts`, blob `e06c6ab8101b95579dc8afc9ad4a06a28e6a3331`, exato à fonte Bddae09; arquivo completo **7 pass / 0 fail** no44697043402. |
+
+Os paths de presença são relativos a `modules/sucafina/Sucafinav1/`. Os dois blobs de produção e o blob do teste foram comparados diretamente com a fonte qualificada. Os sete controles de #521 são uma fatia qualificada separadamente, **sem atribuição a qualquer um dos oito inventários históricos**. Não somá-los aos totais, não tratá-los como enumeração LPT atual e não apagar os dois timeouts do gate B41/2.
+
+C recebeu Imports pelo merge verdadeiro `19e7f625e4649976dd10c99d2ca1e16fa6a84513`, parents `0ff02a0015dc406f0f88e0f982228a0eb355548a` + `53275d8c6d323b534d352644fdba98c53deb9fa7`. Recebeu presença pelo merge `18dffc682a1f8dd9de76927c1642b02ab423375f`, parents19e7f625 + f9171045. O commit causal posterior `916be9c91af0d8b05bbcbb8d15120206d84f191f` muda somente helper/navegações IO2; não transporta testes de B ou sobrescreve o primeiro caso nativo de C. Nenhum desses joins é um novo full C.
+
+### Navegação IO2 — terminal 3/1, Create UNBOUND
+
+O candidato [#520](https://github.com/gustavomhss/Orchestra-SF/pull/520) está em `7d7fab6e97d89b495a18f2f2b4b364112fb16791`, helper blob `3a3b5bf2b6b2c6bf01234da8d5948093fc60f864`. O consumidor [#494](https://github.com/gustavomhss/Orchestra-SF/pull/494) está em `f64f42e358667c989fd0c1f4cd1226d908bd3389`, IO blob `fe6c968e1e5227a3a83ea1822ab4307f09cca643`. O delta IO2 é9+/9−: sete navegações usam a deadline do scope aberto; duas fora de scope explicitam os10000ms já configurados na fixture. Primeiro caso legado, common helpers, asserts, predicates, argumentos Page e90s globais permanecem exatos nesse PR; C recebeu somente o delta do segundo caso.
+
+A causa estática demonstrada é a janela entre concessão do permit e execução de originalFetch: o reload pode destruir o documento sem produzir Request nem interrupt, deixando a identidade antiga incerta. `navigate` pausa novos starts do documento antigo, drena somente os permits concedidos até Request ou retirada comprovadamente anterior ao fetch, executa a navegação e confirma o novo documento. Uma única deadline inclui todas essas etapas; há também conferência do relógio após o handshake. Não espera respostas antigas nem libera tombstones incertos; só retira queued nunca despachados. A revisão independente do HEAD final não achou bloqueador estático; isso não prova que essa race seja a causa exclusiva do log IO2 anterior.
+
+[44704002754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44704002754) terminou **3 pass / 1 fail, +1 filtered**,22 expects, quatro testes em três arquivos,129.19s. Fonte `caa5cd30900e1548b4fc8cd8953f9906e76f00fe`, tree `eaea1d5939436f5220c3d88bbf53577dc58687c5`, parent exato `f91710455792f1eb64ce2153e856fc8940670145`; snapshot `d11dab4f896dd9bd12e2987b6d16426eeaa0b961`, branch `ci-run-linux-sfc-io-navigation`. Teste136178941202 failure; cleanup136180547949 success. O compare confirma19 paths da stack IO2, helper e prova de tipos. A seleção executou IO2 original, mensal como regressão do helper e typechecks app-shell/modules; o primeiro IO legado foi filtrado.
+
+| Caso no gate IO2 de navegação | Resultado e alcance |
+| --- | --- |
+| Typecheck app-shell | **PASS**,23411.05ms, exit0. |
+| Typecheck modules/sucafina | **PASS**,45362.94ms, exit0. |
+| Mensal WP01 | **PASS**,10590.84ms, com os escopos originais de5s; nenhuma navegação posterior à instalação do observer foi acrescentada. |
+| IO2 original | **FAIL / UNBOUND**,48952.79ms; `io-browser.test.ts:531:10` no helper confirmProcurement, caller Bun:244:9. O caller físico de Suppliers Create está em:213–215 no blob `fe6c968e1e5227a3a83ea1822ab4307f09cca643`; espera de10s pela resposta. PageErrorCount0. |
+
+O URL final do log é `/orchestra/sf-procurement/suppliers`. O corpo contém somente três chamadas confirmProcurement: Reset e Settings Save precedem gotoSuppliers; Create é a única posterior. A sequência comprova avanço pelos dois comandos Settings e seus readbacks, sem depender da numeração transformada do Bun. **Supplier Read, upload e o restante da jornada não foram qualificados.** O mesmo ponto funcional Create já falhou no44695495535: IO2 Create fica **UNBOUND após duas falhas, sem terceiro gate ou seleção disfarçada**. #477/#518/#494 continuam draft; #520 também segue sem qualificação integral, apesar do avanço e dos três PASS de escopo próprio.
+
+A seleção e o delta de prova excluem Runtime, visual, migração IO1 nativa e Save de records. Os cinco controles IO anteriores não são repetidos. Runtime45s está UNBOUND; visual120s aguarda correção causal de custo, não uma ampliação de prazo. O mensal já integrado entra somente porque seu helper mudou. A reserva foi registrada em [#410/7034569814](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7034569814), após confirmação de nenhuma outra execução relacionada ativa/queued. Verificar novamente os runs e cleanup antes de reservar outra vaga.
+
+### Anual A1 — terminal 0/2 e parada da causa
+
+[44702605427](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44702605427) terminou **0 pass / 2 fail, +7 filtered**,23 expects, dois testes em um arquivo,210.47s. Fonte `b84e1f1e044e7f71470058d501c989febb014a7e`, snapshot `fe1f430b2d121d4e5617ef9dbc88bfe0bf1b3cf8`; teste136174354064 failure, cleanup136176405884 success. A seleção cobre os dois anuais originais após o fix concreto #503; não é um novo shard ou repetição dos manifestos S10 que não continham esses dois casos.
+
+| Caso anual em `test/product/wp10/analysis-composition/alternative-selection.test.ts` | Resultado / file:line |
+| --- | --- |
+| Comparação canônica da segunda alternativa humana, declaração:576 | **FAIL**,105007.75ms. Deadline cooperativa105000ms da fixture:50:29; stack Bun em:363:19. |
+| Recusa de seleção ausente/externa e troca durante draft, declaração:609 | **FAIL**,105006.22ms. Mesma deadline da fixture:50:29; stack Bun em:389:22. |
+
+As declarações576/609 foram conferidas no source; os números363/389 são os frames transformados emitidos pelo Bun. As fases retornadas após o cancelamento não qualificam os casos. [#503](https://github.com/gustavomhss/Orchestra-SF/pull/503), HEAD `76331980f51dd393ba582dc7e23c0fd5101ec15f`, permanece draft/UNBOUND. As duas falhas já constavam da enumeração A1 e repetiram o ponto de105s: **sem terceiro gate focal da causa**.
+
+Runtime permanece UNBOUND após a repetição anterior ao primeiro Save. O controle distinto #512/#522/#523 passou 2/0 em 44705613843 e foi integrado nos merges acima, com contexto explicitamente fornecido e leitura HTTP validada. Ele não executa Save, CAS ou a instalação Runtime; seus arquivos não recebem atribuição aos inventários históricos nem requalificam Runtime de 45 s ou visual de 120 s.
+
+### Captura nativa — terminal 2/3, mensal e tipos qualificados
+
+O gate causal [44692520124](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44692520124) terminou **2 pass / 3 fail**, 19 expects, cinco testes em quatro arquivos, 166.94 s. Fonte `5046457c4140a1736eade5f50656e630614d0a02`, snapshot `0c6dfe59e7aa8039436c3ab5534a66f8bf3c819b`, base `5c8c5b486135474d3ba2bce8fb4d754d692c0d08`. Teste136141448054 failure; cleanup136143919499 success. A seleção manteve os dois IO originais, visual instalado com 140 cliques, mensal WP01 e typecheck canônico de modules/sucafina. Não executou HTTP, personal-views, os cinco controles IO, os controles Settings/Imports, #482 ou #483.
+
+| Caso observado | Resultado / file:line |
+| --- | --- |
+| Mensal WP01 completo | **PASS**, 5488.38 ms; preview/apply reais com captura dos corpos originais, dois escopos de 5 s e prazo global preservado. |
+| Typecheck canônico modules/sucafina | **PASS**, 34797.91 ms, exit0. |
+| IO1 Planner XLSX | **FAIL**, 33396.15 ms; `io-browser.test.ts:108:12`, espera de targets. A jornada passou da criação Versions, mas não completou import/apply/export. |
+| IO2 documentos / Supplier / Members | **FAIL**, 27457.95 ms; `io-browser.test.ts:698:10`, chamada `:416:9`, espera em confirmProcurement/SavePolicyUI. Bootstrap, captura e Reset progrediram; o log registra um pageerror de tipo Error, sem stack. |
+| Visual instalado | **FAIL**, 65042.20 ms; `visual-layout.test.ts:64:43`, etapa CAP13 IT Risks em 1440 px, esperando a resposta após o link real F01. Não completou as 140 visitas. |
+
+Os paths da tabela são relativos a `modules/sucafina/Sucafinav1/test/`. A perda de corpo CDP deixou de ser o ponto observado dessas três falhas. Isso não transforma IO1, IO2 ou visual em PASS. #508 e #506 foram integrados, respectivamente, em `865447b2f30345b263545f73b2a4146ba8822a11` e `d345454edea4dc4cfe793bc0e285ac5f787e3af3`: a qualificação do mensal/types vem deste gate; HTTP/views e app-shell types conservam sua prova específica anterior.
+
+Heads exatos do gate de captura já terminal:
+
+| Fatia | HEAD / blob da fonte |
+| --- | --- |
+| #508, clone da resposta original | HEAD `3a9c58178e181f686f854caa5223cec7d9dffbaf`; helper blob `823c677de1dd4f105a340172bbd4b345baae872c` |
+| #506, mensal usando o helper | HEAD `04d692d44880e7e66273766028fef3aa20f5dd67`; mensal blob `bc828ae50249cfa751e70c165eb21f4bc19aafc2` |
+| #474 sobre #494, IO combinado | HEAD `d6c929fe8396930ac8cbd3e5f7470dbe3e909791`; IO blob `d7266257092627de3f388baaf74ad5c40b1fe4a5` |
+| #501, visual instalado | HEAD `ecd913aef12df77291e3b6addd7b6eec292469c0`; blob `cff007cc68e69338a473557601623867c67ea7af` |
+
+O helper preserva a associação por **Request real**, documento e frame, mesmo quando existem vários fetches legítimos para a mesma URL. Não escolhe último/FIFO; associação inicial ambígua continua falhando. Copia `response.clone()` antes de devolver a Response original, sem nova HTTP. O orçamento é limitado por tipo e validação de runtime a `5000 | 10000` ms, contado desde `begin`; padrão 10 s para IO/visual e 5 s explícitos nos dois escopos mensal (preview/apply). Nenhum prazo original foi ampliado. C incorporou a query Procurement em `88ad1e8f71e302e5f8e3c14158f4ab1b8c68df8b`, a captura em `60f500d0ca5a3beecf31eec9490bca0279770805` e a integração qualificada #508/#506 pelo merge `7cce3c92b7fe49c15571c681581fa13388b6ddee`, tree `548fad0a2e470aa145af47a0e0d69f2b13f51ab7`. A união do driver preserva os consumidores reais C e WP01. Nenhum full C foi executado por esse merge.
+
+**Segundo WP01 já terminal.** [44691215826](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44691215826), fonte `e65ca2f29d4deb2a7bcf4f463939f17372fc5f2e`, snapshot `824584318d217b3499ed6af04a038782a13658ce`: **4 pass / 1 fail**, 103 expects, cinco testes / quatro arquivos, 100.84 s. Teste136137192748 failure; cleanup136138196008 success. Modules types48492.34ms, app-shell types23887.79ms, personal-views11542.86ms e HTTP13568.52ms passaram. Mensal falhou em `product/wp01/planner-monthly.test.ts:122:48`, `applied.json()` com CDP body lost, caso2734.87ms; Chrome conectado em480ms e fechamento físico limpo. O gate de captura posterior qualificou somente o mensal alterado e modules types; não repetiu HTTP/views. O 4/1 anterior permanece vermelho em sua própria fonte.
+
+### Contratos nativos — terminal 3/3, três jornadas ainda vermelhas
+
+[44695495535](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44695495535) terminou **3 pass / 3 fail**, 9 expects, seis testes em três arquivos, 202.57 s. Fonte `f8471d0dedbde58023b36dcccff42a7acf5be85a`, tree `fde096bf3a89dd2c83f09000afa1f4efefd5dfbc`, snapshot `fa882d983bb96b0f0ab4155c016e025c24e0b241`, branch `ci-run-linux-sfc-native-contracts`, baseado na integração `d345454edea4dc4cfe793bc0e285ac5f787e3af3`. Teste136151146148 failure; cleanup136153153283 success. A fonte reúne23 paths e selecionou **IO1 + IO2 + visual originais + três typechecks canônicos Client/App-shell/modules**. Não repetiu o mensal já aprovado, os controles já verdes, Settings #482, parity #483 ou Runtime A1.
+
+| Caso observado no gate de contratos | Resultado / file:line |
+| --- | --- |
+| Typechecks canônicos | **3 PASS**, Client7370.81ms, App-shell15296.49ms, modules32808.92ms; exit0, stdout/stderr não truncados. |
+| IO1 Planner XLSX | **FAIL / UNBOUND**, 36074.18ms; `io-browser.test.ts:136:12`, wait de10s da resposta GET import-reference no trio admit/preview/reference. Targets foi validado. Três auditorias não demonstraram causa do retorno antes da referência; diagnóstico insuficiente, sem retry até fix concreto. |
+| IO2 documentos / Supplier / Members | **FAIL**, 34984.66ms; `confirmProcurement:698:10`, chamada emitida `io-browser.test.ts:441:5`. O URL final `/orchestra/sf-procurement/suppliers` no log1085, com F01 ready, comprova passagem pelos dois comandos Settings e seus readbacks; o próximo caller no blob é Suppliers Create. A numeração transformada do Bun não é a prova isolada. PageErrorCount0; causa própria `id: undefined` corrigida na proposta518, ainda sem Actions. |
+| Visual instalado | **FAIL**, 75277.23ms; CAP25 Requests em1440px, etapa de decode da resposta original. `fixture/native-response-capture.ts:123:41`: Response sem associação única ao Request original. A jornada passou do ponto CAP13 anterior, mas não completou140 visitas. |
+
+As jornadas permanecem vermelhas. IO1 está UNBOUND por diagnóstico insuficiente; IO2 tem o candidato518 para o DTO de Create; visual CAP25 tem o candidato #520 para associar os dois GETs reais a seus Requests exatos, agora exercitado na prova de despacho abaixo. Nenhum merge de #509/#510/#512 foi atribuído àquela rodada. Posteriormente #512 foi qualificado e integrado apenas no escopo de leitura/labels2/0 acima; os IOs e o visual continuam sem PASS integral. Os typechecks e os prefixos funcionais executados são evidência com alcance próprio; não equivalem ao PASS completo dos três casos. O novo terminal6/3 abaixo acrescenta mensal/types PASS e progresso visual além de CAP25, sem qualificar integralmente #513/#514/#518/#520.
+
+| Causa / fatia isolada | Candidato e limite de qualificação |
+| --- | --- |
+| Targets Files sem os codecs originais | [#510](https://github.com/gustavomhss/Orchestra-SF/pull/510), HEAD `db62d0eb38689af97dc4a5cdf9dbe2d2140594fc`: recompõe os 27 codecs Files omitidos, preservando o contrato Members estrito. |
+| Save clona o draft Solid com proxies | [#509](https://github.com/gustavomhss/Orchestra-SF/pull/509), HEAD `f0aa0f19a63ca459aa2b017591dd95f1eb71cf25`: `structuredClone(unwrap(state.value))` preserva o draft completo antes do digest. A fonte f847 avançou pelos comandos Settings e readbacks antes de Suppliers; isso qualifica o prefixo observado, sem PASS da jornada inteira ou merge atribuído. |
+| CAP13/CAP15 enviam filtros ausentes como undefined | [#512](https://github.com/gustavomhss/Orchestra-SF/pull/512), HEAD `577cdb87919dc0716b1ea18cd7b0dd0940bdd85f`: omite somente os filtros ausentes antes do codec JSON, sem relaxar schema ou autoridade. Integrado em `bdd80601f15496dfce3ebb31accd8c9510bb33e1` após o controle CAP13/labels2/0; não qualifica Save513 ou Runtime. |
+| Save CAP13/CAP15 reintroduz opcionais próprios undefined | [#513](https://github.com/gustavomhss/Orchestra-SF/pull/513), HEAD `f477a7d173efdc33324cb3d536ccb31cabb907db`: omite id ausente e somente campos opcionais undefined; mantém valores definidos, schema e autoridade. NOT_QUALIFIED, fora dos gates concluídos. |
+| Runtime original isolado sobre a integração | [#514](https://github.com/gustavomhss/Orchestra-SF/pull/514), HEAD `c9abede45a242e74aba6f893d3673e92c62729d8`: três paths de teste, quatro casos/59expects/45s preservados;18 linhas de fases sem conteúdo privado. Requer #512/#513; NOT_QUALIFIED. C recebeu essas fases em `c61162cd2587e3527d8ad24b04030b24dd22d2b6`. |
+| Suppliers Create inclui id próprio undefined | [#518](https://github.com/gustavomhss/Orchestra-SF/pull/518), HEAD `09d77aacf6054459fd45d2ce81e0e5a8b33a0146`, blob `ed6c803557110e63e7dd6f6ab6e95579d62575e6`: dois hunks sobre main d345; omite id somente para `intent.ref === null` no requestBody e record. JSON serializado/digest, CAS e demais campos permanecem iguais; NOT_QUALIFIED. |
+
+A composição também retém #477/#502/#492/#493/#494/#474/#501. O postimage Settings deste gate é `833d605495b2bdafaad4e27bac0a287497be717d`, composição estrita de #477 + #502 + #509. Os quatro arquivos WP01 já estão na base integrada. A reserva respeitou a vaga aberta pelo término de B44692805693, publicada em [#410/7033345607](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7033345607). C terminou em07:35:54 UTC; B44694563909 também terminou, com9/7 e cleanup success em07:39:04 UTC. A coordenação posterior está em [#410/7033752421](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7033752421). Conferir os runs e cleanup atuais antes de abrir outra vaga.
+
+**IO1 — diagnóstico insuficiente após três auditorias.** As revisões de DTOs/contratos, produtor/parser/health e reatividade/fences não demonstraram por que a execução parou antes de import-reference. O efeito UI55 `imports/index.tsx:512–540` compara scope e faz resets sob untrack; o token de prepare289 atravessa file294/admit296/preview303/reference312 sem fence intermediário. As revalidações Files fazem fetch direto, sem publicar no provider ou incrementar sua geração. Os três waiters compartilham o início e orçamento de10s; a cadeia completa exige três operações e seis context reads sequenciais. Multipart60s/concurrency2 e scanner30s são tetos do produtor, não custos observados. O log não expõe status/body de admit/preview nem retorno current(false); artefatos contêm timings, log/JUnit e guard, sem DOM/HAR/trace. Não atribuir warning, recusa, custo ou ciclo reativo sem evidência; não fazer retry apenas para logging.
+
+**Composição Supplier518 preserva477.** A variante de prova `sfc-supplier-create-io-proof@6d52e6d1750055fb46b0b4cbbb559b32e0202235` tem parent exato f8471d0, tree `3f36f2ff14e5bb9aaad9346bf43d3cb7d8f63486` e blob `30222620a589785ed4b33fe077cc7fc4ee34df3b`, derivado de `0e7fe80e5e41ea2f38162701595d45e7017536a3`. Compare e readback confirmam um arquivo,2+/2−; mantém as permissões e controles de upload477. A composição posterior `4fbeaba9b575446b10295fe32c1a2dd71aeefb4a` inclui esse postimage no gate44700768736, terminal6/3; IO2 parou no readback de Reset antes de chegar a Supplier, portanto esse gate não qualificou518. O achado separado `suppliers/model.ts:24` — opcionais próprios undefined em supplierEdit de registro existente — permanece não qualificado e não foi incluído no patch da criação.
+
+### Despacho nativo — terminal 6/3, mensal e tipos PASS
+
+**Fonte do terminal6/3.** [#520](https://github.com/gustavomhss/Orchestra-SF/pull/520), na branch `capture-start-permits`, então no HEAD `31d8cb72db2d084426bffdab71dca5fc85c9ba8f`, tree `281025e6938528afe008f3db9a2be2e5e35442a2`, altera somente `modules/sucafina/Sucafinav1/test/fixture/native-response-capture.ts`, blob `0ed9e981429418478d2603a070a7c02bcadaee1c`. A comparação contra d345 tem256+/43−, em dois commits [skip ci]. A revisão independente e a revisão raiz foram concluídas sobre o código; **não constituem PASS de Actions nem aprovação de merge**.
+
+A causa demonstrada em CAP25 é a montagem simultânea de QueueView e RequestsPage, cada uma iniciando seu GET real da mesma URL. O helper anterior podia ver dois tickets sem Request e falhava fechado por ambiguidade. O novo candidato registra levemente todo start relevante e reserva atomicamente um início por frame + método + URL completa até o evento do Request original; a identidade do documento fica no registro e não permite reutilizar uma reserva antiga incerta. Não espera a resposta anterior, não altera HTTP/headers e não cria GET adicional. Mantém igualdade exata Response.request(), URL/status/frame/documento, cópia do corpo original, consumo e prazos5/10s desde begin.
+
+Os dois ajustes finais de revisão encerram filas após rejeição de fetch já despachado sem Request, conservando a reserva antiga para um evento tardio, e excluem `redirectedFrom() !== null` da associação de novos starts. Abort comprovadamente anterior ao fetch pode liberar a reserva; após despacho incerto, o helper falha fechado. `finish` continua síncrono e qualifica somente a Response escolhida de cada operação; starts extras não são evidência PASS e seus registros pendentes são retidos. O controle do início pode consumir parte do mesmo orçamento original, sem aumentar prazos nem serializar respostas. Nenhum consumidor ou produtor foi adaptado para esconder a duplicidade CAP25.
+
+[44700768736](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44700768736) terminou **6 pass / 3 fail, +1 filtered**, 48 expects, nove testes em cinco arquivos, 255.28s. Fonte `4fbeaba9b575446b10295fe32c1a2dd71aeefb4a`, snapshot `c02110cacaefd40cc45b43d061b1299d6103240a`, branch `ci-run-linux-sfc-native-dispatch`. Teste136168318058 failure; cleanup136170615335 success. A request selecionou **IO2 + visual original + quatro Runtime + mensal WP01 + typechecks canônicos app-shell/modules**. O pattern `^(?!browser previews/applies Planner XLSX)` excluiu IO1, que permanece UNBOUND. A fonte compôs as correções concretas #518/#520 e #512/#513, com #514 isolado, além dos candidatos anteriores necessários. Não selecionou Settings482, parity483 ou Client types; o mensal foi revalidado porque usa o helper alterado.
+
+| Caso no gate de despacho | Resultado / file:line |
+| --- | --- |
+| Runtime HTTP | **3 PASS**,6.59/1.31/1.05ms; comandos reais, identidade/CAS/rollback e fronteiras HTTP. Não qualificam o caso browser. |
+| Typechecks canônicos | **2 PASS**, app-shell17174.46ms e modules36990.10ms, exit0. |
+| Mensal WP01 | **PASS**,6999.32ms; preview/apply e draft conflitante com o helper novo e escopos originais de5s. |
+| Runtime browser | **FAIL**,45009.00ms, timeout global45000ms. `runtime-http.test.ts:148` (declaração), prazo em:332; última fase `open new risk editor` em:179, antes da sequência:180–187. O log não identifica o await específico por stack; nenhum PASS do editor ou Save foi demonstrado. |
+| Visual instalado | **FAIL**,120955.68ms, timeout global120000ms. `visual-layout.test.ts:69` (declaração), prazo em:308; última etapa registrada `CAP17 Overview at 1440px: chart bounds`, chamada em:262. CAP25 foi atravessado, mas140 visitas não foram concluídas; não houve asserção geométrica FAIL demonstrada nem causa de atraso provada. |
+| IO2 | **FAIL**,27783.04ms; `io-browser.test.ts:342:12`, espera de10s do GET CAP28 no reload após Reset. PageErrorCount0. Este terminal para antes dos Settings Save e Suppliers observados na fonte anterior; não qualifica o candidato518. |
+
+Os paths são relativos a `modules/sucafina/Sucafinav1/test/`. #520 tem evidência de mensal/types PASS e progresso visual além da associação CAP25 anterior, mas os consumidores originais IO2/visual permanecem FAIL. Não atribuir a regressão IO2 ou o custo global do visual ao helper sem diagnóstico causal. #513/#514 não têm PASS integral Runtime; #518 não foi alcançado pelo novo IO2. Nenhum novo merge foi atribuído a essa rodada.
+
+Os dois gates B44697043402/44697048009 já tinham teste terminal e cleanup success antes deste push; nenhum slot B estava ativo naquele instante. O gate C também terminou com cleanup success às08:18:25UTC. Consultar novamente os runs antes de reservar vaga; esse término não autoriza retry idêntico ou terceira prova focal de causa UNBOUND.
+
+### Ordem de integração auditada — merges parciais, jornadas ainda pendentes
+
+#508/#506, #492/#493, #515/#521 e #512/#522/#523 já estão mergeados nos escopos acima. As demais integrações dependem do resultado da fonte exata: **#477 + #502 + #509 → #510 + #518 → #520 + #494 → #474 → #501**. IO1/IO2/Runtime UNBOUND e o custo visual aberto impedem tratá-la como uma fila automaticamente liberada. #513 e #514 formam uma fatia Runtime separada, dependente de #512 e ainda UNBOUND na jornada original. #520 substitui somente o helper integrado por #508 e exige qualificação dos consumidores reais antes de qualquer merge; o terminal6/3 não concede PASS aos dois casos originais ainda vermelhos. Esta ordem resolve sobreposições; não concede aprovação antecipada. #474 tem base `sfc-members-isolated`: integrar #494 primeiro e retargetar #474 para `sf-join-four` antes de seu merge, ou publicar seu único delta IO equivalente. Não importar a ancestralidade inteira de B/C.
+
+A auditoria anterior da fonte5046457 contém 30 paths:29 eram a união exata dos candidatos e o único extra era `test/native-ui-contract/native-response-types.test.ts`, blob `7dac0a0590892aa218cecbb1fb511b6271d39a03`, auxiliar somente da prova. Não transportá-lo no merge. A tabela abaixo preserva os postimages daquele gate terminal, anterior aos três fixes #509/#510/#512. As três sobreposições reais eram Settings/index (#477/#502), driver (#494/#506) e IO (#494/#474). Para o próximo merge, comparar com a fonte efetivamente qualificada, e não com um postimage histórico.
+
+| Sobreposição | Postimage obrigatório / cuidado |
+| --- | --- |
+| Settings/model: #477 sobre #498 já integrado | `a634eb57565e3a82a30c765b087b8cde30b38b80`, exato à fonte1d157800 e5046457. Preservar import puro `shared/change-review/types`; não copiar o blob antigo bruto de #477. |
+| Settings/index: #477 + #502 | `d81e4a6fe51441f8cc2e968f424e9d6e3b02df35`. Manter `settingsVersion(projection)`, reset, fences pós-digest e `untrack` no receiveRemote. Não incorporar a fila UNBOUND de #482. |
+| Driver após #494 | `c597014c6617fcc171789268645349327a45ddb9` = main/#499 + literal `native-private-io`. Canal continua ausente. |
+| Driver após #506 | `72aa7e743f1903bab227ba33788f9492068656db` = união de `wp01-native-decisions`, `planner-monthly` e `native-private-io` sobre main/#499, byte-exata à fonte5046457. Não copiar um dos blobs antigos que restauraria channel ou removeria outro consumidor. |
+| IO após #474 | `d7266257092627de3f388baaf74ad5c40b1fe4a5`. Aplicar somente seu delta sobre #494; preservar os dois corpos completos e seus controles. |
+| Suppliers: #477 + #518 | `30222620a589785ed4b33fe077cc7fc4ee34df3b`, variante6d52e6d sobre f847. O blob isolado ed6c803 de518 parte de main sem os controles477; não copiá-lo integralmente sobre a composição IO. |
+
+Os sete paths de #477 fora de Settings/index, incluindo model, foram reconstruídos sobre main e conferidos com a fonte1d157800. Settings/index somente fica exato após compor #502. O produtor Imports atual de #492 é `d74a95fefd5283ce58893468494bb3bcbce9f11a`. O gate componente4PASS usou `d78f07a08b76a73360c272ab12dca1a4ad995640`: a única diferença é o `aria-label` do seletor format em `imports/index.tsx:786`. O teste atual de #493, blob `cbb68bd6636a03c00b54cb97fb604f4843aef7f3`, é exato ao que passou4/0. #492/#493 foram agora integrados com seus alcances auditados; preservar a distinção entre quatro controles Imports, typechecks e a jornada IO ainda não verde. Isso não qualifica os cinco Settings nem transfere PASS integral ao IO/visual.
+
+A presente atualização altera somente o handoff. Os merges #508/#506/#492/#493/#515/#521/#512/#522/#523 acima foram confirmados separadamente; não há merge integral C/B. Após cada sobreposição, comparar o arquivo inteiro e seu blob ao postimage da fonte efetivamente qualificada antes de prosseguir. #482/#483 continuam fora da seleção e da ordem de integração.
+
+### Checkpoint atual — IO, Settings, visual e integração WP01
+
+**PARCIAL / UNBOUND.** Não houve nova enumeração completa de A/B. Os números dos oito shards continuam os dos respectivos logs completos ou explicitamente parciais; nenhum recorte abaixo altera esses totais. O último gate de produto desta sessão foi labels 44705613843, com 2/0, componente e tipos, com alcance próprio e merges #512/#522/#523. IO2 em 44704002754 continua 3/1 + 1 filtered e SupplierCreate UNBOUND. O despacho 44700768736 conserva seus três Runtime HTTP PASS e os FAIL de Runtime browser, visual e IO2; o anual 44702605427 continua 0/2 e UNBOUND. IO1 permanece excluído e UNBOUND. A tabela seguinte preserva os terminais anteriores; o verde do componente não substitui as jornadas originais.
+
+| Recorte | Resultado terminal | Fonte / snapshot | Jobs e alcance |
+| --- | --- | --- | --- |
+| IO2 inicial [44685910576](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44685910576) | **5 pass / 5 fail**, +1 filtered; 201 expects; 10 testes / 4 arquivos; 115.42 s | `2c41816396adf8395a57b5c0f1fdfa2fe474c9d6` / `51bf856d95b6d4887e56969c123d4e8a2473c330` | Teste 136120066793 failure; cleanup 136121963429 success. Cinco controles PASS; quatro typechecks e IO2 FAIL. IO1 não foi executado. |
+| IO2 após driver pareado [44687616570](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687616570) | **7 pass / 3 fail**, +1 filtered; 267 expects; 10 testes / 4 arquivos; 118.44 s | `f81ff1c23464bba9f37962850721e91d63bace89` / `b29935adacef58bf1471ff0cb642a2786d900964` | Teste 136125577321 failure; cleanup 136126797793 success. Schema, CLI e cinco controles PASS. Typechecks modules/app-shell e IO2 FAIL. |
+| IO1 + IO2 após origem única [44689526157](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44689526157) | **9 pass / 2 fail**, 267 expects; 11 testes / 4 arquivos; 124.91 s | `1d1578004178ed874e70f20d25bd8093a58e60a5` / `314fa07c16d13475994f7ca788a45c8331ca87ba` | Teste 136131737836 failure; cleanup 136133381330 success. Quatro typechecks e cinco controles PASS; os dois casos originais IO permanecem FAIL. |
+| Settings / Imports, segundo [44687035682](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687035682) | **4 pass / 5 fail**, 229 expects; 9 testes / 2 arquivos; 25.20 s | `b50c3aceb8444986445d67f236169cee107bfed0` / `ef704181c7790f00840f49b1eb36c4755a3d489f` | Teste 136123724726 failure; cleanup 136124261077 success. Imports 4/0; Settings 0/5 após RangeError no mesmo ponto do primeiro gate. |
+| Visual instalado [44689528903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44689528903) | **0 pass / 1 fail**, 1 teste / 1 arquivo; 71.16 s | `1d1578004178ed874e70f20d25bd8093a58e60a5` / `27336610c11a298403b1381140d8ce1195c1561e` | Teste 136131747063 failure; cleanup 136132607716 success. Aquisição e fechamento do Chrome passaram; captura JSON de CAP11 perdeu o corpo via CDP. |
+
+**Falhas IO atuais e limites da prova.** No terminal44695495535, IO1 permanece no GET import-reference em `io-browser.test.ts:136:12`, agora UNBOUND após três auditorias sem causa demonstrada. IO2 chegou a Suppliers Create: `confirmProcurement:698:10`, caller Bun `io-browser.test.ts:441:5`; o URL final Suppliers e a sequência do código comprovam o avanço além dos dois comandos Settings. #518 omite somente o id ausente desse Create, com qualificação ainda pendente. Nenhuma jornada IO completa passou. No terminal44692520124, os pontos eram targets IO1 `:108:12` e Settings Save IO2 `:698:10→416:9`; a repetição do helper e a mudança do caller não bastam para identificar o comando atual ou provar causa igual/distinta. No gate anterior44689526157, IO1 parava em `:59:12` porque o filtro `!url.search` descartava o POST real de `CAP23.save` com `?page=Versions`; IO2 parava em `settingsIoProjection:638→308` por perda de corpo CDP. C incorporou o predicado em `61c5d547d68410072b8d1e4fa9e6127580fff02d` e a asserção original de cardinalidade do grid em `4f9a0ed109f7013206fedc56389bcc1f7e184ca0`, além da captura original #508. As execuções posteriores progrediram além daqueles pontos, sem completar os oráculos restantes. O primeiro IO1, fonte36a3de/snapshot068213, conserva seu diagnóstico insuficiente original de contexto; não se atribui a ele evidência retroativa.
+
+Os quatro comandos canônicos terminaram com exit0 e saída não truncada: Schema 2782.70 ms, CLI 28162.09 ms, modules/sucafina35748.24 ms e app-shell15245.11 ms. Os cinco controles passaram em 164.33/15.80/12.84/8.26/4.45 ms. Esses controles verificam defaults/negações de Settings, anexos Supplier e egress Members; não substituem os dois casos instalados. #497 e #498 foram qualificados por esse recorte e depois mergeados, respectivamente, em `78001f475f7df528b79d185c0f04c8d8c43e5b08` e `4303549d6e78da75be0bbb3e67722fd839a3e509`.
+
+**Duas causas de bootstrap demonstradas, sem ampliação de prazo.** No primeiro IO2, o Chrome não respondeu ao único `Browser.getVersion` antes de 14999 ms e permaneceu em disk sleep (`folio_wait_bit_common`); o cleanup confirmou ausência dos processos. O workflow já provisionava o Chromium correspondente ao Playwright, mas o driver desviava para Chrome do sistema por `channel: "chrome"`. #499 removeu somente esse seletor. No segundo IO2, launch634 ms / connected683 ms, enrollment, discovery e fechamento físico passaram; o erro seguinte foi `io-browser.test.ts:133:12`, contexto10 s sem request a `/sucafina/api/ui/context`. A instalação publicava `localhost`, recusado antes do fetch pelo transporte local em `transport.ts:796–804`. O fix `55dd07fa57bd14f5e3bc56675d3b882de754bc1c` em #494 usa uma única origem numérica somente no opt-in nativo, nos seis pontos da fixture, preservando porta3000, identidade, enrollment, limites e cleanup. O último gate confirmou contexto ready. O IO1 anterior44679668214 continua registrado como diagnóstico insuficiente da sua própria fonte; não se atribui retroativamente a ele um trace que não existe.
+
+**#499 está mergeado** em `7d5e49b368656e8b1b779bfed835f05ab4bb72bc`, fonte `57c15e76d3f55d8d89c9c1e0b823f2972ec6eaf0`. A qualificação é limitada à aquisição do navegador pareado, enrollment/discovery e cleanup físico observados no IO2 e à aquisição/fechamento do visual. Não qualifica os oráculos de negócio IO ou visual. #494/origem e as demais fatias IO continuam propostas isoladas sem verde integral.
+
+**Settings está UNBOUND; #483 permanece bloqueado.** Os cinco casos de `packages/app-shell/test-browser/sucafina-native/settings-refresh.test.ts` voltaram a falhar no helper `:48:13`, chamadas186/244/260/294/322, após RangeError. São os mesmos cinco pontos do primeiro componente44685675858, que terminou3/6. Não executar terceiro gate focal da mesma causa. O candidato de efeito #502, head `fe01bf71f2b5232a28e558ac4aab5b1187745341`, está presente na fonte IO; o progresso do Reset na jornada original não é qualificação dos cinco controles interrompidos. #482 atual `3e34e67419be9648ed75e9e7b53a6ed6b528c743` e a migração original de parity-polling #483 `ac970bd62b7f766c275e3554c247caab2e80d2f9` continuam NOT_QUALIFIED. O segundo recorte confirmou os quatro controles Imports completos, incluindo owner exato, revogação, mismatch e retorno tardio; isso não transforma a composição Settings/Imports inteira em verde.
+
+**Visual permanece vermelho.** O primeiro terminal44689528903 perdeu o corpo CAP11 via CDP após70490.75ms; seu stack só informa `processTicksAndRejections (native:7:39)`, sem linha JavaScript do teste. O terminal44692520124 chegou ao link real CAP13 IT Risks em1440px, mas a resposta não chegou ao observador dentro do prazo original: `modules/sucafina/Sucafinav1/test/visual-layout.test.ts:64:43`, caso65042.20ms. O terminal44695495535 avançou a CAP25 Requests1440px e falhou em `fixture/native-response-capture.ts:123:41`, associação única da Response ao Request real, caso75277.23ms. A fonte mantém140 cliques/28 rotas/5 larguras, 44 capturas e120s/10s; não os completou. #501 HEAD `ecd913aef12df77291e3b6addd7b6eec292469c0` usa o helper original, e #512 está na fonte f8471d0. Com #520, o terminal44700768736 atravessou CAP25 e esgotou120s na largura1440px; última etapa CAP17 Overview:chart bounds (:262), sem causa de custo ou falha de geometria demonstrada. Nenhum PASS integral visual foi atribuído. Não transferir a prova de componente Executive para a jornada instalada.
+
+### Checkpoint atual de B — terminais e falhas remanescentes
+
+Leitura dos branches, handoffs, PRs e logs Actions: **nenhum novo full shard A/B**. A foi reconferido em `ace8a3263cf3a8c3546824ddb339a93e351cfb33`, handoff blob `77bed153ec7d12b1dc403f1ad5277956fcd5464b`. B também foi reconferido; seu último handoff lido é `0c863fd6450653cf93bec1212c33635341ce53dc`, blob `d1d5620ca03ddfbb462af1eaf9d16a6b266f7554`; registra código `04cc482c10a5bf6e7bfa58746c8f269f541cd406` e composição `2d469953c633f353049bc60ce97c8a02852a13ad`, tree `b556fd6dc279d5b19aa550ac9a814a094c3c80a1`, com target d345 por merge verdadeiro. Suas linhas de gates ainda chamam44697043402/44697048009 de ativos; o estado terminal conferido diretamente na API/log prevalece. #516/#517 continuam abertos; #515 e seus sete controles foram integrados separadamente por515/521, sem qualificar os timeouts B. O terminal9/7 de B44694563909 foi conferido no log completo e comunicado em [#410/7033752421](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7033752421). Os terminais posteriores44697043402 e44697048009 foram conferidos pela API e pelos logs completos; ambos partem de `ddae09e40f6eca111b966f70ad622d5a930b8839`. Refs finais conferidos: A em ace8a326 e B em 0c863fd6, sem nova enumeração completa. As contagens abaixo mantêm o alcance de cada seleção.
+
+| Gate B recente | Resultado observado | Fonte / snapshot | Jobs e alcance |
+| --- | --- | --- | --- |
+| C09 / ancestry / dependencies [44692805693](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44692805693) | **25 pass / 5 fail**, 451 expects; 30 testes/4 arquivos; 1014.53s | `1907782f1d83dd323e6964137bcbbc2400852591` / `0c8f6b68a9bb4c8d0041c7fd0ac1ebf7fc686872` | Teste136142396992 failure; cleanup136150844544 success. Ancestry24/2, C09 result1/1, C17 composition0/1, dependencies0/1. As repetições FAIL no resumo não são casos extras. |
+| Native / fallback / memória [44691117568](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44691117568) | **10 pass / 9 fail +2 errors**, 607 expects; 19 testes/6 arquivos; 697.17s | `4506b96cb1e9c361262c6ac146b350b9511139db` / `b4b3d1d2d5f42eafda69feea349a9e14dc1f137c` | Teste136136873657 failure; cleanup136141868496 success. Dashboard2/0, memória4/0, BI3/2, recovery1/5, fallback0/1, reevaluation0/1. |
+| Sensibilidade / pins [44688998064](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44688998064) | **54 PASS /5 FAIL emitidos; sem footer**, step40min | `11a08f05c0aa3fa36c0d8c3766d0604c7385b670` / `cb45a9723afb027c9ef517e17b978714abe0d673` | Teste136130026854 failure; cleanup136146027463 success.59 casos terminados em10 arquivos iniciados; promotion permaneceu incompleto e dois arquivos selecionados não iniciaram. |
+| Ancestry anterior [44688234714](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44688234714) | **53 pass /3 fail**, 681 expects; 56 testes/4 arquivos; 1140.95s | `510b723ed93575aecf40d32468a120a0953f2311` / `ac60a5af37668c812dbc5faf7a713f07f229102c` | Teste136127588734 failure; cleanup136135324276 success. Falhas C17 deadline105s, ancestry-scope:341:20 contador2 recebido15, ancestry-scope:391 deadline120s. |
+| Native posterior [44694563909](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44694563909) | **9 pass / 7 fail**, 601 expects;16 testes/5 arquivos;873.44s | `c9450280f19d93bc8be8ffeb863eefcf00d99e45` / `b55323b9b407c605c02cad7b510cd5eba2e027b9` | Teste136148108525 failure; cleanup136154434077 success. BI4/1, recovery5/1, materiality0/3, fallback0/1, reevaluation0/1. Não repete Dashboard2/0 nem os quatro controles memória já verdes; nenhum novo full. |
+| WP13 / observação [44697043402](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44697043402) | **41 pass / 2 fail**,666 expects;43 testes/5 arquivos;1324.59s | `ddae09e40f6eca111b966f70ad622d5a930b8839` / `9aa89c736d4eb9ddd7ff0a029c7556d25979af20` | Teste136156171962 failure; cleanup136165596802 success. Local-store7/0, semantic-union0/1, coverage-sensitivity6/1, sensitivity-read-scope6/0, fixture-read-observation22/0. |
+| Sensibilidade posterior [44697048009](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44697048009) | **42 pass / 13 fail**,678 expects;55 testes/6 arquivos;1449.28s | `ddae09e40f6eca111b966f70ad622d5a930b8839` / `e402c3abfefbe332deb0d1e7fee57da4c9f3729a` | Teste136156187979 failure; cleanup136166901294 success. History2/1, coverage-pair0/3, Planner21/7, promotion8/0, Portfolio5/1, exact-threshold6/1. |
+
+**Falhas dos dois novos terminais B.** Paths relativos a `modules/sucafina/Sucafinav1/test/product/`, salvo o produtor identificado na tabela. Os2+13 FAIL são os casos distintos, sem contar de novo os marcadores do resumo.
+
+| Run / quantidade | Caso | File:line e evidência |
+| --- | --- | --- |
+| 44697043402 /1 | Semantic union com training confirmado | `wp13/semantic-union-source-scenario.test.ts:33` (declaração), prazo180000ms em:148; timeout externo, caso180007.29ms. O log não identifica o await interno por stack. |
+| 44697043402 /1 | Coverage sensitivity persistida/cold-read | `wp13/coverage-sensitivity-integration.test.ts:23` (declaração), prazo300000ms em:140; timeout externo, caso322536.44ms. Fases posteriores ou tardias não tornam o caso PASS. |
+| 44697048009 /1 | ChoiceRecord histórico após training | `installed-bi-closure/sensitivity-history.test.ts:72:11`, via `wp10/integration/composition-test-deadline.ts:5:29`; deadline cooperativo165000ms, caso165042.62ms. |
+| 44697048009 /3 | Coverage pair positivo e recusas source/reader | `wp10/integration/portfolio-coverage-pair-observation.test.ts:158:27` e:203:27 (dois negativos). `SF_PRODUCT_AUTHORITY_CONFIG_INVALID` em `modules/sucafina/Sucafinav1/product/integration/product-authority.ts:77:15`, via `financial-composition-fixture.ts:39:21`. Falham durante inicialização, em11.22/9.38/6.31ms; os negativos não alcançam seus oráculos de recusa. |
+| 44697048009 /3 | Planner units, resolve, revalidate | `wp10/integration/planner-sensitivity-observation.test.ts:34:33`; esperava coverage>0, recebeu0. Casos5055.42/5516.61/5560.98ms. |
+| 44697048009 /3 | Planner exact, bound-exact, exact source-only | Mesmo arquivo:29:29; comparação numérica rejeitada com “Expected and actual values must be numbers or bigints”. O log não informa o valor concreto recebido; casos16900.84/16284.36/17290.30ms. |
+| 44697048009 /1 | Planner child fixa input até fresh egress | Mesmo arquivo:209:73; esperava ok, recebeu unavailable; caso4203.06ms. |
+| 44697048009 /1 | Rota Portfolio sensitivity real | `wp10/integration/portfolio-sensitivity-observation.test.ts:205:26`; esperava ok, recebeu stale; caso13596.98ms. |
+| 44697048009 /1 | Exact threshold persistido/recertificado | `wp10/integration/portfolio-exact-threshold.test.ts:33:122`, via `composition-test-deadline.ts:5:29`; deadline cooperativo285000ms, caso285011.51ms. |
+
+Promotion tem8/0 completo somente na nova fonte ddae09; os dois arquivos observation que não iniciaram no antigo44688998064 agora têm terminais próprios21/7 e5/1. Isso não completa retroativamente aquele gate interrompido, não modifica seus inventários nem substitui uma enumeração integral B. Os stops já existentes de semantic-union, dependencies e outras causas permanecem; estes resultados não autorizam terceiro gate focal.
+
+**Falhas do B9/7 anterior.** Paths relativos a `modules/sucafina/Sucafinav1/test/product/`; o footer e os sete FAIL distintos foram conferidos no job136148108525:
+
+| Caso | File:line e evidência |
+| --- | --- |
+| Reevaluation original | `wp12/native-execution-reevaluation.test.ts:33` (declaração), prazo300s em:166; caso540942.89ms, sem stack do await. memory-materiality retornou após300076ms; não é conclusão verde. |
+| Fallback compartilhado | `wp10/integration/planner-sensitivity-shared-base.test.ts:9:7`, via `composition-test-deadline.ts:5:29`;105000ms cooperativos, caso105063.58ms. |
+| BI retorna da fonte Planner | `native-ui-browser/observed-fetch.ts:39:18`, caso de retorno em `wp10/integration/bi-lifecycle.test.ts`; espera de resposta real10s, caso13758.82ms. Os outros quatro casos BI passaram. |
+| Materiality lê duas versões | `wp10/integration/memory-materiality-scenario-batch.test.ts:89:29`; esperava HTTP200, recebeu403; caso12031.26ms. |
+| Materiality recusa reader drift | `wp10/integration/memory-materiality-scenario-batch.test.ts:140:32`; observed.changed esperado true, recebeu false; caso10645.30ms. |
+| Materiality recusa source drift | Mesmo `memory-materiality-scenario-batch.test.ts:140:32`; observed.changed esperado true, recebeu false; caso10525.64ms. São dois casos distintos. |
+| Recovery conserva resultado ambíguo entre reloads | `native-ui-browser/observed-fetch.ts:39:18`, caso de receipt ambíguo em `ui-split/ui-recovery/recovery.test.ts`; resposta real não observada em10s, caso37859.25ms. Os outros cinco casos recovery passaram. |
+
+**Falhas do último B25/5.** Paths relativos a `modules/sucafina/Sucafinav1/test/product/`:
+
+| Caso | File:line e evidência |
+| --- | --- |
+| Dependencies original | `wp12/native-execution-dependencies.test.ts:43` (declaração), budget420s em `:180`; 450917.39ms observados, sem stack do await interno. A preparação real concluiu; permanece UNBOUND. |
+| C17 composition | `wp10/integration/composition-test-deadline.ts:5:29`, via `calculation-ancestry-composition.test.ts:26:20`; 105000ms cooperativos, caso105052.09ms. Outer persistence retornou após cancelamento; não é conclusão verde. |
+| Case read autenticado | `wp10/integration/planner-calculation-ancestry-scope.test.ts:371:69`; esperava existir callback com requested.length===0, recebeu false; 9488.25ms. O contador anterior2 versus15 não é o ponto atual. |
+| Cenário persistido atual | `wp10/integration/planner-calculation-ancestry-scope.test.ts:420` (declaração); budget120s, caso159629.69ms; sem stack do await interno. |
+| Mutação real após commit C09 | `wp10/integration/planner-calculation-result-ancestry.test.ts:167:79`, chamada `:68:37`; esperava v0.lines[0].f[1]=121, recebeu120; 16848.33ms. O primeiro caso C09 passou134364.26ms; não qualifica o segundo. |
+
+**Native10/9 tem nove FAIL distintos e dois erros adicionais.** Reevaluation `wp12/native-execution-reevaluation.test.ts:24` (declaração) excedeu300s, caso348641.44ms. Recovery falhou em `ui-split/ui-recovery/recovery.test.ts:55:31` (socketclosed), `fixture.ts:140:91` via `recovery.test.ts:111:21` (região de recuperação10s), `recovery.test.ts:227:59` (response.json descartado), `:365:95` (Proposal permaneceu new) e `:508:29` (esperava403, recebeu503). Fallback `wp10/integration/planner-sensitivity-shared-base.test.ts:9:7` excedeu105s cooperativos. BI falhou em `wp10/integration/bi-lifecycle.test.ts:351:16` (estado após logout10s) e `:498:43` (href de fonte autorizada10s). Os dois erros não tratados estão ligados aos handlers recovery; não somam dois novos casos FAIL.
+
+**Sensitivity54/5 permanece parcial.** Falhas: `installed-bi-closure/sensitivity-history.test.ts:72:11` (165s cooperativos); `wp13/coverage-sensitivity-integration.test.ts:23` (300s, 381706.27ms reportados; fase confirmed continuou depois da expiração); `wp13/semantic-union-source-scenario.test.ts:33` (180s); `wp10/integration/portfolio-exact-threshold.test.ts:45:19` e `:131:19`, via `:268:41` (stale/source-or-authority-changed). `portfolio-promotion.test.ts:312` ficou ativo ao corte e `:379` não iniciou. Os arquivos planner-sensitivity-observation (28 controles) e portfolio-sensitivity-observation (6) não iniciaram. Os arquivos completos verdes nesse recorte são fixture-read-observation20/0, fixture-input-pin6/0, criterion-rules1/0, sensitivity-read-scope6/0 e finance-state-read-performance/isolation7/0. Não transformar os seis PASS emitidos de promotion em arquivo inteiro verde.
+
+**Histórico B anterior preservado:**
+
+| Gate B | Resultado observado | Fonte / snapshot | Jobs e alcance |
+| --- | --- | --- | --- |
+| Native [44685338648](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44685338648) | **6 pass / 4 fail +1 error**, 252 expects; 10 testes / 5 arquivos; 59.54 s | `e5bb7153d9b2f5cb38604b3e7b7432ec3661a3f4` / `acae4de669c6a206d84f8410ca0e411c787ac468` | Teste 136118206503 failure; cleanup 136119300007 success. Três arquivos WP01 completos verdes; Dashboard e BI têm falhas. |
+| Ancestry [44683555039](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683555039) | **51 pass / 2 fail**, 630 expects; 53 testes / 4 arquivos; 742.56 s | `ac009cd9fcf805ab357dca1c16fa32ed0c8d754b` / `d6616c25952a2a190c2e4ca18aec2b765a0cfb96` | Teste 136112407347 failure; cleanup 136119674505 success. Case-scope5/0, planner-calculation24/0, ancestry-scope22/1, composição original0/1. |
+| Sensitivity [44680602254](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680602254) | **28 PASS / 6 FAIL emitidos; sem footer**, interrompido pelo limite global40 min | `dd0f2e58232f0266ac7793908754d8a4164ed805` / `c26cd88e0987a25c0b1a3d32fb9c414f5e5c49a0` | Teste 136102797252 failure; cleanup 136117571617 success. Contagem parcial de marcadores; não é total completo da seleção. |
+| Recovery nativo inicial [44685955107](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44685955107) | **4 pass / 6 fail**, 63 expects; 10 testes / 2 arquivos; 10.42 s | `d4039d45433c4abe21c3f497de15a743ab1cede8` / `c87195c7354bc5797df3e6179c32ec6235f0c00b` | Teste 136120204223 failure; cleanup 136120939226 success. Health 4/0; recovery0/6 antes da UI. |
+| Fases físicas [44685754065](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44685754065) | **85 pass / 3 fail**, 1103 expects; 88 testes / 9 arquivos; 1558.86 s | `1a82eb89bde94c542dc154f44676223945b7bda5` / `6af649d654a84c50234529da2a6c6e476d6a4a92` | Teste 136119561902 failure; cleanup 136129874775 success. Seis arquivos verdes, incluindo purchase completo2/0; reevaluation, dependencies e recall falham. |
+| Contexto explícito / captura [44687720789](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687720789) | **4 pass / 9 fail**, 272 expects; 13 testes / 3 arquivos; 155.29 s | `5e56ee3b306100c47c395a59f7bb7169f492e8cb` / `8fc6ca0aa75b6c5f4c055d80027cefa7006cd64d` | Teste 136125914457 failure; cleanup 136127387843 success. Dashboard1/1, BI3/2, recovery0/6; avanços reais além de CDP/context owned, sem verde integral. |
+
+**Quatro falhas e um erro extra no native.** Caminhos relativos a `modules/sucafina/Sucafinav1/test/product/`:
+
+1. `dashboard-installed-closure/consumer-read.test.ts:67:34`, chamada `:95:11`: corpo CDP perdido em `discovered.json`, depois de cinco POST reais200; caso 10882.06 ms.
+2. `wp10/integration/bi-lifecycle.test.ts:310:30`, chamada `:270:11`: corpo CDP perdido em `response.json` no caso owner/manual/focus/timer/logout;2595.14 ms.
+3. `wp10/integration/bi-lifecycle.test.ts:401:26`: request `sfbi-options` não concluído em 10 s ao limpar a seleção; caso 12606.27 ms. Houve também erro não tratado em `:402:57`, `selectOption("")`,10 s: é o **+1 error** do footer, não um quinto teste FAIL.
+4. `wp10/integration/bi-lifecycle.test.ts:431:61`: `selectOption("BI02")` excedeu10 s no retorno aos filtros;12344.52 ms.
+
+Os seis PASS foram os corpos completos: Dashboard/dirty interrompido com retirada de escrita e perda de leitura4811.23 ms; `wp01/planner-monthly.test.ts`1632.88 ms; `wp01/http.test.ts`8072 ms; `wp01/personal-views.test.ts`3313.88 ms; BI/poll de autoridade com resposta retida e revogação real2276.41 ms; BI/digest de origem com Planner real417.33 ms. O teste HTTP preserva o401 e envelope completos observados após logout, mantendo CSRF403. O personal-views captura o clone do fetch original antes da navegação; não reproduz uma resposta sintética. Esses dois fixes B são `febcf57ecb9980333437c2e130c8b8573745764a` e `e2f6b942ec8a3db3fd5bf848773842fe97ee7987`.
+
+**Duas falhas no ancestry após correção sintática.** `wp10/integration/calculation-ancestry-composition.test.ts:39:7` excedeu o deadline original105000 ms em `composition-test-deadline.ts:5:29` (105007.42 ms). O produtor interno concluiu em 2174 ms; o externo fez314 leituras canônicas em 102787 ms, mas o caso original continuou vermelho e UNBOUND. `planner-calculation-ancestry-scope.test.ts:113:38` esperava `unavailable` na negativa de coverage-reader e recebeu `undefined` (4473.46 ms). O fix sintático `5b9ac06dc64707ca8357e56e9a2ce1b3800b877f` fez os 53 corpos executarem; não resolveu nem removeu essas duas falhas. O antigo0/4+4errors sem corpos é mantido como histórico, não como resultado atual.
+
+**Seis falhas e partes não concluídas no sensitivity.** Os marcadores vieram de fixture-read-observation17/0, coverage-sensitivity5/2, sensitivity-read-scope6/0, installedBI0/3 e semantic-union0/1. Falhas:
+
+- `installed-bi-closure/sensitivity-history.test.ts:19:11` em dois casos omitted/confirmed, ambos165 s no exact-threshold; terceiro caso ChoiceRecord em `:66:6`,165 s na fase `choice.http`.
+- `wp13/coverage-sensitivity-integration.test.ts:23`: timeout 300 s, marcador459294.36 ms; e `:184:43`: `stale/sample-coverage-qualification-changed`,517966.58 ms.
+- `wp13/semantic-union-source-scenario.test.ts:33`: timeout 180 s,180010.59 ms.
+
+`wp10/integration/portfolio-exact-threshold.test.ts:18` iniciou sem resultado antes do corte global; o caso `:123` não iniciou. Os arquivos selecionados `wp10/integration/portfolio-sensitivity-observation.test.ts` e `wp10/integration/portfolio-promotion.test.ts` também não iniciaram. Preservar essas lacunas; não derivar footer, expects ou um total completo.
+
+**Recovery inicial4/6: causa comum antes da UI.** Todos os seis casos falharam em `native-ui-browser/session.ts:16:15`, chamada `ui-split/ui-recovery/fixture.ts:57:10`: `Browser.newPage` criou contexto owned, incompatível com uma nova página para enrollment. Chamadas no teste original `ui-split/ui-recovery/recovery.test.ts:9:1/:99:17/:176:21/:249:19/:331:23/:404:23`. Os quatro controles de `test/native-ui-contract/dashboard-draft-health.test.ts` passaram. O fix posterior B `63c2495c055a3f91440a3f8cc99a8050a776ffbb` cria contextos explícitos e observa a cópia da única chamada fetch genuína; preserva payload, UUID, asserções e deadlines.
+
+**Fases físicas85/3: seis arquivos completos verdes, três falhas.** A distribuição confirmada no log é fixture-read-observation20/0, native-execution-purchase2/0, dashboard-case-read-batch11/0, mixed-case-read-batch16/0, planner-observation-batch17/0, planner-case-read-batch19/0 e um FAIL em cada um dos três arquivos restantes. O purchase completo antes excedia 360 s; **agora os dois casos passam integralmente na fonte 1a82eb89**, sem transferir esse verde para outra árvore. As falhas são:
+
+- `wp12/native-execution-reevaluation.test.ts:52:35`: registro da condição real esperava200, recebeu503; caso 203210.66 ms.
+- `wp12/native-execution-dependencies.test.ts:43` (declaração; budget `:180`): timeout 420000 ms, observado502816.20 ms; preparação real concluiu, sem stack do await interno. A causa C dependencies permanece UNBOUND.
+- `integrated-proofs/am01/portfolio-recall-proof.test.ts:19` (declaração; budget `:148`): timeout 240000 ms, observado254500.07 ms. O catálogo instalado continuou vazio e a evidência declarou ausência de modelo, sem inferência executada; não converter isso em resultado de negócio.
+
+O final do log repete os três marcadores FAIL em uma lista de resumo. O footer real é85/3; não contar as repetições como seis falhas. Os17 controles de observação/batch não são os quatro controles pre-await de #496 nem o teste populado de 36 chamadas.
+
+**Novo native4/9: nove falhas posteriores, com fronteiras diferentes.** Caminhos relativos a `modules/sucafina/Sucafinav1/test/product/`:
+
+| Caso | File:line / ponto observado |
+| --- | --- |
+| Dashboard, preservar dirty até review | `dashboard-installed-closure/consumer-read.test.ts:70:56`, chamada `:101:11`: status e corpos escritos/descobertos passaram; mensagem de draft salvo não apareceu em 10 s. |
+| Recovery, ACK incompleto | `ui-split/ui-recovery/fixture.ts:104:56`, via `:128:28` e `recovery.test.ts:9:1`: mensagem de draft salvo ausente em 10 s. |
+| Recovery, negação real após reload | Mesmo helper `fixture.ts:104:56`, chamada `recovery.test.ts:101:17`. |
+| Recovery, recibo ambíguo após reloads | Mesmo helper `fixture.ts:104:56`, chamada `recovery.test.ts:180:8`. |
+| Recovery, primeiro save perdido | `ui-split/ui-recovery/recovery.test.ts:361:114`: mensagem de recuperação autorizada ausente em 10 s. |
+| Recovery, purge em outro owner | `ui-split/ui-recovery/recovery.test.ts:426:64`: owner/context ready passaram; `Review the action` não apareceu em 10 s. |
+| Recovery, revogação antes de apply | `ui-split/ui-recovery/fixture.ts:104:56`, chamada `recovery.test.ts:416:13`. |
+| BI, owner/manual/focus/timer/logout | `wp10/integration/bi-lifecycle.test.ts:325:78`: seleção esperada permaneceu vazia. |
+| BI, retorno à origem com filtros | `wp10/integration/bi-lifecycle.test.ts:466:34`: marker `data-sf-bi-focus` ausente, espera10 s. |
+
+Os quatro PASS completos são Dashboard/dirty com retirada de escrita e perda de leitura7176.61 ms, BI/poll de autoridade e revogação3215.65 ms, BI/limpar seleção com opções retidas3468.18 ms e BI/digest de origem506.78 ms. O caso clear-selection passou nesta nova fonte; os outros dois BI ainda falham. A mudança de ponto comprova avanço além do CDP/contexto anterior, mas não aprovação de recovery ou do conjunto.
+
+**Propostas e fila B atuais.** A fila antes registrada como fonte `510b723ed93575aecf40d32468a120a0953f2311` agora tem terminal ancestry53/3; a seleção sensitivity posterior tem54/5 parcial. Os candidatos antigos `f6358733100431b77a554776c572c6d1a14043e9`, #500 `88042f5584674f4246f87666962239e824ca6d4b`, #481 `ae821e48d26a9110d05025795cb1707993ca0d89`, B `a155b681c66b1aa674e064f1fd384aff02deadf6` e união business `36463d04d60bc9f50e67f075a59dfaef5a1cf856` são checkpoints históricos, sem transferência de verde. Na composição c945 atual, #481 HEAD `10cb35e0fbd1cb3ae6706d03d7bb5a767775f620` e os controles C09/contador foram exercitados pelo novo25/5; #491 HEAD `17d54d516a1b3dec1f78345fc5f4cc045463022f`, #507 HEAD `94b504304f5e4207cec592ed77f395c600048a3e` e #511 HEAD `61aa141c0ca7da8e35c459aa6b3b8ee8f3fbd87d` estavam na fonte do terminal44694563909=9/7; o resultado não lhes concede qualificação integral nem merge. Os novos pontos estão discriminados acima. Os fixes de teste B incluem recovery `05b7a1d2c6a9f31af3a7b4a9b85f0ddf6e8ef574`, logout `cfe6065e87c22d160782b682a7df02c283e08f9f`, links `83619fbb5cb25eb3f0c23b5495677cb982fa4e6a`, setup `7f79f3c9d40d57bd26a9c22872ab4883c1f5cf85` e materiality `6ef68f22edef1b8246958cbaab198915b3fd65ce`; nenhum ganha PASS pela simples inclusão na fonte. CF13 aguarda receipts reais e a composição final; preservar os38 artefatos e estados BLOCKED/NOT_REVALIDATED. Os346 arquivos históricos de B (118/119/109, incluindo porta/**) e skips originais continuam obrigatórios, sem redistribuição desses inventários por LPT.
+
+**Pendências de ownership B.** #441 permanecia em `8d148624eb52e828007756920905933c905ddfc5` e #464 em `a00b6bb9134d80a6d377d5fee8fb519a3b272fb1` na auditoria anterior. Na composição `255b79805652f2251fb42bbb32e173de45bb29ee`, o blob business `14512133f127a4c1d4389f91c618a797f79631d9` ainda fazia `await selectedCase` antes da captura; os quatro controles negativos pre-await não estavam no blob `571f35a5843fc4b77c7e413169440f9cd0bb1d97`, e o teste populado `92c9cbbf3013a2202fd30270273b6f37c9e48435` não estava nessa composição. Propostas #495 `dc2df943313e0a192942ba0b17e2cc8b673baad6` e #496 `df7758a83f452aa44b16fdbbbabea8deecc3d70a` preservam a fase física #488 e permanecem NOT_QUALIFIED. A verificação de ausência refere-se somente a255b798; não foi repetida sobre c9450280 e não se transfere para ela. Nenhum dos gates listados prova o corpus populado de36 chamadas. Coordenação anterior preservada em [#410/7032043767](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7032043767) e [#410/7032619545](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7032619545).
+
+### Fatia isolada WP01 — #506 mergeado após qualificação mensal e tipos
+
+PR [#506](https://github.com/gustavomhss/Orchestra-SF/pull/506), branch `sfc-native-wp01`, proposta inicial sobre `99cb47d0491a07409875ae6a9af3ad2647c6f62c`, head `3dac8b9f270fa9e0a6799d238ab976e81bc30ecd`, tree `961b287f456b0656d7ff875b2e8ddf14737b3270`. Somente10 arquivos de teste, um commit `[skip ci]`. Sete blobs são byte-exatos da fonte B `e5bb7153d9b2f5cb38604b3e7b7432ec3661a3f4`: três testes e quatro helpers. O gate B prova os três arquivos WP01 na árvore B; **não qualifica automaticamente a composição isolada sobre main**.
+
+Manifesto da proposta inicial `3dac8b9f`, prefixo `modules/sucafina/Sucafinav1/test/product/`:
+
+| Arquivo | Blob | Relação com a fonte |
+| --- | --- | --- |
+| `wp01/http.test.ts` | `d8759e428ebd8f159b71738534a9be7f6e3bcf21` | Corpo B exato;1/0 no native B |
+| `wp01/planner-monthly.test.ts` | `009fc1b921d594ad736f55011d6b235145bc682a` | Corpo B exato;1/0 no native B |
+| `wp01/personal-views.test.ts` | `03f88aa05a38e412f11867f7ef43468117ca430c` | Corpo B exato;1/0 no native B |
+| `native-ui-browser/host.ts` | `97187554ba5ffa482983ecc0051d7b67b15198f2` | Helper B exato |
+| `native-ui-browser/session.ts` | `122ca8cb957a3b161c8790b0d8ecb0aa91ac1f4c` | Helper B exato |
+| `native-ui-browser/monthly-input-proof.ts` | `d4d59dbc6eb3f66363a7b7c3c17c02cabfcff279` | Helper B exato |
+| `wp01/http-entry.tsx` | `5abc8fa9fe79c4ed3eecd695141cbab6310c50c5` | Entry B exato |
+| `native-ui-browser/client.tsx` | `d2b8dbac5dfa63ba975037c76060d2310a8e2a2d` | Remove somente o export de prova privada Dashboard, sem consumidor nesses três testes |
+| `native-ui-browser/browser-assets.ts` | `360d5e65867b5814602cc81ae4022825767720a7` | Remove somente registro WP06 sem uso nessa seleção |
+| `wp02/browser-driver-fixture.ts` | `55302a9f6a6aa96711603fb9056aa03efd6866c8` | Driver da base + literais `wp01-native-decisions` e `planner-monthly`; seleção de canal mantida nesse commit |
+
+Dependências de produção já integradas nessa base: #446 em `c36c9b1a3f63d6b8e5931b7b09fbb01385972b00`, #487 em `ab68f1989280e95ed7152bccd62fa7a52cdfc829` e #449 em `99cb47d0491a07409875ae6a9af3ad2647c6f62c`. A fonte de prova compôs separadamente o import canônico de `ServerConnection` em #461, head `f41374d5ab7e1d228e0e858a9004a1783e4fd421`, e o driver pareado #499 já mergeado. Não copiar o owner-runtime inteiro de B nem importar #448: o código nativo SourceNavigation integrado foi preservado. #461 foi mergeado em `5c8c5b486135474d3ba2bce8fb4d754d692c0d08`; o owner final, blob `b9c05ca0650ff1c58f519a0ca99cb69608a37391`, foi comparado byte a byte com a composição WP01 que passou os três corpos e app-shell types. O gate da composição [44690325455](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44690325455), fonte `7fce734b22262d081b156ba20f12b40857ed99ea`, snapshot `6ed4a1eba0497f8ba3066350d25e6ba22e5b26fe`, sobre a integração `4303549d6e78da75be0bbb3e67722fd839a3e509`, terminou **4 pass / 1 fail**, 108 expects, cinco testes / quatro arquivos, 76.60 s. Os três corpos originais completos passaram: HTTP 9716.15 ms, mensal 2340.10 ms e personal-views 8443.56 ms. O typecheck app-shell passou em 16815.51 ms; modules/sucafina falhou em 38781.16 ms. Diagnósticos concretos: `monthly-input-proof.ts:1` importa `solid-js/store`, indisponível no projeto Bun; `personal-views.test.ts:133` instala fetch sem o membro `preconnect` do ambient Bun; o import somente de tipo `SfNativeChapterNavigationResult` em `wp01/http.test.ts:8` alcança `native-chapter-entry` e o grafo TSX da aplicação, produzindo 305 diagnósticos. O fix dessas fronteiras de fixture, publicado em `d7a7e8784feb6452a8f225597db2e4d4a29b3462`, preservou asserções e tsconfig. O segundo gate44691215826 qualificou ambos os typechecks, HTTP e personal-views, mas permaneceu4/1 por CDP body lost no mensal `:122:48`. O head #506 `04d692d44880e7e66273766028fef3aa20f5dd67` incorporou a captura original com dois escopos de5s; o gate44692520124 qualificou o mensal completo5488.38ms e modules types34797.91ms, sem repetir HTTP/views. O manifesto acima identifica a proposta inicial, não os blobs finais desse fix. **O primeiro4/1 foi vermelho por tipos; o segundo4/1 foi vermelho por mensal; o terceiro recorte2/3 passou mensal/types e falhou nos dois IO e visual.** #506 foi mergeado em `d345454edea4dc4cfe793bc0e285ac5f787e3af3`, após #508 em `865447b2f30345b263545f73b2a4146ba8822a11`. Coordenação e manifesto publicados em [#410/7032507161](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7032507161).
+
+### Checkpoints anteriores — evidência preservada
+
+As seções seguintes preservam checkpoints históricos e o estado de cada candidato naquela época. Menções a gates então ativos, propostas sem gate, PRs draft ou merges ainda pendentes são históricas; o estado vigente é o do fechamento acima e da seção Pendente. Esses registros não reabrem causas UNBOUND nem substituem resultados terminais posteriores.
+
+### Checkpoint: Executive e navegação mergeados; controles de IO em qualificação
+
+**Executive #475/#479:** segundo gate [44682884013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682884013), **21 pass / 0 fail**, 103 expect() calls do Bun, 64.85s. Fonte `0e9414eebfe268748a9402703d34d4fb713d4400`; snapshot `072a53f1eaaac8583ae7fd73caf8ed24b172d144`; teste136110229357 e cleanup136111984579 success. São 12 controles existentes de projeção, cinco de People, um componente browser em cinco larguras e três typechecks canônicos (Schema, CLI, app-shell) com exit0/saída não truncada. Nenhum número é atribuído ao full shard3 nem à jornada original visual-layout.
+
+Merges efetivos: #484 `6aaad6796e94e6f1f963321505755f00c10db3e4`, #485 `0df0e751d7b9f38cd2c8e4f61dbf5393f7691879`, #475 `2c6823a722e93163439b827d28d992a770472783`, #479 `37beac52b76278b1aad1226368e87f02892939c1`. O campo schema combinado integrado foi conferido byte a byte com a fonte qualificada (`cdb09915b945861ebba3b7337a5182e962e199a8`). Auxiliar de typecheck permanece apenas na fonte de prova. O primeiro18/3 segue registrado como histórico, após correções concretas.
+
+**Navegação:** primeiro [44683335605](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683335605), **1 pass / 2 fail**, 6 expect() calls, 76.00s. Browser falhou em `native-ui-contract/source-navigation-browser.test.ts:105:29`: CAP24 tinha título vazio. A origem é o dicionário existente `procurement/overview/copy.ts` não registrado; #490 `d64009523280e089e29e24c521d810ea85f538f8` registra EN/pt-BR sem alterar nenhum texto. O typecheck de modules/sucafina apontou `product/wp13/handoff-domain-integration.test.ts:311:9/:340:52/:341:50`: namespace esperado alargado para string; #489 `3e4f9056aaac7ed5bdb906b09452e61f5e595035` conserva somente o literal cases via as const. O typecheck app-shell passou. Jobs136111681665/136113063514 (cleanup success).
+
+O segundo gate [44684418686](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684418686) concluiu **3 pass / 0 fail**, 6 Bun expects, 97.62s. Fonte `430f74853b00afd9b6d1e83db1d7a2e3d29d14b1`, snapshot `d4bac7c9f3653a8c6b3d551f1d60fa4059f28113`, base37be; teste136115232393 e cleanup136116079214 success. Componente23818.96ms, typechecks canônicos modules/sucafina48974.35ms e app-shell23934.87ms (exit0, saída não truncada). Mantém os28nomes/hrefs, cinco larguras, deadlines, filtros, cliques cancelados/modificados e fences. Merges: #490 `bee95ee401e6968ea2b53908cbce074530bc6243`, #489 `df5431f94bfb7dbff553f20c42011c1c750d9996`, #478 `0d013f990b65e7465078ebee0ecf78895c3ab7ba`, #486 `24f77c13c61143165b008807680daa778276e8e4`. C incorporou essa integração em `a3d20350154c6a082a1659533b91700918214c55`. A prova de componente não substitui visual-layout instalado; helper de tipos somente na fonte de prova.
+
+**Integrações externas verificadas:** #439 merge `d1bcd200a3e9f34cf054671d16263ac2407410e1`, fonte `80e2282cb605d204c0b2612cdb0b3da08d6dfe30`, é qualificado especificamente pelos dois originais import-analysis em44678987832; o combinado7/10 continua vermelho. #434 merge `db14b2a3a04689841b033312cb989741e5677a50` preserva identidade do produtor calculation; #468 merge `9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6` provisiona Chromium pareado. Nada disso converte o shard B completo em verde.
+
+**IO1 #474 permanece UNBOUND por diagnóstico insuficiente:** o run44679668214 observou ausência de resposta de contexto em10s, não provou ausência de request. Nenhum segundo gate foi lançado somente para logs. A migração IO2 e seus fixes concretos permanecem em revisão; foi exigido preservar o primeiro corpo original da integração na proposta isolada. Antes de CI, a revisão encontrou CAS inicial legítimo depois de Supplier.create, perda do owner em Import e Cancel/Revise durante digest sem fence da revisão; as correções e os controles negativos estão sendo preparados em commits próprios. #482/#483 continuam NOT_QUALIFIED.
+
+### IO2, Settings e Imports: fontes exatas e resultado observado
+
+- **Produção #477** `d739bff8cea58166ab48b2f364a31ef5d2f2a568`: anexos de Supplier autorizados, defaults originais e primeiro CAS Settings, Talent Import/Export. Revisão corrigiu CAS0 legítimo após Supplier.create, owner URL e Cancel/Revise durante digest, antes do gate. Nenhum grant, revision/author persistido ou baseline fabricado.
+- **IO2 #494** `f79b5e397150934ae1ba50268d1d81b2101a16d7`: oito arquivos test/**, primeiro Planner original de main e helpers byte-exatos. C `af89e5a35ebc6f304891ed2f38df7185f9ec1415` conserva separadamente seu primeiro candidato nativo, com segundo corpo IO2 idêntico. Novos cinco controles não representam instalação; o caso original exige bootstrap, uploads/downloads reais, CSV, preview/Apply Members, SQLite/reload, bytes da exportação idênticos à resposta observada e cleanup físico. Prazo90s intacto.
+- **#492** `9365e02e37ee909b6ab8645b3fc69ff5fb3def6d`: continuações Imports com owner exato e dois aria-label das chaves originais. **#493** `5ca6d247dc8461549b88087555c0c7c8e1fe0c09`: quatro controles de componente. **#482** `7c885f0ca4b178a7d56053d2466477aeb04d1b94`: fila single-flight Settings e cinco controles. Registro histórico dessas propostas: #492/#493 avançaram aos merges atuais descritos no front; #482 permanece UNBOUND e não foi integrado.
+- **Componente [44685675858](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44685675858): 3 pass / 6 fail**,229expects,9testes/2arquivos12.93s. Fonte `8dba4c2ac0a281cb2318f0a23b9dbc49644376c5`; snapshot `b6bbd5fb7279c157148c206818fd4a8c09738982`; teste136119299800 failure, cleanup136119866186 success. Settings5fail: RangeError na primeira fonte visível, helper `packages/app-shell/test-browser/sucafina-native/settings-refresh.test.ts:48:13`, chamadas174/232/248/282/310. Causa em investigação, sem atribuir a produção prematuramente. Imports3pass/1fail: `imports-owner.test.ts:278:60`, log temporal de owner foi mutado por alias da seleção reconciliada; esperados one/one/two preservados, fix concreto em preparação. Omni corretamente not applicable: nenhum subprocesso declarado neste recorte DOM.
+- **IO2 [44685910576](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44685910576) em andamento**. Fonte `2c41816396adf8395a57b5c0f1fdfa2fe474c9d6`; snapshot `51bf856d95b6d4887e56969c123d4e8a2473c330`; base24f77. Filtra exatamente o segundo caso original + cinco controles + quatro comandos canônicos (Schema/CLI/modules/app-shell), helper de tipos só na fonte. Primeiro Planner não executado nem requalificado. Não há rerun de IO1 somente para diagnóstico.
+
+### Atualização recebida de A/B: checkpoint0602
+
+Nenhum novo full shard A/B. A permanece `ace8a3263cf3a8c3546824ddb339a93e351cfb33`. B observado `10af6abc1874d59b9ee751402685af2220646a96`, composição `d4039d45433c4abe21c3f497de15a743ab1cede8`, handoff blob`be411d1fbd50eb0a58884d4566f9093a65d1d39b`. Coordenação autorizada [#410/7031855207](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7031855207).
+
+| Gate B | Resultado observado | Fonte / snapshot | Falhas e sequência |
+| --- | --- | --- | --- |
+| [44682182809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682182809) native | **1/7**,109expects,8testes4arquivos71.06s | `cecd55308fee7885cec1668ddd34ba42f4d29b76` / `e53710b20fa9045a97f462913d2c7c97904413d5` | monthly Apply `wp01/planner-monthly.test.ts:108:13`; logout `wp01/http.test.ts:197:36` 403esperado/401real; personalviews `:128:87` chamada`:152:66` corpoCDPperdido; quatroBI `wp10/integration/bi-lifecycle.test.ts:242:19` casos233/291/331/365. Jobs136107933163fail/136109156771cleanupsuccess. |
+| [44682675803](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682675803) ancestry | **0/4 +4errors**,320ms; nenhum corpo executou | `be7f708a7b4349cd8d8edf13815393f22277cf83` / `7a0929b2dfc12664ab5404c4f78856c6d04ef383` | Importação bloqueada por parêntese ausente em `planner-calculation-ancestry-scope.ts:219:129`. Fix `5b9ac06dc64707ca8357e56e9a2ce1b3800b877f`; segundo44683555039 observado ativo, sem resultado transferido. |
+| [44680602254](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680602254) sensitivity | Em andamento no checkpoint | `dd0f2e58232f0266ac7793908754d8a4164ed805` / `c26cd88e0987a25c0b1a3d32fb9c414f5e5c49a0` | Nenhum footer confirmado; não somar como PASS. |
+
+B é responsável pelos fixes HTTP `febcf57ecb9980333437c2e130c8b8573745764a` (401exato e envelope completo; CSRF403 preservado) e personalviews `e2f6b942ec8a3db3fd5bf848773842fe97ee7987` (clone do fetch original antes da navegação, sem replay/resposta sintética). Fila native `e5bb7153d9b2f5cb38604b3e7b7432ec3661a3f4` ainda sem run neste checkpoint. Descriptor público `45c2831c3f15e1d7899cf83926edf1c606dd6c11` ultrapassou seu ponto anterior, mas o arquivo HTTP continuou vermelho depois. BI C08 real `fbe6b8e0795213574ce3de655cf4f96fa7a02e27` é posterior e não qualificado pelo1/7.
+
+Proposta pre-await foi adaptada à fase física #488, sem escrever emB: **shared#495** `dc2df943313e0a192942ba0b17e2cc8b673baad6`, business blob`63daf3e0144ba315a9fddae1a680131f823a2196`; **test#496** `df7758a83f452aa44b16fdbbbabea8deecc3d70a`, quatro controles/58linhas e sete corpos anteriores byte-exatos. Base compostaB d4039d45 contém dependências pendentes: não mergear sua ancestralidade inteira. Ambos NOT_QUALIFIED. Populado `92c9cbbf3013a2202fd30270273b6f37c9e48435` continua ausente/NOT_QUALIFIED; #464 a00b6bb não inclui os36calls.
+
+### Situação atual para decisão
+
+| Frente | Resultado / estado | Evidência e próximo limite |
+| --- | --- | --- |
+| Shard 8, inventário histórico completo | **620 pass / 0 fail; mergeado** | [44676183011](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676183011): 115 arquivos exatos, 30843 asserções, 881.49 s. Pin #463 integrado. Não equivale à partição LPT atual. |
+| A3, concorrência C12 | **3/0; mergeado em #465** | [44677773333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677773333): 185 asserções, 82.72 s. O C12 original continua UNBOUND e fora desse PR. |
+| A3, URLs nativas de BI | **2/0; mergeado em #467** | [44676988708](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676988708): 515 asserções, 217.40 s. São os dois casos completos, preservando os controles de seleção contextual. |
+| Driver, EOF bidirecional | **3/0; mergeado em #462** | [44675815817](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675815817): 157.07 ms, controles Node com socket real. Não qualifica startup Chrome. |
+| Review, composição isolada #470 | **16/0; mergeado** | [44678230528](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678230528): 490 asserções, 454.22 s, arquivo completo e cleanup success. |
+| Semantic, transporte Node #469 | **3/0; mergeado** | [44678238009](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678238009): três casos completos, 4.46 s e três fechamentos físicos limpos. |
+| Rollback autenticado #473 | **18/0; mergeado** | [44678639563](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678639563): 542 asserções, quatro arquivos completos, 1.90 s e cleanup success. |
+| Planner XLSX e Members, IO instalado | **9/2 no combinado; duas jornadas FAIL** | [44689526157](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44689526157): quatro typechecks e cinco controles PASS; IO1 wait POST `io-browser.test.ts:59:12`, IO2 captura CDP `settingsIoProjection:638→308`. Bootstrap e cleanup passaram. A asserção de grid posterior em #474 não foi coberta. O primeiro IO1 0/1 permanece histórico. |
+| Driver, Chromium pareado #499 | **Mergeado; aquisição/cleanup qualificados** | IO2 launch634/connect683ms; visual também adquiriu e fechou o navegador. Sem transferência de verde para as jornadas de negócio. |
+| Settings / Imports #482/#493 | **4/5; Settings UNBOUND; #483 bloqueado** | [44687035682](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687035682): Imports4/0; Settings5FAIL no helper`:48:13` após RangeError repetido duas vezes. Sem terceiro gate focal da causa. |
+| Visual instalado #501 | **0/1; proposta em revisão** | [44689528903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44689528903): CAP11 perdeu corpo JSON via CDP;71.16s; cleanup success. |
+| WP01 isolado #506 | **Segundo4/1; tipos, HTTP e views PASS; mensal CDP FAIL** | [44691215826](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44691215826): mensal `:122:48` perdeu corpo CDP após apply200. A causa de captura está no gate44692520124, ainda ativo; sem merge de #506. |
+| B: Portfolio / memória / cálculo | **Pendentes; recortes completos novos** | Fases físicas85/3: purchase2/0, batchs e observações verdes nessa fonte; reevaluation, dependencies e recall FAIL. Native posterior4/9, ancestry51/2 e sensitivity28PASS/6FAIL sem footer. Pre-await e populado seguem sem qualificação demonstrada. Nenhum novo full. |
+| Static / guards | **15/16 comandos PASS; aprovação pendente** | Sete typechecks passaram. O gate de dois paths protegidos continua exigindo label real em #397. |
+
+**Fontes das novas integrações e dos gates ativos**
+
+- **#467:** fonte `f9f7b7e55adc0dfb586c42930a7027fb08fbd9fd`; snapshot `2101b766110667088a28f65f86f735d541d70b1d`; fix C `439fe059a9a4a19bf716452e859164c33897f90f`; merge `723833ed811117a12b9dca9098a3573ef758a64d`.
+- **#433 / #470:** o produtor Review de #433 foi mergeado externamente em `3910a644c7fdab1a438c2b5b39d69afc19361709`, após o gate B 16/0 em 44675050868. A primeira proposta isolada #470 tinha fonte `7c93b5b3967a53e48d44c0cd19a50cfc40542e11`, sem gate. O gate concluído usa fonte composta `cbfe3217b57ee6c13a2993b06dfebe0433f33e2c`, snapshot `e64b053374949ff1b4979d7b2566c75973b2f663`. Ele verifica a composição atual sem transportar #414 ou fontes B não qualificadas. O verde anterior não foi atribuído automaticamente à composição nova.
+- **#469:** proposta isolada `fd077febc1942f6e760a57013e2d32b2562a6dca`, fix C `8b3a61685a6cf1b0d04ef9823797a6539b487203`. O gate concluído usa fonte composta `e433d40f2f8b2a1406c73c189ab15ecd8926cbc4`, snapshot `ecd8098403f2c4b1839c5e29249c8dc8358de3ce`.
+- As duas fontes qualificadas partem de `a8dab4400ba268402b65b872f3bcfff349176031`, com somente seus deltas de teste; o `results-store` integrado foi preservado. Coordenação: [#410, comentário 7030928330](https://github.com/gustavomhss/Orchestra-SF/issues/410#issuecomment-7030928330).
+
+### Histórico de integrações qualificadas
+
+Já mergeados:
+
+- [#399](https://github.com/gustavomhss/Orchestra-SF/pull/399), fixture da instalação e scanner privado; source 1aee8d2dac6c92a6e509e76dca87525128dab4a9, merge a5b15b51b78469a054ba97b0e87fd1e36e31f73a. Typecheck canônico verde, sem alegar execução dos cenários privados EICAR/ClamD.
+- [#398](https://github.com/gustavomhss/Orchestra-SF/pull/398), reobservação Atlas com novas provas consumíveis e fences originais; source 28df867d458fef842919f8b5e703df90209ff76a, merge 589adb7cae06c584e1e51eeac9db7cd24dc987ea. Quinze testes verdes incluem historical-memory C7, revocation-tail A2 e similarity217 B5.
+- [#404](https://github.com/gustavomhss/Orchestra-SF/pull/404), identidade estável de ready dentro da mesma admissão, invalidada por geração/owner/reload/revogação; source 4d8c7866df5e7b8146b7b0ff2fedf4b293cd59a7, merge 5efe5a3ff3a2c382a18b28f0d575825eafab5ede. Três testes de componente verdes; não substituem instalação completa.
+- [#401](https://github.com/gustavomhss/Orchestra-SF/pull/401), prova BI completa reaproveitada somente no escopo original, mantendo autoridade/fontes/dia UTC/imutabilidade; source 29021f31f9ea0a46807e60f25176a272a8c93096, merge 18a913220a6805bef1c62a58a26a310f991d6a0a. Nove testes verdes incluem ambos os renderings C7.
+- [#402](https://github.com/gustavomhss/Orchestra-SF/pull/402), transporte verificável de aprovação real do PR fonte para guards; source cd7c1e082394ab105f507d38bf3d656953827f1b, merge 08854f14d83ab12d8665b0e3787881edbfaabd53. Cinquenta e nove testes de resolver/runner verdes. Não concede aprovação e não elimina os dois gates protegidos.
+
+
+- [#400](https://github.com/gustavomhss/Orchestra-SF/pull/400), fonte Planner na resposta humana; source 50ce9319b03ae52ec3871043161c19b17c49a1b3, merge 392cecab68288d4b669828adc5d1aaa738693d80. Original C7 passou no primeiro gate; a nova fixture recebeu a linha real de acesso do destinatário e passou no segundo (1/0, 32 asserções).
+- [#411](https://github.com/gustavomhss/Orchestra-SF/pull/411), prioridade e destinos nativos de Signals; source 492c06aa5d34e30db3859db3f411f948891d02a3, merge 7c42282e8b910cc0e10381980f040dee72cb2b19. Gate 44660432596: 12/0 em unidades mais 2/0 em browser de rota, 183 asserções. A lista elegível mantém as 21 identidades; CAP13 não se torna produtor.
+- [#409](https://github.com/gustavomhss/Orchestra-SF/pull/409), estado de busca/filtro Portfolio admitido novamente por owner/geração; source b07ed52c5e3d96567f0051520b229313e5b4b04a, merge f4b62403fc2d9c74c6302d745bb4a057cfdd4439. Primeiro gate 4/3 revelou remount incorreto da fixture. O segundo, após keyed render-prop real, passou 4/0, 60 asserções, sem ampliar wait.
+- [#415](https://github.com/gustavomhss/Orchestra-SF/pull/415), restauração de 14 blobs documentais históricos exatos; source fa25e59bbcadc41823cdad47b24e75fac3095d37, merge 1222022bd54282c8086b1da45b0be6ad2f6520ea. Gate 44661599225: 8/0, 401 asserções. Nenhum pin alterado; evidência de corpus/contratos, não execução dos journeys.
+
+- [#417](https://github.com/gustavomhss/Orchestra-SF/pull/417), revisão11 do contrato com proveniência; source f86d423436380812e4ce0835d4dbe4efced1d825, merge 687759276c2c9121c2cfd20a5994b277ceb7ee4d. Gate 44662549289:5/0,913 asserções. Os merges posteriores407 e431 alteraram o produtor host pinado; revisão12 #426 foi emendada com as duas proveniências, passou5/0 e foi mergeada. O verde11 sozinho não qualificava a árvore posterior.
+- [#407](https://github.com/gustavomhss/Orchestra-SF/pull/407), observação Reviews integrada por outra sessão; source 713f9829e896fee44a610dfbda16f893be2e5be5, merge d548a76a4e7838bccdb20e98c1ad16fdeca0b391. Gate 44657226869:4/0,27 asserções. Alteração real do host exige nova proveniência WP00.
+- [#412](https://github.com/gustavomhss/Orchestra-SF/pull/412), recuperação OPEX/CAS; fix de fixture867fe10bf2aae28b244b65b5d17dc54c58ffd22e, merge d7fa94063e798207ed692026b557d27dfff1aef8. Segundo gate 44662953944:2/0,21 asserções,1.63s. Captura usa schema estrito e fronteira JSON real; não modifica espera/assertions.
+- [#421](https://github.com/gustavomhss/Orchestra-SF/pull/421), leitura/configuração nativa de resumos; source 849f00b98ef315025acdfffd4f3705e49c39953f, merge d4ded81224e05f2d3b9789b3eec40b9de8a32fa1. Gate 44663777161:9/0 HTTP/schema +12/0 UI =21/0,7913 asserções. Admin, CSRF, CAS, idempotência, directory, auditoria, intenção e releitura reais; nenhum guard removido.
+- [#422](https://github.com/gustavomhss/Orchestra-SF/pull/422), navegação de período CAP03 pela admissão F01 real; source f201956ef1491e699bee409c571ad16d82cea158, merge 23f851dbc6b86c0a571dd95f4b2bb2558b9dc1cd. Gate 44664293983:5/0,107 asserções,1.84 s; owner, geração, revogação, URL, recarga e draft preservados.
+- [#430](https://github.com/gustavomhss/Orchestra-SF/pull/430), nove fatias B de teste qualificadas; source 9af676c5df10e363c8837562e4bfe6bcc66fd60e, merge 838572713fcceb2df96086f9729347fcda87d9e7. C02/C05/C06/C07+C08+C17(somente3 arquivos)/C12/C13/C14/C15/C16,12 blobs exatos dos snapshots verdes. C01/C03/C04/C09/S10 e demais unbounds excluídos; head B não usado como parent. Gates originais/limites completos no PR, sem alegação de shard integrado verde.
+
+- [#406](https://github.com/gustavomhss/Orchestra-SF/pull/406), replay do draft somente com transação prévia durável e fences atuais; source 3190d29fa62e902f8ceefdffcf703eb367c9b2c9, merge 062506e92427f9ff41fcb952c0b1559e65076a4d. Gate 44663906249:9/0,181 asserções; nova intenção obsoleta403, colisão409 e revogação403 preservadas.
+- [#432](https://github.com/gustavomhss/Orchestra-SF/pull/432), fatias A descriptor/Executive/download qualificadas nos gates completos A1/A2; source c7b4b1d7077ba908bb588e955f784215fd185d72, merge e41c3e18330397ce508a349f52cb3bee8cb07639. Dois arquivos; não transporta os demais unbounds de A.
+- [#427](https://github.com/gustavomhss/Orchestra-SF/pull/427), conflito documental original preservado como stale/HTTP409; source 0fff3074641bf8f21845e4db59423cf89b3eef7a, merge be192011d5cfccc7524fd81d53674b3317005091. Gate 44667039756:2/0,54 asserções,2.67 s; sem exposição privada ou segunda escrita.
+- [#428](https://github.com/gustavomhss/Orchestra-SF/pull/428), fence final da saída de análise distingue falha de render503 e autoridade revogada403; source c62c817df0208202ad3ee768433542d862f3921c, merge 573678d0acf9e91654efb7e67af7d30ebe45312b. Gate 44667507711:3/0,25 asserções,13 filtered; primeira preparação Workbench não incluída nesse gate.
+- [#431](https://github.com/gustavomhss/Orchestra-SF/pull/431), disponibilidade de assets/import observada por outra sessão; merge 295c2bdca05c2373f821d50aab5d3ee3d3fb218b. Gate 44666552454:26/0,182 asserções,729 ms, fonte 6732ff508922b097e5c9c42b457e3dc8dc6c65ae. Novo host altera um pin WP00; não qualifica a suíte Operations inteira.
+- [#437](https://github.com/gustavomhss/Orchestra-SF/pull/437), projeção Budget publica mapa vazio somente quando Domain.view admitido prova ausência canônica; source 54f0e9da5f5119967e268a32b48cb7c7824440c0, merge b180588c63e41eecd6d73d839d078755d68cad3d. Gate 44668705164:18/0,1386 asserções,1219ms. Nenhum CAS inventado; mapa malformado, revogação e corrida continuam recusados. Não é terceiro gate do Dashboard.
+
+Outras fatias concretas: C `bcbc0a30c8d9f9dfb1ed78829ffe62939d07163e` compõe os helpers C04 de B; C `8e71e07e907b02be635d4f98aaf0638816f7b429` corrige o chooser BI com duas fontes reais e controles HTTP negativos; C `3e23044944a59c2544b3d09451960d22e3bec47f` migra o Dashboard completo ao host nativo. O chooser foi qualificado pelo run 44670030550 (1/0) e integrado em #447. O Dashboard nativo falhou duas vezes após 25 asserções: 44663298380 e 44666208536. Continua `UNBOUND`, sem terceira execução focada. Os cinco controles de #423 passaram; #437 corrige separadamente a omissão do mapa pelo produtor. A fixture conserva todos os controles originais e o limite de 60 s.
+
+AM02, pin de produtor, recuperação Atlas, revogação de observação, import/report nativo e planner-origins também passaram nos gates focados abaixo. Não houve execução integrada dos oito shards após todos os fixes. O novo verde completo de C8 cobre somente seu inventário histórico exato; os demais recortes não alteram os totais das enumerações originais.
+
+
+### Integrações qualificadas posteriores
+
+| PR | Mudança | Head qualificado | Merge em sf-join-four | Evidência e limite |
+| --- | --- | --- | --- | --- |
+| [423](https://github.com/gustavomhss/Orchestra-SF/pull/423) | Cliente do primeiro desvio com mapa vazio canonicamente admitido | 4039640ef1acffd79b8e27c7186b3e231a5dddd9 | 9fb1514464e75646ec2f96d9ddaf940f1fe2062c | 5/0,58 asserções no44666208536; produtor43718/0 já integrado. Dashboard original0/1 no mesmo run permanece UNBOUND |
+| [440](https://github.com/gustavomhss/Orchestra-SF/pull/440) | ParserCaseRef preserva IDs/tipagem reais; nega IDvazio/versão<1 | 602c5953f22d7b3de8319afa2f596c7cc347830e | 8eb020dd6cb776b18dc006a23403f8b3a5e4a0bf | 44669527682:17/0,327 asserções; 8.88 s; inclui16Workbench e1identidade |
+| [426](https://github.com/gustavomhss/Orchestra-SF/pull/426) | WP00 revisão12 com proveniência real407+431 | 42926f460f6e1b5195aad2be39ecf200e4a5ef71 | 9391cd78afb37883964263f4a43b08aafead131b | 44669752250:5/0,913 asserções; 178 ms;38artefatos/ordem/proveniências anteriores/consumerAcceptanceBLOCKED preservados |
+| [443](https://github.com/gustavomhss/Orchestra-SF/pull/443) | Dez causasC qualificadas,21 blobs de testes | b14a9caf25dcb8635d364ae4c77ba9bae98f4951 | 95d3ffdc5478edcfa0ce012ba7f367ef7ab39259 | pin/Atlas/source-observation/AM02/import/WP05/public-state/procurement/AM04/Workbench; o único diff procurement inicial são2linhasexpectSpawn; sentinela separada451 |
+| [447](https://github.com/gustavomhss/Orchestra-SF/pull/447) | Histórico de Planner e chooserBI com autoridade atual | 310e03056d2eda701724dd40fe23c32f944db35c | cad07e37262ebc4888422b4cf549e06c37a9390d | 44669530310:3/0,168 asserções; 80.24 s;44670030550:1/0,73 asserções; 69.57 s; dois commits causais |
+| [444](https://github.com/gustavomhss/Orchestra-SF/pull/444) | Recusa exata de revogação do escopo, sem value | 44ea482e56f8fd31fb861d3ca7e18583c3115c35 | 124d5b5c7fbc4a7a57edc0fe1420d38496402a48 | 44670481763:1/0,20 asserções,8filtered26.60 s;13 asserções internas mantidas; casos anuais105 s não incluídos |
+| [438](https://github.com/gustavomhss/Orchestra-SF/pull/438) | Observação histórica bounded de analysis, fallback opaco paralelo e pin real | 43a2dcebfed2cabfa01934f8b9bee0987dc134ac | 676584ba114e34da0a5ec523caa230746716591e | 44670811024:21/0,148 asserções; 40.85 s; pin44671622213:2/0,40 asserções; 35.45 s; B6 excluído e continuaUNBOUND |
+| [451](https://github.com/gustavomhss/Orchestra-SF/pull/451) | Sentinela específica do pedido privado, sem colisão com atributoHTML hidden | def79021902e903641f4c01cedddfa2ec87a0db3 | 82ead34aa68b942b1174f06f8e2c6a0a1f043db9 | CasoA3PASS1845.38 ms em44665621967, helperBun; composiçãohelperNode NOT_REVALIDATED.56expressõesexpect preservadas; C mantém superset de título adicional |
+
+Também incorporados de outras sessões: #435 (AlternativeDraft persistido, merge 82d2041d80784e2d905f99dee3bca91c63ef8350, gate3/0) e #425 (CI, merge c74724c3e82f9a3fd3bdf2cd5492d966069caed8). #425 mede timings reais e liga seleção/source/pais; não representa um recibo completo1–8. Suas provas Core/Sucafina/spawn focado passaram, mas as execuções amplas tiveram falhas históricas de LFS/guards/setup, registradas no PR. Nenhuma aprovação foi fabricada.
+
+### Integrações e verificações deste checkpoint
+
+- **#456 — C03 browser.** Merge `aa751dd731ce91f126a00488dfce16022bb8cb2d`; run 44670314438: **1/0**, 28.47 s; código `831e174a17cae28888c46747e779028524e91ff2`. O teste completo retém a identidade real do enrollment, os controles de retirada/revogação e duas revisões duráveis. O helper acrescenta somente o consumidor `wp07-review`; a composição isolada não foi reexecutada.
+- **#442 — rollback SQLite.** Integrado por B em `45514008d7ce275327003c5d92faaeeab2479739`: proveniência privada de rollback confirmado antes do COMMIT e journal de abort autenticado, sem inferir segurança a partir de ausência de recibo. Run 44673967393: **18/0**, quatro arquivos completos; fonte `32c97d3b4de5bb7960ca42f816b11ea37f594541`, snapshot `24f4bfc7c4671ff69b90961da988419b8f7c6cff`. Nenhuma edição de `runtime/application.ts`.
+- **#457 — identidade de persistência do import-health.** Merge `a1fd4fb7a25814a82a690a6091f29d9041aa225f`; fonte `8557bbdb13243a188f01ecdf5b68c836cddb048a`. `Object.is` compara os mesmos objetos sem coerção de tipos.
+- **#459 — cinco arquivos de teste tipados.** Merge `a88def25ae2a2347d62e2aeb930e0a50a5ef692c`; fonte `24566526e4f4d720c269fd0cdb67577c766d7ebf`. IDs de operação derivados das APIs, `AbsolutePath` do diretório real, anotação de registros AM02 e controle real de ausência do call UI; asserções preservadas.
+- **#453 — prova estática isolada.** Workflow mergeado em `6a1cab15959d37d0df7bbc2982c0aaab0a59789e`; fonte `1885dd769e8100520b15e0596e76bf8525e23b28`. Não dispara `sf-ci` e não concede aprovação.
+- **Static — resultado terminal.** O primeiro run 44672678428 revelou 13 erros TS. Após correções, 44674216763 / snapshot `4cc2864f91eaa96ab40e9010fbf89d4e3e7d23cb` executou **15/16 comandos com exit 0**: sete typechecks, generators, E2E, Web, spawn e guard da base PR. O agregado permanece `FAILURE`: o guard de `origin/dev` exige aprovação real para `godfile-waivers.json` e `script/spawn-allowlist.json`. Esses dois paths são idênticos à base; a regra em `script/guards/rules/protected-paths.toml:17–19` ainda exige o label real, ausente em #397. O snapshot antecede #442 e não prova a árvore posterior inteira. Não repetir o gate pelo mesmo bloqueio.
+- **#460 e #395 — instalação e pacote.** Integrados por outra sessão, respectivamente em `a62ce06fd108d7ea274e80efb69bb18f7fd0728e` e `c32e906a92193ae33d32b5106a82ee47b81c0ba4`. Evidências declaradas nas PRs: 44674117714 = **3/0** para instalação original Reports/Planner; 44670544483 = **143/0** para retenção autêntica do pacote. Esses gates não constituem aceite completo de Reports/Decisions ou GO.
+- **C12 original — permanece UNBOUND.** O segundo gate 44673405969 / snapshot `3f89348147e6f6480face7f129f3b8d8da2e0a38`, fonte `eab3b59d613ff9d32258f91bc50fcc931ecab21d`, terminou **0/2**, 31 asserções, 54.26 s. O fix corrigiu os dois routeRefs usando o codec F01 e validação real de UI39. O primeiro caso falhou no startup Chrome de 15 s com espera de IO; o segundo chegou ao COMMIT 200 perdido, recuperação 200 e um efeito financeiro, mas falhou no fechamento obrigatório do bridge (`:385:35`). O ponto repetiu; não haverá terceiro gate focal do original. `recovery-ui.test.ts` ficou fora de #465.
+- **#462 — EOF do driver, qualificado e mergeado.** Candidato `9a499e3daf5488eaf40a8d56b661821d8473dffd`, C `e432400faff2cf84ac8bedb9590e14248db3653b`, fonte PR `7bae26dc4f6b9336f6f08ac703352108febe26b7`. Alteração restrita a `iterator({destroyOnReturn:false})` e três controles Node com socket Unix/WebSocket reais, sem mudar deadlines ou cleanup. [44675815817](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675815817), snapshot `788adce5756c3a1fd259d388d670e51a560ec0e8`: **3/0**, 157.07 ms. Merge `7eeb29992852a48fccb72cc42c821a5eca3ba84d`. O recorte qualifica o EOF e seus negativos; Chrome/startup e o C12 original conservam seus próprios limites.
+- **#465 — concorrência A3, qualificada e mergeada.** Candidato inicial `73a8c5aa8958b1d24e2472f3d4c60ff32d2c9f00`, aplicado em C `64777e691e98e9b3360a8d0d2bed3270e642f416`. Preserva efeito único, recibo/prova durável, edição concorrente independente, exact replay e recuperação; adiciona negativas de intenção, revogação, alvo físico, pós-COMMIT ambíguo e escolha material alterada. A API atual retorna 200 para edição não material com o mesmo recibo; Apply conserva 409 quando intenção/choice muda. Primeiro run [44676601298](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676601298), fonte `2830802dc330065155f205f235d7ff49ddc79c08`, snapshot `a1d4d9574413c5a70be062312dacdc5f8c2456ac`: **2/1**, 141 asserções, 71.96 s; browser 44.214 s e API 15.424 s passaram. O controle novo de re-Review em `c12-concurrency.test.ts:329` esperava 409 e recebeu 403. O fix exato segue o guard externo `withCase` no HTTP Procurement: **403 / denied / case-selection-unavailable**; conserva Apply **409 / prepared-case-changed**, recibos, efeitos, recovery e escolha material. Fix C `d471e44f0669af041ed6f94fe912452630dd8d31`, isolado `1cf1370b0970df584f006eb02f076b24421596bb`. Segundo run [44677773333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677773333), snapshot `be271fce08a3d76ad21eb51b11992c8393241c57`: **3/0**, 185 asserções, 82.72 s; casos 41.485 / 14.642 / 25.889 s, com os dois modos pós-COMMIT completos. [Job 136093615202](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677773333/job/136093615202) e cleanup 136094386193 terminaram `success`. Merge `a8dab4400ba268402b65b872f3bcfff349176031`.
+- **#463 — pin e escopo histórico completo de C8, qualificados e mergeados.** O `state-provider` pós-442 tem blob `dc0c55245b805f9290f3798100ba6a6fd5fa88ed`, 36432 bytes, SHA256 `bd90848a7e75e62d457901666d6dfc6409e9ce3578092958ee9e794bb210a141`. Proposta de pin `50d8dc20519e85b063ca05d3bcb176487688e9b7`; C `5917a488021408261b59ba81106ad582dd167270`. Outputs, workload e counters permanecem iguais. A request `e79320e4d032edb7749a73dee807334b720d9b55` preserva os 115 arquivos únicos da enumeração 8, com paths explícitos e sem reclassificação LPT. [44676183011](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676183011), fonte `7bed88e6977cdd6de674ad80352d0f7460311f2c`, snapshot `968d5cdd857ea6d4305df5a337bca9c8c6641ff9`: **620 pass / 0 fail**, 30843 asserções, 115 arquivos, 881.49 s. Inventário do log igual à request: 115 únicos, nenhuma falta ou extra. [Job 136088455724](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676183011/job/136088455724) e cleanup 136093953687 terminaram `success`. Merge `ad7bf8a6bea5dc8bcc436f39ebd861eeb935f7ee`. Esta é a qualificação integral do escopo histórico 8, não um recibo canônico da partição LPT atual.
+- **B memória — resultado terminal.** [44670534535](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670534535): **28/2**, 508 asserções, 30 testes em quatro arquivos, 1604.24 s; fonte `91bcd283b6c4fbd9bc9575d232cbc62ddea9630b`. `planner-memory-read-scope` passou 5/0 e `planner-case-read-scope` 23/0. `product/integrated-proofs/am01/portfolio-recall-proof.test.ts:19/:148` excedeu 240 s; `recall-five-profiles.test.ts:24/:166` excedeu 900 s. Os catálogos observados estavam vazios, sem inferência. Os dois cenários AM01 continuam sem aprovação; o timeout repetido de portfolio-recall é `UNBOUND`.
+- **B Portfolio — resultado terminal.** [44670599697](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670599697): **41/4 + 1 error**, 529 asserções, 45 testes em sete arquivos, 1921.93 s; mesma fonte `91bcd283b6c4fbd9bc9575d232cbc62ddea9630b`. Passaram 10 metric + 7 planner-observation + 10 persistence + 14 selection. Os dois purchase excederam 360 s e reevaluation 300 s; erro comum em `native-choice-preparation.ts:36:70`, `decision-authority-changed`. `Dependencies:60:21` usava a fixture antiga `4fe9d9c...`, sem o fix C `ba7200`; não refuta esse fix nem autoriza terceiro gate C. Cleanup de Portfolio e memória terminou `success`. O novo gate B de dependencies, com fixture corrigida, está detalhado na tabela de gates posteriores.
+- **#441 e #464 — propostas pendentes de B.** #441 ainda exige a captura antes do primeiro `await`. O candidato isolado `660a8117b813a5ed5daddcc97511b911159ef618` captura request, identidade, owner, source e criteria antes do `await`, recusa drift e acrescenta quatro interposições reais, preservando sete casos. Foi enviado à sessão B no comentário 7030363396; B ainda não o incorporou. #464 permanece em `8d093ed277668438be1ffde9130c6d7a0f41da46`. A proposta de quatro testes populados `92c9cbbf3013a2202fd30270273b6f37c9e48435` recebeu revisão estática independente favorável, mas continua **NOT_QUALIFIED**, sem gate. Ela exercita C10 real, três promoções reais, 36 chamadas delegadas, paridade, menos raízes, imutabilidade e recusa após COMMIT; não resolve a janela de #441 por si só.
+
+### Checkpoint posterior — Review, semantic, rollback e IO nativo
+
+| Fatia | Run / resultado | Fonte e snapshot | Fix C / merge |
+| --- | --- | --- | --- |
+| Review completo #470 | [44678230528](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678230528): **16/0**, 490 asserções, 454.22 s | fonte `cbfe3217b57ee6c13a2993b06dfebe0433f33e2c`; snapshot `e64b053374949ff1b4979d7b2566c75973b2f663` | C `9f9941a6e6cedc2432cd0e3d6b6aa02580d0c7d1`; merge `3e396b258ab5e10476e9a4e0c38e54a54fa0022b` |
+| Semantic WP05 completo #469 | [44678238009](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678238009): **3/0**, 4.46 s | fonte `e433d40f2f8b2a1406c73c189ab15ecd8926cbc4`; snapshot `ecd8098403f2c4b1839c5e29249c8dc8358de3ce` | C `8b3a61685a6cf1b0d04ef9823797a6539b487203`; merge `cf28ef09ffb4633854106b6f883a16cc56fb96a5` |
+| Rollback completo #473 | [44678639563](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678639563): **18/0**, 542 asserções, quatro arquivos, 1.90 s | fonte `b36d0632838e543f3c4a7c9a938c31f0865ef043`; snapshot `ebe5de4f72cd50c4efe2f59e48d9e385419121b6` | C `33ea0cc807c98d5797a3138ce4aed14859baddcd`; merge `e79c2609042d1f54358a222463566fc4e1ee6e8e` |
+| Planner IO1 #474 | [44679668214](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44679668214): **0/1**, 1 filtered, 39.42 s | fonte `36a3de511df7a5bc683cd2bc7ad827d5cc5662ef`; snapshot `068213d64003aff10dcb7a5637f25087b66ae19c` | C `dbbc5832811202fecebb09c2adebf65ace0d6c05`; não mergeado |
+
+Os jobs de Review `136095092794` / cleanup `136098340728`, semantic `136095117192` / cleanup `136095467345` e rollback `136096438044` / cleanup `136096775415` terminaram **success**. Os gates Review e semantic partiram de a8dab; o de rollback de cf28. A integração posterior de #466 não retroage a qualificação desses snapshots.
+
+Review conserva os 16 casos, 123 linhas de asserção e prazos 105/120 s; HTTP 403 do handler real retira todo o workspace privado, e uma resposta 200 autorizada retida não restaura o conteúdo após revogação. O driver muda somente o literal de consumidor. Semantic conserva os três corpos, 33 linhas de asserção, keyboard/geometry, contexto/viewport original e 90 s por caso; três spawns reais, Node/Chrome exit 0, WebSocket 1000 clean e remoção dos sockets. Rollback transporta dois blobs exatos, sem produção adicional: sete controles privados de proveniência, um handoff, nove reconciliações e um indeterminate. Request admitido, comando draft, SQLite rollback, journal append-only, confirmação renovada e recusa de retries concorrentes permanecem obrigatórios.
+
+IO1 migra somente “browser previews/applies Planner XLSX and exports persisted monthly values and totals”, preservando 90 s, workbook literal, doze valores 125, herança `inherited-budget`, fórmula `SUM(Jn:Un)` com resultado 1500, reload, download real do Chrome e erros vazios. Usa instalação/enrollment/identidade originais, host nativo e F01; o scanner INSTREAM/PING/EICAR herdado permanece simulador, sem alegar AV produtivo. A revisão estática corrigiu o observador para `files.import-reference` e o locator relativo antes do gate. Composição mantém Review no driver e remove somente o alias de tipo vedado por AGENTS. O segundo caso de I/O ficou byte-idêntico e não entra neste gate; investigação separada identificou lacunas reais de UI para Members e anexos Supplier. Visual-layout ainda exige equivalência dos 28 destinos e quatro indicadores; sem redução de asserts.
+
+O primeiro gate IO1 terminou **0/1**, uma filtragem, 39.42 s; job `136099775322` failure, cleanup `136100473256` success. Chrome conectou em 13951 ms dentro do limite 15000, enrollment 303 e autenticação passaram. A espera `io-browser.test.ts:33:12` não observou GET `/sucafina/api/ui/context` em 10000 ms. O log não contém DOM/pageerror desse ponto; não atribuir uma causa especulativa. O fechamento Node terminou exit 0, o census Linux não encontrou membros vivos e o transporte desconectou. Não houve oráculo XLSX executado. Bootstrap, discovery e observer estão em auditoria antes de qualquer novo gate.
+
+### Terminais B posteriores e integração externa #466
+
+| Gate B | Resultado completo | Fonte / snapshot | Falhas e limites |
+| --- | --- | --- | --- |
+| Planner batch [44676186908](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676186908) | **19/3**, 568 asserções, 22 testes / quatro arquivos, 1429.16 s | `3e418a337751bc496d0d4c6cc0cfa38d6ee76faa` / `6590ec54e3a9ab1917ebd759e41c8cec538fee50` | `planner-case-read-batch.test.ts:317:20`: uma scope esperada / zero; `native-execution-reevaluation.test.ts:24/:152`: 300 s, observado 316414.19 ms; `am01/portfolio-recall-proof.test.ts:19/:148`: 240 s, observado 299558.24 ms. Cinco perfis completo PASS em 807555.68 ms, catálogo vazio explícito. |
+| Recovery [44677071823](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677071823) | **33/1**, 463 asserções, 34 testes / quatro arquivos, 1063.72 s | `a21c18957c075eeb913e7f97e627a0a23459e8aa` / `5090a9009489661b2d6a92f98725659b7e3cddbb` | `calculation-ancestry-composition.test.ts:39:7` → `composition-test-deadline.ts:5:29`: 105000 ms; uma falha, reportada novamente no resumo. `produce-outer` completou 470 leituras / 102089 ms e abortou. |
+
+Batch job `136088469059` / cleanup `136097127989`; recovery job `136091319246` / cleanup `136097914133`: ambos cleanups success. Batch positivo faz 12 chamadas reais e reduz operações físicas 162→5 com estado protegido inalterado, mas ainda `alternatives: []`; não substitui quatro controles populados/36 chamadas de `92c9cbbf3013a2202fd30270273b6f37c9e48435`.
+
+Recovery passou **planner-calculation 24/0**, **calculation-case-scope 5/0** e **similarity217 4/0**. #466 foi mergeado externamente em `152be1f2bb7f3f5218ea3de06b60c31f37d8093f`, fonte `50e35c7c03861043f73223e2e63470490f250584`, com os três blobs de produção iguais ao run: atlas-memory `c1dc05148ead425f01584fa8c57800664ba0b573`, atlas-recall-scope `8ee74e2cca1b3e1df128739e4fdb9097019d50fd`, business-context `2909b91cce3dcf595b6a24ce56d8cf07c769d45c`. O wrapper só trata replay já settled; ancestry falhou na produção inicial. A composição B contém ainda business-services `60612bdc02c5c692de82879b553a6a259cd876f5` e result-store `960ec20e78fb6a52e07cecebd2c6b12ce8c5393e`; o verde observado não qualifica automaticamente outras composições ou #414.
+
+B corrente `aa58e28caa571b08da509668847300e38ccd0319` incorporou ajuste concreto do controle scope (`73ca14579c734500361794d944e2d170058fdbd9` / `a00b6bb9134d80a6d377d5fee8fb519a3b272fb1`, teste `75a850a89bc19f42a750c14903f42a18a780351d`): reemissão real autenticada cria nova incarnation, selector antigo continua recusado e estado protegido permanece imutável. Esse ajuste não é qualificado pelo run anterior 19/3. #441 head `8d148624eb52e828007756920905933c905ddfc5` e #464 head `8d093ed277668438be1ffde9130c6d7a0f41da46` ainda não incorporam as revisões C. No B atual, business-services `3df0195541debf6502393fcb65e13b7869ea8abb`, linhas 465–474, ainda captura após await selectedCase:469; o teste populado está ausente. Pedido de incorporação/resultados em [#410, comentário 7031127454](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7031127454).
+
+A continua em `ace8a3263cf3a8c3546824ddb339a93e351cfb33` (código `a86e22c9654663a72bd55586059a4254f548c742`), sem nova enumeração. B tem ativos 44678987832 (native, fonte `24d6ff06dd796ebf237d8460e3ef3952b40d25a4`, snapshot `9af757257a9f734b7acea6a1217e46706361c192`) e 44679287587 (Dashboard batch, fonte `5b0cb657c467ac1e953e9530bfcd54efab44bf75`, snapshot `1b11a352f756ad379351905609c946016fff2863`); nenhum resultado antecipado.
+
+### Adendo posterior — Mixed B e propostas nativas (2026-11-20)
+
+Este adendo parte de C `d8fc0b84c0564b4908b265181bb5826355c5bc96`. A integração observada passou a `sf-join-four@9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6`, incluindo #434 em `db14b2a3a04689841b033312cb989741e5677a50` e #468. As contagens das enumerações completas/parciais dos oito shards permanecem inalteradas.
+
+#### Gate Mixed B: terminal real, sem transferência para corpus populado
+
+[44680196613](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680196613) terminou **36 pass / 1 fail**, **383 asserções**, **37 testes em três arquivos**, **725.03 s**. Fonte `aa58e28caa571b08da509668847300e38ccd0319`; snapshot `3ee28f22b01bd584967e8417e7e8e9ee782a5cec`, cujo único pai é essa fonte; request `.ci-run.json` blob `a5a279acb990aeb056a33af1d107bb40f0c222aa`. Job `136101471773` falhou e cleanup `136107403212` passou.
+
+| Arquivo / recorte | Pass / fail | Evidência e limite |
+| --- | --- | --- |
+| `wp10/integration/planner-case-read-batch.test.ts` | **19 / 0** | Inclui o controle de scope não materializada corrigido por `73ca14579c734500361794d944e2d170058fdbd9` / `a00b6bb9134d80a6d377d5fee8fb519a3b272fb1`. O custo observado continua em **12 chamadas de fonte**, 162→5 operações físicas, uma raiz protegida, projeção integral igual e estado protegido inalterado. |
+| `wp10/integration/mixed-case-read-batch.test.ts` | **16 / 0** | Retém os dois produtores: 12 chamadas Planner e seis Procurement; 261→6 operações físicas, duas raízes protegidas, projeção integral igual, segunda invocação nova e estado protegido inalterado. |
+| `wp12/native-execution-purchase.test.ts`, variante `pending` | **1 / 0** | 343855.45 ms. A escolha humana foi reaberta, com caso inalterado. O recibo emitido declara `inputPrepared:false`, `inferenceExecuted:false`, `domainApplied:false`, `gnativeAccepted:false` e `outputRef:null`; não é execução positiva de missão nativa. |
+| Mesmo arquivo, variante `complete` | **0 / 1** | Declaração em `:14`, prazo original em `:136`: timeout de **360000 ms**, observado **366873.46 ms**. O log não localiza o último await por stack. `decision-choose` completou em 250997 ms; `read-chosen-case` completou. O último boundary emitiu `request-projection-exposes-no-selectable-change-target`; não houve recibo de consumer reaberto para essa variante. |
+
+O footer repete a mesma falha de `complete`; não são duas falhas. O snapshot contém o controle de batch não populado e **não contém** `planner-case-read-populated.test.ts` (404 confirmado). Logo, os quatro controles com 36 chamadas reais de `92c9cbbf3013a2202fd30270273b6f37c9e48435` continuam **NOT_QUALIFIED**. Este gate tampouco qualifica o reparo pre-await `660a8117b813a5ed5daddcc97511b911159ef618` nem o shard B completo.
+
+#### Executive e navegação: resultados e fontes separados
+
+| Causa / gate | Estado na consulta deste adendo | Fonte / snapshot / limites |
+| --- | --- | --- |
+| Executive, primeiro [44681543819](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44681543819) | **18 / 3**, 103 asserções, 21 testes / quatro arquivos, 70.94 s; cleanup success | Fonte `04f58283f47c7e9ed439a9740255eeb41c744dfd`; snapshot `1ef269b636ba844ffec41c14f9d3add79289521b`. Dois casos de typecheck falharam: Summary/schema em `test/sucafina-summary-settings.test.ts:22/:35/:36` e sete diagnósticos de receipt em `product/host-binding/atlas-memory.ts:384/:392/:393/:394/:436`. O browser falhou em `native-ui-contract/executive-people-browser.test.ts:131:53` no seletor Month; as verificações anteriores de cinco larguras passaram. |
+| Executive, segundo [44682884013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682884013) | **21/0; 103 expect() calls, 64.85s; mergeados #484/#485/#475/#479** | Fonte `0e9414eebfe268748a9402703d34d4fb713d4400`; snapshot `072a53f1eaaac8583ae7fd73caf8ed24b172d144`. Composição após os fixes #475 `da38493bb8841fcaf8103f825f5e598ee40e9d2c`, #484 `bcecd8732fef8fe8dd36b23fda23aa5916a99fdf` e #485 `13b170e3508e4e62d970a5e253af1633fefde430`; testes #479 `43e284e2eecf6d8dd9fda4fb5b25a6323fac7d00` inalterados. |
+| Navegação nativa [44683335605](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683335605) | **1/2; 6 expect() calls, 76.00s; cleanup success** | Fonte `45c11fb769682d98f2b2b9c06b9ea4cd901a121e`; snapshot `9acef3622fb63e694b24901b35698e3beb2315af`. Produção #478 `fb60b6c1220d1748a0ebde44f402a76b10702ddf` inclui o guard de evento já cancelado; testes #486 `b12cce3747209d47fe11ab4e6bf5c394daa226f5`. O helper de typecheck de `modules/sucafina` e `packages/app-shell` pertence ao snapshot e fica fora do commit a integrar. |
+
+A prova de navegação é de componente, F01 e navigation-state com entradas de contexto declaradas: verifica os 28 links, filtros, ownerKey, layout e feedback atrasado após unmount. Não substitui a jornada visual instalada dos 28 produtores. O controle de unmount preserva provider/owner/rota e libera uma recusa atrasada; prova supressão de feedback obsoleto, sem alegar cancelamento de uma transição autorizada.
+
+#### Propostas CAP28 preparadas, ainda sem gate
+
+- **Produção #482**, `sfc-settings-polling@f3bcdb97b3eb930d3f41d63080b5b6edd0c772da`, empilhada sobre #477/`2aa5a15889df2764c50e26b0b6d41ca7889c203e`: fila única de leituras, polling de 30 s, refresh manual coalescido e confirmação de save/reset pela leitura iniciada após o POST. Preserva os marcadores de inicialização e CAS de #477. Quatro testes renderizados cobrem dirty/blur/cancel, fila de confirmação, aba oculta, owner/revogação e 409 sem replay; nenhum resultado atribuído.
+- **Migração #483**, `sfc-parity-polling-native@d795692ab13fafae9f557def76596fcf0027d2b9`, sobre `9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6`: mantém nome e deadline de `parity-polling-browser.test.ts`, reset real, segunda sessão EUR, CHF após blur/poll, duas atualizações sem sobreposição e leitura enfileirada após save; acrescenta confirmação SQLite de CHF na versão 3. Depende de #477 + #482. A fixture nativa é copiada byte a byte de `fdbf7c790fb7838009243b323b6c72530679d92b`; o antigo Runtime 3/1 continua sem diagnóstico e não é convertido em verde por essa proposta.
+- **Receipt #485**, `sfc-atlas-receipt-narrowing@13b170e3508e4e62d970a5e253af1633fefde430`: apenas move a captura do receipt para dentro do ramo `settled`, antes da closure async. Sem a declaração deslocada, o arquivo é byte-idêntico; fences, awaits e bytes retornados permanecem. Sua validação está na composição Executive acima.
+
+Nenhum desses gates focados altera os pass/fail históricos da tabela agregada. Não há nova enumeração completa de A1–A3/B4–B6 nem GO global.
+
+
+## Enumeração original por shard
+
+Paths de testes C relativos a `modules/sucafina/Sucafinav1/test/`, salvo indicação explícita.
+
+| Shard | Run id | N pass / M fail | Falhas (file:line) | SHAs dos fixes |
+| --- | --- | --- | --- | --- |
+| 7 | [44645952434](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645952434) | **518 / 12**,530tests103 files | Mapa C7 completo abaixo | 36c7989,ccde747,e24aa85,4758184; shared28df867,29021f3,1aee8d2; demais pendentes |
+| 8 | [44645956665](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645956665) | **618 / 2**,620tests115 files | product/canonical-read-cost/diagnostic-cost.test.ts:13:26; product/wp05/planner-origins.test.ts:83:77 | 328960a664ed64c4db46e69bf30f24f9efb04c51;8392356be8a13c33eb4dec83e4e198f7b1806b37 |
+
+Snapshots:7=0cc9380fdc452c2da328a787e207396c4040c5e1;8=13f88387091b7db295a73aca0d20fb3859a56ae7.
+
+## Mapa C7/C8 atualizado
+
+| Causa | Falhas originais (file:line) | Evidência atual / próximo passo |
+| --- | --- | --- |
+| C7.1 validade da autoridade durante preparo | product/wp12/native-execution-scenarios-review.test.ts:39:72 → :55:25 | Gates44658317657=11/1 e44662130965=23/1; mesmo scenario-or-authority-changed,719650.91ms/611255.76ms. 23 controles novos PASS, original não. **UNBOUND; dois gates no mesmo ponto, sem terceira execução focada. PR 403 draft/não mergeado.** |
+| C7.2 período/campos + baseline observado | product/wp12/native-execution-dependencies.test.ts:60:21 | Fix ba7200ea39f7bc56a97c33301b2d8ccd06ad3d77 + helpers B dda42a61; checkpoints c044ba0 preservam37 asserções/prazo420s. Primeiro44658954003=0/1,139 asserções. Composição #414/#420/#424 no44666613719=20/1,272 asserções,613.77s:10metric+10persistence verdes, original timeout reportado549513.57ms. Última fase iniciada decision-choose, após units157.389 s e criteria17.897s. Segunda falha do original→UNBOUND, sem terceiro gate focado. |
+| C7.3 resposta Planner | product/wp12/native-execution-questions.test.ts:340:73 | Original passou no 44656420362. Nova fixture corrigida em 50ce9319b03ae52ec3871043161c19b17c49a1b3 passou 1/0 no 44658520809; PR 400 mergeado |
+| C7.4 custo BI09,2 casos | product/bi-cost-waterfall/rendering.test.ts:20:11;112:7 | Gate 44657153397:ambos PASS62.1s/57.6 s dentro dos105 s; PR 401 mergeado |
+| C7.5 import/report legado | product/wp02/import-report-consumer.test.ts:100:25 | Migração nativa4758184b6ef9abc61bf57ec7b08481bb78d5c8c3; gate 44656058658:1/0,71 asserções; transportado e mergeado em443 |
+| C7.5 Dashboard legado | product/wp02/dashboard-browser.test.ts:74:66 | Migração3e23044; 44663298380=0/1,25 asserções,60.40s. Segundo44666208536=0/1,25 asserções,55.64 s no Save:97:72; controles #423=5/0,58 asserções. Chrome conectou em ambos, não é falha de launch. UNBOUND. Causa adicional de produção: mapa deviations canonicamente ausente; #437 produtor mergeado após18/0 e #423 cliente mergeado com5/0. O original continua UNBOUND; sem terceiro gate focado. |
+| C7.6 cache Atlas single-use | product/wp10/analysis-composition/historical-memory.test.ts:292:100 | PR 398 mergeado; gate 44654168008:15/0,1495 asserções em5 arquivos |
+| C7.7 recuperação Atlas | product/wp10/atlas-business/atlas-recovery.test.ts:137:32 | Fix 36c7989ecf8b836af893de22a293092e4cbd09ba; gate 44650347644:1/0,37 asserções; mergeado443 |
+| C7.8 estático | product/work-split/work-reuse/static-gates.test.ts:12;budget:28 | Run 44674216763: sete typechecks e15/16 comandos PASS; agregadoFAIL apenasguarddev/godfile-waivers.json e script/spawn-allowlist.json. Correções457/459 e workflow453 mergeados. Aprovação real ausente; UNBOUND para o mesmo gate, sem sf-ci |
+| C7.9 admissão removida | product/diagnostics/calculation/source-observation.test.ts:86:29 | Fix ccde74734b19f78aab0aa64ac0f301e5a4d379c0; gate 44650428648:2/0,27 asserções; mergeado443 |
+| C7.10 identidade + oracle AM02 | product/integrated-proofs/am02/performance-public-c16-reopen.test.ts:160:42;175:43 | Fixes9643737ac1b2a0c475af283dddc72db70d81a81c +e24aa85b0c8d88d0cd007b977ff84ff73eca8f30; gate 44653652279:1/0,194 asserções,revogação final alcançada; mergeado443 |
+| C8.1 pin/proveniência | product/canonical-read-cost/diagnostic-cost.test.ts:13:26 | Fix 328960a664ed64c4db46e69bf30f24f9efb04c51; gate 44649157618:2/0,40 asserções, mergeado443. Após438, pin realC2b3584b9 atualizado e gate 44671622213:2/0,40 asserções,35.45 s; produtor+pin mergeados atomicamente438. Após #442, o pin C5917a488 / PR 463 passou no escopo histórico completo de 115 arquivos: 44676183011 = 620/0; merge ad7bf8a6bea5dc8bcc436f39ebd861eeb935f7ee |
+| C8.2 driver original Node | product/wp05/planner-origins.test.ts:83:77 | Fix 8392356be8a13c33eb4dec83e4e198f7b1806b37; caso PASS3.669 s no44654104426; dois casos sensibilidadeA2 também PASS; helper e oito consumidores com expectSpawn mergeados em #443. Revalidação histórica completa 44676183011: 620/0, sem falta ou extra no inventário de 115 arquivos |
+
+## Gates executados por causa
+
+| Causa | Run | Pass / fail | Snapshot | Fonte / resultado |
+| --- | --- | --- | --- | --- |
+| Pin | [44649157618](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44649157618) | 2/0 | 96211198e61056d3ee17d1710d74ea4b0f16bcad | 328960a;40 asserções |
+| Atlas recovery | [44650347644](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44650347644) | 1/0 | 0007a30900ff798c893cdf6d74362b688572fb48 | 36c7989;37 asserções |
+| Source observation | [44650428648](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44650428648) | 2/0 | 011e889380002daf99536c75c829062a6e270389 | ccde747;27 asserções |
+| AM02 identidade | [44650813269](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44650813269) | 0/1 | e805ecb442655cde05efc584b3f0937658754df6 | 9643737;novo ponto175:43,146 asserções |
+| AM02 oracle completo | [44653652279](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44653652279) | 1/0 | 96b648684730b2b0e81a71370ce8adf80b77db25 | e24aa85;194 asserções |
+| WP05 Node driver | [44654104426](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44654104426) | 12/1 | a29d447 (SHA completo no run) | 8392356;1057 asserções,113.27 s,8 files; único fail sentinel privado hidden colide com atributoHTML |
+| Atlas completo | [44654168008](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44654168008) | 15/0 | 8b696e (SHA completo no run) | 28df867;1495 asserções,1127.47 s,30Omni spawns0 delegations |
+| Private types | [44654714455](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44654714455) | 1/0 | 40a0506 (SHA completo no run) | 1aee8d2;typecheck exit0,30.4 s;1spawn0 delegations |
+| Sentinel privado | [44655693464](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44655693464) | 0/1 | a26d54b83d29e88e72407a0fdae4bb2343b57f65 | 617815c3399db344bf951fa3569d41766a3eb268;57 asserções anteriores PASS;infraChrome launch14667 ms |
+| Import nativo | [44656058658](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656058658) | 1/0 | e1a61cd4671e57b4b40674d8133f7e01fbb934af | 4758184;71 asserções,3.168 s,2spawn0 delegations |
+| Planner answer inicial | [44656420362](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656420362) | 1/1 | 07f3eadb2488aed5a7078fbbf784504f6e91d376 | eaf906;97 asserções;originalPASS,newfixtureFAILrecipient absent |
+| Owner-ready | [44657002119](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657002119) | 3/0 | 366a84276250b782ab46c4b1809dd1d77a43babf | 4d8c786;41 asserções,1.69 s |
+| BI completo | [44657153397](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657153397) | 9/0 | 3d6bce8f3a4828ed2cd0fddd59118c76f6356eee | 29021f3;376 asserções,420.63 s;drilldownA2 não incluído no filtro |
+| Contexto approval guards | [44658251806](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658251806) | 59/0 | b893ed5fb43e1bbcf66972f08634a7fd55578271 | cd7c1e0;361 asserções,215 ms;testes não são aprovação real |
+| Cenários Planner inicial | [44658317657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658317657) | 11/1 | 577f5d4c91bc144a41afbb40075ab0ae95438339 | b84fd723; 201 asserções; original :55 scenario-or-authority-changed |
+| Planner recipient fixture | [44658520809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658520809) | 1/0 | 103b0b4f8c23c49741a254f34fd24949e9c05bff | 50ce9319; 32 asserções, 14.42 s; original já passou |
+| Dependencies C04 | [44658954003](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658954003) | 0/1 | 9f37bb3281b788a880b5b94ce9d0f524a106950d | bcbc0a30; 139 asserções; timeout após preparo completo, sem aumento |
+| Portfolio inicial | [44660248357](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660248357) | 4/3 | a8bae72fe29c80a6282b94af14c6ccd921017e07 | 05e2d751; 31 asserções; fixture não remontava, não falha da admissão inicial |
+| Signals | [44660432596](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660432596) | 14/0 | fff4d205916ad9896b6d93270358c4373df17b10 | 492c06aa; 183 asserções, duas invocações 12/0 + 2/0 |
+| Result selection + B6 | [44660844009](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660844009) | 30/1 + 1 error | c88eebfd04eff94b1ba300fda409eb83198e5cb4 | debed39; 223 asserções; semantic-union-source-scenario.test.ts:50 portfolio-analysis-changed, 180007.25 ms; PR 414 continua draft |
+| Portfolio remount real | [44661234622](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661234622) | 4/0 | 739472f5450cc0f590e3fe5c0eb4e88acd661966 | b07ed52; 60 asserções, 1.493 s |
+| OPEX captura inicial | [44661576715](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661576715) | 0/2 | c7b7a1a455504ebfbd2d11f95e85227164f833c3 | cf961ffd; budget-conflict.test.ts:48/115; captura structuredClone do Proxy Solid diverge da serialização JSON real; corrigida em867fe10 e segundo gate verde abaixo |
+| WP00 docs exatos | [44661599225](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661599225) | 8/0 | 6999937050aeeb5d6839f87027dc26d2c7ab094c | fa25e59; 401 asserções, 358 ms |
+| Cenários, comparação pública | [44662130965](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662130965) | 23/1 | 96b53bb186df47815ce7189b77e8db7a2b45d754 | 0c15b8a;265 asserções; 615.08 s; original:55:25 scenario-or-authority-changed repetiu; UNBOUND, parar esta causa |
+| WP00 contrato11 | [44662549289](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662549289) | 5/0 | d9284bc1079b580af9d6224c5d2b141ee02a0d6f | f86d423;913 asserções; 174 ms; merge417;38artefatos/aceitação BLOCKED preservados;407posterior invalidava somentepinhost; revisão12 #426 posteriormente5/0mergeada |
+| OPEX captura JSON real | [44662953944](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662953944) | 2/0 | f3319eed26f2ec6160566c5fe2af098b1db16678 | 867fe10;21 asserções; 1.63 s; PR 412 mergeado |
+| Dashboard nativo inicial | [44663298380](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663298380) | 0/1 | b0ba743540c727a63f3a579e718a9fb5cb041626 | b1a092b;25 asserções; 60.40 s,52 totais; driverNode/Chrome conectados, novo desvio não chegou à asserção final |
+| Summary settings | [44663777161](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663777161) | 21/0 | bd5bdf42b0c23386501d48a5237fedab330708d7 | 849f00b;9/0+12/0,7913 asserções; PR 421 mergeado |
+| C09 batch + selectors + B6 | [44663788472](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663788472) | 49/1 | 75f6a0dfc518e171d213f6ec2a3e0cae563b9316 | source9d370bc;405 asserções; 236.31 s; 49controlesPASS, original B6 timeout180011.22ms. Log novo não imprime :50/reason; mesmo teste após segundo gate, UNBOUND. PR 414/420 drafts |
+| Budget period | [44664293983](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664293983) | 5/0 | f5fa0449c154ea355bdac91a61c53a6ae2d9783b | f201956;107 asserções; 1.84 s; PR 422 mergeado |
+| Primeiro desvio + Dashboard | [44666208536](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44666208536) | 5/1 (original0/1 + controles5/0) | b108d7fa4d9385c33840944fb56ceb78de3ebc06 | source3216ee4;83 asserções; original Save:97:72 após25 asserções, segundo mesmo ponto→UNBOUND |
+| C7 metric/persistence/dependencies | [44666613719](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44666613719) | 20/1 | 6b61ae5160d1cc2e3fac144f2d6f6840c5125d2f | source 6704378a414d787aa321305ab9d78ae6f96387d2;272 asserções;10metric+10persistencePASS,dependencies420sUNBOUND |
+| Document conflict | [44667039756](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667039756) | 2/0 | 7fd2096159136d00803089b4d9b44aa0d7b8447e | #4270fff307;54 asserções; 2.67 s;mergebe192011 |
+| Analysis egress | [44667507711](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667507711) | 3/0 | df5d7fe31e32d2737b51f4f26a0a814880e3c5ee | #428 c62c817;25 asserções; 13 filtered;merge573678d |
+| Runtime native | [44668010002](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668010002) | 3/1 | 2030026bbd1c3329f4b492d7e3b3d642caec9e7c | source fdbf7c790fb7838009243b323b6c72530679d92b;26 asserções;browser45 s,hostready11.838 s,Chromeconnected11.925 s depois; UNBOUND diagnóstico insuficiente: bloqueio entre runtime-http:173–183 após goto172PASS; sem DOM/trace capaz de identificar o await, sem novo gate especulativo |
+| Canonical deviation projection | [44668705164](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668705164) | 18/0 | 3f6c0e11f319770b91e98605e5025e9614b491b2 | #43754f0e9d;1386 asserções; 1219 ms;mergeb180588 |
+| Native public-state | [44668708981](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668708981) | 3/0 | c5125ef206690b1f5464275aa82eb00d80d378f0 | C2a71e601a50d990f27381f649d705ff5f38b0b15;source084226;25 asserções; 3.91 s;timeoutoriginal30 s |
+| Procurement explicit draft/refusals | [44669199777](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669199777) | 4/0,55 asserções; 12.76 s | 65db150c81c01b1ee3667fa9c34a310ab469c96b | C7e133b7+1cc82d5;source084226;intençãofalse explícita e recusa real de PO |
+| AM04 receipt collision | [44669202348](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669202348) | 1/0,24 asserções; 7.77 s | 7b85405efc1d3a7767166733e1ca28304a936ac7 | C16a7026;source084226;mesma Request admitida e recibo/digest reais, sem leasefabricada |
+
+O incidente Chrome do sentinel foi investigado: importsBun329ms/Node217 ms, ChromePID4178 em espera deIO(folio_wait_bit_common) por~11 s e depois futex, Browser.getVersion1sent0received; cleanup3.239 s confirmou ausência dos2PIDs. **unbound de infraestrutura**, não prova de bug de privacidade. Nenhum rerun idêntico nem aumento de prazo foi feito.
+
+### Gates causais recentes
+
+| Causa | Run | Pass/fail | Fonte | Snapshot / observação |
+| --- | --- | --- | --- | --- |
+| Workbench nativo + CaseRef440 | [44669527682](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669527682) | 17/0,327 asserções; 8.88 s | 124f767dc0542b3f0a3c25ff5d24f7c00919a495 | 2ad694730945c99a9c8ad98fa4e08f90ad5ef8ce;16Workbench+1CaseRef; fixCf2e13d29f9238a736dab23fc3b0ac26201790327 |
+| HistóricoPlanner | [44669530310](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669530310) | 3/0,168 asserções; 80.24 s | be37121d52fe4522db79288a585e877612e9aec0 | 79dd251a1cd75d2d2cb48a27278f8f216539405b; Cfix 049ed587a22103b7e49aa6a5a0e066748689fe21 |
+| Revisão12WP00 | [44669752250](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669752250) | 5/0,913 asserções; 178 ms | 42926f460f6e1b5195aad2be39ecf200e4a5ef71 | 690563b2ec4d9a3812f1ff7874fe7bcf0bbbc0ff |
+| Analysis-observer inicial | [44670026731](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670026731) | 20/1,145 asserções; 40.50 s | a75cb770a51319639a7b3b8a10e8138f8d3e9925 | 3184dc29525f6dab67128b08ab63d483ad6d738f; novo teste189:8 esperava par de refusals errado; os4recovery e9scenario-batch passaram |
+| BI chooser original | [44670030550](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670030550) | 1/0,73 asserções; 7filtered69.57 s | 0126d7330ebe36549a9c9b70ffb3ea95327d0219 | caad3ab06959818138ea7f7bb6ea298c1c84e2d6; Cfix 8e71e07e907b02be635d4f98aaf0638816f7b429 |
+| Revogação escopo | [44670481763](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670481763) | 1/0,20 asserções; 8filtered26.60 s | 0126d7330ebe36549a9c9b70ffb3ea95327d0219 | 8dfb6c091e53b8a348fee83dae2670c933a32d25; resposta denied/case-selection-authority-changed evalueausente |
+| Analysis-observer corrigido | [44670811024](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670811024) | 21/0,148 asserções; 40.85 s | 53df24e94fccd448d36e7512ff7bde250def9241 | 51475bf7f369c8abd097163023df376de6f43b2d; par ordenado unavailable/result-unavailable,denied/result-access-unavailable;3reads4cases4sources |
+| Pin real após438 | [44671622213](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44671622213) | 2/0,40 asserções; 35.45 s | 43a2dcebfed2cabfa01934f8b9bee0987dc134ac | 3f5dac23c8c06b906cb536353cec6901cfbda930; SHA256result-store d35d43b872eee637c913397ec72157757fba9c4daa29d8a9dee499b030879722 |
+| C12 native receipt recovery | [44672589617](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44672589617) | 0/2,10 asserções; 87.55 s | d0ccac815e8e688aab1b7e699f586cc0d4be0af6 | 0b15101cfe495422ffc72eab36bcf558171786a5;2casosoriginais120s/90 s; Review/Apply humanos, resposta perdida, same-key retry, CAS, reopenSQLite e Recover reais |
+| Static Actions isolado453 | [44672678428](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44672678428) | FAILURE: 13 erros TS | d0ccac815e8e688aab1b7e699f586cc0d4be0af6 +1885dd769e8100520b15e0596e76bf8525e23b28 | b5d3371e6288ba445e2af5480f7b2e052e6f1b68; 16 comandos reais, um job de 22 min, guards estritos sem aprovação, não sf-ci; sucessor 44674216763: 15/16 comandos PASS, bloqueio de aprovação real persiste |
+
+## Tabela agregada dos oito shards
+
+Resultados pedidos aos branches `sf-shard-a` / `sf-shard-b` e conferidos nos handoffs, snapshots e logs. A tabela registra a última enumeração observada, completa ou explicitamente parcial. **Nenhum PASS focal foi subtraído dos FAIL históricos.** Somente C8 recebeu nova execução completa do mesmo inventário histórico: 620/0 em 115 arquivos. Sua enumeração inicial 618/2 permanece na seção original e no apêndice. Os índices abaixo pertencem à partição histórica de 883 arquivos; o plano LPT atual exige seleção própria a partir da árvore real.
+
+| Shard | Branch | Run | Pass | Fail | Causas | Unbound / limite atual |
+| --- | --- | --- | ---: | ---: | --- | --- |
+| 1 | sf-shard-a | [44657265518](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657265518) | 576 | 29 | UI legada; C12; Portfolio; HTTP; histórico/revogação; documentos; deadlines anuais | Completo:605 testes, 113 arquivos. Workbench, public-state, procurement, AM04, histórico e revogação têm gates verdes e merges443/447/444. Runtime3/1 e C12 original0/2 em dois gates continuam UNBOUND. Driver462:3/0 e merge; não qualifica Chrome/C12. BI fallback sem equivalente nativo integral; os dois anuais repetiram105s no44702605427=0/2+7filtered,23expects:UNBOUND, #503 draft, sem terceiro gate. #513/#514 entraram no44700768736=6/3; Runtime3HTTP PASS/browser global45s FAIL após fase open new risk editor. Quatro casos/59expects/45s preservados no source; nenhum PASS A1 integral atribuído; Runtime também UNBOUND. Labels 44705613843, com 2/0, e merges #512/#522/#523 qualificam somente componente, leitura e tipos; não requalificam esses casos. |
+| 2 | sf-shard-a | [44661562191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661562191) | 508 | 6 | Chrome; recall; chooser BI; Atlas | Completo: 515 testes, 107 arquivos, +1 skip e +1 error. Chooser 447: 1/0; Atlas 398: três casos PASS; WP05 Node 443: dois casos de sensibilidade PASS. Recall de 120 s aberto. Gates focais não tornam esta enumeração verde. |
+| 3 | sf-shard-a | [44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967) | 250 emitidos | 22 emitidos | Console legado; capacity/semantic WP05; WP13/BI deadlines; C12 oráculos; URLs BI legadas; corpus WP00 | CANCELADO, sem footer:66/99 arquivos iniciados, 33 não iniciados; review-answer-confirmation interrompido sem FAIL do caso:99. Sentinela procurement PASS; corpus415 qualificado fora desta fonte. BI URL467=2/0, concorrência465=3/0, semantic469=3/0 mergeados; capacity passou no recorte Node44654104426. Executive21/0 e navegação3/0 mergeados. Captura44692520124=2/3 passou mensal/types. Contratos44695495535=3/3 passou três tipos, mas IO1 import-reference:136:12 UNBOUND por diagnóstico insuficiente, IO2 Suppliers Create confirmProcurement:698:10→441:5 e visual CAP25/helper:123:41 falham. Settings/Imports44687035682=4/5:Imports4/0, Settings UNBOUND no helper:48; #483 bloqueado. Novo44700768736=6/3:mensal/tipos/RuntimeHTTP PASS; IO2reloadCAP28:342:12 e visual global120s/CAP17chart bounds:262 FAIL, IO1 excluído. Imports492/493 mergeados pelos quatro controles completos, sem verde IO. Nova prova44704002754=3/1+1filtered:mensal/types PASS; SupplierCreate:531:10→244:9 (caller físico213–215) repetido ficaUNBOUND. Não inclui Runtime/visual/IO1. Labels44705613843=2/0 e merges512/522/523 não alteram estes recibos nem qualificam Runtime/visual. Nenhuma nova enumeração completa A3. |
+| 4 | sf-shard-b | [44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692) | 497 | 14 | AM01; C03 browser; native execution; recovery; S10 | Completo:511 testes, 118 arquivos. Fatias430/406 mergeadas; C03 44670314438=1/0 mergeado em456. Batch19/3 passou cinco perfis em807555.68ms, portfolio-recall240s continua aberto. Purchase completo2/0 no44685754065=85/3. S10 original repetiu dois pontos no44667978696=16/2:UNBOUND. Native44691117568=10/9+2errors mantém reevaluation300s e recovery1/5. Novo44692805693=25/5 repete dependencies420s e C17 deadline; C091/1 não qualifica conjunto. B44694563909 terminou9/7 (BI4/1, recovery5/1, materiality0/3, fallback0/1, reevaluation0/1), sem novo full. Gates posteriores41/2 e42/13 têm seleções próprias e não substituem estes511 testes. |
+| 5 | sf-shard-b | [44645913808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645913808) | 576 emitidos | ≥21 observadas | Performance/sensibilidade; Atlas; links BI; coverage; freeze; UI/transporte; cálculo | CANCELADO, sem footer:20 marcadores FAIL+uma asserção adicional sem marcador, +1skip; 105/119 arquivos iniciados, 14 não iniciados. Atlas398, freeze12 426 e fatias430 qualificadas. Cálculo24/0 e case-scope5/0 preservados; ancestry44688234714=53/3 foi sucedido por C09/ancestry/dependencies44692805693=25/5, com seleção diferente. Sensitivity44688998064 terminou por40min:54PASS/5FAIL emitidos, sem footer; dois arquivos não iniciados e promotion incompleto. WP01 isolado passou types/HTTP/views no44691215826 e mensal/types no44692520124; 508/506 mergeados. Novos44697043402=41/2 e44697048009=42/13 são completos em suas próprias seleções; promotion8/0, Planner observation21/7 e Portfolio observation5/1 não completam retroativamente o54/5 interrompido. #515/#521 integram produto e sete controles exatos de presença, qualificados separadamente e sem atribuição ao inventário histórico. Não somar recortes para substituir o inventário histórico. |
+| 6 | sf-shard-b | [44651628624](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651628624) | 409 | 23 | UI nativa; Portfolio; CAS; Planner/Forecast; baseline; locator; AlternativeDraft; chooser; host lifecycle | Completo:434 testes, 109 arquivos, +2skip. Semantic-union B6 repetido:UNBOUND. NativeSourcing3/0, 4353/0 e review47016/0 são recortes; 433 e470 mergeados. #495/#496 e populado#464 NOT_QUALIFIED; ausência constatada somente na composição255b798, não transferida para c945. Fases físicas85/3 passam Planner19/0, mixed16/0, observação17/0 sem cobrir o populado36calls. Native44691117568=10/9+2errors:Dashboard2/0, memória4/0, BI3/2, recovery1/5, fallback0/1, reevaluation0/1. Sensitivity parcial mantém semantic-union e exact-threshold vermelhos. B44694563909 terminou9/7 (BI4/1, recovery5/1, materiality0/3, fallback0/1, reevaluation0/1), sem novo full. Posteriores41/2 e42/13 mantêm semantic-union180s, coverage300s e exact-threshold285s vermelhos; Planner observation21/7 e Portfolio5/1 têm seus próprios terminais. |
+| 7 | sf-shard-c | [44645952434](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645952434) | 518 | 12 | Cenários; dependencies; Planner; BI; import; Dashboard; Atlas; static; admissão; AM02 | Cenários, dependencies e Dashboard atingiram duas falhas:UNBOUND. Outras causas focadas qualificadas em400/401/398/443; cliente423=5/0 e produtor437=18/0 mergeados. Static44674216763:sete typechecks PASS, 15/16 comandos, dois paths protegidos sem aprovação. B dependencies continua FAIL no25/5 de44692805693; isso não autoriza repetir a causa C. C em 8e8e82dc preserva a integração qualificada 83a4ad2d por join verdadeiro, incluindo labels/filtros 2/0. IO2 em 44704002754 continua 3/1 + 1 filtered e UNBOUND; nenhuma nova execução completa do shard 7 verde. |
+| 8 | sf-shard-c | [44676183011](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676183011) | **620** | **0** | Pin do produtor real; transporte Node | **Escopo histórico integral verde:** 620 testes, 115 arquivos, 30843 asserções, 881.49 s. Inventário log = request, sem falta ou extra. Fonte 7bed88e6977cdd6de674ad80352d0f7460311f2c; snapshot 968d5cdd857ea6d4305df5a337bca9c8c6641ff9; pin 463 mergeado. A enumeração original 44645956665 foi 618/2. Este resultado não representa a partição LPT atual nem oito shards verdes. |
+
+Não há total global completo ou GO: as enumerações de 3 e 5 foram interrompidas, e os demais resultados históricos vermelhos não foram substituídos por execuções integrais verdes. Os arquivos/linhas originais e os inventários não iniciados permanecem nos apêndices. Os gates focais posteriores são descritos separadamente.
+
+## Pendente
+
+1. Preservar o terminal [44695495535](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44695495535), fonte `f8471d0dedbde58023b36dcccff42a7acf5be85a` / snapshot `fa882d983bb96b0f0ab4155c016e025c24e0b241`: 3/3, com os três typechecks canônicos PASS. IO1 GET import-reference em `io-browser.test.ts:136:12` ficou UNBOUND após três auditorias sem causa concreta; não repetir para obter logs nem ampliar os 10 s. IO2 foi identificado como Suppliers Create pelo URL observado e pela sequência de Settings. O candidato #518 não obteve qualificação integral. Visual CAP25 em `fixture/native-response-capture.ts:123:41` tem a correção de teste #520, revisada estaticamente. O gate 44700768736 terminou 6/3 + 1 filtered, fonte 4fbeaba / snapshot c02110c, cleanup success. Mensal, tipos e Runtime HTTP passaram; IO2 reload CAP28 em :342:12, visual global de 120 s / CAP17 chart bounds em :262 e Runtime browser de 45 s continuaram FAIL. IO1 foi excluído. A barreira de navegação de #520 e os nove callers de IO2 em #494 entraram em 44704002754, fonte caa5cd / snapshot d11dab: terminal 3/1 + 1 filtered, 22 expects, 129.19 s, cleanup success. IO2 avançou por Reset, SettingsSave e suas leituras; falhou em SupplierCreate, helper :531:10, caller Bun :244:9 / fonte :213–215. É o mesmo ponto de 44695495535: **UNBOUND após duas falhas, sem terceiro gate**. SupplierRead e upload não foram qualificados. Essa seleção excluiu Runtime, visual e IO1. #509/#510 não têm merge ou PASS integral das jornadas atribuído. #512 foi integrado no controle de leitura/labels 2/0, sem qualificar IO, Runtime ou visual. O primeiro IO1, fonte 36a3de / snapshot 068213, conserva seu 0/1 e diagnóstico insuficiente original de contexto.
+
+2. Preservar os limites dos verdes: C8 qualifica os 115 arquivos de seu escopo histórico; #465 qualifica três casos de `operations-fixes/c12-concurrency.test.ts`. O C12 original `recovery-ui.test.ts` não está em #465 e continua UNBOUND. Review #470, semantic #469, rollback #473, Executive #475/#479, navegação #478/#486 e WP01 #508/#506 já estão qualificados nos escopos descritos e mergeados. Imports #492/#493, presença #515/#521 e leitura/labels #512/#522/#523 também estão mergeados. Os sete controles do blob e06 são uma fatia separada, sem atribuição aos oito inventários históricos ou à partição LPT atual. O controle de labels e seu entry têm alcance de componente; o auxiliar de tipos da prova ficou fora do merge. Esses merges não substituem os totais dos oito shards.
+
+3. #403 cenários, #414/#420 B6, #424 dependencies, Dashboard e C12 originais atingiram duas falhas no mesmo ponto: **UNBOUND; sem terceiro gate focal**. O anual 44702605427 repetiu os dois limites de 105 s, e Runtime 44700768736 repetiu a região anterior ao primeiro Save; ambos seguem a mesma parada. SupplierCreate de IO2 também repetiu o ponto em 44704002754, após 44695495535: UNBOUND, sem terceiro gate. Settings repetiu os cinco FAIL em `settings-refresh.test.ts:48:13` após RangeError: UNBOUND, #482 sem qualificação e #483 bloqueado. #502 compõe a jornada IO original; seu progresso não qualifica aqueles cinco testes nem autoriza terceiro gate da mesma causa.
+
+4. Runtime nativo 44668010002 terminou 3/1, com 26 asserções: três HTTP PASS e `goto:172` PASS; espera em `:173–183` sem DOM/trace. O diagnóstico dessa fonte permanece UNBOUND. [#513](https://github.com/gustavomhss/Orchestra-SF/pull/513), HEAD `f477a7d173efdc33324cb3d536ccb31cabb907db`, omite opcionais undefined no Save Risks/Stakeholders. [#514](https://github.com/gustavomhss/Orchestra-SF/pull/514), HEAD `c9abede45a242e74aba6f893d3673e92c62729d8`, isola quatro casos Runtime e 18 linhas de fases, preservando 59 expects e 45 s. Em 44700768736, os três casos HTTP passaram e o browser esgotou 45 s após a fase open new risk editor, sem localização do await específico; a jornada Runtime é UNBOUND, sem terceiro gate. A fonte 4fbeaba compõe #512/#513 e o driver atual; não repetir apenas por logging, nem atribuir PASS A1 por isolamento. BI fallback antigo continua sem equivalente nativo integral; preservar o console descomissionado. Os anuais A1 terminaram 0/2 em 44702605427, fonte b84e1f1e / snapshot fe1f430b: declarações :576/:609, fixture :50:29, ambos com limite de 105 s; #503 segue draft/UNBOUND. #512/#522/#523 foram qualificados em 44705613843, com 2/0, e mergeados. A fixture foi corrigida para local-operator antes do primeiro gate. Esse controle de componente/leitura não executa Save/#513/CAS, não estabelece autenticação instalada e não requalifica Runtime, visual ou recibos históricos.
+
+5. B 44694563909 está terminal: 9/7, 601 expects, 16 testes em 5 arquivos, 873.44 s; fonte `c9450280f19d93bc8be8ffeb863eefcf00d99e45` / snapshot `b55323b9b407c605c02cad7b510cd5eba2e027b9`, cleanup 136154434077 success. Restam BI 1, recovery 1, materiality 3, fallback 1 e reevaluation 1; as linhas e evidências estão no checkpoint B acima. Não transferir verde integral para #491/#507/#511. Os terminais 44697043402, com 41/2, e 44697048009, com 42/13, partem de ddae09, ambos com cleanup success; suas 15 falhas e distribuições estão acima. Promotion 8/0 tem alcance completo nesse arquivo da nova fonte, sem qualificar todo B. #515 e #521 integram somente os dois blobs de produção e o arquivo com 7/0, blob e06, exatos à fonte de 41/2. B HEAD 0c863 / handoff d1d562 mantém os inventários; seus estados antigos de execução não prevalecem sobre os terminais Actions. Preservar 25/5 (C09/ancestry/dependencies), 10/9 + 2 errors (native anterior), 54 PASS / 5 FAIL parciais (sensitivity) e 53/3 (ancestry anterior). Revisar #495/#496 e o populado `92c9cbbf3013a2202fd30270273b6f37c9e48435` na árvore atual; nenhum gate listado cobre o corpus populado de 36 calls. Preservar resolveMany/fallback sequencial de #424; dependencies B não autoriza repetir o gate C bloqueado.
+
+6. O guard de `origin/dev` continua exigindo aprovação real para `godfile-waivers.json` e `script/spawn-allowlist.json`, embora ambos sejam idênticos à base. A regra `script/guards/rules/protected-paths.toml:17–19` exige label real, e #397 não possui essa aprovação. #402 transporta aprovação verificada; #453 registra o FAIL estrito. Não fabricar label, aprovador ou token, nem repetir o gate pelo mesmo bloqueio.
+
+7. Preservar os 33 arquivos A3 e 14 B5 não iniciados, os casos interrompidos e os totais históricos. Sensitivity B 54/5 também deixou dois arquivos selecionados não iniciados, promotion :312 sem terminal e :379 não iniciado. Os mesmos dois arquivos observation têm 21/7 e 5/1, e promotion tem 8/0, somente no novo 44697048009; conservar as lacunas da execução antiga. Manter os 346 arquivos históricos B (118/119/109, incluindo porta/**) e seus skips reais, sem redistribuir esses inventários por LPT. A leitura dos oito shards ainda tem lacunas; não deduzir totais finais de recortes.
+
+8. WP01 e captura já integrados: #508 merge `865447b2f30345b263545f73b2a4146ba8822a11` e #506 merge `d345454edea4dc4cfe793bc0e285ac5f787e3af3`. C merge `7cce3c92b7fe49c15571c681581fa13388b6ddee` preserva a união real do driver e incorpora essa integração; nenhuma execução completa de C decorre desse merge. Os joins 19e7f625 e 18dffc682 também incorporaram Imports #492/#493 e presença #515/#521 da integração f917. O commit causal 916be9c altera o helper e nove navegações IO2, preservando IO1 nativo de C; teve prova própria 3/1, sem verde integral por integração. O checkpoint de código C `8e8e82dc9790dbff6a754a5ef91e2880dba4c9d3` incorpora a integração `83a4ad2d97417f6047cf4580fd2bdfd6a7434319` e acrescenta o código e os controles qualificados de labels #512/#522/#523, mantendo as propostas UNBOUND. Conservar as provas específicas 44691215826/44692520124 e não qualificar as jornadas IO/visual ainda vermelhas por associação.
+
+9. A jornada visual original continua pendente, agora por timeout global de 120 s após atravessar CAP25, com última etapa CAP17 Overview em 1440 px: chart bounds (:262). #512 permitiu progresso além de CAP13 na fonte f8471d0, sem PASS integral. Manter 140 cliques, 28 rotas, 5 larguras, 44 capturas, os mesmos oráculos geométricos, financeiros e People, owner/revogação/cleanup e os prazos de 120 s / 10 s. #520 HEAD 31d8cb72 / blob 0ed9e981 está no terminal 44700768736, com 6/3; o mensal e os tipos passaram, mas o visual não completou os oráculos. Investigar custo/await com a fonte e os logs, sem presumir falha geométrica. Não repetir visual apenas porque a barreira IO2 mudou; o gate 44704002754 o excluiu. O primeiro viewport consumiu cerca de 104 s após setup, com as transições e screenshots ainda sob investigação; nenhum controle menor substitui as 140 visitas. As provas de componente Executive/nav e o novo labels 2/0 têm escopos distintos e não requalificam o visual. Se o mesmo ponto repetir duas vezes, parar a causa e registrar UNBOUND.
+
+10. Integrar somente PRs isolados efetivamente qualificados. #397 continua draft, com candidatos e causas UNBOUND; #410 mantém seus inventários não qualificados. #476 publica este checkpoint documental sem trazer código C/B. C 44695495535 terminou 3/3, B 44694563909 terminou 9/7 e os posteriores B 44697043402/44697048009 terminaram 41/2 e 42/13, todos com cleanup success. C 44700768736 terminou 6/3 + 1 filtered, com cleanup 136170615335 success; anual 44702605427 terminou 0/2, com cleanup 136176405884 success. IO2 44704002754 terminou 3/1 + 1 filtered, com cleanup 136180547949 success; SupplierCreate é UNBOUND após duas falhas. Labels 44705613843 terminou 2/0, com teste 136184334613 e cleanup 136185300767 success; #512/#522/#523 estão mergeados. A última coordenação conferida é [#410/7034807319](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7034807319). Conferir os status e cleanup atuais antes de reservar vaga; máximo de dois gates simultâneos. #513/#514/#477/#518/#494/#520 continuam sem qualificação integral; #503 e Runtime estão UNBOUND. O controle de labels não requalifica essas paradas; mensal, tipos e prefixos executados conservam somente o alcance observado. Os gates de produto da sessão estão terminais. A consulta também observou o workflow estático 44706194930, depois terminal completed/failure, fora da auditoria deste handoff; conferir a fila atual antes de nova reserva. Nenhum `sf-ci`.
+
+## Decisões e justificativas
+
+- Mantidos o console descomissionado e `runtime/application.ts` intactos. Nenhuma navegação à porta proibida. Fixtures novas usam o host nativo, portas efêmeras ou a porta3000 da instalação IO original, identidade criptografada original, comandos reais e SQLite.
+- Asserções e controles preservados; nenhum baseline, coverage, digest ou GO inventado; nenhum prazo ampliado.
+- O pin C8 tem cadeia de proveniência do produtor real. AM02 compara exatamente seis efeitos C08 idempotentes e mantém snapshot completo e última revogação. A nova execução de 115 arquivos fornece seu próprio footer e inventário.
+- Memória Atlas cria uma observação nova após consumo, verificando novamente fonte/C08; não reclassifica token gasto. O cache BI mantém a prova completa no escopo real, sem conceder autoridade global.
+- Aprovação de guards é uma decisão humana efetiva e verificável. Nenhum label de aprovação foi aplicado. O resolver valida snapshot único, blob da request original, PR/head/base/labels/permissões atuais, e repete a verificação antes de transmitir; falha fechado. As bases `origin/dev` e do PR real foram mantidas.
+- Se o mesmo ponto falha duas vezes, parar a causa e registrar UNBOUND. Uma alteração posterior exige causa concreta distinta; não se repete um snapshot idêntico para tentar obter número melhor. Gates completos e focais mantêm âmbitos explícitos.
+
+## Como retomar
+
+Ler os HEADs e comentários atuais de #397/#410/#441, a partir de [#410/7034807319](https://github.com/gustavomhss/Orchestra-SF/pull/410#issuecomment-7034807319). Este checkpoint fixa **código C `8e8e82dc9790dbff6a754a5ef91e2880dba4c9d3` e integração `83a4ad2d97417f6047cf4580fd2bdfd6a7434319`**; a publicação documental posterior não muda essas referências de código. A e B foram reconferidos em `ace8a3263cf3a8c3546824ddb339a93e351cfb33` e `0c863fd6450653cf93bec1212c33635341ce53dc`. O parent documental deste fechamento é `9062ef29a40b125c573bcb21a2d29fd6c49b7548`.
+
+Labels 44705613843, com 2/0, qualificou o componente/leitura e tipos; coleção 9810a25 e testes f710533/893995 são exatos à fonte ed9c022. Merges #512/#522/#523, Imports #492/#493, presença #515/#521 e WP01 #508/#506 têm somente os alcances descritos. O auxiliar collection-types, blob 3b0e, ficou fora do merge. Os sete controles de presença e o controle de labels são fatias separadas, sem atribuição aos inventários históricos ou à partição LPT atual.
+
+IO2 44704002754, com 3/1 + 1 filtered, preserva mensal e tipos PASS, mas SupplierCreate (:531:10 → :244:9 / fonte :213–215) repetiu e está UNBOUND; SupplierRead e upload não foram alcançados. IO1 import-reference permanece UNBOUND sem causa residual demonstrada. Runtime de 45 s e anual 44702605427, com 0/2 no limite de 105 s, atingiram a parada após duas falhas. Settings #482 continua UNBOUND e parity #483 bloqueado; C12 original, cenários, dependencies e as demais paradas não foram reabertos. Visual de 120 s requer correção causal de custo mantendo 140 cliques e 44 capturas. Nenhum desses casos é requalificado por controles menores. Não há outro gate de produto autorizado e qualificável nesta sessão sem violar essas paradas.
+
+B conserva seus terminais 9/7, 25/5, 41/2 e 42/13 e os recortes incompletos; preservar os 346 arquivos históricos, os 33 A3 / 14 B5 não iniciados e todos os totais. Pre-await #495/#496 e populado 92c9 exigem auditoria da composição B e qualificação explícita; os guards protegidos continuam exigindo aprovação real. Os gates de produto listados estão terminais. A consulta também observou o workflow estático 44706194930, depois terminal completed/failure; seus logs e sua causa não foram auditados aqui. Consultar novamente a fila e os cleanups antes de qualquer nova reserva. Não subtrair recortes dos totais históricos.
+
+Para um gate futuro autorizado e sustentado por correção concreta, criar snapshot filho alterando somente `.ci-run.json`; o runner Node aceita somente `*.node-smoke.mjs` e não usa args Bun. Static #453 usa prefixo `ci-static-sfc-*` e não dispara `test-ci` / `sf-ci`. Máximo de dois gates relacionados simultâneos, incluindo cleanup; nenhum rerun idêntico ou terceira execução focal de causa UNBOUND. Antes de cada merge, conferir diff/blob exato e CAS do head, preservando o código já integrado e os quatro branches proibidos. Não executar `sf-ci`.
+
+## Comandos e resultados
+
+Nenhum comando foi executado em shell. Requisições Actions usam `package: sucafina`, `directory: modules/sucafina`, `runner: bun`, `args: [--timeout, 30000, ...caminhos]` e `ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=1`. A forma literal `SF_SUITE_ID` / `SF_SHARD_INDEX` / `SF_SHARD_COUNT` não é aceita pelo validador da base; a enumeração inicial derivou `suites.json` + SHA256(path) mod 8 e branches `ci-run-linux-*`. A seleção inicial tinha 883 arquivos, distribuídos em 113, 107, 99, 118, 119, 109, 103 e 115. Depois, #413 introduziu `script/sf-ci/shard-plan.mjs` com LPT determinístico e cobertura/disjunção completas do manifesto atual. Custos históricos parciais são heurística. A revalidação C8 usou os mesmos 115 paths históricos explícitos; a partição final atual deve ser derivada da árvore real. Não chamar `sf-ci`.
+
+- `bun typecheck` canônico: exit 0 no 44654714455; antes havia 21 erros reais da fixture.
+- `check:guards --base origin/dev`: resultado original 2 GATE, 194 WARN, 0 errors; #425 observou os mesmos dois protegidos sem novo gate. Não há PASS global real; a aprovação específica continua pendente.
+- Testes de transporte de aprovação: 59/0 no 44658251806, sem efeitos de aprovação.
+- `sf-ci`: nunca executado.
+- Merges próprios registrados:399/398/404/401/402/400/409/411/415/417/412/421/422/430/406/432/427/428/437/423/440/426/443/447/444/438/451/456/457/459/453, seguidos de462/467/463/465/469/473/470 em `sf-join-four`; SHAs e limites acima. #451 tem PASS causal A3 e composição Node NOT_REVALIDATED. #433 foi mergeado externamente; sua composição isolada470 passou16/0 e foi mergeada. #466 também foi mergeado externamente, com limite ancestry explícito. Os merges recentes508/506/492/493/515/521/512/522/523 e seus limites estão no checkpoint atual. Outros merges da sessão de integração estão no handoff `sf-continuation`.
+
+
+## Atualização agregada — A3 terminal e gates B posteriores
+
+### Shard 3: enumeração mais recente, cancelada
+
+[Run 44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967), [job 136054050430](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967/job/136054050430), fonte `a86e22c9654663a72bd55586059a4254f548c742`, snapshot `3caf96c9115b30f8a1150532e08b4a1714345a4a`. O job foi cancelado; cleanup 136070755205 terminou `success`. Contagem direta: **250 PASS / 22 FAIL emitidos, sem footer Bun**, 66/99 arquivos iniciados e 33 não iniciados. Não são totais de uma execução completa.
+
+A sentinela procurement passou em 1845.38 ms. As falhas de capacity e semantic-discriminants eram novas nesta enumeração, ainda com helper anterior sob Bun. A contagem de PASS também não alcança quatro casos finais. Não inferir regressão da composição Node #443 a partir dessa árvore anterior. A evolução posterior de semantic está no gate #469 em execução.
+
+Caminhos abaixo relativos a `modules/sucafina/Sucafinav1/test/`. Linhas vêm do log, exceto a declaração de timeout indicada explicitamente.
+
+| # | Falha file:line | Causa observada |
+| ---: | --- | --- |
+| 1 | `io-browser.test.ts:26:35` | Console retirado; conexão recusada na jornada Planner XLSX. |
+| 2 | `io-browser.test.ts:114:16` | Console retirado; conexão recusada na jornada Documents/supplier CSV/Members XLSX. |
+| 3 | `visual-layout.test.ts:37` | POST ao console retirado; ECONNREFUSED. |
+| 4 | `product/wp05/capacity-numeric.test.ts:76:22` | Click aguardava marca visível/estável (10 s), seguido do timeout do caso de180 s; nova falha nesta enumeração. |
+| 5 | `product/wp05/semantic-discriminants.test.ts:85` | Timeout de90 s do segundo caso; linha de declaração, sem await interno identificado. |
+| 6 | `product/wp13/sensitivity-units-boundary.test.ts:54` | Timeout de30 s reportado76670.17 ms; replay-ready só em74764 ms. |
+| 7 | `product/wp13/persistence-recovery.test.ts:21` | Lost-binding reply; timeout de30 s reportado31838 ms. |
+| 8 | `product/operations-fixes/c12-concurrency.test.ts:34:44` | Na enumeração histórica: esperava 409, recebeu 200. Oráculo de receipt-first corrigido e três casos posteriormente qualificados em #465; o FAIL histórico permanece registrado. |
+| 9 | `product/operations-fixes/c12-concurrency.test.ts:103:106` | Na enumeração histórica: esperava 409, recebeu 200; mesma família. Evolução qualificada em #465, sem alterar esta contagem parcial. |
+| 10 | `product/installed-bi-closure/numerical-coverage.test.ts:20:11 (omitted training)` | Deadline165 s; último estágio advantage.persist. |
+| 11 | `product/installed-bi-closure/numerical-coverage.test.ts:20:11 (confirmed training)` | Deadline165 s; último estágio advantage.persist. |
+| 12 | `product/installed-bi-closure/numerical-coverage.test.ts:20:11 (zero training)` | Deadline165 s; último estágio advantage.persist. |
+| 13 | `product/installed-bi-closure/numerical-coverage.test.ts:20:11 (null training)` | Deadline165 s; último estágio advantage.persist. |
+| 14 | `product/wp12/native-execution-bi-kpi.test.ts:312:131` | HTTP 200, mas a URL esperada do BudgetOverview legado não apareceu. URL nativa posteriormente qualificada em #467. |
+| 15 | `product/wp12/native-execution-bi-public-selection.test.ts:326:146` | HTTP 200, mesmo contrato de URL legado. URL nativa posteriormente qualificada em #467. |
+| 16 | `product/bi-cost-waterfall/presentation.test.ts:17:20` | Promoções sequenciais/totais pendentes: deadline105 s. |
+| 17 | `product/bi-cost-waterfall/presentation.test.ts:66:50` | Custos confirmados completos: deadline105 s. |
+| 18 | `product/bi-cost-waterfall/presentation.test.ts:97:14` | Contribuições zero/opostas: deadline105 s. |
+| 19 | `product/bi-cost-waterfall/presentation.test.ts:113:19` | Custos null/missing: deadline105 s. |
+| 20 | `product/bi-cost-waterfall/presentation.test.ts:133:11` | Equivalência Portfolio persistida: deadline105 s. |
+| 21 | `product/bi-cost-waterfall/presentation.test.ts:242:19` | Current source/BI10/BI11: deadline105 s. |
+| 22 | `product/wp00/baseline-corpus-coverage.test.ts:60:231` | Metadados arquivais fixtureBindings/executionStatus ausentes nesta fonte; restauração415 já qualificada em outra árvore. |
+
+Em `product/wp08/review-answer-confirmation.test.ts`, o primeiro caso `:14` passou em 81077.31 ms. O caso `:99` estava em execução no cancelamento, último marcador `edit-stale real-answer-edit` aos 45735 ms; **não emitiu FAIL**. Os casos `:127` / `:161` / `:188` / `:228` não começaram.
+
+Os 33 arquivos não iniciados foram conferidos comparando os 99 argumentos do snapshot com 66 headers distintos do log. Caminhos relativos a `modules/sucafina/Sucafinav1/test/product/`:
+
+```text
+c12-receipt-recovery/normal-retry.test.ts
+reports-draft-reconciliation/installed-read-integrity.test.ts
+review-fixes/finance-resume-performance/journey-phase.test.ts
+review-fixes/import-recovery/apply-restart.test.ts
+ui-split/ui-source/static-checks.test.ts
+ui-split/ui-work/static-gates.test.ts
+wp02/backup-consumer.test.ts
+wp02/keyed-update.test.ts
+wp02/kpi-comparison.test.ts
+wp02/prepared.test.ts
+wp02/review-completion.test.ts
+wp02/signals.test.ts
+wp02/workbench-recovery.test.ts
+wp06/documents/resolver.test.ts
+wp06/imports/dashboard-backup-e2e.test.ts
+wp06/imports/end-to-end.test.ts
+wp06/imports/planner-roundtrip-runtime.test.ts
+wp06/imports/roster-runtime.test.ts
+wp06/imports/sqlite-planner.test.ts
+wp08/answer-reuse.test.ts
+wp08/case-selection-cas.test.ts
+wp08/collaboration-journey.test.ts
+wp08/confirmation-real-dependencies.test.ts
+wp08/mutation-fence.test.ts
+wp08/work-presentation.test.ts
+wp10/integration/browser-bundle-literals.test.ts
+wp10/integration/dashboard-preview.test.ts
+wp10/integration/memory-services.test.ts
+wp10/integration/portfolio-reconciliation.test.ts
+wp10/integration/store-read-scope.test.ts
+wp10/integration/ui-authority.test.ts
+wp10/memory-integrity/identity.test.ts
+wp10/native-host/execution-host-guard.test.ts
+```
+
+### Gates B verificados depois das enumerações
+
+| Causa | Run | Resultado | Fonte | Snapshot | Falha/limite |
+| --- | --- | --- | --- | --- | --- |
+| C03 transporte | [44667407691](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667407691) | 0/1,10.37 s | 16fc1f1cf07a52f4cb6d02c3b509c29384cc97f9 | 6c529ac61e56d777dc0c42d12bb4540d2588079f | wp07/browser-ui.test.ts:257:11; navegação de enrollment interrompe goto autenticado com chrome-error://chromewebdata |
+| C03 enrollment isolado | [44668069860](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668069860) | 0/1,17.68 s | c94011c7ad425389e3a91392d6d16203bc816241 | 08082b4996eeab03d7ba3f815b3339f00eadf9b3 | browser-ui.test.ts:233:29; launch15000 ms antes de enrollment; ponto diferente do run anterior |
+| C03 corrigido | [44670314438](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670314438) | **1/0**, 28.47 s | 42209cab9081705f63133ca3fe8b4ef28ff660df | 82bbd5b7dfa0bd9de444c0a58cb3f419e3c08412 | Job 136069432415 e cleanup 136070089399 success; caso 28136.72 ms, driver exit 0 e cleanup físico. Fatia isolada #456 mergeada em aa751dd731ce91f126a00488dfce16022bb8cb2d. |
+| S10 composição | [44667978696](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667978696) | **16/2,288 asserções; 1007.23s** | e325d5b2382267e1bc7a9df4f29453f4a365cec8 | eeffac552972d6c9b1e41f668127a358409bd732 | coverage-sensitivity-integration.test.ts:22,300 s e:141→renewal-choice-fixture.ts:65→fixture-trace.ts:15,180 s; repetem44657814166:UNBOUND |
+| NativeSourcing | [44668567443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668567443) | 3/0,27 asserções; 422 ms | c6dde2ba43db83445e2043d9064eaa41dbade9fb | 51eba3c3f73eb79112fdc065b80ec426e1dc3e5e | NativeHTTP503 quando runtimeausente e403origin/path; não prova execução real de modelo |
+| shared435 | [44667463947](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667463947) | 3/0,30 asserções; 169 ms | 0a31f6c8fe5c5020165c6225212ad1b3a13c3548 | cb3103d440c34074a8669ab3ff19c0b87abd90d7 | AlternativeDraftnull/zero/stale; merge 82d2041d80784e2d905f99dee3bca91c63ef8350, não B6 |
+| Portfolio441 composto | [44670599697](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670599697) | **41/4 + 1 error**, 529 asserções, 1921.93 s | 91bcd283b6c4fbd9bc9575d232cbc62ddea9630b | af31e465c7dc4a69c9cb4b2d0327350506b54c05 | 45 testes / sete arquivos; purchase pending e complete excederam 360 s, reevaluation 300 s; erro native-choice-preparation.ts:36:70; dependencies:60:21 ainda com fixture antiga. A regressão pre-await de #441 não está neste snapshot. Job 136070349396; cleanup 136082200909 success. |
+| Memória436 composta | [44670534535](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670534535) | **28/2**, 508 asserções, 1604.24 s | 91bcd283b6c4fbd9bc9575d232cbc62ddea9630b | 032dcd4942b8992c2ed639233d0fbcd7700f40ee | 30 testes / quatro arquivos; portfolio-recall-proof.test.ts:19/:148 excedeu 240 s e recall-five-profiles.test.ts:24/:166 excedeu 900 s. Scope tests 5/0 + 23/0. Job 136070139366; cleanup 136080103134 success. |
+| Review B completo | [44675050868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675050868) | **16/0**, 490 asserções, 495.24 s | 50e2222b18cb44081df4a8ea9afea46204f12555 | a8b68069ec781c07ab073f3fa67daf3bce81121e | review-portfolio-http.test.ts completo: prova de invocação, Memory residente, revogação HTTP/case/session, histórico, purge privado e 200 tardio. Produtor #433 exato; fonte inclui #414. Job 136084789076; cleanup 136088092695 success. Não transfere qualificação para #470; o gate isolado atual está em execução. |
+| Rollback SQLite | [44673967393](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44673967393) | **18/0**, 542 asserções, 2.60 s | 32c97d3b4de5bb7960ca42f816b11ea37f594541 | 24f4bfc7c4671ff69b90961da988419b8f7c6cff | Quatro arquivos: handoff-domain-integration, transaction-abort-provenance, application-indeterminate e execution-reconciliation. #442 integrado. Job 136081255780; cleanup 136081581758 success. |
+| Cálculo #434 | [44674214842](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44674214842) | **17/4**, 304 asserções, 550.43 s | 32c97d3b4de5bb7960ca42f816b11ea37f594541 | 04c442a9584126630779f0aaf65ca72e34223a20 | planner-calculation.test.ts:430 → composition-test-deadline.ts:5: reopen-and-recall excedeu 105 s. Três controles clock/principal/lease em :796: applied esperado 1, recebido 0. Job 136082056424; cleanup 136085769892 success. |
+| Native host | [44673683546](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44673683546) | **0/1**, quatro asserções; caso 24377.14 ms | 32c97d3b4de5bb7960ca42f816b11ea37f594541 | 5010ab9f8923b779e994e30382216c0d1af3bcf0 | planner-monthly falha em browser-driver-fixture.ts:385, após browser-connected: Node AbortError no EOF, pipeEnded true / WS sem fechamento limpo. Chrome conectou em 13.122 s. Job 136080339921; cleanup 136080883492 success. |
+| Half-close B | [44674551510](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44674551510) | **1/1**, quatro asserções, 44.96 s | 50e2222b18cb44081df4a8ea9afea46204f12555 | 92bb4482b19ece9eedd6d96b774d8f8d66e647d3 | wp07/browser-ui PASS em 33234.68 ms. wp01/planner-monthly.test.ts:68: forecast ausente em 11306.17 ms, pageerror ServerConnection2.key is not a function. Fix B 7f3afaed6b767e2ddde4a1294f912dff94c37bc7; Job 136083160822, cleanup 136083804268 success. |
+| Identidade canônica #461 | [44675653919](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675653919) | **0/3**, três casos / dois arquivos, 24.20 s | e9f3ce75e387369686816cad758d24e3c72a1f9e | 33c8cfbbb0c845c21608c2f8f6745a529f4c7365 | planner-monthly.test.ts:24 → browser-driver-fixture.ts:288: launch ~15 s, Chrome em IO e Browser.getVersion pendente. wp01/http.test.ts:32: EISDIR fast-check; terceiro FAIL em test-omni-control.ts:75. Não qualifica funcionalmente a identidade. Job 136086719194; cleanup 136087320438 success. |
+| Dependencies B, fixture corrigida | [44675888290](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675888290) | **0/1**, 124 asserções, 551.87 s | e9f3ce75e387369686816cad758d24e3c72a1f9e | dfe256cf9aeeafc13afdc4d06f261e2364190786 | native-execution-dependencies.test.ts:43 (declaração), limite :180: 420000 ms; caso 550613.45 ms. Sem stack do await interno; emissores e preparação C09 real já concluídos. Fix B c58ca0b9d4f56d81867fa3e9406657117defe03b; blob c38fe5e3ca0ab3a4601d7bbde7c0610a15edc7a7. Job 136087500794; cleanup 136091191761 success. Evidência B posterior; C permanece UNBOUND. |
+
+No S10, os 16 PASS são cinco negativas de integração, quatro `sensitivity-read-scope`, quatro `renewal-case-read-scope` e três `renewal-read-scope`. O primeiro caso continuou emitindo marcadores durante o bootstrap do segundo; não há prova de duas causas independentes de lentidão.
+
+Auditoria WP05 na integração `124d`: 42 arquivos TypeScript, oito consumidores de `inspectWp05Browser`, todos com `expectSpawn`. `semantic-discriminants`, `consumer-dashboard` e `render-completion-browser` usavam `chromium.launch` direto e não foram alterados pela migração #443. #469 agora migra somente os discriminantes semânticos para o driver Node com declaração real; seu gate está em execução, sem resultado atribuído.
+
+## Nota sobre os apêndices históricos
+
+Os apêndices seguintes preservam integralmente as enumerações e diagnósticos disponíveis em cada checkpoint. Quando um status histórico diverge do estado atual — por exemplo, A3 anterior, chooser C8 ou pin — prevalecem as tabelas atuais e os novos runs identificados acima. A evidência antiga permanece para comparação. Gates focais e resultados parciais continuam separados de uma execução completa.
+
+## Apêndice — última enumeração completa A1/A2
+
+Prefixo: modules/sucafina/Sucafinav1/test/. A1 run44657265518:576pass29fail; cada linha abaixo é um caso, não contagem de marcadoresduplicados. Os apêndices seguintes conservam a enumeração inicial para auditoria.
+
+| # | Shard | File:line | Causa / estado |
+| --- | --- | --- | --- |
+| 1 | 1 | runtime-http.test.ts:146 | browser45s; migração Cfdbf7c7 gate44668010002=3/1,26expects;Chromeconectou; investigação concreta pendente |
+| 2 | 1 | parity-polling-browser.test.ts:10 | console retirado |
+| 3 | 1 | business-browser.test.ts:22→49 | formulário retirado |
+| 4 | 1 | business-browser.test.ts:210 | duas abas do console retirado |
+| 5 | 1 | product/wp13/source-scenario.test.ts:32 | timeout180s |
+| 6 | 1 | product/installed-bi-closure/temporal-contract.test.ts:12 | deadline165s |
+| 7 | 1 | product/installed-bi-closure/temporal-contract.test.ts:69 | deadline165s; stack61 é cleanup |
+| 8 | 1 | product/wp12/native-execution-portfolio.test.ts:14→native-portfolio-preparation.ts:150 | oraclebaselineC04 |
+| 9 | 1 | product/wp12/native-execution-portfolio.test.ts:134→native-portfolio-preparation.ts:150 | oraclebaselineC04 |
+| 10 | 1 | product/wp01/workbench-analysis.test.ts:144 | fixture nativa Cf2e13d29f9238a736dab23fc3b0ac26201790327 +parser440 prontos para gate |
+| 11 | 1 | product/wp01/workbench-analysis.test.ts:380 | PR428mergeado;gate44667507711=3/0,25expects;fence403preservado |
+| 12 | 1 | product/c12-receipt-recovery/recovery-ui.test.ts:72 | rótulo Retrysameapplication ausente,UIreativaApply |
+| 13 | 1 | product/c12-receipt-recovery/recovery-ui.test.ts:197 | recoveryseletor/decision-recover após200perdido |
+| 14 | 1 | product/wp02/host-workbench.test.ts:147 | HTMLretirado |
+| 15 | 1 | product/wp02/host-workbench.test.ts:280 | conflictdraftlegado |
+| 16 | 1 | product/wp02/host-workbench.test.ts:468 | revogaçãoconsolelegado |
+| 17 | 1 | product/wp10/integration/bi-fallback-lifecycle.test.ts:49 | redirectBIlegado |
+| 18 | 1 | product/wp10/integration/analysis-stale-calculation.test.ts:303 | unavailablevsactualhistorical |
+| 19 | 1 | product/wp10/integration/analysis-stale-calculation.test.ts:346 | injeçãoprivatereadnãochamada |
+| 20 | 1 | product/wp10/integration/analysis-stale-calculation.test.ts:410 | injeçãoadmissãoprivadanãochamada |
+| 21 | 1 | product/wp10/integration/public-state.test.ts:49 | C2a71e601native;gate44668708981=3/0,25expects;privacidade e armazenamento intactos |
+| 22 | 1 | product/wp10/analysis-composition/alternative-selection.test.ts:456 | guardexternodeniedapósrevogação,wrapperesperavaok |
+| 23 | 1 | product/wp10/analysis-composition/alternative-selection.test.ts:573 | annualdeadline105s;draft:58571.161s |
+| 24 | 1 | product/wp10/analysis-composition/alternative-selection.test.ts:606 | annualdeadline105s;draft:61849.286s |
+| 25 | 1 | product/wp06/documents/ws3-rejection.test.ts:65 | PR427mergeado;gate44667039756=2/0,54expects;stale409real |
+| 26 | 1 | product/review-fixes/procurement-apply/refusals.test.ts:29 | estágioindisponível403vsoracle400 |
+| 27 | 1 | product/review-fixes/procurement-apply/refusals.test.ts:59 | seedLegacyChangemissingconfirmedfalse |
+| 28 | 1 | product/review-fixes/procurement-apply/refusals.test.ts:96→preparationInput:122 | missingconfirmedfalseantesmixedmutation |
+| 29 | 1 | product/integrated-proofs/am04/receipt-key-collision.test.ts:53 | probeC08novarequestsemlease;colisão55–60nãoalcançada |
+| 1 | 2 | product/wp05/sensitivity-integration.test.ts:9→browser.ts:9 | Chrome180s+error; driverNodefocadoCverde,semqualificaçãodofull |
+| 2 | 2 | product/wp12/native-execution-collaboration-recall.test.ts:143 | timeout120s |
+| 3 | 2 | product/wp10/integration/bi-call-scope.test.ts:402 | chooserBI;C8e71e07aguardagate |
+| 4 | 2 | product/wp10/memory-integrity/revocation-tail.test.ts:87 | Atlas398focadoverde;ausentenestesnapshot |
+| 5 | 2 | product/wp10/memory-integrity/revocation-tail.test.ts:104 | Atlas398focadoverde;ausentenestesnapshot |
+| 6 | 2 | product/wp10/memory-integrity/revocation-tail.test.ts:124 | Atlas398focadoverde;ausentenestesnapshot |
+
+A2 latest44661562191:508pass6fail,1skip1error,9142expects1791.93s; o executivo passou após2ee5e961. O skiplocal-backups.test.ts:209 épreexistente. Nenhuma subtração de testes focados foi usada para essas contagens.
+
+## Apêndice — evidência original detalhada de C7/C8
+
+O trecho seguinte preserva o diagnóstico da enumeração inicial. Seus estados unbound e pendências são históricos; o mapa atualizado e os gates acima prevalecem.
+
+### C7.1 — preparação / autoridade
+
+O log vai de 00:35:49.585Z a 00:40:49.687Z, aproximadamente 300,10 s. `apps/cli/src/sucafina-product/analysis-http.ts:59–60` aguarda `runtime.inputs.prepare` e reautoriza o mesmo contexto; `product/integration/ui-authority.ts:45` aplica validade de cinco minutos, e `human-authority.ts:44–45` exige a autoridade atual. Há evidência forte de expiração durante a preparação, sem localização do custo interno. Não ampliar lease, manipular relógio ou fabricar aprovação. A investigação do produtor exige fatia `shared:` se houver alteração fora de test/**.
+
+### C7.2 — seleção de período / campos
+
+A fixture usa projetos correntes observados em 2026 como fontes de 2027 (`native-execution-dependencies.test.ts:53–56`). `product/dashboard/scope.ts:15` recusa esses snapshots fora do período observado; `product/dashboard/sources.ts:124–126` não transforma o array `milestones` em campo escalar. A projeção `milestoneDates` de 2027 perde `status` em `dashboard/scope.ts:30`, enquanto `apps/cli/src/sucafina-product/analysis-dependency-readers.ts:79–84` exige data, nome e estado confirmados. Uma troca isolada do ano ou dos campos não resolve a fixture. Retomar com projeto e marco coerentes com a observação, horizonte financeiro explícito e controles de homônimo, identidade, data e FTE preservados.
+
+### C7.3 — integração da resposta Planner
+
+O teste emite fonte Planner em `test/product/wp12/native-question-preparation.ts:50–59`, cria suporte/thread e lê resposta em `native-execution-questions.test.ts:281–289`. `product/collaboration/dispatch.ts:49–50` consulta `answerReuse.read`; `answer-reuse.ts:120–121` exige escopo válido mesmo antes de confirmar a resposta. `collaboration/host.ts:257–263` só tem fallback Dashboard quando `resolveAnswerScope` está ausente. A composição em `apps/cli/src/sucafina-product/business-services.ts:202–219` não fornece esse resolvedor, embora o observador de confirmação suporte Planner em `:192–198`. Diagnóstico estático forte; o erro observado omite o motivo interno. Retomar no produtor compartilhado mantendo manifest, fonte, dependências e fences de confirmação. Não trocar a fonte para Dashboard para obter verde.
+
+### C7.4 — BI09, antes do browser
+
+Nos dois casos, o timeout nasce em `test/product/wp10/integration/composition-test-deadline.ts:5:29`. No primeiro, `comparison.persist` leva 42.519 ms; `BI09.dispatch` inicia em 51.507 ms e retorna abortado em 105.032 ms. No segundo, comparação leva 41.373 ms; dispatch inicia em 48.600 ms e retorna abortado em 105.002 ms. Nenhum `browser.bundle` ou `browser.launch` foi alcançado. A fixture já usa horizonte de um mês e produtores reais; `apps/cli/src/sucafina-product/bi-services.ts:162–168` já usa `callScope.run`. Não há suboperação culpada comprovada; instrumentar a composição em fatia própria antes de corrigir, sem ampliar o prazo ou reduzir provas.
+
+### C7.5 — consumidores do console morto
+
+`runtime/application.ts:58–61` define o 404 `legacy console decommissioned — use /`; `:94–95` o aplica aos GETs HTML antigos. O teste de importação pede `page=IT+Risks` e exige 200; o teste de browser pede `page=OPEX+Detail&year=2026` e espera o formulário `save-entry`/botão Edit. O browser conecta e encerra normalmente neste caso. A falha não prova defeito dos produtores JSON/DOCX, pois esses passos não foram alcançados. Retomar migrando os consumidores para o host nativo com importação, conflito, rascunho, confirmação, foco e navegação preservados; não recriar o console nem editar o runtime proibido.
+
+### C7.6 — cache / observação Atlas
+
+`product/decision-memory/case-recall.ts:66` classifica e `:79` repete a classificação para confirmar o resultado. `product/host-binding/atlas-memory.ts:28–35` consome a marca privada de observação; `cloneSfAtlasRecallResult:41–45` só mantém a associação enquanto ela existe. `apps/cli/src/sucafina-product/memory-case-read-scope.ts:314–319` reutiliza o valor cacheado na segunda classificação. O log é consistente: uma leitura canônica Atlas concluída, `memory.prepare` em cerca de 12,952 s e `aborted:false`; o resultado observado é `analysis-source-unavailable`. Classificação estática forte, sem fix validado. Retomar renovando a observação canônica após consumo, mantendo o bloqueio de observações fabricadas/reutilizadas.
+
+### C7.7, C7.9 e C7.10 — correções restritas a testes
+
+- **Atlas:** o estado sem evidência passou a ser controle negativo explícito; restaurar o resolver real permite verificar o mesmo recibo durável com scanner offline. Nenhuma asserção anterior foi retirada. Gate 1/0, 37 asserções, 19,47 s; controle Omni real passou com 2 spawns e zero delegações.
+- **Observação Planner:** a quarta revalidação da chamada anterior remove a admissão em `ui-authority.ts:32`; `requestFor:70–72` retorna undefined e `planner-sources.ts:45–46` recusa antes do próximo callback. O fix prova essa ausência, exige o motivo exato da negação e zero transações/autenticações/revalidações/leitura preparada, mantendo ABA, egress, abort e estado durável. Gate 2/0, 27 asserções, 529 ms.
+- **AM02:** `source-lifecycle.ts:57–65` preserva incarnation/versão para fonte, escopo e digest intactos. `native-capabilities-fixture.ts:296–302` reabre o mesmo banco e troca host/geração, sem alterar a fonte. As referências devem continuar iguais; a autoridade se renova por novas sessões e recibos. As asserções de bindings antigos negados e novas sessões passaram no gate; a igualdade global posterior ainda falha conforme registrado acima.
+
+### C7.8 — gate estático, evidência integral
+
+O teste excedeu 120 s. O log contém, inclusive após o timeout do teste, os resultados dos comandos reais:
+
+- `WORK_REUSE_TYPECHECK 2`: **21 diagnósticos** em `test/product/operations-installed-finish/private-admission.check.ts`. Raiz de API desatualizada: chamada sem await e parâmetros `principalRef/readOnly` em `:66–72`; a factory atual em `packages/app-shell/e2e/sucafina/operations-support/installation.ts:29–42` é assíncrona e exige `operators`/`isAuthenticated`; `:150–156` devolve contribuições/discovery/services/application, sem o antigo dispose. Corrigir só await não migra o lifecycle e os comandos legados.
+- Diagnósticos: TS2353 `:67:47`; TS2339 `:72:44, :80:41, :121:39, :145:30, :147:12, :159:11, :161:80, :162:54, :175:12, :180:12, :180:131, :184:12, :185:54, :196:11, :199:49`; TS7006 `:159:55, :159:65, :180:58, :196:57, :196:67`.
+- `WORK_REUSE_GUARD_BASE 0`: fetch de `origin/dev` concluído.
+- `WORK_REUSE_GUARDS 1`: **78 regras, 6.183 paths alterados, 2 gate, 194 warn, 0 errors**. Gates em `godfile-waivers.json` e `script/spawn-allowlist.json`, protegidos e já diferentes de `origin/dev` na base de integração. Esses arquivos não foram alterados pela sessão C.
+- Não foi fabricado `GUARDRAIL_APPROVED`, acrescentada label nem alterada regra protegida. O resultado “0 errors” não significa guard verde: há dois gates sem aprovação observada.
+
+
+## Shard 8 — mapa por causa
+
+### C8.1 — identidade do produtor desatualizada: corrigida e validada
+
+- Falha: `test/product/canonical-read-cost/diagnostic-cost.test.ts:13:26`.
+- Pin anterior de `product/host-binding/state-provider.ts`: `ba10043704bbb1a25eb0f4a8edddcdca814ec7610157bc7c4d9d88d2970467f5`.
+- Bytes atuais na base: `bf0a5639bd41f903c67a89096b733269fbcd9eaf25392dde8c062fdcc13434c1`.
+- Proveniência: [c00b150b48f576a79a7c8b33f15c4fb55d72dfd1](https://github.com/gustavomhss/Orchestra-SF/commit/c00b150b48f576a79a7c8b33f15c4fb55d72dfd1), cujo pai é `2682f82da2650314e3437ab48b5c65e52c5b3fe4`, acrescentou `preferences`/`receipts` à união de tipos e à admissão de `selectSfNamespaceHealth`, nas linhas 39–40. Recomputação SHA256 dos arquivos obtidos do GitHub confirmou ambos os hashes. Aplicar somente essas duas alterações ao arquivo do pai reproduz integralmente os bytes atuais.
+- Fix restrito a `modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts`: um pin e seu comentário de proveniência. Os demais pins, teste, probe, recibo histórico e revisão histórica permanecem intactos.
+- Gate executou `diagnostic-cost.test.ts` e `native-ui-contract/namespace-health.test.ts`. Os controles de autoridade original, autoridade incorreta, revogação e ausência de conteúdo privado passaram.
+- O diagnóstico mede trabalho real; ele não contém asserção de teto numérico de custo. Esse verde confirma a execução com a identidade correta e controles existentes, sem demonstrar melhoria de desempenho nem qualificar P03.
+
+### C8.2 — clique no chooser e cleanup pendente: unbound
+
+- Falha primária: `test/product/wp05/planner-origins.test.ts:83:77`, origem B do BI03. O locator encontrou o botão correto, visível, habilitado e estável; o clique travou em “scrolling into view if needed” e excedeu 10 s.
+- Falha secundária de encerramento: `test/product/wp05/browser.ts:61` aguarda `fixture.dispose()`/`browser.close()` sem deadline depois de cancelar o timer. O log não registra fechamento/desconexão desse browser antes do timeout externo de 180 s.
+- Linha do tempo do run atual: BI02 concluiu entre 00:37:33.498Z e 00:37:35.719Z; BI03 começou às 00:37:36.131Z; origem A passou por mouse, foco, teclado e tabela; origem B começou às 00:37:36.935Z; o erro de clique foi registrado às 00:37:46.976Z; timeout externo às 00:40:33.426Z.
+- Contraprova histórica: [run 44590270877](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44590270877), job 135794077900, snapshot `f85c4ca344ee0a064d6f9a422f6d55d4c4b8dba2`, fix [b32a7a1fc9f9280aa54ca1708fe8764ef48c5ae6](https://github.com/gustavomhss/Orchestra-SF/commit/b32a7a1fc9f9280aa54ca1708fe8764ef48c5ae6) / PR #376: **1 pass / 0 fail**, 178 asserções, 23,37 s.
+- Blobs idênticos entre esse snapshot e a base atual: `product/analytics/view.ts`, `product/analytics/source-navigation.ts`, `test/product/wp05/browser.ts`, `test/product/wp05/planner-origins.test.ts` e `test/product/wp03/planner-fixture.ts`.
+- Runner image observada: verde histórico `ubuntu-24.04 / 20261116.376.1`; shard atual `ubuntu-24.04 / 20261111.370.1`. A diferença não estabelece causa. O verde histórico não é transferido ao shard atual.
+- Nenhuma troca de mouse por teclado, clique forçado/JavaScript, ampliação de timeout ou alteração de foco foi realizada. Corrigir só o cleanup não demonstraria solução para o clique. Sem fix causal concreto, não foi gasto rerun idêntico.
+
+
+## Apêndice — falhas originais A/B com file:line
+
+Diagnóstico original; correções e estados atuais estão no agregado e nos handoffs dos responsáveis.
+
+## Falhas A/B — evidência da primeira leitura
+
+Os mapas abaixo registram o comportamento observado, com classificações preliminares. Não atribuem correção de causa raiz às sessões A/B. Linhas de declaração são identificadas quando um timeout não fornece stack da instrução bloqueada.
+
+### Shard 1 — enumeração A interrompida
+
+[Run 44646013868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646013868), snapshot `a4bbf6b042526a0ee3f544243cfa67158236f871`, job 135988658580: **cancelled, N/D pass /N/D fail finais**. O log interrompido mostra 557 eventos pass,21 fail e0 skip, com102 dos113 arquivos iniciados; não há resumo Bun nem erro não tratado entre testes observado. Esses eventos não são o resultado final do shard. Último arquivo ativo: `test/product/wp10/analysis-composition/alternative-selection.test.ts`. O log diz “The operation was canceled”, e a API encerrou o run às01:13:00Z. Não foi inferida autoria de cancelamento. Classificações abaixo são preliminares; paths relativos a `modules/sucafina/Sucafinav1/test/`.
+
+| Falha (file:line) | Causa observada / unbound |
+| --- | --- |
+| `runtime-http.test.ts:169:55` | Add risk não encontrado em30s; seletor/fluxo legado |
+| `business-browser.test.ts:22:26` | ERR_CONNECTION_REFUSED em localhost:4110 Settings; dependência legada de porta fixa |
+| `business-browser.test.ts:210:16` | ERR_CONNECTION_REFUSED em localhost:4110 Suppliers |
+| `parity-polling-browser.test.ts:10:16` | ERR_CONNECTION_REFUSED em localhost:4110 Settings |
+| `product/installed-bi-closure/temporal-contract.test.ts:12:7` | Deadline165000 ms; BI10/BI09; custo interno unbound |
+| `product/installed-bi-closure/temporal-contract.test.ts:61:151` | Deadline165000 ms; persistência Portfolio retorna abortada |
+| `product/wp02/host-workbench.test.ts:147:16` | Falha HTTP em /sucafina/auth/local; status exato não impresso |
+| `product/wp02/host-workbench.test.ts:280:16` | Falha HTTP em /sucafina/auth/local |
+| `product/wp02/host-workbench.test.ts:468:16` | Falha HTTP em /sucafina/auth/local |
+| `product/wp13/source-scenario.test.ts:32 (declaração)` | Timeout180000 ms; await interno não localizado |
+| `product/c12-receipt-recovery/recovery-ui.test.ts:72:17` | Retry same application não visível em30s |
+| `product/c12-receipt-recovery/recovery-ui.test.ts:197:57` | [data-recover-change]:enabled não visível em30s |
+| `product/wp12/native-execution-portfolio.test.ts:14; product/wp12/native-portfolio-preparation.ts:150:26` | Total esperado null, recebido 240000; portfolio |
+| `product/wp12/native-execution-portfolio.test.ts:134; product/wp12/native-portfolio-preparation.ts:150:26` | Total esperado null, recebido 240000; sensitivity |
+| `product/wp01/workbench-analysis.test.ts:144:27` | Prepare HTTP200 esperado, recebido 400 |
+| `product/wp01/workbench-analysis.test.ts:380:27` | Após alteração de acesso: HTTP403 esperado, recebido 200; preservar negativo |
+| `product/wp10/integration/public-state.test.ts:49:28` | GET Dashboard legado esperado 200, recebido 404 |
+| `product/wp10/integration/bi-fallback-lifecycle.test.ts:49:16` | Falha HTTP em /sucafina/auth/local |
+| `product/wp10/integration/analysis-stale-calculation.test.ts:303:28` | scoped.state esperado unavailable, recebido historical |
+| `product/wp10/integration/analysis-stale-calculation.test.ts:346:10` | Preflight esperado denied/analysis-stale-access-unavailable, recebido ok com sourceFence |
+| `product/wp10/integration/analysis-stale-calculation.test.ts:410:23` | Flag de injeção fired esperada true, recebida false |
+
+### Shard 2 — enumeração A
+
+[Run 44646018333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646018333), snapshot `dcb0c68d7e866b4df2153eadd26fda2eab45b266`, job 135988673159: **504 pass / 10 fail**, mais **1 skip e 1 error**, 515 testes em 107 arquivos, 2.278,24 s. O skip existente é `test/local-backups.test.ts` (root estrangeiro exige privilégios de fixture). O erro não tratado é o timeout tardio de Chromium; não constitui um décimo primeiro teste falho. Classificação preliminar pela evidência do log, sem fix A validado nesta leitura.
+
+Paths desta tabela relativos a `modules/sucafina/Sucafinav1/test/product/`, salvo `runtime/local-store.ts`, relativo a `modules/sucafina/Sucafinav1/`.
+
+| Falha (file:line) | Causa observada / unbound |
+| --- | --- |
+| `mixed-source-contracts/recorded-fallback.test.ts:11:7` | Deadline cooperativo165s; custo interno unbound |
+| `wp08/thread-period-continuity.test.ts:17` | Hot Topic day excede30s; declaração parametrizada, await interno não localizado |
+| `wp05/sensitivity-integration.test.ts:9; wp05/browser.ts:9:34` | Timeout180s; Chromium launch falha em fixture-setup, erro não tratado tardio; stack também teste:43:9 |
+| `operations-fixes/document-search.test.ts:5; runtime/local-store.ts:55:16` | SQLITE_IOERR na abertura SQLite; storage/fixture/auth |
+| `wp12/native-execution-collaboration-recall.test.ts:143` | Timeout120s, duração reportada286,487s; ponto interno unbound |
+| `wp12/native-execution-executive.test.ts:213:31` | Esperava unavailable/analysis-source-unavailable; recebeu denied/case-selection-unavailable |
+| `wp10/integration/bi-call-scope.test.ts:402:56` | BI retornou sem drilldown de registro Planner |
+| `wp10/memory-integrity/revocation-tail.test.ts:87:22` | Positivo producer.prepare indisponível; possível família observação Atlas, não comprovada neste teste |
+| `wp10/memory-integrity/revocation-tail.test.ts:104:29` | Positivo verifier.verify indisponível antes da revogação |
+| `wp10/memory-integrity/revocation-tail.test.ts:124:29` | Positivo verifier.verify indisponível antes da aceitação/revogação |
+
+### Shard 4 — enumeração B completa
+
+[Run 44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692), snapshot `dd45d888617943df40e02815d58b59f88d8a18f7`, job 135988262742, attempt 1: **497 pass /14 fail**,511 testes/118 arquivos,2.480,75s. O estado transitório queued foi o cleanup, não um rerun. Classificação preliminar sem fix B validado nesta leitura. Paths relativos a `modules/sucafina/Sucafinav1/test/product/`; o produtor `product/integration/product-authority.ts` é relativo à raiz Sucafinav1.
+
+| Falha (file:line) | Causa observada / unbound |
+| --- | --- |
+| `wp13/handoff-persistence.test.ts:95:29` | Preparação: esperado ok, recebido stale; validade de escolha |
+| `wp13/coverage-sensitivity-integration.test.ts:115:109` | Verificador aceitou objeto alterado após validação final: esperado false, recebido true; integridade de egress |
+| `wp13/handoff-domain-integration.test.ts:392:39 (chamador :65:93)` | Canonical Procurement preparation unavailable |
+| `wp13/handoff-c08-predispatch.test.ts:242:200` | Retomada: esperado ok, recebido conflict; idempotência |
+| `wp13/handoff-canonical-integration.test.ts:176:200` | Retomada: esperado ok, recebido conflict; idempotência |
+| `proof234/am04-c12-return.test.ts:78:18; c12-receipt-recovery/consumer.ts:81:43` | Authoritative receipt namespace unavailable |
+| `wp12/native-execution-reevaluation.test.ts; wp12/native-portfolio-preparation.ts:150:26` | Total esperado null, recebido 240000; contrato de total/cobertura |
+| `wp12/native-execution-purchase.test.ts (pending); wp12/native-procurement-preparation.ts:193:43` | Total esperado null, recebido 240000; contrato de total/cobertura |
+| `wp12/native-execution-purchase.test.ts (complete); wp12/native-procurement-preparation.ts:193:43` | Total esperado null, recebido 240000; contrato de total/cobertura |
+| `wp07/browser-ui.test.ts:45:41 (captura :500:21)` | Erro HTTP em /sucafina/auth/local; entrada legada |
+| `ui-split/ui-source/draft-replay.test.ts:32:27` | Replay esperado 200, recebido 403; autorização |
+| `ui-split/ui-work/guards.test.ts:23:18` | Guards exit 1, base0; arquivos protegidos |
+| `integrated-proofs/am01/portfolio-recall-proof.test.ts:19 (declaração; budget :148)` | Timeout240000 ms sem stack do await interno |
+| `integrated-proofs/am01/recall-five-profiles.test.ts:31:25; product/integration/product-authority.ts:77:15` | SF_PRODUCT_AUTHORITY_CONFIG_INVALID; configuração de autoridade |
+
+### Shard 5 — enumeração B interrompida
+
+[Run 44645913808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645913808), snapshot `f0bccdc48b42a9d000f3bda6565fa3d88286c845`, job 135988306632, attempt 1: **cancelled, N/D pass /N/D fail**. Não existe resumo Bun final. Foram observadas **20 falhas parciais**, listadas abaixo; esse número não substitui o total do shard. Job iniciou 00:26:45Z, Run tests cancelou 01:11:58Z, run encerrou 01:12:15Z. Intervalo compatível com timeout-minutes45 de `.github/workflows/test-ci.yml:25`, mas log só informa “The operation was canceled”; não há autoria de cancelamento exposta. Última fase: `planner-calculation.overlapping-revocation`, iniciando recall real do Atlas. Paths relativos a `modules/sucafina/Sucafinav1/test/product/`.
+
+| Falha (file:line) | Causa observada / unbound |
+| --- | --- |
+| `installed-bi-closure/sensitivity-history.test.ts:19:11 (omitted)` | Deadline cooperativo165000 ms; custo de sensibilidade |
+| `installed-bi-closure/sensitivity-history.test.ts:19:11 (confirmed)` | Deadline cooperativo165000 ms; custo de sensibilidade |
+| `installed-bi-closure/sensitivity-history.test.ts:66:6` | Deadline165000 ms; histórico de escolha após treinamento |
+| `similarity217/installed.test.ts:53:29 (AC01/02)` | ok→unavailable; recall/similaridade Atlas |
+| `similarity217/installed.test.ts:99:29 (AC05)` | ok→unavailable; fonte histórica |
+| `similarity217/installed.test.ts:137:28 (AC06/07)` | ok→unavailable; autoridade de atores |
+| `wp12/native-execution-bi.test.ts:85:149 (sf_finance)` | Predicado true→false; evidência de BI |
+| `wp12/native-execution-bi.test.ts:85:149 (sf_maestro)` | Predicado true→false; evidência de BI |
+| `wp11/source-promotion-coverage.test.ts:182:67` | Igualdade da prova de cobertura diverge |
+| `wp01/planner-monthly.test.ts:44:17` | Erro HTTP em /sucafina/auth/local; entrada legada |
+| `wp00/contract-freeze.test.ts:19:72` | Digest de contrato versus freeze diverge; requer proveniência, sem re-pin especulativo |
+| `wp10/integration/portfolio-promotion.test.ts:227:68 (fixture :43:14)` | Deadline cooperativo285000 ms; cobertura/autoridade |
+| `wp10/integration/review-portfolio-http.test.ts:271:38` | Recusa esperada denied, recebida unavailable |
+| `wp10/integration/review-portfolio-http.test.ts; wp10/integration/review-access-browser-fixture.ts:29:45` | WP10_REVIEW_BROWSER_TRANSPORT_DEADLINE10000 ms |
+| `wp10/integration/bi-lifecycle.test.ts:202:33 (shell/refresh/sign-out)` | Erro HTTP de enrollment /sucafina/auth/local |
+| `wp10/integration/bi-lifecycle.test.ts:202:33 (chamador :249:34)` | Erro HTTP de enrollment; resultado retido/revogação |
+| `wp10/integration/bi-lifecycle.test.ts:202:33 (chamador :286:11)` | Erro HTTP de enrollment; limpar seleção |
+| `wp10/integration/bi-lifecycle.test.ts:202:33 (chamador :315:29)` | Erro HTTP de enrollment; retorno da fonte |
+| `wp10/integration/portfolio-exact-threshold.test.ts:43:19 (helper :213:41)` | denied/criterion-result-access-unavailable |
+| `wp10/integration/planner-calculation.test.ts:615:58` | Recall Atlas esperado comprimento1, recebido 0 |
+
+
+## Falhas observadas — shard 3
+
+Prefixo: `modules/sucafina/Sucafinav1/test/`. Job136006716047 cancelled; cleanup136025186224 success. São255 marcadores PASS e21 FAIL; não há resumo final, marcador skip/todo nem Unhandled error. O grande HTML/diff pertence à falha procurement-integration:180, sem falha adicional oculta.
+
+| File:line | Classe | Evidência / próximo passo |
+| --- | --- | --- |
+| `io-browser.test.ts:26` | unbound/UI legado | ERR_CONNECTION_REFUSED em :4110; primeira jornada. |
+| `io-browser.test.ts:114` | unbound/UI legado | ERR_CONNECTION_REFUSED em :4110; segunda jornada. |
+| `visual-layout.test.ts:37` | unbound/UI legado | POST ECONNREFUSED no serviço legado; caso declarado em :15. |
+| `product/wp05/procurement-integration.test.ts:180` | falso positivo de fixture | O sentinel privado `hidden` colide com o atributo HTML legítimo `<fieldset hidden>`. A projeção e a seleção anteriores passaram. Próxima fatia: sentinel inequívoco no seed e em todos os checks, mantendo data privada e revogação. |
+| `product/wp13/sensitivity-units-boundary.test.ts:54` | timeout/desempenho | Timeout Bun de 30000ms; duração observada de 74999ms, após replay-ready em ~73119ms. Await caro não isolado; manter orçamento. |
+| `product/wp13/persistence-recovery.test.ts:21` | timeout/desempenho | Timeout Bun de 30000ms; duração de 31236ms na segunda variação portfolioRecovery(after). Await exato não isolado. |
+| `product/operations-fixes/c12-concurrency.test.ts:34` | oracle C12 desatualizado | Esperado409, recebido200. A fixture altera só objective/version após receipt; apply.ts:125–162 reconcilia edits não relacionados e mantém fences de choice/change. Migrar a contraprova inteira, sem apenas trocar409 por200. |
+| `product/operations-fixes/c12-concurrency.test.ts:103` | oracle C12 desatualizado | Mesma causa do caso anterior. O teste para antes de provar retry/reload; preservar controles de receipt e autorização. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso omitted: deadline de165000ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso confirmed: deadline de165000ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso zero: deadline de165000ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso null: deadline de165000ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
+| `product/wp12/native-execution-bi-kpi.test.ts:312` | oracle de URL legado | HTTP200 e links autorizados; teste busca Budget+Overview/Budget%20Overview. apps/cli/src/sucafina-product/extended-source-links.ts:55–78 produz /orchestra/sf-dashboard/budget com year. Migrar URL/origin/ano mantendo proveniência, isolamento e reload. |
+| `product/wp12/native-execution-bi-public-selection.test.ts:326` | oracle de URL legado | Mesma migração de rota Budget Overview para /orchestra/sf-dashboard/budget. Manter seleção pública, isolamento de caso e consumidores reais. |
+| `product/bi-cost-waterfall/presentation.test.ts:17` | timeout/desempenho | Deadline cooperativo de105000ms em BI09.dispatch; não elevar orçamento nem atribuir a cleanup lento. |
+| `product/bi-cost-waterfall/presentation.test.ts:66` | timeout/desempenho | Deadline cooperativo de105000ms em BI09.dispatch; não elevar orçamento nem atribuir a cleanup lento. |
+| `product/bi-cost-waterfall/presentation.test.ts:97` | timeout/desempenho | Deadline cooperativo de105000ms em BI09.dispatch; não elevar orçamento nem atribuir a cleanup lento. |
+| `product/bi-cost-waterfall/presentation.test.ts:113` | timeout/desempenho | Deadline cooperativo de105000ms em BI09.dispatch; não elevar orçamento nem atribuir a cleanup lento. |
+| `product/bi-cost-waterfall/presentation.test.ts:133` | timeout/desempenho | Deadline de105000ms em portfolio.persist, após portfolio.select de ~49.5s. Custo de composição; não prova de erro numérico. |
+| `product/bi-cost-waterfall/presentation.test.ts:242` | timeout/desempenho | Deadline de105000ms em BI10.dispatch; manter orçamento e asserções. |
+| `product/wp00/baseline-corpus-coverage.test.ts:60` | unbound/inventário documental | docs/product-campaign/wp00/oracles/journeys-j01-j08.json não fornece fixtureBindings nem executionStatus nos8 registros. Não fabricar NOT_RUN/bindings. Eventual mudança documental exige evidência real e PR shared:. |
+
+O último arquivo `product/wp08/review-answer-confirmation.test.ts` teve5 PASS e foi interrompido no sexto caso, `:228`, após `current-lease reply-denied-at-last-human-await`. Não contar essa interrupção como falha emitida.
+
+### Arquivos não iniciados no shard 3
+
+Caminhos relativos a `modules/sucafina/`:
+
+- `Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts`
+- `Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts`
+- `Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts`
+- `Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts`
+- `Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts`
+- `Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts`
+- `Sucafinav1/test/product/wp02/backup-consumer.test.ts`
+- `Sucafinav1/test/product/wp02/keyed-update.test.ts`
+- `Sucafinav1/test/product/wp02/kpi-comparison.test.ts`
+- `Sucafinav1/test/product/wp02/prepared.test.ts`
+- `Sucafinav1/test/product/wp02/review-completion.test.ts`
+- `Sucafinav1/test/product/wp02/signals.test.ts`
+- `Sucafinav1/test/product/wp02/workbench-recovery.test.ts`
+- `Sucafinav1/test/product/wp06/documents/resolver.test.ts`
+- `Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts`
+- `Sucafinav1/test/product/wp06/imports/end-to-end.test.ts`
+- `Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts`
+- `Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts`
+- `Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts`
+- `Sucafinav1/test/product/wp08/answer-reuse.test.ts`
+- `Sucafinav1/test/product/wp08/case-selection-cas.test.ts`
+- `Sucafinav1/test/product/wp08/collaboration-journey.test.ts`
+- `Sucafinav1/test/product/wp08/confirmation-real-dependencies.test.ts`
+- `Sucafinav1/test/product/wp08/mutation-fence.test.ts`
+- `Sucafinav1/test/product/wp08/work-presentation.test.ts`
+- `Sucafinav1/test/product/wp10/integration/browser-bundle-literals.test.ts`
+- `Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts`
+- `Sucafinav1/test/product/wp10/integration/memory-services.test.ts`
+- `Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts`
+- `Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts`
+- `Sucafinav1/test/product/wp10/integration/ui-authority.test.ts`
+- `Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts`
+- `Sucafinav1/test/product/wp10/native-host/execution-host-guard.test.ts`
+
+
+## Falhas do shard 6
+
+Caminhos relativos a modules/sucafina/Sucafinav1/test/product/. Soma:23casos, sem contar novamente a lista repetida do sumário.
+
+| File:line | Casos | Evidência | Classificação / encaminhamento |
+| --- | ---: | --- | --- |
+| dashboard-installed-closure/consumer-read.test.ts:64,179 | 2 | Inscrição antes de Hot Topics/summary | Migração de UI instalada; não restaurar console |
+| wp13/semantic-union-source-scenario.test.ts:50 | 1 | stale/portfolio-selection-changed após180034ms; deadline180000 | unbound — desempenho,10404 leituras de cases/126564 revalidações |
+| wp04/capabilities.test.ts:88 | 1 | unavailable/requisition-unavailable | C15 — CAS canônico requests:PR-1 ausente |
+| wp04/ui-sourcing-analysis.test.ts:98 | 1 | 503 esperado, undefined recebido | Migração/integração; interface/http.ts:26,30 não admite workbench-sourcing-input |
+| wp12/native-question-consumer.test.ts:149 | 1 | answer-reuse-unavailable; Planner17campos | Dependência shared existente #400; ainda sem gate deste teste nesse head |
+| wp12/native-verifier-negatives.test.ts:147 | 1 | invalid-forecast-input após false-monthly-total | C14 — seleção HTTP com caseRef passada ao Forecast canônico |
+| wp12/native-execution-documents-contract.test.ts:21 → native-procurement-preparation.ts:193 | 1 | null esperado,240000 recebido | C04 — fonte sem operações vs hipótese |
+| wp01/http.test.ts:56 | 1 | workbench legado404, esperado200 | Migração de UI; não restaurar contrato retirado |
+| wp01/import-receipt-browser.test.ts:26 | 1 | File encontra upload e checkbox | C13 — locator exato |
+| wp01/alternative-contribution.test.ts:46 | 2 | Subtotal null/0; corpo de proposta ausente | Migração/apresentação; contribution-body.ts default vazio:53; payload/envelope passaram:37–42 |
+| wp01/personal-views.test.ts:82 | 1 | Inscrição antes de ?page=OPEX | Migração de UI; :83–90 usa densidade e global legados |
+| wp10/integration/calculation-ancestry-composition.test.ts:26 → composition-test-deadline.ts:5 | 1 | Deadline105000 em produce-outer | unbound — desempenho;573 leituras,102548ms na fase |
+| wp10/integration/bi-case-access.test.ts:136 → bi-access-browser-fixture.ts:198 | 1 | Espera botão singular Abrir origem | C16 — opções reais de múltiplas origens; distinto de C06 |
+| wp10/native-host/native-host-disposal.test.ts:38 | 7 | SessionSubagentModels ausente nos7modos | C12 — composição do host de teste |
+| wp06/native/import-analysis.test.ts:156 → :326 | 1 | Contribuição persistida sem preview link renderizado | Migração do consumidor; persistência/importPreviewRef/mensagem passaram:148–155; não fabricarURL |
+
