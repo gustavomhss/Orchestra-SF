@@ -9,6 +9,7 @@ import { projectSfSourceScope, sfPlannerProjectionSelector } from "../../../../m
 import { sfScopedSourceIdentity, sfSourceIdentity } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { sfPlannerCaseDependencies } from "./planner-case-read-scope.ts"
 import { createSfCaseReadBatch } from "./case-read-batch.ts"
+import type { SfCaseReadBatchAdmission } from "./case-read-batch.ts"
 
 type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
 
@@ -22,12 +23,17 @@ export function createSfPlannerCaseReadBatch(input: {
   readerIdentity: () => BusinessContextService | undefined
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
 }): DecisionCasePort["read"] {
-  return createSfCaseReadBatch(input, { kind: "planner",
+  return createSfCaseReadBatch(input, sfPlannerCaseReadAdmission(input))
+}
+
+/** Reuse the exact domain admission for complete read-only producer phases. */
+export function sfPlannerCaseReadAdmission(input: Omit<Parameters<typeof createSfPlannerCaseReadBatch>[0], "read">): SfCaseReadBatchAdmission {
+  return { kind: "planner",
     identity: () => [input.sources, input.sources.resolveForecastSource],
     forCall: (call) => ({ current: () => true, dependencies: sfPlannerCaseDependencies,
       witness: async (refs, snapshots, principal) => refs.every((ref) => sfPlannerRecordMaterialized(ref, call, snapshots.planner, principal))
         ? { kind: "current", value: {} } : { kind: "unsupported" } }),
-  })
+  }
 }
 
 /** Prove only that the exact current actor scope needs no C02 write. The actual

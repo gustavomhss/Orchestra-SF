@@ -91,17 +91,23 @@ export function createFixtureReadObservation(input: {
         const before = await environment()
         const principal = structuredClone(await authenticate(request, { surface: "planner", roleMap: roleMap(locked.planner, "planner") }))
         if (!before || !principal || principal.id !== authority.principalRef || principal.id.startsWith("local:") || !live(owner)) return undefined
+        if (!await revalidate(call) || !live(owner)) return undefined
         const after = await environment()
         const again = await authenticate(request, { surface: "planner", roleMap: roleMap(locked.planner, "planner") })
         if (!after || digestSfValue(before) !== digestSfValue(after) || digestSfValue(principal) !== digestSfValue(again) ||
-          !await revalidate(call) || !live(owner) || digestSfValue(snapshots()) !== protectedDigest) return undefined
+          !live(owner) || digestSfValue(snapshots()) !== protectedDigest) return undefined
         return { state: value, authority, snapshots: locked, principal, environment: after,
           sourceFences: { dashboard: sfRunSourceFence(locked.dashboard), planner: sfRunSourceFence(locked.planner), procurement: sfRunSourceFence(locked.procurement) },
           external, input: digest, request: requestDigest, binding: bindingDigest }
       })
       // Include the real C08 envelope (incarnation and both revisions), not just
       // its selected value. The provider performs its own final authority read.
-      return live(owner) && observed.status === "ok" && observed.value ? digestSfValue(observed) : undefined
+      if (!live(owner) || observed.status !== "ok" || !observed.value) return undefined
+      // The provider authorizes again after its callback. Observe the real host
+      // clock/directory after that final envelope, with no later authority await.
+      const closed = await environment()
+      return closed && live(owner) && digestSfValue(closed) === digestSfValue(observed.value.environment)
+        ? digestSfValue(observed) : undefined
     }
     try {
       return await local.run(owner, async () => {

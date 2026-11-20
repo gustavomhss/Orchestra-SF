@@ -37,7 +37,7 @@ test("fixture observation preserves the complete canonical case, both source pas
   } finally { await fixture.cleanup() }
 }, 120000)
 
-for (const fault of ["input", "source-ref", "revocation", "final-revocation", "request", "lease", "day", "actor", "reader", "c08", "planner"] as const) {
+for (const fault of ["input", "source-ref", "revocation", "final-revocation", "final-day", "final-actor", "post-envelope-day", "request", "lease", "day", "actor", "reader", "c08", "planner"] as const) {
   test("fixture observation rejects a fresh egress change in " + fault, async () => {
     const fixture = await observationFixture()
     try {
@@ -48,11 +48,14 @@ for (const fault of ["input", "source-ref", "revocation", "final-revocation", "r
         if (fault === "input") fixture.argument.caseRef += "-changed"
         if (fault === "source-ref") fixture.sourceRefs[0]!.target.fields = [...fixture.sourceRefs[0]!.target.fields, "changed-field"]
         if (fault === "revocation") fixture.revokeSource(fixture.sourceRefs[0]!.refId)
-        if (fault === "final-revocation") fixture.faults.afterAuthority = (allowed) => {
+        if (fault === "final-revocation" || fault === "final-day" || fault === "final-actor") fixture.faults.afterAuthority = (allowed) => {
           if (++effects.authority !== 2) return
           effects.allowed = allowed
-          fixture.revokeSource(fixture.sourceRefs[0]!.refId)
+          if (fault === "final-revocation") fixture.revokeSource(fixture.sourceRefs[0]!.refId)
+          if (fault === "final-day") fixture.faults.day = "2026-11-14T00:00:00Z"
+          if (fault === "final-actor") fixture.faults.actor = true
         }
+        if (fault === "post-envelope-day") fixture.faults.afterEnvelope = () => { fixture.faults.day = "2026-11-14T00:00:00Z" }
         if (fault === "request") fixture.request.headers.delete("authorization")
         if (fault === "lease") fixture.ui.finish(fixture.context)
         if (fault === "day") fixture.faults.day = "2026-11-14T00:00:00Z"
@@ -87,8 +90,8 @@ for (const fault of ["input", "source-ref", "revocation", "final-revocation", "r
         expect(effects.write).toBe(true)
         expect((await fixture.capture()).snapshots).not.toEqual(before.snapshots)
       } else expect(await fixture.rawSnapshots()).toEqual(before.snapshots)
-      if (fault === "final-revocation") { expect(effects.authority).toBe(2); expect(effects.allowed).toBe(true) }
-      if (fault === "actor") expect(fixture.faults.actorObserved).toBe(true)
+      if (fault === "final-revocation" || fault === "final-day" || fault === "final-actor") { expect(effects.authority).toBe(2); expect(effects.allowed).toBe(true) }
+      if (fault === "actor" || fault === "final-actor") expect(fixture.faults.actorObserved).toBe(true)
       if (fault === "revocation" || fault === "final-revocation") expect((await fixture.evidence.resolve(fixture.sourceRefs[0]!, fixture.context)).state).toBe("revoked")
       if (fault === "request" || fault === "lease") expect(await fixture.host.revalidate(fixture.context)).toBe(false)
     } finally { await fixture.cleanup() }
@@ -194,7 +197,7 @@ test("an unfinished lexical child cannot publish after its physical owner closes
 
 async function observationFixture() {
   const fixture = await createRenewalSourceFixture("omitted")
-  const faults: { afterRoot?: () => Promise<void>; afterAuthority?: (allowed: boolean) => void; day?: string; actor?: boolean; actorObserved?: boolean; canonicalWrite?: boolean } = {}
+  const faults: { afterRoot?: () => Promise<void>; afterAuthority?: (allowed: boolean) => void; afterEnvelope?: () => void; day?: string; actor?: boolean; actorObserved?: boolean; canonicalWrite?: boolean } = {}
   const host: DomainPortHost = { ...fixture.host,
     revalidate: async (context) => { const allowed = await fixture.host.revalidate(context); faults.afterAuthority?.(allowed); return allowed },
     environment: async (request) => { const value = await fixture.host.environment(request); return faults.day ? { ...value, at: faults.day } : value },
@@ -225,6 +228,16 @@ async function observationFixture() {
     const effect = faults.afterRoot
     faults.afterRoot = undefined
     await effect?.()
+    return value
+  }
+  const stateRead = fixture.state.read
+  fixture.state.read = async (request, namespace, read) => {
+    const value = await stateRead(request, namespace, read)
+    if (!fixture.store.currentSnapshots()) {
+      const effect = faults.afterEnvelope
+      faults.afterEnvelope = undefined
+      effect?.()
+    }
     return value
   }
   const verifyOperations = createRenewalCaseOperationVerifier(host, fixture.sources)
