@@ -1,3 +1,4 @@
+import { sfCreateReportsDiagnostic } from "../../runtime/reports-create-diagnostic.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedUiContext } from "../contracts/sf-execution.ts"
 import type { createCollaborationHost } from "./host.ts"
@@ -18,6 +19,7 @@ export function createCollaborationHttp(input: {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
     if (!mode?.startsWith("collaboration-")) return undefined
+    sfCreateReportsDiagnostic.phase("http-enter", request)
     if (url.origin !== input.origin || url.pathname !== input.mount || request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied", reason: "collaboration-origin-denied" })
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "collaboration-post-required" }, 405)
     if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "needs-input", reason: "invalid-collaboration-route" })
@@ -41,6 +43,7 @@ export function createCollaborationHttp(input: {
     } : original
     if (!route) return reply({ status: "unavailable", reason: "collaboration-route-unavailable" }, 404)
     if (request.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase() !== "application/json") return reply({ status: "needs-input", reason: "collaboration-json-required" }, 415)
+    sfCreateReportsDiagnostic.phase("http-payload-enter", request)
     const bytes = await bounded(request, 131072).catch(() => undefined)
     if (!bytes) return reply({ status: "needs-input", reason: "collaboration-request-too-large-or-unavailable" }, 413)
     const decoded: unknown = await Promise.resolve().then(async () => {
@@ -55,19 +58,25 @@ export function createCollaborationHttp(input: {
     const keys = [...route.keys, ...(route.optional ?? [])]
     if (Object.keys(payload).some((key) => !keys.includes(key)) || route.keys.some((key) => !Object.hasOwn(payload, key)) || route.validate && !route.validate(payload)) return reply({ status: "needs-input", reason: "invalid-collaboration-payload" })
     if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
+    sfCreateReportsDiagnostic.phase("http-payload-done", request)
+    sfCreateReportsDiagnostic.phase("http-admission-enter", request)
     const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-authority-unavailable" }))
+    sfCreateReportsDiagnostic.phase("http-admission-done", request)
     if (admitted.status !== "ok") return reply(admitted)
     try {
       // An expected revision is an identity fence, never an access grant. The
       // host digest already binds installation, project, principal and scope.
       const expectedBinding = request.headers.get("X-SF-Review-Binding")
       if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return reply({ status: "denied", reason: "review-discussion-binding-changed" })
+      sfCreateReportsDiagnostic.phase("http-invoke-enter", request)
       const result = await Promise.resolve().then(() => route.invoke(payload, admitted.value)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-operation-unavailable" }))
+      sfCreateReportsDiagnostic.phase("http-invoke-done", request)
       if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
       return reply(result, undefined, expectedBinding === null ? undefined : admitted.value.binding.accessRevision)
     } finally {
       if (route.action) input.human.finish(admitted.value)
       if (!route.action) input.finishRead(admitted.value)
+      sfCreateReportsDiagnostic.phase("http-finish", request)
     }
   }
 }

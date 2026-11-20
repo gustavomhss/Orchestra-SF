@@ -1,3 +1,4 @@
+import { sfCreateReportsDiagnostic } from "../runtime/reports-create-diagnostic.ts"
 import path from "node:path"
 import type { SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { randomUUID } from "node:crypto"
@@ -273,19 +274,25 @@ export async function createConfiguredInstallation(
       },
     } } : {}),
     async handler(request: Request) {
+      return sfCreateReportsDiagnostic.request(request, async () => {
       const url = new URL(request.url)
+      sfCreateReportsDiagnostic.route(url.searchParams.get("sf"), request.method)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
       const postedOrigin = request.headers.get("origin")
       const foreignOrigin = postedOrigin !== config.origin
       if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (foreignOrigin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
       const readiness = status(request)
       if (readiness) return readiness
+      sfCreateReportsDiagnostic.phase("entry-identity-enter", request)
       const auth = await identity.handle(request)
+      sfCreateReportsDiagnostic.phase("entry-identity-done", request)
       if (auth) {
         if (operator && url.pathname === `${config.mount}/auth/login` && auth.status === 200) return utilityHtml("Signed out", '<p class="utility-empty">Your local session has ended. To sign in again, open the Abrir Sucafina shortcut on this Mac.</p>', true)
         return auth
       }
+      sfCreateReportsDiagnostic.phase("entry-prepare-enter", request)
       await identity.prepare(request)
+      sfCreateReportsDiagnostic.phase("entry-prepare-done", request)
       if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
         const person = await identity.person(request)
@@ -355,13 +362,17 @@ export async function createConfiguredInstallation(
       // origin, identity.handle/prepare and narrowly selected surface bootstrap.
       // Every handler receives this identical Request; no URL rewrite, body
       // clone or parallel backend. Absence of context authority fails closed.
+      sfCreateReportsDiagnostic.phase("entry-native-enter", request)
       const nativeResponse = await nativeProjections(request)
+      sfCreateReportsDiagnostic.phase("entry-native-done", request)
       if (nativeResponse) return nativeResponse
+      sfCreateReportsDiagnostic.phase("entry-business-enter", request)
       const response = await business(request)
+      sfCreateReportsDiagnostic.phase("entry-business-done", request)
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (operator && request.method === "GET" && response?.ok && response.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() === "text/html") return localChrome(response)
       return response
-
+      })
     },
     async dispose() { nativeReadBinding = undefined; await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
   }

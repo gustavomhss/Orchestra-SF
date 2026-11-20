@@ -1,3 +1,4 @@
+import { sfCreateReportsDiagnosticLine } from "../../../../../modules/sucafina/Sucafinav1/runtime/reports-create-diagnostic.ts"
 import type { Page } from "@playwright/test"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
@@ -141,6 +142,8 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         Stream.splitLines,
         Stream.runForEach((line) => {
           tail.value = `${tail.value}\n${redact(line)}`.slice(-8192)
+          const diagnostic = sfCreateReportsDiagnosticLine(line)
+          if (diagnostic) { try { console.info(diagnostic) } catch { /* Diagnostic output cannot affect readiness. */ } }
           return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4110\/?$/.test(line.trim())
             ? Deferred.succeed(ready, undefined)
             : Effect.void
