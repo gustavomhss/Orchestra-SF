@@ -46,7 +46,7 @@ const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(valu
 const isDigest = (value: unknown): value is string => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
 const qi = (name: string) => '"' + name.replaceAll('"', '""') + '"'
 const sessionTables = new Set(AuthoritySqlFence.protectedTables)
-const placementTables = new Set(["project", "project_directory", "workspace", "data_migration"])
+const placementTables = new Set(["project", "project_directory", "workspace", "data_migration", "migration", "__drizzle_migrations"])
 const journalNames = ["sf_team_migration_plan", "sf_team_migration_step"]
 const cutTable = "sf_team_migration_cut"
 const quarantineTable = "sf_team_migration_quarantine"

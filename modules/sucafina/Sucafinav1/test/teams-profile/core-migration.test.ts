@@ -31,7 +31,7 @@ import { group, oid, other } from "../microsoft-login/oidc-fixture.ts"
 const cleanups: (() => Promise<void>)[] = []
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close() })
 const supported = new Set(AuthoritySqlFence.protectedTables)
-const placement = new Set(["project", "project_directory", "workspace", "data_migration", "sqlite_sequence"])
+const placement = new Set(["project", "project_directory", "workspace", "data_migration", "migration", "__drizzle_migrations", "sqlite_sequence"])
 type Services = Database.Service | SessionV2.Service | SessionOwner.Service | HostMaintenance.Service | SessionExecution.Service | ScheduledTask.Service
 
 async function fixture() {
@@ -160,19 +160,30 @@ test("core migration: a source write after review rejects the cut without backfi
 test("core migration: authority lost while the real producer drain awaits is rechecked before the snapshot", async () => {
   const f = await fixture(), engine = f.engine()
   const prepared = await engine.prepare(f.request(), f.mapping())
-  const started = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
-  const admitted = Effect.runPromise(f.graph.maintenance.admit(Effect.promise(() => {
-    started.resolve(); return new Promise<never>(() => {})
-  }).pipe(Effect.ensuring(Effect.promise(async () => {
-    f.provider.account.groups.splice(f.provider.account.groups.indexOf(group), 1)
-    await release.promise
-  })))))
+  const started = Promise.withResolvers<void>(), cleaning = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+  const cancel = new AbortController()
+  const admitted = Effect.runPromise(f.graph.maintenance.admit(Effect.sync(() => started.resolve()).pipe(
+    Effect.andThen(Effect.never),
+    Effect.ensuring(Effect.promise(async () => {
+      f.provider.account.groups.splice(f.provider.account.groups.indexOf(group), 1)
+      cleaning.resolve()
+      await release.promise
+    })),
+  )), { signal: cancel.signal })
   void admitted.catch(() => {})
   await started.promise
   const cutting = engine.cut(f.request(), prepared.planDigest)
-  release.resolve()
-  await expect(cutting).rejects.toThrow("SF_CORE_MIGRATION_AUTHORITY")
-  await admitted.catch(() => {})
+  let finished = false
+  void cutting.then(() => { finished = true }, () => { finished = true })
+  try {
+    await Promise.race([cleaning.promise, cutting.then(() => { throw new Error("Cut ended before its producer cleanup") })])
+    expect(finished).toBe(false)
+    release.resolve()
+    await expect(cutting).rejects.toThrow("SF_CORE_MIGRATION_AUTHORITY")
+  } finally {
+    release.resolve(); cancel.abort()
+    await admitted.catch(() => {})
+  }
   expect(AuthoritySqlFence.marker(f.files.business)).toBeUndefined()
   expect(AuthorityControl.open(f.files.control).inspect(f.storageId)).toBeUndefined()
 }, 30000)
