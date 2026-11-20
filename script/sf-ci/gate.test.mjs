@@ -115,9 +115,12 @@ test("the live manifest excludes exactly the static ordered-pool closure", () =>
     .map((entry) => path.join("Sucafinav1", entry))
   const closure = [...browserPoolConsumers(discovered, suiteRoot)]
     .map((file) => path.relative(suiteRoot, file)).sort()
-  assert.deepEqual([...selection.harnessOwnedFiles].sort(), closure)
+  assert.deepEqual(selection.harnessEntryFiles, ["Sucafinav1/test/product/wp01/browser-selection.test.ts"])
+  assert.equal(selection.harnessOwnedFiles.length, 40)
+  assert.deepEqual([...selection.harnessOwnedFiles].sort(),
+    closure.filter((file) => !selection.harnessEntryFiles.includes(file)))
   const selected = selectSuiteFiles(live, "CI-SF", root)
-  for (const file of selection.harnessOwnedFiles) assert.equal(selected.includes(file), false)
+  for (const file of [...selection.harnessOwnedFiles, ...selection.harnessEntryFiles]) assert.equal(selected.includes(file), false)
 })
 test("a harness-owned entry that never reaches the pool fails closed", () => {
   const root = poolTree("Sucafinav1/test/plain.test.ts")
@@ -642,5 +645,64 @@ test("CI-05 explicit selections reject symlinked parent paths inside the checkou
       /missing\/unsafe file in selected candidate/)
   } finally {
     rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test("harness entry is discovered and excluded before pool-consumer checks and shard partition", () => {
+  const owned = "Sucafinav1/test/product/ordered/browser.test.ts"
+  const entry = "Sucafinav1/test/product/wp01/browser-selection.test.ts"
+  const root = poolTree(owned)
+  try {
+    writeFileSync(path.join(root, "modules/sucafina", entry), 'import "./browser-fixture.ts"\n')
+    const input = structuredClone(manifest)
+    const selection = input.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = [owned]
+    selection.harnessEntryFiles = [entry]
+    selection.releaseOnlyFiles = []
+    const files = selectSuiteFiles(input, "CI-SF", root)
+    assert.deepEqual(files, ["Sucafinav1/test/plain.test.ts"])
+    assert.equal(shardFiles(files, 1, 1).includes(entry), false)
+    selection.harnessEntryFiles = []
+    assert.throws(() => selectSuiteFiles(input, "CI-SF", root), /ordered browser pool file is still selected/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+test("harness entries reject missing, duplicate, non-test, unsafe and overlapping declarations", () => {
+  const owned = "Sucafinav1/test/product/ordered/browser.test.ts"
+  const entry = "Sucafinav1/test/product/wp01/browser-selection.test.ts"
+  const root = poolTree(owned)
+  try {
+    writeFileSync(path.join(root, "modules/sucafina", entry), 'import "./browser-fixture.ts"\n')
+    for (const entries of [
+      [entry, entry], ["Sucafinav1/test/missing.test.ts"], ["Sucafinav1/test/product/wp01/browser-fixture.ts"],
+      ["../escape.test.ts"], [owned],
+    ]) {
+      const input = structuredClone(manifest)
+      const selection = input.suites.find((suite) => suite.id === "CI-SF").selection
+      selection.harnessOwnedFiles = [owned]
+      selection.harnessEntryFiles = entries
+      selection.releaseOnlyFiles = []
+      assert.throws(() => selectSuiteFiles(input, "CI-SF", root), /SF_CI_FAIL_CLOSED/)
+    }
+    const input = structuredClone(manifest)
+    const selection = input.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = [owned]
+    selection.harnessEntryFiles = [entry]
+    selection.releaseOnlyFiles = [entry]
+    assert.throws(() => selectSuiteFiles(input, "CI-SF", root), /overlaps source\/release/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+test("live manifest validation cannot erase or merge the separate pool entry", () => {
+  const live = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  assert.doesNotThrow(() => validateManifest(live))
+  for (const change of [
+    (selection) => { delete selection.harnessEntryFiles },
+    (selection) => { selection.harnessEntryFiles = [] },
+    (selection) => { selection.harnessEntryFiles.push(selection.harnessEntryFiles[0]) },
+    (selection) => { selection.harnessOwnedFiles.push(selection.harnessEntryFiles[0]) },
+    (selection) => { selection.releaseOnlyFiles.push(selection.harnessEntryFiles[0]) },
+  ]) {
+    const broken = structuredClone(live)
+    change(broken.suites.find((suite) => suite.id === "CI-SF").selection)
+    assert.throws(() => validateManifest(broken), /SF_CI_FAIL_CLOSED/)
   }
 })

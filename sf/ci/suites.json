@@ -65,7 +65,10 @@
           "Sucafinav1/test/product/wp04/host-integration.test.ts",
           "Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts"
         ],
-        "harnessOwnedReason": "WP01's ordered browser pool needs startup first and finalizer last in one Bun process, and Bun schedules test files itself; these proofs need an integrator-owned lane."
+        "harnessOwnedReason": "WP01's ordered browser pool needs startup first and finalizer last in one Bun process, and Bun schedules test files itself; these proofs need an integrator-owned lane.",
+        "harnessEntryFiles": [
+          "Sucafinav1/test/product/wp01/browser-selection.test.ts"
+        ]
       },
       "coverageBaseline": {
         "schemaVersion": 1,
