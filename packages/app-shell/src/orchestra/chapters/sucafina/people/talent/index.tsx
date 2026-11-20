@@ -396,7 +396,15 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                   <button type="button" class="mx-btn" data-sf-talent-workbook="import"
                     disabled={!canImport() || local.pending || local.exporting}
                     title={!canImport() ? t(sfCommonKey("sf.common.unavailable")) : undefined}
-                    onClick={() => { if (canImport()) navigate("/orchestra/sf-imports/new") }}>
+                    onClick={() => {
+                      const state = session.context.state()
+                      const active = ready()
+                      if (state.status !== "ready" || !active || active.ownerKey !== state.ownerKey || !canImport()) return
+                      const { serverKey, projectId, installationId } = state.selection
+                      if (serverKey == null || projectId == null || installationId == null) return
+                      const query = new URLSearchParams({ server: serverKey, project: projectId, installation: installationId })
+                      navigate("/orchestra/sf-imports/new?" + query.toString())
+                    }}>
                     {t(key("sf.u47.import"))}
                   </button>
                   <button type="button" class="mx-btn" data-sf-talent-workbook="export"
