@@ -1,5 +1,5 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { useSfContext } from "../../context"
@@ -500,7 +500,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     } as const
   }
   const confirm = async (admitted: Extract<ReturnType<typeof confirmation>, {kind:"admitted"}>) => {
-    const intent = ui.review, token = authority(), current = page()
+    // Strict native codecs reject Solid's internal symbol keys. Capture plain
+    // reviewed data once, preserving the same token, CAS, draft and command.
+    const intent = ui.review ? structuredClone(unwrap(ui.review)) : null
+    const token = authority(), current = page()
     if (!intent || !token || !current || sending || ui.phase !== "reviewing" ||
         !can(intent.action) || !admitted || admitted.purpose !== intent.action ||
         admitted.binding.operationId !== "domain.command.CAP27." + intent.action ||
@@ -601,7 +604,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       setUi("confirmedMessage", response.body.warnings?.join("; ") ?? null)
       setUi("review", null)
       setUi("phase", "verifying")
-      if (editsDraft && intent.action !== "save") {
+      if (intent.action === "create") {
         controllerDraft?.confirmSave({kind:"confirmed-without-projection",
           operationRef:opRef,resultVersion:null})
         host.ready()?.drafts.discard({
@@ -609,7 +612,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           identity:intent.ref
             ? {kind:"record",recordRef:intent.ref as SfRef}
             : {kind:"new",newIntentRef:"CAP27:supplier-create" as SfIntentRef},
-          editScopeKey:(intent.action==="change-bank"?"CAP27:bank":"CAP27:general") as SfEditScopeKey,
+          editScopeKey:"CAP27:general" as SfEditScopeKey,
         })
       }
       if (intent.action === "create" || intent.action === "delete") {
@@ -620,12 +623,14 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       }
       const confirmedPage=await refresh(token)
       if(controller.signal.aborted||authority()!==token)return
-      if(intent.action==="save"&&controllerDraft) {
+      if((intent.action==="save"||intent.action==="change-bank")&&controllerDraft) {
         const confirmed=confirmedPage&&intent.ref?uniqueSupplier(confirmedPage,intent.ref):null
         const confirmedVersion=confirmedPage&&intent.ref?supplierVersion(confirmedPage,intent.ref):null
         if(confirmed&&confirmedVersion!==null&&confirmedVersion!==intent.version)
           controllerDraft.confirmSave({kind:"projected",operationRef:opRef,
-            baseVersion:confirmedVersion,value:supplierEdit(confirmed)})
+            // Bank drafts are partial changes; display values come from this
+            // fresh authorized projection, never the submitted private fields.
+            baseVersion:confirmedVersion,value:intent.action==="change-bank"?{}:supplierEdit(confirmed)})
         else controllerDraft.confirmSave({kind:"confirmed-without-projection",
           operationRef:opRef,resultVersion:confirmedVersion})
       }
