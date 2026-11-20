@@ -211,3 +211,41 @@ concorrência passaram: **33 pass, 0 fail, 103 assertions**
 A barreira recusa bind tardio, novos wakes e novos trabalhos exclusivos, suprime
 sucessores e aguarda todos os finalizadores. Esse resultado não atesta que
 scheduled tasks, hooks ou efeitos externos estejam drenados.
+
+
+## Checkpoint: configuração, execução e recuperação das decisões
+
+Fonte integrada: [0e0aafdd](https://github.com/gustavomhss/Orchestra-SF/commit/0e0aafdd2cd6af86a12766c22926c155f275792a).
+A configuração compartilhada de Team usa a lease atual do Request original e CAS;
+a execução exclusiva aguarda sua própria finalização privada sem esperar o sucessor coalescido.
+As correções de decisões mantêm corpo e chave de intenção nos retries, exigem a admissão
+atual e recusam respostas tardias depois da perda de acesso.
+
+| Evidência dirigida | Resultado observado | Run |
+|---|---:|---|
+| Administração e configuração, 3 arquivos | 35 pass, 0 fail, 432 assertions | [44710851234](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44710851234) |
+| Core integrado, 11 arquivos | 111 pass, 0 fail, 605 assertions | [44711178894](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44711178894) |
+| Actions com Owner do mesmo Database, 3 arquivos | 20 pass, 0 fail, 826 assertions | [44712712942](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44712712942) |
+| Static na fonte 5ba5d0d2, árvore idêntica | 15 comandos passaram; guard-dev bloqueado pelos dois arquivos protegidos | [44712718054](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44712718054) |
+| HTTP de análise e preparação | 14 pass, 0 fail, 261 assertions | [44711150378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44711150378) |
+| Pool G04 integral na fonte 51da5e62 | 135 retornos, 71 exceções; gate RED | [44711982391](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44711982391) |
+
+O pool preservou os 40 arquivos e 206 corpos iniciados/finalizados, sem finalização forçada.
+O Bun reportou 135 pass e 72 fail porque também contabiliza o encerramento correto do gate.
+Houve 39 fail→pass e nenhum pass→fail sobre o checkpoint anterior dessa frente.
+Os 71 corpos restantes continuam em reparo; o console HTML aposentado não foi reaberto.
+
+A barreira do host está isolada e ainda não integrada. Ela fecha admissão, aguarda os
+finalizadores do coordenador, confirma o encerramento do processo nativo e interrompe
+o daemon de schedules do mesmo grafo. A última rodada observada teve 100 pass e 2 fail
+([44713428906](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44713428906)).
+As duas falhas novas estavam na montagem dos testes: tentar obter uma nova lease
+após revogação e omitir o agent explícito da Session de schedule. A próxima execução
+usa a lease real retida e uma Session com agent concreto. O recibo dessa barreira
+prova somente drenagem local, nunca conclusão de efeito externo desconhecido.
+
+O vault corporativo, a interface nativa de sessões, o journal/corte do Core, o
+inventário do artefato final e a qualificação conjunta continuam em implementação.
+Nenhum corte de dados reais, deploy, aprovação de arquivo protegido, consentimento
+Microsoft ou ambiente Azure foi presumido. Os dez gates permanecem não executados
+no candidato final.

@@ -11,8 +11,8 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "3031efce31f65c7f501ceeadd0fa16aab3336b37",
-    "latestIntegratedSource": "3031efce31f65c7f501ceeadd0fa16aab3336b37",
+    "preCheckpointHead": "0e0aafdd2cd6af86a12766c22926c155f275792a",
+    "latestIntegratedSource": "0e0aafdd2cd6af86a12766c22926c155f275792a",
     "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
@@ -15561,6 +15561,295 @@
         "status": "SUCCESS"
       },
       "qualification": "Original 28 coordinator cases plus five closure/race cases. Actual owner interruption and finalizers are awaited; no durable pending input consumed or external completion inferred. Global runtime migration barrier and effect census still required."
+    },
+    {
+      "id": "TEAM_CONFIGURATION_INTEGRATED",
+      "source": "1253334922d855f477602c536831265ecf98c0d0",
+      "sourceTree": "114a95fb6c0686cd6f3b675ab4fee55a9a8da380",
+      "snapshot": "474f76036c378b78e663a6a65c6c7f013a81eb87",
+      "runId": 44710851234,
+      "jobId": 136201840711,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 35,
+        "fail": 0,
+        "expects": 432,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136202480948,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual current administration and shared configuration/CAS boundaries. Directed evidence, not final candidate qualification."
+    },
+    {
+      "id": "TEAM_CONFIGURATION_STATIC_FIRST",
+      "source": "1253334922d855f477602c536831265ecf98c0d0",
+      "snapshot": "b2a84913440b5ff07d9842bd2e827611b1e3051e",
+      "runId": 44710854180,
+      "jobId": 136201849442,
+      "status": "FAILURE",
+      "qualification": "13/16 real commands exit zero. Six implicit-any restore callbacks and 16 missing SessionOwner services in three Actions fixture families; guard-dev separately blocks two protected paths."
+    },
+    {
+      "id": "SESSION_FINALIZATION_FIRST",
+      "source": "c53199aa78e0df15d1f12c40e58b7ddaead590d8",
+      "snapshot": "a360020627ea8ea00ceb00b8bd7d6e551fe8d97e",
+      "runId": 44709800993,
+      "jobId": 136198322680,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 41,
+        "fail": 1,
+        "expects": 148,
+        "tests": 42,
+        "files": 3
+      },
+      "qualification": "Original SessionStop cases passed. Waiting the whole entry.done also waits a successful coalesced successor and deadlocked original exclusive coalescing."
+    },
+    {
+      "id": "SESSION_FINALIZATION_OWNED_EXECUTION",
+      "source": "2a140e9a686af602734f9c0743ef955b76f797e6",
+      "snapshot": "6a167294ba9f6f64b2ef100ebed4517d9745f50c",
+      "runId": 44710805363,
+      "jobId": 136201688287,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 42,
+        "fail": 0,
+        "expects": 153,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136202092140,
+        "status": "SUCCESS"
+      },
+      "qualification": "Waits the current owned execution's private binding and settle, distinct from joined/coalesced drain lifecycle; original coalescing semantics retained."
+    },
+    {
+      "id": "CONFIGURATION_AND_SESSION_CORE_INTEGRATED",
+      "source": "547fa4db317a57fcccc302ee2dfbace7f9860cbe",
+      "sourceTree": "f519f2cbe3f98b4dca76b60b25926695b8dfe920",
+      "snapshot": "823801067a223a487272ff078545ea9a8e463ac1",
+      "runId": 44711178894,
+      "jobId": 136202987994,
+      "status": "SUCCESS",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/config/team-configuration.test.ts",
+          "./test/effect/layer-node/node-build.test.ts",
+          "./test/location-startup-globals.test.ts",
+          "./test/relay-hook-recovery-startup.test.ts",
+          "./test/session-prompt-observer.test.ts",
+          "./test/session-stop-runs.test.ts",
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "./test/tool-task-cold.test.ts",
+          "./test/tool-task-governance.test.ts",
+          "./test/tool-task.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 111,
+        "fail": 0,
+        "expects": 605,
+        "files": 11
+      },
+      "cleanup": {
+        "jobId": 136203589708,
+        "status": "SUCCESS"
+      },
+      "qualification": "Configuration, same-graph contracts, startup/recovery, prompt observation, SessionStop, coordinator and tool task regressions. Not global maintenance or final qualification."
+    },
+    {
+      "id": "ACTIONS_REAL_OWNER_FIXTURE",
+      "source": "5ba5d0d2fc7bf86e282cebb96a1c153b70ba19d8",
+      "sourceTree": "68cd705b1ccb501ddf9c45beb7426eeb62f98626",
+      "snapshot": "9c32f9d874296d70256fc67864895de2873a1970",
+      "runId": 44712712942,
+      "jobId": 136208179371,
+      "status": "SUCCESS",
+      "request": {
+        "package": "server",
+        "runner": "bun",
+        "args": [
+          "./test/actions-http.test.ts",
+          "./test/actions-resource-query.test.ts",
+          "./test/actions-run-rename-http.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 20,
+        "fail": 0,
+        "expects": 826,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136208667239,
+        "status": "SUCCESS"
+      },
+      "qualification": "The Actions fixture builds real SessionOwner over its same real Database. No assertion or authority check weakened."
+    },
+    {
+      "id": "TEAM_CONFIGURATION_STATIC_FIXED",
+      "source": "5ba5d0d2fc7bf86e282cebb96a1c153b70ba19d8",
+      "snapshot": "dbefd755e8afd68de29192c437a9c424a2fa8bf1",
+      "runId": 44712718054,
+      "jobId": 136208197250,
+      "status": "FAILURE",
+      "qualification": "15/16 actual commands exit zero, including every typecheck, both generated-code checks, E2E inclusion/config and Web build. guard-dev refuses godfile-waivers.json and script/spawn-allowlist.json; no approval manufactured."
+    },
+    {
+      "id": "HOST_MAINTENANCE_FIRST",
+      "source": "1c84fe9f34ae1cb447432229ee5bb8378955abdc",
+      "snapshot": "3b4b05209387d2beaf2901dfb63b269d249478b4",
+      "runId": 44712135231,
+      "jobId": 136206191685,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 64,
+        "fail": 2,
+        "expects": 259,
+        "tests": 66,
+        "files": 6
+      },
+      "cleanup": {
+        "jobId": 136206834214,
+        "status": "SUCCESS"
+      },
+      "qualification": "Both failures expose real Omni SIGTERM exitCode rejection. Do not treat an exit-code failure as proof that the OS process is alive or as an external-effect success."
+    },
+    {
+      "id": "HOST_MAINTENANCE_TERMINAL_PROBE",
+      "source": "37840afa958f200999d011af2d9a95d5d0ce2582",
+      "snapshot": "b2e5f8f4f85a271f6ed79dba699bccc7b831f5a3",
+      "runId": 44712622672,
+      "jobId": 136207879082,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 65,
+        "fail": 1,
+        "expects": 273,
+        "tests": 66,
+        "files": 6
+      },
+      "cleanup": {
+        "jobId": 136208525770,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual same graph, exclusive finalizer, native sleep child and future schedule drain pass, including OS pid absence and no later admission. Sole remaining original process fixture omits isRunning after known exit zero; fixed by supplying actual false, no assertion changed."
+    },
+    {
+      "id": "BACKGROUND_OWNER_FIRST",
+      "source": "5c2af0712651a1fce526e74ed2e2dde5b337510b",
+      "sourceTree": "c9513348c1b46240d47e3b98651661f9da3f75c1",
+      "snapshot": "e752e779ffbb54aae441f94b6c833415015b8f73",
+      "runId": 44713428906,
+      "jobId": 136210629378,
+      "status": "FAILURE",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/host-maintenance.test.ts",
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "./test/session-stop-runs.test.ts",
+          "./test/session-process.test.ts",
+          "./test/scheduled-task.test.ts",
+          "./test/scheduled-task-capability.test.ts",
+          "./test/session-background-owner.test.ts",
+          "./test/session-team-owner.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 100,
+        "fail": 2,
+        "expects": 572,
+        "tests": 102,
+        "files": 9
+      },
+      "cleanup": {
+        "jobId": 136211486687,
+        "status": "SUCCESS"
+      },
+      "qualification": "Original coordinator/process/schedule/capability/owner cases pass. New fixtures failed when trying to reacquire after membership revocation and decoding a nonexistent agent. Next candidate retains the real prior lease and creates a real explicit-agent Session."
+    },
+    {
+      "id": "BACKGROUND_OWNER_RETAINED_LEASE",
+      "source": "9b30e68524acad285fcddb54b612f3a16cf7c862",
+      "sourceTree": "02c74f2b4c30cff668a0861ae1fe1613da8a3afb",
+      "snapshot": "e54fe5c5ef322c3b542ca1c0effeaaec380cbf51",
+      "status": "RUNNING",
+      "qualification": "Directed candidate only. Corporate automatic scheduler remains denied without independently admitted current authority; local drain receipt cannot settle unknown external effects."
+    },
+    {
+      "id": "G04_DECISION_ANALYSIS_HTTP",
+      "source": "00c8ca7e693a7d4d1cbc2131d39ba57a7926eb0a",
+      "snapshot": "f4016def7512daa9b60828093288d6e488284932",
+      "runId": 44711150378,
+      "jobId": 136202888184,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 14,
+        "fail": 0,
+        "expects": 261
+      },
+      "qualification": "Current admission, skill/manifest/schema checks and real prepared input; fixture currency repaired from actual C06 planner projection, no helper authority bypass."
+    },
+    {
+      "id": "G04_DECISION_ANALYSIS_POOL",
+      "source": "51da5e625d4bc48f8c9f816debfb79af86e04f67",
+      "snapshot": "ff520b8a5c52315ae01fbec81819396d071306e2",
+      "runId": 44711982391,
+      "jobId": 136205671485,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 135,
+        "fail": 72,
+        "expects": 2124,
+        "tests": 207
+      },
+      "poolJournal": {
+        "sources": 40,
+        "declared": 206,
+        "started": 206,
+        "finished": 206,
+        "returned": 135,
+        "threw": 71,
+        "activeCase": null,
+        "forcedFinalization": false
+      },
+      "cleanup": {
+        "jobId": 136209549195,
+        "status": "SUCCESS"
+      },
+      "qualification": "39 original failures now pass, zero previous passes regressed versus root35c. Decision mutation16, edit recovery34, forecast visibility13 and creation1 pass. Remaining71 bodies and finalizer correctly keep G04 red. Retired HTML stays closed."
+    },
+    {
+      "id": "G04_DECISION_ANALYSIS_STATIC",
+      "source": "51da5e625d4bc48f8c9f816debfb79af86e04f67",
+      "runId": 44711984189,
+      "jobId": 136205676437,
+      "status": "FAILURE",
+      "qualification": "No errors in the nine owned paths. Old reply-identity expected unknown and inherited admin/policy brand errors; integrated over current typed main and explicit expect<unknown> preserves runtime exact equality. Two protected files remain gated."
     }
   ],
   "infrastructureReconciliation": [
