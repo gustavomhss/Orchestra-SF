@@ -212,7 +212,8 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
     addReportTextSlides(presentation, section.title, section.lines, "Preserved review")
     addReportValueSlides(presentation, section.title, section.table)
   })
-  const output = await presentation.write({ outputType: "uint8array" })
+  // PptxGenJS 4 compresses this stream path; explicit outputType ignores compression.
+  const output = await presentation.stream({ compression: true })
   if (!(output instanceof Uint8Array)) throw new Error("Unexpected presentation output")
   const artifact = { ok: true as const, name: `${name}.pptx`, type: "application/vnd.openxmlformats-officedocument.presentationml.presentation", bytes: output }
   sealReviewArtifact(artifact, review, options)
