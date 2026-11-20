@@ -8,7 +8,7 @@ import { PositiveInt } from "./schema"
 import { TeamProfile } from "./sucafina/team-profile"
 
 const Token = /^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$/
-export const ProviderId = Provider.ID.check(Schema.isPattern(Token))
+export const ProviderId = Provider.ID.check(Schema.isPattern(/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/))
 export const ModelId = Model.ID.check(Schema.isPattern(Token))
 export const Name = Schema.NonEmptyString.check(
   Schema.isMaxLength(256), Schema.isTrimmed(), Schema.isPattern(/^[^\u0000-\u001f\u007f]+$/),
@@ -25,7 +25,8 @@ export const Protocol = Schema.Literal("openai-chat-completions")
   .annotate({ identifier: "ProviderAccess.Protocol" })
 
 export const Limits = Schema.Struct({ context: PositiveInt, output: PositiveInt }).check(
-  Schema.makeFilter((value) => value.output <= value.context, { message: "Provider output cannot exceed its context limit" }),
+  Schema.makeFilter((value) => Number.isSafeInteger(value.context) && Number.isSafeInteger(value.output) && value.output <= value.context,
+    { message: "Provider limits must be safe integers and output cannot exceed context" }),
 ).annotate({ identifier: "ProviderAccess.Limits", parseOptions: { onExcessProperty: "error" } })
 export interface Limits extends Schema.Schema.Type<typeof Limits> {}
 export const ModelDefinition = Schema.Struct({

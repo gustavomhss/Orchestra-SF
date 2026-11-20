@@ -12,6 +12,7 @@ import { HttpEffect, HttpRouter, HttpServer, HttpServerRequest, HttpServerRespon
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { BodyLimit } from "./body-limit"
 import { isInstalledPersonalConnectionPath, makeInstalledPersonalConnectionHttp } from "./personal-connection-http"
+import { isInstalledProviderCatalogPath, makeInstalledProviderCatalogHttp } from "./provider-catalog-http"
 import { EventHandler } from "./handlers/event"
 import { MessageHandler } from "./handlers/message"
 import { ReferenceHandler } from "./handlers/reference"
@@ -42,7 +43,7 @@ export interface InstalledSessionOptions {
 export const isInstalledSessionPath = (pathname: string, mount: string) =>
   pathname === mount + "/api/session" || pathname.startsWith(mount + "/api/session/") ||
   pathname === mount + "/api/event" || pathname === mount + "/api/reference" ||
-  isInstalledPersonalConnectionPath(pathname, mount)
+  isInstalledPersonalConnectionPath(pathname, mount) || isInstalledProviderCatalogPath(pathname, mount)
 
 /**
  * Build only HTTP adapters over the root's existing services and reference overrides.
@@ -52,6 +53,7 @@ export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Ef
   const services = (yield* Effect.context<Host.RuntimeServices>()).pipe(Context.omit(Scope.Scope))
   const owners = yield* SessionOwner.Service
   const personalConnections = yield* makeInstalledPersonalConnectionHttp(options)
+  const providerCatalog = yield* makeInstalledProviderCatalogHttp(options)
   const authorization = Layer.succeed(Authorization, Authorization.of((effect, metadata) => Effect.gen(function* () {
     const request = yield* HttpServerRequest.HttpServerRequest
     yield* HttpEffect.appendPreResponseHandler((_request, response) => Effect.succeed(
@@ -101,6 +103,10 @@ export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Ef
     Effect.sync(() => HttpRouter.toWebHandler(routes, { disableLogger: true })),
     (value) => Effect.promise(() => value.dispose()),
   )
-  return (original: Request) => isInstalledPersonalConnectionPath(new URL(original.url).pathname, options.mount)
-    ? personalConnections(original) : http.handler(original, services)
+  return (original: Request) => {
+    const pathname = new URL(original.url).pathname
+    if (isInstalledPersonalConnectionPath(pathname, options.mount)) return personalConnections(original)
+    if (isInstalledProviderCatalogPath(pathname, options.mount)) return providerCatalog(original)
+    return http.handler(original, services)
+  }
 })
