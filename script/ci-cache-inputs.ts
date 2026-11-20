@@ -122,7 +122,10 @@ export async function dependencyFingerprint(
     if (!source) throw new Error("CACHE_POSTINSTALL_MISSING")
     // This admitted hook currently reads only the installed node-pty tree.
     // A new repository/module dependency requires an explicit input-policy update.
-    const imports = new Bun.Transpiler({ loader: "ts" }).scanImports(Buffer.from(source).toString("utf8"))
+    // Bun.Transpiler expects module source without a hashbang; the fingerprint
+    // still uses every original file byte collected above.
+    const moduleSource = Buffer.from(source).toString("utf8").replace(/^#![^\r\n]*(?:\r\n?|\n|$)/, "")
+    const imports = new Bun.Transpiler({ loader: "ts" }).scanImports(moduleSource)
     if (imports.some((entry) => !isBuiltin(entry.path))) throw new Error("CACHE_POSTINSTALL_IMPORT_UNADMITTED")
   }
   if (top.patchedDependencies !== undefined) {
