@@ -12,7 +12,7 @@
   "implementationStatus": "NOT_STARTED",
   "testsStatus": "NOT_RUN",
   "realTenantVerification": "NOT_RUN",
-  "reviewStatus": "FINDINGS_INCORPORATED_AWAITING_RECHECK",
+  "reviewStatus": "DOCUMENT_FINDINGS_RESOLVED_AND_RECHECKED",
   "scopeNote": "Study of repository-derived profile ownership and its dependencies. Not a claim that every project/directory symbol must be deleted. Product-specific dead repo-profile code must be removed; technical location, personal data, installation data and workflow profiles need explicit classification.",
   "coverage": {
     "sourceGroups": 26,
@@ -2093,7 +2093,8 @@
         "acceptanceIds": [
           "A42"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R02",
@@ -2104,7 +2105,8 @@
         "acceptanceIds": [
           "A37"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R03",
@@ -2115,7 +2117,8 @@
         "acceptanceIds": [
           "A38"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R04",
@@ -2126,7 +2129,8 @@
         "acceptanceIds": [
           "A39"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R05",
@@ -2137,7 +2141,8 @@
         "acceptanceIds": [
           "A40"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R06",
@@ -2148,7 +2153,8 @@
         "acceptanceIds": [
           "A41"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R07",
@@ -2161,7 +2167,8 @@
           "A28",
           "A30"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
       },
       {
         "id": "R08",
@@ -2172,7 +2179,40 @@
         "acceptanceIds": [
           "A43"
         ],
-        "resolution": "INCORPORATED_AWAITING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      }
+    ],
+    "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5",
+    "recheckResults": [
+      {
+        "reviewer": "teams_identity",
+        "findings": [
+          "R01"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "scope": "Identity and host transport admission"
+      },
+      {
+        "reviewer": "profile_runtime",
+        "findings": [
+          "R02",
+          "R03",
+          "R04",
+          "R07"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "scope": "Principal isolation, writer fence, session relations, private quarantine"
+      },
+      {
+        "reviewer": "profile_ui",
+        "findings": [
+          "R05",
+          "R06",
+          "R08"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "scope": "Storage key binding, compulsory revocation, URL parsers/builders"
       }
     ]
   }

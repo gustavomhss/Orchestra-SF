@@ -471,6 +471,8 @@ Três revisões técnicas independentes da autoria examinaram a primeira versão
 | R07 — quarentena interpretada como acesso admin ao privado | P2 | §7.1: retenção não concede leitura; logs/backup preservam sigilo e acesso. |
 | R08 — parsers/builders de URL fora do inventário | P2 | §5.1, WP0–2 e A43: contrato versionado e seletores atômicos. |
 
+Os três revisores releram as correções no commit `99499e3f7adbf48ede909c98378a0f8d2fa8b3b5` e confirmaram a resolução textual dos oito achados, sem pendência remanescente nos pontos levantados. A confirmação e seu alcance estão registrados no inventário.
+
 A revisão é do planejamento e de fontes direcionadas; não certifica migração, CI, execução instalada ou ausência global de resíduos.
 
 ## 13. Fontes de código e documentação
