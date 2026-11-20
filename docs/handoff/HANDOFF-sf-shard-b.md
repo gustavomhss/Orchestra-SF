@@ -4,33 +4,66 @@
 
 - Estado: **IN_PROGRESS — continuação autorizada para entrega completa, verde e mergeada; ver seção de continuação. Os resultados anteriores são históricos e não qualificam o candidato atual.**
 - Base imutável: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` (`sf-join-four`).
-- Branch: sf-shard-b; código neste checkpoint: `6c7b1732f84828f26eb9999e6c3dcda131190553`. Esta revisão acrescenta somente a atualização do handoff.
+- Branch: sf-shard-b; código neste checkpoint: `b880cb3fd1eed908dccbdcdcc2671c7e5c43d9e6`. Esta revisão acrescenta somente a atualização do handoff.
 - Escopo: CI-SF shards 4, 5 e 6 de 8; apenas GitHub; verificação por Actions.
 - `sf-ci` não foi executado. Não há declaração de GO ou de shard verde.
 
 ## Continuação — entrega completa autorizada
 
-A solicitação posterior exige correção completa, validação verde e merge. Os resultados da enumeração e dos checkpoints abaixo são históricos e não qualificam o candidato atual.
+A solicitação posterior exige correção completa, validação verde e merge. Este é um checkpoint de trabalho; os gates focados abaixo não substituem a qualificação completa dos inventários originais.
 
-- **Estado: IN_PROGRESS.** Branch de testes `sf-shard-b`, código `6c7b1732f84828f26eb9999e6c3dcda131190553`; candidato `32c97d3b4de5bb7960ca42f816b11ea37f594541` em `sfb-complete-composition`. Target incorporado por merge real: `aa751dd731ce91f126a00488dfce16022bb8cb2d`. Nenhuma soma de gates focados é usada para declarar um shard completo verde.
-- Originais fixados por arquivo: shard4 **118**, shard5 **119**, shard6 **109**. Requests históricos: `dd45d888617943df40e02815d58b59f88d8a18f7`, `f0bccdc48b42a9d000f3bda6565fa3d88286c845`, `204a74491764dcde4da22ebe558efc318e04a777`. A nova distribuição LPT não substitui esses inventários.
-- Shared **#435** mergeado em `82d2041d80784e2d905f99dee3bca91c63ef8350`: run **44667463947**, **3 pass / 0 fail**, AlternativeDraft. Sourcing nativo: run **44668567443**, **3 pass / 0 fail**, fix `c6dde2ba43db83445e2043d9064eaa41dbade9fb`.
-- C03/WP07: fix `42209cab9081705f63133ca3fe8b4ef28ff660df`, run **44670314438**, **1 pass / 0 fail**, Omni1spawn. O target incorporou os mesmos bytes do teste pelo **#456**, merge `aa751dd731ce91f126a00488dfce16022bb8cb2d`; a união completa de consumidores do driver foi preservada em B.
-- **Planner-memory-observation:** run **44670534535**, job **136070139366**, request `032dcd4942b8992c2ed639233d0fbcd7700f40ee`, fonte `91bcd283b6c4fbd9bc9575d232cbc62ddea9630b`; **28 pass / 2 fail**,30testes/4arquivos,1604.24s. Os28controles passam. Falhas: `integrated-proofs/am01/portfolio-recall-proof.test.ts:19` (240000ms,291924.66ms observados) e `integrated-proofs/am01/recall-five-profiles.test.ts:24` (900000ms,1306350.13ms observados). Catálogo instalado vazio permanece explicitamente indisponível; inferência não foi executada. Não elevar deadlines nem omitir controles/negativas. Investigação de composição/lifecycle em andamento.
-- **Portfolio-canonical-observation:** run **44670599697**, request `af31e465c7dc4a69c9cb4b2d0327350506b54c05`, ainda ativo neste checkpoint.
-- **Native-browser-fixture-composition:** run **44673683546**, request `5010ab9f8923b779e994e30382216c0d1af3bcf0`, candidato `32c97d3b4de5bb7960ca42f816b11ea37f594541`, ainda ativo. Corrige o build que não resolvia exports browser/import reais e a descoberta antes da sessão do produto; gate anterior **44670331648** terminou **0 pass / 2 fail** (teste+controleOmni), sem navegador iniciado.
-- Fixture F01 usa somente produtores reais: descoberta confinada ao transporte/Location, contexto ainda exige sessão, Procurement usa C02/fila real. Commits B `47ea842801c7a6507082c96e00420cac355ef241` e `ac7e1e5de5d38bb5037c1873dffbe5cbfbd80e92`. Provas novas: descoberta sem cookie200, Location divergente vazia, cross-site403, contexto anônimo401, CAP25autorizado200/revogado403.
-- UI54 #452 + health #449: testes B `39f21ebaffd4f18d13142cb2c8d6ed084c9e08d5`; revisão independente preserva CAS1→409→releitura2→confirmação→CAS3, campos dirty, retirada de escrita entre admissões,403/purge/history e60s. A encarnação de escopo C02 pode renovar após retirada de escrita; o produtor prova continuidade física, e o consumidor mantém originalSource exato e nova confirmação.
-- BI #448: testes B `5f519b35c6b47f09ab9a14b1a4124dfc85ecfc8c`; ajuste de cookie B `cfc4df5218d441cf6e0f5e049c7e3457d8b22076` seleciona a URL real `/sucafina/auth/logout`, preservando204/401/purge. UI32 #446 e import-preview #439 estão compostos e aguardam gates.
-- Sensibilidade #455 (supersede #454 sem rewrite): head `910d046316c908c0472eac41fa41bd0c0fa61ea6`, parent #441. Escopos somente de leitura para units/preview/revalidate/exactThreshold; persistência de amostras/resultados fica fora. Guard usa cobertura humana registrada no produtor, exige exact120/3samples, igualdade/digest reais, fontes/lease/input mutados recusados e chamadas independentes. #445 mantém a distinção entre cobertura avaliada e pending-only; teste original de exactThreshold B `7e9e43193d5cfe86c9ac97672cc40630ec7ac19c`.
-- A composição preserva os avanços do target: result-store **#414+#438**, blob `960ec20e78fb6a52e07cecebd2c6b12ce8c5393e`, foi conferido nas duas direções; analysis-http **#439+caseInput estrito**, blob `eba00a3718bc9ee68dc393d6d9eea30d27d175d9`, conserva id/incarnation não vazios, version>=1 e revalidação403. Os dois host-context são a união exata #446+#449.
-- S10 anterior: run **44667978696**, **16 pass / 2 fail**, fonte `e325d5b2382267e1bc7a9df4f29453f4a365cec8`: `wp13/coverage-sensitivity-integration.test.ts` excedeu300s; bootstrap em `wp11/renewal-choice-fixture.ts:65` / `fixture-trace.ts:15` excedeu180s enquanto a primeira continuação ainda corria. A nova composição contém fixes concretos de leitura; budgets intactos.
-- Review anterior: run **44669159725**, **15 pass / 1 fail**, `review-access-browser-fixture.ts:238`. Fix B `f0d32fa5170a2c7319c1e7cff0747bd17b7c93d7` exige estado terminal real, ausência de todo DOM privado e resposta atrasada incapaz de restaurar conteúdo. O request anterior incluiu por engano o filtro inexistente `review-read-scope.test.ts`; o log confirma16testes/1arquivo, sem atribuir cobertura ao filtro.
-- RollbackC09 #442 + B `1a34364162b9babba7e817f466cec1fc7ba76d03` aguardam gate composto dos4arquivos. Nenhuma alteração em `runtime/application.ts`.
-- Fila concreta: Decisions nativo; UI32; UI54+health; import-preview; BI; C09; Review; identidadeCalculation; sensibilidade+histórico. No máximo2ativos, incluindo cleanup. Não repetir gate idêntico sem correção.
-- Contract-freeze: #426/CF12 já mergeado. CF13 exige recibos reais de #446/#449/#452 antes da emenda dos2pins produtivos e narrativa. Não fabricar baseline/coverage/digest/GO. O diagnóstico `canonical-read-cost/diagnostic-cost.test.ts` é fora dos inventários4/5/6; seus pins exigem proveniência real se alterados.
-- Merge após gates: #403→#436/#441→#455; #420→#424; #414 e #434; #405/#445; #433/#439/#442; #446→#449→#452, #448; depois #410. Ajustar apenas por dependência real. Não rebasear branches alheios; resolver conflitos por merges reais preservando o target.
-- Retomar: coletar os2runs ativos, corrigir a causa dos2timeoutsAM01, processar fila uma vez por causa, finalizar CF13 com evidência, validar os3inventários originais completos e mergear osPRs qualificados. Apenas GitHub/Actions; nenhum `sf-ci`, shell, browser:4110 ou push nos branches proibidos.
+### Estado atual e evidência
+
+- **IN_PROGRESS**, código em `sf-shard-b`: `b880cb3fd1eed908dccbdcdcc2671c7e5c43d9e6`. Candidato integrado: `3b41a73a6777781db7e0654f1d413e39abab58a2` em `sfb-complete-composition`, árvore `5dd6973817a68faecb2ab84101ba87d04aba42f4`. Target incorporado por merge verdadeiro: `3910a644c7fdab1a438c2b5b39d69afc19361709`.
+- Inventários imutáveis: shard4 **118 arquivos**, shard5 **119**, shard6 **109**. Requests históricos `dd45d888617943df40e02815d58b59f88d8a18f7`, `f0bccdc48b42a9d000f3bda6565fa3d88286c845`, `204a74491764dcde4da22ebe558efc318e04a777`. A distribuição LPT nova não substitui o escopo original.
+- PR principal **#410**, ainda draft; os PRs compartilhados só são integrados depois da evidência pertinente. Nenhum rebase, aumento de prazo/lease, execução de `sf-ci`, shell, browser em4110 ou push nos branches proibidos.
+- Já mergeados pelo coordenador: **#435** `82d2041d80784e2d905f99dee3bca91c63ef8350` (3/0); **#442** `45514008d7ce275327003c5d92faaeeab2479739` (18/0); **#433** `3910a644c7fdab1a438c2b5b39d69afc19361709` (16/0). O blob de Review integrado `3dc520c7bd7357650deb73322cf0c7fa50d8a13f` é idêntico ao validado.
+- C03 permanece validado: run44670314438 1/0; reteste sob half-close corrigido run44674551510 também passou C03. O run combinado terminou1/1 porque o mensal revelou uma falha independente de identidade no bundle.
+- Sourcing nativo: run44668567443 **3/0**. O catálogo vazio é registrado honestamente como indisponível; não implica inferência ou GO.
+- Target posterior trouxe types/ingress e fábrica já qualificados. Foram preservados os13postimages de a62ce06 sem colisões. A alteração externa do iterator do browser é semanticamente igual à nossa; preservamos o blob87934cd com todos os consumidores, em vez de sobrescrevê-lo com um arquivo mais antigo.
+
+| Causa / gate | Run | Resultado | Código qualificado ou candidato |
+| --- | --- | --- | --- |
+| C03-transport | [44667407691](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667407691) | 0 pass / 1 fail | ver registro histórico abaixo |
+| AlternativeDraft-rendering | [44667463947](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667463947) | 3 pass / 0 fail | ver registro histórico abaixo |
+| S10-snapshot | [44667978696](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667978696) | 16 pass / 2 fail | ver registro histórico abaixo |
+| C03-enrollment-page | [44668069860](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668069860) | 0 pass / 1 fail | ver registro histórico abaixo |
+| Native-sourcing-admission | [44668567443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668567443) | 3 pass / 0 fail | ver registro histórico abaixo |
+| C03-node-owner | [44668879392](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668879392) | 0 pass / 1 fail | ver registro histórico abaixo |
+| Review-current-denial | [44669159725](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669159725) | 15 pass / 1 fail | ver registro histórico abaixo |
+| C03-current-denial | [44670314438](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670314438) | 1 pass / 0 fail | ver registro histórico abaixo |
+| Native-monthly-browser | [44670331648](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670331648) | 0 pass / 2 fail | ver registro histórico abaixo |
+| Planner-memory-observation | [44670534535](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670534535) | 28 pass / 2 fail | `91bcd283b6c4fbd9bc9575d232cbc62ddea9630b` |
+| Portfolio-canonical-observation | [44670599697](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670599697) | 41 pass / 4 fail / 1 error | `91bcd283b6c4fbd9bc9575d232cbc62ddea9630b` |
+| Native-browser-fixture-composition | [44673683546](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44673683546) | 0 pass / 1 fail | ver registro histórico abaixo |
+| C09-abort-provenance | [44673967393](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44673967393) | 18 pass / 0 fail | `32c97d3b4de5bb7960ca42f816b11ea37f594541` |
+| Native-browser-half-close | [44674551510](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44674551510) | 1 pass / 1 fail | `50e2222b18cb44081df4a8ea9afea46204f12555` |
+| Calculation-service-identity | [44674214842](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44674214842) | 17 pass / 4 fail | `32c97d3b4de5bb7960ca42f816b11ea37f594541` |
+| Review-browser-purge | [44675050868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675050868) | 16 pass / 0 fail | `50e2222b18cb44081df4a8ea9afea46204f12555` |
+| Native-connection-identity | [44675653919](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675653919) | 0 pass / 3 fail | `e9f3ce75e387369686816cad758d24e3c72a1f9e` |
+| Dependencies-observation-clock | [44675888290](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44675888290) | in_progress | `e9f3ce75e387369686816cad758d24e3c72a1f9e` |
+| Planner-physical-read-batch | [44676186908](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676186908) | in_progress | `3e418a337751bc496d0d4c6cc0cfa38d6ee76faa` |
+
+### Correções concretas recentes e pendências
+
+- **Browser half-close:** B `7f3afaed6b767e2ddde4a1294f912dff94c37bc7`, `wp02/browser-driver-fixture.ts:164`, usa iterator que preserva o lado de escrita após EOF. Mantém limites de fila, WS1000, drenagem e provas de encerramento físico. `wp01/planner-monthly.test.ts` preserva o erro primário e agrega falhas de cleanup; não altera asserções. A execução44674551510 comprovou processos com saída0.
+- **Identidade canônica:** shared **#461**, head `f41374d5ab7e1d228e0e858a9004a1783e4fd421`, troca o import do owner para o módulo real `context/server-connection`; `ServerConnection.key` existe e não foi substituído. B `613332cd51c8911a02c3807fb38f0bb31450d62a` ajusta os dois entrypoints tipados. O gate44675653919 não qualificou a UI: mensal excedeu14996ms no launch e HTTP encontrou `fast-check/lib/fast-check.js` como diretório na segunda construção. Resultado0/3 inclui o controleOmni sem spawn do HTTP. Correção de provisionamento/resolução em preparação; nenhum retry idêntico.
+- **Dependências:** B `c58ca0b9d4f56d81867fa3e9406657117defe03b`, `wp12/native-mission-harness.ts` e `native-execution-dependencies.test.ts`, declara relógio2027-01-15 comum ao projetor/ambiente e pede campos escalares ao leitor C06. Preserva datas, homônimo, FTE, relações, escolha, reabertura e420000ms. Gate44675888290 ativo.
+- **Leitura física Planner:** shared **#464**, head `8d093ed277668438be1ffde9130c6d7a0f41da46`, parent#441. B `9d817a563a2ad87085af4c4f59c027d65b2f7616` acrescenta19guardas reais em `wp10/integration/planner-case-read-batch.test.ts`. O helper agrupa somente leituras físicas elegíveis, executa todos os callbacks canônicos e reabre C08/C02 após fechar a raizSQLite. Materialização necessária/mistura de fontes retorna ao produtor antes do trabalho; escrita posterior invalida sem retry. Gate44676186908 cobre guardas +2AM01 +reevaluation. Não aumentar240/900/300s.
+- **Compra nativa:** `wp12/native-execution-purchase.test.ts:14,136`, pending/complete, ainda excede360s; escolha expira exatamente na seleção300s, sem renovação durante a ação. O caso contém Planner+Procurement e não é elegível para o batch Planner puro. Causa de leitura física mista em investigação separada.
+- **Calculation:** gate44674214842,17/4. O recall positivo concluiu em25.786s; a recuperação idempotente de evento já gravado repetiu mais de20resoluções financeiras antes do deadline105s (`wp10/integration/planner-calculation.test.ts:601-620`). Preparar escopo privado somente no ramo settled, preservando primeira emissão e todos fences. Os3testes de clock/principal/lease em:737-807 ainda usam um segundo snapshot outbox; o produtor agora faz os snapshots finais em atlas. Ajustar o seam ao envelope real mantendo mutação1, resolução1, recusa e ausência de records.
+- **Sensibilidade:** shared#405/#445/#455 compostos. #455head `910d046316c908c0472eac41fa41bd0c0fa61ea6`, parent#441, mantém escritas de amostras/resultados fora da observação de leitura. Gate concreto dos5arquivos está na fila, com a composição que já contém o batch.
+- **UI32/UI54/BI/import:** #446/#449/#452/#448/#439 compostos, aguardam correção da fixture comum e seus gates. UI54 mantém CAS1→409→releitura2→confirmação→CAS3, dirty fields, retirada de escrita,403/purge/history; BI mantém204/401/purge e o cookiePath real.
+- **CF13:** #426/CF12 já integrado; somente após recibos reais de UI32/health/UI54 atualizar os2pins produtivos de host-context e narrativa, preservando38keys e a evidência histórica não revalidada. Nenhuma atualização de hash para fabricar aprovação.
+- Preserve unions: business-services `60612bdc02c5c692de82879b553a6a259cd876f5` (#403/#436/#441/#434/#464); result-store `960ec20e78fb6a52e07cecebd2c6b12ce8c5393e` (#414+#438); analysis-http `eba00a3718bc9ee68dc393d6d9eea30d27d175d9` (#439+caseInput estrito); host-context CLI `72aeb15a096c2d8384bb1c59410fc77124afc65d` e produto `acad4f00a2a03c7c1d7f6a381367168fab794cbb` (#446+#449); owner `6d51c94533d7da048aad2dc72b99f9ccad0f2bd5` (#448+#461).
+
+### Ordem de merge e retomada
+
+1. Coletar os2gates ativos incluindo cleanup; nunca ultrapassar2. Registrar resultados reais e resolver a causa antes de outro gate correspondente.
+2. Integrar #403→#436/#441→#464/#455 e novo batch misto quando qualificados; #420→#424; #414/#434; #405/#445; #439; #446→#449→#452; #448/#461. #433/#435/#442 já integrados. Retarget de PR dependente após o parent; nenhum rebase.
+3. Finalizar fixes de navegador e recuperação settled, depois os gates UI e a emendaCF13 sustentada por evidência.
+4. Qualificar os346arquivos originais nos3inventários explícitos, corrigindo toda falha restante. Não usar soma de recortes como resultado integral. Mergear#410 e atualizar este arquivo comSHAs/resultados finais.
+
 
 ## Por shard
 
