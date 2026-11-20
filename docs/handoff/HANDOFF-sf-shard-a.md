@@ -194,7 +194,6 @@ SHA atual de código: `2ee5e96198500ed9d2524b692240b90cce86ed79`. Foram alterado
 | --- | --- | --- | --- | --- | --- |
 | 1 | Registro de descriptors versus admissão por owner | `243c083dfef4caefddf88c64adb46ab7f7b88b2f` | `3edf1737c390f89220337cbcbc0efdf9f689ad51` | [44657265518](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657265518) | Em andamento; contagem pendente |
 | 2 | Recusa C08 anterior ao produtor após revisão da fonte | `d582fe32ca6fcab503a364065d846715642e8837` | `0c352eef4965c9e8c59ca123a95d7ebfba491f8b` | [44657300808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657300808) | FAILURE; 507 pass / 7 fail / 1 skip / 1 error |
-
 | 2 | Recusa anônima com header ausente e corpo textual exato | `2ee5e96198500ed9d2524b692240b90cce86ed79` | `460ca5cbcbe85af34bc1945af832e52ac8db07cc` | [44661562191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661562191) | Em andamento; contagem pendente |
 
 Jobs: shard1 `136026453241`; primeiro gate do shard2 `136026570741`; segundo gate do shard2 `136040769695`. Cada gate usa exatamente a requisição da enumeração de seu shard (113/107 arquivos, timeout30000). Não houve rerun idêntico nem gate adicional do shard3. Máximo de2 gates simultâneos **desta sessão**.
