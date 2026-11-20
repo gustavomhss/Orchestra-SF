@@ -473,6 +473,7 @@ jobs:
         shell: bash
         run: bash script/sf-ci/operations-clamd.sh
       - name: Run installed SF UI journey
+        id: ui_journey
         env:
           SF_OPERATIONS_CLAMD_PORT: ${{ matrix.id == 'CI-UI-OPERATIONS' && '3310' || '' }}
         shell: bash
@@ -507,6 +508,8 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
+          # Publish candidates only after the original test run and minimization succeed.
+          echo "minimized=true" >> "$GITHUB_OUTPUT"
           # The coverage gate needs a baseline versioned from an authentic successful
           # run and independently reviewed. Until that baseline exists in the
           # manifest, calling it here would only fail closed on every PR.
@@ -519,6 +522,15 @@ jobs:
           path: |
             sf-ci-evidence/${{ matrix.id }}/report.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Preserve minimized UI baseline candidate after receipt rejection
+        if: ${{ failure() && steps.ui_journey.outcome == 'failure' && steps.ui_journey.outputs.minimized == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-baseline-candidate-${{ matrix.id }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/${{ matrix.id }}/report.json
           if-no-files-found: error
           retention-days: 7
 
