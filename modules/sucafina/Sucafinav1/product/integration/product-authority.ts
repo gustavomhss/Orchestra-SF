@@ -466,11 +466,11 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
       value.some((grant) => !grant || typeof grant.principalRef !== "string" || !grant.principalRef.trim() ||
         !Array.isArray(grant.namespaces) || !Array.isArray(grant.operations) ||
         new Set(grant.namespaces).size !== grant.namespaces.length || new Set(grant.operations).size !== grant.operations.length ||
-        grant.namespaces.some((namespace) => typeof namespace !== "string" || !namespace.trim()) ||
-        grant.operations.some((operation) => typeof operation !== "string" || !operation.trim()) ||
+        grant.namespaces.some((namespace: unknown) => typeof namespace !== "string" || !namespace.trim()) ||
+        grant.operations.some((operation: unknown) => typeof operation !== "string" || !operation.trim()) ||
         grant.humanActions !== undefined && (!Array.isArray(grant.humanActions) ||
           new Set(grant.humanActions).size !== grant.humanActions.length ||
-          grant.humanActions.some((action) => !sfHumanActions.some((known) => known === action)))))
+          grant.humanActions.some((action: unknown) => !sfHumanActions.some((known) => known === action)))))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
   return Object.freeze(value.map((grant) => Object.freeze({
     principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
