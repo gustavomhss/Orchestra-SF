@@ -5,6 +5,7 @@ import type { CostCoverageAssessment, CostCoverageBasis, CostCoverageEntry, Deci
 import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import { assessCostCoverage } from "./cost-coverage.ts"
 import { classifyCoverage, classificationDigest, classificationKey, supportsCoverageClassification } from "./coverage-classification.ts"
@@ -34,7 +35,7 @@ export function createDecisionBaselineCoverage(input: {
       const source = input.host.requestFor(context)
       const bound = await input.resolveCase(context)
       if (!source || !selector.trim() || bound.status !== "ok" || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
-      const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[bound.value.id] : undefined)
+      const readCase = () => input.state.read(source, "cases", selectSfCase(bound.value.id, context))
       const current = await readCase()
       if (current.status !== "ok" || !allowed(current.value, bound.value, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
       const readRecords = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? Object.entries(state.preferences).filter(([key]) => key.startsWith("sf:proposal-coverage:baseline:active:")).flatMap(([, value]) => {
@@ -61,7 +62,7 @@ export function createDecisionBaselineCoverage(input: {
       const source = input.host.requestFor(context)
       const operation = input.operationIdentity(context)
       if (!source || !operation || !Number.isSafeInteger(request.expectedVersion) || request.expectedVersion < 0 || request.source.kind !== "record" || request.source.target.surface !== "planner" || request.source.refDigest !== digestSfEvidenceRef(request.source) || request.source.installationId !== context.binding.installationId || request.source.projectId !== context.binding.projectId || !await input.authorizeCoverage(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const current = await input.state.read(source, "cases", selectSfCase(request.caseRef.id, context))
       const key = activeKey(request.caseRef, request.source.refId)
       const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { active: state.preferences[key], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `baseline-coverage:${operation}`])] } : undefined)
       if (current.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
