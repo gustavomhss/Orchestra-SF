@@ -1,7 +1,8 @@
+import { sfOwnerQuery, sfOwnerQueryKeys, sfParseOwnerQuery, sfSelectionFromQuery, sfSameOwnerSelection } from "./owner"
 import { batch } from "solid-js"
 import type {
   SfHref, SfOwnerKey, SfOwnerSelection, SfRef, SfResolvedRoute,
-  SfServerKey, SurfaceId,
+  SurfaceId,
 } from "@orchestra/schema/sucafina/context"
 
 /**
@@ -15,9 +16,7 @@ export function sfEntryDestinationRequest(from: SfResolvedRoute, target: "CAP07"
   if (!owner.serverKey || !owner.projectId || !owner.installationId) return undefined
   const pathname = target === "CAP07" ? "/orchestra/sf-people/structure"
     : "/orchestra/sf-procurement/requests"
-  return pathname + "?" + new URLSearchParams({
-    server: owner.serverKey, project: owner.projectId, installation: owner.installationId,
-  }).toString()
+  return pathname + "?" + new URLSearchParams(sfOwnerQuery(owner)).toString()
 }
 
 /** Original opaque references are encoded only to avoid route-token collisions. */
@@ -31,7 +30,7 @@ export function encodeSfRouteRef(original: string): string {
 function ownerQueryNamed(href: string): boolean {
   try {
     const url = new URL(href, "http://orchestra.invalid")
-    return ["server", "project", "installation"].some((key) => url.searchParams.has(key))
+    return sfOwnerQueryKeys.some((key) => url.searchParams.has(key))
   } catch {
     return true
   }
@@ -68,19 +67,10 @@ export function resolveSfUrlSelection(href: string, currentHref: string, selecte
     if (!["http:", "https:"].includes(destination.protocol) || destination.origin !== base.origin || !destination.pathname.startsWith("/orchestra/"))
       return { status: "invalid-link" }
     if (/%(?![\da-fA-F]{2})/.test(destination.search)) return { status: "invalid-link" }
-    const values = ["server", "project", "installation"].map((key) => destination.searchParams.getAll(key))
-    if (values.some((items) => items.length > 1)) return { status: "invalid-link" }
-    if (values.every((items) => items.length === 0)) return { status: "selected", selection: selected, explicit: false }
-    if (!values.every((items) => items.length === 1 && items[0])) return { status: "invalid-link" }
-    return {
-      status: "selected",
-      explicit: true,
-      selection: {
-        serverKey: values[0]![0] as SfServerKey,
-        projectId: values[1]![0] as SfRef,
-        installationId: values[2]![0] as SfRef,
-      },
-    }
+    const parsed = sfParseOwnerQuery(destination.searchParams)
+    const selection = sfSelectionFromQuery(destination.searchParams, selected)
+    if (!selection) return { status: "invalid-link" }
+    return { status: "selected", selection, explicit: parsed.kind !== "absent" }
   } catch {
     return { status: "invalid-link" }
   }
@@ -170,9 +160,7 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
       })
       if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
       if (resolved.status !== "authorized") return { status: resolved.status }
-      if (resolved.route.ownerSelection.serverKey !== selected.selection.serverKey ||
-          resolved.route.ownerSelection.projectId !== selected.selection.projectId ||
-          resolved.route.ownerSelection.installationId !== selected.selection.installationId)
+      if (!sfSameOwnerSelection(resolved.route.ownerSelection, selected.selection))
         return { status: "invalid-link" }
       if (options?.expectedOwnerKey &&
           (resolved.ownerKey !== options.expectedOwnerKey ||
@@ -207,9 +195,7 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
         if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
         if (again.status !== "authorized" || again.ownerKey !== resolved.ownerKey ||
             again.route.href !== resolved.route.href ||
-            again.route.ownerSelection.serverKey !== selected.selection.serverKey ||
-            again.route.ownerSelection.projectId !== selected.selection.projectId ||
-            again.route.ownerSelection.installationId !== selected.selection.installationId)
+            !sfSameOwnerSelection(again.route.ownerSelection, selected.selection))
           return { status: again.status === "authorized" ? "denied" : again.status }
         admitted = again
       }

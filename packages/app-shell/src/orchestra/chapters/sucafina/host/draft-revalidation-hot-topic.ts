@@ -2,12 +2,12 @@ import { Option, Schema } from "effect"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfPeopleTopicSelection } from "@orchestra/schema/sucafina/people"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 const fields = ["action", "owner", "due", "status", "priority", "notes"]
 export async function revalidateHotTopicDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP02" || input.read.operationId !== "domain.page.CAP02" ||
       input.read.actionIds.length !== 1 || input.read.actionIds[0] !== "save" ||

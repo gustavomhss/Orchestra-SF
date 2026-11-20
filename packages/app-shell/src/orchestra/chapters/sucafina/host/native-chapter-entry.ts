@@ -1,4 +1,5 @@
-import type { SfContext, SfOwnerKey, SfOwnerSelection, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
+import { sfOwnerQuery, sfSameOwnerSelection, sfSameContextStamp, sfSameTeamRef } from "../navigation-state/owner"
+import type { SfReadableContext, SfOwnerKey, SfOwnerSelection, SfRef, SfServerKey } from "@orchestra/schema/sucafina/context"
 import type { SfContextHandle, SfContextState } from "../context/contracts"
 import type { SfNativeNavigationState, SfNativeTransitionResult } from "../navigation-state"
 import { isSfNativeChapter, type SfNativeChapterId } from "../route-registry"
@@ -28,8 +29,7 @@ export function sfNativeChapterEntry(chapter: string): string | undefined {
 export function sfNativeOwnerChapterRequest(chapter: string, selection: SfOwnerSelection): string | undefined {
   const path = sfNativeChapterEntry(chapter)
   if (!path || !selection.serverKey || !selection.projectId || !selection.installationId) return
-  return path + "?" + new URLSearchParams({ server: selection.serverKey, project: selection.projectId,
-    installation: selection.installationId }).toString()
+  return path + "?" + new URLSearchParams(sfOwnerQuery(selection)).toString()
 }
 
 /** Invalid owner syntax is not permission to retire an already-mounted owner. */
@@ -52,11 +52,17 @@ export function sfReadyOwnerSelection(state: Extract<SfContextState, { status: "
     state.context.stamp.projectId !== state.binding.projectId || state.context.stamp.installationId !== state.binding.installationId ||
     state.context.stamp.hostId !== state.binding.hostId || state.context.stamp.principalRef !== state.owner.principalRef ||
     !state.context.stamp.policyVersion || !state.context.stamp.accessRevision) return
+  const team = state.context.stamp.team?.owner
+  if (state.context.contractRevision === "sf-team-profile/1" &&
+      (!team || !state.owner.team || !sfSameTeamRef(team.profile, state.owner.team.profile) ||
+       team.principal.tenantId !== state.owner.team.principal.tenantId ||
+       team.principal.principalObjectId !== state.owner.team.principal.principalObjectId)) return
+  if (state.context.contractRevision !== "sf-team-profile/1" && (team || state.owner.team)) return
   return { serverKey: state.owner.serverKey as SfServerKey, projectId: state.binding.projectId as SfRef,
-    installationId: state.binding.installationId as SfRef }
+    installationId: state.binding.installationId as SfRef, ...(team ? { team: structuredClone(team.profile) } : {}) }
 }
 
-export type SfReadyOwnerSnapshot = Readonly<{ selection: SfOwnerSelection; ownerKey: SfOwnerKey; stamp: SfContext["stamp"] }>
+export type SfReadyOwnerSnapshot = Readonly<{ selection: SfOwnerSelection; ownerKey: SfOwnerKey; stamp: SfReadableContext["stamp"] }>
 export function sfCaptureReadyOwner(state: Extract<SfContextState, { status: "ready" }>): SfReadyOwnerSnapshot | undefined {
   const selection = sfReadyOwnerSelection(state)
   if (!selection) return
@@ -64,6 +70,7 @@ export function sfCaptureReadyOwner(state: Extract<SfContextState, { status: "re
   return { selection, ownerKey: state.ownerKey, stamp: {
     installationId: stamp.installationId, projectId: stamp.projectId, hostId: stamp.hostId,
     principalRef: stamp.principalRef, policyVersion: stamp.policyVersion, accessRevision: stamp.accessRevision,
+    ...(stamp.team ? { team: structuredClone(stamp.team) } : {}),
   } }
 }
 
@@ -72,13 +79,10 @@ export function sfSameReadyOwnerSnapshot(handle: Readonly<{ state: () => SfConte
   const current = handle.state()
   if (handle.generation() !== generation || current.status !== "ready" || current.ownerKey !== prior.ownerKey) return false
   const after = sfReadyOwnerSelection(current)
-  if (!after || prior.selection.serverKey !== after.serverKey || prior.selection.projectId !== after.projectId ||
-    prior.selection.installationId !== after.installationId) return false
+  if (!after || !sfSameOwnerSelection(prior.selection, after)) return false
   const left = prior.stamp
   const right = current.context.stamp
-  return left.installationId === right.installationId && left.projectId === right.projectId &&
-    left.hostId === right.hostId && left.principalRef === right.principalRef &&
-    left.policyVersion === right.policyVersion && left.accessRevision === right.accessRevision
+  return sfSameContextStamp(left, right)
 }
 
 /** Discard only after consent while the exact owner epoch and handle are unchanged. */
@@ -111,8 +115,7 @@ export async function confirmSfOwnerExit(deps: Readonly<{
     if (!ready || !sfSameReadyOwnerSnapshot(handle, ready, generation)) return false
   } else {
     if (!selected || now.status === "ready" || now.status !== status ||
-      now.selection.serverKey !== selected.serverKey || now.selection.projectId !== selected.projectId ||
-      now.selection.installationId !== selected.installationId) return false
+      !sfSameOwnerSelection(now.selection, selected)) return false
     if (status === "unauthenticated" && (!binding || now.status !== "unauthenticated" ||
       now.binding.projectId !== binding.projectId || now.binding.installationId !== binding.installationId ||
       now.binding.hostId !== binding.hostId || now.binding.publicOrigin !== binding.publicOrigin ||

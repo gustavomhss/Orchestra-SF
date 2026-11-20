@@ -28,13 +28,13 @@ const route = (ownerSelection: SfOwnerSelection): SfResolvedRoute => ({
   query: {},
 })
 const original = (id: string, projectId = "project") => ({
-  publicOrigin: "https://sucafina.example",
+  publicOrigin: "http://127.0.0.1:4096",
   mount: "/sucafina",
-  authMode: "microsoft" as const,
+  authMode: "local-operator" as const,
   identity: () => ({ installationId: id, projectId, hostId: "loaded-host" }),
 })
 
-describe("F01 strict installation discovery", () => {
+describe("F01 local-operator legacy installation discovery", () => {
   test("IDs never call selected Location, cwd or directory fallback", async () => {
     let locationCalls = 0
     const source: SfTrustedInstallationSource = {
@@ -189,5 +189,48 @@ describe("Q01 original-owner entry navigation candidates", () => {
     expect(sfEntryDestinationRequest(route(incomplete), "CAP07")).toBeUndefined()
     expect(sfEntryDestinationRequest(route(selected("source-b", "another-project", "another-install")), "CAP25"))
       .toBe("/orchestra/sf-procurement/requests?server=source-b&project=another-project&installation=another-install")
+  })
+})
+
+
+describe("F01 Microsoft metadata replaces legacy discovery without admitting an actor", () => {
+  const tenantId = "11111111-2222-4333-8444-555555555555"
+  const corporate = { publicOrigin: "https://sucafina.example", mount: "/sucafina", authMode: "microsoft" as const,
+    tenantId, identity: () => ({ installationId: "installation", projectId: "physical-placement", hostId: "loaded-host" }) }
+  test("current and exact installed tenant selectors never consult selected Location or cwd", async () => {
+    let current = 0, locations = 0
+    const source: SfTrustedInstallationSource = { current: async () => { current++; return corporate },
+      forAdmittedLocation: async () => { locations++; return [corporate] } }
+    for (const query of ["select=current&contractRevision=sf-team-profile%2F1",
+      "select=installation&contractRevision=sf-team-profile%2F1&installationId=installation&tenantId=" + tenantId]) {
+      const selector = parseSfInstallationSelector("https://sucafina.example/api/sucafina/installations?" + query)
+      const result = await readSfInstallations(source, selector, new AbortController().signal)
+      expect(result.installations).toEqual([{ ...corporate.identity(), publicOrigin: corporate.publicOrigin,
+        mount: corporate.mount, authMode: "microsoft", contractRevision: "sf-team-profile/1", tenantId }])
+    }
+    expect(current).toBe(2)
+    expect(locations).toBe(0)
+  })
+  test("Microsoft cannot be discovered by legacy IDs/Location or borrow another tenant/installation", async () => {
+    let locations = 0
+    const source: SfTrustedInstallationSource = { current: async () => corporate,
+      forAdmittedLocation: async () => { locations++; return [corporate] } }
+    for (const query of ["select=ids&installationId=installation&projectId=physical-placement",
+      "select=location&location%5Bdirectory%5D=%2Frepo",
+      "select=installation&contractRevision=sf-team-profile%2F1&installationId=foreign&tenantId=" + tenantId,
+      "select=installation&contractRevision=sf-team-profile%2F1&installationId=installation&tenantId=22222222-2222-4333-8444-555555555555"]) {
+      expect(await readSfInstallations(source, parseSfInstallationSelector("/api/sucafina/installations?" + query),
+        new AbortController().signal)).toEqual({ installations: [] })
+    }
+    expect(locations).toBe(1) // Only the explicitly local legacy Location selector visits that port; it still yields no Microsoft descriptor.
+  })
+  test("versioned bootstrap rejects duplicate, partial, mixed and caller-authority queries", () => {
+    for (const query of ["select=current", "select=current&contractRevision=sf-native-ui%2F1",
+      "select=current&contractRevision=sf-team-profile%2F1&tenantId=" + tenantId,
+      "select=current&contractRevision=sf-team-profile%2F1&select=current",
+      "select=current&contractRevision=sf-team-profile%2F1&location%5Bdirectory%5D=%2Frepo",
+      "select=current&contractRevision=sf-team-profile%2F1&principalRef=caller"]) {
+      expect(() => parseSfInstallationSelector("/api/sucafina/installations?" + query)).toThrow()
+    }
   })
 })

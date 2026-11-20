@@ -1,8 +1,9 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfReviews } from "@orchestra/schema/sucafina/reviews"
 import { SfOperationId } from "@orchestra/schema/sucafina/common"
-import type { SfContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfRef, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfAgendaView } from "../reviews/agenda"
@@ -15,14 +16,13 @@ export function isReviewsSurface(id: string): boolean { return Object.hasOwn(kin
 export function parseReviewsRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
-  const allowed = ["server", "project", "installation",
+  const allowed = [...sfOwnerQueryKeys,
     ...(candidate.surfaceId === "UI47" ? ["year"] : []),
     ...(candidate.surfaceId === "UI48" ? ["reviewThread", "reviewMessage", "reviewIncarnation", "reviewVersion"] : []),
     ...(candidate.surfaceId === "UI49" ? ["previousReview", "currentReview"] : []),
   ]
   if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year"), previous = params.get("previousReview"), current = params.get("currentReview")
   if (year !== null && (!/^\d{4}$/.test(year) || Number(year) === 0)) return
   if ([previous, current].some((ref) => ref !== null && (!ref.trim() || ref.length > 2048)) || previous !== null && previous === current) return
@@ -43,7 +43,7 @@ function admittedReviewBinding(params: URLSearchParams) {
   return !!thread && parts.every((value) => !!value && value.trim().length > 0 && value.length <= 2048) &&
     /^[1-9]\d*$/.test(version ?? "") && Number.isSafeInteger(Number(version))
 }
-export function reviewsRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function reviewsRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-reviews" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   const id = candidate.surfaceId === "UI47" ? SfReviews["projection.review"].operationId : SfReviews["dashboard.dashboard-review"].operationId
   if (!context.availability.some((resource) => resource.family === "reviews" && resource.operations.some((item) => item.operationId === id && item.state === "ready" && item.operational))) return false

@@ -1,8 +1,9 @@
+import { sfSameTeamRef, sfSameContextStamp } from "../../navigation-state/owner"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
-import { createSfContextClient } from "@orchestra/client/sucafina/context"
+import { createSfContextClient, createSfTeamContextClient } from "@orchestra/client/sucafina/context"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfEditScopeKey, SfIntentRef } from "@orchestra/schema/sucafina/context"
-import type { SfContext, SfContextStamp, SfDraftRegistry, SfDraftRevalidation, SfDraftRevalidationInput, SfOwnerIdentity } from "../../context/contracts"
+import type { SfReadableContext, SfContextStamp, SfDraftRegistry, SfDraftRevalidation, SfDraftRevalidationInput, SfOwnerIdentity } from "../../context/contracts"
 import { downloadReviewReport } from "./download"
 
 const selection = Object.freeze({
@@ -16,17 +17,20 @@ const legacyUnknown = "legacy-unknown"
 
 /** Only a hashed owner scope and random correlation are persisted, never report content. */
 export async function reportMarkerScope(owner: SfOwnerIdentity): Promise<string> {
-  const scope = JSON.stringify([owner.serverKey, owner.transportIdentity, owner.publicOrigin,
-    owner.installationId, owner.projectId, owner.principalRef])
+  const scope = JSON.stringify(owner.team ? [owner.publicOrigin, owner.team.profile.installationId,
+    owner.team.profile.tenantId, owner.team.profile.teamObjectId, owner.team.principal.principalObjectId] :
+    [owner.serverKey, owner.transportIdentity, owner.publicOrigin,
+      owner.installationId, owner.projectId, owner.principalRef])
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(scope))
-  return "sf:ui50:report:v2:" + Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("")
+  return (owner.team ? "sf:ui50:report:v3:" : "sf:ui50:report:v2:") + Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("")
 }
 export function readReportMarker(storage: MarkerStorage, scope: string): string | null | undefined {
   try {
     // Old host-scoped hashes cannot be attributed after a restart. Do not
     // silently allow a second intent while any such marker remains unresolved.
     for (let index = 0; index < storage.length; index++) {
-      if (storage.key(index)?.startsWith("sf:ui50:report:v1:")) return legacyUnknown
+      if (storage.key(index)?.startsWith("sf:ui50:report:v1:") ||
+        scope.startsWith("sf:ui50:report:v3:") && storage.key(index)?.startsWith("sf:ui50:report:v2:")) return legacyUnknown
     }
     const value = storage.getItem(scope)
     return value === null || uuid.test(value) ? value : undefined
@@ -84,11 +88,9 @@ function update(drafts: SfDraftRegistry, intent: ReportRecovery, changes: Partia
     gaps: changes.gaps ? Object.freeze([...changes.gaps]) : snapshot.value.gaps }))
 }
 
-const stampMatches = (a: SfContextStamp, b: SfContextStamp) =>
-  a.installationId === b.installationId && a.projectId === b.projectId && a.hostId === b.hostId &&
-  a.principalRef === b.principalRef && a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
+const stampMatches = sfSameContextStamp
 
-function readiness(context: SfContext): "ready" | "denied" | "unavailable" {
+function readiness(context: SfReadableContext): "ready" | "denied" | "unavailable" {
   const required = [
     { family: "reviews", resource: "preserved", operationId: "dashboard.dashboard-review" },
     { family: "reviews", resource: "report-export", operationId: "reviews.report.prepare" },
@@ -109,7 +111,7 @@ function readiness(context: SfContext): "ready" | "denied" | "unavailable" {
 }
 
 /** F01 may restore this private intent only after these original source reads. */
-export async function revalidateReportRecovery(input: SfDraftRevalidationInput, fresh: SfContext,
+export async function revalidateReportRecovery(input: SfDraftRevalidationInput, fresh: SfReadableContext,
   transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation> {
   if (signal.aborted || input.surfaceId !== selection.surfaceId || input.identity.kind !== "new" ||
       input.identity.newIntentRef !== selection.identity.newIntentRef || input.editScopeKey !== selection.editScopeKey ||
@@ -123,13 +125,23 @@ export async function revalidateReportRecovery(input: SfDraftRevalidationInput, 
       input.read.fieldPaths.some((field) => typeof field !== "string" || !field.startsWith("section:") || !field.slice(8).trim() || field.slice(8).length > 16384) ||
       new Set(input.read.fieldPaths).size !== input.read.fieldPaths.length) return { status: "unavailable" }
   if (input.originalOwner.installationId !== fresh.stamp.installationId || input.originalOwner.projectId !== fresh.stamp.projectId ||
-      input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "denied" }
+      input.originalOwner.principalRef !== fresh.stamp.principalRef ||
+      !sfSameTeamRef(input.originalOwner.team?.profile, fresh.stamp.team?.owner.profile)) return { status: "denied" }
   const ready = readiness(fresh)
   if (ready !== "ready") return { status: ready }
   try {
-    const contextClient = createSfContextClient(transport)
-    const tuple = { installationId: fresh.stamp.installationId, projectId: fresh.stamp.projectId, hostId: fresh.stamp.hostId }
-    const first = await contextClient["ctx.context"](tuple, { signal })
+    const readContext = () => {
+      const team = fresh.stamp.team?.owner.profile
+      if (fresh.contractRevision === "sf-team-profile/1" && team)
+        return createSfTeamContextClient(transport)["ctx.context"]({
+          contractRevision: "sf-team-profile/1", installationId: team.installationId, tenantId: team.tenantId,
+          hostId: fresh.stamp.hostId, kind: "team", teamObjectId: team.teamObjectId,
+        }, { signal })
+      return createSfContextClient(transport)["ctx.context"]({
+        installationId: fresh.stamp.installationId, projectId: fresh.stamp.projectId, hostId: fresh.stamp.hostId,
+      }, { signal })
+    }
+    const first = await readContext()
     if (signal.aborted || first.kind !== "response") return { status: "unavailable" }
     if (first.body.status === "denied") return { status: "denied" }
     if (first.body.status !== "ok" || first.status !== 200 || !stampMatches(first.body.value.stamp, fresh.stamp)) return { status: "unavailable" }
@@ -141,7 +153,7 @@ export async function revalidateReportRecovery(input: SfDraftRevalidationInput, 
     if (review.status !== 200 || review.body.status !== "ok" || review.body.value.id !== query.id) return { status: "unavailable" }
     const ids = review.body.value.sections.map((section) => section.id)
     if (new Set(ids).size !== ids.length || input.read.fieldPaths.some((field) => !ids.includes(field.slice(8)))) return { status: "denied" }
-    const last = await contextClient["ctx.context"](tuple, { signal })
+    const last = await readContext()
     if (signal.aborted || last.kind !== "response") return { status: "unavailable" }
     if (last.body.status === "denied") return { status: "denied" }
     if (last.body.status !== "ok" || last.status !== 200 || !stampMatches(last.body.value.stamp, fresh.stamp)) return { status: "unavailable" }

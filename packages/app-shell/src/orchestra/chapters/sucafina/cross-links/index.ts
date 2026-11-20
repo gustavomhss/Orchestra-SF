@@ -1,7 +1,8 @@
+import { sfOwnerQuery } from "../navigation-state/owner"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfOwnerSelection, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { encodeSfRouteRef } from "../navigation-state"
 import { sfReadProjects } from "../portfolio/projects/producer"
 import { parseSfSignalPriorities } from "../dashboard/executive/signals"
@@ -25,15 +26,15 @@ export type SfExecutiveSourceRoute = Readonly<{
   query: SfResolvedQuery
 }>
 
-const operationReady = (context: SfContext, operationId: string) =>
+const operationReady = (context: SfReadableContext, operationId: string) =>
   context.availability.some((resource) => resource.operations.some((operation) =>
     operation.operationId === operationId && operation.state === "ready" && operation.operational))
 
-const admitted = (context: SfContext, capability: "CAP01" | "CAP02" | "CAP10" | "CAP13" | "CAP15") =>
+const admitted = (context: SfReadableContext, capability: "CAP01" | "CAP02" | "CAP10" | "CAP13" | "CAP15") =>
   context.destinations.some((item) => item.capabilityId === capability && item.canRead) &&
   operationReady(context, "domain.page." + capability)
 
-export function sfExecutiveLinkAllowed(context: SfContext, target: SfExecutiveLink): boolean {
+export function sfExecutiveLinkAllowed(context: SfReadableContext, target: SfExecutiveLink): boolean {
   switch (target.kind) {
     case "agenda":
       return operationReady(context, "projection.review") &&
@@ -68,9 +69,7 @@ export function sfExecutiveLinkRequest(from: SfExecutiveSourceRoute, target: SfE
   if (target.kind === "relations" && !validRef(target.source.ref)) return
   if (target.kind === "signal-priority" && !parseSfSignalPriorities(target.ids)) return
 
-  const query = new URLSearchParams({
-    server: owner.serverKey, project: owner.projectId, installation: owner.installationId,
-  })
+  const query = new URLSearchParams(sfOwnerQuery(owner))
   let path = ""
   switch (target.kind) {
     case "signal-priority":

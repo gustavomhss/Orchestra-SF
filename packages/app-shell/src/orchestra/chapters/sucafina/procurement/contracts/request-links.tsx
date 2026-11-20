@@ -1,3 +1,4 @@
+import { sfParseOwnerQuery, sfSelectionFromQuery, sfSameOwnerSelection, sfAppendOwnerQuery } from "../../navigation-state/owner"
 import { For, Show, createEffect, createMemo, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
@@ -75,11 +76,14 @@ export function SfContractRequestLinks(props: Props) {
 
   const requestHref = (ref: SfRef, part: "requisition" | "sourcing" | "po") => {
     const ownerUrl = new URL(props.routeHref, "http://orchestra.invalid")
+    const state = sf.state()
+    if (state.status !== "ready") throw new Error("SF_OWNER_SELECTOR_UNAVAILABLE")
+    const parsed = sfParseOwnerQuery(ownerUrl.searchParams)
+    const selected = sfSelectionFromQuery(ownerUrl.searchParams, state.selection)
+    if (parsed.kind === "invalid" || !selected || !sfSameOwnerSelection(selected, state.selection))
+      throw new Error("SF_OWNER_SELECTOR_MISMATCH")
     const query = new URLSearchParams()
-    for (const key of ["server", "project", "installation"]) {
-      const value = ownerUrl.searchParams.get(key)
-      if (value) query.set(key, value)
-    }
+    if (parsed.kind !== "absent") sfAppendOwnerQuery(query, selected)
     return "/orchestra/sf-procurement/requests/" + encodeSfRouteRef(ref) +
       "/" + part + (query.size ? "?" + query.toString() : "")
   }

@@ -2,11 +2,11 @@ import { Option, Schema } from "effect"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfDomainPageCap21 } from "@orchestra/schema/sucafina/planner"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 export async function revalidatePlannerCatalogDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP21" || input.read.operationId !== "domain.page.CAP21" ||
       input.read.actionIds.length !== 1 || input.read.actionIds[0] !== "save") return { status: "unavailable" }

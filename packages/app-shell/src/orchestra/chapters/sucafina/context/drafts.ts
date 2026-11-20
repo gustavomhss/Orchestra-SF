@@ -1,6 +1,7 @@
+import { sfSameTeamRef, sfSameContextStamp } from "../navigation-state/owner"
 import { batch } from "solid-js"
 import type {
-  SfContext, SfContextDependencies, SfDraftReadBinding, SfDraftRegistry,
+  SfReadableContext, SfContextDependencies, SfDraftReadBinding, SfDraftRegistry,
   SfDraftRevalidation, SfOwnerIdentity, SfPublicDraftController,
 } from "./contracts"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
@@ -152,17 +153,22 @@ export function createSfOwnerDrafts(
     left.publicOrigin === right.publicOrigin &&
     left.projectId === right.projectId &&
     left.installationId === right.installationId &&
-    left.principalRef === right.principalRef
+    left.principalRef === right.principalRef &&
+    ((!left.team || !right.team) ? left.team === right.team :
+      sfSameTeamRef(left.team.profile, right.team.profile) &&
+      left.team.principal.tenantId === right.team.principal.tenantId &&
+      left.team.principal.principalObjectId === right.team.principal.principalObjectId)
   const revalidate = async (
     incoming: Readonly<{ key: SfOwnerKey; identity: SfOwnerIdentity }>,
-    context: SfContext,
+    context: SfReadableContext,
     transport: SfTransport,
     signal: AbortSignal,
   ): Promise<boolean> => {
     if (!sameAuthority(owner.identity, incoming.identity) ||
         incoming.identity.installationId !== context.stamp.installationId ||
         incoming.identity.projectId !== context.stamp.projectId ||
-        incoming.identity.principalRef !== context.stamp.principalRef) {
+        incoming.identity.principalRef !== context.stamp.principalRef ||
+        !sfSameTeamRef(incoming.identity.team?.profile, context.stamp.team?.owner.profile)) {
       revoke("authority-changed")
       return false
     }
@@ -184,12 +190,7 @@ export function createSfOwnerDrafts(
       }
       if (!proof || proof.status === "unavailable") continue
       if (proof.status !== "authorized" || proof.authority !== "unchanged" || !proof.stamp ||
-          proof.stamp.installationId !== context.stamp.installationId ||
-          proof.stamp.projectId !== context.stamp.projectId ||
-          proof.stamp.hostId !== context.stamp.hostId ||
-          proof.stamp.principalRef !== context.stamp.principalRef ||
-          proof.stamp.policyVersion !== context.stamp.policyVersion ||
-          proof.stamp.accessRevision !== context.stamp.accessRevision) {
+          !sfSameContextStamp(proof.stamp, context.stamp)) {
         revoke("authority-changed")
         return false
       }

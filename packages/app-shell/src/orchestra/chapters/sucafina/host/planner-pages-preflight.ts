@@ -2,7 +2,7 @@ import type { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 
 type Operation = (typeof SfPlanner.operations)["domain.page.CAP18" | "domain.page.CAP19" | "domain.page.CAP20" | "domain.page.CAP21" | "domain.page.CAP22"]
@@ -44,7 +44,7 @@ export async function preflightPlannerPages(input: Readonly<{
   candidate: SfNativeRouteCandidate
   query: SfResolvedQuery
   transport: SfTransport
-  stamp: SfContext["stamp"]
+  stamp: SfReadableContext["stamp"]
   signal: AbortSignal
   current: () => boolean
 }>): Promise<"authorized" | "denied" | "unavailable"> {

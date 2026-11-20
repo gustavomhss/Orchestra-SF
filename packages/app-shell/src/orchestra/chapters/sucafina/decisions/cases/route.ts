@@ -1,3 +1,4 @@
+import { sfOwnerQuery } from "../../navigation-state/owner"
 /**
  * N24 closed UI33–UI37 route links, using the F01 opaque reference codec.
  * These are only same-owner href candidates; F01 still validates the target
@@ -20,10 +21,6 @@ export function sfDecisionHref(
   const selected = route.ownerSelection
   // Partial owner selection must NEVER be encoded; F01 resolves shell selection
   // when no explicit installation is present.
-  const query = selected.installationId ? new URLSearchParams({
-    server: selected.serverKey,
-    project: selected.projectId,
-    installation: selected.installationId,
-  }).toString() : ""
+  const query = selected.installationId ? new URLSearchParams(sfOwnerQuery(selected)).toString() : ""
   return (pathname + (query ? "?" + query : "")) as SfHref
 }

@@ -1,3 +1,4 @@
+import { sfOwnerQuery, sfSameOwnerSelection } from "../navigation-state/owner"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
@@ -236,12 +237,8 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
     const state = owner.state()
     const selected = props.route.ownerSelection
     if (state.status !== "ready" || !selected.installationId ||
-        state.selection.serverKey !== selected.serverKey ||
-        state.selection.projectId !== selected.projectId ||
-        state.selection.installationId !== selected.installationId) return
-    const query = new URLSearchParams({
-      server: selected.serverKey, project: selected.projectId, installation: selected.installationId,
-    })
+        !sfSameOwnerSelection(state.selection, selected)) return
+    const query = new URLSearchParams(sfOwnerQuery(selected))
     // This only requests the native route; F01 rechecks current source authority.
     navigate(pathname + "?" + query.toString())
   }
@@ -279,9 +276,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
     const state = owner.state()
     const ready = owner.ready()
     if (state.status !== "ready" || !ready || !hasResumePort(owner)) return
-    if (props.route.ownerSelection.serverKey !== state.selection.serverKey ||
-        props.route.ownerSelection.projectId !== state.selection.projectId ||
-        props.route.ownerSelection.installationId !== state.selection.installationId) {
+    if (!sfSameOwnerSelection(props.route.ownerSelection, state.selection)) {
       setResume({ caseRef: item.caseRef, status: "invalid" })
       return
     }

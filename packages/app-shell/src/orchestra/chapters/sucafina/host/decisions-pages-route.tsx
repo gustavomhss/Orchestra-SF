@@ -1,7 +1,8 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Match, Switch, type JSX } from "solid-js"
 import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
-import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../context/contracts"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { SfAlternativesView } from "../decisions/alternatives"
@@ -20,12 +21,11 @@ export function isDecisionPagesSurface(id: string): boolean { return Object.hasO
 export function parseDecisionPagesRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-decisions" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
-  if (new Set(keys).size !== keys.length || keys.some((key) => !["server", "project", "installation"].includes(key))) return
-  const selected = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (new Set(keys).size !== keys.length || keys.some((key) => !sfOwnerQueryKeys.some((name) => name === key))) return
+  if (!sfOwnerQueryValid(params)) return
   return {}
 }
-export function decisionPagesRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function decisionPagesRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-decisions" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   const operation = candidate.surfaceId === "UI41" ? SfAnalyses.operations["intelligence.analysis.choices"].operationId :
     candidate.surfaceId === "UI38" ? SfDecisions.operations["decisions.choice.read"].operationId :

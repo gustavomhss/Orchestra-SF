@@ -1,3 +1,4 @@
+import { sfSameOwnerSelection } from "../../../navigation-state/owner"
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -75,9 +76,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     const state=host.state(),ready=host.ready()
     if(state.status!=="ready"||!ready)return null
     const routeOwner=props.route.ownerSelection
-    if(state.selection.serverKey!==routeOwner.serverKey||
-       state.selection.projectId!==routeOwner.projectId||
-       state.selection.installationId!==routeOwner.installationId)return null
+    if(!sfSameOwnerSelection(state.selection, routeOwner))return null
     return JSON.stringify([state.ownerKey,host.generation(),state.owner.authEpoch,
       state.context.stamp,props.route.href])
   }

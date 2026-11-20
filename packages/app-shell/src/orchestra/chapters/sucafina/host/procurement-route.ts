@@ -1,4 +1,5 @@
-import type { SfContext, SfRef, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
+import type { SfReadableContext, SfRef, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import { Option, Schema } from "effect"
 import { SfProcurementSchemas } from "@orchestra/schema/sucafina/procurement"
 import type { SfNativeRouteCandidate } from "../route-registry"
@@ -19,10 +20,9 @@ export function isProcurementSurface(id: string): boolean {
 export function parseProcurementRouteQuery(params: URLSearchParams, candidate: SfNativeRouteCandidate): SfResolvedQuery | undefined {
   if (candidate.chapterId !== "sf-procurement" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return
   const keys = [...params.keys()]
-  const allowed = ["server", "project", "installation", "year", "month", ...(candidate.surfaceId === "CAP25" ? ["request"] : [])]
+  const allowed = [...sfOwnerQueryKeys, "year", "month", ...(candidate.surfaceId === "CAP25" ? ["request"] : [])]
   if (new Set(keys).size !== keys.length || keys.some((key) => !allowed.includes(key))) return
-  const selectors = ["server", "project", "installation"].map((key) => params.get(key))
-  if (selectors.some((item) => item !== null) && !selectors.every((item) => !!item)) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year")
   const month = params.get("month")
   const request = params.get("request")
@@ -41,7 +41,7 @@ export function parseProcurementRouteQuery(params: URLSearchParams, candidate: S
 }
 
 /** Availability and destination are necessary only; each leaf still reads and authorizes at its producer. */
-export function procurementRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function procurementRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId !== "sf-procurement" || !kinds[candidate.surfaceId]?.includes(candidate.kind)) return false
   const id = candidate.surfaceId
   return context.destinations.some((item) => item.capabilityId === id && item.canRead) &&

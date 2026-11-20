@@ -1,3 +1,4 @@
+import { sfOwnerQueryKeys } from "../navigation-state/owner"
 import type { SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 
 /** Producer links are data. Bind egress to the current authenticated installation. */
@@ -19,7 +20,7 @@ export function safeBiDestination(value: string, binding: Pick<SfInstallationDes
   const params = target.searchParams
   const keys = [...params.keys()]
   if (!keys.length || new Set(keys).size !== keys.length ||
-      keys.some((key) => ["server", "project", "installation"].includes(key)) ||
+      keys.some((key) => sfOwnerQueryKeys.some((name) => name === key)) ||
       [...params.values()].some((item) => !item || item.length > 4096 || /[\u0000-\u001f\u007f]/.test(item))) return
   const only = (allowed: string[]) => keys.every((key) => allowed.includes(key))
   const year = params.get("year")
