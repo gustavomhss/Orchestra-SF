@@ -12,10 +12,12 @@ import { financialCompositionFixture } from "../product/wp10/integration/financi
 const origin = "https://example.test"
 const mount = "/sucafina"
 const ids = ["dashboard.dashboard-workbench", "dashboard.dashboard-hot-topic-source", "dashboard.dashboard-draft-read",
-  "dashboard.dashboard-hot-topic-draft", "dashboard.dashboard-hot-topic-drafts", "dashboard.dashboard-hot-topic-draft-outcome", "dashboard.dashboard-capture"] as const
-const reads = ids.filter((id) => id !== "dashboard.dashboard-hot-topic-draft" && id !== "dashboard.dashboard-hot-topic-draft-outcome" && id !== "dashboard.dashboard-capture")
+  "dashboard.dashboard-hot-topic-draft", "dashboard.dashboard-hot-topic-drafts", "dashboard.dashboard-hot-topic-draft-outcome", "dashboard.dashboard-capture",
+  "dashboard.dashboard-hot-topic-prepare", "dashboard.dashboard-hot-topic-review", "dashboard.dashboard-hot-topic-apply", "dashboard.dashboard-hot-topic-recover"] as const
+const reads = ids.filter((id) => !["dashboard.dashboard-hot-topic-draft", "dashboard.dashboard-hot-topic-draft-outcome",
+  "dashboard.dashboard-capture", "dashboard.dashboard-hot-topic-prepare", "dashboard.dashboard-hot-topic-apply", "dashboard.dashboard-hot-topic-recover"].includes(id))
 
-async function draftFixture(policy: { dashboard?: boolean; cases?: boolean; preferences?: boolean; edit?: boolean; preserve?: boolean; write?: boolean } = {}) {
+async function draftFixture(policy: { dashboard?: boolean; cases?: boolean; preferences?: boolean; edit?: boolean; preserve?: boolean; prepare?: boolean; apply?: boolean; receipts?: boolean; write?: boolean } = {}) {
   const f = await financialCompositionFixture()
   const scheduling: { beforeCommand?: () => Promise<void> } = {}
   const authority = createSfProductAuthority({ installationId: "installation", origin, policyVersion: "dashboard-draft-health-policy",
@@ -26,9 +28,10 @@ async function draftFixture(policy: { dashboard?: boolean; cases?: boolean; pref
     },
     environment: f.authority.host.environment,
     grants: [{ principalRef: "person", namespaces: [...(policy.cases === false ? [] : ["cases" as const]),
-      ...(policy.preferences === false ? [] : ["preferences" as const])],
+      ...(policy.preferences === false ? [] : ["preferences" as const]), ...(policy.receipts === false ? [] : ["receipts" as const])],
       operations: policy.dashboard === false ? [] : ["sf_dashboard_read"],
-      humanActions: [...(policy.edit === false ? [] : ["decisions.edit" as const]), ...(policy.preserve === false ? [] : ["reviews.preserve" as const])] }],
+      humanActions: [...(policy.edit === false ? [] : ["decisions.edit" as const]), ...(policy.preserve === false ? [] : ["reviews.preserve" as const]),
+        ...(policy.prepare === false ? [] : ["decisions.prepare-changes" as const]), ...(policy.apply === false ? [] : ["decisions.apply" as const])] }],
     createId: randomUUID, now: Date.now,
     commandIdentity: async () => { await scheduling.beforeCommand?.(); return randomUUID() },
     inspectSession: async () => undefined, verifySelection: async () => false,
@@ -62,7 +65,11 @@ async function draftFixture(policy: { dashboard?: boolean; cases?: boolean; pref
         id === "dashboard.dashboard-hot-topic-source" ? dashboard.issue :
         id === "dashboard.dashboard-draft-read" ? decisions.revalidateDraftRead :
         id === "dashboard.dashboard-hot-topic-draft" ? decisions.drafts.register :
-        id === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list : decisions.drafts.lookupFirstSave
+        id === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list :
+        id === "dashboard.dashboard-hot-topic-draft-outcome" ? decisions.drafts.lookupFirstSave :
+        id === "dashboard.dashboard-hot-topic-prepare" ? decisions.prepare :
+        id === "dashboard.dashboard-hot-topic-review" ? decisions.review :
+        id === "dashboard.dashboard-hot-topic-apply" ? decisions.apply : decisions.recover
       return { producer: productHttp, handler: owner.handler, operation,
         dependencies: [authority, authority.host, authority.host.authenticate, authority.host.environment,
           authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity, authority.human,
@@ -70,6 +77,7 @@ async function draftFixture(policy: { dashboard?: boolean; cases?: boolean; pref
           dashboard, dashboard.discover, dashboard.issue, dashboard.capture, dashboard.observer, dashboard.observer.preparePrivateDraftRead,
           decisions, decisions.discover, decisions.revalidateDraftRead, decisions.drafts, decisions.drafts.register,
           decisions.drafts.readCurrent, decisions.drafts.list, decisions.drafts.lookupFirstSave,
+          decisions.prepare, decisions.review, decisions.apply, decisions.recover,
           business.cases, business.cases.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
           business.dashboardRecords, business.dashboardRecords.issue, business.dashboardRecords.resolve, business.dashboardRecords.read,
           f.persistence, f.persistence.transaction, f.persistence.transactionAll!, f.persistence.readScopedSource, f.persistence.resolveScopedSource] }
@@ -113,8 +121,11 @@ test("Dashboard private editor availability observes original mounted handlers a
 
 test("private draft reads survive absent write authority while save and outcome retain their human action", async () => {
   for (const [policy, expected] of [
-    [{ edit: false }, [...reads, "dashboard.dashboard-capture"]],
+    [{ edit: false }, ids.filter((id) => id !== "dashboard.dashboard-hot-topic-draft" && id !== "dashboard.dashboard-hot-topic-draft-outcome")],
     [{ preserve: false }, ids.filter((id) => id !== "dashboard.dashboard-capture")],
+    [{ prepare: false }, ids.filter((id) => id !== "dashboard.dashboard-hot-topic-prepare")],
+    [{ apply: false }, ids.filter((id) => id !== "dashboard.dashboard-hot-topic-apply" && id !== "dashboard.dashboard-hot-topic-recover")],
+    [{ receipts: false }, ids.filter((id) => id !== "dashboard.dashboard-hot-topic-apply" && id !== "dashboard.dashboard-hot-topic-recover")],
     [{ write: false }, reads],
     [{ dashboard: false }, []],
     [{ cases: false }, ["dashboard.dashboard-capture"]],
