@@ -11,6 +11,7 @@ import { Context, Effect, Layer, Schema, Scope } from "effect"
 import { HttpEffect, HttpRouter, HttpServer, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { BodyLimit } from "./body-limit"
+import { isInstalledPersonalConnectionPath, makeInstalledPersonalConnectionHttp } from "./personal-connection-http"
 import { EventHandler } from "./handlers/event"
 import { MessageHandler } from "./handlers/message"
 import { ReferenceHandler } from "./handlers/reference"
@@ -40,7 +41,8 @@ export interface InstalledSessionOptions {
 
 export const isInstalledSessionPath = (pathname: string, mount: string) =>
   pathname === mount + "/api/session" || pathname.startsWith(mount + "/api/session/") ||
-  pathname === mount + "/api/event" || pathname === mount + "/api/reference"
+  pathname === mount + "/api/event" || pathname === mount + "/api/reference" ||
+  isInstalledPersonalConnectionPath(pathname, mount)
 
 /**
  * Build only HTTP adapters over the root's existing services and reference overrides.
@@ -49,6 +51,7 @@ export const isInstalledSessionPath = (pathname: string, mount: string) =>
 export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Effect.gen(function* () {
   const services = (yield* Effect.context<Host.RuntimeServices>()).pipe(Context.omit(Scope.Scope))
   const owners = yield* SessionOwner.Service
+  const personalConnections = yield* makeInstalledPersonalConnectionHttp(options)
   const authorization = Layer.succeed(Authorization, Authorization.of((effect, metadata) => Effect.gen(function* () {
     const request = yield* HttpServerRequest.HttpServerRequest
     yield* HttpEffect.appendPreResponseHandler((_request, response) => Effect.succeed(
@@ -98,5 +101,6 @@ export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Ef
     Effect.sync(() => HttpRouter.toWebHandler(routes, { disableLogger: true })),
     (value) => Effect.promise(() => value.dispose()),
   )
-  return (original: Request) => http.handler(original, services)
+  return (original: Request) => isInstalledPersonalConnectionPath(new URL(original.url).pathname, options.mount)
+    ? personalConnections(original) : http.handler(original, services)
 })
