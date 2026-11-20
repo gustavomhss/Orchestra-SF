@@ -6,6 +6,7 @@ import { object, rows } from "../../../runtime/contract.ts"
 import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { createConsumerReadFixture, initialCaseRef } from "./ownhost-fixture.ts"
+import { decodePrivateWorkbench, sourceDraft } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/private-draft-model.ts"
 
 const currentLoaded = "Current version loaded. Compare the differences and confirm the base before saving your values."
 const savedMessage = "Draft saved. It can be included in a case choice before preparation."
@@ -22,7 +23,27 @@ async function openWorkbench(page: Page, origin: string) {
     panel.getByRole("button", { name: "Load options", exact: true }).click(),
   ])
   expect(response.status()).toBe(200)
-  expect(object(await response.json()).status).toBe("ok")
+  const envelope = object(await response.json())
+  expect(envelope.status).toBe("ok")
+  const decoded = decodePrivateWorkbench(envelope.value)
+  expect(decoded).toBeDefined()
+  const selectedCase = decoded?.cases.find((entry) => entry.label === "Review the action")
+  expect(selectedCase).toBeDefined()
+  const originals = decoded?.records.filter((entry) => entry.label === "Original action") ?? []
+  expect(originals).toHaveLength(1)
+  if (!selectedCase || !originals[0]) throw new Error("Original authorized Dashboard source unavailable")
+  // Parse the exact producer DTO before Solid stores it, keeping the closed
+  // target/evidence contract and every source identity check.
+  expect(sourceDraft(originals[0], selectedCase.caseRef)).toBeDefined()
+  const proof = await page.evaluate(async ({ source, caseRef }) => {
+    const asset = "/__sf-native-fixture/client.js"
+    const module: unknown = await import(asset)
+    if (!module || typeof module !== "object" || !("proveNativePrivateDraft" in module) ||
+      typeof module.proveNativePrivateDraft !== "function") throw new Error("Native model proof unavailable")
+    return module.proveNativePrivateDraft(source, caseRef)
+  }, { source: originals[0], caseRef: selectedCase.caseRef })
+  expect(proof).toEqual({ browserProxy: true, storeSymbols: true, originalAccepted: true, strictProxyRejected: true,
+    proxiedAccepted: true, sameJson: true, extraJsonRejected: true, extraProxyJsonRejected: true })
   await panel.getByText("Options loaded.", { exact: false }).waitFor()
   expect(await panel.textContent()).not.toContain("Unrelated confidential case")
   return panel
