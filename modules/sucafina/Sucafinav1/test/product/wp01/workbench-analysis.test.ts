@@ -371,13 +371,65 @@ test("Reviewer consumer rejects a supplied comparison, evidence or nonreviewer p
   expect(f.state.authorReads).toBe(0)
 })
 
-test("analysis output returns a denial when access changes during optional review discovery", async () => {
+test("analysis output renders an authorized contribution and closes its read lease", async () => {
   const f = await reviewConsumerFixture()
-  // Only the HTTP consumer's declared read/model methods are exercised here.
-  // Neither this adapter fixture nor its fake model catalog executes a native run.
-  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, models: async () => { f.state.allowed = false; return [] } }
+  let revalidations = 0
+  let modelReads = 0
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = {
+    ...f.services,
+    models: async () => { modelReads++; return [] },
+    ui: { ...f.services.ui, revalidate: async (context) => {
+      revalidations++
+      return f.services.ui.revalidate(context)
+    } },
+  }
+  const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
+  expect(response.status).toBe(200)
+  const body = await response.json()
+  expect(body).toMatchObject({ status: "ok", value: { outputRef: f.output.id } })
+  expect(body.value.html).toContain("Scenario comparison")
+  expect(body.value.html).toContain(f.input.selection.authorAnalysis.runRef)
+  expect(revalidations).toBe(2)
+  expect(f.state.outputReads).toBe(1)
+  expect(modelReads).toBe(0)
+  expect(f.state.readAdmissions).toBe(1)
+  expect(f.state.readFinishes).toBe(f.state.readAdmissions)
+})
+
+test.each(["output", "render"] as const)("analysis output returns a denial when access changes after %s", async (phase) => {
+  const f = await reviewConsumerFixture()
+  const analyses = f.services.analyses
+  if (!analyses) throw new Error("The consumer fixture requires its declared analysis read port")
+  let revalidations = 0
+  let modelReads = 0
+  // The former optional model discovery was after rendering. Exercise both
+  // current egress fences; this contract fixture executes no native analysis.
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = {
+    ...f.services,
+    models: async () => { modelReads++; return [] },
+    analyses: {
+      ...analyses,
+      output: async (context, runRef) => {
+        const result = await analyses.output(context, runRef)
+        expect(result.status).toBe("ok")
+        if (phase === "output") f.state.allowed = false
+        return result
+      },
+    },
+    ui: { ...f.services.ui, revalidate: async (context) => {
+      revalidations++
+      // The second consumer check is reached only after contribution HTML
+      // was rendered successfully. Revoke before its real authority lookup.
+      if (phase === "render" && revalidations === 2) f.state.allowed = false
+      return f.services.ui.revalidate(context)
+    } },
+  }
   const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
   expect(response.status).toBe(403)
   expect(await response.json()).toEqual({ status: "denied" })
+  expect(revalidations).toBe(phase === "output" ? 1 : 2)
+  expect(f.state.outputReads).toBe(1)
+  expect(modelReads).toBe(0)
+  expect(f.state.readAdmissions).toBe(1)
   expect(f.state.readFinishes).toBe(f.state.readAdmissions)
 })

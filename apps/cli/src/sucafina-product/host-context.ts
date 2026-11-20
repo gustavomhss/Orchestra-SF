@@ -94,6 +94,7 @@ import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
+import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
@@ -966,6 +967,14 @@ export const createSfHostRuntimeWithRoutineNative = async (
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
+        observeSfImportHealth({ authority, binding: input.nativeReadBinding, source: () => {
+          if (!identity() || services.productHttp !== productHttp || !imports || !input.assets) return undefined
+          return { producer: productHttp, handler: importHttp, service: imports,
+            persistence: input.persistence, assets: input.assets,
+            dependencies: [authority, authority.host, authority.host.authenticate, authority.host.environment,
+              authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity,
+              input.persistence.readScopedSource, input.persistence.resolveScopedSource, imports.descriptors] }
+        } }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewAgendaHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
