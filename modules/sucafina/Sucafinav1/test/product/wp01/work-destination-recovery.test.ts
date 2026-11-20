@@ -35,6 +35,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const { origin, principalRef, persistence } = host, at = host.clock.at
     const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
     let business: Awaited<ReturnType<typeof createFixtureBusiness>> | undefined, context: BrowserContext | undefined
+    const phases: { phase: string; state: "started" | "returned" | "threw"; elapsedMs?: number; providerRequests?: number }[] = []
+    const observed = async <T>(phase: string, effect: () => Promise<T>): Promise<T> => {
+      const entry: (typeof phases)[number] = { phase, state: "started" }
+      const started = performance.now(), providerStarted = host.provider.requests.length
+      phases.push(entry)
+      try { const value = await effect(); entry.state = "returned"; return value }
+      catch (error) { entry.state = "threw"; throw error }
+      finally { entry.elapsedMs = Math.round(performance.now() - started); entry.providerRequests = host.provider.requests.length - providerStarted }
+    }
     const close = async () => {
       const errors: unknown[] = []
       try { business?.dispose() } catch (error) { errors.push(error) }
@@ -73,13 +82,16 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         validateInput: (_descriptor, value) => operation === "sf_work_list" ? decodeSfOperationInput("sf_work_list", value).ok : operation === "sf_case_read" && decodeSfOperationInput("sf_case_read", value).ok,
         validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_work_list" ? decodeSfOperationOutput("sf_work_list", result.result).ok : operation === "sf_case_read" && decodeSfOperationOutput("sf_case_read", result.result).ok) })
       const unmounted = (port: string): never => { throw new Error(`Work destination fixture does not mount ${port}`) }
-      const runtime = { ...authority, dispatch, work: collaboration.work, procurementSelections: services.procurementSelections,
+      const runtime = { ...authority, dispatch, work: {
+        list: (selection, call) => observed("work.list", () => collaboration.work.list(selection, call)),
+        listPresentation: (selection, call) => observed("work.listPresentation", () => collaboration.work.listPresentation(selection, call)),
+      }, procurementSelections: services.procurementSelections,
         get sessions() { return unmounted("sessions") }, get selected() { return unmounted("selected") }, models: () => unmounted("models") } satisfies SfHostServices
       const workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime })
       const responses: { mode: string | null; status: number }[] = []
       host.mount({ product: async (request, surface) => await http(request) ?? await workbench(request, surface) })
       host.routing.handle = async (request) => {
-        const response = await host.dispatch(request)
+        const response = await observed("HTTP " + request.method + " " + (new URL(request.url).searchParams.get("sf") ?? "page"), () => host.dispatch(request))
         responses.push({ mode: new URL(request.url).searchParams.get("sf"), status: response.status })
         return response
       }
@@ -97,6 +109,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.locator("[data-work-list]").textContent()).toContain("Private approval B")
       return { origin, page, responses, errors, close }
     } catch (error) {
+      console.error("G04 work destination component failed", { phases, providerRequests: host.provider.requests.length })
       try { await close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Work destination setup and cleanup failed") }
       throw error
     }

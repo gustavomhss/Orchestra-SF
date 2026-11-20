@@ -31,7 +31,7 @@ export async function createRecoveryFixture() {
   })
   const { origin, persistence, clock, policy, principalRef } = host
   const delayed: { next: boolean; release?: () => void; started?: () => void; calls: number } = { next: false, calls: 0 }
-  const httpTrace: { mode: string; method: string; state: "received" | "returned" | "threw"; status?: number; elapsedMs?: number }[] = []
+  const httpTrace: { mode: string; method: string; state: "received" | "returned" | "threw"; status?: number; elapsedMs?: number; providerRequests?: number; aborted?: boolean }[] = []
   let disposeBusiness: (() => void) | undefined
   try {
   await persistence.transaction("dashboard", async (snapshot) => {
@@ -54,8 +54,8 @@ export async function createRecoveryFixture() {
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
   host.mount({ product: http }, { dashboardWorkbench: true })
   host.routing.handle = async (request) => {
-    const mode = new URL(request.url).searchParams.get("sf"), started = performance.now()
-    const observation: (typeof httpTrace)[number] | undefined = mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft" ? { mode, method: request.method, state: "received" } : undefined
+    const mode = new URL(request.url).searchParams.get("sf"), started = performance.now(), providerStarted = host.provider.requests.length
+    const observation: (typeof httpTrace)[number] | undefined = mode?.startsWith("dashboard-") ? { mode, method: request.method, state: "received" } : undefined
     if (observation) httpTrace.push(observation)
     try {
       const response = await host.dispatch(request)
@@ -69,7 +69,12 @@ export async function createRecoveryFixture() {
       if (observation) observation.state = "threw"
       throw error
     } finally {
-      if (observation) observation.elapsedMs = Math.round(performance.now() - started)
+      if (observation) {
+        observation.elapsedMs = Math.round(performance.now() - started)
+        // Inclusive provider calls can include overlapping component requests.
+        observation.providerRequests = host.provider.requests.length - providerStarted
+        observation.aborted = request.signal.aborted
+      }
     }
   }
   const request = () => host.request("/dashboard?sf=dashboard-workbench", host.cookie, { method: "POST",

@@ -88,7 +88,7 @@ export function createAuthorizedComponentRenderer(input: Readonly<{
         const year = ownYearKey ? sidebarYear(Number(url.searchParams.get(ownYearKey) ?? url.searchParams.get("own") ?? now.getUTCFullYear())) : sidebar
         const month = Number(ownMonthKey && url.searchParams.get(ownMonthKey) || url.searchParams.get("month") || now.getUTCMonth() + 1)
         if (!Number.isSafeInteger(month) || month < 1 || month > 12) return { commit: false, value: undefined }
-        const body = contribution.render(page, { ...publicSfData(view.data), ...prepared?.data, ...selected },
+        const body = contribution.render(page, { ...publicSfData(view.data), ...prepared?.data, ...selected, sidebarYear: sidebar },
           { actor, year, month, at: environment.at, versions: view.versions })
         if (body === undefined) return { commit: false, value: undefined }
         const revision = hash({ profile: admitted.profile, principal: admitted.principal, configRevision: admitted.configRevision, actor, roleMap: roleMap(snapshot, surface) })

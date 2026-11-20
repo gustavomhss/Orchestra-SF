@@ -100,7 +100,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         // Programmatic probes use the very session issued to this browser. Reading
         // its real cookie does not inject a credential or invent an admission.
         const sessionName = cookie.slice(0, cookie.indexOf("="))
-        const session = (await context.cookies(origin)).find((item) => item.name === sessionName && item.httpOnly && item.path === "/sucafina")
+        const session = (await context.cookies(origin + "/sucafina/dashboard")).find((item) => item.name === sessionName && item.httpOnly && item.path === "/sucafina")
         if (!session) throw new Error("The Microsoft callback did not issue the expected browser session")
         cookie = session.name + "=" + session.value
         tab.on("pageerror", (error) => { errors.push(error.message) })

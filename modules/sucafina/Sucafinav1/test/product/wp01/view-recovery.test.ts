@@ -344,17 +344,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("an older open response cannot replace the user's newer destination choice", async () => {
     const state: { started?: () => void; release?: () => void } = {}
+    const trace: { phase: string; action?: string; id?: string; status?: number; error?: string }[] = []
     const started = new Promise<void>((resolve) => { state.started = resolve })
     const first: SfPersonalViewRecord = { view: { id: "saved-view-01", title: "First destination", surface: "planner", page: "CAPEX" }, version: 1 }
     const second: SfPersonalViewRecord = { view: { id: "saved-view-02", title: "Second destination", surface: "planner", page: "OPEX", currency: "USD" }, version: 1 }
     const server = Bun.serve({ port: 0, fetch: async (request) => {
       if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("view") ? "<h1>Older destination opened</h1>" : pageHtml(personalViewsWidget({ surface: "planner", page: "OPEX" }), personalViewsScript), { headers: { "Content-Type": "text/html" } })
       const command = await request.json()
+      trace.push({ phase: "received", action: command.action, id: command.input?.id })
       if (command.action === "list") return Response.json({ status: "ok", value: [first, second] })
-      if (command.input.id === first.view.id) { await new Promise<void>((resolve) => { state.release = resolve; state.started?.() }); return Response.json({ status: "ok", value: first }, { headers: { "X-Late-Fixture": "yes" } }) }
+      if (command.input.id === first.view.id) { await new Promise<void>((resolve) => { state.release = resolve; state.started?.() }); trace.push({ phase: "released", id: first.view.id }); return Response.json({ status: "ok", value: first }, { headers: { "X-Late-Fixture": "yes" } }) }
       return Response.json({ status: "ok", value: second })
     } })
     const page = await fixturePage(server)
+    page.on("requestfailed", (request) => { if (request.method() === "POST") trace.push({ phase: "requestfailed", error: request.failure()?.errorText }) })
+    page.on("response", (response) => { if (response.request().method() === "POST") trace.push({ phase: response.headers()["x-late-fixture"] === "yes" ? "late-response" : "response", status: response.status() }) })
     try {
       const original = new URL("planner?page=OPEX", server.url).href
       await page.goto(original)
@@ -363,9 +367,13 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await page.getByRole("button", { name: "Second destination", exact: true }).click()
       await page.getByText("This view has a currency context that cannot be restored here.", { exact: false }).waitFor()
       const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "yes")
-      state.release?.(); await finishRead(page, late)
+      if (!state.release) throw new Error("Delayed open did not publish its release barrier")
+      state.release(); await finishRead(page, late)
       expect(page.url()).toBe(original)
       expect(await page.getByText("This view has a currency context that cannot be restored here.", { exact: false }).count()).toBe(1)
+    } catch (error) {
+      console.error("G04 saved-view open race failed", { trace, url: page.url() })
+      throw error
     } finally { state.release?.(); await closeFixture(page, server) }
   }, 30000)
 
