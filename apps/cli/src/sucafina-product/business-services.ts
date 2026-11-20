@@ -442,7 +442,20 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
-  const planner = procurementComposite.planner
+  const canonicalPlanner = procurementComposite.planner
+  const planner: typeof canonicalPlanner = { ...canonicalPlanner,
+    compareScenarios: async (request, call) => {
+      const observation = plannerCaseRead.current
+      if (!observation || call.kind !== "ui") return canonicalPlanner.compareScenarios(request, call)
+      const selected = await selectedCase(call)
+      // Unselected/unsupported callers retain their canonical admission path.
+      if (selected.status !== "ok") return canonicalPlanner.compareScenarios(request, call)
+      const incoming = { caseRef: selected.value, request }
+      // Each comparison or persistence replay owns a separate read-only
+      // observation. C09 publication is outside this scope and cannot borrow it.
+      return observation.observe(incoming, call, () => canonicalPlanner.compareScenarios(request, call))
+    },
+  }
   const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner

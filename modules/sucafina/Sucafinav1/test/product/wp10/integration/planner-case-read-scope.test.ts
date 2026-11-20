@@ -166,3 +166,113 @@ test("Planner case proof rechecks real lease ownership after its final asynchron
     expect(fixture.counts.canonical).toBe(1)
   } finally { await deadline.close() }
 }, 120_000)
+
+test("Planner comparison joins only its live case owner and keeps nested run refusal", async () => {
+  const deadline = compositionTestDeadline("planner-comparison-owner")
+  try {
+    const fixture = await prepare(deadline), scope = fixture.scope()
+    const other = await fixture.read()
+    deadline.own(() => fixture.authority.ui.finish(other))
+    const result = await scope.run(fixture.selection, fixture.call, async () => {
+      expect((await scope.read(fixture.argument, fixture.call)).status).toBe("ok")
+      const incoming = { caseRef: fixture.caseRef, request: { scenarioRefs: ["baseline", "candidate"], criteria: [] } }
+      const joined = await scope.observe(incoming, fixture.call, async () => {
+        const first = ok(await scope.read(fixture.argument, fixture.call), "Joined canonical case")
+        const second = ok(await scope.read(fixture.argument, fixture.call), "Joined final case")
+        expect(first.case).toEqual(second.case)
+        expect(first.case).not.toBe(second.case)
+        return { status: "ok", value: first.case.id }
+      })
+      expect(joined).toEqual({ status: "ok", value: fixture.caseRef.id })
+      expect(fixture.counts.canonical).toBe(1)
+      let foreignWork = false
+      const work = async (): Promise<PortResult<true>> => { foreignWork = true; return { status: "ok", value: true } }
+      expect(await scope.observe(incoming, other, work))
+        .toEqual({ status: "denied", reason: "scenario-case-invocation-unavailable" })
+      expect(await scope.observe({ ...incoming, caseRef: { ...fixture.caseRef, id: "other-case" } }, fixture.call, work))
+        .toEqual({ status: "denied", reason: "scenario-case-selection-unavailable" })
+      expect(await scope.run(fixture.selection, fixture.call, work))
+        .toEqual({ status: "denied", reason: "scenario-case-already-active" })
+      expect(foreignWork).toBe(false)
+      expect(fixture.counts.canonical).toBe(1)
+      return joined
+    })
+    expect(result).toEqual({ status: "ok", value: fixture.caseRef.id })
+    expect(await fixture.authority.host.revalidate(other)).toBe(true)
+  } finally { await deadline.close() }
+}, 120_000)
+
+for (const phase of ["pending", "completed"] as const) {
+  test(`an overlapping comparison cannot borrow the active owner's ${phase} proof`, async () => {
+    const deadline = compositionTestDeadline(`planner-comparison-overlap-${phase}`)
+    try {
+      const fixture = await prepare(deadline)
+      const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+      let hold = phase === "pending"
+      const scope = createSfPlannerCaseReadScope({ host: fixture.business.host, state: fixture.authority.state,
+        sources: fixture.business.plannerSources, readerIdentity: () => fixture.business.evidence.current,
+        lockedSourceFences: fixture.business.lockedSourceFences, read: async (...args) => {
+          fixture.counts.canonical++
+          const result = await fixture.business.cases.read(...args)
+          if (hold) { hold = false; reached.resolve(); await release.promise }
+          return result
+        } })
+      const pending = scope.observe(fixture.selection, fixture.call, async () => {
+        expect((await scope.read(fixture.argument, fixture.call)).status).toBe("ok")
+        if (phase === "completed") { reached.resolve(); await release.promise }
+        return { status: "ok", value: true }
+      })
+      try {
+        await Promise.race([reached.promise, pending.then(() => { throw new Error("Comparison did not reach its owner boundary") })])
+        let invoked = false
+        expect(await scope.observe(fixture.selection, fixture.call, async () => { invoked = true; return { status: "ok", value: true } }))
+          .toEqual({ status: "denied", reason: "scenario-case-invocation-unavailable" })
+        expect(invoked).toBe(false)
+        expect(fixture.counts.canonical).toBe(1)
+      } finally { release.resolve() }
+      expect(await pending).toEqual({ status: "ok", value: true })
+      const next = await scope.observe(fixture.selection, fixture.call, async () => {
+        expect((await scope.read(fixture.argument, fixture.call)).status).toBe("ok")
+        return { status: "ok", value: true }
+      })
+      expect(next).toEqual({ status: "ok", value: true })
+      expect(fixture.counts.canonical).toBe(2)
+    } finally { await deadline.close() }
+  }, 120_000)
+}
+
+for (const boundary of ["source", "case", "reader", "day", "request", "input", "lease", "actor", "abort"] as const) {
+  test(`joined Planner comparison rechecks ${boundary} after its final awaited callback`, async () => {
+    const deadline = compositionTestDeadline(`planner-comparison-final-${boundary}`)
+    try {
+      const fixture = await prepare(deadline), scope = fixture.scope()
+      const incoming = { caseRef: { ...fixture.caseRef }, request: { scenarioRefs: ["baseline", "candidate"], criteria: [] } }
+      const result = await scope.run(fixture.selection, fixture.call, async () => {
+        expect((await scope.read(fixture.argument, fixture.call)).status).toBe("ok")
+        return scope.observe(incoming, fixture.call, async () => {
+          if (boundary === "source" || boundary === "case") await fixture.store.transaction(boundary === "source" ? "planner" : "dashboard", async (snapshot) => {
+            if (boundary === "source") {
+              const versions = snapshot.data.versions as { lines: { f: number[] }[] }[]
+              versions[0]!.lines[0]!.f[0] = 101
+            } else (snapshot.data.__sfProductV1 as SfProductState).cases[fixture.caseRef.id]!.objective = "Changed during comparison"
+            return { commit: true, value: undefined }
+          })
+          if (boundary === "reader") fixture.business.evidence.current = undefined
+          if (boundary === "day") fixture.clock.at = "2026-11-15T00:00:00Z"
+          if (boundary === "request") fixture.authority.host.requestFor(fixture.call)!.headers.set("x-comparison-owner", "changed")
+          if (boundary === "input") incoming.request.scenarioRefs[1] = "other-candidate"
+          if (boundary === "lease") fixture.authority.ui.finish(fixture.call)
+          if (boundary === "actor") fixture.active.value = false
+          if (boundary === "abort") fixture.cancellation.abort(new Error("Comparison Request cancellation"))
+          await Promise.resolve()
+          return { status: "ok", value: true }
+        })
+      })
+      const stale = ["source", "case", "day", "input"].includes(boundary)
+      expect(result).toEqual(stale ? { status: "stale", reason: "scenario-source-changed" }
+        : { status: "denied", reason: "case-access-unavailable" })
+      expect(result).not.toHaveProperty("value")
+      expect(fixture.counts.canonical).toBe(1)
+    } finally { await deadline.close() }
+  }, 120_000)
+}

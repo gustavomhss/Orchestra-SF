@@ -25,7 +25,7 @@ type Scope = {
 type Fence = { kind: "current"; digest: string; caseDigest: string; refs: readonly PlannerRef[] } |
   { kind: "unsupported" | "denied" | "stale" }
 
-/** One scenario preparation may reuse a completed local Planner case projection.
+/** One read-only scenario observation may reuse a completed local Planner case projection.
  * Canonical case/source/operation checks run before the first proof. Every reuse
  * independently reopens the complete protected state, real sources and authority. */
 export function createSfPlannerCaseReadScope(input: {
@@ -148,7 +148,33 @@ export function createSfPlannerCaseReadScope(input: {
       })
     } finally { scope.open = false; scope.proof = undefined; if (active.get(call) === scope) active.delete(call) }
   }
-  return { read, run }
+  // A public read-only comparison may already belong to scenario preparation
+  // or verification. Join only that exact lexical owner; an overlapping caller
+  // never sees its proof, and nested run() keeps its original refusal.
+  const observe: SfPlannerCaseObservation = async (incoming, call, work) => {
+    const owner = local.getStore(), scope = active.get(call)
+    if (!scope) {
+      if (owner) return { status: "denied", reason: "scenario-case-invocation-unavailable" }
+      return run(incoming, call, work)
+    }
+    if (owner !== scope) return { status: "denied", reason: "scenario-case-invocation-unavailable" }
+    if (!current(scope)) return failure(scope, scope.invalid ?? "denied")
+    if (digestSfValue(incoming.caseRef) !== digestSfValue(scope.selected))
+      return { status: "denied", reason: "scenario-case-selection-unavailable" }
+    const incomingDigest = digestSfValue(incoming)
+    const result = await work()
+    if (result.status !== "ok") return result
+    if (!current(scope)) return failure(scope, scope.invalid ?? "denied")
+    if (digestSfValue(incoming) !== incomingDigest) return failure(scope, "stale")
+    if (!scope.proof) return result
+    // Reopen the same complete C08/source/actor/day witness after the child's
+    // final await. No Promise or pending canonical read is shared by this join.
+    const final = await fence(scope)
+    if (final.kind !== "current") return failure(scope, final.kind === "denied" ? "denied" : "stale")
+    return current(scope) && digestSfValue(incoming) === incomingDigest && final.digest === scope.proof.fence
+      ? result : failure(scope, "stale")
+  }
+  return { read, run, observe }
 }
 
 function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) }
