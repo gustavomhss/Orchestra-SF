@@ -24,16 +24,17 @@ export function c17End(label: string, started: number, aborted = false) {
   }))
 }
 
-export function c17ReadOrigin(): "request" | "calculation-scope" | "other" | "unclassified" {
+// Origin enum: 0 other, 1 scenario-request-store, 2 calculation-read-scope, 3 unclassified.
+export function c17ReadOrigin(): 0 | 1 | 2 | 3 {
   const started = c17Clock()
   try {
     for (const frame of (new Error().stack ?? "").split("\n")) {
       if (!/\.tsx?:\d+/.test(frame) || frame.includes("/audit-c17-profile.ts") || frame.includes("/state-provider.ts")) continue
-      if (frame.includes("/scenario-request-store.ts:")) return "request"
-      if (frame.includes("/planner-calculation-read-scope.ts:")) return "calculation-scope"
-      return "other"
+      if (frame.includes("/scenario-request-store.ts:")) return 1
+      if (frame.includes("/planner-calculation-read-scope.ts:")) return 2
+      return 0
     }
-    return "unclassified"
+    return 3
   } finally { c17End("instrumentation.stack", started) }
 }
 
