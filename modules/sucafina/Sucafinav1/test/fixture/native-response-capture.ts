@@ -328,6 +328,7 @@ export async function observeNativeResponses(page: Page, origin: string) {
       // covers draining, navigation and the new document's binding handshake.
       const result = await Promise.race([operation(), failure])
       await Promise.race([changed, failure])
+      if (Date.now() >= deadline) throw expired()
       return result
     } catch (error) {
       if (barrier.phase === "navigating" && document === barrier.document) {
