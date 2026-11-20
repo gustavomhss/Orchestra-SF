@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, statSy
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { parseShardCosts, planShards } from "./shard-plan.mjs"
+import { candidateSource } from "./workflow-source.mjs"
 
 export const REQUIRED = [
   "CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS",
@@ -21,7 +22,7 @@ const SUITE_DIRECTORIES = Object.freeze({
   "CI-UI-REPORTS": "packages/app-shell",
 })
 const PROOFS = ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"]
-const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui", "teams-profile-browser-pool"]
+const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui", "teams-profile-browser-pool", "teams-profile-artifact", "teams-profile-residue"]
 // CI-SF is the only suite that outgrows one Linux job. Its parts are a strict
 // partition of the manifest selection, proven complete and disjoint below.
 export const SHARDED = Object.freeze({ "CI-SF": 8 })
@@ -579,7 +580,7 @@ function realTreeSha() {
   return treeSha
 }
 function realRunMeta() {
-  const sha = process.env.GITHUB_SHA
+  const sha = candidateSource()
   const runId = process.env.GITHUB_RUN_ID
   const attempt = process.env.GITHUB_RUN_ATTEMPT
   if (!/^[a-f0-9]{40}$/.test(sha || "") || !/^[0-9]+$/.test(runId || "") ||

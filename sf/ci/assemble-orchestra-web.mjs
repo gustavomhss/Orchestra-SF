@@ -5,10 +5,7 @@ import { chmod, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/pr
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
-import { Effect } from "effect"
-import { ChildProcess } from "effect/unstable/process"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
-import { AppProcess } from "@orchestra/core/process"
+import { run } from "../../apps/cli/script/sf-package-process.mjs"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const cli = path.join(root, "apps/cli")
@@ -23,21 +20,6 @@ if (!expectedSHA || !/^[0-9a-f]{40}$/.test(expectedSHA))
 if (process.platform !== "linux" || process.arch !== "x64" || process.versions.bun !== "1.3.14")
   throw new Error("SF_ORCHESTRA_WEB_LINUX_X64_BUN_1_3_14_REQUIRED")
 
-const processLayer = LayerNode.compile(AppProcess.node)
-const outputLimit = 16 * 1024 * 1024
-async function run(cmd, cwd, env, stream = false) {
-  const result = await Effect.runPromise(AppProcess.Service.use((app) => app.run(
-    ChildProcess.make(cmd[0], cmd.slice(1), { cwd, env, extendEnv: false, stdin: "ignore" }),
-    stream ? {
-      combineOutput: true,
-      maxOutputBytes: outputLimit,
-      inspect: (chunk) => process.stdout.write(chunk),
-    } : { maxOutputBytes: outputLimit, maxErrorBytes: outputLimit },
-  )).pipe(Effect.provide(processLayer)))
-  if (result.exitCode !== 0)
-    throw new Error(`SF_ORCHESTRA_WEB_COMMAND_FAILED: ${cmd.join(" ")}`)
-  return result
-}
 
 // The source SHA is not enough: staged, unstaged, untracked and nested
 // submodule edits can change compiled bytes without changing HEAD.
@@ -80,7 +62,9 @@ for (const filename of [".env", ".env.local", ".env.production", ".env.productio
 const sourceChecks = [
   ["apps/cli/src/commands/handlers/serve.ts", /sucafinaInstallations:\s*installation\?\.discovery/],
   ["apps/cli/src/sucafina-product/installation.ts", /discovery\?:\s*SfTrustedInstallationSource/],
-  ["packages/app-shell/src/orchestra/sidebar.tsx", /sfNativeChapterEntry/],
+  ["apps/web/src/entry.tsx", /if \(isSucafinaBrand\(\)\)[\s\S]*?<SfTeamWebApp origin=\{location\.origin\}/],
+  ["packages/app-shell/src/web.ts", /export \{ SfTeamWebApp \} from "\.\/pages\/team-profile"/],
+  ["packages/app-shell/src/context/team-profile-web.ts", /export async function readCurrentTeamInstallation/],
 ]
 for (const [relative, required] of sourceChecks) {
   if (!required.test(await readFile(path.join(root, relative), "utf8")))

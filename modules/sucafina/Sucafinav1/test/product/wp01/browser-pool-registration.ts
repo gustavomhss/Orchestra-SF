@@ -6,6 +6,8 @@ import {
   admitPoolCommand, createPoolRegistry, loadPoolInventory, openPoolJournal, readPoolAdmission,
 } from "../../../../../../script/sf-ci/browser-pool.mjs"
 
+import { candidateSource } from "../../../../../../script/sf-ci/workflow-source.mjs"
+
 let active: ReturnType<typeof createPoolRegistry> | undefined
 
 /** Shared module state, never an environment flag that can bypass full registration. */
@@ -29,7 +31,7 @@ export async function openWp01PoolRegistration() {
     : mkdtempSync(path.join(tmpdir(), "sf-browser-pool-"))
   if (process.env.SF_BROWSER_POOL_OUTPUT) {
     const admission = readPoolAdmission(output, inventory)
-    if (admission.metadata.checkoutSha !== process.env.GITHUB_SHA ||
+    if (admission.metadata.checkoutSha !== candidateSource() ||
         admission.metadata.checkoutSha !== process.env.SF_CHECKOUT_SHA ||
         admission.metadata.treeSha !== process.env.SF_CHECKOUT_TREE_SHA ||
         admission.metadata.runId !== process.env.GITHUB_RUN_ID ||

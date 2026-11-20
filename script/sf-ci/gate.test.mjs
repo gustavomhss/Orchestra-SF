@@ -1,5 +1,6 @@
 import { test } from "node:test"
-import { assertWorkflowManifestSelection } from "./workflow-contract.mjs"
+import { assertWorkflowManifestSelection, assertWorkflowSourceSelection } from "./workflow-contract.mjs"
+import { candidateSource } from "./workflow-source.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
@@ -225,7 +226,7 @@ function fixture() {
     reports[suite.id] = bytes
     receipts[suite.id] = receiptFor(suite, bytes, selection)
   }
-  const needs = Object.fromEntries(["preflight","static","omni","unit","unit-sf","ui","teams-profile-browser-pool"].map((name) => [name, { result: "success" }]))
+  const needs = Object.fromEntries(["preflight","static","omni","unit","unit-sf","ui","teams-profile-browser-pool","teams-profile-artifact","teams-profile-residue"].map((name) => [name, { result: "success" }]))
   return { manifest: structuredClone(manifest), reports, receipts, shards, needs, sha, runId, attempt, treeSha,
     selectionProvider: (_manifest, id) => fixtureSelection(id), repoRoot: FIXTURE_ROOT }
 }
@@ -390,7 +391,7 @@ test("upstream failures list every failed, skipped or missing job, not only the 
   data.needs.unit.result = "cancelled"
   delete data.needs.ui
   assert.throws(() => requirePrerequisites(data.needs), /static=failure, unit=cancelled, ui=missing/)
-  assert.equal(requirePrerequisites(fixture().needs), 7)
+  assert.equal(requirePrerequisites(fixture().needs), 9)
 })
 test("live installed and macOS-local recovery proofs are release-owned, never silently discarded", () => {
   assert.deepEqual(releaseOnlySelection(manifest, "CI-SF"), ["Sucafinav1/test/parity-pitr.test.ts"])
@@ -714,4 +715,69 @@ test("the ordered Teams browser pool is a required successful job, independently
     else data.needs["teams-profile-browser-pool"].result = outcome
     assert.throws(() => requirePrerequisites(data.needs), /teams-profile-browser-pool=/)
   }
+})
+
+test("actual PR head remains the product identity while GitHub's synthetic merge SHA remains workflow provenance", () => {
+  const product = "a".repeat(40), workflow = "b".repeat(40)
+  const env = { GITHUB_EVENT_NAME: "pull_request", GITHUB_SHA: workflow, SF_PRODUCT_SOURCE_SHA: product }
+  const event = { pull_request: { head: { sha: product } } }
+  assert.equal(candidateSource(env, event), product)
+  for (const broken of [
+    { ...env, SF_PRODUCT_SOURCE_SHA: workflow },
+    { ...env, SF_PRODUCT_SOURCE_SHA: "c".repeat(40) },
+    { ...env, SF_PRODUCT_SOURCE_SHA: undefined },
+    { ...env, GITHUB_SHA: "not-a-commit" },
+    { ...env, GITHUB_EVENT_NAME: "pull_request_target" },
+  ]) assert.throws(() => candidateSource(broken, event), /SF_CANDIDATE_IDENTITY_INVALID/)
+  for (const broken of [{}, { pull_request: {} }, { pull_request: { head: { sha: workflow } } }])
+    assert.throws(() => candidateSource(env, broken), /SF_CANDIDATE_IDENTITY_INVALID/)
+})
+
+test("PR source validation reads the actual runner event and fails on missing or malformed evidence", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "sf-candidate-event-"))
+  try {
+    const event = path.join(root, "event.json"), product = "a".repeat(40)
+    const env = { GITHUB_EVENT_NAME: "pull_request", GITHUB_SHA: "b".repeat(40),
+      SF_PRODUCT_SOURCE_SHA: product, GITHUB_EVENT_PATH: event }
+    assert.throws(() => candidateSource(env), /SF_CANDIDATE_IDENTITY_INVALID/)
+    writeFileSync(event, "{")
+    assert.throws(() => candidateSource(env), /SF_CANDIDATE_IDENTITY_INVALID/)
+    writeFileSync(event, JSON.stringify({ pull_request: { head: { sha: product } } }))
+    assert.equal(candidateSource(env), product)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
+
+test("push and dispatch evidence cannot be rebound to a foreign product commit", () => {
+  const product = "a".repeat(40)
+  for (const name of ["push", "workflow_dispatch"]) {
+    const env = { GITHUB_EVENT_NAME: name, GITHUB_SHA: product, SF_PRODUCT_SOURCE_SHA: product }
+    assert.equal(candidateSource(env), product)
+    assert.throws(() => candidateSource({ ...env, SF_PRODUCT_SOURCE_SHA: "b".repeat(40) }),
+      /SF_CANDIDATE_IDENTITY_INVALID/)
+    assert.throws(() => candidateSource({ ...env, SF_PRODUCT_SOURCE_SHA: undefined }),
+      /SF_CANDIDATE_IDENTITY_INVALID/)
+  }
+})
+
+test("the canonical workflow pins every product checkout and keeps raw workflow provenance", () => {
+  const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
+  assert.equal(assertWorkflowSourceSelection(workflow), 11)
+  const expression = "$" + "{{ github.event.pull_request.head.sha || github.sha }}"
+  for (const broken of [
+    workflow.replace("          ref: " + expression, "          ref: $" + "{{ github.sha }}"),
+    workflow.replace("  SF_PRODUCT_SOURCE_SHA: " + expression, ""),
+    workflow.replace("workflowSHA: process.env.GITHUB_SHA", "workflowSHA: process.env.SF_PRODUCT_SOURCE_SHA"),
+    workflow.replace('test "$SF_PRODUCT_SOURCE_SHA"', 'test "$GITHUB_SHA"'),
+    workflow.replace("    env:\n", "    env:\n      SF_FORBIDDEN: $" + "{{ runner.temp }}\n"),
+  ]) assert.throws(() => assertWorkflowSourceSelection(broken), /SF_CI_WORKFLOW_SELECTION/)
+})
+
+test("both the actual production artifact and exact-archive residue audit are mandatory successful prerequisites", () => {
+  for (const job of ["teams-profile-artifact", "teams-profile-residue"])
+    for (const outcome of [undefined, "failure", "cancelled", "skipped"]) {
+      const data = fixture()
+      if (outcome === undefined) delete data.needs[job]
+      else data.needs[job].result = outcome
+      assert.throws(() => requirePrerequisites(data.needs), new RegExp(job + "="))
+    }
 })

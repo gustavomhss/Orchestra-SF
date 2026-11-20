@@ -2,6 +2,7 @@ import { createHash } from "node:crypto"
 import { appendFileSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, writeFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { candidateSource } from "./workflow-source.mjs"
 
 export const POOL_DIRECTORY = "modules/sucafina"
 export const POOL_ENTRY = POOL_DIRECTORY + "/Sucafinav1/test/product/wp01/browser-selection.test.ts"
@@ -255,9 +256,11 @@ export function openPoolJournal(output, inventory, execution) {
 }
 
 function metadata(env) {
+  let source
+  try { source = candidateSource(env) } catch { fail("invalid actual product source identity") }
   const result = { checkoutSha: env.SF_CHECKOUT_SHA, treeSha: env.SF_CHECKOUT_TREE_SHA,
     runId: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT, runnerOS: env.RUNNER_OS, runnerArch: env.RUNNER_ARCH }
-  if (!/^[a-f0-9]{40}$/.test(result.checkoutSha || "") || result.checkoutSha !== env.GITHUB_SHA ||
+  if (!/^[a-f0-9]{40}$/.test(result.checkoutSha || "") || result.checkoutSha !== source ||
       !/^[a-f0-9]{40}$/.test(result.treeSha || "") || !/^[1-9]\d*$/.test(result.runId || "") ||
       !/^[1-9]\d*$/.test(result.attempt || "") || result.runnerOS !== "Linux" || result.runnerArch !== "X64") {
     fail("missing or mismatched actual Actions checkout/run identity")
