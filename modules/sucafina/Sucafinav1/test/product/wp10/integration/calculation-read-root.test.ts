@@ -45,7 +45,7 @@ test("a cold Planner source prepares before the witness and is re-read inside on
     const baseline = await identity()
     expect(baseline).not.toBe(before)
     const selected = reference
-    const observations: unknown[] = []
+    const observations: Awaited<ReturnType<typeof f.business.plannerSources.resolveForecastSource>>[] = []
     const result = await prepared.run(async () => {
       workScopes.push(f.persistence.currentSnapshots() !== undefined)
       const first = await f.business.plannerSources.resolveForecastSource(selected, f.lease.call)
@@ -55,7 +55,9 @@ test("a cold Planner source prepares before the witness and is re-read inside on
     })
     expect(result.status).toBe("ok")
     expect(observations[1]).toEqual(observations[0])
-    expect(result).toEqual(observations[1])
+    const observed = observations[1]
+    if (!observed) throw new Error("Second actual source observation unavailable")
+    expect(result).toEqual(observed)
     expect(await identity()).toBe(baseline)
     expect(preparationScopes).toEqual([false])
     expect(workScopes).toEqual([true])

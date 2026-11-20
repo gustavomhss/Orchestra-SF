@@ -27,8 +27,17 @@ export async function calculationRootFixture(count = 0) {
   const control: { active: boolean; coverageReads: number; roots: number; rootCallbacks: number; rootsClosed: number;
     coverage?: (call: TrustedDomainContext) => Promise<void>; afterRoot?: () => Promise<void> } =
     { active: true, coverageReads: 0, roots: 0, rootCallbacks: 0, rootsClosed: 0 }
-  const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources,
+  const candidate = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources,
     projectScope: createSfSourceScopeProjector(() => at) }) }
+  if (typeof candidate.readSnapshotRoot !== "function" || typeof candidate.currentSnapshots !== "function") {
+    await store.dispose()
+    await rm(directory, { recursive: true, force: true })
+    throw new Error("Real LocalStore read-root capabilities unavailable")
+  }
+  // Refine the actual guarded adapter in place; retain its object and methods.
+  const persistence = Object.assign(candidate, {
+    readSnapshotRoot: candidate.readSnapshotRoot, currentSnapshots: candidate.currentSnapshots,
+  })
   const readRoot = persistence.readSnapshotRoot
   persistence.readSnapshotRoot = async (work, options) => {
     control.roots++
