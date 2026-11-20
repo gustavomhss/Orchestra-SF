@@ -91,8 +91,7 @@ jobs:
           const allowed = (path) => [
             "packages/core/schema.json", "packages/core/src/database/migration.gen.ts",
             "packages/core/src/database/schema.gen.ts", "packages/core/src/database/schema-board.gen.ts",
-          ].includes(path) || path.startsWith("packages/core/src/database/migration/") &&
-            /^[0-9]+_teams_session_owner[.]ts$/.test(path.split("/").at(-1))
+          ].includes(path) || /^packages\/core\/src\/database\/migration\/[0-9]+_teams_session_owner[.]ts$/.test(path)
           if (names.some((path) => !allowed(path))) throw new Error("SF_CODEGEN_UNEXPECTED_WRITE: " + names.filter((path) => !allowed(path)).join(","))
           const manifest = {
             sourceSha: process.env.SF_CODEGEN_SOURCE, sourceTree: readFileSync(directory + "/source-tree", "utf8").trim(),
