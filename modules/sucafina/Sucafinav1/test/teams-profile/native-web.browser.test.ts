@@ -31,6 +31,9 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   let passed = false, phase = "build", holdLogout = false
   const logoutEntered = Promise.withResolvers<void>(), logoutRelease = Promise.withResolvers<void>(), logoutHandled = Promise.withResolvers<void>()
   try {
+    phase = "browser-start"
+    driver = await launchBrowserDriver("teams-web-transport")
+    phase = "build"
     built = await buildNativeTeamsWeb()
     f = await nativeTeamWebFixture({ enabled: [profileA, profileB], direct: [profileA, profileB] })
     await f.seedPlannerVersion()
@@ -38,7 +41,6 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     admin.provider.teamResources.set(profileA.teamObjectId, teamRow())
     admin.provider.hooks.before = (request) => new URL(request.url).pathname === "/v1.0/me/joinedTeams"
       ? Response.json({ error: { code: "ServiceUnavailable" } }, { status: 503 }) : undefined
-    driver = await launchBrowserDriver("teams-web-transport")
     const open = async (fixture: NonNullable<typeof f>, name: "business" | "admin") => {
       const browser = await driver!.browser.newContext({ offline: true, serviceWorkers: "block", locale: "en-US", viewport: { width: 1360, height: 900 } })
       browser.setDefaultTimeout(7000)
