@@ -22,27 +22,27 @@ export function createTeamWebRuntime(input: Readonly<{
   confirmDiscard(): Promise<boolean>
   closeConsent(): void
   notice(key: "sf.teams.actionFailed" | "sf.teams.invalidLink" | "sf.teams.pending" | "sf.teams.revokedDrafts"): void
-  broadcast(): void
+  broadcast(reason: "logout" | "revoked" | "principal-change"): void
 }>) {
   const [view, setView] = createStore<{ kind: View; route?: SfResolvedRoute; epoch: number }>({
     kind: "resolving", epoch: 0,
   })
-  let controller: TeamProfileSelection, disposed = false, attempt = 0
+  let controller: TeamProfileSelection, disposed = false, signedOut = false, attempt = 0
   let routeAbort: AbortController | undefined
   let commitOverride: ((href: string) => void) | undefined
   const owner = createTeamNativeOwner({
     binding: input.binding, windowId: input.window.id,
     reload: () => refresh(),
-    invalidate: (reason) => { controller.suspend(reason); setView({ kind: "denied", route: undefined }) },
+    invalidate: (reason) => { if (!signedOut) { controller.suspend(reason); setView({ kind: "denied", route: undefined }) } },
     onDraftAccessRevoked: () => input.notice("sf.teams.revokedDrafts"),
   })
   const rawFetch: SfTransportFetch = async (url, init) => {
+    const dispatched = controller.current(), headers = new Headers(init?.headers)
     const response = await input.fetch(url, init)
-    const headers = new Headers(init?.headers)
     // A failure observed on a Team-bound resource immediately scrubs the UI.
     // F02/admin reads carry no business header and retain their own typed outcome.
-    if (!disposed && headers.has("x-sf-team-profile")) {
-      const current = controller.current()
+    if (!disposed && dispatched && controller.current() === dispatched && headers.has("x-sf-team-profile")) {
+      const current = dispatched
       const revision = response.headers.get("x-sf-access-revision")
       if (current && (response.status === 401 || response.status === 403 ||
           revision !== null && revision !== current.context.stamp.accessRevision)) {
@@ -221,7 +221,7 @@ export function createTeamWebRuntime(input: Readonly<{
     if (answer !== "committed" && answer !== "aborted") setView({ kind: answer === "unavailable" ? "unavailable" : "denied", route: undefined })
   }
   const refresh = async () => {
-    if (disposed) return
+    if (disposed || signedOut) return
     await controller.refresh()
     if (!disposed) await admitCurrent()
   }
@@ -229,6 +229,7 @@ export function createTeamWebRuntime(input: Readonly<{
     binding: controller.binding, window: input.window, view, state, current,
     owner: owner.handle, navigation, generation: controller.generation, fetch: rawFetch,
     async start() {
+      if (disposed || signedOut) return
       const intent = readSfTeamWebRoute(input.currentHref(), input.binding)
       if (intent.kind === "invalid") { setView({ kind: "invalid", route: undefined }); return }
       await controller.start("profile" in intent ? intent.profile : undefined)
@@ -245,6 +246,7 @@ export function createTeamWebRuntime(input: Readonly<{
       return answer
     },
     async resetSelection() {
+      if (disposed || signedOut) return false
       const abort = new AbortController(), generation = controller.generation()
       const original = controller.current()
       if (original && !await landing("context", abort.signal, generation)) return false
@@ -255,6 +257,7 @@ export function createTeamWebRuntime(input: Readonly<{
       return true
     },
     async logout() {
+      signedOut = true
       const c = controller.current()
       const pending = createSfTeamAuthActions({ binding: input.binding, fetch: input.fetch,
         navigate: () => undefined }).logout()
@@ -268,7 +271,15 @@ export function createTeamWebRuntime(input: Readonly<{
         console.error("Microsoft sign-out was not confirmed", error instanceof Error ? error.name : "unknown")
       }
     },
-    invalidate() { controller.suspend("revoked", false); setView({ kind: "denied", route: undefined }) },
+    invalidate(reason: "logout" | "revoked" | "principal-change" = "revoked") {
+      if (signedOut && reason !== "logout") return
+      if (reason === "logout") signedOut = true
+      const c = controller.current()
+      if (reason === "logout" && c && input.window.persistent)
+        clearTeamSelection(input.storage, principalScope(c.context.profile.principal))
+      controller.suspend(reason, false)
+      setView({ kind: reason === "logout" ? "context" : "denied", route: undefined })
+    },
     dispose() {
       if (disposed) return
       disposed = true; attempt++; routeAbort?.abort()

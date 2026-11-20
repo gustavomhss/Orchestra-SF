@@ -115,16 +115,20 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
   }
   const channelName = "orchestra.teams.invalidate.v1:" + encodeURIComponent(props.binding.installationId) + ":" + props.binding.tenantId
   const channel = typeof BroadcastChannel === "function" ? new BroadcastChannel(channelName) : undefined
-  const broadcast = () => channel?.postMessage({ version: 1, type: "invalidate" })
+  const broadcast = (reason: "logout" | "revoked" | "principal-change") =>
+    channel?.postMessage({ version: 1, type: "invalidate", reason })
   runtime = createTeamWebRuntime({
     binding: props.binding, window: props.window, storage: browserStorage, fetch: props.fetch, currentHref, commitHref,
     confirmDiscard: confirm, closeConsent, notice: (key) => setUi("notice", key), broadcast,
   })
   if (channel) channel.onmessage = (event) => {
     if (!disposed && event.data && typeof event.data === "object" && event.data.version === 1 &&
-        event.data.type === "invalidate" && Object.keys(event.data).length === 2) {
-      runtime.invalidate()
-      void runtime.refresh()
+        event.data.type === "invalidate" && Object.keys(event.data).length === 3 &&
+        ["logout", "revoked", "principal-change"].includes(event.data.reason)) {
+      runtime.invalidate(event.data.reason)
+      // A logout request can still be in flight. Never resurrect its cookie
+      // with an automatic read in another window while that outcome is unknown.
+      if (event.data.reason !== "logout") void runtime.refresh()
     }
   }
   const context = () => runtime.current()?.context
@@ -175,7 +179,10 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
     const picker = [...document.querySelectorAll<HTMLSelectElement>("[data-sf-team-picker]:not(:disabled)")]
       .find((element) => element.getClientRects().length > 0)
     if (picker) picker.focus()
-    else setUi("narrowOpen", true)
+    else {
+      setUi("narrowOpen", true)
+      queueMicrotask(() => { if (!disposed) document.querySelector<HTMLSelectElement>(".sf-team-mobile [data-sf-team-picker]:not(:disabled)")?.focus() })
+    }
   }
   onMount(() => {
     void act(() => runtime.start())

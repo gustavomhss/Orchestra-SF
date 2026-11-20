@@ -40,6 +40,9 @@ function fixture(options: Readonly<{ teams?: readonly TeamProfile.Ref[]; admin?:
   let consent: () => Promise<boolean> = async () => true
   let hook: ((kind: string, teamId: string | null) => Promise<void>) | undefined
   let logout: () => Promise<Response> = async () => new Response(null, { status: 204 })
+  let resource: (() => Promise<Response>) | undefined
+  let broadcastEffect: ((reason: "logout" | "revoked" | "principal-change") => void) | undefined
+  const broadcastReasons: string[] = []
   const calls: { path: string; kind: string | null; team: string | null; init?: RequestInit }[] = []
   const notices: string[] = [], commits: string[] = [], storage = new Map<string, string>()
   const projection = (kind: string, id: string | null): SfTeamContextResult => {
@@ -69,7 +72,10 @@ function fixture(options: Readonly<{ teams?: readonly TeamProfile.Ref[]; admin?:
     const url = new URL(raw), kind = url.searchParams.get("kind"), team = url.searchParams.get("teamObjectId")
     calls.push({ path: url.pathname, kind, team, init })
     if (url.pathname.endsWith("/auth/logout")) return logout()
-    if (url.pathname !== binding.mount + "/api/ui/context") throw new Error("Unexpected UI wire request: " + url.pathname)
+    if (url.pathname !== binding.mount + "/api/ui/context") {
+      if (resource) return resource()
+      throw new Error("Unexpected UI wire request: " + url.pathname)
+    }
     const body = projection(kind ?? "", team)
     await hook?.(kind ?? "", team)
     return new Response(JSON.stringify(body), { status: body.status === "unauthenticated" ? 401 : 200,
@@ -81,7 +87,7 @@ function fixture(options: Readonly<{ teams?: readonly TeamProfile.Ref[]; admin?:
       removeItem: (key) => { storage.delete(key) } },
     currentHref: () => location, commitHref: (value) => { commits.push(value); location = value },
     confirmDiscard: async () => { confirmations++; return consent() }, closeConsent: () => { closed++ },
-    notice: (key) => notices.push(key), broadcast: () => { broadcasts++ },
+    notice: (key) => notices.push(key), broadcast: (reason) => { broadcasts++; broadcastReasons.push(reason); broadcastEffect?.(reason) },
   })
   const draft = () => {
     const ready = runtime.owner.ready()
@@ -91,7 +97,9 @@ function fixture(options: Readonly<{ teams?: readonly TeamProfile.Ref[]; admin?:
       editScopeKey: "ui-edit" as SfEditScopeKey, baseVersion: null, base: null, value: { objective: "private A" },
       revalidation: { operationId: "projection.cases", input: {}, fieldPaths: ["objective"], actionIds: [] } })
   }
-  return { runtime, state, calls, notices, commits, storage, draft,
+  return { runtime, state, calls, notices, commits, storage, draft, broadcastReasons,
+    setResource: (value: typeof resource) => { resource = value },
+    setBroadcast: (value: typeof broadcastEffect) => { broadcastEffect = value },
     selected: () => runtime.current()?.context.stamp.team?.owner.profile.teamObjectId,
     confirmations: () => confirmations, broadcasts: () => broadcasts, closed: () => closed,
     setConsent: (value: typeof consent) => { consent = value },
@@ -239,4 +247,61 @@ test("legacy Project URLs, mixed owners and foreign origins never become Team in
     sfTeamAdministrationHref(binding) + "&teamObjectId=" + a.teamObjectId,
     href("/orchestra/sf-home").replace("sf-team-profile%2F1", "sf-native-ui%2F1"),
   ]) expect(readSfTeamWebRoute(candidate, binding)).toEqual({ kind: "invalid" })
+})
+
+test("a delayed denial from the former Team never invalidates the successor native owner", async () => {
+  const f = fixture({ initial: href("/orchestra/sf-home/context") })
+  const reply = Promise.withResolvers<Response>()
+  try {
+    await f.runtime.start()
+    f.setResource(() => reply.promise)
+    const request = f.runtime.fetch(binding.publicOrigin + binding.mount + "/api/ui/pages/UI29", {
+      headers: { "x-sf-team-profile": JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: a }) },
+    })
+    expect(await f.runtime.choose(b)).toBe("selected")
+    const current = f.runtime.owner.ready()
+    reply.resolve(new Response(null, { status: 403 }))
+    await request
+    expect(f.selected()).toBe(b.teamObjectId)
+    expect(f.runtime.owner.ready()).toBe(current)
+    expect(f.broadcastReasons).toEqual([])
+    f.setResource(async () => new Response(null, { status: 403 }))
+    await f.runtime.fetch(binding.publicOrigin + binding.mount + "/api/ui/pages/UI29", {
+      headers: { "x-sf-team-profile": JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: b }) },
+    })
+    expect(f.runtime.owner.ready()).toBeUndefined()
+    expect(f.broadcastReasons).toEqual(["revoked"])
+  } finally { reply.resolve(new Response(null, { status: 403 })); f.close() }
+})
+test("a peer logout fences automatic refresh while the original cookie logout is still pending", async () => {
+  const first = fixture({ initial: href("/orchestra/sf-home/context") })
+  const peer = fixture({ initial: href("/orchestra/sf-home/context", b) })
+  const reply = Promise.withResolvers<Response>()
+  let pending: Promise<void> | undefined
+  try {
+    await first.runtime.start(); await peer.runtime.start()
+    const draft = peer.draft()
+    first.setLogout(() => reply.promise)
+    first.setBroadcast((reason) => peer.runtime.invalidate(reason))
+    const reads = peer.calls.length
+    pending = first.runtime.logout()
+    expect(first.broadcastReasons).toEqual(["logout"])
+    expect(peer.runtime.state().status).toBe("unauthenticated")
+    expect(peer.runtime.owner.ready()).toBeUndefined()
+    expect(draft.snapshot()).toEqual({ availability: "revoked", reason: "logout" })
+    await peer.runtime.refresh()
+    await peer.runtime.start()
+    expect(await peer.runtime.resetSelection()).toBe(false)
+    peer.runtime.invalidate("revoked")
+    expect(peer.calls.length).toBe(reads)
+    expect(peer.runtime.state().status).toBe("unauthenticated")
+    reply.resolve(new Response(null, { status: 204 }))
+    await pending
+    expect(peer.runtime.state().status).toBe("unauthenticated")
+    expect(peer.storage.size).toBe(0)
+  } finally {
+    reply.resolve(new Response(null, { status: 204 }))
+    await pending
+    peer.close(); first.close()
+  }
 })

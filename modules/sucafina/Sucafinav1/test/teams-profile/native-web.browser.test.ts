@@ -17,7 +17,8 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   const contexts: BrowserContext[] = [], errors: string[] = []
   const observed: { fixture: "business" | "admin"; path: string; method: string; cookie: boolean; basic: boolean; selector: string | null; status: number }[] = []
-  let passed = false
+  let passed = false, phase = "build", holdLogout = false
+  const logoutEntered = Promise.withResolvers<void>(), logoutRelease = Promise.withResolvers<void>(), logoutHandled = Promise.withResolvers<void>()
   try {
     built = await buildNativeTeamsWeb()
     f = await nativeTeamWebFixture({ enabled: [profileA, profileB], direct: [profileA, profileB] })
@@ -49,11 +50,15 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
         try {
           const request = new Request(wire.url(), { method: wire.method(), headers, signal: abort.signal,
             ...(["GET", "HEAD"].includes(wire.method()) ? {} : { body: bytes === null ? undefined : new Uint8Array(bytes).buffer }) })
+          if (name === "business" && holdLogout && url.pathname === fixture.binding.mount + "/auth/logout") {
+            logoutEntered.resolve(); await logoutRelease.promise
+          }
           const response = url.pathname.startsWith(fixture.binding.mount + "/") || url.pathname.startsWith("/api/")
             ? await fixture.handle(request) : await built!.asset(request) ?? new Response(null, { status: 404 })
           observed.push({ fixture: name, path: url.pathname, method: request.method,
             cookie: request.headers.has("cookie"), basic: request.headers.has("authorization"),
             selector: request.headers.get("x-sf-team-profile"), status: response.status })
+          if (name === "business" && url.pathname === fixture.binding.mount + "/auth/logout") logoutHandled.resolve()
           const outgoing = Object.fromEntries(response.headers)
           const cookies = response.headers.getSetCookie()
           if (cookies.length) outgoing["set-cookie"] = cookies.join("\n")
@@ -82,9 +87,12 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       expect(new URL(page.url()).pathname).toBe("/")
     }
 
+    phase = "business-bootstrap"
     const human = await open(f, "business")
+    await waitState(human.page, "unauthenticated")
     expect(observed.some((call) => call.path === "/api/sucafina/installations" && call.status === 200 && !call.basic)).toBe(true)
     expect(f.metadataCalls.locations).toBe(0)
+    phase = "microsoft-login"
     await signIn(human.page)
     const session = (await human.browser.cookies()).find((cookie) => cookie.name.includes("_session"))
     expect(session).toMatchObject({ httpOnly: true, secure: true, path: f.binding.mount, sameSite: "Lax" })
@@ -95,6 +103,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       "Synthetic shared Team · " + profileA.teamObjectId,
       "Synthetic shared Team · " + profileB.teamObjectId,
     ])
+    phase = "selection-and-history"
     await picker(human.page).selectOption(profileA.teamObjectId)
     await waitTeam(human.page, profileA.teamObjectId)
     await picker(human.page).selectOption(profileB.teamObjectId)
@@ -103,6 +112,24 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     await waitTeam(human.page, profileA.teamObjectId)
     expect(new URL(human.page.url()).searchParams.get("teamObjectId")).toBe(profileA.teamObjectId)
 
+    phase = "narrow-and-keyboard"
+    await human.page.setViewportSize({ width: 390, height: 844 })
+    await human.page.keyboard.press("Control+Shift+P")
+    const narrowPicker = human.page.locator(".sf-team-mobile [data-sf-team-picker]")
+    await narrowPicker.waitFor({ state: "visible" })
+    expect(await narrowPicker.inputValue()).toBe(profileA.teamObjectId)
+    expect(await narrowPicker.evaluate((element) => document.activeElement === element)).toBe(true)
+    await narrowPicker.selectOption(profileB.teamObjectId)
+    await waitTeam(human.page, profileB.teamObjectId)
+    await narrowPicker.selectOption(profileA.teamObjectId)
+    await waitTeam(human.page, profileA.teamObjectId)
+    expect(await human.page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+    await human.page.locator(".sf-team-menu-toggle").click()
+    await human.page.setViewportSize({ width: 1360, height: 900 })
+    await human.page.keyboard.press("Control+Shift+P")
+    expect(await picker(human.page).evaluate((element) => document.activeElement === element)).toBe(true)
+
+    phase = "two-independent-windows"
     // A duplicated document initially copies sessionStorage. Web Locks force a
     // distinct actual window identity; the copied Team hint does not select it.
     const popupPromise = human.browser.waitForEvent("page")
@@ -119,6 +146,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     await waitTeam(second, profileB.teamObjectId)
     expect(await picker(human.page).inputValue()).toBe(profileA.teamObjectId)
 
+    phase = "native-planner-draft"
     const owner = new URLSearchParams({ contractRevision: "sf-team-profile/1", server: f.binding.origin,
       installationId: f.binding.installationId, tenantId: f.binding.tenantId, teamObjectId: profileA.teamObjectId })
     const versionPath = "/orchestra/sf-planner/versions/r_" + Buffer.from("version-native").toString("base64url") + "?" + owner + "&year=2026"
@@ -145,9 +173,18 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     await human.page.locator("#sf-u46-name").fill("Revoked unsaved Team A")
     await picker(human.page).selectOption(profileB.teamObjectId)
     await human.page.locator("dialog.sf-team-dialog[open]").waitFor({ state: "visible" })
+    phase = "logout-before-server-confirmation"
+    holdLogout = true
+    const contextReads = observed.filter((call) => call.fixture === "business" && call.path.endsWith("/api/ui/context")).length
     await second.locator("[data-sf-sign-out]").click()
+    await logoutEntered.promise
     await waitState(human.page, "unauthenticated")
     await waitState(second, "unauthenticated")
+    await human.page.bringToFront()
+    await waitState(human.page, "unauthenticated")
+    expect(observed.filter((call) => call.fixture === "business" && call.path.endsWith("/api/ui/context"))).toHaveLength(contextReads)
+    logoutRelease.resolve()
+    await logoutHandled.promise
     expect(await human.page.locator("dialog[open]").count()).toBe(0)
     expect(await human.page.locator("#sf-u46-name").count()).toBe(0)
     expect(await human.page.locator("body").textContent()).not.toContain("Revoked unsaved Team A")
@@ -157,6 +194,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     const persisted = await f.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.versions }))
     expect(persisted).toMatchObject([{ id: "version-native", name: "Original version" }])
 
+    phase = "independent-administration"
     const administrator = await open(admin, "admin")
     await signIn(administrator.page)
     expect(await administrator.page.locator("[data-sf-team-status]").textContent()).toContain("currently unavailable")
@@ -181,6 +219,9 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     expect(errors).toEqual([])
     passed = true
   } finally {
+    logoutRelease.resolve()
+    if (!passed) console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ phase, errors,
+      calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
     const browserClosed = await Promise.allSettled(contexts.map((context) => context.close()))
     const driverClosed = await Promise.allSettled([driver?.close()])
     const fixturesClosed = await Promise.allSettled([f?.close(), admin?.close()])

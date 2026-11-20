@@ -21,7 +21,7 @@ export type TeamProfileSelectionDependencies = Readonly<{
   retire(reason: TeamProfileRetirement): void
   /** Called only with a newly verified context and the transport that actually read it. */
   accept(context: SfTeamContext, transport: SfTransport, generation: number, signal: AbortSignal): Promise<boolean>
-  broadcast?(): void
+  broadcast?(reason: "logout" | "revoked" | "principal-change"): void
   restore?(principal: TeamProfile.Principal): TeamProfile.Ref | undefined
   remember?(principal: TeamProfile.Principal, selected: TeamProfile.Ref): boolean
 }>
@@ -106,7 +106,7 @@ export function createTeamProfileSelection(deps: TeamProfileSelectionDependencie
     if (result.status !== "ok") {
       if (result.status === "unauthenticated" || result.status === "denied") {
         deps.retire("revoked")
-        if (prior) deps.broadcast?.()
+        if (prior) deps.broadcast?.("revoked")
       }
       publish(result.status === "unavailable" ? { status: "unavailable", reason: result.reason } : { status: result.status })
       return
@@ -114,7 +114,7 @@ export function createTeamProfileSelection(deps: TeamProfileSelectionDependencie
     const context = result.value
     if (prior && !samePrincipal(prior.profile.principal, context.profile.principal)) {
       deps.retire("principal-change")
-      deps.broadcast?.()
+      deps.broadcast?.("principal-change")
       // The new account never inherits the previous account's explicit Team.
       if (requested.kind !== "selection") { await load(selectionIntent(), "principal-change", false); return }
     }
@@ -133,7 +133,7 @@ export function createTeamProfileSelection(deps: TeamProfileSelectionDependencie
     }
     if (prior?.stamp.team && (context.profile.teams.status === "revoked" || context.profile.teams.status === "denied")) {
       deps.retire("revoked")
-      deps.broadcast?.()
+      deps.broadcast?.("revoked")
     }
     let accepted = false
     try { accepted = await deps.accept(context, answer.transport, epoch, abort.signal) }
@@ -172,7 +172,7 @@ export function createTeamProfileSelection(deps: TeamProfileSelectionDependencie
       if (!preflight || preflight.result.status !== "ok") return "unavailable"
       const targetContext = preflight.result.value
       if (!samePrincipal(source.context.profile.principal, targetContext.profile.principal)) {
-        await load(selectionIntent(), "principal-change", false); deps.broadcast?.(); return "denied"
+        await load(selectionIntent(), "principal-change", false); deps.broadcast?.("principal-change"); return "denied"
       }
       if (targetContext.profile.teams.status !== "ready" || !sfSameTeamRef(targetContext.profile.teams.selected, profile)) return "denied"
       if (deps.hasDirtyDrafts() && !await deps.confirmDiscard()) return stillSource() ? "kept-editing" : "aborted"
@@ -182,7 +182,7 @@ export function createTeamProfileSelection(deps: TeamProfileSelectionDependencie
       if (!stillSource()) return "aborted"
       if (!sourceProof || sourceProof.result.status !== "ok" ||
           !sfSameContextStamp(sourceProof.result.value.stamp, source.context.stamp)) {
-        await load(intent, "revoked", false); deps.broadcast?.(); return "denied"
+        await load(intent, "revoked", false); deps.broadcast?.("revoked"); return "denied"
       }
       const targetProof = await read(target, abort.signal, stage, () => stillSource() ? attempt : -1)
       if (!stillSource()) return "aborted"
@@ -212,7 +212,7 @@ export function createTeamProfileSelection(deps: TeamProfileSelectionDependencie
       fence(reason)
       intent = selectionIntent()
       if (reason === "logout") publish({ status: "unauthenticated" })
-      if (broadcast) deps.broadcast?.()
+      if (broadcast) deps.broadcast?.(reason)
     },
     resume: () => load(selectionIntent(), "refresh", false),
     dispose() { if (disposed) return; disposed = true; fence("dispose"); listeners.clear() },
