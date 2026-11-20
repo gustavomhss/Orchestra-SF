@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
-import type { DirectoryPerson, EntraClient, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
+import type { DirectoryPerson, EntraClient, EntraTeamsSessionResult, EntraTokens, LocalIdentity, LocalSecrets, MicrosoftProfileSession } from "./local-contract.ts"
 
 type Session = { person: DirectoryPerson; tokens: EntraTokens; expiresAt: number; createdAt: number; login: string }
 type Login = { nonce: string; verifier: string; returnTo: string; expiresAt: number }
@@ -125,6 +125,72 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     if (!current || current.value.tokens.expiresAt <= now()) return undefined
     return current
   }
+  const observeMicrosoftSession = async (request: Request): Promise<MicrosoftProfileSession | undefined> => {
+    const admissibleRequest = () => binding[0] === "microsoft" && !request.signal.aborted &&
+      trusted(request) && (!request.headers.has("origin") || request.headers.get("origin") === options.origin) &&
+      request.headers.get("sec-fetch-site") !== "cross-site"
+    if (!admissibleRequest()) return undefined
+    const current = await ready(request)
+    if (!current || !admissibleRequest()) return undefined
+    const principal = Object.freeze({ tenantId: binding[1], principalObjectId: current.value.person.id.toLowerCase() })
+    const verifyCurrent = async () => {
+      if (!admissibleRequest()) return false
+      const latest = await ready(request).catch(() => undefined)
+      return !!latest && admissibleRequest() && latest.handle === current.handle &&
+        latest.value.login === current.value.login && latest.value.createdAt === current.value.createdAt &&
+        latest.value.expiresAt === current.value.expiresAt && latest.value.person.id === current.value.person.id &&
+        latest.value.tokens.accessToken === current.value.tokens.accessToken &&
+        latest.value.tokens.refreshToken === current.value.tokens.refreshToken &&
+        latest.value.tokens.idToken === current.value.tokens.idToken &&
+        latest.value.tokens.expiresAt === current.value.tokens.expiresAt &&
+        JSON.stringify(latest.value.tokens.grantedScopes) === JSON.stringify(current.value.tokens.grantedScopes)
+    }
+    // Only these closures retain credentials. This observation is not a grant;
+    // the installation resolver revalidates it after its own policy/store awaits.
+    const observation: MicrosoftProfileSession = {
+      principal,
+      verifyCurrent,
+      async teams() {
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        const reader = options.client.joinedTeams
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        const observed = await reader({ tokens: current.value.tokens, principal })
+          .catch(() => ({ state: "unavailable" as const, reason: "provider_unavailable" as const }))
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+      async groupMembership(groupObjectId) {
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        const reader = options.client.checkGroupMembership
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        const observed = await reader({ tokens: current.value.tokens, principal, groupObjectId })
+          .catch(() => ({ state: "unavailable" as const, reason: "provider_unavailable" as const }))
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId ||
+              typeof groupObjectId !== "string" || observed.groupObjectId !== groupObjectId.toLowerCase()))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+      async team(teamObjectId) {
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        const reader = options.client.team
+        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
+        const observed = await reader({ tokens: current.value.tokens, principal, teamObjectId })
+          .catch(() => ({ state: "unavailable" as const, reason: "provider_unavailable" as const }))
+        if (!await verifyCurrent()) return { state: "unauthenticated" }
+        if (observed.state === "complete" &&
+            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId ||
+              typeof teamObjectId !== "string" || observed.team.teamObjectId !== teamObjectId.toLowerCase()))
+          return { state: "unavailable", reason: "identity_mismatch" }
+        return observed
+      },
+    }
+    return Object.freeze(observation)
+  }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
   return {
@@ -216,32 +282,11 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       refreshing.set(current.handle, work)
       await work
     },
+    ...(binding[0] !== "microsoft" ? {} : { microsoftSession: observeMicrosoftSession }),
     ...(binding[0] !== "microsoft" || !options.client.joinedTeams ? {} : {
       async teamDirectory(request: Request): Promise<EntraTeamsSessionResult> {
-        const current = await ready(request)
-        if (!current) return { state: "unauthenticated" }
-        const reader = options.client.joinedTeams
-        if (!reader) return { state: "unavailable", reason: "capability_disabled" }
-        // The browser supplies only its scoped opaque session cookie. Neither
-        // query/header IDs nor a directory selection identify this principal.
-        const principal = { tenantId: binding[1], principalObjectId: current.value.person.id.toLowerCase() }
-        const observed = await reader({ tokens: current.value.tokens, principal })
-          .catch((): EntraTeamsSessionResult => ({ state: "unavailable", reason: "provider_unavailable" }))
-        const latest = await ready(request)
-        // Logout, a replaced login or refreshed token fences the old read even
-        // when the provider ignores cancellation and eventually returns data.
-        if (!latest || latest.handle !== current.handle ||
-            latest.value.person.id !== current.value.person.id ||
-            latest.value.tokens.accessToken !== current.value.tokens.accessToken ||
-            latest.value.tokens.expiresAt !== current.value.tokens.expiresAt ||
-            JSON.stringify(latest.value.tokens.grantedScopes) !== JSON.stringify(current.value.tokens.grantedScopes))
-          return { state: "unauthenticated" }
-        if (observed.state === "complete" &&
-            (observed.tenantId !== principal.tenantId || observed.principalObjectId !== principal.principalObjectId))
-          return { state: "unavailable", reason: "identity_mismatch" }
-        // This is a fresh directory observation, not profile admission, a role
-        // or a resource grant. The installation resolver owns those decisions.
-        return observed
+        const observation = await observeMicrosoftSession(request)
+        return observation ? observation.teams() : { state: "unauthenticated" }
       },
     }),
     async authenticate(request, context) {

@@ -13,6 +13,7 @@ export const syntheticSecret = "synthetic-test-only-web-client-secret"
 export const authority = `https://login.microsoftonline.com/${tenant}`
 
 type Account = { id: string; name: string; groups: string[] }
+type TeamResource = { id: string; displayName: string; tenantId: string; isArchived: boolean }
 type Code = { user: string; nonce: string; challenge: string; redirect: string }
 type ProviderHook = (request: Request) => Response | undefined | Promise<Response | undefined>
 
@@ -35,7 +36,9 @@ export async function microsoftFixture(input: {
   const account: Account = { id: oid, name: "Synthetic resource-tenant guest", groups: [group] }
   const second: Account = { id: other, name: "Synthetic other user", groups: [group] }
   const accounts = new Map([[oid, account], [other, second]])
-  const directTeams = new Map<string, { id: string; displayName: string; tenantId: string; isArchived: boolean }[]>([[oid, []], [other, []]])
+  const directTeams = new Map<string, TeamResource[]>([[oid, []], [other, []]])
+  // Existence/visibility of a Team is independent of this user's direct memberships.
+  const teamResources = new Map<string, TeamResource>()
   const codes = new Map<string, Code>()
   const access = new Map<string, string>()
   const refresh = new Map<string, string>()
@@ -106,6 +109,11 @@ export async function microsoftFixture(input: {
         if (request.method !== "GET" || url.search) return Response.json({ error: "bad_request" }, { status: 400 })
         return Response.json({ value: directTeams.get(person.id) ?? [] })
       }
+      if (url.pathname.startsWith("/v1.0/teams/") && input.teams === "direct") {
+        if (request.method !== "GET" || url.search !== "?$select=id,displayName,isArchived,tenantId") return Response.json({ error: "bad_request" }, { status: 400 })
+        const resource = teamResources.get(url.pathname.slice("/v1.0/teams/".length))
+        return resource ? Response.json(resource) : Response.json({ error: "ItemNotFound" }, { status: 404 })
+      }
       if (url.pathname === "/v1.0/me/checkMemberGroups") {
         const body = await request.json() as { groupIds: string[] }
         if (request.method !== "POST" || !Array.isArray(body.groupIds) || body.groupIds.length > 20) return Response.json({ error: "bad_request" }, { status: 400 })
@@ -118,5 +126,5 @@ export async function microsoftFixture(input: {
     throw new Error("Unexpected synthetic provider endpoint")
   }
   const options: EntraOptions = { tenantId: tenant, clientId, profile, fetch: transport, now: () => new Date(clock.value), ...(input.teams === undefined ? {} : { teams: input.teams }), ...(profile === "web-confidential" ? { clientSecret: async () => syntheticSecret } : {}) }
-  return { client: createEntraClient(options), options, fetch: transport, clock, claims, hooks, account, second, accounts, directTeams, requests, issueCode, metadata }
+  return { client: createEntraClient(options), options, fetch: transport, clock, claims, hooks, account, second, accounts, directTeams, teamResources, requests, issueCode, metadata }
 }
