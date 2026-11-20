@@ -1,5 +1,6 @@
 import type { SfInstallationDescriptor, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
 import { sfNativeRouteSpecs, matchSfNativeRoutePath } from "../route-registry"
+import { encodeSfRouteRef } from "../navigation-state"
 import { safeBiDestination } from "./safe-destination"
 
 const dashboardPages: Readonly<Record<string, string>> = {
@@ -58,7 +59,7 @@ export function nativeBiDestination(value: string, binding: SfInstallationDescri
   }
   const spec = sfNativeRouteSpecs.find((item) => item.surfaceId === surface && item.kind === kind)
   if (!spec) return
-  const pathname = reference ? spec.pattern.replace(/:[A-Za-z]+/, encodeURIComponent(reference)) : spec.pattern
+  const pathname = reference ? spec.pattern.replace(/:[A-Za-z]+/, encodeSfRouteRef(reference)) : spec.pattern
   const candidate = matchSfNativeRoutePath(pathname)
   if (!candidate || candidate.surfaceId !== surface || candidate.kind !== kind) return
   return pathname + "?" + params.toString()
