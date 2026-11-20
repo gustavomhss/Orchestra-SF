@@ -242,18 +242,23 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const enrollmentUrl = `${origin}/sucafina/auth/local?code=${code}`
     // Chromium owns the real Set-Cookie exchange. The product redirects to the
     // native root, which is intentionally absent from this isolated component host.
-    const [enrollment] = await timed("operator-enrollment-http", () => Promise.all([
-      page.waitForResponse((response) => response.url() === enrollmentUrl),
-      page.goto(enrollmentUrl, { waitUntil: "domcontentloaded", timeout: 5000 }).catch((error: unknown) => {
-        if (!(error instanceof Error) || !error.message.includes("net::ERR_HTTP_RESPONSE_CODE_FAILURE")) throw error
-        return null
-      }),
-    ]))
-    expect(enrollment.status()).toBe(303)
-    expect(enrollment.headers().location).toBe("/")
-    const redirected = enrollment.request().redirectedTo()
-    expect(redirected?.url()).toBe(`${origin}/`)
-    expect((await redirected?.response())?.status()).toBe(404)
+    // A separate page contains Chromium's asynchronous error-document navigation;
+    // the authenticated cookie remains in this same BrowserContext.
+    const enrollmentPage = await timed("operator-enrollment-page", () => context.newPage())
+    try {
+      const [enrollment] = await timed("operator-enrollment-http", () => Promise.all([
+        enrollmentPage.waitForResponse((response) => response.url() === enrollmentUrl),
+        enrollmentPage.goto(enrollmentUrl, { waitUntil: "domcontentloaded", timeout: 5000 }).catch((error: unknown) => {
+          if (!(error instanceof Error) || !error.message.includes("net::ERR_HTTP_RESPONSE_CODE_FAILURE")) throw error
+          return null
+        }),
+      ]))
+      expect(enrollment.status()).toBe(303)
+      expect(enrollment.headers().location).toBe("/")
+      const redirected = enrollment.request().redirectedTo()
+      expect(redirected?.url()).toBe(`${origin}/`)
+      expect((await redirected?.response())?.status()).toBe(404)
+    } finally { await timed("operator-enrollment-page-close", () => enrollmentPage.close()) }
     await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded", timeout: 5000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
