@@ -141,7 +141,13 @@ document.querySelectorAll('table').forEach((table) => {
       } else {
         if (action === 'apply') result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => {
           const saved = rows.find((entry) => entry.id === row.draft.rowId)
-          if (saved) saved.saved = true
+          if (saved) {
+            for (const cell of row.draft.cells) {
+              const prefix = cell.measure === 'budget' ? 'b' : cell.measure === 'actual' ? 'a' : 'f'
+              saved.values[prefix + (cell.month - 1)] = cell.text
+            }
+            saved.saved = true
+          }
           for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id)
         })
         if (action === 'apply') { pending = null; uncertain = false; key = crypto.randomUUID() }
