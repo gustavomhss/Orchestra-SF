@@ -65,3 +65,10 @@ O resultado esperado por esta sessão é zero errors e dois GATE protected-paths
 5. Antes do push final em sfa, resolver o PR draft #257 atualmente baseado em close-final-candidate para evitar uma sf-ci incidental por synchronize; preservar draft e verificar o estado real após qualquer retarget.
 6. Congelar e executar a fábrica pelo mecanismo autorizado. Confirmar que origem 4120, SHA do source/checkout, run/attempt e archiveSha256 são coerentes no receipt real.
 7. Não declarar complete antes de registrar a qualificação correspondente. Não fabricar hashes, check, receipt ou aceite.
+
+
+## Gate integral antes da integração
+
+A qualificação do reparo será executada pelo workflow original `sf-factory-package` no head real deste PR para `sf-join-four`. O novo braço é restrito a `head_ref == sf-continuation-package` no próprio repositório; PRs para `close-final-candidate` e o push final em `sfa-factory-package` preservam seus gatilhos originais. Checkout, identidade do evento, testes, receipt e artefato são os mesmos. A branch do pacote final não foi movida.
+
+Gate unitário da retenção: snapshot `e8927363e763c8defe57599abf826589143b356b`, parent `143cbb9227c2a33251ec55a95a2b6432effbbb43`, branch `ci-run-linux-sfc-evidence`; resultado ainda pendente. O novo workflow de factory não dispara `sf-ci`, pois o PR tem base `sf-join-four`.
