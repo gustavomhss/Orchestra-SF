@@ -819,7 +819,9 @@ function nativeFixture(role = "u15") {
       producerObservationSha256: "9".repeat(64) })) }
   const specFile = contract.specFile.slice("e2e/".length)
   const report = {
-    config: { workers: 1, forbidOnly: true, fullyParallel: false, metadata: { bundle: "production" },
+    config: { configFile: "/source/packages/app-shell/e2e/playwright.production.config.ts",
+      version: "1.59.1", webServer: null, shard: null, maxFailures: 0,
+      workers: 1, forbidOnly: true, fullyParallel: false, metadata: { bundle: "production" },
       projects: [{ name: "chromium", retries: 0, repeatEach: 1 }], reporter: [["json"]] },
     errors: [], stats: { expected: cases.length, unexpected: 0, flaky: 0, skipped: 0 },
     suites: [{ file: specFile, title: "PRIVATE_TEST_VALUE_DO_NOT_PUBLISH", specs: cases.map((item) => ({
@@ -883,6 +885,10 @@ test("native report admission rejects incomplete, flaky, retried, skipped and fo
     (data) => { data.report.suites[0].specs[0].tests[0].results[0].attachments.push({ path: "/private/trace.zip" }) },
     (data) => { data.report.suites[0].specs[0].tests[0].annotations.push({ type: "skip" }) },
     (data) => { data.report.suites[0].specs[1].id = data.report.suites[0].specs[0].id },
+    (data) => { data.report.config.configFile = "/source/other.config.ts" },
+    (data) => { data.report.config.version = "1.50.0" },
+    (data) => { data.report.config.webServer = { command: "start replacement" } },
+    (data) => { data.report.config.shard = { current: 1, total: 2 } },
     (data) => { data.report.config.workers = 2 },
     (data) => { data.report.config.projects[0].retries = 1 },
     (data) => { data.report.config.projects[0].repeatEach = 2 },

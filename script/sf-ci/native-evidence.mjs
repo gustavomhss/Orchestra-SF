@@ -11,6 +11,10 @@ export const NATIVE_SPECS = Object.freeze({
   recovery: "e2e/sucafina/native/teams-profile-recovery-linux.spec.ts",
 })
 const NATIVE_ORIGINAL_COUNTS = Object.freeze({ u15: 6, u39: 22, u40: 22 })
+const NATIVE_ACCEPTANCE_IDS = Object.freeze({
+  teams: ["A01", "A16", "A17", "A18", "A20", "A33", "A35", "A36", "A37", "A40", "A41", "A42", "A44", "A45"],
+  u15: [], u39: [], u40: [], recovery: ["A30", "A36", "A45", "A46"],
+})
 export const NATIVE_CASE_LEDGER = "sf/ci/team-profile-native-cases.json"
 export const nativeFail = () => { throw new Error("SF_CI_FAIL_CLOSED: invalid private native evidence") }
 const isDigest = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
@@ -66,7 +70,8 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
       !["PRESERVED_SOURCE_OBLIGATIONS", "IMPLEMENTED_SOURCE_OBLIGATIONS"].includes(role.status) ||
       !Array.isArray(role.cases) || role.cases.length < 1 || role.cases.length > 256 ||
       (NATIVE_ORIGINAL_COUNTS[meta.role] && role.cases.length !== NATIVE_ORIGINAL_COUNTS[meta.role])) nativeFail()
-  if (!Array.isArray(role.requiredAcceptanceIds) ||
+  if (JSON.stringify(role.requiredAcceptanceIds) !== JSON.stringify(NATIVE_ACCEPTANCE_IDS[meta.role]) ||
+      !Array.isArray(role.requiredAcceptanceIds) ||
       role.requiredAcceptanceIds.some((id) => typeof id !== "string" || !/^A(?:0[1-9]|[1-3][0-9]|4[0-6])$/.test(id)) ||
       new Set(role.requiredAcceptanceIds).size !== role.requiredAcceptanceIds.length) nativeFail()
   const declarations = nativeCaseDeclarations(new TextDecoder("utf-8", { fatal: true }).decode(sourceBytes))
@@ -138,7 +143,10 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
     hostCases.add(item.id)
   })
   const report = nativeJson(rawReport), config = report.config
-  if (!config || config.workers !== 1 || config.forbidOnly !== true || config.fullyParallel !== false ||
+  if (!config || typeof config.configFile !== "string" ||
+      !config.configFile.endsWith("/packages/app-shell/e2e/playwright.production.config.ts") ||
+      config.version !== "1.59.1" || config.webServer !== null || config.shard !== null || config.maxFailures !== 0 ||
+      config.workers !== 1 || config.forbidOnly !== true || config.fullyParallel !== false ||
       config.metadata?.bundle !== "production" || !Array.isArray(config.projects) || config.projects.length !== 1 ||
       config.projects[0]?.name !== "chromium" || config.projects[0]?.retries !== 0 || config.projects[0]?.repeatEach !== 1 ||
       !Array.isArray(config.reporter) || config.reporter.length !== 1 || config.reporter[0]?.[0] !== "json" ||
@@ -163,7 +171,8 @@ export function recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes,
           result.parallelIndex !== 0 || !Number.isSafeInteger(result.workerIndex) || result.workerIndex < 0 ||
           result.error !== undefined || !Array.isArray(result.errors) || result.errors.length ||
           !Array.isArray(result.attachments) || result.attachments.length ||
-          (test.annotations ?? []).some((annotation) => ["skip", "fixme", "fail"].includes(annotation?.type))) nativeFail()
+          (test.annotations ?? []).some((annotation) => ["skip", "fixme", "fail"].includes(annotation?.type)) ||
+          (result.annotations ?? []).some((annotation) => ["skip", "fixme", "fail"].includes(annotation?.type))) nativeFail()
       found.add(item.id); ids.add(spec.id)
       safeCases.push({ id: item.id, sourceCaseSha256: digest(spec.id), status: "passed", attempts: 1 })
     }
