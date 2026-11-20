@@ -6,7 +6,7 @@ import { SfFiles } from "@orchestra/schema/sucafina/files"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { Workbook } from "exceljs"
 import { expect } from "@playwright/test"
-import type { Locator, Page, Response as BrowserResponse } from "@playwright/test"
+import type { Locator, Page, Response } from "@playwright/test"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
 
@@ -19,12 +19,12 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const origin = new URL(page.url()).origin
     page.setDefaultTimeout(10000)
     page.on("dialog", (dialog) => dialog.accept())
-    const nativePage = (response: BrowserResponse, capability: string) => {
+    const nativePage = (response: Response, capability: string) => {
       const url = new URL(response.url())
       return response.request().method() === "GET" && url.origin === origin &&
         url.pathname === "/sucafina/api/ui/pages/" + capability
     }
-    const fileResponse = (response: BrowserResponse, mode: string, method: string) => {
+    const fileResponse = (response: Response, mode: string, method: string) => {
       const url = new URL(response.url())
       return response.request().method() === method && url.origin === origin &&
         url.pathname === "/sucafina/planner" && url.searchParams.get("sf") === mode
@@ -349,7 +349,7 @@ async function expectDownload(page: Page, link: Locator) {
   return Bun.file(file!)
 }
 
-async function plannerIoProjection(response: Pick<BrowserResponse, "status" | "json">) {
+async function plannerIoProjection(response: Pick<Response, "status" | "json">) {
   expect(response.status()).toBe(200)
   const body = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP18"].output)(await response.json())
   expect(body.status).toBe("ok")
