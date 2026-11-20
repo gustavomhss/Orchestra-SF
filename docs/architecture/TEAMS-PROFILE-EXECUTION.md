@@ -56,7 +56,7 @@ A revisão independente do store/resolver não encontrou bloqueante nesta fatia.
 
 ## Pool G04: infraestrutura incorporada, execução vermelha
 
-Os 40 arquivos originais são registrados por uma única entrada Bun, com startup, consumidores e finalizador originais. A comparação dos 40 pares de blobs confirmou equivalência dos corpos, assertions e prazos após normalizar apenas wrapper/import/indentação. O pool passou a ser pré-requisito obrigatório de `sf/verify`, mantendo as oito suites atuais.
+Os 40 arquivos originais são registrados por uma única entrada Bun, com startup, consumidores e finalizador originais. No source inicial `b7b9f75d`, a comparação dos 40 pares de blobs confirmou equivalência dos corpos, assertions e prazos após normalizar apenas wrapper/import/indentação. Essa equivalência não é atribuída às correções posteriores de fixtures e produtores, que têm deltas e evidência próprios. O pool passou a ser pré-requisito obrigatório de `sf/verify`, mantendo as oito suites atuais.
 
 O contrato Node passou com 138 casos em [44680523755](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680523755); a integração do gate passou com 139 casos em [44680862794](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680862794). Esses resultados não substituem browser real.
 
@@ -70,11 +70,37 @@ A workflow `.github/workflows/sf-static-surgical.yml` veio do commit `3910a644�
 
 A observação da base [44680974070](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680974070) preservou o produto congelado e adicionou somente a workflow. Geradores, compiladores, build web, spawn e guard da base de PR passaram. O guard contra `dev` falhou pelas alterações protegidas preexistentes em `godfile-waivers.json` e `script/spawn-allowlist.json`; nenhuma aprovação foi fornecida.
 
-O primeiro candidato [44680970442](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680970442) encontrou dois erros novos de inferência de tipos em tabelas de testes e um falso positivo de skip na fixture que verifica sua rejeição. O commit `5c419bf3…` preserva os tipos literais e explicita o registrar sintético; não remove assertions nem pula casos. A nova observação do conjunto integrado ainda precisa ser registrada.
+O primeiro candidato [44680970442](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680970442) encontrou dois erros novos de inferência de tipos em tabelas de testes e um falso positivo de skip na fixture que verifica sua rejeição. O commit `5c419bf3…` preserva os tipos literais e explicita o registrar sintético; não remove assertions nem pula casos. O conjunto integrado `c232ce48` passou em 522 testes dirigidos, com zero falhas e três skips preexistentes de fixtures de UID ([44682417711](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682417711)). A estática no mesmo source ([44682415652](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682415652)) permaneceu vermelha: nove erros novos de tipagem em fixtures de testes, já corrigidos nas branches de implementação e ainda sem nova prova estática integrada. O guard contra dev continuou com os dois caminhos protegidos preexistentes; nenhuma aprovação foi fabricada.
+
+## Scanner real incorporado
+
+A fatia `6f9b66a2` acrescenta uma admissão de CI própria de Teams, vinculada ao SHA/tree da fonte e a um snapshot que muda somente `.ci-run.json`. Não se apresenta como a campanha histórica de Operations. O setup preserva o binário ClamAV pinado, as assinaturas oficiais e as três fontes originais do controle.
+
+O verificador passou em **59 testes Node** ([44684026214](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684026214)). O controle real passou em **7 testes, zero falhas e zero skips**, com **4 spawns Omni** ([44684352036](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684352036)). Foram observados clean/EICAR/limite de tamanho/comando inválido/outage e as fronteiras privadas de importação e upload. O cleanup dos processos de propriedade do job terminou antes da emissão do recibo positivo.
+
+O recibo declara `COMPONENT_REAL_CLAMD` e `installedTeamsProof: false`. Esse PASS pertence àquela fonte; G06 continua obrigatório no candidato final.
+
+## WP1 efetivo e transportes: provas isoladas
+
+A autoridade efetiva passou em **111 testes, zero falhas e zero skips** na fonte `1a15b862` ([44686263757](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44686263757)). Ela relê os grants privados atuais, preserva as RoleRows reais e distingue configRevision de accessRevision. O primeiro run falhou porque a fixture não inicializava as fontes reais; a correção fez a mesma inicialização da composição, sem enfraquecer o guard.
+
+O boundary de Request e a composição Microsoft passaram em **76 testes, zero falhas e zero skips**, na fonte `2a185381` ([44687661604](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687661604)). O mesmo Request retém intenção, cookie e observação de sessão; alteração, refresh, logout, revogação e mudança de política invalidam o holder. Application/Bi usam o boundary de Team; a autoridade de produto recebe o autenticador original e aplica a própria guarda. A administração independente continua possível sem Team.
+
+Os dois runs anteriores do boundary permanecem no ledger: 63 pass/13 fail e 75 pass/1 fail. O último revelou uma leitura de ambiente antes da resposta de logout, corrigida para admitir a rota antes daquela leitura. Os testes Microsoft antigos agora configuram o Team por login OIDC e endpoint administrativo reais da fixture; todas as assertions de role, ownership e códigos de resposta foram mantidas, com uma negativa nova para ausência de seleção.
+
+Essas fatias ainda não foram integradas isoladamente ao produto: a mudança de chave dos recibos exige todos os consumidores juntos, para não transformar estado legado ou de outra equipe em ausência e repetir um efeito.
+
+## Continuação G04 e fronteira de geração
+
+A nova execução dos 40 arquivos, fonte `b8cd7308` ([44687241318](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687241318)), continua **RED**. O journal registra 206 casos declarados, **149 corpos iniciados e finalizados**, 50 retornos e 99 exceções; 57 corpos não iniciaram. O Bun reporta 50 pass/157 fail e um erro. O finalizador original passou com 44 leases/releases, zero contextos e saída do driver/browser. A prova de cleanup não fecha G04.
+
+Os waiters de recuperação de edição passaram a ter dono e erro recolhido na limpeza, mantendo os 29 corpos e 213 assertions. O replay e o timeout do save mensal chegaram ao resultado, mas dois casos detectaram que o render voltava ao valor inicial depois da confirmação; a correção está em andamento. A interrupção seguinte vem de waiters de recuperação de thread. As falhas dos demais produtores e pins históricos permanecem visíveis.
+
+WP3 e WP4 agora compartilham um contrato privado de geração e ownership, ainda em implementação. A proteção de writer antigo será exercitada com conexões SQLite reais; não basta um if no handler nem uma flag global visível. Nenhum corte está liberado por esses contratos.
 
 ## Trabalho restante
 
-A autoridade efetiva de negócio e a cadeia F02/host ainda não foram migradas. UI/estado pessoal (WP2), ownership e consumidores de runtime (WP3), backfill/corte/recuperação (WP4) e qualificação/retirada (WP5) permanecem trabalho de implementação. A ausência de contextos externos não deve ser usada para apresentar esse código restante como concluído.
+A autoridade efetiva de negócio e a cadeia F02/host têm implementação e testes dirigidos em branches isoladas; a integração coesa, os clientes oficiais e a estática ainda não estão fechados. UI/estado pessoal (WP2), ownership e consumidores de runtime (WP3), backfill/corte/recuperação (WP4) e qualificação/retirada (WP5) permanecem trabalho de implementação. A ausência de contextos externos não deve ser usada para apresentar esse código restante como concluído.
 
 Nenhuma migração real de dados ou troca de autoridade de produção foi executada.
 
@@ -82,6 +108,6 @@ Nenhuma migração real de dados ou troca de autoridade de produção foi execut
 
 O censo real de dados/atores, o ledger final de resíduos, o ambiente Azure descartável, o consentimento e os contextos Microsoft originais não foram observados. Não há migration, restore, tenant LIVE ou release qualificados. Os dez gates do plano continuam obrigatórios no mesmo candidato final.
 
-A integração concorrente foi observada em `3910a644c7fdab1a438c2b5b39d69afc19361709`, 129 commits à frente do pin. Esses patches não foram misturados silenciosamente; a reconciliação antes de promoção continua obrigatória.
+A integração concorrente foi reobservada em `9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6`, 158 commits à frente do pin, sendo 29 após a primeira observação em `3910a644…`. Esses patches não foram misturados silenciosamente; a reconciliação antes de promoção continua obrigatória.
 
 O [ledger estruturado](./TEAMS-PROFILE-EXECUTION.json) registra requests, SHAs de fonte/snapshot, todos os casos observados, deltas e bloqueios. Este documento é um checkpoint de execução, não um handoff de conclusão.
