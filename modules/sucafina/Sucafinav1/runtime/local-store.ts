@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
+import { createHash, randomUUID } from "node:crypto"
 import { constants } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
@@ -8,6 +9,34 @@ import { createAuthenticationSecrets, initializeAuthentication } from "./auth-ma
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
+
+type LocalTransactionAbort = {
+  storageIdentity: string
+  transactionId: string
+  phase: "callback" | "callback-failed" | "callback-completed" | "rolled-back"
+  error?: unknown
+  consumed: boolean
+}
+const localTransactions = new WeakMap<Snapshot, LocalTransactionAbort>()
+const localAbortObservations = new WeakMap<object, LocalTransactionAbort>()
+
+/** Observe only an actual live SQLite callback. The returned capability has no writable fields. */
+export function observeLocalTransactionAbort(snapshot: Snapshot): object | undefined {
+  const transaction = localTransactions.get(snapshot)
+  if (transaction?.phase !== "callback") return undefined
+  const observation = Object.freeze({})
+  localAbortObservations.set(observation, transaction)
+  return observation
+}
+
+/** Only the original callback error after a confirmed rollback can consume this capability. */
+export function consumeLocalTransactionAbort(observation: object, error: unknown) {
+  const transaction = localAbortObservations.get(observation)
+  localAbortObservations.delete(observation)
+  if (!transaction || transaction.consumed || transaction.phase !== "rolled-back" || transaction.error !== error) return undefined
+  transaction.consumed = true
+  return Object.freeze({ storageIdentity: transaction.storageIdentity, transactionId: transaction.transactionId })
+}
 
 export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits> } = {}): Promise<LocalStore> {
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
@@ -43,13 +72,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       throw new Error("Local database must be a private regular file")
     return open(path, constants.O_RDWR | constants.O_NOFOLLOW)
   })
-  try {
-    const opened = await file.stat()
-    if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
-      throw new Error("Local database must be owned by the current UID at its real path")
-  } finally {
-    await file.close()
-  }
+  const storageIdentity = await (async () => {
+    try {
+      const opened = await file.stat()
+      if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
+        throw new Error("Local database must be owned by the current UID at its real path")
+      // Bind the observation to this physical database without disclosing its path.
+      return createHash("sha256").update(JSON.stringify([path, opened.dev, opened.ino])).digest("hex")
+    } finally {
+      await file.close()
+    }
+  })()
 
   const connect = () => {
     const db = new Database(path, { strict: true })
@@ -133,6 +166,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
+  const abortRoots = new WeakMap<Database, LocalTransactionAbort>()
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
     if (lifecycle.closed) {
       const scope = context.getStore()
@@ -168,15 +202,33 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
       signal?.throwIfAborted()
       const db = connect()
+      const failure: { failed: boolean; error?: unknown } = { failed: false }
       try {
         if (write) await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
         signal?.throwIfAborted()
         return await work(db)
+      } catch (error) {
+        failure.failed = true
+        failure.error = error
+        throw error
       } finally {
+        const rollback = { confirmed: false }
         try {
-          if (db.inTransaction) db.exec("ROLLBACK")
+          try {
+            if (db.inTransaction) {
+              db.exec("ROLLBACK")
+              rollback.confirmed = true
+            }
+          } finally {
+            db.close()
+          }
+          const transaction = abortRoots.get(db)
+          // Serialization/COMMIT failures and errors thrown after the callback
+          // returned never receive this provenance, even if SQL rolls back.
+          if (rollback.confirmed && failure.failed && transaction?.phase === "callback-failed" && transaction.error === failure.error)
+            transaction.phase = "rolled-back"
         } finally {
-          db.close()
+          abortRoots.delete(db)
         }
       }
     })()
@@ -421,9 +473,22 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
         const generations = Object.fromEntries(surfaces.map((surface) => [surface, structuredClone(snapshots[surface].sfBlobGenerations ?? {})]))
         const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const transaction: LocalTransactionAbort = { storageIdentity, transactionId: randomUUID(), phase: "callback", consumed: false }
+        abortRoots.set(db, transaction)
+        surfaces.forEach((surface) => localTransactions.set(snapshots[surface], transaction))
         const result = await (async () => {
-          try { return await context.run(scope, () => work(snapshots)) }
-          finally { scope.open = false }
+          try {
+            const result = await context.run(scope, () => work(snapshots))
+            transaction.phase = "callback-completed"
+            return result
+          } catch (error) {
+            transaction.phase = "callback-failed"
+            transaction.error = error
+            throw error
+          } finally {
+            scope.open = false
+            surfaces.forEach((surface) => localTransactions.delete(snapshots[surface]))
+          }
         })()
         transactionOptions?.signal?.throwIfAborted()
         if (scope.root.poisoned) throw new Error("Nested local write attempted")
