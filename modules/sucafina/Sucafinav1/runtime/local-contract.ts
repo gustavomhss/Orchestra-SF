@@ -1,5 +1,6 @@
 import type { Persistence } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
+import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
 import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 
 /** Authentication records are separate from business snapshots and their backups. Payloads are encrypted by identity. */
@@ -30,7 +31,7 @@ export type LocalSecrets = {
   /** Required by the Microsoft composition; optional only for retained local adapters. */
   authentication?: AuthenticationSecrets
 }
-export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; dispose: () => Promise<void> }
+export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; readonly teamProfiles?: TeamProfilePolicyStore; dispose: () => Promise<void> }
 export type DirectoryPerson = { id: string; name: string }
 export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number; grantedScopes?: readonly string[] }
 /** A server-only Graph observation. It never grants product access or proves a login by itself. */

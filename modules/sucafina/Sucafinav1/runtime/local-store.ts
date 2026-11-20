@@ -5,12 +5,15 @@ import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
 import type { AuthLimits, LocalStore } from "./local-contract.ts"
 import { createAuthenticationSecrets, initializeAuthentication } from "./auth-maintenance.ts"
+import { createTeamProfilePolicyStore, initializeTeamProfilePolicy } from "./team-profile-store.ts"
+import { teamProfilePolicyBinding } from "./team-profile-policy.ts"
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
 
-export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits> } = {}): Promise<LocalStore> {
+export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits>; teamProfiles?: { installationId: string; tenantId: string } } = {}): Promise<LocalStore> {
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
+  const teamProfileBinding = options.teamProfiles === undefined ? undefined : teamProfilePolicyBinding(options.teamProfiles)
   const timeout = options.lockTimeoutMs ?? 5000
   if (!Number.isFinite(timeout) || timeout < 0) throw new Error("Invalid lock timeout")
   if (resolve(directory) !== directory) throw new Error("Local storage requires a canonical directory path")
@@ -73,6 +76,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
         `)
         const limits = initializeAuthentication(initial, options.authentication)
+        if (teamProfileBinding) initializeTeamProfilePolicy(initial, teamProfileBinding)
         initial.exec("COMMIT")
         return limits
       } finally {
@@ -215,7 +219,29 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     }),
   })
 
+  const teamProfiles = teamProfileBinding ? createTeamProfilePolicyStore({
+    binding: teamProfileBinding,
+    // Profile policy is current authority metadata, not an older business read snapshot.
+    read: async <T>(work: (db: Database) => T): Promise<T> => {
+      if (lifecycle.closed) throw new Error("Local store is disposed")
+      const scope = context.getStore()
+      if (scope) requireScope(scope)
+      const db = connect()
+      try {
+        db.exec("BEGIN")
+        const value = work(db)
+        if (scope) requireScope(scope)
+        return value
+      } finally {
+        if (db.inTransaction) db.exec("ROLLBACK")
+        db.close()
+      }
+    },
+    write: (work, signal) => operation(true, work, signal),
+  }) : undefined
+
   return {
+    ...(teamProfiles ? { teamProfiles } : {}),
     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
       operation(true, async (db) => {
         const copies: Partial<Record<Surface, () => Snapshot>> = {}

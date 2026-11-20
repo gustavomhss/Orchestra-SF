@@ -1,6 +1,7 @@
 import { createEntraClient } from "./entra-client.ts"
 import { createMicrosoftIdentity } from "./local-identity.ts"
 import type { EntraOptions, LocalSecrets } from "./local-contract.ts"
+import type { TeamProfilePolicySource } from "./team-profile-policy.ts"
 import { requireLocalIsolation } from "./local-configuration.ts"
 import { bindMicrosoftInstallation, loadMicrosoftConfiguration } from "./microsoft-configuration.ts"
 
@@ -24,9 +25,21 @@ export async function prepareMicrosoftInstallation(
     ...(config.teams === "direct" ? { teams: config.teams } : {}),
     fetch: overrides.fetch, now: overrides.now,
   })
+  const readTeamProfilePolicy = async (): Promise<TeamProfilePolicySource> => {
+    const current = await loadMicrosoftConfiguration(file)
+    // Current policy may change; a running instance must never retarget its tenant, transport or private keys.
+    for (const field of ["deployment", "authentication", "origin", "listenerOrigin", "ingressOrigin", "mount", "tenantId", "clientId", "workspaceDirectory"] as const)
+      if (current.config[field] !== config[field]) throw new Error("Microsoft installation binding changed; explicit reconfiguration required")
+    for (const name of ["session", "bank", "assets"] as const)
+      if (!Bun.deepEquals(current.keys[name], keys[name])) throw new Error("Microsoft installation keys changed; explicit reconfiguration required")
+    return Object.freeze({
+      ...(current.config.teams === "direct" ? { teams: current.config.teams } : {}),
+      ...(current.config.supremeAdminGroupId === undefined ? {} : { supremeAdminGroupId: current.config.supremeAdminGroupId }),
+    })
+  }
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
-    loaded: { config, directory, keys }, client, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
+    loaded: { config, directory, keys }, client, readTeamProfilePolicy, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
     createIdentity: (secrets: LocalSecrets) => createMicrosoftIdentity({ origin: config.origin, mount: config.mount, tenantId: config.tenantId, clientId: config.clientId, client, secrets, key: keys.session, sessionSeconds: config.sessionSeconds, loginSeconds: config.loginSeconds, now: overrides.now }),
   }
 }
