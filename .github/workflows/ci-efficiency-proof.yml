@@ -21,7 +21,6 @@ jobs:
     timeout-minutes: 15
     env:
       REVIEWED_SOURCE_SHA: "b5312caba2a8825c2061dfafab926a3feed370cf"
-      CI_EVIDENCE_DIR: ${{ runner.temp }}/ci-efficiency-evidence
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
@@ -30,6 +29,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "24.15"
+      - name: Keep diagnostics outside checked-out source
+        run: |
+          printf 'CI_EVIDENCE_DIR=%s/ci-efficiency-evidence\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - name: Gate, profile, cache promotion and shard binding regressions
         run: node --test script/sf-ci/gate.test.mjs script/sf-ci/shard-plan.test.mjs script/sf-ci/cache-source.test.mjs script/sf-ci/shard-adoption.test.mjs
       - name: Timing report boundary regressions
