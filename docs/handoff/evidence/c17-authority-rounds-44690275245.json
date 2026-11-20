@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "baseline contract and focused authority fixtures green; C17 and mixed deadlines remain open",
+  "candidate": {
+    "sha": "aa793a60d029fce3d927bce019102603b8cb7700",
+    "parent": "8d7cb85f068d877c8e808206627ca0dc8993d39f",
+    "tree": "15342b2ab887d7aae66dcafc84c116e28f434284",
+    "scope": "Only the new authority fixture and its manifest changed; runtime is identical to 53faf.",
+    "spec": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+      "blob": "3fcca506c58bb98d97dd7a46e12b61021401687e",
+      "characters": 19275,
+      "linesIncludingFinalEmpty": 334,
+      "literalExpects": 65,
+      "awaitTokens": 57,
+      "effectiveTests": 14
+    },
+    "runtimeBlobs": {
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts": "677ca9d2a236d984763b34f42d749435c9e5dfac",
+      "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts": "75c9a9455ed543c48ffefc00be6b25efd2a32950",
+      "modules/sucafina/Sucafinav1/product/integration/product-authority.ts": "3147ac1fba3dd7e71aa6d9e73dc93e1be5db43b3",
+      "modules/sucafina/Sucafinav1/runtime/admin.ts": "02de55c89a981057823002948b1f90fbeef021d3"
+    }
+  },
+  "baseline": {
+    "runId": 44688979791,
+    "attempt": 1,
+    "workflow": "test-ci",
+    "head": "f2dc0fc752a56c546ce65b17ce2634a270b3bfd8",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-20T06:36:19Z",
+    "startedAt": "2026-11-20T06:36:19Z",
+    "updatedAt": "2026-11-20T06:37:59Z",
+    "product": "1542afe3a79550d6f3002eff8dcdbc442c981a79",
+    "stage": "a3a06c980e100aaa1cff1169b40b0a854c79dc21",
+    "triggerParent": "a3a06c980e100aaa1cff1169b40b0a854c79dc21",
+    "tree": "906264a709fb419937d101dd770f049d71778281",
+    "triggerDiffPaths": [],
+    "requestBlob": "c4b7d3425acd96b7ec8607db7479e192f0d442fc",
+    "request": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/product/wp10/integration/authority-admit-contract.diagnostic.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "specBlob": "57ca46a09448e23e90d5897844f9670899acab02",
+    "jobId": 136129966351,
+    "jobConclusion": "success",
+    "cleanupJobId": 136130557065,
+    "cleanupConclusion": "success",
+    "summary": {
+      "pass": 4,
+      "fail": 0,
+      "expectCalls": 57,
+      "tests": 4,
+      "files": 1,
+      "durationMs": 405
+    },
+    "cases": [
+      {
+        "timestamp": "2026-11-20T06:37:49.3000655Z",
+        "name": "baseline admit has two complete principal rounds and standalone revalidate has one",
+        "outcome": "pass",
+        "durationMs": 26.91
+      },
+      {
+        "timestamp": "2026-11-20T06:37:49.3088693Z",
+        "name": "baseline opaque admission keeps two persistence getters and one full copy in each real round",
+        "outcome": "pass",
+        "durationMs": 8.84
+      },
+      {
+        "timestamp": "2026-11-20T06:37:49.3189104Z",
+        "name": "baseline poison preserves both complete rounds and is refused at its original root egress",
+        "outcome": "pass",
+        "durationMs": 10.02
+      },
+      {
+        "timestamp": "2026-11-20T06:37:49.3308959Z",
+        "name": "baseline inherited role map observes the full receiver nine times in each real round",
+        "outcome": "pass",
+        "durationMs": 12
+      }
+    ],
+    "omni": "not applicable (focused: no declaring test ran); no spawn or delegation; not a native witness"
+  },
+  "focused": {
+    "runId": 44690275245,
+    "attempt": 1,
+    "workflow": "test-ci",
+    "head": "54dbfd02f89e159f004e6772fc745be255f4699f",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-20T06:47:19Z",
+    "startedAt": "2026-11-20T06:47:19Z",
+    "updatedAt": "2026-11-20T06:48:24Z",
+    "product": "aa793a60d029fce3d927bce019102603b8cb7700",
+    "parent": "aa793a60d029fce3d927bce019102603b8cb7700",
+    "tree": "eb97518ff822e84792365c910c9caa0152ca2f53",
+    "snapshotDiffPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "347a8349e34796094f99b6cbfd5cba8a29d6fdd6",
+    "request": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "jobId": 136134139723,
+    "jobConclusion": "success",
+    "cleanupJobId": 136134516899,
+    "cleanupConclusion": "success",
+    "summary": {
+      "pass": 14,
+      "fail": 0,
+      "expectCalls": 98,
+      "tests": 14,
+      "files": 1,
+      "durationMs": 487
+    },
+    "cases": [
+      {
+        "timestamp": "2026-11-20T06:48:15.2641773Z",
+        "name": "real authority keeps all three authentications and identical admission revisions on projected and full reads",
+        "outcome": "pass",
+        "durationMs": 30.41
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.2794574Z",
+        "name": "ACL changes between fresh roots revoke existing authority without changing other-principal semantics",
+        "outcome": "pass",
+        "durationMs": 15.31
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.2879479Z",
+        "name": "an awaited consumer owner change denies admission without a legacy retry",
+        "outcome": "pass",
+        "durationMs": 8.51
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.2981804Z",
+        "name": "an awaited source owner change denies admission without a legacy retry",
+        "outcome": "pass",
+        "durationMs": 10.1
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3070013Z",
+        "name": "an awaited driver owner change denies admission without a legacy retry",
+        "outcome": "pass",
+        "durationMs": 8.9
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3173327Z",
+        "name": "an awaited composite owner change denies admission without a legacy retry",
+        "outcome": "pass",
+        "durationMs": 10.35
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3255436Z",
+        "name": "opaque input getters and wrappers retain their actual full-copy path",
+        "outcome": "pass",
+        "durationMs": 8.2
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3353964Z",
+        "name": "revocation and abort during real authentication remain refusals after all three callbacks start",
+        "outcome": "pass",
+        "durationMs": 9.84
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3441280Z",
+        "name": "an already poisoned root still authenticates before its original publication fence rejects",
+        "outcome": "pass",
+        "durationMs": 8.71
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3522063Z",
+        "name": "prototype drift during authentication is refused without executing a getter on a reduced receiver",
+        "outcome": "pass",
+        "durationMs": 8.06
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3592772Z",
+        "name": "a changed provider cannot recover the same in-flight observation by restoring its method",
+        "outcome": "pass",
+        "durationMs": 7.02
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3690096Z",
+        "name": "the final identity callback cannot replace the authority input owner before egress",
+        "outcome": "pass",
+        "durationMs": 9.65
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3821484Z",
+        "name": "an inherited role map uses the real full data receiver on the original fallback",
+        "outcome": "pass",
+        "durationMs": 13.29
+      },
+      {
+        "timestamp": "2026-11-20T06:48:15.3911885Z",
+        "name": "inherited descriptor.value cannot disguise the consumer input accessor during authentication",
+        "outcome": "pass",
+        "durationMs": 8.99
+      }
+    ],
+    "omni": "not applicable (focused: no declaring test ran); no spawn or delegation; not a native witness"
+  },
+  "compiler": {
+    "runId": 44690275700,
+    "attempt": 1,
+    "workflow": "test-ci",
+    "head": "865949c65c607f220dfa5fc001715d604a5a72c6",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-20T06:47:19Z",
+    "startedAt": "2026-11-20T06:47:19Z",
+    "updatedAt": "2026-11-20T06:49:10Z",
+    "product": "aa793a60d029fce3d927bce019102603b8cb7700",
+    "parent": "aa793a60d029fce3d927bce019102603b8cb7700",
+    "tree": "99572ebabf1674b35be5856e0a6336bce6decaf8",
+    "snapshotDiffPaths": [
+      ".ci-run.json",
+      "apps/cli/audit-stale-typecheck.node-smoke.mjs"
+    ],
+    "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+    "request": {
+      "package": "cli",
+      "runner": "node",
+      "args": [
+        "audit-stale-typecheck.node-smoke.mjs"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "harnessBlob": "23d70a1baa40d4ad331eb3e0906e49466da458b0",
+    "jobId": 136134141308,
+    "jobConclusion": "success",
+    "cleanupJobId": 136134806857,
+    "cleanupConclusion": "success",
+    "summary": {
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 31598.811825
+    },
+    "marker": {
+      "timestamp": "2026-11-20T06:48:29.4706554Z",
+      "name": "SF_AUDIT_COMPILER_PRODUCT",
+      "sha": "aa793a60d029fce3d927bce019102603b8cb7700",
+      "package": "sucafina"
+    },
+    "test": {
+      "name": "sucafina package compiler",
+      "outcome": "pass",
+      "durationMs": 31554.91415,
+      "timestamp": "2026-11-20T06:49:01.0265148Z"
+    },
+    "command": {
+      "executable": "bun",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "directory": "modules/sucafina",
+      "observedScripts": [
+        "bun --cwd Sucafinav1 typecheck",
+        "tsgo --noEmit"
+      ]
+    }
+  },
+  "priorQualification": {
+    "evidenceCommit": "a19899d95aef563a00c8d638f9ae067b0540b3eb",
+    "evidencePath": "docs/handoff/evidence/c17-authority-data-44686066277.json",
+    "evidenceBlob": "e9772a07762ea029b4623dfde417c1f218d86804",
+    "functional": {
+      "runId": 44686066277,
+      "jobId": 136120565459,
+      "cleanupJobId": 136124232394,
+      "snapshot": "9ddbf78ef3451a5380b727ace584dea6283aacb5",
+      "parent": "53faf8db0f015431b80722f457bc1018aff17ebe",
+      "tree": "59f082920b56943ab931ba1ad981e32a8b0119ec",
+      "requestBlob": "92f1538a75748b8849d25e8377c790f59aa6d3d5",
+      "summary": {
+        "pass": 83,
+        "fail": 6,
+        "expectCalls": 546,
+        "tests": 89,
+        "files": 7,
+        "durationSeconds": 533.41
+      },
+      "byFile": {
+        "Sucafinav1/test/local-authority-data.test.ts": {
+          "pass": 16,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts": {
+          "pass": 23,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts": {
+          "pass": 0,
+          "fail": 1
+        },
+        "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts": {
+          "pass": 14,
+          "fail": 1
+        },
+        "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts": {
+          "pass": 10,
+          "fail": 4
+        },
+        "Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts": {
+          "pass": 5,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/wp10/integration/product-authority.test.ts": {
+          "pass": 15,
+          "fail": 0
+        }
+      },
+      "failures": [
+        {
+          "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+          "reason": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+          "durationMs": 105009.77,
+          "unchangedTest": true
+        },
+        {
+          "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+          "line": 172,
+          "reason": "test timed out after 120000ms",
+          "durationMs": 161499.05,
+          "unchangedTest": true,
+          "barrierDiagnosis": "not established by this run"
+        },
+        {
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "line": 58,
+          "reason": "baseline admission authentication sequence repeated",
+          "expected": [
+            "dashboard",
+            "planner",
+            "procurement"
+          ],
+          "received": [
+            "dashboard",
+            "planner",
+            "procurement",
+            "dashboard",
+            "planner",
+            "procurement"
+          ],
+          "newTest": true
+        },
+        {
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "line": 132,
+          "reason": "opaque persistence getter count",
+          "expected": 2,
+          "received": 4,
+          "newTest": true
+        },
+        {
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "line": 176,
+          "innerLine": 173,
+          "reason": "inner authentication-count assertion masks final poison fence assertion",
+          "expectedError": "Nested local write attempted",
+          "receivedError": "expect(received).toEqual(expected)",
+          "expectedAuthenticationCount": 3,
+          "receivedAuthenticationCount": 6,
+          "newTest": true
+        },
+        {
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "line": 246,
+          "reason": "inherited roleMap getter observation sequence repeated",
+          "expected": [
+            "dashboard",
+            "dashboard",
+            "dashboard",
+            "planner",
+            "planner",
+            "planner",
+            "procurement",
+            "procurement",
+            "procurement"
+          ],
+          "received": [
+            "dashboard",
+            "dashboard",
+            "dashboard",
+            "planner",
+            "planner",
+            "planner",
+            "procurement",
+            "procurement",
+            "procurement",
+            "dashboard",
+            "dashboard",
+            "dashboard",
+            "planner",
+            "planner",
+            "planner",
+            "procurement",
+            "procurement",
+            "procurement"
+          ],
+          "newTest": true
+        }
+      ],
+      "phases": [
+        {
+          "marker": "SF_COMPOSITION_PHASE",
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "started",
+          "elapsedMs": 2
+        },
+        {
+          "marker": "SF_COMPOSITION_PHASE",
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "returned",
+          "phaseMs": 42,
+          "elapsedMs": 45,
+          "aborted": false
+        },
+        {
+          "marker": "SF_COMPOSITION_PHASE",
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "started",
+          "elapsedMs": 45
+        },
+        {
+          "marker": "SF_CALCULATION_ANCESTRY",
+          "phase": "produce-inner",
+          "elapsedMs": 2408,
+          "canonicalResultReads": 14,
+          "canonicalResultReadsCompleted": 14,
+          "aborted": false
+        },
+        {
+          "marker": "SF_COMPOSITION_PHASE",
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "returned",
+          "phaseMs": 2409,
+          "elapsedMs": 2453,
+          "aborted": false
+        },
+        {
+          "marker": "SF_COMPOSITION_PHASE",
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "started",
+          "elapsedMs": 2459
+        },
+        {
+          "marker": "SF_CALCULATION_ANCESTRY",
+          "phase": "produce-outer",
+          "elapsedMs": 102547,
+          "canonicalResultReads": 961,
+          "canonicalResultReadsCompleted": 961,
+          "aborted": true
+        },
+        {
+          "marker": "SF_COMPOSITION_PHASE",
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "returned",
+          "phaseMs": 102547,
+          "elapsedMs": 105006,
+          "aborted": true
+        }
+      ]
+    },
+    "compilers": [
+      {
+        "runId": 44686072921,
+        "jobId": 136120586996,
+        "cleanupJobId": 136121617658,
+        "attempt": 1,
+        "snapshot": "35f0ffe9a3f6231bdf4064a499708cde6f662247",
+        "product": "53faf8db0f015431b80722f457bc1018aff17ebe",
+        "tree": "6fa5a2d8c1cdcb552093cbb19869a7028d22cb16",
+        "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+        "harnessBlob": "a7920cc9ea1d64d70bf9ed6920c29eb9dc361ed4",
+        "summary": {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "cancelled": 0,
+          "durationMs": 58804.099126
+        },
+        "sucafina": {
+          "status": "failure",
+          "durationMs": 30986.282527,
+          "diagnostics": [
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 58,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 116,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 134,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 149,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 163,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 173,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 194,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 228,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            },
+            {
+              "code": "TS2769",
+              "file": "test/product/wp10/integration/authority-read-projection.test.ts",
+              "line": 247,
+              "reason": "readonly surface tuple not assignable to mutable Surface[] matcher expectation"
+            }
+          ]
+        },
+        "cli": {
+          "status": "success",
+          "durationMs": 27748.683851
+        },
+        "cleanup": "success"
+      },
+      {
+        "runId": 44686875780,
+        "jobId": 136123190406,
+        "cleanupJobId": 136123923264,
+        "attempt": 1,
+        "snapshot": "95051efd810de12d1dc23a1f7596c9ded6390196",
+        "product": "8d7cb85f068d877c8e808206627ca0dc8993d39f",
+        "tree": "b299d48ec36d0cdcc75b10c840d2ba23abeaf66f",
+        "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+        "harnessBlob": "036f1608e9e582853e059204a4a0bafdeb157f2d",
+        "summary": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "cancelled": 0,
+          "durationMs": 29564.485399
+        },
+        "sucafina": {
+          "status": "success",
+          "durationMs": 29523.495411
+        },
+        "cleanup": "success"
+      }
+    ]
+  },
+  "measurement": {
+    "originalUiAuthorityBlob": "fc6b8dc2345f70520ddcc2facdbef0d90a334df9",
+    "sequence": "authorize at ui-authority.ts:65; actual commandIdentity at :70; revalidate at :78-79 calls authorize at :48",
+    "roundBoundary": "Exactly one real commandIdentity invocation with original Request, sf_context_get and original input digest; no synthetic cut by an expected count.",
+    "countsPerRound": {
+      "authenticationSurfaces": [
+        "dashboard",
+        "planner",
+        "procurement"
+      ],
+      "opaqueInputGetters": 2,
+      "opaqueFullCopies": 1,
+      "inheritedRoleMapReceiverOrder": [
+        "dashboard",
+        "dashboard",
+        "dashboard",
+        "planner",
+        "planner",
+        "planner",
+        "procurement",
+        "procurement",
+        "procurement"
+      ]
+    },
+    "completeVectors": "Both admission rounds are separately asserted and concatenated to the entire measured vector; standalone revalidate equals the first round; all later state.read observations remain reconciled.",
+    "absoluteBaselineGuards": {
+      "authentication": 0,
+      "opaqueCopies": 0,
+      "inheritedReceivers": 0
+    },
+    "constructionInputGetters": "Retained in the vector before the original before marker; the original getter measurement already began after product construction."
+  },
+  "limitations": [
+    "These are component fixtures using real SQLite/source/product authority and explicit fixture authentication. No native model or human approval is claimed.",
+    "The four-case baseline only establishes the original admission contract; it does not qualify the projection implementation or measure a performance improvement.",
+    "The 14-case follow-up repairs measurement boundaries, preserves both complete rounds and all expected values, and leaves runtime and the other 75 original gate cases unchanged.",
+    "The original 89-case run remains 83/6. C17 and mixed siblings were not repeated and their original deadlines remain open.",
+    "No elapsed time here is a CPU attribution or evidence that C17 closes. No sf-ci, installed nominal, browser, workflow modification or approval label was used."
+  ]
+}
