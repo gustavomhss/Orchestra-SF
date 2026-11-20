@@ -1,6 +1,7 @@
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
+import { initialProcurementSettings } from "../../../../../modules/sucafina/Sucafinav1/src/initial-settings.ts"
 import { canChangeAssetKind } from "../../../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot, View } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -290,7 +291,10 @@ function pageData(
   }
   if (!actor.roles.includes("admin")) return undefined
   return {
-    data: { settings: pick(data.settings, settingsKeys), directory },
+    // The reset command invokes this same producer function; the browser never
+    // reconstructs defaults. Both projections share CAP28's admin/source fence.
+    data: { settings: pick(data.settings, settingsKeys), directory,
+      resetSettings: pick(initialProcurementSettings(), settingsKeys) },
     versions: versionsFor(view, ["settings"]),
   }
 }

@@ -288,6 +288,7 @@ const SuppliersData = Schema.Struct({
 })
 const SettingsData = Schema.Struct({
   settings: SfProcurementSettings, directory: Schema.Array(DirectoryEntry),
+  resetSettings: optional(SfProcurementSettings),
 })
 function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "CAP28", Data>(
   capabilityId: Capability, data: Schema.Codec<Data>,
