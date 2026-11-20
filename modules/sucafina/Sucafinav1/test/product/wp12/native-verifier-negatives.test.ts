@@ -103,6 +103,12 @@ test("real Forecast verifier refuses a false total, an out-of-schema operation a
         skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest,
         outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare", "sf_source_get"] },
         selection: { caseRef, baseRef: decision.value.sourceRefs[0]!.refId, candidateRef: decision.value.sourceRefs[1]!.refId, period, currency: "USD" } }
+      const forecastSelection = {
+        baseRef: incoming.selection.baseRef,
+        candidateRef: incoming.selection.candidateRef,
+        period: incoming.selection.period,
+        currency: incoming.selection.currency,
+      }
       const before = await durableState(context, caseRef.id)
       expect(before.outputRefs).toEqual([])
       expect(before.runRefs).toEqual([])
@@ -143,7 +149,7 @@ test("real Forecast verifier refuses a false total, an out-of-schema operation a
             expect(resolution.state).not.toBe("fresh")
             expect(resolution.authorizedProjection).toBeUndefined()
           }
-          const replay = await context.business.planner.compareForecast(incoming.selection, call)
+          const replay = await context.business.planner.compareForecast(forecastSelection, call)
           if (replay.status !== "ok") throw new Error(`Real Planner replay failed after ${attack.id}: ${replay.reason}`)
           assertEngineValues(replay.value)
           expect(digestSfValue(withoutObservationTimes(replay.value))).toBe(comparisonDigest)
@@ -162,7 +168,7 @@ test("real Forecast verifier refuses a false total, an out-of-schema operation a
       expect(checked).toEqual({ status: "ok", value: true })
       if (!context.models.length) {
         observeWp12UnavailableMission(context, { request: incoming.request, skillInput: input })
-        return { caseRef, selection: incoming.selection, comparisonDigest, before, after: before, completed: undefined }
+        return { caseRef, selection: forecastSelection, comparisonDigest, before, after: before, completed: undefined }
       }
       expectSpawn(import.meta.path)
       const completed = await executeWp12NativeMission(context, { request: incoming.request, skillInput: input,
@@ -199,7 +205,7 @@ test("real Forecast verifier refuses a false total, an out-of-schema operation a
         return { status: "ok", value: true } as const
       }))
       expect(nativeChecked).toEqual({ status: "ok", value: true })
-      return { caseRef, selection: incoming.selection, comparisonDigest, before, after, completed }
+      return { caseRef, selection: forecastSelection, comparisonDigest, before, after, completed }
     })
     // Domain preservation and C08 absence/integrity are observed after a fresh
     // host opens the same store, including when no provider is configured.
