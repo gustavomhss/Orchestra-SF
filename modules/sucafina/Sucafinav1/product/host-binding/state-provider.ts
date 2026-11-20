@@ -419,8 +419,14 @@ export function sfTransactionBelongsTo(
 ) {
   const intent = sfTransactionIdentity(key)
   if (!intent || intent.principalRef !== authority.principalRef) return false
-  if (!authority.profile) return intent.profile === undefined
-  return intent.profile?.installationId === authority.profile.installationId &&
-    intent.profile.tenantId === authority.profile.tenantId &&
-    intent.profile.teamObjectId === authority.profile.teamObjectId
+  return sfTransactionProfileMatches(authority.profile, key)
+}
+
+/** Shared resource proofs may have another authorized author; this compares only the current Team scope. */
+export function sfTransactionProfileMatches(profile: TeamProfile.Ref | undefined, key: string) {
+  const intent = sfTransactionIdentity(key)
+  if (!intent) return false
+  if (!profile) return intent.profile === undefined
+  return intent.profile?.installationId === profile.installationId &&
+    intent.profile.tenantId === profile.tenantId && intent.profile.teamObjectId === profile.teamObjectId
 }

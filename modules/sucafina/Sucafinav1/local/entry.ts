@@ -36,6 +36,7 @@ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
 import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
+import { createTeamProfileIdentityBoundary } from "../runtime/team-profile-identity.ts"
 import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
@@ -140,17 +141,24 @@ export async function createConfiguredInstallation(
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
-  const teamProfiles = (() => {
+  const profileResolver = (() => {
     if (!microsoft) return undefined
     if (!driver.teamProfiles || !identity.microsoftSession) throw new Error("Microsoft profile authority capability unavailable")
-    return createTeamProfileHttp({
-      origin: config.origin, mount: config.mount, installationId, tenantId: microsoft.loaded.config.tenantId,
-      resolver: createTeamProfileResolver({
-        installationId, tenantId: microsoft.loaded.config.tenantId, store: driver.teamProfiles,
-        microsoftSession: identity.microsoftSession, policy: microsoft.readTeamProfilePolicy,
-      }),
+    return createTeamProfileResolver({
+      installationId, tenantId: microsoft.loaded.config.tenantId, store: driver.teamProfiles,
+      microsoftSession: identity.microsoftSession, policy: microsoft.readTeamProfilePolicy,
     })
   })()
+  const teamBoundary = microsoft && profileResolver ? createTeamProfileIdentityBoundary({
+    identity, resolver: profileResolver, installationId, tenantId: microsoft.loaded.config.tenantId,
+    origin: config.origin, mount: config.mount,
+  }) : undefined
+  if (microsoft && !teamBoundary) throw new Error("Microsoft Team boundary unavailable")
+  const businessIdentity = teamBoundary?.identity ?? identity
+  const teamProfileHttp = microsoft && profileResolver ? createTeamProfileHttp({
+    origin: config.origin, mount: config.mount, installationId, tenantId: microsoft.loaded.config.tenantId,
+    resolver: profileResolver,
+  }) : undefined
   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
   const backups = await createLocalBackups(backupDirectory)
   const recovery = operator ? await loadRecoveryConfiguration(loaded.directory) : undefined
@@ -166,13 +174,14 @@ export async function createConfiguredInstallation(
   } : undefined
   const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
   services.jobs = jobs
-  const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
+  const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await businessIdentity.directory(request), bankKey: loaded.keys.bank })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
   let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
+    ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId, readGrants: microsoft.readGrants, teamProfiles: teamBoundary?.profiles } : {}),
     operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
     nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
     nativeActions: (request, stamp, pages) => nativeActions ? nativeActions(request, stamp, pages) : Promise.reject(new Error("SF_ACTION_SOURCE_UNAVAILABLE")),
@@ -182,11 +191,11 @@ export async function createConfiguredInstallation(
       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
-    persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
+    persistence: store, authenticate: businessIdentity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
   const applicationServices: ModuleServices = {
     persistence: store,
-    authenticate: identity.authenticate,
+    authenticate: businessIdentity.authenticate,
     environment: requestEnvironment,
     product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
     productView: async (request, surface, page) => {
@@ -277,6 +286,7 @@ export async function createConfiguredInstallation(
       current: async (signal: AbortSignal) => signal.aborted ? undefined : {
         publicOrigin: config.origin, mount: config.mount,
         authMode: operator ? "local-operator" as const : "microsoft" as const,
+        ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId } : {}),
         identity: () => runtime?.identity(),
       },
       forAdmittedLocation: async (location: Readonly<{ directory: string; workspace?: string }>, signal: AbortSignal) => {
@@ -285,6 +295,7 @@ export async function createConfiguredInstallation(
             location.directory !== identity.location.directory) return []
         return [{ publicOrigin: config.origin, mount: config.mount,
           authMode: operator ? "local-operator" as const : "microsoft" as const,
+          ...(microsoft ? { tenantId: microsoft.loaded.config.tenantId } : {}),
           identity: () => runtime?.identity() }]
       },
     } } : {}),
@@ -307,7 +318,7 @@ export async function createConfiguredInstallation(
         return auth
       }
       await identity.prepare(request)
-      const teamProfileResponse = await teamProfiles?.(request)
+      const teamProfileResponse = await teamProfileHttp?.(request)
       if (teamProfileResponse) return teamProfileResponse
       if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
@@ -372,7 +383,9 @@ export async function createConfiguredInstallation(
       if (surface === "dashboard" || surface === "planner" || surface === "procurement") {
         const person = await identity.person(request)
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
-        if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
+        // Corporate maps are initialized from explicit private configuration at composition.
+        // A legacy HTML landing must never create Microsoft business state before Team admission.
+        if (person && !operator && !microsoft) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
       // The authorized native projection seam runs after the installation's
       // origin, identity.handle/prepare and narrowly selected surface bootstrap.

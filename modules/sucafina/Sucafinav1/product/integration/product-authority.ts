@@ -88,13 +88,19 @@ export function createSfProductAuthority(input: {
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
   const currentGrants = async () => readGrants ? productGrants(await readGrants()) : grants
   // A Request never reacquires a session generation after refresh, relogin or a changed selection.
-  const teamResolutions = new WeakMap<Request, Promise<TeamProfileResolution>>()
+  const teamResolutions = new WeakMap<Request, Readonly<{ intent: string; value: Promise<TeamProfileResolution> }>>()
+  const requestIntent = (request: Request) => digestSfValue({
+    url: request.url, method: request.method, selector: request.headers.get("x-sf-team-profile"),
+    origin: request.headers.get("origin"), site: request.headers.get("sec-fetch-site"),
+  })
+  const sameTeamIntent = (request: Request) => !teamProfiles || teamResolutions.get(request)?.intent === requestIntent(request)
   const resolveTeams = (request: Request) => {
     if (!teamProfiles) return undefined
     const known = teamResolutions.get(request)
-    if (known) return known
+    if (known) return known.intent === requestIntent(request) ? known.value : Promise.resolve({ status: "denied" } as const)
+    const intent = requestIntent(request)
     const pending = teamProfiles.resolve(request)
-    teamResolutions.set(request, pending)
+    teamResolutions.set(request, Object.freeze({ intent, value: pending }))
     return pending
   }
   const creationTarget = Object.freeze({ ref: `sf-workspace:${encodeURIComponent(input.installationId)}`, incarnation: input.installationId })
@@ -115,8 +121,9 @@ export function createSfProductAuthority(input: {
       request.headers.get("sec-fetch-site") === "cross-site" ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
     const identityDigest = digestSfValue(current)
+    const pendingResolution = resolveTeams(request)?.catch(() => undefined)
     const policy = await currentGrants()
-    const resolution = await resolveTeams(request)
+    const resolution = await pendingResolution
     if (teamProfiles && resolution?.status !== "authenticated") return undefined
     const profile = resolution?.status === "authenticated" ? resolution : undefined
     if (profile && (!teamProfiles || !(context
@@ -161,7 +168,7 @@ export function createSfProductAuthority(input: {
       : profile.admission && await teamProfiles.revalidate(profile.admission)))) return undefined
     if (digestSfValue(await currentGrants()) !== digestSfValue(policy) ||
         digestSfValue(maps()) !== mappedDigest || digestSfValue(scopes()) !== digestSfValue(scoped) ||
-        digestSfValue(identity()) !== identityDigest || request.signal.aborted) return undefined
+        digestSfValue(identity()) !== identityDigest || request.signal.aborted || !sameTeamIntent(request)) return undefined
     const accessRevision = digestSfValue({
       installationId: current.installationId, projectId: current.projectId, principalRef,
       ...(profile ? { principal: profile.principal, profile: profile.admission?.profile ?? null,
