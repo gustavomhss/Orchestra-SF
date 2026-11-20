@@ -38,7 +38,7 @@
 - As quatro execuções terminaram sem executar testes. Elas não são contadas como falhas de produto.
 - Houve sobreposição transitória desses runs de admissão acima do limite de dois; não se declara cumprimento retroativo desse limite.
 - Correção de publicação: criar árvore e commit completos via Git Data API ANTES de criar a ref `ci-run-linux-*`. Cada novo pedido passa a disparar somente um workflow. Pedidos seguintes usam o alias registrado e no máximo duas execuções ativas.
-- Nenhum gate idêntico foi repetido; os pedidos atuais corrigem o seletor de pacote.
+- As duas execuções involuntárias no SHA base repetiram o mesmo bloqueio de admissão ENOENT e ficam classificadas como `unbound`, sem testes de produto. Após corrigir a publicação e o alias de pacote, não houve repetição de pedido idêntico sem mudança.
 
 ## Limite da evidência
 
