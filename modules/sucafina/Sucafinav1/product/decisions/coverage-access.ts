@@ -3,6 +3,7 @@ import type { DecisionCase, CostCoverageAssessment, CostCoverageBasis } from "..
 import type { DomainPortHost, PlannerSourceHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
 
 export function decisionCoverageRef(caseRef: { id: string; incarnation: string }, alternativeId: string, alternativeVersion: number) {
   return `case-coverage:${encodeURIComponent(caseRef.id)}:${encodeURIComponent(caseRef.incarnation)}:${encodeURIComponent(alternativeId)}:${alternativeVersion}`
@@ -25,7 +26,7 @@ export function createDecisionCoverageAccess(input: {
       if (!id.trim() || !incarnation.trim() || !alternativeId.trim() || !Number.isSafeInteger(version) || decisionCoverageRef({ id, incarnation }, alternativeId, version) !== reference) return { status: "needs-input", reason: "invalid-coverage-reference" }
       const source = input.host.requestFor(context)
       if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "coverage-access-unavailable" }
-      const read = async () => input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[id] : undefined)
+      const read = async () => input.state.read(source, "cases", selectSfCase(id, context))
       const current = await read()
       if (current.status !== "ok") return { status: "unavailable", reason: "coverage-unavailable" }
       const decision = current.value
