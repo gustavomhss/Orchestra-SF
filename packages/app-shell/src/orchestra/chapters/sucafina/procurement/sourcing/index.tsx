@@ -827,6 +827,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
                   <label>{t("sf.u12.quoteSupplier")}
                     <input type="text" value={request()?.po?.supplier??""} disabled/>
                   </label>
+                  <label>{t("sf.u12.quoteSupplierId")}
+                    <input type="text" value={request()?.po?.supplierId??""} disabled/>
+                  </label>
+                  <label>{t("sf.u12.quoteQty")}
+                    <input type="number" step="any" value={asString(request()?.po?.lines?.[0]?.qty)} disabled/>
+                  </label>
                   <label>{t("sf.u12.quoteCurrency")}
                     <input type="text" value={request()?.po?.currency??""} disabled/>
                   </label>
