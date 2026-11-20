@@ -395,7 +395,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                   onInput={(event) => setStore("filtersEdit", "q", event.currentTarget.value)} /></label>
                 <Show when={spec.id === "CAP13"}>
                   <label>{t("sf.u30.status")}
-                    <select value={store.filtersEdit.status || ""}
+                    <select aria-label={t("sf.u30.status")} value={store.filtersEdit.status || ""}
                       onChange={(event) => setStore("filtersEdit", "status", event.currentTarget.value)}>
                       <option value="">{t("sf.u30.all")}</option>
                       <For each={["open", "mitigating", "monitoring", "closed"]}>{(option) =>
@@ -486,7 +486,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                                   required={field.required} value={getValue()}
                                   onInput={(event) => change(event.currentTarget.value)} />
                               }>
-                                <select required={field.required} value={getValue()}
+                                <select aria-label={t(field.label)} required={field.required} value={getValue()}
                                   onChange={(event) => change(event.currentTarget.value)}>
                                   <For each={field.options || []}>{(option) =>
                                     <option value={option.value}>{t(option.label)}</option>}</For>
