@@ -14,6 +14,8 @@ import { createSfProductAuthority } from "../../../product/integration/product-a
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
+import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
@@ -73,7 +75,15 @@ export async function createConsumerReadFixture() {
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
   const application = { persistence, authenticate, environment, product: http, maxJsonBytes: 100000 }
   const module = createModule("/sucafina", application)
-  const services = { ...authority, productHttp: http } as SfHostServices
+  // UI33 uses the same original case capabilities as Dashboard. Its native
+  // projection/health producers retain their own admission and participant reads.
+  const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({
+    operation, payload, context, descriptors: business.descriptors, authority: authority.authority,
+    validateInput: (_descriptor, value) => operation === "sf_case_read" && decodeSfOperationInput("sf_case_read", value).ok,
+    validateOutput: (_descriptor, result) => result.status !== "ok" ||
+      operation === "sf_case_read" && decodeSfOperationOutput("sf_case_read", result.result).ok,
+  })
+  const services: SfHostServices = { ...authority, dispatch, productHttp: http }
   const native = createNativeBrowserHost({ origin, mount: "/sucafina", directory, identity: () => binding,
     application: { ...application, domains: contributions }, authority, services: () => services,
     observe: (request, stamp) => observeSfDashboardDraftHealth({
