@@ -175,7 +175,9 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(persistedLines![0]!.cells.map((cell) => cell.month)).toEqual(Array.from({ length: 12 }, (_, month) => month + 1))
     expect(persistedLines![0]!.cells.map((cell) => ({ value: cell.forecast.value, source: cell.forecast.source })))
       .toEqual(Array.from({ length: 12 }, () => ({ value: 125, source: "inherited-budget" })))
-    const projectedLine = page.getByRole("grid").getByRole("row").filter({ hasText: "Browser OPEX fixture" })
+    const monthlyGrid = page.getByRole("grid")
+    await expect(monthlyGrid).toHaveCount(1)
+    const projectedLine = monthlyGrid.getByRole("row").filter({ hasText: "Browser OPEX fixture" })
     await expect(projectedLine).toHaveCount(1)
     await expect(projectedLine).toBeVisible()
     const forecasts = projectedLine.locator(".sf-s02-measure").filter({
