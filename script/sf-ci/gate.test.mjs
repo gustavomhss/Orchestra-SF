@@ -5,7 +5,8 @@ import { createHash } from "node:crypto"
 import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { parseShardCosts } from "./shard-plan.mjs"
+import { SHARDED, describeShardPlan, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -280,6 +281,41 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
 // A6 consumes this test-defined wiring contract in .github/workflows/sf-ci.yml.
 // The positive fixture is intentionally independent from the live workflow:
 // negative mutations must pass even while A6's YAML still needs updating.
+function uiBootstrapFixture() {
+  return [
+    "      - name: Install Chromium for Linux only",
+    "        working-directory: packages/app-shell",
+    "        run: bunx playwright install --with-deps chromium",
+    "      - name: Qualify real loopback ClamD for Operations uploads",
+    "        if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}",
+    "        shell: bash",
+    "        run: bash script/sf-ci/operations-clamd.sh",
+  ].join("\n")
+}
+
+function timingSidecarFixture(sharded = false) {
+  const directory = sharded ? "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX" : "sf-ci-evidence/$SF_SUITE_ID"
+  const command = [
+    "python3 script/sf-ci/timings.py",
+    '--report "' + directory + '/report.xml" --output "' + directory + '/timings.json"',
+    '--source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT"',
+    '--job-name "$GITHUB_JOB"',
+    sharded
+      ? '--suite CI-SF --directory modules/sucafina --file-root "$GITHUB_WORKSPACE/modules/sucafina"'
+      : '--suite "$SF_SUITE_ID" --directory "${SF_TIMINGS_DIRECTORY:-.}" --file-root "$GITHUB_WORKSPACE/${SF_TIMINGS_DIRECTORY:-.}"',
+    '--conclusion "$TEST_CONCLUSION"',
+    ...(sharded ? ['--shard-index "$SF_SHARD_INDEX" --shard-count "$SF_SHARD_COUNT"'] : []),
+  ].join(" ")
+  return [
+    "      - name: Preserve timing observations",
+    "        if: always() && !cancelled() && steps.tests.outcome != 'skipped'",
+    "        env:",
+    "          TEST_CONCLUSION: ${{ steps.tests.outcome }}",
+    "        run: |",
+    "          " + command,
+  ].join("\n")
+}
+
 function manifestWiredWorkflowFixture(actualManifest) {
   const buns = actualManifest.suites.filter((suite) => suite.kind === "bun")
   const single = buns.filter((suite) => !SHARDED[suite.id])
@@ -300,14 +336,27 @@ function manifestWiredWorkflowFixture(actualManifest) {
     '          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"',
     selected,
   ].join("\n")
+  const explicit = '          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done'
+  const directory = [
+    "          suite_dir=\"$(node --input-type=module -e '",
+    '            import { readFileSync } from "node:fs"',
+    '            import { validateManifest } from "./script/sf-ci/gate.mjs"',
+    '            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))',
+    '            const suite = suites.find((item) => item.id === process.env.SF_SUITE_ID)',
+    '            if (!suite) throw new Error("SF_CI_UNKNOWN_SUITE")',
+    '            process.stdout.write(suite.directory)',
+    "          ')\"",
+    '          test -f "$root/$suite_dir/package.json"',
+    '          printf \'SF_TIMINGS_DIRECTORY=%s\\n\' "$suite_dir" >> "$GITHUB_ENV"',
+  ].join("\n")
   return [
     "name: sf-ci", "on:", "  pull_request:", "    branches: [close-final-candidate]", "jobs:",
     "  unit:", "    strategy:", "      matrix:",
     `        id: [${single.map((suite) => suite.id).join(", ")}]`,
     "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
-    "    steps:", "      - name: test", "        run: |", prefix,
-    '          test "${#files[@]}" -gt 0 || exit 2',
-    '          case "$SF_SUITE_ID" in', arms, '              *) exit 2 ;;', "          esac",
+    "    steps:", "      - name: test", "        id: tests", "        run: |", prefix,
+    '          test "${#files[@]}" -gt 0 || exit 2', explicit, directory,
+    '          case "$SF_SUITE_ID" in', arms, '              *) exit 2 ;;', "          esac", timingSidecarFixture(),
     ...sharded.map((suite) => {
       const count = SHARDED[suite.id]
       return [
@@ -315,19 +364,20 @@ function manifestWiredWorkflowFixture(actualManifest) {
         `        shard: [${Array.from({ length: count }, (_, offset) => offset + 1).join(", ")}]`,
         "    env:", `      SF_SUITE_ID: ${suite.id}`,
         "      SF_SHARD_INDEX: ${{ matrix.shard }}", `      SF_SHARD_COUNT: "${count}"`,
-        "    steps:", "      - name: test", "        run: |",
+        "    steps:", "      - name: test", "        id: tests", "        run: |",
         '          root="$GITHUB_WORKSPACE"',
         '          evidence="$root/sf-ci-evidence/$SF_SUITE_ID-shard-$SF_SHARD_INDEX"',
         selected,
-        '          test "${#files[@]}" -gt 0 || exit 2',
+        '          test "${#files[@]}" -gt 0 || exit 2', explicit,
         `          cd "$root/${suite.directory}"`,
         `          bun test --timeout 30000 "\${files[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+        timingSidecarFixture(true),
       ].join("\n")
     }),
     "  ui:", "    strategy:", "      matrix:", "        include:",
     ...ui.map((suite) => `          - id: ${suite.id}`),
     "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
-    "    steps:", "      - name: test", "        run: |", prefix,
+    "    steps:", uiBootstrapFixture(), "      - name: test", "        run: |", prefix,
     '          test "${#files[@]}" -eq 1 || exit 2',
     '          cd "$root/packages/app-shell"',
     '          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2',
@@ -373,6 +423,104 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
     assert.notEqual(broken, good, "mutation must actually change the fixture: " + name)
     assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
   }
+})
+
+test("UI admits exactly the existing Chromium and ClamD setup blocks before its sole execution", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  const setup = uiBootstrapFixture()
+  const mutations = [
+    ["missing setup", good.replace(setup, "")],
+    ["duplicate setup", good.replace(setup, setup + "\n" + setup)],
+    ["Chromium executes tests", good.replace("run: bunx playwright install --with-deps chromium", "run: bunx playwright install --with-deps chromium && bun test")],
+    ["ClamD executes tests", good.replace("run: bash script/sf-ci/operations-clamd.sh", "run: bash script/sf-ci/operations-clamd.sh; bun test")],
+    ["foreign Chromium directory", good.replace("working-directory: packages/app-shell", "working-directory: modules/sucafina")],
+    ["changed ClamD condition", good.replace("if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}", "if: success()")],
+    ["changed ClamD shell", good.replace("        shell: bash", "        shell: sh")],
+    ["extra setup metadata", good.replace("        run: bunx playwright install --with-deps chromium",
+      "        env:\n          BASH_ENV: hidden.sh\n        run: bunx playwright install --with-deps chromium")],
+    ["setup after execution", good.replace(setup, "") + setup + "\n"],
+    ["other inline setup", good.replace(setup, setup + "\n      - run: bun test")],
+    ["quoted executable key", good.replace(setup, setup + '\n      - name: hidden\n        "run": bun test')],
+    ["flow executable step", good.replace(setup, setup + "\n      - { run: bun test }")],
+  ]
+  assert.doesNotThrow(() => assertWorkflowManifestSelection(good, actual))
+  for (const [name, broken] of mutations) {
+    assert.notEqual(broken, good, name)
+    assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
+  }
+})
+
+test("Bun timing sidecars reject extra commands, altered provenance, metadata and duplicate steps", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  for (const sharded of [false, true]) {
+    const sidecar = timingSidecarFixture(sharded)
+    const mutations = [
+      ["extra Bun command", sidecar + '\n          bun test "${files[@]}"'],
+      ["metadata command substitution", sidecar.replace('--job-name "$GITHUB_JOB"', '--job-name "$(bun test)"')],
+      ["metadata Node execution", sidecar.replace("          python3 ", '          node -e "process.exit(0)"\n          python3 ')],
+      ["extra inline script", sidecar + '\n      - run: bun test'],
+      ["extra folded script", sidecar + '\n      - name: hidden\n        run: >\n          bun test'],
+      ["folded sidecar", sidecar.replace("        run: |", "        run: >")],
+      ["duplicate sidecar", sidecar + "\n" + sidecar],
+      ["missing sidecar", ""],
+      ["duplicate argument", sidecar + ' --run-id "$GITHUB_RUN_ID"'],
+      ["false success", sidecar.replace('--conclusion "$TEST_CONCLUSION"', '--conclusion success')],
+      ["foreign source", sidecar.replace('--source-sha "$GITHUB_SHA"', '--source-sha "unverified"')],
+      ["false outcome metadata", sidecar.replace("TEST_CONCLUSION: ${{ steps.tests.outcome }}", "TEST_CONCLUSION: success")],
+      ["hidden shell metadata", sidecar.replace("        env:", '        env:\n          BASH_ENV: hidden.sh')],
+      ["wrong outcome condition", sidecar.replace("always() && !cancelled() && steps.tests.outcome != 'skipped'", "success()")],
+      ["ignored collector error", sidecar + " || true"],
+      ["shell command substitution suffix", sidecar + ' "$(bun test)"'],
+    ]
+    for (const [name, replacement] of mutations) {
+      const broken = good.replace(sidecar, replacement)
+      assert.notEqual(broken, good, name)
+      assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
+    }
+    const continued = sidecar.replace(" --report ", " \\" + "\n            --report ")
+    assert.doesNotThrow(() => assertWorkflowManifestSelection(good.replace(sidecar, continued), actual))
+  }
+  assert.throws(() => assertWorkflowManifestSelection(good.replace("        id: tests", "        id: unrelated"), actual),
+    /SF_CI_WORKFLOW_SELECTION/)
+})
+
+test("only one exact argv prefix follows each Bun guard and leaves saved selection untouched", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  const prefix = '          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done'
+  const guard = '          test "${#files[@]}" -gt 0 || exit 2'
+  for (const [job, next] of [["unit", "unit-sf"], ["unit-sf", "ui"]]) {
+    const start = good.indexOf("  " + job + ":\n")
+    const end = good.indexOf("  " + next + ":\n", start)
+    const original = good.slice(start, end)
+    const mutations = [
+      ["missing prefix", original.replace(prefix, "")],
+      ["double prefix", original.replace(prefix, prefix + "\n" + prefix)],
+      ["prefix before guard", original.replace(guard + "\n" + prefix, prefix + "\n" + guard)],
+      ["prefix after execution", original.replace(prefix, "").replace("      - name: Preserve timing observations", prefix + "\n      - name: Preserve timing observations")],
+      ["indented duplicate prefix", original.replace(prefix, prefix + "\n  " + prefix)],
+      ["different prefix", original.replace('"./${files[$index]}"', '"../${files[$index]}"')],
+      ["filter selected argv", original.replace(prefix, prefix + '\n          files=("${files[@]:0:1}")')],
+      ["append selected argv", original.replace(prefix, prefix + '\n          files+=("$extra")')],
+      ["unset selected argv", original.replace(prefix, prefix + '\n          unset files[0]')],
+      ["scalar selected argv", original.replace(prefix, prefix + '\n          files="$extra"')],
+      ["rewrite saved inventory", original.replace(prefix, prefix + '\n          printf "%s\\n" "$extra" > "$evidence/selection.txt"')],
+      ["read a replacement inventory", original.replace(prefix, prefix + '\n          readarray -t files < "$replacement"')],
+      ["repeat full argv", original.replace('"${files[@]}"', '"${files[@]}" "${files[@]}"')],
+    ]
+    for (const [name, replacement] of mutations) {
+      assert.notEqual(replacement, original, job + ": " + name)
+      const broken = good.slice(0, start) + replacement + good.slice(end)
+      assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, job + ": " + name)
+    }
+  }
+  const publish = '          printf \'SF_TIMINGS_DIRECTORY=%s\\n\' "$suite_dir" >> "$GITHUB_ENV"'
+  assert.throws(() => assertWorkflowManifestSelection(good.replace(publish, ""), actual), /SF_CI_WORKFLOW_SELECTION/)
+  assert.throws(() => assertWorkflowManifestSelection(good.replace(publish, publish + "\n" + publish), actual), /SF_CI_WORKFLOW_SELECTION/)
+  assert.throws(() => assertWorkflowManifestSelection(good.replace('          test -f "$root/$suite_dir/package.json"', ""), actual),
+    /SF_CI_WORKFLOW_SELECTION/)
 })
 
 test("selected files are read only from the validated Linux SF manifest", () => {
@@ -643,4 +791,25 @@ test("CI-05 explicit selections reject symlinked parent paths inside the checkou
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
+})
+
+
+test("advisory plan reports the validated v2 status and preserves the complete selection", () => {
+  const costs = parseShardCosts({
+    schemaVersion: 2, status: "OBSERVED_TIMINGS", unit: "seconds", measurement: "junit-case-seconds",
+    pathPrefix: "test/", fallbackSeconds: 10, minimumObservedSeconds: 0.001,
+    sourceCount: 1, observedFiles: 1, weightedFiles: 1, exclusionsFromCostProfile: [],
+    sources: [{ id: "green", runId: 123, runAttempt: 1, jobName: "unit-sf", headSha: sha,
+      suiteId: "CI-SF", directory: "modules/sucafina", status: "success", conclusionScope: "test-step",
+      partial: true, observedFiles: 1, passedTests: 1, failedTests: 0, skippedTests: 0,
+      reportSha256: "b".repeat(64), shardIndex: 1, shardCount: 8 }],
+    costs: [["sf-shard-1.test.ts", 0.05, "green"]],
+  })
+  const planned = describeShardPlan(CI_SF_FILES, "CI-SF", costs)
+  assert.equal(planned.profileStatus, "OBSERVED_TIMINGS")
+  assert.equal(planned.selectedFiles, CI_SF_FILES.length)
+  assert.equal(planned.selectedFilesSha256, sha256Lines(CI_SF_FILES))
+  assert.deepEqual(planned.shards.flatMap((part) => part.files).sort(), [...CI_SF_FILES].sort())
+  assert.equal(planned.shards.length, SHARDED["CI-SF"])
+  assert.equal(describeShardPlan(CI_SF_FILES, "CI-SF").profileStatus, "HISTORICAL_RED_OR_PARTIAL")
 })

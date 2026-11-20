@@ -49,9 +49,7 @@ describe("setup-bun cache architecture repair", () => {
       expect(modulesSave.with?.key).toBe(modulesRestore.with?.key)
       expect(modulesRestore.with?.["restore-keys"]).toBeUndefined()
       expect(modulesSave.with?.path).toBe(modulesRestore.with?.path)
-      const paths = text(modulesRestore.with?.path, "CACHE_MODULE_PATHS_MISSING").trim().split(/\r?\n/)
-      ;["packages/*/node_modules", "packages/*/*/node_modules", "modules/*/node_modules", "modules/*/*/node_modules", "tooling/*/node_modules"]
-        .forEach((pattern) => expect(paths).toContain(pattern))
+      expect(modulesRestore.with?.path).toBe("${{ steps.fingerprint.outputs.modules-paths }}")
 
       const rows = yield* Effect.all(
         runners.map((runner) => runEmitter(text(keys.run, "CACHE_KEY_SCRIPT_MISSING"), runner)),
@@ -61,7 +59,7 @@ describe("setup-bun cache architecture repair", () => {
       rows.forEach((row) => {
         expect(row.outputs).toEqual({
           bun: `${row.os}-${row.arch}-bun-v3-${hash}`,
-          modules: `${row.os}-${row.arch}-modules-v4-${hash}`,
+          modules: `${row.os}-${row.arch}-modules-v5-${hash}`,
         })
         const prefixes = expand(text(bunRestore.with?.["restore-keys"], "BUN_RESTORE_PREFIX_MISSING"), row)
           .trim()
@@ -152,6 +150,7 @@ function expand(source: string, runner: { os: string; arch: string }) {
         return runner.arch
       case "hashFiles('bun.lock')":
       case "hashFiles('bun.lock', 'patches/**', 'package.json')":
+      case "steps.fingerprint.outputs.fingerprint":
         return hash
       default:
         throw new Error(`CACHE_EXPRESSION_UNSUPPORTED: ${expression.trim()}`)
