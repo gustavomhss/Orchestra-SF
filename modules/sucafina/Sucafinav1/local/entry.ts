@@ -383,6 +383,14 @@ export async function createConfiguredInstallation(
       if (surface === "dashboard" || surface === "planner" || surface === "procurement") {
         const person = await identity.person(request)
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
+        if (teamBoundary && !await teamBoundary.admit(request)) {
+          const resolution = await teamBoundary.profiles.resolve(request)
+          const status = resolution.status === "unauthenticated" ? 401 :
+            resolution.status === "unavailable" || resolution.status === "authenticated" && resolution.teams.status === "unavailable" ? 503 : 403
+          return Response.json({ status: status === 401 ? "unauthenticated" : status === 503 ? "unavailable" : "denied" }, {
+            status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+          })
+        }
         // Corporate maps are initialized from explicit private configuration at composition.
         // A legacy HTML landing must never create Microsoft business state before Team admission.
         if (person && !operator && !microsoft) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
