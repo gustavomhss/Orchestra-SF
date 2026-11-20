@@ -89,8 +89,20 @@ export function createSfBiServices(input: {
     },
   }
   const scenarios = business.plannerProduct.scenarios
-  const scenarioCosts = scenarios ? createScenarioCostBiHost({ host, results: business.results, scenarios,
-    scenario: bindStoredScenarioBiPort(scenarioHost) }) : undefined
+  const scenarioCosts = scenarios ? (() => {
+    const canonical = createScenarioCostBiHost({ host, results: business.results, scenarios,
+      scenario: bindStoredScenarioBiPort(scenarioHost) })
+    const readView: typeof canonical.readView = (request, call) =>
+      callScope.readView(request, call, () => canonical.readView(request, call))
+    return {
+      readView,
+      async revalidate(request: BiViewRequest, call: TrustedDomainContext, projection?: DomainProjection) {
+        if (!projection) return host.revalidate(call)
+        const current = await readView(request, call)
+        return current.status === "ok" && sameBiProjection(current.value.projection, projection)
+      },
+    }
+  })() : undefined
   const portfolioCosts = portfolioProjection && scenarios ? createPortfolioCostProjection({ host, results: business.results,
     scenarios, readProjection: portfolioProjection }) : undefined
   const factory = createSfBiFactory({ authority: authority.authority,
