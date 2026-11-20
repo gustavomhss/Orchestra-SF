@@ -12,11 +12,11 @@
   "implementationStatus": "NOT_STARTED",
   "testsStatus": "NOT_RUN",
   "realTenantVerification": "NOT_RUN",
-  "reviewStatus": "COLD_REVIEW_CORRECTIONS_PENDING_RECHECK",
+  "reviewStatus": "COLD_REVIEW_DOCUMENT_FINDINGS_RESOLVED_AND_RECHECKED",
   "scopeNote": "Study of repository-derived profile ownership and its dependencies. Not a claim that every project/directory symbol must be deleted. Product-specific dead repo-profile code must be removed; technical location, personal data, installation data and workflow profiles need explicit classification.",
   "coverage": {
-    "sourceGroups": 29,
-    "mappedSourcePaths": 130,
+    "sourceGroups": 30,
+    "mappedSourcePaths": 133,
     "testGroups": 19,
     "existingTestPaths": 89,
     "acceptanceScenarios": 46,
@@ -1402,6 +1402,66 @@
       "verificationStatus": "NOT_RUN",
       "comparisonBase": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
       "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+    },
+    {
+      "id": "FRESH03",
+      "wp": "WP0/WP5",
+      "disposition": "RECONCILE_CI_EVIDENCE_OWNERSHIP",
+      "area": "Post-recheck CI observation: selection distribution versus real static execution",
+      "acceptanceIds": [
+        "A33",
+        "A34",
+        "A35"
+      ],
+      "observation": "7 commits/17 files after 392cecab. Historical costs distribute the existing complete selection, not its membership. Four static tests now prove mandatory job wiring instead of running duplicate compiler/guard commands; their isolated PASS is not execution evidence. sf/static-and-contracts and actual candidate outcomes remain required. Source-PR guard resolver is unchanged. No performance or CI result certified.",
+      "evidenceLevel": "TARGETED_DELTA_CONTRACT_READING",
+      "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+      "paths": [
+        {
+          "path": ".github/actions/setup-bun/action.yml",
+          "blobSha": "5372f6a10b0f9b3a1472c301ef7699b539901604",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/actions/setup-bun/action.yml"
+        },
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "blobSha": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/workflows/sf-ci.yml"
+        },
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "blobSha": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/workflows/test-ci.yml"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "blobSha": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/script/sf-ci/gate.mjs"
+        },
+        {
+          "path": "script/sf-ci/shard-plan.mjs",
+          "blobSha": "afa82dbec794ca607f64dd2fe3a6fb7cdfcd8dd2",
+          "presentAtPin": false,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/script/sf-ci/shard-plan.mjs"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts",
+          "blobSha": "40fac03d180476e73c4ec333c1ac880c61247246",
+          "presentAtPin": false,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
     }
   ],
   "existingTestGroups": [
@@ -2318,7 +2378,8 @@
     "Corporate-admin bootstrap/recovery admission independent of Team selection; identify already-authorized actor classes with no eligible Team before cutover",
     "Restore-versus-preserve classification per store, including post-checkpoint receipts, consumed schedule slots, cancellations, dedup keys and issued identifiers; suspend uncertain effect producers",
     "Durable BusinessEvidenceRef/BI/confirmation families, canonical digests and historical project identifiers versus current authorized projection and transient proofs",
-    "Handwritten native client consumers including packages/client/src/sucafina/transport.ts; generating clients alone does not update handwritten owner/stamp guards"
+    "Handwritten native client consumers including packages/client/src/sucafina/transport.ts; generating clients alone does not update handwritten owner/stamp guards",
+    "At execution SHA, distinguish static ownership/wiring regression PASS from actual mandatory static job execution; preserve complete shard coverage and source-PR guard contract after CI optimization delta 72830e53"
   ],
   "residueSearchSeeds": [
     "profileProject",
@@ -2364,7 +2425,9 @@
     "corporateAdminGrantsPrivateBusinessRead": false,
     "restoreMayRewindConsumedEffectProof": false,
     "unknownPostCheckpointEffectMayAutoRetry": false,
-    "ciRequestMaySupplyGuardApproval": false
+    "ciRequestMaySupplyGuardApproval": false,
+    "staticOwnershipTestPassProvesCompilerOrGuardExecution": false,
+    "historicalShardCostsProveSuccessfulRuntime": false
   },
   "authoritativeExternalSources": [
     {
@@ -2386,130 +2449,130 @@
   ],
   "freshnessCheck": {
     "observedBranch": "sf-join-four",
-    "observedHead": "392cecab68288d4b669828adc5d1aaa738693d80",
-    "comparisonBase": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+    "observedHead": "72830e53adfcb2059575b249e76c88753beb04e8",
+    "comparisonBase": "392cecab68288d4b669828adc5d1aaa738693d80",
     "status": "ahead",
-    "totalCommits": 13,
-    "evidence": "Complete compare enumerated 17 changed files. Additional 15-file delta after a5b15b51 read by integrator and fresh reviewers through patches and targeted contracts/tests. Source branch is not frozen or rebased into the documentation branch. No CI/tenant/runtime result inferred.",
+    "totalCommits": 7,
+    "evidence": "Post-recheck CI-only observation. Complete compare enumerated 17 files; integrator and cold_scope read relevant workflow, static ownership, selection/shard and approval contracts. suites.json unchanged; source-PR guard resolver blob unchanged. Not an audit of every optimization, performance claim or test execution.",
     "sourceBranchFrozen": false,
     "changedFiles": [
       {
+        "path": ".github/actions/setup-bun/action.yml",
+        "headBlobSha": "5372f6a10b0f9b3a1472c301ef7699b539901604",
+        "status": "modified",
+        "additions": 43,
+        "deletions": 4
+      },
+      {
+        "path": ".github/workflows/sf-ci.yml",
+        "headBlobSha": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+        "status": "modified",
+        "additions": 19,
+        "deletions": 4
+      },
+      {
         "path": ".github/workflows/test-ci.yml",
-        "headBlobSha": "60d4ec50be167379747be198ffbd205fb58ec971",
+        "headBlobSha": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
         "status": "modified",
-        "additions": 68,
-        "deletions": 2
+        "additions": 15,
+        "deletions": 4
       },
       {
-        "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
-        "headBlobSha": "3f21eabd8a40178e5054b28ef59ad54473abe2aa",
+        "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts",
+        "headBlobSha": "a10445d5f226b5f966bd97082ddb2fa2310763e5",
         "status": "modified",
-        "additions": 50,
-        "deletions": 30
+        "additions": 1,
+        "deletions": 5
       },
       {
-        "path": "apps/cli/src/sucafina-product/bi-services.ts",
-        "headBlobSha": "24cb859d3508309c0cfe7476907f5421be9149a8",
-        "status": "modified",
-        "additions": 14,
-        "deletions": 2
-      },
-      {
-        "path": "apps/cli/src/sucafina-product/business-services.ts",
-        "headBlobSha": "03e6260fb965f189a4cb40287dd8c8d5d23af05e",
-        "status": "modified",
-        "additions": 9,
+        "path": "modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.test.ts",
+        "headBlobSha": "d029f234ed50140fba32771fe3dc1743e71236d0",
+        "status": "added",
+        "additions": 48,
         "deletions": 0
       },
       {
-        "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
-        "headBlobSha": "5b3357fa5f88fb78ab1fea3201c13b5c1ae6d6c5",
+        "path": "modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts",
+        "headBlobSha": "40fac03d180476e73c4ec333c1ac880c61247246",
+        "status": "added",
+        "additions": 109,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts",
+        "headBlobSha": "0451db983a19e6d708c428c6f87626c86895d9a4",
         "status": "modified",
         "additions": 10,
-        "deletions": 4
+        "deletions": 39
       },
       {
-        "path": "docs/guardrail/test-ci-context.md",
-        "headBlobSha": "64cf88dc315cf0a19ef556754c640326cd16f031",
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/guards.test.ts",
+        "headBlobSha": "0187c6b7c6792ad4ce8278eb752d631c9e014991",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+        "headBlobSha": "e934400cb61810af3913416a6104b672cb2a1f74",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 27
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts",
+        "headBlobSha": "be16ada7558535b22c05ddc7ef088a8973973f69",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 27
+      },
+      {
+        "path": "script/sf-ci/gate.mjs",
+        "headBlobSha": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+        "status": "modified",
+        "additions": 28,
+        "deletions": 22
+      },
+      {
+        "path": "script/sf-ci/gate.test.mjs",
+        "headBlobSha": "5a04281dc86e7a5d377bd077831bc98c0a454ac8",
+        "status": "modified",
+        "additions": 38,
+        "deletions": 0
+      },
+      {
+        "path": "script/sf-ci/shard-plan.mjs",
+        "headBlobSha": "afa82dbec794ca607f64dd2fe3a6fb7cdfcd8dd2",
         "status": "added",
-        "additions": 42,
+        "additions": 104,
         "deletions": 0
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
-        "headBlobSha": "2f0a09ff71fa73ee11509c3860e1a6fe94e4c763",
-        "status": "modified",
-        "additions": 33,
-        "deletions": 0
-      },
-      {
-        "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
-        "headBlobSha": "ac471400f2fac9cedec45d693ebf35b815ad0b9f",
-        "status": "modified",
-        "additions": 35,
-        "deletions": 5
-      },
-      {
-        "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-observation.test.ts",
-        "headBlobSha": "bfb31c704dc695595cd45041e722de2d03e7da53",
+        "path": "script/sf-ci/shard-plan.test.mjs",
+        "headBlobSha": "859ff15c2950ffdadae18a63627fc4a33a3aa266",
         "status": "added",
-        "additions": 122,
+        "additions": 148,
         "deletions": 0
       },
       {
-        "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
-        "headBlobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
-        "status": "modified",
-        "additions": 37,
-        "deletions": 5
-      },
-      {
-        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
-        "headBlobSha": "1e309a6f2f56eeba5e9a038eb06d226a7d9c56a0",
-        "status": "modified",
-        "additions": 62,
-        "deletions": 0
-      },
-      {
-        "path": "modules/sucafina/Sucafinav1/test/product/wp12/planner-answer-scope.test.ts",
-        "headBlobSha": "058f173ba1f74ac7d0669a109773a54d089d425f",
+        "path": "sf/ci/PERFORMANCE.md",
+        "headBlobSha": "de56e3f1e5a72651063ee0fdeba087cabbcbd832",
         "status": "added",
-        "additions": 141,
+        "additions": 160,
         "deletions": 0
       },
       {
-        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
-        "headBlobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+        "path": "sf/ci/README.md",
+        "headBlobSha": "31dd916a7d484d33108af9d398001ddcf4cb7717",
         "status": "modified",
         "additions": 12,
-        "deletions": 1
+        "deletions": 9
       },
       {
-        "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
-        "headBlobSha": "047643f93ac4f97c4c627dda4802c5406f791a52",
-        "status": "modified",
-        "additions": 21,
-        "deletions": 4
-      },
-      {
-        "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
-        "headBlobSha": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+        "path": "sf/ci/shard-costs.json",
+        "headBlobSha": "508a62d91c00758e18cffa06db5459a138acb4cd",
         "status": "added",
-        "additions": 152,
-        "deletions": 0
-      },
-      {
-        "path": "packages/core/test/test-ci-guard-context.test.ts",
-        "headBlobSha": "d41808d4c498ed26b94d24746abc1c3d214bea88",
-        "status": "added",
-        "additions": 296,
-        "deletions": 0
-      },
-      {
-        "path": "script/test-ci-guard-context.ts",
-        "headBlobSha": "acb672e9734b761316b0914180a295aa74235365",
-        "status": "added",
-        "additions": 197,
+        "additions": 294,
         "deletions": 0
       }
     ]
@@ -2676,6 +2739,136 @@
           "deletions": 1
         }
       ]
+    },
+    {
+      "observedBranch": "sf-join-four",
+      "observedHead": "392cecab68288d4b669828adc5d1aaa738693d80",
+      "comparisonBase": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+      "status": "ahead",
+      "totalCommits": 13,
+      "evidence": "Complete compare enumerated 17 changed files. Additional 15-file delta after a5b15b51 read by integrator and fresh reviewers through patches and targeted contracts/tests. Source branch is not frozen or rebased into the documentation branch. No CI/tenant/runtime result inferred.",
+      "sourceBranchFrozen": false,
+      "changedFiles": [
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "headBlobSha": "60d4ec50be167379747be198ffbd205fb58ec971",
+          "status": "modified",
+          "additions": 68,
+          "deletions": 2
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+          "headBlobSha": "3f21eabd8a40178e5054b28ef59ad54473abe2aa",
+          "status": "modified",
+          "additions": 50,
+          "deletions": 30
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "headBlobSha": "24cb859d3508309c0cfe7476907f5421be9149a8",
+          "status": "modified",
+          "additions": 14,
+          "deletions": 2
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "headBlobSha": "03e6260fb965f189a4cb40287dd8c8d5d23af05e",
+          "status": "modified",
+          "additions": 9,
+          "deletions": 0
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+          "headBlobSha": "5b3357fa5f88fb78ab1fea3201c13b5c1ae6d6c5",
+          "status": "modified",
+          "additions": 10,
+          "deletions": 4
+        },
+        {
+          "path": "docs/guardrail/test-ci-context.md",
+          "headBlobSha": "64cf88dc315cf0a19ef556754c640326cd16f031",
+          "status": "added",
+          "additions": 42,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "headBlobSha": "2f0a09ff71fa73ee11509c3860e1a6fe94e4c763",
+          "status": "modified",
+          "additions": 33,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+          "headBlobSha": "ac471400f2fac9cedec45d693ebf35b815ad0b9f",
+          "status": "modified",
+          "additions": 35,
+          "deletions": 5
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-observation.test.ts",
+          "headBlobSha": "bfb31c704dc695595cd45041e722de2d03e7da53",
+          "status": "added",
+          "additions": 122,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+          "headBlobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
+          "status": "modified",
+          "additions": 37,
+          "deletions": 5
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+          "headBlobSha": "1e309a6f2f56eeba5e9a038eb06d226a7d9c56a0",
+          "status": "modified",
+          "additions": 62,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/planner-answer-scope.test.ts",
+          "headBlobSha": "058f173ba1f74ac7d0669a109773a54d089d425f",
+          "status": "added",
+          "additions": 141,
+          "deletions": 0
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "headBlobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+          "status": "modified",
+          "additions": 12,
+          "deletions": 1
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "headBlobSha": "047643f93ac4f97c4c627dda4802c5406f791a52",
+          "status": "modified",
+          "additions": 21,
+          "deletions": 4
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+          "headBlobSha": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+          "status": "added",
+          "additions": 152,
+          "deletions": 0
+        },
+        {
+          "path": "packages/core/test/test-ci-guard-context.test.ts",
+          "headBlobSha": "d41808d4c498ed26b94d24746abc1c3d214bea88",
+          "status": "added",
+          "additions": 296,
+          "deletions": 0
+        },
+        {
+          "path": "script/test-ci-guard-context.ts",
+          "headBlobSha": "acb672e9734b761316b0914180a295aa74235365",
+          "status": "added",
+          "additions": 197,
+          "deletions": 0
+        }
+      ]
     }
   ],
   "coldReview": {
@@ -2684,7 +2877,7 @@
     "reviewers": 3,
     "freshContext": true,
     "scope": "Three new reviewers with no inherited author conversation; independent identity, persistence and UI/client/CI reviews, followed by integrator source verification. Targeted reading only.",
-    "status": "CORRECTED_PENDING_INDEPENDENT_RECHECK",
+    "status": "DOCUMENT_FINDINGS_RESOLVED_AND_RECHECKED",
     "findings": [
       {
         "id": "CR01",
@@ -2695,7 +2888,8 @@
         "acceptanceIds": [
           "A45"
         ],
-        "resolution": "CORRECTED_IN_PLAN_PENDING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6"
       },
       {
         "id": "CR02",
@@ -2706,7 +2900,8 @@
         "acceptanceIds": [
           "A46"
         ],
-        "resolution": "CORRECTED_IN_PLAN_PENDING_RECHECK"
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6"
       }
     ],
     "noAdditionalFindings": [
@@ -2720,11 +2915,50 @@
       "Source delta reconciliation is required by the existing WP0 contract and is not counted as another finding",
       "Historical project identifiers in canonical evidence have a permitted non-authoritative preservation route; no additional finding asserted from their presence alone"
     ],
-    "recheckResults": [],
+    "recheckResults": [
+      {
+        "reviewer": "cold_auth",
+        "findings": [
+          "CR01"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+        "scope": "Independent corporate administrative admission without Team eligibility; bootstrap/recovery; no implicit business or private access",
+        "remainingFindings": []
+      },
+      {
+        "reviewer": "cold_data",
+        "findings": [
+          "CR02"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+        "scope": "Post-checkpoint effect proof, restore classification, suspension of uncertain consumers and regression obligations; historical evidence remains inventory obligation",
+        "remainingFindings": []
+      },
+      {
+        "reviewer": "cold_scope",
+        "findings": [],
+        "result": "RECONCILIATION_ACCURATE",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+        "scope": "Stable ready-access identity per generation, source-PR CI guard contract, freshness references and related inventory/tests",
+        "remainingFindings": []
+      }
+    ],
     "limitations": [
       "No code implementation or product mutation",
       "No tests, build, Actions, sf-ci or tenant qualification",
       "No exhaustive content scan or final Linux artifact reachability trace"
-    ]
+    ],
+    "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+    "postRecheckObservation": {
+      "reviewer": "cold_scope",
+      "sourceBase": "392cecab68288d4b669828adc5d1aaa738693d80",
+      "sourceHead": "72830e53adfcb2059575b249e76c88753beb04e8",
+      "result": "COMPATIBLE_WITH_PLAN_NO_ADDITIONAL_FINDING",
+      "scope": "CI selection/shard coverage, mandatory static execution ownership and unchanged source-PR guard contract",
+      "qualificationStatus": "NOT_RUN",
+      "limitations": "Relevant contracts read, not a full audit of CI optimizations or performance assertions"
+    }
   }
 }

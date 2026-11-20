@@ -16,6 +16,8 @@ O estudo teve três frentes de leitura: runtime/configuração; identidade Micro
 
 **Rechecagem da cold review:** foi observado `sf-join-four@392cecab68288d4b669828adc5d1aaa738693d80`. O compare completo desde o pin contém **13 commits e 17 arquivos**; desde `a5b15b51…`, são 11 commits e 15 arquivos. O delta inclui identidade de acesso da UI por geração, observações canônicas de Atlas, escopo completo de respostas Planner, provas BI por chamada e o contexto de aprovação de guards no CI. Os patches e os contratos relevantes foram confrontados com o plano; os detalhes e blobs estão no inventário. A implementação precisa preservar essas garantias, descritas em §§5.2, 6 e 9.3. O código da branch documental continua no pin original: atualizar evidência não faz rebase de produto, congela a integração ou certifica esses commits.
 
+**Observação posterior à rechecagem documental:** a integração avançou para `72830e53adfcb2059575b249e76c88753beb04e8` (mais 7 commits/17 arquivos desde `392cecab…`, em CI, fixtures e documentação). A leitura focada dos contratos de seleção/shards, execução estática e guards não altera os dois achados da revisão. A interpretação atualizada da evidência está em §9.3 e FRESH03. Essa observação não valida performance nem execução e não dispensa novo repin no início da implementação.
+
 O arquivo [teams-profile-inventory.json](./teams-profile-inventory.json) é o inventário inicial rastreável: distingue evidência lida, destino proposto, testes existentes e verificações ainda obrigatórias. Sua existência não significa cobertura integral ou aprovação da mudança.
 
 ## 1. Objetivo e decisões de produto
@@ -380,6 +382,8 @@ O head observado `392cecab…` acrescenta um canal estrito para transportar apro
 
 O resolver consulta label/evento atual e ator humano atualmente elegível, independente do autor do PR salvo a exceção do dono pessoal do repositório, e relê autoridade/refs antes de concluir. Preservar qualquer restrição mais estreita do dono. Erro, ambiguidade ou mudança deixa approval vazio; não passar aprovação em env/request, fabricar label ou buscar atalho. Com contexto admitido, precisam passar tanto os guards contra `origin/dev` quanto contra o SHA real da base do PR. Testes ordinários podem executar sem essa aprovação; os que exigem `protected-paths` continuam sujeitos ao guard. A decisão de aprovação pertence ao responsável autorizado no PR concreto; esta documentação não fornece essa decisão nem dispara solicitação. Registrar o resolver, seu teste e o artefato de evidência real nos gates que se aplicarem. [S52][S53]
 
+Na observação posterior `72830e53…`, o CI passou a distribuir a seleção de CI-SF por custos históricos e concentrou a execução estática no job obrigatório `sf/static-and-contracts`. Os testes `static-checks`/`static-gates`/`guards` afetados passam a provar a ligação e obrigatoriedade desse job; seu PASS isolado em recorte não atesta que typecheck ou guards foram executados. A qualificação continua exigindo os resultados reais no candidato, os gates adicionais da migração e a cobertura integral selecionada. `suites.json` não mudou nesse delta; custos históricos não selecionam/excluem testes, e o plano de shards exige cobertura completa e disjunta. Custos e plano de shards não são evidência de PASS ou de ganho de desempenho. O contrato de aprovação source-PR permaneceu intacto; run cancelado não qualifica o candidato. [S59][S60][S61]
+
 Cadência proposta: gates direcionados por pacote; typecheck/build/geração em Actions; prova de migração; depois um `sf-ci` no candidato integrado final, junto dos gates adicionais exigidos. Se o candidato mudar, as evidências precisam ser vinculadas ao novo conteúdo e gates afetados reexecutados. Nunca usar um run de outro SHA como aprovação do diff final.
 
 Não abrir lanes Windows/macOS. A prova de runtime instalado deve usar o artefato e Linux x64 de destino. Login/membership/revogação reais no tenant são qualificação operacional separada dos testes determinísticos; fixtures não devem ser anunciadas como prova de Teams LIVE.
@@ -511,11 +515,11 @@ A revisão é do planejamento e de fontes direcionadas; não certifica migraçã
 
 Três revisores novos, sem herdar a conversa dos autores, examinaram a versão `4d984e0bd3a3bd5445fcd504b96be4f7888da5da` e confrontaram fontes nas frentes de identidade, persistência e UI/CI. O integrador verificou os achados e o delta. Foram aceitos **CR01/P1 — bloqueio de bootstrap/admin sem Team** e **CR02/P2 — contrato/teste de restore pós-corte sem fronteira explícita de recibos e marcadores monotônicos**. Nenhum P0 foi identificado na amostra; UI/rotas/CI não trouxe achado material adicional. Isso não certifica ausência de defeitos fora da amostra.
 
-As correções estão em §§3.2/4.3/A45 e §7.3/WP4/A46. A reconciliação do delta é uma atualização factual, não um finding adicional. O [relatório da cold review](./teams-profile-cold-review.md) registra contraexemplos, severidade, fontes, hipóteses rejeitadas e limites. **Estado desta revisão: correções incorporadas; rechecagem independente pendente.** Implementação, testes e tenant continuam NOT_STARTED/NOT_RUN.
+As correções estão em §§3.2/4.3/A45 e §7.3/WP4/A46. A reconciliação do delta é uma atualização factual, não um finding adicional. O [relatório da cold review](./teams-profile-cold-review.md) registra contraexemplos, severidade, fontes, hipóteses rejeitadas e limites. **Estado desta revisão: os dois achados foram resolvidos no plano e rechecados independentemente no commit `353e74afb2d7fdbceb8842188e42f30d743186d6`; a frente UI/CI confirmou a precisão da reconciliação nesse mesmo commit.** Implementação, testes e tenant continuam NOT_STARTED/NOT_RUN.
 
 ## 13. Fontes de código e documentação
 
-Os links S usam o pin do estudo, exceto S50–S56, explicitamente vinculados ao head observado na cold review (`392cecab…`). Números de linha devem ser lidos no commit da respectiva fonte. A documentação Microsoft foi consultada durante o estudo para validar as diferenças de identidade, memberships e Teams.
+Os links S usam o pin do estudo, exceto S50–S56 (`392cecab…`) e S59–S61 (`72830e53…`), explicitamente vinculados às observações de integração da cold review. Números de linha devem ser lidos no commit da respectiva fonte. A documentação Microsoft foi consultada durante o estudo para validar as diferenças de identidade, memberships e Teams.
 
 [S01]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/src/identity.ts
 [S02]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/sidebar.tsx
@@ -582,3 +586,7 @@ Os links S usam o pin do estudo, exceto S50–S56, explicitamente vinculados ao 
 [S56]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/apps/cli/src/sucafina-product/bi-call-scope.ts
 [S57]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
 [S58]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/analytics/artifact-store.ts
+
+[S59]: https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/workflows/sf-ci.yml
+[S60]: https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts
+[S61]: https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/script/sf-ci/shard-plan.mjs

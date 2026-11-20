@@ -3,9 +3,10 @@
 **Data:** 19/11/2026, America/Sao_Paulo.  
 **Documento revisado:** `4d984e0bd3a3bd5445fcd504b96be4f7888da5da`.  
 **Base principal de código:** `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.  
-**Integração observada nesta revisão:** `392cecab68288d4b669828adc5d1aaa738693d80`.  
+**Integração reconciliada na revisão principal:** `392cecab68288d4b669828adc5d1aaa738693d80`.  
+**Observação posterior de CI:** `72830e53adfcb2059575b249e76c88753beb04e8`.  
 **Branch de entrega:** `teams-profile-plan`.  
-**Estado:** correções documentais incorporadas; rechecagem independente pendente.  
+**Estado:** CR01 e CR02 resolvidos no plano e rechecados independentemente em `353e74afb2d7fdbceb8842188e42f30d743186d6`; reconciliação UI/CI confirmada no mesmo commit.  
 **Implementação:** NOT_STARTED. **Testes, build, Actions, tenant e migração real:** NOT_RUN.
 
 ## 1. Veredito e alcance
@@ -124,6 +125,12 @@ No CI, o snapshot que transporta aprovação altera somente `.ci-run.json`; seu 
 
 Essa reconciliação não é rebase, execução desses testes ou aprovação da integração. Cada caminho novo registra seu `evidenceCommit` no inventário.
 
+### Observação posterior de CI
+
+Durante o fechamento documental, o compare [392cecab → 72830e53][C13] acrescentou 7 commits/17 arquivos de CI, fixtures e documentação. O revisor da frente e o integrador leram os contratos relevantes: `suites.json` permaneceu igual, o planejador distribui sua seleção completa com pesos históricos e fallback, e o job `sf/static-and-contracts` continua obrigatório no verificador final. O blob do resolver source-PR não mudou; o novo cancelamento de runs não os transforma em evidência de PASS.
+
+Quatro testes estáticos passaram de executar comandos repetidos a verificar sua ligação e obrigatoriedade no job estático. O [helper de contrato][C14] declara que essa prova não é recibo de execução de compilador/guard. Seu PASS isolado em recorte não substitui os resultados reais do [workflow][C15] nem os gates adicionais desta migração. Essa precisão foi acrescentada a §9.3/FRESH03. O revisor confirmou compatibilidade da observação com o plano, sem novo finding; não houve auditoria de todas as otimizações, validação de desempenho ou execução de testes.
+
 ## 6. Hipóteses examinadas e não aceitas como novos achados
 
 - **Rebind de cookie jar, modal de draft vetando revogação, dois principais no mesmo Team, parent/fork/move/import e writers antigos no corte:** já têm obrigações explícitas e aceites no plano.
@@ -133,7 +140,15 @@ Essa reconciliação não é rebase, execução desses testes ou aprovação da 
 
 ## 7. Rechecagem e pendências de execução
 
-**Rechecagem independente: pendente sobre o commit com as correções.**
+Os três revisores releram os pontos de sua frente no commit `353e74afb2d7fdbceb8842188e42f30d743186d6`:
+
+| Revisor | Objeto | Resultado |
+|---|---|---|
+| cold_auth | CR01; §§3.2/4.3, WP1/A45 e inventário | RESOLVED_IN_PLAN; sem pendência concreta no achado. |
+| cold_data | CR02; §7.3, WP4/A46, adapters/testes e inventário | RESOLVED_IN_PLAN; sem promessa de execução única ou merge indiscriminado. |
+| cold_scope | Contexto ready(), contrato CI, referências e inventário | RECONCILIATION_ACCURATE; sem achado material adicional na frente. |
+
+A rechecagem encerra os dois achados documentais. Não certifica implementação, execução de testes ou tenant.
 
 Após a rechecagem documental, continuam pendentes:
 
@@ -156,3 +171,7 @@ O resultado documental não afirma migração concluída, testes verdes ou ausê
 [C10]: https://github.com/gustavomhss/Orchestra-SF/compare/f7dd58e32bc834f1485df20b91adbf759b4c4ad0...392cecab68288d4b669828adc5d1aaa738693d80
 [C11]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx
 [C12]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/docs/guardrail/test-ci-context.md
+
+[C13]: https://github.com/gustavomhss/Orchestra-SF/compare/392cecab68288d4b669828adc5d1aaa738693d80...72830e53adfcb2059575b249e76c88753beb04e8
+[C14]: https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts
+[C15]: https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/workflows/sf-ci.yml
