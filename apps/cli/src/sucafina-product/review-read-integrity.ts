@@ -1,3 +1,4 @@
+import { pinReviewReadProperties } from "../../../../modules/sucafina/Sucafinav1/product/reviews/read-identity.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { canonicalSfValue, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -28,18 +29,27 @@ export function protectSfReviewReads(input: {
   residentSnapshotReaders?: () => boolean
   /** Consumer owners/methods only; never a substitute for their callbacks. */
   dependenciesCurrent?: () => boolean | undefined
+  /** Late-bound provider identity, captured per actual read; callbacks still run. */
+  captureDependencies?: () => (() => boolean) | undefined
 }) {
   const { authority, reviews } = input
   const host = authority.host
   const validation = sfReviewReadValidation(reviews)
   const read = reviews.read.bind(reviews)
   const dependenciesCurrent = input.dependenciesCurrent
+  const captureDependencies = input.captureDependencies
+  const authorityOwner = pinReviewReadProperties(authority, ["host", "state", "creationTarget"])
+  const stateReader = authorityOwner && pinReviewReadProperties(authorityOwner.values.state, ["read"])
+  const target = authorityOwner && pinReviewReadProperties(authorityOwner.values.creationTarget, ["ref", "incarnation"])
+  const knownConsumer = !!authorityOwner && !!stateReader && !!target
+  const consumerCurrent = () => !knownConsumer || authorityOwner!.current() && stateReader!.current() && target!.current()
   const execution = new AsyncLocalStorage<ReadScope>()
   const defaultReaders = input.localSnapshotReaders === true
   const residentSnapshotReaders = input.residentSnapshotReaders
-  const compositionCurrent = () => input.dependenciesCurrent === dependenciesCurrent && input.residentSnapshotReaders === residentSnapshotReaders &&
+  const compositionCurrent = () => consumerCurrent() && input.dependenciesCurrent === dependenciesCurrent && input.captureDependencies === captureDependencies &&
+    input.residentSnapshotReaders === residentSnapshotReaders &&
     (!dependenciesCurrent || dependenciesCurrent() !== false) && (!validation || validation.current())
-  const localReaders = () => !!validation && compositionCurrent() && (!dependenciesCurrent || dependenciesCurrent() === true) &&
+  const localReaders = () => knownConsumer && !!validation && compositionCurrent() && (!dependenciesCurrent || dependenciesCurrent() === true) &&
     (defaultReaders || residentSnapshotReaders?.() === true)
   // Resident portfolio/native dependencies retain their original producer path.
   const supported = (review: PreservedReview) => snapshotBoundReview(review) && (defaultReaders || localRecordReview(review))
@@ -61,13 +71,14 @@ export function protectSfReviewReads(input: {
   const denied = (): ReadFailure => ({ status: "denied", reason: "review-integrity-unavailable" })
   const unavailable = (): ReadFailure => ({ status: "unavailable", reason: "review-integrity-unavailable" })
   const changed = (): ReadFailure => ({ status: "stale", reason: "review-read-changed" })
-  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string, reuse?: { fence?: string; digest?: string }): Promise<PortResult<SnapshotProof>> => {
-    const current = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
+  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string, dependencies: () => boolean, reuse?: { fence?: string; digest?: string }): Promise<PortResult<SnapshotProof>> => {
+    const unchanged = () => sameCall(scope, call, binding) && dependencies()
+    const current = async () => unchanged() && await host.revalidate(call) && unchanged()
     try {
       let sourcesCurrent = () => true
       if (!await current()) return denied()
       const checked = await authority.state.read(scope.request, "reviews", async (state, actor): Promise<PortResult<SnapshotProof>> => {
-        if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
+        if (!unchanged() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
           actor.policyVersion !== call.binding.policyVersion) return denied()
         const snapshots = host.persistence.currentSnapshots?.()
         const review = state.reviews[id]
@@ -89,11 +100,11 @@ export function protectSfReviewReads(input: {
           // A hit reuses only the protected body's materialization. The exact
           // producer reobserves evidence, projectors and every access callback.
           const observation = await withSfScopedSourceChecks({ owner: host, request: scope.request,
-            current: () => sameCall(scope, call, binding) }, () => validation.validate(id, structuredClone(review), call,
-            () => sameCall(scope, call, binding)))
+            current: () => unchanged() }, () => validation.validate(id, structuredClone(review), call,
+            () => unchanged()))
           sourcesCurrent = observation.current
           const validated = observation.value
-          if (!sameCall(scope, call, binding) || !sourcesCurrent()) return denied()
+          if (!unchanged() || !sourcesCurrent()) return denied()
           if (validated.status !== "ok") return validated
           if (digestSfValue(validated.value) !== digest || digestSfValue(state.reviews[id]) !== digest ||
             receiptDigest(state, id, digest) !== receipt) return denied()
@@ -104,7 +115,7 @@ export function protectSfReviewReads(input: {
       })
       // C08 reauthorizes after its callback. Successful proofs have no later await;
       // failed reads revalidate again before preserving an uncertain result.
-      if (!sameCall(scope, call, binding) || !sourcesCurrent()) return denied()
+      if (!unchanged() || !sourcesCurrent()) return denied()
       if ("reason" in checked) return checked.status === "denied" || await current() ? checked : denied()
       return checked.status === "ok" ? checked.value : unavailable()
     } catch {
@@ -161,14 +172,17 @@ export function protectSfReviewReads(input: {
   const protectedRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
     const scope = execution.getStore()
     if (!scope || !localReaders()) return legacyRead(id, call)
+    const dependencyPin = captureDependencies?.()
+    if (captureDependencies && !dependencyPin) return legacyRead(id, call)
+    const dependencies = dependencyPin ?? (() => true)
     const binding = digestSfValue([call.kind, call.binding])
-    const currentAccess = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
+    const currentAccess = async () => sameCall(scope, call, binding) && dependencies() && await host.revalidate(call) && sameCall(scope, call, binding) && dependencies()
     try {
       if (!await currentAccess()) return denied()
       let proofs = scope.calls.get(call)
       if (!proofs) { proofs = new Map(); scope.calls.set(call, proofs) }
       const prior = proofs.get(id)
-      const before = await snapshot(id, call, scope, binding, prior)
+      const before = await snapshot(id, call, scope, binding, dependencies, prior)
       if (before.status === "ok" && prior?.fence === before.value.fence && before.value.validated) return structuredClone(before.value.validated)
       proofs.delete(id)
       if (before.status !== "ok") return before
@@ -181,7 +195,7 @@ export function protectSfReviewReads(input: {
       for (let attempt = 0; attempt < 2; attempt++) {
         const result = structuredClone(await read(id, call))
         if (result.status !== "ok") return await currentAccess() ? result : denied()
-        const after = await snapshot(id, call, scope, binding)
+        const after = await snapshot(id, call, scope, binding, dependencies)
         if (after.status !== "ok") return after
         if (first.digest !== after.value.digest || first.receipt !== after.value.receipt || first.access !== after.value.access ||
           digestSfValue(result.value) !== after.value.digest) return denied()
@@ -220,8 +234,10 @@ export function protectSfReviewReads(input: {
       if (!scope || !localReaders()) return legacyRead(id, call)
       if (!scope.calls.get(call)?.has(id)) return scope.delegated.get(call)?.has(id)
         ? legacyRead(id, call) : denied()
+      const dependencyPin = captureDependencies?.()
+      if (captureDependencies && !dependencyPin) return legacyRead(id, call)
       const binding = digestSfValue([call.kind, call.binding])
-      const checked = await snapshot(id, call, scope, binding, { digest })
+      const checked = await snapshot(id, call, scope, binding, dependencyPin ?? (() => true), { digest })
       return checked.status === "ok" ? checked.value.validated ?? denied() : checked
     },
     prepare: async (references: readonly string[], call: TrustedDomainContext) => {

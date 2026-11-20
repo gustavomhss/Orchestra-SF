@@ -106,18 +106,25 @@ export function createSfReviewServices(input: {
   const owners = pinReviewReadProperties(input, ["authority", "business", "persistence", "readers", "agenda"])
   const businessReader = owners && pinReviewReadProperties(owners.values.business, ["context", "evidence"])
   const context = businessReader && pinReviewReadProperties(businessReader.values.context, ["resolve"])
-  const evidencePin = businessReader && pinReviewReadProperties(businessReader.values.evidence, ["current"])
-  const sources = owners && pinReviewReadProperties(owners.values.persistence,
+  const sourcesPin = owners && pinReviewReadProperties(owners.values.persistence,
     ["resolveScopedSource", "readScopedSource", "readScopedSourcePrepared", "checkScopedSource"])
   const agenda = owners?.values.agenda && pinReviewReadProperties(owners.values.agenda, ["resolveEvidence"])
   // The same functions may revoke through their closures, so validation invokes
   // them again. Descriptor pins only prevent crossing a composition replacement.
-  const dependenciesCurrent = () => !owners || !businessReader || !context || !evidencePin || !sources || owners.values.agenda && !agenda ? undefined :
-    owners.current() && businessReader.current() && context.current() && evidencePin.current() && sources.current() &&
+  const dependenciesCurrent = () => !owners || !businessReader || !context || !sourcesPin || owners.values.agenda && !agenda ? undefined :
+    owners.current() && businessReader.current() && context.current() && sourcesPin.current() &&
     (!agenda || agenda.current()) && authority.host === host
+  // Atlas binds after the installed host creates Review. Pin its actual provider
+  // per read, not before that legitimate first bind, and retain the pin through
+  // the read's awaits/egress. It never replaces the provider's real resolve.
+  const captureDependencies = () => {
+    const evidence = businessReader && pinReviewReadProperties(businessReader.values.evidence, ["current"])
+    const provider = evidence?.values.current && pinReviewReadProperties(evidence.values.current, ["resolve"])
+    return evidence && provider ? () => evidence.current() && provider.current() : undefined
+  }
   const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
     localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined),
-    residentSnapshotReaders, dependenciesCurrent })
+    residentSnapshotReaders, dependenciesCurrent, captureDependencies })
   const protectedApplication: typeof application & { readScope?: typeof readScope } = { ...application, readScope,
     http: (request, surface) => readScope.run(request, () => application.http(request, surface)) }
   return { application: protectedApplication, historical, portfolioHistory, handoffs, residentSnapshotReaders, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
