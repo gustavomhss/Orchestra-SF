@@ -7,11 +7,13 @@ import { SessionSchema } from "../schema"
 import { SessionStore } from "../store"
 import { SessionExecution } from "../execution"
 import { SessionOwner } from "../owner"
+import { HostMaintenance } from "../../host-maintenance"
 
 /** Current-process routing for implicit-local Locations. Future remote placement belongs here. */
 const layer = Layer.effect(
   SessionExecution.Service,
   Effect.gen(function* () {
+    const maintenance = yield* HostMaintenance.Service
     const store = yield* SessionStore.Service
     const owners = yield* SessionOwner.Service
     const locations = yield* LocationServiceMap.Service
@@ -40,7 +42,8 @@ const layer = Layer.effect(
       })),
     })
 
-    return SessionExecution.Service.of({
+    yield* maintenance.register("session-execution", coordinator.close)
+    const service = SessionExecution.Service.of({
       active: Effect.gen(function* () {
         const scope = yield* owners.open().pipe(Effect.orDie)
         yield* owners.authorize(scope, "read").pipe(Effect.orDie)
@@ -68,13 +71,20 @@ const layer = Layer.effect(
           )
         })) as Effect.Effect<A, E, never>,
     })
+    return SessionExecution.Service.of({
+      ...service,
+      resume: (id, options) => maintenance.admit(service.resume(id, options)),
+      wake: (id) => maintenance.admit(service.wake(id)),
+      exclusive: (id, work, options) => maintenance.admit(service.exclusive(id, work, options)),
+      withRunner: (id, use) => maintenance.admit(service.withRunner(id, use)),
+    })
   }),
 )
 
 export const node = makeGlobalNode({
   service: SessionExecution.Service,
   layer,
-  deps: [SessionStore.node, LocationServiceMap.node, SessionOwner.node],
+  deps: [SessionStore.node, LocationServiceMap.node, SessionOwner.node, HostMaintenance.node],
 })
 
 export * as SessionExecutionLocal from "./local"

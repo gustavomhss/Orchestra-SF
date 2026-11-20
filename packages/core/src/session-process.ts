@@ -10,6 +10,7 @@ import { makeGlobalNode } from "./effect/app-node"
 import { OmniBackground } from "./omni-background"
 import { OutputInspector } from "./output-inspector"
 import { SessionV2 } from "./session"
+import { HostMaintenance } from "./host-maintenance"
 
 export const RING_BYTES = OmniBackground.RING_BYTES
 export const TAIL_BYTES = OmniBackground.TAIL_BYTES
@@ -83,11 +84,13 @@ type Entry = {
 }
 
 const make = Effect.gen(function* () {
+  const maintenance = yield* HostMaintenance.Service
   const appProcess = yield* AppProcess.Service
   const events = yield* EventV2.Service
   const scope = yield* Scope.Scope
 
   const entries = new Map<string, Entry>()
+  const processScopes = new Set<Scope.Closeable>()
 
   // Mirrors foreground bash, which discards a result whose output shows a recognized secret.
   const output = (entry: Entry, bytes: number) =>
@@ -133,7 +136,9 @@ const make = Effect.gen(function* () {
     const finished = [...entries.values()].filter((item) => item.finished)
     finished.slice(0, Math.max(0, finished.length - FINISHED_KEPT)).forEach((item) => entries.delete(item.id))
     // Forked: the exit watcher that calls this runs inside the scope being closed.
-    yield* Scope.close(entry.scope, Exit.void).pipe(Effect.forkIn(scope))
+    yield* Scope.close(entry.scope, Exit.void).pipe(
+      Effect.ensuring(Effect.sync(() => { processScopes.delete(entry.scope) })), Effect.forkIn(scope),
+    )
   })
 
   const cancelEntry = Effect.fn("SessionProcess.cancelEntry")(function* (entry: Entry) {
@@ -159,7 +164,9 @@ const make = Effect.gen(function* () {
     const ring = new OmniBackground.Ring()
     const done = yield* Deferred.make<Info>()
     const sessions = yield* Effect.serviceOption(SessionV2.Service)
-    const procScope = yield* Scope.fork(scope)
+    const procScope = yield* Scope.fork(scope).pipe(
+      Effect.tap((child) => Effect.sync(() => { processScopes.add(child) })), Effect.uninterruptible,
+    )
     const shell = input.shell ?? (process.platform === "win32" ? (process.env.COMSPEC ?? "cmd.exe") : "/bin/sh")
     const base =
       typeof input.command === "string"
@@ -260,7 +267,22 @@ const make = Effect.gen(function* () {
   })
   yield* Effect.addFinalizer(() => off)
 
-  return Service.of({ launch, list, get, wait, cancel, stopSession })
+  yield* maintenance.register("session-process", Effect.suspend(() =>
+    Effect.forEach([...processScopes], (child) => Scope.close(child, Exit.void).pipe(
+      Effect.ensuring(Effect.sync(() => { processScopes.delete(child) })),
+    ), { concurrency: "unbounded", discard: true }).pipe(Effect.andThen(
+    Effect.forEach([...entries.values()], (entry) => Effect.gen(function* () {
+      // Closing the actual process scope owns kill/readers/watchers. Await the real exit afterwards.
+      // A missing external result is not converted into a successful effect receipt here.
+      yield* entry.handle.exitCode.pipe(Effect.orDie)
+      if (!entry.finished) {
+        entry.finished = true
+        entry.status = "cancelled"
+        entry.exitCode = null
+        yield* Deferred.succeed(entry.done, snapshot(entry))
+      }
+    }), { concurrency: "unbounded", discard: true })))))
+  return Service.of({ launch: (input) => maintenance.admit(launch(input)), list, get, wait, cancel, stopSession })
 })
 
 // A Session refuses a synthetic message while a turn runs; the notice waits for that turn to settle and tries again,
@@ -277,4 +299,4 @@ function deliver(sessions: SessionV2.Interface, sessionID: SessionV2.ID, text: s
 
 const layer = Layer.effect(Service, make)
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [AppProcess.node, EventV2.node] })
+export const node = makeGlobalNode({ service: Service, layer, deps: [AppProcess.node, EventV2.node, HostMaintenance.node] })
