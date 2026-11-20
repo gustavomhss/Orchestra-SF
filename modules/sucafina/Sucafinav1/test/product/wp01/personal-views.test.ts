@@ -1,6 +1,12 @@
 import { expect, test } from "bun:test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
+import type { Response as BrowserResponse } from "@playwright/test"
+import { createNativeBrowserAssets } from "../native-ui-browser/browser-assets.ts"
+import { createNativeBrowserHost } from "../native-ui-browser/host.ts"
+import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
+import { observeSfPersonalViewsHealth } from "../../../../../../apps/cli/src/sucafina-product/native-ui/personal-views-health.ts"
+import { object } from "../../../runtime/contract.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -15,31 +21,45 @@ import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { PLANNER_TABS } from "../../../src/nav.ts"
-import { createModule } from "../../../index.ts"
+import { contributions, createModule } from "../../../index.ts"
 
 test("personal views isolate authenticated principals and reconcile exact retries", async () => {
   expectSpawn(import.meta.path)
+  const assets = await createNativeBrowserAssets()
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-personal-views-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
   const serverState: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-  const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
+  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 404 }) })
   const origin = server.url.origin
   const installationId = randomUUID()
   const first = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1, name: "First" }, secrets: store.secrets, key: randomBytes(32) })
   const second = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 2, name: "Second" }, secrets: store.secrets, key: randomBytes(32) })
   const authenticate: typeof first.authenticate = async (request, context) => await first.authenticate(request, context) ?? await second.authenticate(request, context)
   const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: [...await first.directory(request), ...await second.directory(request)] })
-  const authority = createSfProductAuthority({ identity: () => ({ installationId, projectId: "project", hostId: "host", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), installationId, origin, policyVersion: "policy", persistence: store, authenticate, environment,
+  const binding = { installationId, projectId: "project", hostId: "host", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
+  const authority = createSfProductAuthority({ identity: () => binding, installationId, origin, policyVersion: "policy", persistence: store, authenticate,
+    isAuthenticated: async (request) => Boolean(await first.person(request) ?? await second.person(request)), environment,
     grants: [1, 2].map((uid) => ({ principalRef: `macos:${installationId}:${uid}`, namespaces: ["preferences" as const], operations: [], humanActions: ["views.read" as const, "views.save" as const, "views.remove" as const] })), createId: randomUUID, now: Date.now,
-    commandIdentity: async (request, operation) => request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
+    commandIdentity: async (request, operation) => request.method === "GET" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
   const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined, humanAuthorize: authority.human.authorize,
     authorizeView: async (view, context) => view.surface === "planner" && PLANNER_TABS.some((page) => page === view.page) && await authority.host.revalidate(context) })
   const services = { ...authority, personalViews } as SfHostServices
   const app = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-  const module = createModule("/sucafina", { persistence: store, authenticate, environment, product: app, maxJsonBytes: 100000 })
-  serverState.handle = async (request) => await first.handle(request) ?? await module(request)
+  const application = { persistence: store, authenticate, environment, product: app, maxJsonBytes: 100000 }
+  const module = createModule("/sucafina", application)
+  const native = createNativeBrowserHost({ origin, mount: "/sucafina", directory, identity: () => binding,
+    application: { ...application, domains: contributions }, authority, services: () => services,
+    observe: (request, stamp) => observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state,
+      source: () => services.personalViews === personalViews ? personalViews : undefined,
+      binding: (operationId, producer) => (operationId === "views.list" || operationId === "views.open" ||
+        operationId === "views.save" || operationId === "views.remove") && producer === personalViews &&
+        services.personalViews === producer && application.product === app ? app : undefined,
+    }, request, stamp),
+  })
+  serverState.handle = async (request) => await first.handle(request) ?? assets.handle(request, { directory }) ??
+    await native.handle(request) ?? await module(request)
   let browserDriver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   try {
     const cookie = async (identity: typeof first) => (await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)))!.headers.get("set-cookie")!.split(";")[0]!
@@ -72,25 +92,65 @@ test("personal views isolate authenticated principals and reconcile exact retrie
     const invalid = { view: { ...filtered.view, id: "invalid-view-1", filters: { selections: { supplier: "not-allowed-on-opex" } } }, expectedVersion: null }
     expect((await post(firstCookie, "save", invalid, "invalid-intention"))?.status).toBe(400)
     await store.transaction("planner", async (snapshot) => {
-      snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
+      snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, locked: false, closed: 0, lines: [
+        { id: "renewal-line", name: "License renewal", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), f: [] },
+        { id: "other-line", name: "Unrelated hosting", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(200), f: [] },
+      ], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
     browserDriver = await launchBrowserDriver("personal-views")
-    const browser = browserDriver.browser
+    const { expect: browserExpect } = await import("@playwright/test")
     try {
-      const tab = await browser.newPage()
-      await tab.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`)
-      await tab.goto(`${origin}/sucafina/planner?page=OPEX`)
+      const context = await browserDriver.browser.newContext({ viewport: { width: 1440, height: 1000 } })
+      context.setDefaultTimeout(5000)
+      context.setDefaultNavigationTimeout(5000)
+      await enrollNativeBrowser(context, origin, () => first.enroll())
+      const tab = await context.newPage(), errors: string[] = []
+      tab.on("pageerror", (error) => errors.push(error.message))
+      await tab.goto(origin + "/orchestra/sf-work/views")
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
-      await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id)
-      expect(new URL(tab.url()).searchParams.get("year")).toBe("2027")
-      expect(new URL(tab.url()).searchParams.get("mode")).toBe("forecast")
-      expect(new URL(tab.url()).searchParams.get("q")).toBe("renewal")
-      await tab.locator('html[data-sf-density="compact"]').waitFor()
-      await tab.evaluate(async () => { await (window as unknown as { sucafinaRefresh: () => Promise<void> }).sucafinaRefresh() })
-      await tab.getByRole("button", { name: "Filtered plan", exact: true }).waitFor()
-      await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
-      await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id && url.searchParams.get("q") === "renewal")
+      const openSavedPage = tab.getByRole("link", { name: "Open saved page", exact: true })
+      const candidate = new URL(await openSavedPage.getAttribute("href") ?? "", origin)
+      expect(candidate.pathname).toBe("/orchestra/sf-planner/opex")
+      expect(Object.fromEntries(candidate.searchParams)).toEqual({
+        server: origin, project: binding.projectId, installation: installationId, view: filtered.view.id,
+      })
+      const pageResponse = (response: BrowserResponse) =>
+        response.request().method() === "GET" && new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP18"
+      const openedView = (response: BrowserResponse) =>
+        response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-views" &&
+        object(response.request().postDataJSON()).action === "open" &&
+        object(object(response.request().postDataJSON()).input).id === filtered.view.id
+      const assertRestored = async (response: BrowserResponse, opened: BrowserResponse) => {
+        expect(opened.status()).toBe(200)
+        expect(await opened.json()).toMatchObject({ status: "ok", value: { view: filtered.view } })
+        expect(response.status()).toBe(200)
+        const query = new URL(response.url()).searchParams
+        expect(query.get("year")).toBe("2027")
+        expect(query.get("mode")).toBe("forecast")
+        expect(query.get("q")).toBe("renewal")
+        expect(await response.json()).toMatchObject({ status: "ok", value: {
+          selection: { year: 2027, mode: "forecast", q: "renewal" },
+          data: { lines: [{ id: "renewal-line", name: "License renewal" }] },
+        } })
+        expect(new URL(tab.url()).searchParams.get("view")).toBe(filtered.view.id)
+        expect(new URL(tab.url()).searchParams.has("q")).toBe(false)
+        await browserExpect(tab.locator('[data-sf-density="compact"]')).toHaveCount(1)
+        await browserExpect(tab.getByText("Saved view restored: Filtered plan", { exact: true })).toBeVisible()
+        const grid = tab.getByRole("grid")
+        await browserExpect(grid.locator(".sf-s02-row")).toHaveCount(1)
+        await browserExpect(grid.locator(".sf-s02-measure-name")).toHaveText(Array(12).fill("Forecast"))
+        await browserExpect(tab.getByText("Unrelated hosting", { exact: true })).toHaveCount(0)
+      }
+      const [opened, response] = await Promise.all([
+        tab.waitForResponse(openedView), tab.waitForResponse(pageResponse), openSavedPage.click(),
+      ])
+      await assertRestored(response, opened)
+      const [reopened, refreshed] = await Promise.all([
+        tab.waitForResponse(openedView), tab.waitForResponse(pageResponse), tab.reload(),
+      ])
+      await assertRestored(refreshed, reopened)
+      expect(errors).toEqual([])
     } finally { await browserDriver.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
   if (!browserDriver) throw new Error("Personal views browser driver was not created")
