@@ -146,6 +146,7 @@ function minimized(result) {
     step.durationMs >= 1000 || index < 12 || index >= result.steps.length - 12 ||
     (firstError >= 0 && index >= Math.max(0, firstError - 8) && index <= firstError + 12))
   return { case: result.case, status: result.status, durationMs: result.durationMs, errors: result.errors,
+    stepEvidence: result.steps.length ? "recorded" : "not-recorded",
     recordedCaseLocation: result.location, retry: result.retry, totalRecordedSteps: result.steps.length,
     phases: result.steps.filter((step) => step.phase),
     firstRecordedError: firstError < 0 ? null : result.steps[firstError],
@@ -154,53 +155,143 @@ function minimized(result) {
     steps: keep.slice(0, 100), omittedSteps: result.steps.length - Math.min(keep.length, 100) }
 }
 
-test("inspect only retained Operations2 HTML step evidence", async () => {
+function artifactPath(root, file) {
+  const relative = path.relative(root, file).split(path.sep).join("/")
+  return relative.startsWith(source.name + "/") ? relative.slice(source.name.length + 1) : relative
+}
+async function readBounded(file, limit) {
+  const size = (await lstat(file)).size
+  requireValue(size > 0 && size <= limit, "RETAINED_FILE_SIZE")
+  return readFile(file, "utf8")
+}
+function resultRecord(id, result, recordedLocation) {
+  requireValue((result.retry ?? 0) === 0 && statuses.has(result.status), "UNEXPECTED_RETAINED_RESULT")
+  return { case: id, status: result.status, retry: 0, durationMs: number(result.duration),
+    location: recordedLocation, errors: [...new Set([
+      ...errorClasses(result.error), ...(Array.isArray(result.errors) ? result.errors.flatMap(errorClasses) : []),
+    ])], steps: flatten(result) }
+}
+function completeCases(detailed) {
+  return detailed.size === cases.size && [...cases.keys()].every((id) => detailed.has(id))
+}
+function htmlResults(entries) {
+  const detailed = new Map()
+  let visited = 0
+  const visit = (value, depth = 0) => {
+    requireValue(depth < 100 && ++visited <= 100_000, "REPORT_STRUCTURE_LIMIT")
+    if (!value || typeof value !== "object") return
+    if (Array.isArray(value)) { value.forEach((item) => visit(item, depth + 1)); return }
+    if (Array.isArray(value.results) && typeof value.title === "string") {
+      const id = /^(OP-PROC-0[123]|OP-IMPORT-01|OP-DOC-01)(?: |$)/.exec(value.title)?.[1]
+      if (!id || !cases.has(id)) return
+      for (const result of value.results) {
+        const retained = resultRecord(id, result, location(value.location))
+        if ((detailed.get(id)?.steps.length ?? -1) >= retained.steps.length) continue
+        detailed.set(id, retained)
+      }
+      return
+    }
+    // Only report hierarchy is visited. Bodies, titles, attachments, stdout/stderr and traces are not traversed.
+    for (const key of ["files", "tests", "suites", "specs", "children"]) if (value[key]) visit(value[key], depth + 1)
+  }
+  entries.forEach((entry) => visit(entry.value))
+  requireValue(completeCases(detailed), "FIVE_RETAINED_CASE_RESULTS_REQUIRED")
+  return detailed
+}
+function runtimeResults(report) {
+  const detailed = new Map()
+  let visited = 0
+  const visit = (suites, depth = 0) => {
+    requireValue(Array.isArray(suites) && depth < 80, "INVALID_RUNTIME_SUITE_TREE")
+    for (const suite of suites) {
+      requireValue(++visited < 10_000 && suite && typeof suite === "object", "RUNTIME_SUITE_LIMIT")
+      for (const spec of suite.specs ?? []) {
+        const id = typeof spec.title === "string"
+          ? /^(OP-PROC-0[123]|OP-IMPORT-01|OP-DOC-01)(?: |$)/.exec(spec.title)?.[1] : undefined
+        if (!id || !cases.has(id)) continue
+        const recorded = location(spec)
+        requireValue(recorded?.file === "packages/app-shell/e2e/sucafina/operations.spec.ts" &&
+          recorded.line === cases.get(id), "RUNTIME_CASE_SOURCE_MISMATCH")
+        requireValue(Array.isArray(spec.tests) && spec.tests.length === 1 && !detailed.has(id), "RUNTIME_CASE_AMBIGUOUS")
+        const selected = spec.tests[0]
+        requireValue(selected && (selected.projectName === "chromium" || selected.projectId === "chromium") &&
+          Array.isArray(selected.results) && selected.results.length === 1, "RUNTIME_PROJECT_OR_RETRY_MISMATCH")
+        detailed.set(id, resultRecord(id, selected.results[0], recorded))
+      }
+      if (suite.suites !== undefined) visit(suite.suites, depth + 1)
+    }
+  }
+  visit(report.suites)
+  requireValue(completeCases(detailed), "FIVE_RUNTIME_CASE_RESULTS_REQUIRED")
+  return detailed
+}
+
+test("inspect only retained Operations2 report evidence", async () => {
   try {
     requireValue(typeof process.env.RUNNER_TEMP === "string" && path.isAbsolute(process.env.RUNNER_TEMP), "RUNNER_TEMP_REQUIRED")
     const root = path.join(process.env.RUNNER_TEMP, "audit-operations-evidence")
     requireValue(!(await lstat(root)).isSymbolicLink(), "ARTIFACT_ROOT_SYMLINK_REFUSED")
     const metadata = parseJson(await readFile(path.join(process.env.RUNNER_TEMP, "audit-operations-source.json"), "utf8"))
     requireValue(Object.keys(source).every((key) => metadata[key] === source[key]), "PINNED_ARTIFACT_METADATA_MISMATCH")
-    const htmls = (await inventory(root)).filter((file) => path.basename(file) === "index.html")
-    requireValue(htmls.length === 1, "EXACTLY_ONE_RETAINED_HTML_REQUIRED")
-    requireValue((await lstat(htmls[0])).size <= 96 * 1024 * 1024, "RETAINED_HTML_SIZE")
-    const html = await readFile(htmls[0], "utf8")
-    const assigned = /playwrightReportBase64\s*=\s*["'](?:data:application\/zip;base64,)?([A-Za-z0-9+/=]+)["']/.exec(html)?.[1]
-    const dataUrl = /data:application\/zip;base64,([A-Za-z0-9+/=\r\n]+)/.exec(html)?.[1]
-    const inlineZip = /(?:^|[^A-Za-z0-9+/])((?:UEsDB)[A-Za-z0-9+/=\r\n]{100,})/.exec(html)?.[1]
-    const payload = (assigned ?? dataUrl ?? inlineZip)?.replace(/\s/g, "")
-    requireValue(payload && payload.length <= 90 * 1024 * 1024, "RETAINED_REPORT_ZIP_MISSING_OR_LARGE")
-    const entries = archive(Buffer.from(payload, "base64"))
-    const detailed = new Map()
-    let visited = 0
-    const visit = (value, depth = 0) => {
-      requireValue(depth < 100 && ++visited <= 100_000, "REPORT_STRUCTURE_LIMIT")
-      if (!value || typeof value !== "object") return
-      if (Array.isArray(value)) { value.forEach((item) => visit(item, depth + 1)); return }
-      if (Array.isArray(value.results) && typeof value.title === "string") {
-        const id = /^(OP-PROC-0[123]|OP-IMPORT-01|OP-DOC-01)(?: |$)/.exec(value.title)?.[1]
-        if (!id || !cases.has(id)) return
-        for (const result of value.results) {
-          if (!Array.isArray(result.steps) || !result.steps.length) continue
-          requireValue((result.retry ?? 0) === 0 && statuses.has(result.status), "UNEXPECTED_RETAINED_RESULT")
-          const steps = flatten(result)
-          if ((detailed.get(id)?.steps.length ?? -1) >= steps.length) continue
-          detailed.set(id, { case: id, status: result.status, retry: 0, durationMs: number(result.duration),
-            location: location(value.location), errors: [...new Set([
-              ...errorClasses(result.error), ...(Array.isArray(result.errors) ? result.errors.flatMap(errorClasses) : []),
-            ])], steps })
-        }
-        return
+    const files = await inventory(root)
+    const htmls = files.filter((file) => {
+      const relative = artifactPath(root, file)
+      return relative.startsWith("packages/app-shell/e2e/playwright-report/") &&
+        relative.endsWith(".html") && !relative.includes("/data/")
+    })
+    const runtimes = files.filter((file) => artifactPath(root, file) === "test-ci-evidence/playwright-runtime.json")
+    const requests = files.filter((file) => artifactPath(root, file) === "test-ci-evidence/request.json")
+    emit("INVENTORY", { files: files.length, htmlCandidates: htmls.length,
+      originalRuntimeJsonCandidates: runtimes.length, originalRequestJsonCandidates: requests.length })
+    requireValue(htmls.length <= 32, "HTML_CANDIDATE_LIMIT")
+    const valid = []
+    let totalHtmlBytes = 0
+    let embedded = 0
+    let invalid = 0
+    for (const file of htmls) {
+      totalHtmlBytes += (await lstat(file)).size
+      requireValue(totalHtmlBytes <= 128 * 1024 * 1024, "HTML_TOTAL_SIZE_LIMIT")
+      const html = await readBounded(file, 96 * 1024 * 1024)
+      const assigned = /playwrightReportBase64\s*=\s*["'](?:data:application\/zip;base64,)?([A-Za-z0-9+/=]+)["']/.exec(html)?.[1]
+      const dataUrl = /data:application\/zip;base64,([A-Za-z0-9+/=\r\n]+)/.exec(html)?.[1]
+      const inlineZip = /(?:^|[^A-Za-z0-9+/])((?:UEsDB)[A-Za-z0-9+/=\r\n]{100,})/.exec(html)?.[1]
+      const payload = (assigned ?? dataUrl ?? inlineZip)?.replace(/\s/g, "")
+      if (!payload) continue
+      embedded++
+      requireValue(payload.length <= 90 * 1024 * 1024, "RETAINED_REPORT_ZIP_TOO_LARGE")
+      try {
+        const entries = archive(Buffer.from(payload, "base64"))
+        valid.push({ detailed: htmlResults(entries), jsonEntries: entries.length })
+      } catch {
+        // A candidate without the actual five-case Playwright report is not selected; never emit its contents.
+        invalid++
       }
-      // Only report hierarchy is visited. Bodies, titles, attachments, stdout/stderr and traces are not traversed.
-      for (const key of ["files", "tests", "suites", "specs", "children"]) if (value[key]) visit(value[key], depth + 1)
     }
-    entries.forEach((entry) => visit(entry.value))
-    requireValue(detailed.size === cases.size && [...cases.keys()].every((id) => detailed.has(id)), "FIVE_RETAINED_CASE_TREES_REQUIRED")
-    emit("SOURCE", { ...source, binding: "github-metadata-pinned-download", execution: "retained-artifact-only" })
+    emit("REPORT_SELECTION", { htmlCandidates: htmls.length, embeddedZipCandidates: embedded,
+      invalidEmbeddedReports: invalid, validEmbeddedReports: valid.length })
+    requireValue(valid.length <= 1, "MULTIPLE_VALID_RETAINED_REPORTS")
+    const report = valid[0]
+    let detailed = report?.detailed
+    if (!report) {
+      // The original snapshot's test-ci.yml:229-232 writes this JSON and :349-352 uploads it.
+      // Its sibling request proves the snapshot and exact Playwright selection before any result is consumed.
+      requireValue(runtimes.length === 1 && requests.length === 1, "ORIGINAL_RUNTIME_AND_REQUEST_REQUIRED")
+      const recorded = parseJson(await readBounded(requests[0], 64 * 1024))
+      const request = recorded.request
+      requireValue(recorded.sha === source.snapshot && recorded.platform === "linux" && recorded.arch === "x64" &&
+        request?.package === "app" && request.directory === "packages/app-shell" && request.runner === "playwright" &&
+        request.config === "e2e/playwright.production.config.ts" && Array.isArray(request.args) &&
+        request.args.length === 1 && request.args[0] === "e2e/sucafina/operations.spec.ts", "ORIGINAL_REQUEST_IDENTITY_MISMATCH")
+      detailed = runtimeResults(parseJson(await readBounded(runtimes[0], 16 * 1024 * 1024)))
+    }
+    requireValue(detailed && completeCases(detailed), "FIVE_RETAINED_CASE_RESULTS_REQUIRED")
+    const format = report ? "html-embedded-report" : "original-playwright-runtime-json"
+    emit("SOURCE", { ...source, binding: "github-metadata-pinned-download",
+      execution: "retained-artifact-only", format })
     for (const id of cases.keys()) emit("RESULT", minimized(detailed.get(id)))
-    emit("SUMMARY", { originalRun: source.run, originalArtifact: source.artifact, cases: detailed.size,
-      reportJsonEntries: entries.length, qualification: "none", productReplay: false })
+    emit("SUMMARY", { originalRun: source.run, originalArtifact: source.artifact, format, cases: detailed.size,
+      casesWithRecordedSteps: [...detailed.values()].filter((result) => result.steps.length > 0).length,
+      reportJsonEntries: report?.jsonEntries ?? 1, qualification: "none", productReplay: false })
   } catch (error) {
     // Node's TAP reporter must never serialize untrusted parser/filesystem error messages or paths.
     throw new AuditError(error instanceof AuditError ? error.message : "RETAINED_ARTIFACT_PARSE_FAILED")
