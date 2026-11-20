@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { DomainProjection, Period } from "../contracts/context.ts"
@@ -204,7 +205,12 @@ export function createPortfolioCampaign(input: {
     const commandDigest = digestSfValue(request)
     const decision = await owner(request.ownerCase, context)
     const cases = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.ownerCase.id] : undefined)
-    const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { active: state.preferences[campaignKey(request.ownerCase)], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.ownerCase.id, `portfolio-campaign:${operation}`])], index: state.preferences[indexKey(request.ownerCase)] } : undefined)
+    const preferences = await input.state.read(source, "preferences", (state, authority) => {
+      if (!(sameAuthority(authority, context))) return undefined
+      const savedIntent = sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.ownerCase.id, idempotencyKey: `portfolio-campaign:${operation}` })
+      if (savedIntent.status === "ambiguous") return undefined
+      return { active: state.preferences[campaignKey(request.ownerCase)], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined, index: state.preferences[indexKey(request.ownerCase)] }
+    })
     const contributions = request.proposalRefs.length ? await input.state.read(source, "contributions", (_state, authority) => sameAuthority(authority, context)) : undefined
     if (decision.status !== "ok" || cases.status !== "ok" || preferences.status !== "ok" || (contributions && (contributions.status !== "ok" || !contributions.value)) || !preferences.value || !allowed(cases.value, request.ownerCase, context) || !cases.value || !await input.authorizeCase(cases.value, context)) return { status: "denied", reason: "campaign-access-unavailable" }
     if (request.scope.currency !== decision.value.case.currency || digestSfValue(request.scope.horizon) !== digestSfValue(decision.value.case.horizon)) return { status: "needs-input", reason: "campaign-scope-mismatch" }

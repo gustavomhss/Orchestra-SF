@@ -962,6 +962,21 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
+    ...(input.authMode === "microsoft" ? { teams: {
+      tenantId: input.tenantId ?? "",
+      admit: async (request: Request) => {
+        const admitted = await authority.readTeamContextAdmission(request)
+        if (admitted.status !== "ok") return admitted
+        const stamp = { ...admitted.technical, ...(admitted.binding ? { team: admitted.binding } : {}) }
+        const actions = admitted.binding && input.nativeActions
+          ? await input.nativeActions(request, stamp, admitted.pages) : undefined
+        if (admitted.binding && input.nativeActions && !Array.isArray(actions))
+          return { status: "unavailable", reason: "contract-mismatch" } as const
+        const destinations = admitted.binding ? sfContextDestinationsFromPages(admitted.pages, actions) : []
+        if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
+        return { ...admitted, destinations }
+      },
+    } } : {}),
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),

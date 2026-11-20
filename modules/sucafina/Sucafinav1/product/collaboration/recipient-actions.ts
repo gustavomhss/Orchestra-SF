@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { object } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -50,9 +51,15 @@ export function createRecipientThreadActions(input: {
     if (!request || !await input.human.authorize(context, humanAction, payload) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
     const projected = await input.read(id, context)
     if (projected.status !== "ok" || projected.value.recipientRef !== context.binding.principalRef && !projected.value.messages.some((message) => message.authorRef === context.binding.principalRef)) return { status: "unavailable", reason: "thread-access-unavailable" }
-    const stored = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? { thread: state.threads[id], replay: Object.hasOwn(state.transactions, JSON.stringify([context.binding.principalRef, "threads", input.creationTarget.ref, selected.mutation.idempotencyKey])) } : undefined)
+    const stored = await input.state.read(request, "threads", (state, authority) => {
+      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
+      const savedIntent = sfTransactionLookup(state, authority, { namespace: "threads", targetRef: input.creationTarget.ref, idempotencyKey: selected.mutation.idempotencyKey })
+      if (savedIntent.status === "ambiguous") return undefined
+      return { thread: state.threads[id], replay: savedIntent.status === "found", receiptAuthority: authority }
+    })
     if (stored.status !== "ok" || !stored.value || !isThread(stored.value.thread) || stored.value.thread.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const prior = stored.value.thread
+    const receiptAuthority = stored.value.receiptAuthority
     if (digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period }) !== digestSfValue({ id: projected.value.id, kind: projected.value.kind, recipientRef: projected.value.recipientRef, state: projected.value.state, messages: projected.value.messages, version: projected.value.observed.version, period: projected.value.observed.period })) return { status: "stale", reason: "thread-changed" }
     const original = prior.evidenceRefs.find((ref) => ref.refId === prior.sourceRef)
     const reviewBasis = prior.messages[0]?.sourceContext?.reviewContext ? prior.messages[0].sourceContext : undefined
@@ -103,7 +110,9 @@ export function createRecipientThreadActions(input: {
         if (reviewBasis && (!reviewFence || !await reviewFence() || !unchanged() || !checkReviewRecipient || !reviewRecipients.every((recipient) => checkReviewRecipient(recipient, reviewBasis, context, true)))) return { commit: false, value: false }
         const product = object(snapshots.dashboard.data.__sfProductV1)
         const thread = object(product.threads)[id]
-        const durable = object(object(product.transactions)[JSON.stringify([context.binding.principalRef, "threads", transaction.targetRef, selected.mutation.idempotencyKey])])
+        const savedIntent = sfTransactionLookup({ transactions: object(product.transactions) }, receiptAuthority, transaction)
+        if (savedIntent.status !== "found") return { commit: false, value: false }
+        const durable = object(savedIntent.receipt)
         const sameThread = isThread(thread) && digestSfValue({ id: thread.id, kind: thread.kind, recipientRef: thread.recipientRef, state: thread.state, messages: thread.messages, version: thread.observedVersion, period: thread.period }) === digestSfValue({ id: current.value.id, kind: current.value.kind, recipientRef: current.value.recipientRef, state: current.value.state, messages: current.value.messages, version: current.value.observed.version, period: current.value.observed.period })
         return { commit: false, value: unchanged() && check.call(mutationFence, releaseFence) && sameThread && digestSfValue(durable.value) === digestSfValue(outcome) }
       }, { signal: request.signal })

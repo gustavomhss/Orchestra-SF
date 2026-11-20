@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../contracts/decisions.ts"
@@ -123,8 +124,13 @@ export function createCurrentChoicePreview(input: {
       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-preview-access-unavailable" }
       const stored = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(request.resultRef)] : undefined)
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-      const receipt = promoted ? await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${input.operationIdentity(context)}:promote-current-choice`])] : undefined) : undefined
-      if (promoted && (receipt?.status !== "ok" || !receipt.value || receipt.value.commandDigest !== digestSfValue(request) || receipt.value.targetIncarnation !== request.caseRef.incarnation || digestSfValue(receipt.value.value) !== digestSfValue(promoted) || promoted.caseRef.id !== request.caseRef.id || promoted.caseRef.incarnation !== request.caseRef.incarnation || promoted.caseRef.version !== request.caseRef.version + 1)) return { status: "unavailable", reason: "choice-preview-receipt-unavailable" }
+      const transaction = { namespace: "cases" as const, targetRef: request.caseRef.id, idempotencyKey: `${input.operationIdentity(context)}:promote-current-choice` }
+      const receipt = promoted ? await input.state.read(source, "cases", (state, authority) => {
+        if (!sameAuthority(authority, context)) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, transaction)
+        return savedIntent.status === "found" ? { receipt: savedIntent.receipt, authority } : undefined
+      }) : undefined
+      if (promoted && (receipt?.status !== "ok" || !receipt.value || receipt.value.receipt.commandDigest !== digestSfValue(request) || receipt.value.receipt.targetIncarnation !== request.caseRef.incarnation || digestSfValue(receipt.value.receipt.value) !== digestSfValue(promoted) || promoted.caseRef.id !== request.caseRef.id || promoted.caseRef.incarnation !== request.caseRef.incarnation || promoted.caseRef.version !== request.caseRef.version + 1)) return { status: "unavailable", reason: "choice-preview-receipt-unavailable" }
       const result = promoted ? await input.results.readHistoricalScenario({ resultRef: request.resultRef }, context) : await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
       if (stored.status !== "ok" || !stored.value || typeof stored.value !== "object" || current.status !== "ok" || !current.value || current.value.incarnation !== request.caseRef.incarnation || current.value.version !== (promoted?.caseRef.version ?? request.caseRef.version) || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context) || result.status !== "ok") return { status: "unavailable", reason: "choice-preview-unavailable" }
       const binding = structuredClone(stored.value) as CurrentChoiceBinding
@@ -143,14 +149,16 @@ export function createCurrentChoicePreview(input: {
       }
       input.fence!.observe(context, (snapshots) => {
         const state = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
-        const savedReceipt = promoted && state?.transactions[JSON.stringify([context.binding.principalRef, "cases", request.caseRef.id, `${input.operationIdentity(context)}:promote-current-choice`])]
+        const savedIntent = promoted && state && receipt?.status === "ok" && receipt.value
+          ? sfTransactionLookup(state, receipt.value.authority, transaction) : undefined
+        const savedReceipt = savedIntent?.status === "found" ? savedIntent.receipt : undefined
         const promotedResult = promoted && state?.decisionResults?.[promoted.resultRef]
         return !!state && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(current.value) &&
           digestSfValue(state.decisionResults?.[request.resultRef]) === digestSfValue(result.value) &&
           digestSfValue(state.decisionResults?.[binding.producerResultRef]) === digestSfValue(producer.value) &&
           verifyCurrentChoiceBinding(state, request, digestSfValue(binding)) &&
           (!binding.coverageRecordDigest || digestSfValue(state.preferences[`sf:proposal-coverage:${request.coverageRef}`]) === binding.coverageRecordDigest) &&
-          (!promoted || !!savedReceipt && receipt?.status === "ok" && digestSfValue(savedReceipt) === digestSfValue(receipt.value) &&
+          (!promoted || !!savedReceipt && receipt?.status === "ok" && digestSfValue(savedReceipt) === digestSfValue(receipt.value?.receipt) &&
             !!promotedResult && promotedResult.resultRef === promoted.resultRef && digestSfValue(promotedResult.caseRef) === digestSfValue(promoted.caseRef) &&
             promotedResult.resultDigest === request.resultDigest && digestSfValue(promotedResult.result) === request.resultDigest) &&
           input.verifySnapshot(snapshots.planner, request, binding, context)

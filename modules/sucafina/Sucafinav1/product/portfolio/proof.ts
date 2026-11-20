@@ -1,3 +1,4 @@
+import { sfTransactionIdentity, sfTransactionProfileMatches } from "../host-binding/state-provider.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
@@ -38,12 +39,17 @@ export function createPortfolioCandidateHistoryReader(input: {
           if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
           const current = state.cases[decision.id]
           if (!current || current.incarnation !== decision.incarnation || current.version !== decision.version || digestSfValue({ alternatives: current.alternatives, choices: current.choices, ledger: current.ledger }) !== digestSfValue({ alternatives: decision.alternatives, choices: decision.choices, ledger: decision.ledger })) return undefined
-          const transactions = Object.entries(state.transactions).flatMap(([key, transaction]) => {
-            if (!transactionSnapshot(key, transaction, state, selected.originalCaseRef)) return []
+          const transactions: { key: string; transaction: SfProductState["transactions"][string] & { value: DecisionCase }; alternatives: DecisionCase["alternatives"] }[] = []
+          for (const [key, transaction] of Object.entries(state.transactions)) {
+            if (!transactionSnapshot(transaction, state, selected.originalCaseRef)) continue
             const alternatives = transaction.value.alternatives.filter((alternative) => alternative.id === selected.alternativeId && alternative.version === selected.alternativeVersion)
-            if (!alternatives.length) return []
-            return [{ key, transaction, alternatives }]
-          })
+            if (!alternatives.length) continue
+            const identity = sfTransactionIdentity(key)
+            if (!identity || identity.principalRef !== transaction.principalRef || identity.namespace !== "cases" ||
+                identity.targetRef !== selected.originalCaseRef.id || !identity.idempotencyKey.trim() ||
+                !sfTransactionProfileMatches(authority.profile, key)) return undefined
+            transactions.push({ key, transaction, alternatives })
+          }
           return { currentCaseRef: { id: current.id, incarnation: current.incarnation, version: current.version }, transactions, results: Object.values(state.decisionResults ?? {}).filter((record) => record.kind === "scenario" && record.caseRef.id === selected.originalCaseRef.id && record.caseRef.incarnation === selected.originalCaseRef.incarnation && record.caseRef.version <= selected.originalCaseRef.version) }
         }))
         if (loaded.status !== "ok" || !loaded.value) return { status: "unavailable", reason: "portfolio-history-candidate-provenance-unavailable" } as const
@@ -112,12 +118,8 @@ function selector(ref: string) {
   } catch { return undefined }
 }
 
-function transactionSnapshot(key: string, transaction: SfProductState["transactions"][string], state: Readonly<SfProductState>, ref: CaseRef): transaction is SfProductState["transactions"][string] & { value: DecisionCase } {
+function transactionSnapshot(transaction: SfProductState["transactions"][string], state: Readonly<SfProductState>, ref: CaseRef): transaction is SfProductState["transactions"][string] & { value: DecisionCase } {
   if (transaction.namespace !== "cases" || transaction.targetRef !== ref.id || transaction.targetIncarnation !== ref.incarnation || transaction.incarnation !== state.incarnation || !transaction.principalRef.trim() || !/^[a-f0-9]{64}$/.test(transaction.commandDigest) || !/^[a-f0-9]{64}$/.test(transaction.scopeDigest) || !Number.isSafeInteger(transaction.storageVersion) || transaction.storageVersion < 1 || transaction.storageVersion > state.versions.cases || !Number.isSafeInteger(transaction.aggregateRevision) || transaction.aggregateRevision < 1 || transaction.aggregateRevision > state.revision) return false
-  try {
-    const identity: unknown = JSON.parse(key)
-    if (!Array.isArray(identity) || identity.length !== 4 || identity[0] !== transaction.principalRef || identity[1] !== "cases" || identity[2] !== ref.id || typeof identity[3] !== "string" || !identity[3].trim()) return false
-  } catch { return false }
   const value = transaction.value as Partial<DecisionCase> | null
   return !!value && typeof value === "object" && value.id === ref.id && value.incarnation === ref.incarnation && value.version === ref.version && Array.isArray(value.alternatives)
 }

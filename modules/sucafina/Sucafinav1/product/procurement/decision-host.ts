@@ -1,3 +1,4 @@
+import { applicationIntentReceipts } from "../decisions/application-attempt.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { object, rows } from "../../runtime/contract.ts"
 import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
@@ -212,14 +213,14 @@ export function createProcurementDecisionHost(input: BridgeInput & {
       const source = host.requestFor(context)
       const commandId = input.operationIdentity(context)
       if (!held || held.mode !== "apply" || !source || !commandId || !await confirmHuman(request, held.change, context)) return false
-      const before = await state.read(source, "cases", (stored, authority) => sameApplicationAuthority(authority, context) && digestSfValue(stored.cases[held.decision.id]) === digestSfValue(held.decision) && !applicationIntentEntries(stored, request).length)
+      const before = await state.read(source, "cases", (stored, authority) => sameApplicationAuthority(authority, context) && digestSfValue(stored.cases[held.decision.id]) === digestSfValue(held.decision) && !hasApplicationIntent(stored, request, authority))
       if (before.status !== "ok" || !before.value) return false
       const record = applicationIntent(held, held.admitted, commandId)
       const reservation = { createdHere: false }
       // An ambiguous first dispatch stays reserved even if no receipt can yet be read.
       // Only this callback's successful commit may cross the domain boundary.
       const saved = await state.transaction<ApplicationIntent | null>(source, { namespace: "cases", expectedStorageVersion: before.storageVersion, targetRef: held.decision.id, targetIncarnation: held.decision.incarnation, idempotencyKey: applicationIntentKey(request), commandDigest: digestSfValue(record) }, async (stored, authority) => {
-        if (!sameApplicationAuthority(authority, context) || digestSfValue(stored.cases[held.decision.id]) !== digestSfValue(held.decision) || applicationIntentEntries(stored, request).length || context.kind !== "ui" || !input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admission))) return { commit: false, value: null }
+        if (!sameApplicationAuthority(authority, context) || digestSfValue(stored.cases[held.decision.id]) !== digestSfValue(held.decision) || hasApplicationIntent(stored, request, authority) || context.kind !== "ui" || !input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admission))) return { commit: false, value: null }
         reservation.createdHere = true
         return { commit: true, value: record }
       }).catch(() => undefined)
@@ -260,7 +261,12 @@ export function createProcurementDecisionHost(input: BridgeInput & {
       return { commit: false, value: validTarget(snapshot, value) ? value : undefined }
     }, { signal: source.signal })
     if (!scope || !await host.revalidate(context)) return { status: "denied", reason: "application-source-authority-unavailable" }
-    const recorded = await state.read(source, "cases", (stored, authority) => sameApplicationAuthority(authority, context) && digestSfValue(stored.cases[scope.decision.id]) === digestSfValue(scope.decision) ? { count: applicationIntentEntries(stored, selector).length, intent: readApplicationIntent(stored, scope) } : undefined).catch(() => undefined)
+    const recorded = await state.read(source, "cases", (stored, authority) => {
+      if (!sameApplicationAuthority(authority, context) || digestSfValue(stored.cases[scope.decision.id]) !== digestSfValue(scope.decision)) return undefined
+      const attempts = applicationIntentEntries(stored, selector, authority)
+      if (attempts.status === "ambiguous") return undefined
+      return { count: attempts.entries.length, intent: readApplicationIntent(stored, scope, attempts.entries) }
+    }).catch(() => undefined)
     if (!recorded || recorded.status !== "ok" || !recorded.value) return { status: "unavailable", reason: "application-intent-unavailable" }
     if (recorded.value.count && !recorded.value.intent) return { status: "conflict", reason: "application-intent-mismatch" }
     if (recorded.value.intent && "reviewDigest" in admission && digestSfValue(recorded.value.intent.admitted) !== digestSfValue(admission)) return { status: "conflict", reason: "application-intent-mismatch" }
@@ -411,17 +417,21 @@ function applicationIntentKey(request: ApplyRequest) {
   return `sf:c12:application:${digestSfValue({ caseId: request.caseRef.id, caseIncarnation: request.caseRef.incarnation, choiceId: request.choiceId, changeId: request.changeId })}`
 }
 
-function applicationIntentEntries(state: Readonly<SfProductState>, request: ApplyRequest) {
+function applicationIntentEntries(state: Readonly<SfProductState>, request: ApplyRequest, authority: SfStateAuthority) {
   // A change already attempted by any principal cannot become a fresh dispatch.
-  return Object.entries(state.transactions).filter(([key, transaction]) => key === JSON.stringify([transaction.principalRef, "cases", request.caseRef.id, applicationIntentKey(request)])).map(([, transaction]) => transaction)
+  return applicationIntentReceipts(state, authority, { targetRef: request.caseRef.id, idempotencyKey: applicationIntentKey(request) })
+}
+
+function hasApplicationIntent(state: Readonly<SfProductState>, request: ApplyRequest, authority: SfStateAuthority) {
+  const attempts = applicationIntentEntries(state, request, authority)
+  return attempts.status === "ambiguous" || attempts.entries.length > 0
 }
 
 function applicationIntent(scope: ApplicationScope, admitted: AdmittedApply, commandId: string): ApplicationIntent {
   return { schema: "sf-c12-application-intent-v1", installationId: scope.context.binding.installationId, projectId: scope.context.binding.projectId, principalRef: scope.context.binding.principalRef, admitted: structuredClone(admitted), commandId, changeDigest: digestSfValue({ ...scope.change, state: "planned", receipt: null }), choiceDigest: digestSfValue(scope.decision.choices.find((choice) => choice.id === scope.change.choiceId)), physicalIncarnation: scope.physicalIncarnation }
 }
 
-function readApplicationIntent(state: Readonly<SfProductState>, scope: ApplicationScope): ApplicationIntent | undefined {
-  const entries = applicationIntentEntries(state, scope.request)
+function readApplicationIntent(state: Readonly<SfProductState>, scope: ApplicationScope, entries: readonly SfProductState["transactions"][string][]): ApplicationIntent | undefined {
   if (entries.length !== 1) return undefined
   const transaction = entries[0]!
   const record = object(transaction.value)

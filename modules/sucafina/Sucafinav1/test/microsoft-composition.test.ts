@@ -1,5 +1,6 @@
 import { afterEach, beforeAll, expect, test } from "bun:test"
 import { writeFile } from "node:fs/promises"
+import { admitMicrosoftFixtureTeam } from "./microsoft-login/team-admission-fixture.ts"
 import path from "node:path"
 import { Layer, Tracer } from "effect"
 import type { SfInstallation } from "../../../../apps/cli/src/sucafina-product/installation.ts"
@@ -33,8 +34,8 @@ afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await 
 async function setup(native = false) {
   const f = await privateFixture()
   cleanups.push(f.close)
-  const provider = await microsoftFixture()
-  await writeFile(f.file, JSON.stringify({ ...f.config, groups: { ...f.config.groups, dashboard: { viewer: `group:${group}`, admin: `group:${other}` } },
+  const provider = await microsoftFixture({ teams: "direct" })
+  await writeFile(f.file, JSON.stringify({ ...f.config, teams: "direct", supremeAdminGroupId: group, groups: { ...f.config.groups, dashboard: { viewer: `group:${group}`, admin: `group:${other}` } },
     grants: native ? [oid, other].map((principalRef) => ({ principalRef, namespaces: [], operations: [], humanActions: [] })) : [] }))
   const application = await entry.createMicrosoftInstallation({ origin: listenerOrigin, ...(native ? { createHostRuntime: createSfHostRuntime } : {}) }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
   cleanups.push(async () => { await application.dispose() })
@@ -46,7 +47,13 @@ async function setup(native = false) {
   cleanups.push(router.dispose)
   const store = await openLocalStore(path.join(f.directory, "business-microsoft"))
   cleanups.push(store.dispose)
-  const request = (pathname: string, init: RequestInit = {}) => router.handler(new Request(`${ingressOrigin}${pathname}`, { ...init, headers: { host: new URL(ingressOrigin).host, ...Object.fromEntries(new Headers(init.headers)) } }))
+  let teamSelector: string | undefined
+  const request = (pathname: string, init: RequestInit = {}, selectTeam = true) => router.handler(new Request(`${ingressOrigin}${pathname}`, { ...init, headers: {
+    host: new URL(ingressOrigin).host,
+    ...(selectTeam && teamSelector && !pathname.startsWith("/sucafina/auth/") ? { "x-sf-team-profile": teamSelector } : {}),
+    ...Object.fromEntries(new Headers(init.headers)),
+  } }))
+  if (native) teamSelector = (await admitMicrosoftFixtureTeam({ installation, provider, request })).selector
   async function login(account = oid) {
     const begin = await request("/sucafina/auth/login?returnTo=%2Fsucafina%2Fdashboard")
     expect(begin.status).toBe(303)
@@ -76,6 +83,9 @@ test("installed Microsoft viewer reads the native projection without gaining adm
   expect(anonymous.status).toBe(401)
   expect(await anonymous.json()).toMatchObject({ status: "unauthenticated" })
   const first = await f.login()
+  const legacy = await f.request("/sucafina/api/ui/pages/CAP01", { headers: { cookie: first.cookie } }, false)
+  expect(legacy.status).toBe(403)
+  expect(await legacy.json()).toMatchObject({ status: "denied" })
   const viewer = await f.request("/sucafina/api/ui/pages/CAP01", { headers: { cookie: first.cookie } })
   expect(viewer.status).toBe(200)
   expect(await viewer.json()).toMatchObject({

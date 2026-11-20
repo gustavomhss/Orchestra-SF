@@ -37,7 +37,7 @@ import { corsLayer } from "./cors"
 import { hostPolicyLayer } from "./host-policy"
 import { handlers } from "./handlers"
 import { SfInstallationSource, type SfTrustedInstallationSource } from "./sucafina-installations"
-import { authorizationLayer } from "./middleware/authorization"
+import { authorizationLayerWith } from "./middleware/authorization"
 import { schemaErrorLayer } from "./middleware/schema-error"
 import { PtyEnvironment } from "@orchestra/core/host/pty-environment"
 import { layer as inboxLocationLayer } from "./inbox-location"
@@ -138,7 +138,7 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(sessionLocationLayer),
     Layer.provide(inboxLocationLayer),
     Layer.provide(locationLayer),
-    Layer.provide(authorizationLayer),
+    Layer.provide(authorizationLayerWith(options.sucafinaInstallations)),
     Layer.provide(capabilityAuthorizationLayer),
     Layer.provide(schemaErrorLayer),
     Layer.provide(auth),

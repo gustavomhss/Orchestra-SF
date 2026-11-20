@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -68,16 +69,17 @@ export function createChangeProposalStore(input: {
       const operation = input.operationIdentity(context)
       if (!source || !operation || request.request.caseRef !== encodeCaseRef(request.caseRef) || !decodeSfOperationInput("sf_change_prepare", request.request).ok || !await input.host.revalidate(context)) return { status: "denied", reason: "change-proposal-access-unavailable" }
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-      const prior = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `change-proposal:${operation}`])] : undefined)
-      if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context) || prior.status !== "ok") return { status: "denied", reason: "change-proposal-access-unavailable" }
-      if (!prior.value) {
-        const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `change-proposal:${operation}`])] : undefined)
+      const prior = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.caseRef.id, idempotencyKey: `change-proposal:${operation}` }) : undefined)
+      if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context) || prior.status !== "ok" || !prior.value || prior.value.status === "ambiguous") return { status: "denied", reason: "change-proposal-access-unavailable" }
+      if (prior.value.status === "missing") {
+        const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.caseRef.id, idempotencyKey: `change-proposal:${operation}` }) : undefined)
         const currentAgain = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-        if (again.status !== "ok" || again.value || currentAgain.status !== "ok" || !allowed(currentAgain.value, request.caseRef, context) || digestSfValue(currentAgain.value) !== digestSfValue(current.value) || !await input.authorizeCase(currentAgain.value!, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "change-proposal-changed" }
+        if (again.status !== "ok" || again.value?.status !== "missing" || currentAgain.status !== "ok" || !allowed(currentAgain.value, request.caseRef, context) || digestSfValue(currentAgain.value) !== digestSfValue(current.value) || !await input.authorizeCase(currentAgain.value!, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "change-proposal-changed" }
         return { status: "ok", value: { state: "not-found" } }
       }
-      const proposal = prior.value.value
-      if (!isProposal(proposal) || prior.value.targetIncarnation !== request.caseRef.incarnation || digestSfValue(proposal.caseRef) !== digestSfValue(request.caseRef) || proposal.requestDigest !== digestSfValue(request.request)) return { status: "conflict", reason: "idempotency-content-changed" }
+      const receipt = prior.value.receipt
+      const proposal = receipt.value
+      if (!isProposal(proposal) || receipt.targetIncarnation !== request.caseRef.incarnation || digestSfValue(proposal.caseRef) !== digestSfValue(request.caseRef) || proposal.requestDigest !== digestSfValue(request.request)) return { status: "conflict", reason: "idempotency-content-changed" }
       const checked = await Promise.all(proposal.output.changes.map((item) => read({ caseRef: request.caseRef, changeRef: item.changeRef }, context)))
       if (!checked.length || checked.some((item) => item.status !== "ok") || !await input.verifySources(proposal, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "change-proposal-unavailable" }
       return { status: "ok", value: { state: "found", output: structuredClone(proposal.output) } }
