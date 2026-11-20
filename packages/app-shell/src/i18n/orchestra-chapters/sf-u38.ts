@@ -1,5 +1,14 @@
 // N12/U38: frozen bilingual leaf copy; integrator125 owns global dictionary registration.
 export const SF_U38_COPY = {
+  "sf.u38.privateRecovery": "Original first-save recovery",
+  "sf.u38.privateRecoveryPending": "The original first save is still unconfirmed. No fields or draft identity were restored from browser storage.",
+  "sf.u38.privateRecovered": "The original saved draft was recovered from its authorized result.",
+  "sf.u38.applicationRecovery": "Original application recovery",
+  "sf.u38.applicationPending": "The original application outcome is unknown. A new application is blocked until its original receipt is confirmed.",
+  "sf.u38.applicationRecover": "Read original application receipt",
+  "sf.u38.applicationRecovered": "The original application receipt was recovered. No application command was sent.",
+  "sf.u38.recoveryExpired": "The saved recovery selection expired. It cannot authorize recovery or another command.",
+  "sf.u38.recoveryUnavailable": "Recovery storage is unavailable. No new command was sent.",
   "sf.cap02.title": "Hot Topics & Actions",
   "sf.cap02.primary": "New topic",
   "sf.ui54.title": "Follow-up proposal",
@@ -11,6 +20,7 @@ export const SF_U38_COPY = {
   "sf.u38.privateRetained": "Options refreshed. Your form changes were retained.",
   "sf.u38.privateCurrentLoaded": "Current version loaded. Compare the differences and confirm the base before saving your values.",
   "sf.u38.privateSaved": "Draft saved. It can be included in a case choice before preparation.",
+  "sf.u38.privateReviewSaved": "Review saved proposal",
   "sf.u38.privateChanged": "The draft changed. Load the current version before reviewing your retained values.",
   "sf.u38.privateInvalid": "Review the required proposal fields before saving.",
   "sf.u38.privateUnknown": "The save outcome is unknown. No mutation will be repeated automatically.",
@@ -106,6 +116,15 @@ export const SF_U38_COPY = {
 } as const
 
 export const SF_U38_COPY_BR: Readonly<Record<keyof typeof SF_U38_COPY, string>> = {
+  "sf.u38.privateRecovery": "Recuperação do primeiro salvamento original",
+  "sf.u38.privateRecoveryPending": "O primeiro salvamento original ainda não foi confirmado. Nenhum campo ou identidade de rascunho foi restaurado do navegador.",
+  "sf.u38.privateRecovered": "O rascunho salvo original foi recuperado pelo resultado autorizado.",
+  "sf.u38.applicationRecovery": "Recuperação da aplicação original",
+  "sf.u38.applicationPending": "O resultado da aplicação original é desconhecido. Uma nova aplicação fica bloqueada até a confirmação do recibo original.",
+  "sf.u38.applicationRecover": "Ler recibo da aplicação original",
+  "sf.u38.applicationRecovered": "O recibo da aplicação original foi recuperado. Nenhum comando de aplicação foi enviado.",
+  "sf.u38.recoveryExpired": "A seleção de recuperação salva expirou. Ela não autoriza uma recuperação ou outro comando.",
+  "sf.u38.recoveryUnavailable": "O armazenamento de recuperação está indisponível. Nenhum comando novo foi enviado.",
   "sf.cap02.title": "Hot Topics e ações",
   "sf.cap02.primary": "Novo tópico",
   "sf.ui54.title": "Proposta de encaminhamento",
@@ -117,6 +136,7 @@ export const SF_U38_COPY_BR: Readonly<Record<keyof typeof SF_U38_COPY, string>> 
   "sf.u38.privateRetained": "Opções atualizadas. As alterações do formulário foram mantidas.",
   "sf.u38.privateCurrentLoaded": "Versão atual carregada. Compare as diferenças e confirme a base antes de salvar seus valores.",
   "sf.u38.privateSaved": "Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.",
+  "sf.u38.privateReviewSaved": "Revisar proposta salva",
   "sf.u38.privateChanged": "O rascunho mudou. Carregue a versão atual antes de revisar seus valores mantidos.",
   "sf.u38.privateInvalid": "Revise os campos obrigatórios da proposta antes de salvar.",
   "sf.u38.privateUnknown": "O resultado do salvamento é desconhecido. Nenhuma alteração será repetida automaticamente.",

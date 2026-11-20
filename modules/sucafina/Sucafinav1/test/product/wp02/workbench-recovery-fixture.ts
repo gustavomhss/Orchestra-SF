@@ -113,7 +113,7 @@ export async function createRecoveryFixture() {
     close: async () => { delayed.release?.(); business.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
 
-export async function storeExistingChoice(f: Awaited<ReturnType<typeof createRecoveryFixture>>, draft: HotTopicDraft) {
+export async function storeExistingChoice(f: Pick<Awaited<ReturnType<typeof createRecoveryFixture>>, "authority" | "request" | "principalRef" | "clock">, draft: HotTopicDraft) {
   const result: ScenarioResult = { id: "scenario", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [draft.targetEvidence],
     unresolvedConditions: ["Financial impact of the Hot Topic change is not assessed."], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: null, total: null,
     costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [draft.targetEvidence],

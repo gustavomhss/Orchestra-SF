@@ -32,6 +32,7 @@ import { dashboardSourceCurrent } from "./dashboard-services.ts"
 import { createSfDashboardDecisionEvidence } from "./dashboard-decision-evidence.ts"
 import type { DashboardSourceCapture } from "./dashboard-decision-evidence.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
+import { createSfDashboardApplicationIntents, type DashboardRecoverRequest } from "./dashboard-application-intent.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 export type DashboardPrepareRequest = { caseRef: CaseRef; choiceId: string; draftRef: string }
@@ -68,10 +69,12 @@ export function createSfDashboardDecisions(input: {
 }) {
   const { state, host, human, ui } = input.authority
   const applicationEgress = createSfPreparedApplicationEgress(input.authority)
+  const applicationIntents = createSfDashboardApplicationIntents(input.authority)
   const evidence = createSfDashboardDecisionEvidence({ authority: input.authority, records: input.records, isBinding, bindingDigest })
   const environments = new WeakMap<TrustedDomainContext, Environment>()
   const preferenceReads = new WeakSet<TrustedDomainContext>()
-  const admitted = new WeakMap<TrustedDomainContext, { request: AdmittedApply; actor: Actor; environment: Environment; roles: string; access: string }>()
+  const admitted = new WeakMap<TrustedDomainContext, { request: AdmittedApply; admission: AdmittedApply | DashboardRecoverRequest;
+    mode: "apply" | "recover"; actor: Actor; environment: Environment; roles: string; access: string }>()
   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
   const actorFor = async (snapshot: Snapshot, context: TrustedDomainContext) => {
     const request = host.requestFor(context)
@@ -240,12 +243,12 @@ export function createSfDashboardDecisions(input: {
   const authorizeApplication = async (request: PreparedApplyRequest, change: PreparedChange, context: TrustedDomainContext) => {
     const value = admitted.get(context)
     return !!value && sameApplyRequest(value.request, request) && change.id === request.changeId && change.choiceId === request.choiceId &&
-      await human.authorize(context, "decisions.apply", value.request) && await host.revalidate(context)
+      await human.authorize(context, "decisions.apply", value.admission) && await host.revalidate(context)
   }
   const lookup = async (request: { targetRef: string; targetIncarnation: string; idempotencyKey: string; commandDigest: string }, context: TrustedDomainContext) => {
     const allowed = admitted.get(context)
     const source = host.requestFor(context)
-    if (!source || !allowed || !await human.authorize(context, "decisions.apply", allowed.request)) return false
+    if (!source || !allowed || !await human.authorize(context, "decisions.apply", allowed.admission)) return false
     const found = await state.read(source, "cases", (stored, authority) => {
       const current = stored.cases[allowed.request.caseRef.id]
       const changes = current?.preparedChanges.filter((change) => change.id === allowed.request.changeId && change.choiceId === allowed.request.choiceId) ?? []
@@ -258,7 +261,7 @@ export function createSfDashboardDecisions(input: {
   const verifyGrant = (snapshot: Snapshot, request: PreparedApplyRequest, change: PreparedChange, actor: Actor, context: TrustedDomainContext) => {
     const allowed = admitted.get(context)
     const binding = object(object(snapshot.data.__sfProductV1).preferences)[preparedKey(change.id)]
-    return !!allowed && sameApplyRequest(allowed.request, request) && allowed.actor.id === actor.id && actor.canWrite && actor.roles.some((role) => role === "admin" || role === "domain leader") &&
+    return !!allowed && allowed.mode === "apply" && sameApplyRequest(allowed.request, request) && allowed.actor.id === actor.id && actor.canWrite && actor.roles.some((role) => role === "admin" || role === "domain leader") &&
       allowed.roles === digestSfValue(roleMap(snapshot, "dashboard")) && allowed.access === digestSfValue(object(snapshot.data.access)[actor.id]) &&
       isBinding(binding) && bindingCurrent(snapshot, binding, context) && digestSfValue(binding.command) === digestSfValue(change.operation)
   }
@@ -269,7 +272,7 @@ export function createSfDashboardDecisions(input: {
     resolveMutation: (snapshot, change, actor, context) => {
       const binding = object(object(snapshot.data.__sfProductV1).preferences)[preparedKey(change.id)]
       const allowed = admitted.get(context)
-      if (!allowed || !isBinding(binding) || !bindingCurrent(snapshot, binding, context) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return undefined
+      if (!allowed || allowed.mode !== "apply" || !isBinding(binding) || !bindingCurrent(snapshot, binding, context) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return undefined
       const mutation = createDashboardPreparedMutation({ actorId: actor.id, target: binding.command.target, command: binding.command.command,
         baseDigest: binding.baseDigest, previewDigest: binding.previewDigest, idempotencyKey: binding.command.idempotencyKey, mutationScope: binding.mutationScope,
         projectScope: (current, _actor, scope) => projectSfSourceScope("dashboard", current, scope, allowed.environment.at) })
@@ -283,7 +286,8 @@ export function createSfDashboardDecisions(input: {
   const execute = createPreparedExecution({ state, host, apply: applyPort, authorizeCase, authorizeApplication,
     confirmApplication: async (request, context) => {
       const value = admitted.get(context)
-      return !!value && sameApplyRequest(value.request, request) && await human.authorize(context, "decisions.apply", value.request)
+      return !!value && value.mode === "apply" && sameApplyRequest(value.request, request) &&
+        await human.authorize(context, "decisions.apply", value.admission) && await applicationIntents.reserve(value.request, context)
     },
     operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
     reviewDigestFor, revalidateProducer: async (request, context) => {
@@ -297,6 +301,33 @@ export function createSfDashboardDecisions(input: {
         target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
       return { state: receipt.result.ok ? "applied" : receipt.result.status === 409 ? "conflict" : "failed", evidence: { ...initial, refDigest: digestSfEvidenceRef(initial) } }
     } })
+  const executeApplication = async (incoming: AdmittedApply | DashboardRecoverRequest, context: TrustedDomainContext, mode: "apply" | "recover") => {
+    const admission = structuredClone(incoming), digest = digestSfValue(admission)
+    const unchanged = () => digestSfValue(incoming) === digest && digestSfValue(admission) === digest
+    if (!unchanged() || context.kind !== "ui" || !await human.authorize(context, "decisions.apply", admission) || !unchanged())
+      return { status: "denied" as const, reason: "human-application-required" }
+    if (mode === "apply" ? !("reviewDigest" in admission) || !/^[a-f0-9]{64}$/.test(admission.reviewDigest) :
+      !("purpose" in admission) || admission.purpose !== "recover")
+      return { status: "denied" as const, reason: "application-intent-required" }
+    const source = host.requestFor(context)
+    if (!source || admitted.has(context)) return { status: "denied" as const, reason: "application-authority-unavailable" }
+    const restored = "purpose" in admission ? await applicationIntents.read(admission, context) : { status: "ok" as const, value: admission }
+    if (!unchanged()) return { status: "denied" as const, reason: "application-intent-changed" }
+    if (restored.status !== "ok") return restored
+    const request = restored.value
+    const environment = await host.environment(source)
+    const captured = await host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
+      value: { actor: await actorFor(snapshot, context), roles: digestSfValue(roleMap(snapshot, "dashboard")), access: digestSfValue(object(snapshot.data.access)[context.binding.principalRef]) } }))
+    if (!captured.actor || !unchanged()) return { status: "denied" as const, reason: "application-authority-unavailable" }
+    admitted.set(context, { ...captured, actor: captured.actor, request: structuredClone(request), admission, mode, environment })
+    try {
+      // The current human grant covers this recovery selector; only the protected
+      // original request supplies its review proof. Recover cannot dispatch.
+      return await applicationEgress(incoming, context, () => execute({
+        caseRef: request.caseRef, changeId: request.changeId, choiceId: request.choiceId,
+      }, context, mode))
+    } finally { admitted.delete(context) }
+  }
   return {
     revalidateDraftRead,
     resolveEvidence: evidence.resolveEvidence,
@@ -459,18 +490,8 @@ export function createSfDashboardDecisions(input: {
       return saved.status === "ok" && saved.value ? { status: "ok", value: saved.value } : { status: saved.status === "conflict" ? "conflict" : "unavailable", reason: "hot-topic-preparation-not-persisted" }
     },
     review,
-    apply: async (request: AdmittedApply, context: TrustedDomainContext) => {
-      if (context.kind !== "ui" || !/^[a-f0-9]{64}$/.test(request.reviewDigest) || !await human.authorize(context, "decisions.apply", request)) return { status: "denied" as const, reason: "human-application-required" }
-      const source = host.requestFor(context)
-      if (!source || admitted.has(context)) return { status: "denied" as const, reason: "application-authority-unavailable" }
-      const environment = await host.environment(source)
-      const captured = await host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
-        value: { actor: await actorFor(snapshot, context), roles: digestSfValue(roleMap(snapshot, "dashboard")), access: digestSfValue(object(snapshot.data.access)[context.binding.principalRef]) } }))
-      if (!captured.actor) return { status: "denied" as const, reason: "application-authority-unavailable" }
-      admitted.set(context, { ...captured, actor: captured.actor, request: structuredClone(request), environment })
-      try { return await applicationEgress(request, context, (captured) => execute({ caseRef: captured.caseRef, changeId: captured.changeId, choiceId: captured.choiceId }, context)) }
-      finally { admitted.delete(context) }
-    },
+    apply: (request: AdmittedApply, context: TrustedDomainContext) => executeApplication(request, context, "apply"),
+    recover: (request: DashboardRecoverRequest, context: TrustedDomainContext) => executeApplication(request, context, "recover"),
   }
 }
 

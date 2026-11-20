@@ -248,6 +248,10 @@ export function createSfDomainClient(transport: SfTransport) {
       input: typeof SfDomain.operations["dashboard.dashboard-hot-topic-review"]["input"]["Type"],
       options: SfCallOptions,
     ) => transport.execute(SfDomain.operations["dashboard.dashboard-hot-topic-review"], input, options),
+    "dashboard.dashboard-hot-topic-recover": (
+      input: typeof SfDomain.operations["dashboard.dashboard-hot-topic-recover"]["input"]["Type"],
+      options: SfCallOptions,
+    ) => transport.execute(SfDomain.operations["dashboard.dashboard-hot-topic-recover"], input, options),
     "dashboard.dashboard-hot-topic-apply": (
       input: typeof SfDomain.operations["dashboard.dashboard-hot-topic-apply"]["input"]["Type"],
       options: SfCallOptions,

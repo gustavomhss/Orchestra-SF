@@ -86,7 +86,13 @@ export async function createConsumerReadFixture() {
           id === "dashboard.dashboard-draft-read" ? decisions.revalidateDraftRead :
           id === "dashboard.dashboard-hot-topic-draft" ? decisions.drafts.register :
           id === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list :
-          id === "dashboard.dashboard-capture" ? dashboard.capture : decisions.drafts.lookupFirstSave
+          id === "dashboard.dashboard-capture" ? dashboard.capture :
+          id === "dashboard.dashboard-hot-topic-draft-outcome" ? decisions.drafts.lookupFirstSave :
+          id === "dashboard.dashboard-hot-topic-prepare" ? decisions.prepare :
+          id === "dashboard.dashboard-hot-topic-review" ? decisions.review :
+          id === "dashboard.dashboard-hot-topic-apply" ? decisions.apply :
+          id === "dashboard.dashboard-hot-topic-recover" ? decisions.recover : undefined
+        if (!operation) return undefined
         return { producer: http, handler: http, operation,
           dependencies: [authority, authority.ui, authority.state, authority.human, dashboard, decisions,
             records, persistence, persistence.transaction, persistence.transactionAll!] }
@@ -132,5 +138,7 @@ export async function createConsumerReadFixture() {
     })
   expect(seeded.status).toBe("ok")
   return { origin, identity, policy, clock, httpTrace, principalRef, persistence, authority, dashboard, decisions, records, request, read,
+    selectProject: (projectId: string) => { binding.projectId = projectId },
+    selection: () => ({ server: origin, project: binding.projectId, installation: binding.installationId }),
     close: async () => { business.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
