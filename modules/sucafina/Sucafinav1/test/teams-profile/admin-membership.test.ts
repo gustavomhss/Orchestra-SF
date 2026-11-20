@@ -347,7 +347,7 @@ for (const operation of ["group", "team"] as const) {
     { status: 404, reason: "provider_unavailable" },
     { status: 429, reason: "throttled" },
     { status: 503, reason: "provider_unavailable" },
-  ]) {
+  ] as const) {
     test(`admin-${operation}: HTTP ${failure.status} is unavailable, sanitized, and never retried`, async () => {
       const f = await microsoftFixture({ teams: "direct" })
       const session = await login(f)

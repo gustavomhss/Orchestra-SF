@@ -148,7 +148,8 @@ for (const [name, callback] of [
   ["empty parameter table", (test) => test.each([])("denial %i", (value) => value)],
   ["unreviewed structured parameter", (test) => test.each([{ id: 1 }])("value %p", (value) => value)],
   ["retry option", (test) => test("retry", () => {}, { retry: 1 })],
-  ["skipped case", (test) => test.skip("skip", () => {})],
+  // This is the synthetic registrar under test; the real Node test must run and reject it.
+  ["skipped case", (registerCase) => registerCase.skip("skip", () => {})],
 ]) test("registration refuses " + name, () => {
   const input = registration()
   assert.throws(() => input.register(POOL_STARTUP, callback))
