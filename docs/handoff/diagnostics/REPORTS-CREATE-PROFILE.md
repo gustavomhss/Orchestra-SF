@@ -3,12 +3,12 @@
 ## State and question
 
 Prepared over product `6c6303f5a52cd6123762f8875b33822ba28e1ed8`, tree
-`a88331c0e06fccdaf41e946a30a7ce8f0b93d3a1`. This candidate has not run.
+`a88331c0e06fccdaf41e946a30a7ce8f0b93d3a1`. The candidate completed two compiler checks and one installed diagnostic; results are recorded below.
 All added observers, the copied diagnostic spec, request, and this manifest are
 CI-only. None is an integration candidate. No workflow or product authorization
 contract is changed.
 
-The original nominal is run44675679976, head46a4d879e86077a6ab35f0fd64b3df86e8807a33:
+The original nominal is run 44675679976, head46a4d879e86077a6ab35f0fd64b3df86e8807a33:
 one passed and three timed out. Its retained RPT02 UI has an existing question
 intent and an enabled Reconcile action after the missing response. That locates
 the browser after context/storage preflights, but does not prove that the create
@@ -22,7 +22,7 @@ This diagnostic asks only:
 3. How many actual canonical traversals/materializations/copies and queue/lock
    waits occur within that Request, and how much inclusive time do they consume?
 
-The browser client already has its original30000ms fetch deadline. This observer
+The browser client already has its original30000 ms fetch deadline. This observer
 adds no deadline, timer, sleep, abort, retry, request, SQL, hash, or serialization
 of domain values. If the server receives no abort event, the report must say so.
 Server elapsed30s is not proof of a client abort or network delivery.
@@ -83,7 +83,7 @@ all real providers at their original places.
 ## Literal restoration and selection proof
 
 Removing only the recorded imports/observer statements/wrappers reconstructs
-each of the seven existing files byte for byte from6c630. Await token counts are:
+each of the seven existing files byte for byte from 6c630. Await token counts are:
 
 | File | Before | After |
 |---|---:|---:|
@@ -131,12 +131,12 @@ duplicate metric codes and lines over16384 characters. No arbitrary line/chunk
 is newly forwarded.
 
 - v=1.
-- event:1 begin after route classification;2 phase;3 progress at an existing
-  metric completion after at least2000ms;4 observed Request abort;5 fulfilled;
+- event:1 begin after route classification; 2 phase; 3 progress at an existing
+  metric completion after at least2000 ms; 4 observed Request abort; 5 fulfilled;
   6 rejected. There is no progress timer.
-- owner:1 Request;2 local maintenance. Maintenance emission stays disabled.
-- mode:1 review-thread-context;2 collaboration-storage-version;3 collaboration-thread-create.
-- method:0 other;1 GET;2 POST;3 HEAD.
+- owner:1 Request; 2 local maintenance. Maintenance emission stays disabled.
+- mode:1 review-thread-context; 2 collaboration-storage-version; 3 collaboration-thread-create.
+- method:0 other; 1 GET; 2 POST; 3 HEAD.
 - active: [open Request scopes, open local-maintenance scopes].
 - metrics: [code, call count, inclusive milliseconds, maximum numeric units].
   Units are existing string/plan lengths only; no body is serialized to measure size.
@@ -240,6 +240,121 @@ CPU instrumentation is added. This first profile answers create arrival/phase
 progress and its canonical/materialization costs only. It does not infer a
 production fix, allow fewer callbacks, or reuse a grant across Requests/leases.
 
-Status: prepared, not executed. Root cold review is required before the two
-compiler checks and the single installed diagnostic. No nominal retry,
-integration, sf-ci, or unchanged diagnostic rerun is authorized by this file.
+Status: compiler 2 green; the single installed diagnostic reproduced the original
+RPT02 timeout. No runtime fix, nominal retry, integration, sf-ci, or unchanged
+diagnostic rerun follows from this evidence.
+
+## Executed evidence — 2026-11-20 UTC
+
+Candidate: `a35400f38ebe523ebbb03f786ae66f791068e161`, tree
+`e56d8b0d4a7deccb1c73a779984a1078e64e0338`, over product 6c630.
+Its only change after cold review of 01821 was a try/catch around the collector's
+console.info; it cannot interrupt the original stream/readiness.
+
+Compiler run **44683915808**, job **136113592209**, cleanup **136114496401**
+completed successfully on snapshot
+`c900d063d0aa627a74b299b57aaa282d250f72ea`, tree
+`608c240a14666f2a5772024b64586aadce099629`. The only snapshot paths were request
+e359ff4033d50207f9770b1838b3667a6453321e and the qualified compiler harness
+fc4819c918d7326ae16628f625a9e39fd1b8ccff. Both actual bun run typecheck calls
+printed the exact a354 candidate marker. Results: **2 pass, 0 fail, 0 skip, 0
+cancel**, 60103.993249 ms; Sucafina32033.892852 ms, CLI28025.618151 ms.
+
+The single installed diagnostic is run **44684328393**, job **136114936180**,
+cleanup **136116721871**. Head
+`5b12edd86f91c5458f57ad23964360596c7c471b` is a direct child of a354 with the
+**same tree e56d8b0d4a7deccb1c73a779984a1078e64e0338 and zero changed paths**.
+Request 2af4a561cfbde6278d8de11c42a5cb552ce0f297 and copied spec
+42ce80921cbfd7c6c9194ce88745a21ea861dd50 were read back before the single trigger.
+
+Attempt1 started05:56:23Z and completed failure at06:01:38Z; cleanup succeeded.
+The complete RPT02 timed out at its original180000 ms. Its final stack was
+page.unroute at lost-created-thread-read.ts:142 and the copied spec:33.
+That final cleanup exception does not identify the internal stalled server
+phase. No second attempt, cancel, nominal, or sf-ci was run.
+
+Artifact 14606525451 is playwright-ubuntu-24.04-1, 313185 bytes, SHA256
+4261b4c839d4ab8a43964e113a24dd5643bd34091e4121d4a92bb65d1ad2246e.
+The following observations use only the completed job log. No artifact body or
+trace was read.
+
+### Exact retained records
+
+[REPORTS-CREATE-PROFILE-44684328393.json](REPORTS-CREATE-PROFILE-44684328393.json)
+preserves all **137** valid numeric records, each with its original ISO log
+timestamp and no ANSI. No record was rejected. Removing the added at field and
+serializing each wire object exactly reproduces its original JSON line.
+
+Five observed Requests are distinct. Numbers below are ephemeral observer IDs:
+
+| Request | Mode | Last elapsed ms | Last event |
+|---:|---|---:|---|
+|35|review-thread-context|15979.282834000005|fulfilled|
+|37|collaboration-storage-version|37.06018299999414|fulfilled|
+|38|review-thread-context|15973.910994999998|fulfilled|
+|39|collaboration-storage-version|36.75556599999254|fulfilled|
+|42|collaboration-thread-create|95240.13313899998|progress, not settled|
+
+### Request 42 reached the real create
+
+Its begin event is at05:59:44.2904371Z. HTTP admission completed at
+17.175627999997232 ms, create entered at18.090775999997277 ms and its actual
+captured Request matched the entry Request (metric 17 count1; no mismatch
+record). The actual Review state read completed at37.30943299998762 ms.
+
+prepareReviewFence entered at42.20078799998737 ms and completed at
+25116.63474699999 ms: **25074.433959 ms** for that existing await.
+mutationFence entered at25116.750818 ms. Its final retained progress record is
+at06:01:19.5305977Z, 95240.13313899998 ms from server scope start.
+
+There is **no phase 24 mutation-fence-done**, no final thread C08 phase 25–28,
+no egress phase 29–31, and no fulfilled/rejected or abort event for this Request
+in the retained prefix. Internal readonly C08 work exists within the earlier
+fences, so absence of the final thread C08 phase is not absence of all C08 work.
+No commit or rollback conclusion is inferred.
+
+### Measured phases and costs
+
+The table reports differences between cumulative metric snapshots. The second
+row is a completed await. The third is only an observed prefix of an await.
+
+| Phase | Observed wall ms | Canonical count / inclusive ms | Clone count / inclusive ms | Materialize count / inclusive ms | Queue inclusive ms |
+|---|---:|---|---|---|---:|
+|Before prepareReviewFence|42.147809999994934|426 /5.699363999912748|0 /0|23 /12.717974999992293|0.024254999996628612|
+|prepareReviewFence completed|25074.433959|171794 /5537.539534004682|2836 /11824.99461899983|2461 /687.766544000202|996.8835999998555|
+|mutationFence retained prefix, incomplete|70123.38232099998|443696 /14742.308984004761|5530 /36293.00852700026|8724 /573.4766649981902|0.7788929999805987|
+
+At the last Request 42 record, cumulative observations were:
+
+- Canonical:615916 calls, 20285.547882009356 ms.
+- cloneSnapshot:8366 calls, 48118.00314600009 ms.
+- Materialization-plan:11208 calls, 1273.9611839983845 ms.
+- Queue wait:254 calls, 997.6867479998327 ms; the immediate predecessors were
+  classified Request, not maintenance. Their mirrored997.8374749998766 ms
+  includes the intervening observation and must not be added again.
+- Write lock:676 calls, 6.5368650001473725 ms.
+- Memo hits:676 for each of dashboard/planner/procurement. Maximum existing
+  payload string units:1156242/705/978; plan units 1950000.
+  No memo-miss, decode or planning metric was observed in Request 42.
+- Observer clocks:1913960 reads. Metric-map bookkeeping638703 updates,
+  49.1241289999889 ms. Prior output emission66 calls, 3.944314000022132 ms.
+  These overhead intervals retain the lower-bound caveats above.
+
+Full clone time is the largest measured inclusive subtotal, especially after
+mutationFence starts. This is evidence for examining the actual clone callsites,
+not evidence that callbacks, validations or authorization can be removed.
+The three measured children do not form an exhaustive disjoint partition;
+do not label their remainder exclusive CPU or add overlapping spans.
+
+### Abort and completion limits
+
+The observer saw **no server Request abort event**. The create continued emitting
+beyond30s of server elapsed time, but this does not establish when/if a client
+abort propagated. The client30000 ms timer remained unchanged. The last progress
+record is not completion of the mutation fence, nor a terminal result. The
+scenario/fixture teardown eventually stopped the installation with that work
+still lacking a retained settlement event.
+
+No product change or new run is authorized by this result. The next task is a
+static causal proposal preserving every real callback and all28 conditional
+successful-path validations already described in the [retained static triage](https://github.com/gustavomhss/Orchestra-SF/blob/ec6b8c6821716d9df40bdea31cd774bacfb4f8ac/docs/handoff/diagnostics/REPORTS-C05-CREATE-TRIAGE.md).
