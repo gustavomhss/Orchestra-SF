@@ -46,7 +46,7 @@ async function fixture() {
     list: () => Effect.succeed([]), directories: () => Effect.succeed([]), commit: () => Effect.void,
   }))
   const layer = () => AppNodeBuilder.build(LayerNode.group([
-    SessionV2.node, SessionOwner.node, SessionExecution.node, SessionProcess.node, ScheduledTask.node,
+    Database.node, SessionV2.node, SessionOwner.node, SessionExecution.node, SessionProcess.node, ScheduledTask.node,
     ScheduledTask.daemonNode, HostMaintenance.node,
   ]), [
     [Database.node, Database.layerFromPath(filename)], [ProjectV2.node, projects],
