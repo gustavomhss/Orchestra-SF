@@ -1,8 +1,9 @@
+import { sfSameOwnerSelection } from "../../navigation-state/owner"
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSfContext } from "../../context"
-import type { SfContext, SfEditScopeKey, SfSurfaceProps } from "../../context/contracts"
+import type { SfReadableContext, SfEditScopeKey, SfSurfaceProps } from "../../context/contracts"
 import type { SfDraftState, SfPendingOperation } from "../../shared/draft"
 import type { SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
@@ -50,7 +51,7 @@ const scoreValue = (scores:QuoteEdit["scores"], index:number):string|number|null
 }
 
 /** Source-read and editable-stage admission must not depend on operational save. */
-export function sourcingDraftReadAuthorized(row:SourcingRequest,context:SfContext):boolean {
+export function sourcingDraftReadAuthorized(row:SourcingRequest,context:SfReadableContext):boolean {
   if(!editableStages.some((stage)=>stage===row.status)||
     row.allowedDraftActions?.includes("save-sourcing")!==true||
     !context.destinations.some((destination)=>destination.capabilityId==="CAP25"&&
@@ -113,9 +114,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const state=host.state(),ready=host.ready()
     if(state.status!=="ready"||!ready)return null
     const selected=props.route.ownerSelection
-    if(state.selection.serverKey!==selected.serverKey||
-      state.selection.projectId!==selected.projectId||
-      state.selection.installationId!==selected.installationId)return null
+    if(!sfSameOwnerSelection(state.selection, selected))return null
     return JSON.stringify([state.ownerKey,host.generation(),state.owner.authEpoch,state.context.stamp,props.route.href])
   }
   const directRef=()=>props.route.kind==="sourcing"||props.route.kind==="quotes"||

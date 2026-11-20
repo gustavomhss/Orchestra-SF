@@ -13,6 +13,8 @@ export function createSfTeamProfileClient(options: Readonly<{
 }>): Readonly<{
   list(options: SfCallOptions): Promise<SfTransportResult<TeamProfile.AdminListResult>>
   configure(command: TeamProfile.AdminCommand, options: SfCallOptions): Promise<SfTransportResult<TeamProfile.AdminConfigureResult>>
+  readConfiguration(profile: TeamProfile.Ref, options: SfCallOptions): Promise<SfTransportResult<TeamProfile.ConfigurationReadResult>>
+  configureDocument(command: TeamProfile.ConfigurationCommand, options: SfCallOptions): Promise<SfTransportResult<TeamProfile.AdminConfigureResult>>
 }> {
   const binding = structuredClone(options.binding)
   const bindingText = JSON.stringify(binding)
@@ -27,18 +29,28 @@ export function createSfTeamProfileClient(options: Readonly<{
     installationId: binding.installationId, tenantId: binding.tenantId }).toString()
 
   const send = async <Output>(
-    schema: Schema.Schema<Output>, command: TeamProfile.AdminCommand | undefined, call: SfCallOptions,
+    schema: Schema.Schema<Output>, command: TeamProfile.AdminCommand | TeamProfile.ConfigurationCommand | undefined,
+    call: SfCallOptions, configuration?: TeamProfile.Ref,
   ): Promise<SfTransportResult<Output>> => {
     const fail = (reason: SfTransportFailure["reason"]): SfTransportFailure => ({ kind: "transport-error", reason })
     if (!valid || !url || !current() || typeof window === "undefined" || window.location.origin !== binding.publicOrigin)
       return fail("contract-mismatch")
     if (call.signal.aborted) return fail("aborted")
     if (call.idempotencyKey !== undefined || call.retry !== undefined) return fail("contract-mismatch")
-    if (command && (!Schema.is(TeamProfile.AdminCommand)(command) ||
-      command.profile.installationId !== binding.installationId || command.profile.tenantId !== binding.tenantId))
+    if (configuration && (!Schema.is(TeamProfile.Ref)(configuration) ||
+      configuration.installationId !== binding.installationId || configuration.tenantId !== binding.tenantId))
       return fail("contract-mismatch")
+    if (command && (!(configuration ? Schema.is(TeamProfile.ConfigurationCommand)(command) : Schema.is(TeamProfile.AdminCommand)(command)) ||
+      command.profile.installationId !== binding.installationId || command.profile.tenantId !== binding.tenantId ||
+      configuration && command.profile.teamObjectId !== configuration.teamObjectId))
+      return fail("contract-mismatch")
+    const endpoint = new URL(url.href)
+    if (configuration) {
+      endpoint.pathname += "/configuration"
+      if (!command) endpoint.searchParams.set("teamObjectId", configuration.teamObjectId)
+    }
     const body = command ? JSON.stringify(command) : undefined
-    if (body && new TextEncoder().encode(body).byteLength > 8192) return fail("contract-mismatch")
+    if (body && new TextEncoder().encode(body).byteLength > (configuration ? 65536 : 8192)) return fail("contract-mismatch")
     const controller = new AbortController()
     const stopped = Promise.withResolvers<undefined>()
     const abort = () => { controller.abort(); stopped.resolve(undefined) }
@@ -49,7 +61,7 @@ export function createSfTeamProfileClient(options: Readonly<{
     try {
       if (call.signal.aborted || !current()) return fail("aborted")
       dispatched = true
-      const response = await Promise.race([options.fetch(url.href, {
+      const response = await Promise.race([options.fetch(endpoint.href, {
         method: command ? "POST" : "GET", credentials: "same-origin", cache: "no-store", redirect: "error",
         signal: controller.signal,
         headers: { Accept: "application/json", ...(command ? { "Content-Type": "application/json" } : {}) },
@@ -84,7 +96,11 @@ export function createSfTeamProfileClient(options: Readonly<{
       const parsed = Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value)
       if (Option.isNone(parsed) || !validStatus(value, response.status) || controller.signal.aborted || !current() ||
         Schema.is(TeamProfile.AdminListResult)(value) && value.status === "ok" &&
-          value.profiles.some((entry) => entry.profile.installationId !== binding.installationId || entry.profile.tenantId !== binding.tenantId))
+          value.profiles.some((entry) => entry.profile.installationId !== binding.installationId || entry.profile.tenantId !== binding.tenantId) ||
+        configuration && Schema.is(TeamProfile.ConfigurationReadResult)(value) && value.status === "ok" &&
+          (value.configuration.profile.installationId !== configuration.installationId ||
+            value.configuration.profile.tenantId !== configuration.tenantId ||
+            value.configuration.profile.teamObjectId !== configuration.teamObjectId))
         return fail(command ? "outcome-unknown" : "invalid-response")
       return { kind: "response", status: response.status,
         headers: { "content-type": response.headers.get("content-type")! }, body: parsed.value }
@@ -103,6 +119,14 @@ export function createSfTeamProfileClient(options: Readonly<{
   return Object.freeze({
     list: (call: SfCallOptions) => send(TeamProfile.AdminListResult, undefined, call),
     configure: (command: TeamProfile.AdminCommand, call: SfCallOptions) => send(TeamProfile.AdminConfigureResult, command, call),
+    readConfiguration: async (profile: TeamProfile.Ref, call: SfCallOptions): Promise<SfTransportResult<TeamProfile.ConfigurationReadResult>> => {
+      if (!Schema.is(TeamProfile.Ref)(profile)) return { kind: "transport-error", reason: "contract-mismatch" }
+      return send(TeamProfile.ConfigurationReadResult, undefined, call, profile)
+    },
+    configureDocument: async (command: TeamProfile.ConfigurationCommand, call: SfCallOptions): Promise<SfTransportResult<TeamProfile.AdminConfigureResult>> => {
+      if (!Schema.is(TeamProfile.ConfigurationCommand)(command)) return { kind: "transport-error", reason: "contract-mismatch" }
+      return send(TeamProfile.AdminConfigureResult, command, call, command.profile)
+    },
   })
 }
 

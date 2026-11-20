@@ -679,6 +679,46 @@ export function createSfTransport(options: Readonly<{
   return transport
 }
 
+/**
+ * Microsoft Web authentication is independent of Team/business admission.
+ * The configured descriptor fixes both URLs; no login token, Basic credential,
+ * Team selector or caller return route crosses this boundary.
+ */
+export function createSfTeamAuthActions(options: Readonly<{
+  binding: SfTeamInstallationDescriptor
+  fetch: SfTransportFetch
+  navigate(validatedSameOriginUrl: string): void
+}>): Readonly<{ login(): void; logout(): Promise<void> }> {
+  const binding = structuredClone(options.binding)
+  const valid = () => Schema.is(SfTeamInstallationDescriptor)(binding) &&
+    /^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(binding.mount) &&
+    URL.canParse(binding.publicOrigin) && new URL(binding.publicOrigin).origin === binding.publicOrigin &&
+    new URL(binding.publicOrigin).protocol === "https:" &&
+    typeof window !== "undefined" && window.location.origin === binding.publicOrigin
+  return Object.freeze({
+    login() {
+      if (!valid()) throw new Error("SF_NATIVE_AUTH_CONTEXT_MISMATCH")
+      const target = new URL(binding.mount + "/auth/login", binding.publicOrigin)
+      target.search = new URLSearchParams({ returnTo: "/" }).toString()
+      options.navigate(target.href)
+    },
+    async logout() {
+      if (!valid()) throw new Error("SF_NATIVE_AUTH_CONTEXT_MISMATCH")
+      const controller = new AbortController(), stopped = Promise.withResolvers<undefined>()
+      const stop = () => { controller.abort(); stopped.resolve(undefined) }
+      const timer = setTimeout(stop, 10000)
+      try {
+        const response = await Promise.race([options.fetch(binding.publicOrigin + binding.mount + "/auth/logout", {
+          method: "POST", credentials: "same-origin", cache: "no-store", redirect: "error",
+          signal: controller.signal, headers: { "Idempotency-Key": crypto.randomUUID() },
+        }), stopped.promise])
+        if (!response || controller.signal.aborted || response.status !== 204 || !valid())
+          throw new Error("SF_NATIVE_REMOTE_LOGOUT_UNCONFIRMED")
+      } finally { clearTimeout(timer); stop() }
+    },
+  })
+}
+
 export function createSfAuthActions(options: Readonly<{
   binding: SfInstallationDescriptor
   desktop?: SfDesktopCapability

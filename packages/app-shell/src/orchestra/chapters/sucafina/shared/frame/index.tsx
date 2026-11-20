@@ -1,3 +1,4 @@
+import { useSfTeamLabel } from "../team-label"
 import { getFilename } from "@orchestra/core/util/path"
 import { A, useLocation } from "@solidjs/router"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, onMount, Show } from "solid-js"
@@ -75,7 +76,9 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
   const layout = shellContext(useLayout)
   const global = shellContext(useGlobal)
   const server = shellContext(useServer)
+  const teamLabel = useSfTeamLabel()
   const profileName = () => {
+    if (teamLabel) return teamLabel()
     if (!layout || !global) return ""
     const selection = layout.home.selection()
     const conn = global.servers.list().find((item) => ServerConnection.key(item) === selection.server)

@@ -616,7 +616,7 @@ import { makeActionsTransfers } from "./actionsTransfers"
 
 export interface ClientOptions {
   readonly baseUrl: string
-  readonly fetch?: typeof globalThis.fetch
+  readonly fetch?: (...args: Parameters<typeof globalThis.fetch>) => ReturnType<typeof globalThis.fetch>
   readonly headers?: HeadersInit
 }
 

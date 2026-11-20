@@ -151,12 +151,19 @@ test.each(["tenant", "audience", "nonce", "expired", "signature", "algorithm"] a
   expect((await begun.callback())?.status).toBe(403)
 })
 
-test("unsafe return targets stay within real Sucafina surfaces", async () => {
+test("Microsoft sign-in returns only to the native root and never replays private or retired routes", async () => {
   const f = await fixture()
   for (const returnTo of ["https://attacker.example", "//attacker.example", "/sucafina/../api", "/sucafina/planner\\@attacker.example", "/sucafina/auth/logout"]) {
-    expect((await f.login(oid, returnTo)).response.headers.get("location")).toBe(`${mount}/dashboard`)
+    expect((await f.login(oid, returnTo)).response.headers.get("location")).toBe("/")
   }
-  expect((await f.login(oid, `${mount}/procurement?page=pending`)).response.headers.get("location")).toBe(`${mount}/procurement?page=pending`)
+  expect((await f.login(oid, `${mount}/procurement?page=pending`)).response.headers.get("location")).toBe("/")
+  for (const returnTo of ["/", "/?auth_token=private", "/#private", "/sucafina/dashboard", "/sucafina/planner",
+    "/orchestra/sf-home?contractRevision=sf-team-profile%2F1&installationId=private&tenantId=private&teamObjectId=private"]) {
+    const login = await f.login(oid, returnTo)
+    expect(login.response.headers.get("location")).toBe("/")
+    expect(login.response.headers.get("cache-control")).toBe("no-store")
+    expect(await f.identity.person(f.request("/planner", login.cookie))).not.toBeNull()
+  }
 })
 
 test("immutable individual subjects receive only current assigned surface roles", async () => {

@@ -1,3 +1,4 @@
+import { SF_TEAMS_COPY, SF_TEAMS_COPY_BR } from "./orchestra-chapters/sf-teams"
 import { HOME_COPY, HOME_COPY_BR } from "./orchestra-chapters/home"
 import { SHELL_COPY, SHELL_COPY_BR } from "./orchestra-chapters/shell"
 import { SF_CONTEXT_COPY, SF_CONTEXT_COPY_BR } from "./orchestra-chapters/sf-context"
@@ -420,6 +421,7 @@ export const ORCHESTRA_COPY = {
   ...HOME_COPY,
   ...SHELL_COPY,
   ...SF_CONTEXT_COPY,
+  ...SF_TEAMS_COPY,
   ...SF_COMMON_COPY,
   ...SF_S02_COPY,
   ...SF_S03_COPY,
@@ -825,6 +827,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...HOME_COPY_BR,
   ...SHELL_COPY_BR,
   ...SF_CONTEXT_COPY_BR,
+  ...SF_TEAMS_COPY_BR,
   ...SF_COMMON_COPY_BR,
   ...SF_S02_COPY_BR,
   ...SF_S03_COPY_BR,

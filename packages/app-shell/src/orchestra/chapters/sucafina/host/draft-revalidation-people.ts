@@ -2,7 +2,7 @@ import { Option, Schema } from "effect"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfPeopleStructureSelection, SfPeopleTalentSelection } from "@orchestra/schema/sucafina/people"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 const cioFields = ["name", "title", "location", "start"]
@@ -11,7 +11,7 @@ const memberFields = ["name", "title", "type", "leaderId", "location", "start", 
 const talentFields = [...memberFields, "cls", "outlook", "notes"]
 
 export async function revalidatePeopleDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (signal.aborted) return { status: "unavailable" }
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||

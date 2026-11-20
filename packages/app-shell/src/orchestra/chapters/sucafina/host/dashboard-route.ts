@@ -1,11 +1,12 @@
+import { sfOwnerQueryKeys, sfOwnerQueryValid } from "../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { SfDomain, SfDomainPageCap01, SfDomainPageCap03, SfDomainPageCap04, SfDomainPageCap05 } from "@orchestra/schema/sucafina/domain"
 import { SfDomainPageCap02 } from "@orchestra/schema/sucafina/people"
-import type { SfContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfResolvedQuery } from "@orchestra/schema/sucafina/context"
 import type { SfNativeRouteCandidate } from "../route-registry"
 import { parseSfSignalPriorities } from "../dashboard/executive/signals"
 
-const selectors = ["server", "project", "installation"] as const
+const selectors = sfOwnerQueryKeys
 const schemas = { CAP01: SfDomainPageCap01.input, CAP02: SfDomainPageCap02.input,
   CAP03: SfDomainPageCap03.input, CAP04: SfDomainPageCap04.input, CAP05: SfDomainPageCap05.input } as const
 const surfaces = ["CAP01", "CAP02", "CAP03", "CAP04", "CAP05", "UI54"] as const
@@ -18,8 +19,7 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   if (candidate.chapterId === "sf-dashboard" && candidate.surfaceId === "UI54" && candidate.kind === "entry") {
     const keys = [...params.keys()]
     if (new Set(keys).size !== keys.length || keys.some((key) => !selectors.includes(key as typeof selectors[number]))) return
-    const selected = selectors.map((key) => params.get(key))
-    if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+    if (!sfOwnerQueryValid(params)) return
     return {}
   }
   if (candidate.chapterId !== "sf-dashboard" || !(candidate.surfaceId in schemas)) return
@@ -32,8 +32,7 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
   if (new Set(unique).size !== unique.length || keys.some((key) => !allowed.includes(key))) return
   const priorities = parseSfSignalPriorities(params.getAll("signalPriority"))
   if (!priorities) return
-  const selected = selectors.map((key) => params.get(key))
-  if (selected.some((value) => value !== null) && !selected.every((value) => !!value)) return
+  if (!sfOwnerQueryValid(params)) return
   const year = params.get("year"), month = params.get("month"), status = params.get("status")
   if (year !== null && !/^\d{4}$/.test(year) || month !== null && !/^(?:[1-9]|1[0-2])$/.test(month)) return
   if (status !== null && !["open", "progress", "blocked", "done"].includes(status)) return
@@ -46,7 +45,7 @@ export function parseDashboardRouteQuery(params: URLSearchParams, candidate: SfN
 }
 
 /** CAP destinations and live operation readiness are prerequisites, not write grants. */
-export function dashboardRouteAvailable(context: SfContext, candidate: SfNativeRouteCandidate): boolean {
+export function dashboardRouteAvailable(context: SfReadableContext, candidate: SfNativeRouteCandidate): boolean {
   if (candidate.chapterId === "sf-dashboard" && candidate.surfaceId === "UI54" && candidate.kind === "entry") {
     return context.availability.some((resource) => resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
         resource.operations.some((operation) => operation.operationId === SfDomain.operations["dashboard.dashboard-workbench"].operationId &&

@@ -1,3 +1,4 @@
+import { sfSameOwnerSelection } from "../../navigation-state/owner"
 import { createEffect, createMemo, createUniqueId, onCleanup, Show, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
@@ -48,8 +49,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps<"CAP25"> & Readonly<{ r
     const state = sf.state(), ready = sf.ready()
     if (state.status !== "ready" || !ready || !refValue()) return null
     const selected = props.route.ownerSelection
-    if (state.owner.serverKey !== selected.serverKey || state.owner.projectId !== selected.projectId ||
-        selected.installationId && state.owner.installationId !== selected.installationId) return null
+    if (!sfSameOwnerSelection(state.selection, selected)) return null
     return JSON.stringify([state.ownerKey, state.owner, sf.generation(), ready.context.stamp, props.route.href, refValue()])
   }
   const selection = (ref: SfRef) => ({ surfaceId: "CAP25" as const,

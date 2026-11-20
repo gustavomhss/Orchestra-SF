@@ -1,6 +1,7 @@
+import { sfSameTeamRef, sfSameContextStamp } from "../navigation-state/owner"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { revalidateRequestsDraft } from "./draft-revalidation-requests"
 import { revalidateSupplierDraft } from "./draft-revalidation-supplier"
 import { revalidateSettingsDraft } from "./draft-revalidation-settings"
@@ -23,12 +24,13 @@ import { revalidatePlannerBudgetDraft } from "./draft-revalidation-planner-budge
 import { revalidatePlannerFxDraft } from "./draft-revalidation-planner-fx"
 
 export async function revalidateSfNativeDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (signal.aborted) return { status: "unavailable" }
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||
       input.originalOwner.projectId !== fresh.stamp.projectId ||
-      input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
+      input.originalOwner.principalRef !== fresh.stamp.principalRef ||
+      !sfSameTeamRef(input.originalOwner.team?.profile, fresh.stamp.team?.owner.profile)) return { status: "authority-changed" }
   if (input.read.operationId === "domain.page.CAP04" || input.read.operationId === "domain.page.CAP05")
     return revalidateBudgetDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP18" || input.read.operationId === "domain.page.CAP19")
@@ -97,7 +99,5 @@ export async function revalidateSfNativeDraft(
 }
 
 export function sameDraftStamp(a: SfContextStamp, b: SfContextStamp) {
-  return a.installationId === b.installationId && a.projectId === b.projectId &&
-    a.hostId === b.hostId && a.principalRef === b.principalRef &&
-    a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
+  return sfSameContextStamp(a, b)
 }

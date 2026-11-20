@@ -1,8 +1,9 @@
+import { sfOwnerMatchesContext } from "../../navigation-state/owner"
 import { Option, Schema } from "effect"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfOwnerSelection, SurfaceId } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext, SfOwnerSelection, SurfaceId } from "@orchestra/schema/sucafina/context"
 import type { SfUiState } from "../../shared/frame"
 import { readSfProjectPage, type SfProjectPage } from "./model"
 
@@ -17,7 +18,7 @@ export type SfProjectCommandResult =
 
 /** True only for the *exact* destination and operation admitted by the owner. */
 export function sfAdmitted(
-  context: SfContext,
+  context: SfReadableContext,
   capability: ProjectSurface,
   operationId: string,
   action?: Command | "import",
@@ -31,9 +32,8 @@ export function sfAdmitted(
   return resource?.operations.some((op) => op.operationId === operationId &&
     op.state === "ready" && op.operational) === true
 }
-export function sfOwnerMatches(context: SfContext, selection: SfOwnerSelection) {
-  return context.stamp.projectId === selection.projectId &&
-    (!selection.installationId || context.stamp.installationId === selection.installationId)
+export function sfOwnerMatches(context: SfReadableContext, selection: SfOwnerSelection) {
+  return sfOwnerMatchesContext(context, selection)
 }
 function failure(status: number, reason: string): SfProjectSourceResult & SfProjectCommandResult {
   return { status: "failed", state: status === 401 ? "session-expired" : status === 403 ? "denied" :

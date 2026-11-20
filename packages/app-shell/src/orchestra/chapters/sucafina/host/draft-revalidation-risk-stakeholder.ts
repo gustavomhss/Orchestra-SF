@@ -1,6 +1,6 @@
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 const riskFields = ["title", "name", "action", "responsible", "desc", "category", "impact", "probability",
@@ -9,7 +9,7 @@ const stakeholderFields = ["name", "position", "title", "company", "department",
   "perc", "priority", "owner", "action", "actions", "notes"]
 
 export async function revalidateRiskStakeholderDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   const risk = input.surfaceId === "CAP13" && input.read.operationId === "domain.page.CAP13"
   const stakeholder = input.surfaceId === "CAP15" && input.read.operationId === "domain.page.CAP15"

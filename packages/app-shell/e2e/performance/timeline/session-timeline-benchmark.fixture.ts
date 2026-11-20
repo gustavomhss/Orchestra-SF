@@ -97,6 +97,27 @@ export async function setupTimelineBenchmark(
 ) {
   const events: EventPayload[] = []
   let eventBatch = options.eventBatch
+  // The mock serves finite SSE batches. Each reconnect revalidates messages,
+  // so its HTTP snapshot must contain the text already delivered by the source.
+  // Otherwise a fresh read erases Text.Started before the next Text.Delta.
+  let streamedText: string | undefined
+  const deliver = () => {
+    const batch = events.splice(0, eventBatch)
+    for (const event of batch) {
+      const properties = event.payload.properties
+      if (!properties || typeof properties !== "object") continue
+      if (event.payload.type === "session.text.started") streamedText ??= ""
+      if (event.payload.type === "session.text.delta" && "delta" in properties && typeof properties.delta === "string")
+        streamedText = (streamedText ?? "") + properties.delta
+    }
+    return batch
+  }
+  const currentAssistant = () => streamedText === undefined ? assistantMessage : {
+    ...assistantMessage,
+    parts: [...assistantMessage.parts, {
+      id: textPartID, sessionID, messageID: assistantMessageID, type: "text", text: streamedText,
+    }],
+  }
   const currentUserMessage = options.turnDiffs
     ? { ...userMessage, info: { ...userMessage.info, summary: { diffs: options.turnDiffs } } }
     : userMessage
@@ -110,14 +131,14 @@ export async function setupTimelineBenchmark(
       items: [
         ...Array.from({ length: options.historyTurns }, (_, index) => performanceTurn(index)).flat(),
         currentUserMessage,
-        assistantMessage,
+        currentAssistant(),
       ],
     }),
     diffs: (_, messageID) =>
       messageID === userMessageID
         ? (options.turnDiffs ?? []).map((diff) => ({ ...diff, path: diff.file, status: "modified" }))
         : [],
-    events: () => events.splice(0, eventBatch),
+    events: deliver,
     eventRetry: 16,
   })
   // The build retains the base config's default backend port while performance workers mock the app port.

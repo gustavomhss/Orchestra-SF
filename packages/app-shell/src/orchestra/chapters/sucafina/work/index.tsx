@@ -1,3 +1,4 @@
+import { sfOwnerQuery, sfSameOwnerSelection } from "../navigation-state/owner"
 import { useNavigate } from "@solidjs/router"
 import { For, Show, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js"
 import { useLanguage } from "@/context/language"
@@ -117,10 +118,7 @@ export function nextNativeWorkRoute(item: Details["item"], s: Snapshot | undefin
     default: return undefined
   }
   // Explicit original owner tuple, never an ambient project or cross-owner link.
-  const query = new URLSearchParams({
-    server: s.selection.serverKey, project: s.selection.projectId,
-    installation: s.selection.installationId,
-  })
+  const query = new URLSearchParams(sfOwnerQuery(s.selection))
   return path + "?" + query.toString()
 }
 
@@ -169,9 +167,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       source.ownerKey === now.ownerKey && source.accessRevision === now.accessRevision &&
       source.transport === now.transport &&
       source.mount === now.mount && source.publicOrigin === now.publicOrigin &&
-      source.selection.serverKey === now.selection.serverKey &&
-      source.selection.projectId === now.selection.projectId &&
-      source.selection.installationId === now.selection.installationId
+      sfSameOwnerSelection(source.selection, now.selection)
   }
   // Abort and erase every private read, including detail and links, on owner/access change.
   createEffect(on(() => {

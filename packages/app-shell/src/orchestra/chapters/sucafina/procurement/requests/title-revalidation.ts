@@ -1,14 +1,14 @@
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
-import type { SfContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../../context/contracts"
+import type { SfReadableContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../../context/contracts"
 import { decodeRequestsPage, isPrWritable, requestRef, requestVersion } from "./model"
 
 export const sameTitleStamp = (a: SfContextStamp, b: SfContextStamp) =>
   a.installationId === b.installationId && a.projectId === b.projectId && a.hostId === b.hostId &&
   a.principalRef === b.principalRef && a.policyVersion === b.policyVersion && a.accessRevision === b.accessRevision
 
-export function titleReadiness(context: SfContext): "ready" | "denied" | "unavailable" {
+export function titleReadiness(context: SfReadableContext): "ready" | "denied" | "unavailable" {
   const resources = context.availability.filter((item) => item.family === "procurement" && item.resource === "CAP25")
   if (resources.length !== 1) return "unavailable"
   const resource = resources[0]!
@@ -27,7 +27,7 @@ export function titleReadiness(context: SfContext): "ready" | "denied" | "unavai
 }
 
 /** A locator is not a grant: read and check the exact original request every time. */
-export async function readRequestTitle(context: SfContext, transport: SfTransport, ref: SfRef, signal: AbortSignal) {
+export async function readRequestTitle(context: SfReadableContext, transport: SfTransport, ref: SfRef, signal: AbortSignal) {
   const readiness = titleReadiness(context)
   if (signal.aborted || readiness !== "ready") return { status: readiness === "ready" ? "unavailable" : readiness } as const
   try {
@@ -53,7 +53,7 @@ export async function readRequestTitle(context: SfContext, transport: SfTranspor
 }
 
 /** Dispatcher integration: retain private values only after original typed read reauthorization. */
-export async function revalidateRequestTitleDraft(input: SfDraftRevalidationInput, fresh: SfContext,
+export async function revalidateRequestTitleDraft(input: SfDraftRevalidationInput, fresh: SfReadableContext,
   transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation> {
   if (signal.aborted || input.surfaceId !== "CAP25" || input.identity.kind !== "record" ||
       !input.identity.recordRef || input.editScopeKey !== "pr.title" || input.read.operationId !== "domain.page.CAP25" ||

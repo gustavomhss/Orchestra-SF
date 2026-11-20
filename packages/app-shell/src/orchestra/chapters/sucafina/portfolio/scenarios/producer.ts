@@ -4,7 +4,7 @@ import { SfPortfolio } from "@orchestra/schema/sucafina/portfolio"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { createSfPortfolioClient } from "@orchestra/client/sucafina/portfolio"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext } from "@orchestra/schema/sucafina/context"
+import type { SfReadableContext } from "@orchestra/schema/sucafina/context"
 import type { SfUiState } from "../../shared/frame"
 import { sfReadControls, sfReadPortfolioHistory, sfReadPortfolioResult, sfReadSensitivityResult,
   sfUnwrapPort, type SfCaseControls, type SfCaseVersionRef, type SfPortfolioHistory,
@@ -65,7 +65,7 @@ const string = (value: unknown): value is string => typeof value === "string"
  * Public routing, successful URL parsing, or a remembered case never confers
  * a grant. Selection/readers are still fenced by the host on each call.
  */
-export function sfPortfolioReady(context: SfContext, operationId: string, family: "portfolio" | "decisions"): boolean {
+export function sfPortfolioReady(context: SfReadableContext, operationId: string, family: "portfolio" | "decisions"): boolean {
   return context.availability.some((resource) =>
     resource.family === family && resource.state === "ready" &&
     resource.operations.some((op) => op.operationId === operationId &&
@@ -101,7 +101,7 @@ export function sfCandidateRef(caseRef: string, caseVersion: number, alternative
     encodeURIComponent(alternativeId) + ":" + alternativeVersion
 }
 export async function sfDecisionControls(
-  transport: SfTransport, context: SfContext, caseRef: string | undefined, signal: AbortSignal,
+  transport: SfTransport, context: SfReadableContext, caseRef: string | undefined, signal: AbortSignal,
 ): Promise<OpResult<SfCaseControls>> {
   const id = "decisions.controls.read"
   if (!sfPortfolioReady(context, id, "decisions")) return fail("decisions-controls-not-admitted", "denied")
@@ -114,7 +114,7 @@ export async function sfDecisionControls(
   return decoded ? { status: "ok", value: decoded } : fail("decisions-controls-projection-mismatch")
 }
 export async function sfPortfolioHistory(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef, signal: AbortSignal,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef, signal: AbortSignal,
 ): Promise<OpResult<SfPortfolioHistory>> {
   const id = "portfolio.decision-portfolio-results"
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("portfolio-results-not-admitted", "denied")
@@ -126,7 +126,7 @@ export async function sfPortfolioHistory(
   return data ? { status: "ok", value: data } : fail("portfolio-results-projection-mismatch")
 }
 export async function sfPortfolioRecorded(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef,
   resultRef: string, signal: AbortSignal,
 ): Promise<OpResult<SfRecordedPortfolioProjection>> {
   const id = "portfolio.decision-portfolio-read"
@@ -145,7 +145,7 @@ export async function sfPortfolioRecorded(
     fail("portfolio-read-projection-mismatch")
 }
 export async function sfPortfolioPreviewRequest(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef,
   request: SfPortfolioRequest, signal: AbortSignal,
 ): Promise<OpResult<SfPortfolioPreview>> {
   const id = "portfolio.decision-portfolio-preview"
@@ -167,7 +167,7 @@ export async function sfPortfolioPreviewRequest(
   return { status: "ok", value: { portfolio, selections, evaluationDigest: source.evaluationDigest } }
 }
 export async function sfPortfolioEvaluate(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef, request: SfPortfolioRequest,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef, request: SfPortfolioRequest,
   idempotencyKey: string, signal: AbortSignal,
 ): Promise<OpResult<SfRecordedPortfolioProjection>> {
   const id = "portfolio.decision-portfolio-evaluate"
@@ -184,7 +184,7 @@ export async function sfPortfolioEvaluate(
     fail("portfolio-evaluate-result-mismatch")
 }
 export async function sfSensitivityUnitsForSelection(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef,
   scenarioRef: string, baselineRef: string, parameterRef: string, signal: AbortSignal,
 ): Promise<OpResult<SfSensitivityUnits>> {
   const id = "portfolio.decision-sensitivity-units"
@@ -212,7 +212,7 @@ export async function sfSensitivityUnitsForSelection(
     unit: raw.units.resultUnit, engineVersion: raw.units.engineVersion, sourceRefs: sources } }
 }
 export async function sfSensitivityRecorded(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef,
   resultRef: string, signal: AbortSignal,
 ): Promise<OpResult<SfRecordedSensitivityProjection>> {
   const id = "portfolio.decision-sensitivity-read"
@@ -230,7 +230,7 @@ export async function sfSensitivityRecorded(
     fail("sensitivity-read-projection-mismatch")
 }
 export async function sfSensitivityEvaluate(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef, request: SfSensitivityRequest,
+  transport: SfTransport, context: SfReadableContext, caseRef: SfCaseVersionRef, request: SfSensitivityRequest,
   idempotencyKey: string, signal: AbortSignal,
 ): Promise<OpResult<SfRecordedSensitivityProjection>> {
   const id = "portfolio.decision-sensitivity-evaluate"
