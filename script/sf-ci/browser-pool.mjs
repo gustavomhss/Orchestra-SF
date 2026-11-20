@@ -140,7 +140,7 @@ function caseRecord(source, ordinal, title, template, parameter, options) {
 export function createPoolRegistry(sources, emit) {
   unique(sources, "duplicate registry sources")
   if (sources[0] !== POOL_STARTUP || sources.at(-1) !== POOL_FINALIZER) fail("lifecycle registration order changed")
-  const cases = [], registered = [], seen = new Set(), outcomes = []
+  const cases = [], queued = [], registered = [], seen = new Set(), outcomes = []
   let sealed = false, current = null, cursor = 0
   const invoke = async (record, fn, args) => {
     if (!sealed || current || cases[cursor]?.id !== record.id) fail("case started out of order, twice, or before complete registration")
@@ -160,7 +160,8 @@ export function createPoolRegistry(sources, emit) {
   }
   return {
     register(source, register, nativeTest, describe) {
-      if (sealed || source !== sources[registered.length] || typeof register !== "function") fail("unknown, duplicate or missing source registration")
+      if (sealed || source !== sources[queued.length] || typeof register !== "function") fail("unknown, duplicate or missing source registration")
+      queued.push(source)
       const own = []
       const add = (title, template, parameter, options) => {
         if (sealed || source !== sources[registered.length]) fail("late or out-of-scope case registration")
@@ -189,13 +190,20 @@ export function createPoolRegistry(sources, emit) {
           }, options)
         }
       }
-      describe(source, () => register(test))
-      if (own.length === 0) fail("source registered no cases: " + source)
-      registered.push(source)
-      emit({ type: "source-registered", source, cases: own.length })
+      // Bun 1.3.14 queues describe callbacks during collection. Registration
+      // completes inside that callback; the entry's root beforeAll seals only
+      // after Bun has collected every scope, before any named case can start.
+      describe(source, () => {
+        if (source !== sources[registered.length]) fail("source collection order changed")
+        register(test)
+        if (own.length === 0) fail("source registered no cases: " + source)
+        registered.push(source)
+        emit({ type: "source-registered", source, cases: own.length })
+      })
     },
     seal() {
       if (sealed) fail("registry already sealed")
+      same(queued, sources, "not every original source was queued exactly once")
       same(registered, sources, "not every original source registered exactly once")
       if (cases[0]?.source !== POOL_STARTUP || cases.at(-1)?.source !== POOL_FINALIZER ||
           cases.filter((item) => item.source === POOL_STARTUP).length !== 1 ||

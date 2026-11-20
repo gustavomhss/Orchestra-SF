@@ -1,4 +1,4 @@
-import { afterAll } from "bun:test"
+import { afterAll, beforeAll } from "bun:test"
 import { pathToFileURL } from "node:url"
 import path from "node:path"
 import { ensureWp01BrowserCleanup, wp01BrowserLifecycleEvidence } from "./browser-fixture.ts"
@@ -27,4 +27,5 @@ for (const source of run.inventory.sources) {
   const { registerPoolTests } = await import(pathToFileURL(path.join(run.repoRoot, source.path)).href)
   run.register(source.path, registerPoolTests)
 }
-run.seal()
+// Bun completes its deferred describe collection before this root hook.
+beforeAll(() => run.seal())

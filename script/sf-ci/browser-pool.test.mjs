@@ -300,3 +300,25 @@ test("verify writes a separate receipt only after all supplied artifacts agree a
     assert.throws(() => verifyPool({ repoRoot: root, output: data.output, env: data.env }), /EEXIST/)
   } finally { rmSync(data.output, { recursive: true, force: true }) }
 })
+
+test("Bun's deferred describe collection finishes before the root beforeAll seals the registry", async () => {
+  const queue = [], events = [], native = adapter()
+  const sources = [POOL_STARTUP, source, POOL_FINALIZER]
+  const registry = createPoolRegistry(sources, (event) => events.push(event))
+  for (const file of sources) registry.register(file, (test) => test("native case", () => {}),
+    native.native, (name, callback) => { queue.push({ name, callback }) })
+  assert.equal(native.records.length, 0, "describe callbacks have only been queued")
+  assert.throws(() => registry.seal(), /not every original source registered/)
+  for (const item of queue) item.callback()
+  registry.seal()
+  assert.deepEqual(events.filter((item) => item.type === "source-registered").map((item) => item.source), sources)
+  for (const item of native.records) await item.fn()
+  assert.deepEqual(registry.complete(), { sourceCount: 3, caseCount: 3 })
+})
+test("a deferred source callback cannot collect out of order", () => {
+  const queue = [], native = adapter()
+  const registry = createPoolRegistry([POOL_STARTUP, source, POOL_FINALIZER], () => {})
+  for (const file of [POOL_STARTUP, source, POOL_FINALIZER]) registry.register(file, (test) => test("case", () => {}),
+    native.native, (_name, callback) => { queue.push(callback) })
+  assert.throws(queue[1], /source collection order changed/)
+})
