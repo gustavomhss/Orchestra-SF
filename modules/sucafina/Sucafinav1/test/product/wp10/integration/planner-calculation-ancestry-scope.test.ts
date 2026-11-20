@@ -320,10 +320,12 @@ test("the authenticated case read keeps both evidence passes inside one complete
     const evidence = fixture.business.evidence.current
     if (!evidence) throw new Error("The real BCS producer was not mounted")
     const original = evidence.context
-    const invocation = new AsyncLocalStorage<{ call: Parameters<typeof original>[1]; depth: number }>()
+    type Phase = "empty-before" | "case" | "empty-after"
+    const invocation = new AsyncLocalStorage<{ call: Parameters<typeof original>[1]; depth: number; phase: Phase }>()
+    const emptyResponses: Awaited<ReturnType<typeof original>>[] = []
     const contexts: {
       requested: Parameters<typeof original>[0]["refs"]; returned: Parameters<typeof original>[0]["refs"]
-      states: BusinessEvidenceResolution["state"][]; depth: number; sameCall: boolean
+      states: BusinessEvidenceResolution["state"][]; depth: number; phase: Phase; sameCall: boolean
       results: number; sources: number; fresh: boolean
     }[] = []
     const leafRefs = digestSfValue([fixture.leaf])
@@ -331,10 +333,10 @@ test("the authenticated case read keeps both evidence passes inside one complete
       const scope = invocation.getStore()
       if (!scope) return original(...args)
       const requested = structuredClone(args[0].refs)
-      return invocation.run({ call: scope.call, depth: scope.depth + 1 }, async () => {
+      return invocation.run({ ...scope, depth: scope.depth + 1 }, async () => {
         const value = await original(...args)
         contexts.push({ requested, returned: structuredClone(value.map((item) => item.ref)),
-          states: value.map((item) => item.state), depth: scope.depth, sameCall: args[1] === scope.call,
+          states: value.map((item) => item.state), depth: scope.depth, phase: scope.phase, sameCall: args[1] === scope.call,
           results: fixture.counts.results, sources: fixture.counts.sources,
           fresh: value.length > 0 && value.every((item) => item.state === "fresh") })
         return value
@@ -343,14 +345,21 @@ test("the authenticated case read keeps both evidence passes inside one complete
     const read = await fixture.run(async (call) => {
       fixture.reset()
       contexts.length = 0
-      return invocation.run({ call, depth: 0 }, () =>
+      // The empty public BCS request is its own real contract. Record-only leaf
+      // replay has no evidence resolver and does not emit an empty child request.
+      emptyResponses.push(await invocation.run({ call, depth: 0, phase: "empty-before" }, () =>
+        fixture.business.context.context({ refs: [] }, call)))
+      const value = await invocation.run({ call, depth: 0, phase: "case" }, () =>
         fixture.business.cases.read({ caseRef: `case:${fixture.caseRef.id}:${fixture.caseRef.incarnation}` }, call))
+      emptyResponses.push(await invocation.run({ call, depth: 0, phase: "empty-after" }, () =>
+        fixture.business.context.context({ refs: [] }, call)))
+      return value
     }).finally(() => invocation.disable())
-    // The case port admits its complete [leaf] evidence twice. Replaying that
-    // leaf also asks BCS about Planner sources and empty operation inputs; keep
-    // those real callbacks, without counting them as extra parent admissions.
-    const passes = contexts.filter((entry) => digestSfValue(entry.requested) === leafRefs)
-    const callbacks = contexts.filter((entry) => digestSfValue(entry.requested) !== leafRefs)
+    // The case port admits its complete [leaf] evidence twice. Retain the actual
+    // nested Planner callbacks separately from both parent and empty admissions.
+    const passes = contexts.filter((entry) => entry.phase === "case" && digestSfValue(entry.requested) === leafRefs)
+    const callbacks = contexts.filter((entry) => entry.phase === "case" && digestSfValue(entry.requested) !== leafRefs)
+    const emptyCallbacks = contexts.filter((entry) => entry.phase !== "case")
     expect(read.status).toBe("ok")
     if (read.status !== "ok") throw new Error("The actual case projection was not returned")
     expect(read.value.case.id).toBe(fixture.caseRef.id)
@@ -368,7 +377,11 @@ test("the authenticated case read keeps both evidence passes inside one complete
       expect(entry.returned).toEqual(entry.requested)
       expect(entry.states).toEqual(entry.requested.map(() => "fresh"))
     }
-    expect(callbacks.some((entry) => entry.requested.length === 0)).toBe(true)
+    expect(emptyResponses).toEqual([[], []])
+    expect(emptyCallbacks.map((entry) => entry.phase)).toEqual(["empty-before", "empty-after"])
+    expect(emptyCallbacks.map((entry) => entry.requested)).toEqual([[], []])
+    expect(emptyCallbacks.map((entry) => entry.depth)).toEqual([0, 0])
+    expect(emptyCallbacks.map((entry) => entry.results)).toEqual([0, 6])
     expect(callbacks.some((entry) => entry.depth > 0 && entry.requested.some((ref) =>
       ref.kind === "record" && ref.target.surface === "planner" && ref.refId === fixture.incoming.baseRef))).toBe(true)
     expect(fixture.counts.results).toBe(6)
