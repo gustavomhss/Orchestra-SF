@@ -20,8 +20,18 @@ export class Denied extends Schema.TaggedErrorClass<Denied>()("SessionOwner.Deni
   ]),
 }) {}
 
+export interface Inspection {
+  readonly authorized: boolean
+  readonly excludedSessions: ReadonlyArray<SessionSchema.ID>
+}
+export interface InspectionOperation {
+  readonly action: SessionAccess.Action
+  readonly sessionID?: SessionSchema.ID
+}
 export interface Admission {
   readonly binding: TeamProfile.Binding
+  /** One fresh policy observation may answer several checks at the same boundary; it is never cached across awaits. */
+  readonly inspect?: (operations: ReadonlyArray<InspectionOperation>) => Effect.Effect<Inspection | undefined>
   readonly authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.Effect<boolean>
   /** Current resource exceptions within this owner; evaluated before SQL pagination. */
   readonly excludedSessions: () => Effect.Effect<ReadonlyArray<SessionSchema.ID>>
@@ -48,6 +58,7 @@ type LeaseData = Readonly<{
   generation: number
   verifyCurrent: () => Effect.Effect<boolean>
   kind: "request" | "recovery"
+  inspect?: Admission["inspect"]
   authorize?: Admission["authorize"]
   excludedSessions?: Admission["excludedSessions"]
   sessionIds?: ReadonlySet<SessionSchema.ID>
@@ -136,6 +147,36 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
     if (new Set(values).size !== values.length) return yield* new Denied({ reason: "stale-admission" })
     return values.toSorted()
   })
+  const inspect = (scope: Scope, additional?: Readonly<{ action: Operation; sessionID?: SessionSchema.ID }>) =>
+    Effect.gen(function* () {
+      const retained = data(scope)
+      if (!retained.lease?.inspect || !retained.generation || retained.lease.kind !== "request")
+        return yield* new Denied({ reason: "missing-admission" })
+      if (!(yield* retained.generation.verifyGeneration(retained.lease.generation)))
+        return yield* new Denied({ reason: "stale-admission" })
+      const current = yield* CurrentOperation
+      const operation = current && scopes.get(current.scope)?.database === database &&
+        scopes.get(current.scope)?.lease === retained.lease ? current : undefined
+      const operations: InspectionOperation[] = []
+      for (const value of [operation, additional]) {
+        if (!value) continue
+        if (value.action === "replay") return yield* new Denied({ reason: "forbidden-operation" })
+        if (!operations.some((entry) => entry.action === value.action && entry.sessionID === value.sessionID))
+          operations.push(Object.freeze({ action: value.action, ...(value.sessionID ? { sessionID: value.sessionID } : {}) }))
+      }
+      const checked = yield* retained.lease.inspect(Object.freeze(operations)).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
+      if (!checked) return yield* new Denied({ reason: "stale-admission" })
+      if (checked.authorized !== true) return yield* new Denied({ reason: "forbidden-operation" })
+      const excluded = yield* Schema.decodeUnknownEffect(SessionAccess.ExcludedSessions)(checked.excludedSessions)
+        .pipe(Effect.mapError(() => new Denied({ reason: "stale-admission" })))
+      const ordered = excluded.toSorted()
+      const observed = listed.get(scope)
+      if (observed && JSON.stringify(ordered) !== JSON.stringify(observed))
+        return yield* new Denied({ reason: "stale-admission" })
+      if (!(yield* retained.generation.verifyGeneration(retained.lease.generation)))
+        return yield* new Denied({ reason: "stale-admission" })
+      return ordered
+    })
   const verify: Interface["verify"] = (scope) => Effect.gen(function* () {
     const retained = data(scope)
     if (!retained.lease) {
@@ -143,6 +184,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         return yield* new Denied({ reason: "missing-admission" })
       return
     }
+    if (retained.lease.kind === "request" && retained.lease.inspect) { yield* inspect(scope); return }
     if (!retained.generation || !(yield* retained.generation.verifyGeneration(retained.lease.generation)))
       return yield* new Denied({ reason: "stale-admission" })
     yield* verifyProof(retained.lease.verifyCurrent)
@@ -180,8 +222,12 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
     return { owner, generation: row.generation }
   })
   const authorize: Interface["authorize"] = (scope, operation, sessionID) => Effect.gen(function* () {
-    yield* verify(scope)
     const retained = data(scope).lease
+    if (retained?.kind === "request" && retained.inspect) {
+      yield* inspect(scope, { action: operation, ...(sessionID ? { sessionID } : {}) })
+      return
+    }
+    yield* verify(scope)
     if (!retained) return
     if (retained.kind === "recovery") {
       if ((operation !== "read" && operation !== "replay") || sessionID && !retained.sessionIds?.has(sessionID))
@@ -240,6 +286,9 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       if (!recovery && (!("binding" in observed) || typeof observed.authorize !== "function" || typeof observed.excludedSessions !== "function"))
         return yield* new Denied({ reason: "missing-admission" })
       const verifyCurrent = observed.verifyCurrent
+      const inspection = "binding" in observed ? observed.inspect : undefined
+      if (inspection !== undefined && typeof inspection !== "function")
+        return yield* new Denied({ reason: "missing-admission" })
       yield* verifyProof(verifyCurrent)
       if (!(yield* provider.verifyGeneration(generation))) return yield* new Denied({ reason: "stale-admission" })
       const lease = Object.freeze({ _tag: "SessionOwner.Lease" } satisfies Lease)
@@ -247,6 +296,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         database, owner: freezeOwner(owner), generation, verifyCurrent,
         kind: recovery ? "recovery" : "request",
         ...("binding" in observed ? { authorize: observed.authorize, excludedSessions: observed.excludedSessions } : {}),
+        ...(inspection ? { inspect: inspection } : {}),
         ...(sessionIds ? { sessionIds: new Set(sessionIds) } : {}),
       })
       return lease
@@ -271,8 +321,10 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
           ? Effect.succeed(false) : Effect.fail(error)),
     ),
     predicate: (scope) => Effect.gen(function* () {
-      yield* authorize(scope, "read")
       const retained = data(scope)
+      const inspected = retained.lease?.kind === "request" && retained.lease.inspect
+        ? yield* inspect(scope, { action: "read" }) : undefined
+      if (!inspected) yield* authorize(scope, "read")
       if (!retained.hasTable) return undefined
       if (!retained.lease) return sql`NOT EXISTS (SELECT 1 FROM session_owner WHERE session_owner.session_id = ${SessionTable.id})`
       const owner = retained.lease.owner
@@ -283,9 +335,9 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         AND session_owner.team_object_id = ${owner.profile.teamObjectId}
         AND session_owner.principal_object_id = ${owner.principal.principalObjectId})`
       if (!retained.lease.sessionIds) {
-        const excluded = yield* exclusions(retained.lease)
+        const excluded = inspected ?? (yield* exclusions(retained.lease))
         listed.set(scope, excluded)
-        yield* verify(scope)
+        if (!inspected) yield* verify(scope)
         return excluded.length ? and(match, sql`${SessionTable.id} NOT IN (${sql.join(excluded.map((id) => sql`${id}`), sql`, `)})`) : match
       }
       return and(match, sql`${SessionTable.id} IN (${sql.join(Array.from(retained.lease.sessionIds).map((id) => sql`${id}`), sql`, `)})`)
@@ -379,7 +431,7 @@ export const access = <A, E, R>(
   }
   const check = Effect.gen(function* () {
     const marker = yield* db.get(sql`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sf_authority_generation'`).pipe(Effect.orDie)
-    if (marker && (yield* db.get(sql`SELECT 1 FROM sf_authority_generation LIMIT 1`).pipe(Effect.orDie)))
+    if (marker)
       return yield* Effect.die(new Denied({ reason: "missing-admission" }))
     const table = yield* db.get(sql`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'session_owner'`).pipe(Effect.orDie)
     if (table && (yield* db.get(sql`SELECT session_id FROM session_owner WHERE session_id = ${sessionID}`).pipe(Effect.orDie)))
