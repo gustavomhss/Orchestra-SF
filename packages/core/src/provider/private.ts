@@ -6,7 +6,7 @@ import { Auth } from "@orchestra/llm/route"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { Model } from "@orchestra/schema/model"
 import { ProviderAccess } from "@orchestra/schema/provider-access"
-import { Effect, Layer, Schema, Stream } from "effect"
+import { Effect, Layer, Schema, Scope, Stream } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest } from "effect/unstable/http"
 import { SessionOwner } from "../session/owner"
 import { SessionSchema } from "../session/schema"
@@ -71,7 +71,7 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
     })
     const transport: typeof original = Object.freeze({
       id: "private-openai-chat",
-      prepare: (input) => Effect.gen(function* () {
+      prepare: (input: Parameters<typeof original.prepare>[0]) => Effect.gen(function* () {
         yield* verify()
         if (input.request.model !== model || input.request.model.route !== route ||
           input.request.http?.query && Object.keys(input.request.http.query).length > 0 ||
@@ -83,41 +83,45 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
           return yield* unavailable()
         const value = yield* original.prepare(input)
         if (value.request.method !== "POST" || value.request.url !== expectedURL ||
-          value.request.urlParams.length !== 0 || value.request.hash._tag !== "None" ||
+          value.request.urlParams.params.length !== 0 || value.request.hash._tag !== "None" ||
           Buffer.byteLength(input.encodeBody(input.body), "utf8") > 8 * 1024 * 1024)
           return yield* unavailable()
         preparedValues.add(value)
         return value
       }).pipe(Effect.mapError(() => unavailable())),
-      frames: (prepared, request, _runtime) => {
+      frames: (prepared: Parameters<typeof original.frames>[0], request: Parameters<typeof original.frames>[1]) => {
         if (!preparedValues.has(prepared) || request.model !== model || request.model.route !== route)
           return Stream.fail(unavailable())
-        const execute = (outgoing: HttpClientRequest.HttpClientRequest) => Effect.gen(function* () {
-          yield* verify()
-          if (outgoing !== prepared.request || outgoing.method !== "POST" || outgoing.url !== expectedURL ||
-            Object.keys(outgoing.headers).some((name) => !["content-type", "accept", ...Object.keys(expectedHeaders)].includes(name.toLowerCase())))
-            return yield* unavailable()
-          const stored = yield* vault.read(binding.connection)
-          if (!stored?.encodedValue || stored.metadata.state !== "active" || stored.metadata.revision !== revision)
-            return yield* unavailable()
-          const credential = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(KeyValue))(stored.encodedValue)
-            .pipe(Effect.mapError(() => unavailable()))
-          yield* verify()
-          const secured = HttpClientRequest.setHeader(outgoing, "authorization", "Bearer " + credential.key)
-          // Corporate provider calls make exactly one attempt. An uncertain response is never retried automatically.
-          const response = yield* http.execute(secured).pipe(
-            Effect.provideService(FetchHttpClient.RequestInit, { redirect: "manual", credentials: "omit", cache: "no-store" }),
-            Effect.mapError(() => unavailable()),
+        return Stream.unwrap(Effect.gen(function* () {
+          const lifetime = yield* Scope.Scope
+          const execute = (outgoing: HttpClientRequest.HttpClientRequest) => Effect.gen(function* () {
+            yield* verify()
+            if (outgoing !== prepared.request || outgoing.method !== "POST" || outgoing.url !== expectedURL ||
+              Object.keys(outgoing.headers).some((name) => !["content-type", "accept", ...Object.keys(expectedHeaders)].includes(name.toLowerCase())))
+              return yield* unavailable()
+            const stored = yield* vault.read(binding.connection)
+            if (!stored?.encodedValue || stored.metadata.state !== "active" || stored.metadata.revision !== revision)
+              return yield* unavailable()
+            const credential = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(KeyValue))(stored.encodedValue)
+              .pipe(Effect.mapError(() => unavailable()))
+            yield* verify()
+            const secured = HttpClientRequest.setHeader(outgoing, "authorization", "Bearer " + credential.key)
+            // Corporate provider calls make exactly one attempt. The response lives only as long as this stream.
+            const response = yield* HttpClient.withScope(http).execute(secured).pipe(
+              Effect.provideService(Scope.Scope, lifetime),
+              Effect.provideService(FetchHttpClient.RequestInit, { redirect: "manual", credentials: "omit", cache: "no-store" }),
+              Effect.mapError(() => unavailable()),
+            )
+            if (response.status < 200 || response.status >= 300) return yield* unavailable()
+            yield* verify()
+            return response
+          }).pipe(Effect.mapError(() => unavailable()))
+          return original.frames(prepared, request, { http: { execute } }).pipe(
+            Stream.mapEffect((frame) => verify().pipe(Effect.as(frame))),
+            // Provider error bodies and headers are not part of this public failure surface.
+            Stream.mapError(() => unavailable()),
           )
-          if (response.status < 200 || response.status >= 300) return yield* unavailable()
-          yield* verify()
-          return response
-        }).pipe(Effect.mapError(() => unavailable()))
-        return original.frames(prepared, request, { http: { execute } }).pipe(
-          Stream.mapEffect((frame) => verify().pipe(Effect.as(frame))),
-          // Provider error bodies and headers are not part of this public failure surface.
-          Stream.mapError(() => unavailable()),
-        )
+        }))
       },
     })
     const route = OpenAICompatibleChat.route.with({

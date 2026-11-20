@@ -93,6 +93,17 @@ export function createTeamProfileIdentityBoundary(input: {
           !await profiles.revalidate(admission)) return null
       return actor
     },
+    ...(identity.authenticateAll ? { authenticateAll: async (request: Request,
+      contexts: Parameters<NonNullable<LocalIdentity["authenticateAll"]>>[1]) => {
+      const originalMaps = JSON.stringify(contexts)
+      const maps = contexts.map((context) => ({ surface: context.surface, roleMap: context.roleMap.map((row) => ({ ...row })) }))
+      const admission = await admit(request)
+      if (!admission || !identity.authenticateAll || JSON.stringify(contexts) !== originalMaps) return null
+      const observed = await identity.authenticateAll(request, maps)
+      if (!observed || observed.some((entry) => entry.actor && entry.actor.id !== admission.principal.principalObjectId) ||
+          !await profiles.revalidate(admission) || JSON.stringify(contexts) !== originalMaps) return null
+      return observed
+    } } : {}),
     async directory(request: Request) {
       const admission = await admit(request)
       if (!admission) throw new Error("SF_TEAM_BUSINESS_CONTEXT_UNAVAILABLE")

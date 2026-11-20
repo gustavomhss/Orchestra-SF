@@ -12,6 +12,7 @@ import { ExecutionHost } from "@orchestra/core/session/runner"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import type { SessionScope } from "@orchestra/core/session/scope"
 import { SessionStore } from "@orchestra/core/session/store"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { InvalidRequestReason, LLMError, LLMRequest, Model } from "@orchestra/llm"
 import { LLMClient, RequestExecutor } from "@orchestra/llm/route"
@@ -144,7 +145,7 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
   }) : new SessionRunnerModel.ModelNotSelectedError({ sessionID: session.id })
   const modelNode = makeLocationNode({
     service: SessionRunnerModel.Service,
-    deps: [Catalog.node, Integration.node, SessionSubagentModels.node, SessionStore.node, Location.node],
+    deps: [Catalog.node, Integration.node, SessionSubagentModels.node, SessionStore.node, Location.node, SessionOwner.node, LayerNodePlatform.httpClient],
     layer: Layer.effect(SessionRunnerModel.Service, Effect.gen(function* () {
       const store = yield* SessionStore.Service
       const location = yield* Location.Service

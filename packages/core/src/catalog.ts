@@ -387,7 +387,7 @@ const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
   const service = yield* make
   if (!binding) return service
   const scope = yield* owners.open().pipe(Effect.orDie)
-  const guard = <A>(effect: Effect.Effect<A>) =>
+  const guard = <A, E, R>(effect: Effect.Effect<A, E, R>) =>
     owners.assertCurrent(scope).pipe(Effect.orDie, Effect.andThen(binding.bind(effect)))
   const declared = (active: boolean) => Effect.gen(function* () {
     const providers = yield* owners.providers(scope)

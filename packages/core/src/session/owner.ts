@@ -111,6 +111,8 @@ export interface Interface {
   readonly configuration: (scope: Scope) => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined, Failure>
   readonly connections: (scope: Scope) => Effect.Effect<CredentialVault.Interface | undefined, Failure>
   readonly providers: (scope: Scope) => Effect.Effect<ProviderAdmission.Interface | undefined, Failure>
+  /** Current authorized browser metadata; never contains a private endpoint or credential. */
+  readonly providerCatalog: (scope: Scope) => Effect.Effect<ProviderAccess.Catalog, Failure>
   /** Requires the exact currently installed lease, not just an equal owner label. */
   readonly assertCurrent: (scope: Scope) => Effect.Effect<void, Failure>
   readonly verify: (scope: Scope) => Effect.Effect<void, Failure>
@@ -427,6 +429,24 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         },
       }
       return Object.freeze(bound)
+    }),
+    providerCatalog: (scope) => Effect.gen(function* () {
+      yield* result.assertCurrent(scope)
+      const client = yield* result.providers(scope)
+      const owner = result.owner(scope)
+      const generation = result.generation(scope)
+      if (!client || !owner || generation === undefined)
+        return yield* new Denied({ reason: "storage-unavailable" })
+      const values = yield* client.list().pipe(Effect.mapError(() => new Denied({ reason: "storage-unavailable" })))
+      const catalog = yield* Schema.decodeUnknownEffect(ProviderAccess.Catalog)({
+        namespace: { version: 1, owner, authorityGeneration: generation },
+        providers: values.map((value) => ({
+          providerId: value.providerId, name: value.name, protocol: value.protocol,
+          connection: value.connection, models: value.models,
+        })),
+      }).pipe(Effect.mapError(() => new Denied({ reason: "storage-unavailable" })))
+      yield* result.assertCurrent(scope)
+      return catalog
     }),
     connections: (scope) => Effect.gen(function* () {
       yield* verify(scope)

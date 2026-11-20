@@ -7,6 +7,7 @@ import * as OpenAICompatibleChat from "@orchestra/llm/protocols/openai-compatibl
 import * as OpenAIResponses from "@orchestra/llm/protocols/openai-responses"
 import { Auth, type AnyRoute } from "@orchestra/llm/route"
 import { Context, Effect, Layer, Option, Schema } from "effect"
+import { HttpClient } from "effect/unstable/http"
 import { produce } from "immer"
 import { Catalog } from "../../catalog"
 import { Credential } from "../../credential"
@@ -280,12 +281,15 @@ export const locationLayer = Layer.effect(
     const integrations = yield* Integration.Service
     const policies = yield* SessionSubagentModels.Service
     const owners = yield* SessionOwner.Service
+    const http = yield* HttpClient.HttpClient
     return Service.of({
       resolve: Effect.fn("SessionRunnerModel.resolve")(function* (session) {
         const sessionID = session.id
         const parentID = session.parentID
         const selection = session.model ? Object.freeze({ ...Schema.decodeUnknownSync(ModelV2.Ref)(session.model) }) : undefined
-        const scope = yield* owners.open()
+        const scope = yield* owners.open().pipe(Effect.mapError(() => selection
+          ? new ModelUnavailableError({ providerID: selection.providerID, modelID: selection.id })
+          : new ModelNotSelectedError({ sessionID })))
         if (owners.owner(scope)) {
           const ceilings = yield* policies.forSession(sessionID)
           const configured = selection ? undefined : yield* catalog.model.default()
@@ -294,6 +298,7 @@ export const locationLayer = Layer.effect(
           if (!SessionSubagentModels.permits(ceilings, selected))
             return yield* new SessionSubagentModels.ModelDeniedError({ sessionID, model: selected, reason: "not-allowed" })
           return yield* PrivateProvider.resolve(scope, { sessionID, parentID, model: selected }).pipe(
+            Effect.provideService(SessionOwner.Service, owners), Effect.provideService(HttpClient.HttpClient, http),
             Effect.map((value) => withReference(value, selected)),
             Effect.mapError(() => new ModelUnavailableError({ providerID: selected.providerID, modelID: selected.id })),
           )

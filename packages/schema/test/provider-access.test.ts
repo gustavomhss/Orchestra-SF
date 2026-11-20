@@ -37,6 +37,7 @@ describe("explicit private provider policy", () => {
     expect(Schema.is(ProviderAccess.Bindings)([binding, binding])).toBe(false)
     expect(Schema.is(ProviderAccess.Binding)({ ...binding, models: [model, model] })).toBe(false)
     expect(Schema.is(ProviderAccess.Binding)({ ...binding, models: [] })).toBe(false)
+    expect(Schema.is(ProviderAccess.Binding)({ ...binding, providerId: "ambiguous/provider" })).toBe(false)
     expect(Schema.is(ProviderAccess.Binding)({ ...binding, models: [{ ...model, id: "invalid model" }] })).toBe(false)
     expect(Schema.is(ProviderAccess.Binding)({ ...binding, models: [{ ...model, limit: { context: 0, output: 1 } }] })).toBe(false)
     expect(Schema.is(ProviderAccess.Binding)({ ...binding, models: [{ ...model, limit: { context: 10, output: 11 } }] })).toBe(false)
