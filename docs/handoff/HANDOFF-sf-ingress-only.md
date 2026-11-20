@@ -102,7 +102,7 @@ Complete status for this narrow candidate requires the installed SF E2E typechec
 ## Verification, merge order and resumption
 
 - GitHub-only source review, exact blob composition and readback performed. Original app/e2e instructions and official Playwright guidance were read. No local shell, tests, typecheck, build or guards.
-- Independent static review was requested from the Reports owner; no independent pass is claimed in this preparation-time handoff.
+- Independent static review by the Reports owner examined code 345cebeedb2b04d3e349bd40f0678c82cfaac215, both parents, all six paths and the exact fixture blobs. No static blocker was found: the browser status/query binding remains original, the separate authorized body read is explicit, capture guards precede the credential, and logout follows the installed owner invalidation/reload. This is source review only; Actions qualification is still pending. Its scope is ingress/lifecycle and the original BI first-save proof, not complete Reports, Decisions or BI.
 - No gate, PR, merge or ready transition was performed by this owner. No merge order is claimed here. The coordinator integrates this as shared ingress only after the declared scoped success.
 - Guards: not run by this owner; final integration guards remain with the coordinator.
 - sf-ci: not run by this owner. The unique final run and every job outcome remain pending.
