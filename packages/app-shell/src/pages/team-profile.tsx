@@ -149,10 +149,12 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
   const go = (href: string) => { setUi("narrowOpen", false); void act(() => runtime.navigate(href, "sidebar")) }
   const links = createMemo(() => {
     const ready = runtime.owner.state()
-    if (ready.status !== "ready" || !runtime.owner.ready() || ready.context.contractRevision !== "sf-team-profile/1") return []
+    if (ready.status !== "ready" || !runtime.owner.ready()) return []
+    const context = ready.context
+    if (context.contractRevision !== "sf-team-profile/1") return []
     return chapterNavigation.flatMap((chapter) => {
       const href = sfNativeOwnerChapterRequest(chapter.id, ready.selection)
-      return href && resolveSfTeamNativeRoute(href, props.binding, ready.selection, ready.context) ? [{ chapter, href }] : []
+      return href && resolveSfTeamNativeRoute(href, props.binding, ready.selection, context) ? [{ chapter, href }] : []
     })
   })
   const loginUrl = () => teamWebLoginUrl(props.binding, window.location.origin)

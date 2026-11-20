@@ -94,7 +94,7 @@ describe("versioned Teams native owner selectors", () => {
       sfEntryDestinationRequest(route, "CAP07"),
       sfExecutiveLinkRequest(route, { kind: "projects" }),
       sfProjectHref(route, "projects"),
-      sfDecisionHref({ ...route, surfaceId: "UI42", kind: "entry" }, "list"),
+      sfDecisionHref({ ...route, surfaceId: "UI42", kind: "entry", params: { caseRef: "case-one" as SfRef } }, "list"),
     ]
     for (const link of links) {
       expect(link).toBeDefined()

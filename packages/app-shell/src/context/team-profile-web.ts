@@ -4,6 +4,7 @@ import { SfInstallationList, SfTeamContextQuery, SfTeamInstallationDescriptor } 
 import { createSfTeamContextClient } from "@orchestra/client/sucafina/context"
 import { createSfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
+import type { TeamProfileSelectionDependencies } from "./team-profile-selection"
 
 /** Public metadata for the explicitly loaded Web host. It does not authenticate a user. */
 export async function readCurrentTeamInstallation(input: Readonly<{
@@ -71,7 +72,7 @@ export function teamContextQuery(binding: SfTeamInstallationDescriptor, selector
 }
 
 /** The same real F02 transport that authenticated the context is returned to the UI owner. */
-export function teamWebContextReader(binding: SfTeamInstallationDescriptor, fetch: SfTransportFetch) {
+export function teamWebContextReader(binding: SfTeamInstallationDescriptor, fetch: SfTransportFetch): TeamProfileSelectionDependencies["read"] {
   return async (selector: TeamProfile.Selector, signal: AbortSignal, generation: number, currentGeneration: () => number) => {
     const transport = createSfTransport({ binding, teamSelector: selector, generation, currentGeneration,
       operations: SfNativeOperationBindings, fetch })

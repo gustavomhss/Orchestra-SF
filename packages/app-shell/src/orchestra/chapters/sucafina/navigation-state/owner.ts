@@ -7,7 +7,8 @@ export const sfOwnerQueryKeys = ["server", "project", "installation", "contractR
 const legacyKeys = ["server", "project", "installation"] as const
 const teamKeys = ["contractRevision", "server", "installationId", "tenantId", "teamObjectId"] as const
 export type SfParsedOwnerQuery =
-  | Readonly<{ kind: "absent" | "invalid" }>
+  | Readonly<{ kind: "absent" }>
+  | Readonly<{ kind: "invalid" }>
   | Readonly<{ kind: "legacy"; serverKey: string; projectId: string; installationId: string }>
   | Readonly<{ kind: "team"; serverKey: string; profile: TeamProfile.Ref }>
 

@@ -6,7 +6,8 @@ import { sfSameContextStamp, sfSameTeamRef } from "../orchestra/chapters/sucafin
 
 export type TeamProfileSelectionState =
   | Readonly<{ status: "resolving" }>
-  | Readonly<{ status: "unauthenticated" | "denied" }>
+  | Readonly<{ status: "unauthenticated" }>
+  | Readonly<{ status: "denied" }>
   | Readonly<{ status: "unavailable"; reason: string }>
   | Readonly<{ status: "authenticated"; context: SfTeamContext }>
 export type TeamProfileRetirement = "refresh" | "profile-change" | "logout" | "revoked" | "principal-change" | "dispose"

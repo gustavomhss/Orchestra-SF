@@ -27,7 +27,7 @@ export function createTeamNativeOwner(input: Readonly<{
 }>) {
   const selection = (context?: SfTeamContext): SfOwnerSelection => ({
     serverKey: input.binding.publicOrigin as SfServerKey, projectId: input.binding.projectId as SfRef,
-    installationId: input.binding.installationId as SfRef,
+    installationId: input.binding.installationId,
     ...(context?.stamp.team ? { team: context.stamp.team.owner.profile } : {}),
   })
   const [view, setView] = createStore<{ state: SfContextState; generation: number }>({
@@ -90,7 +90,7 @@ export function createTeamNativeOwner(input: Readonly<{
       context.stamp.hostId, context.stamp.policyVersion, context.stamp.accessRevision, generation]) as SfOwnerKey
     const previous = retained
     let drafts = previous?.drafts
-    if (drafts && (!drafts.sameAuthority(previous.identity, identity) ||
+    if (previous && drafts && (!drafts.sameAuthority(previous.identity, identity) ||
         previous.context.stamp.hostId !== context.stamp.hostId)) {
       drafts.revoke("authority-changed"); drafts = undefined; retained = undefined
     }
