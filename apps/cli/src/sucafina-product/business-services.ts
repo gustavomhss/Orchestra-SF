@@ -192,9 +192,16 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     (plannerCaseRead.current?.read ?? memoryCaseScope.read)(...args) }
   const withScenarioObservation: SfPlannerCaseObservation = (request, call, work) =>
     plannerCaseRead.current ? plannerCaseRead.current.run(request, call, work) : work()
-  const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
+  const withMemoryObservation: SfMemoryObservation = async (request, call, work) => {
     const canonical = recall.current
-    return canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
+    const observe = () => canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
+    const version = request.caseRef.version
+    if (!plannerCaseRead.current || typeof version !== "number" || !Number.isSafeInteger(version)) return observe()
+    // One memory producer/verifier pass may reuse only its completed Planner case.
+    // The next pass opens a fresh owner; Atlas/source observations remain canonical.
+    const selected = { caseRef: { ...request.caseRef, version }, request }
+    const result = await plannerCaseRead.current.run(selected, call, async () => ({ status: "ok", value: await observe() }))
+    return result.status === "ok" ? result.value : undefined
   }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
