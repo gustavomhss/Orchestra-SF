@@ -14,7 +14,8 @@ import { financialCompositionFixture } from "../product/wp10/integration/financi
 
 const origin = "https://example.test"
 const mount = "/sucafina"
-const ids = ["files.asset.link", "files.asset.download", "files.asset.upload"]
+type AssetOperationId = Awaited<ReturnType<typeof observeSfAssetHealth>>[number]["operationId"]
+const ids: AssetOperationId[] = ["files.asset.link", "files.asset.download", "files.asset.upload"]
 
 async function assetFixture() {
   const schedule: { beforeEnvironment?: () => Promise<void> } = {}
