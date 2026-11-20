@@ -283,6 +283,13 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await importControl.click()
     const imports = page.locator('.sf-files[data-sf-surface="UI55"]')
     await expect(imports).toBeVisible()
+    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
+    const importsUrl = new URL(page.url())
+    expect(importsUrl.origin).toBe(origin)
+    expect(importsUrl.pathname).toBe("/orchestra/sf-imports/new")
+    expect(importsUrl.searchParams.get("server")).toBeTruthy()
+    expect(importsUrl.searchParams.get("project")).toBe(context.value.stamp.projectId)
+    expect(importsUrl.searchParams.get("installation")).toBe(context.value.stamp.installationId)
     await imports.getByLabel("Source", { exact: true }).selectOption("dashboard")
     const [targetsResponse] = await Promise.all([
       page.waitForResponse((response) => dashboardFile(response, "import-targets", "GET"), { timeout: 10000 }),
@@ -328,6 +335,17 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(preview.value.commands).toHaveLength(1)
     expect(preview.value.commands[0]!.action).toBe("import")
     expect(reference.value.manifest.id).toBe(preview.value.id)
+    // Same-owner navigation can reuse F01's current context without another GET.
+    // Both original import responses must retain its exact authority stamp.
+    for (const manifest of [preview.value, reference.value.manifest]) {
+      expect(manifest.context).toMatchObject({
+        installationId: context.value.stamp.installationId,
+        projectId: context.value.stamp.projectId,
+        principalRef: context.value.stamp.principalRef,
+        accessRevision: context.value.stamp.accessRevision,
+        policyVersion: context.value.stamp.policyVersion,
+      })
+    }
     expect(reference.value.detail.sourceDigest).toBe(sourceDigest)
     const addedMembers = reference.value.detail.changes.filter((change) => change.kind === "added" &&
       change.path.endsWith("/name") && change.after.state === "present" &&
