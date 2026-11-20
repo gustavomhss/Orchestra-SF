@@ -40,11 +40,9 @@ jobs:
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    # Initial activation seeds the reviewed SF integration, whose lock differs from dev.
-    # Restore push defaults after the shared-cache consumer proof is complete.
     env:
-      SOURCE_REF: ${{ inputs.source_ref || 'sf-join-four' }}
-      SOURCE_SHA: ${{ inputs.source_sha || '72830e53adfcb2059575b249e76c88753beb04e8' }}
+      SOURCE_REF: ${{ inputs.source_ref || github.ref_name }}
+      SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
     steps:
       - name: Bind the default-branch writer to the reviewed source
         shell: bash
@@ -61,7 +59,7 @@ jobs:
           printf 'Cache scope=%s; reviewed source=%s@%s\n' "$GITHUB_REF" "$SOURCE_REF" "$SOURCE_SHA"
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: ${{ env.SOURCE_SHA }}
+          ref: ${{ inputs.source_sha || github.sha }}
           persist-credentials: false
       - name: Verify checked-out source
         run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
