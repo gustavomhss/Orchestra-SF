@@ -48,6 +48,38 @@ export type BudgetCommand = Readonly<{
   versions: Readonly<Record<string, number>>
   form: BudgetForm
 }>
+/**
+ * A new deviation is addressed by its existing owner ID. That owner ID alone
+ * does not mean the deviation already has a CAS version. Only an admitted,
+ * complete deviation map can prove absence; a partial projection cannot.
+ */
+export function budgetDeviationSourceMatches(
+  page: BudgetPage | undefined,
+  capability: BudgetCapability,
+  year: number,
+  binding: Readonly<{
+    parentId: string | null
+    recordId: string | undefined
+    month: number
+    versionKey: string
+    version: number
+    sourcePresent: boolean
+  }>,
+): boolean {
+  if (!page || page.capabilityId !== capability || page.selection.year !== year ||
+      page.deviations === undefined || !binding.parentId || binding.recordId !== binding.parentId ||
+      page.owners?.filter((owner) => String(owner.id) === binding.parentId).length !== 1 ||
+      !Number.isInteger(binding.month) || binding.month < 1 || binding.month > 12 ||
+      !Number.isInteger(binding.version) || binding.version < 0) return false
+  const id = (capability === "CAP04" ? "opex" : "capex") + "-" + binding.parentId + "-" + year + "-" + binding.month
+  if (binding.versionKey !== "deviations:" + id) return false
+  const present = Object.hasOwn(page.deviations, id)
+  const version = page.versions[binding.versionKey]
+  return binding.sourcePresent
+    ? present && version !== undefined && version === binding.version
+    : !present && version === undefined && binding.version === 0
+}
+
 export type BudgetWriteResponse = Awaited<ReturnType<ReturnType<typeof createSfDomainClient>["domain.command.CAP04.save"]>>
 
 const requiredStamp = (current: SfContextStamp, received: SfContextStamp) =>
