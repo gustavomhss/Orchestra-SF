@@ -139,6 +139,13 @@ jobs:
           # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
+      # SF Bun suites also launch a real Node-owned Playwright browser. Provision
+      # its pinned headless shell before test deadlines begin, including full shards.
+      - name: Install SF Bun Chromium headless shell
+        if: steps.request.outputs.runner == 'bun' && steps.request.outputs.directory == 'modules/sucafina'
+        working-directory: ${{ steps.request.outputs.directory }}
+        run: node node_modules/@playwright/test/cli.js install --with-deps --only-shell chromium
+
       - name: Setup Python
         if: steps.request.outputs.runner == 'pytest'
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
