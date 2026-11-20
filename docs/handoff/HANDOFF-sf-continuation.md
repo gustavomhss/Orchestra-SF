@@ -2,42 +2,49 @@
 
 ## SHA e estado
 
-- Data deste checkpoint: 2026-11-20 02:59 UTC.
+- Data deste checkpoint: 2026-11-20, após início do gate Reports44668834875.
 - Estado: **PARTIAL / IN_PROGRESS**. Não há declaração de GO, deploy ou SF_ORCHESTRA_WEB_PACKAGE_VERIFIED.
 - Base pedida e preservada: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
-- Branch desta sessão: `sf-continuation`, head antes desta atualização documental `df4d56f2b3513c825823aa2ac7e7456c990da51b`.
-- Último SHA integrado observado: **`d7fa94063e798207ed692026b557d27dfff1aef8`**, em `sf-join-four`. Ainda não congelado.
+- Branch desta sessão: `sf-continuation`, head antes desta atualização documental `96770e0c00ceba81c141c8f105304aa8caa794ca`.
+- Último SHA integrado observado: **`b180588c63e41eecd6d73d839d078755d68cad3d`**, em `sf-join-four`. Ainda não congelado.
 - Toda leitura/escrita foi pelo GitHub; verificações executadas em Actions. Nenhum shell ou teste local.
 - O único `sf-ci` final ainda **NOT_RUN**. Guards finais **NOT_RUN**. Pacote final **NOT_PRODUCED**. A corrida completa permanece reservada para depois do último merge elegível.
 
 ## O que foi mergeado e em que ordem
 
-Os quinze merges abaixo seguem a cadeia real de primeiras parents da branch compartilhada, conferida via GitHub. A Sessão5 executou #411 e #407 após revisão e gate qualificado; os outros merges vieram das sessões concorrentes. A ordem observada inclui #413 antes de #411 e #417 antes de #407.
+Cadeia real de primeiros parents conferida pelo GitHub, desde a base pedida. A Sessão5 executou #411, #407 e #431; os demais merges ocorreram por outras sessões concorrentes. A tabela registra a evidência e seu alcance, sem promover casos isolados a um shard completo.
 
-| Ordem | PR | Merge em sf-join-four | Gate concluído |
-|---|---|---|---|
-| 1 | [#399 — private admission](https://github.com/gustavomhss/Orchestra-SF/pull/399) | `a5b15b51b78469a054ba97b0e87fd1e36e31f73a` | [44654714455](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44654714455), success; typecheck/lifecycle, não prova ClamD de runtime |
-| 2 | [#398 — Atlas observations](https://github.com/gustavomhss/Orchestra-SF/pull/398) | `589adb7cae06c584e1e51eeac9db7cd24dc987ea` | [44654168008](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44654168008), success, 15 pass / 0 fail / 1495 expects |
-| 3 | [#404 — native ready identity](https://github.com/gustavomhss/Orchestra-SF/pull/404) | `5efe5a3ff3a2c382a18b28f0d575825eafab5ede` | [44657002119](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657002119), success, 3 pass / 0 fail / 41 expects |
-| 4 | [#401 — BI cost proofs](https://github.com/gustavomhss/Orchestra-SF/pull/401) | `18a913220a6805bef1c62a58a26a310f991d6a0a` | [44657153397](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657153397), success, 9 pass / 0 fail / 376 expects |
-| 5 | [#402 — source PR guard context](https://github.com/gustavomhss/Orchestra-SF/pull/402) | `08854f14d83ab12d8665b0e3787881edbfaabd53` | [44658251806](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658251806), success, 59 pass / 0 fail / 361 expects |
-| 6 | [#400 — Planner answer scope](https://github.com/gustavomhss/Orchestra-SF/pull/400) | `392cecab68288d4b669828adc5d1aaa738693d80` | [44656420362](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656420362): original test passed, new fixture failed; concrete fixture repair `50ce9319b03ae52ec3871043161c19b17c49a1b3` then [44658520809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658520809) success, 1 pass / 0 fail / 32 expects |
+| Ordem | PR | Merge SHA | Evidência / limite |
+| --- | --- | --- | --- |
+| 1 | [#399](https://github.com/gustavomhss/Orchestra-SF/pull/399) | `a5b15b51b78469a054ba97b0e87fd1e36e31f73a` | 44654714455 success; lifecycle/typecheck |
+| 2 | [#398](https://github.com/gustavomhss/Orchestra-SF/pull/398) | `589adb7cae06c584e1e51eeac9db7cd24dc987ea` | 44654168008 success; 15/0/1495 |
+| 3 | [#404](https://github.com/gustavomhss/Orchestra-SF/pull/404) | `5efe5a3ff3a2c382a18b28f0d575825eafab5ede` | 44657002119 success; 3/0/41 |
+| 4 | [#401](https://github.com/gustavomhss/Orchestra-SF/pull/401) | `18a913220a6805bef1c62a58a26a310f991d6a0a` | 44657153397 success; 9/0/376 |
+| 5 | [#402](https://github.com/gustavomhss/Orchestra-SF/pull/402) | `08854f14d83ab12d8665b0e3787881edbfaabd53` | 44658251806 success; 59/0/361 |
+| 6 | [#400](https://github.com/gustavomhss/Orchestra-SF/pull/400) | `392cecab68288d4b669828adc5d1aaa738693d80` | 44658520809 success; 1/0/32 após fix concreto |
+| 7 | [#413](https://github.com/gustavomhss/Orchestra-SF/pull/413) | `72830e53adfcb2059575b249e76c88753beb04e8` | 44658705334 success; 155 testes e typecheck |
+| 8 | [#411](https://github.com/gustavomhss/Orchestra-SF/pull/411) | `7c42282e8b910cc0e10381980f040dee72cb2b19` | 44660432596 success; 14/0/183; merge Sessão5 |
+| 9 | [#418](https://github.com/gustavomhss/Orchestra-SF/pull/418) | `c7fc8b4cfc809e8ba46ab7a3ad48dcae2ec46e61` | 44661129868 success; 176 testes/typecheck/886 arquivos |
+| 10 | [#419](https://github.com/gustavomhss/Orchestra-SF/pull/419) | `c327aad168769ff68a7f700c85c7352a4adc40f8` | Documentação dos mesmos produtores qualificados |
+| 11 | [#409](https://github.com/gustavomhss/Orchestra-SF/pull/409) | `f4b62403fc2d9c74c6302d745bb4a057cfdd4439` | 44661234622 success; 4/0/60 |
+| 12 | [#415](https://github.com/gustavomhss/Orchestra-SF/pull/415) | `1222022bd54282c8086b1da45b0be6ad2f6520ea` | 44661599225 success; 8/0/401 |
+| 13 | [#417](https://github.com/gustavomhss/Orchestra-SF/pull/417) | `687759276c2c9121c2cfd20a5994b277ceb7ee4d` | 44662549289 success; 5/0/913 no source revision11 |
+| 14 | [#407](https://github.com/gustavomhss/Orchestra-SF/pull/407) | `d548a76a4e7838bccdb20e98c1ad16fdeca0b391` | 44657226869 success; 4/0/27; merge Sessão5 |
+| 15 | [#412](https://github.com/gustavomhss/Orchestra-SF/pull/412) | `d7fa94063e798207ed692026b557d27dfff1aef8` | 44662953944 success; 2/0/21 |
+| 16 | [#421](https://github.com/gustavomhss/Orchestra-SF/pull/421) | `d4ded81224e05f2d3b9789b3eec40b9de8a32fa1` | 44663777161 success; 21/0/7913 |
+| 17 | [#422](https://github.com/gustavomhss/Orchestra-SF/pull/422) | `23f851dbc6b86c0a571dd95f4b2bb2558b9dc1cd` | 44664293983 success; 5/0/107 |
+| 18 | [#430](https://github.com/gustavomhss/Orchestra-SF/pull/430) | `838572713fcceb2df96086f9729347fcda87d9e7` | 9 gates success; 27/0/832; 12 blobs exatos; recorte B |
+| 19 | [#406](https://github.com/gustavomhss/Orchestra-SF/pull/406) | `062506e92427f9ff41fcb952c0b1559e65076a4d` | 44663906249 success; 9/0/181 |
+| 20 | [#432](https://github.com/gustavomhss/Orchestra-SF/pull/432) | `e41c3e18330397ce508a349f52cb3bee8cb07639` | 7 casos alvo PASS em dois runs FAILURE; condição success não satisfeita |
+| 21 | [#431](https://github.com/gustavomhss/Orchestra-SF/pull/431) | `295c2bdca05c2373f821d50aab5d3ee3d3fb218b` | 44666552454 success; 26/0/182; merge Sessão5 |
+| 22 | [#427](https://github.com/gustavomhss/Orchestra-SF/pull/427) | `be192011d5cfccc7524fd81d53674b3317005091` | 44667039756 success; 2/0/54 |
+| 23 | [#435](https://github.com/gustavomhss/Orchestra-SF/pull/435) | `82d2041d80784e2d905f99dee3bca91c63ef8350` | 44667463947 success; 3/0 |
+| 24 | [#428](https://github.com/gustavomhss/Orchestra-SF/pull/428) | `573678d0acf9e91654efb7e67af7d30ebe45312b` | 44667507711 success; 3/0/25; 13 casos filtrados |
+| 25 | [#437](https://github.com/gustavomhss/Orchestra-SF/pull/437) | `b180588c63e41eecd6d73d839d078755d68cad3d` | Integração externa observada; evidência do dono em revisão |
 
-| 7 | [#413 — CI shard/cache rescue](https://github.com/gustavomhss/Orchestra-SF/pull/413) | `72830e53adfcb2059575b249e76c88753beb04e8` | [44658705334](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334), success no probe; revisão de integração descrita abaixo |
-| 8 | [#411 — executive signals/native links](https://github.com/gustavomhss/Orchestra-SF/pull/411) | `7c42282e8b910cc0e10381980f040dee72cb2b19` | [44660432596](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660432596), success, 14 pass / 0 fail / 183 expects / 4 arquivos |
+**Desvios externos da ordem pedida:** #430 (recorte B) entrou antes de shared #406 e antes da UI completa; #432 (recorte A) também entrou antes da UI. Os 12 blobs de #430 correspondem exatamente aos nove snapshots success, mas não houve prova de B completo. Em #432, os dois blobs e sete casos alvo são exatos; os runs44657265518 e44661562191 e respectivos jobs concluíram **failure**. Logo a condição de merge com conclusão success não foi satisfeita nessa integração externa. Não foi atribuída aceitação global nem desfeito trabalho concorrente sem causa comprovada.
 
-
-| 9 | [#418 — Planner required period](https://github.com/gustavomhss/Orchestra-SF/pull/418) | `c7fc8b4cfc809e8ba46ab7a3ad48dcae2ec46e61` | [44661129868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661129868), success, 176 focused tests, real Sucafina typecheck and exact 886-file selection equivalence |
-| 10 | [#419 — rescue/cache evidence](https://github.com/gustavomhss/Orchestra-SF/pull/419) | `c327aad168769ff68a7f700c85c7352a4adc40f8` | Documentation only; preserves the qualified #418 source and actual cache evidence |
-| 11 | [#409 — Portfolio owner view state](https://github.com/gustavomhss/Orchestra-SF/pull/409) | `f4b62403fc2d9c74c6302d745bb4a057cfdd4439` | [44661234622](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661234622), success, 4 pass / 0 fail / 60 expects |
-| 12 | [#415 — archival WP00 provenance](https://github.com/gustavomhss/Orchestra-SF/pull/415) | `1222022bd54282c8086b1da45b0be6ad2f6520ea` | [44661599225](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661599225), success, 8 pass / 0 fail / 401 expects |
-| 13 | [#417 — versioned producer contract manifest](https://github.com/gustavomhss/Orchestra-SF/pull/417) | `687759276c2c9121c2cfd20a5994b277ceb7ee4d` | [44662549289](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662549289), success, 5 pass / 0 fail / 913 expects on its exact source; see subsequent producer drift below |
-| 14 | [#407 — admitted review agenda observer](https://github.com/gustavomhss/Orchestra-SF/pull/407) | `d548a76a4e7838bccdb20e98c1ad16fdeca0b391` | [44657226869](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657226869), success, 4 pass / 0 fail / 27 expects; bounded shared contract qualification, full Reports remains red |
-| 15 | [#412 — native Budget conflict recovery](https://github.com/gustavomhss/Orchestra-SF/pull/412) | `d7fa94063e798207ed692026b557d27dfff1aef8` | [44662953944](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662953944), success, 2 pass / 0 fail / 21 expects; real rendered component with schema-validated injected A01 replies, not installed Dashboard qualification |
-
-The #402 resolver grants nothing without actual current GitHub approval evidence. Its controlled API regression fixtures are not owner approval. No approval label was applied by this session. Final workflow_dispatch remains without a PR label and must retain the two inherited protected-path findings.
-
-No whole `sf-ui-c02`, `sf-shard-a`, `sf-shard-b` or `sf-shard-c` merge had occurred at this checkpoint. Preserve remaining order: shared → UI → A/B/C → qualified leftovers.
+Nenhuma branch inteira sf-ui-c02/sf-shard-a/b/c foi declarada complete por esta sessão. A revisão11 de #417 foi qualificada antes dos produtores #407 e #431; seu gate não pode ser transferido ao host modificado.
 
 ## Parte A — auditoria concluída
 
@@ -176,6 +183,48 @@ Read on the supplied base: HANDOFF-lastmile-wp1..wp5 and the recent finish-ingre
 ## Preservação de regras
 
 No edit to runtime/application.ts; no new/use of listener4110; no push to close-final-candidate, sf-red-clusters, go-live-close or sf-frontend-bundle; no loosened assertion, fabricated coverage/baseline/digest/approval/GO. reviews.export.docx/pptx remain Schema.Never; real bytes remain on original GET ?sf=review-download.
+
+
+
+## Atualização de integração e diagnósticos — checkpoint corrente
+
+### Files/Imports compartilhados — COMPLETE
+
+PR #431 integrado em `295c2bdca05c2373f821d50aab5d3ee3d3fb218b`, após revisão independente e correção da ordem validate → requestFor antes do primeiro gate. Código `3041fcd305c9014c1558197c30863952a2abbdbe`; source `6732ff508922b097e5c9c42b457e3dc8dc6c65ae`; docs-only closeout `92dd01c6d69c0ce2b5fdeb44b7db4e754a9fe8f8`.
+
+Run [44666552454](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44666552454), snapshot `5038302de56e1dc4c4a255eace3ab5210d6ae535`: **success,26 pass/0 fail/182 expects**,3arquivos/729ms. Jobs136057127618 e136057491026 success. Oito casos novos usam SQLite/autoridade/serviços reais;18regressões de assets passaram. Observação de configuração não é scanner vivo; registro, CAS e scan real continuam nos produtores. Handoff `HANDOFF-sf-files-upload-observation.md` COMPLETE somente desse recorte.
+
+### Reports — bytes originais e F01 ainda separados
+
+O run original44660375065 continua **0/4**, snapshot4cdba611, artefato14596071954 de365836bytes. Seu ZIP real tem SHA-256 `2c1bb49b65772852b63c762a632ea6b12acfddf5bfd6c7088a9ae47d9a4eb488`.
+
+Três leitores por Actions, sem replay do produto, terminaram success:44664962509,44666329606,44667668234. O terceiro corrigiu um defeito demonstrado de parsing dos atributos AI de Playwright1.59.1; leu o mesmo artefato e confirmou digest. RPT01 preservou o dossiê e editou a fonte real antes de falhar em review-flow.ts:415:24. O snapshot mostra toolbar/Refreshaccess/Signout e o fallback `Sucafina route not admitted`. Esse fallback também ocorre com view resolving: **não prova isoladamente uma recusa de permissão**.
+
+A correção concreta de retenção é `18e995771879cb67c144c87b61e7d17c6df9e917`: Fetch Response-stage lê bytes originais antes de continueResponse(requestId apenas), sem fulfill/refetch/replay. Preserva232linhas de expect e o GET review-download original. Source corrente `6b0af4a38e15d98b82d37c6479ca0695fe50292f` acrescenta só observação dos três enums F01 após a mesma falha e relança o erro original.
+
+Primeiro gate dessa retenção: **[44668834875](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668834875), IN_PROGRESS**, snapshot `cf75dc20a4e42b6945ef4beadffcfc903a323ab3`. Request original reports.spec.ts completo, sem grep/retries/timeouts novos. Não se alega correção UI50 antecipada. Artefato/resultado deste novo gate pendentes.
+
+### Operations — fonte causal e migração em revisão
+
+Leitor do artefato Operations3: run44666025425 **success**, jobs136055405361/136055908327; digest realmente calculado do artefato14596666417: `28ca71a87e76cb8fc85cb370d0da714b5d8e8503f574b396c192c7efa4cd5cd3`. PROC02/03 terminaram o clique em runtime.ts:175:18; o await:176 é inferido da fonte, não evento do trace.
+
+Causa concreta Sourcing: critério0 automático/desabilitado, cscores inicialmente[], preenchimento dos índices1/2 cria buraco/undefined; o transporte valida o objeto antes de fetch. Fix mínimo de duas linhas, já existente na Sessão1, publicado em `sf-sourcing-json`: código `c4218a0911e10c1ca791b784dc0ded22ca7bcd75`, source `5856483ee09bcb6b3511aa2d70276dc44b3aa0e5`. Ainda sem gate.
+
+Migração de Import nativo em `sf-import-native`, em revisão independente: UI55 está em /orchestra/sf-imports/new, opções usam selectionRef, prepare usa preview+reference, receipt canônico em UI57 e recuperação explícita. Preserva oráculos financeiros, digest, CAS+1, um Apply, receipt/reload/reentrada e revogação/crossowner. Dois pequenos reparos compartilhados mostram manifest/ator/versão dos recibos originais e conectam o botão de outcome-unknown do StatePanel ao reconcile original. O botão externo Refreshreceipt já existia e foi preservado. Nenhum gate desta migração ainda.
+
+A composição receberá os blobs qualificados #407/#431 e o retainer exato5b4c067d. Contém a dependência de teste #393 e **não pode ser mergeada inteira enquanto a condição específica de checks desse PR não estiver satisfeita**.
+
+### CI/package/freeze — fechamento preparado, sem corrida final antecipada
+
+#425 avançou para `b5312caba2a8825c2061dfafab926a3feed370cf`, ainda draft. Seu gate44667265276 falhou no source anterior a08a: typecheck summary-settings.test.ts:76:48 (string→AbsolutePath) e logs do driver dentro do checkout. O reparo b531 usa o constructor canônico AbsolutePath.make e preserva as58linhas de expect; o novo source ainda precisa de Actions. A alternativa `sf-summary-path` foi documentada SUPERSEDED e não será mergeada em duplicidade.
+
+#395 mantém sua qualificação58/0 e factory13/0, mas precisa preservar as novas mudanças de #425. União mínima em sf-ci.yml e gate.test.mjs está sendo preparada em `sf-package-reconciled`; os três blobs factory4120 permanecem os já qualificados. Nenhum baseline mudou.
+
+Freeze #426 continua draft/NOT_REVALIDATED. Auditoria no sourcebe192:38paths,37blobs iguais e somente CLIhost alterado pelo #431 de b30a para3f6863. Não reutilizar hash do blob anterior. A revisão12 proposta pode registrar a cadeia #407→#431 e os bytes reais após estabilizar produtores, mantendo consumerAcceptance BLOCKED; gate de freeze ainda pendente.
+
+Drivers finais revisados na branch `sf-final-controls@3955859e6fbd7fcce7d03e941c7c236ee998c09f`, **não executados**. Ambos exigem criação inicial/attempt1/parent direto do congelado; guards executa exatamente o comando requerido e preserva exit1; dispatch contém um único POST e reconciliação somenteGET. Seus placeholders continuam sem SHAfinal. O `sf-ci` final permanece NOT_RUN e o pacote final NOT_PRODUCED.
+
+**Bloqueio relevante antes do freeze:** a integração ainda contém a fixture antiga Reports com listener4110. Este integrador não executará o sf-ci final dessa configuração. O ingresso4174 está na branch corrigida e precisa de qualificação e integração; não declarar um run final ou pacote antecipado.
 
 
 ## Histórico do checkpoint anterior — 02:33Z (substituído pelo estado acima)
