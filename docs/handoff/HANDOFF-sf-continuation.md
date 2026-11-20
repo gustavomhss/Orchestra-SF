@@ -195,7 +195,7 @@ Reader independente [44672368527](https://github.com/gustavomhss/Orchestra-SF/ac
 
 **[44676428710](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710), workflow420530405, eventworkflow_dispatch, refsf-join-four, attempt1, head3910a644c7fdab1a438c2b5b39d69afc19361709.** Único dispatch desta sessão. Driver sf-final-dispatch@dc60b94da88eb9f1d067d4c689b8e966fd3b39f0, run44676417113/job136089209667success; log confirma POSTúnico HTTP204 e ID do run. O único outro workflow_dispatch listado para esse branch era44541767066cancelled, anterior à sessão.
 
-Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já success. CI-APP-BROWSER terminou failure apesar de138testespassarem: receipt acusa inventário de baseline existente em gate.mjs300:5. ShardsSF/UI/static ainda sem conclusão final neste checkpoint. Tabela completa será substituída por resultados terminais; nenhuma segunda corrida será disparada.
+Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já success. CI-APP-BROWSER terminou failure apesar de138testespassarem: receipt acusa inventário de baseline existente em gate.mjs300:5. Decisions terminou failure (0 pass / 2 fail / 3 não executados), primeira asserção em decisions-support/planner-sources.ts:19:24; nenhum candidato de baseline, pois falhou antes da minimização/receipt. Shards SF, Reports e static ainda sem conclusão final neste checkpoint. Tabela completa será substituída por resultados terminais; nenhuma segunda corrida será disparada.
 
 ## Artefato / baseline
 
@@ -203,7 +203,17 @@ Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já su
 
 ## Pacote final e sha256
 
-**[Run44676459520](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676459520), workflow420750908, pushsfa-factory-package, attempt1, head3910a644c7fdab1a438c2b5b39d69afc19361709.** Job136089350283IN_PROGRESS. Arquivo esperado `orchestra-sf-factory-linux-x64-baseline.tar.gz`, recibofactory-package-receipt.json. **archiveSha256 finalPENDING.** Será lido de SF_FACTORY_PACKAGE_QUALIFIED e confirmado pelo auditor independente SF_FACTORY_RECEIPT_VERIFIED; não usar WEB_NATIVE_QUALIFIED.archive.sha256 nem digestZIP do Actions.
+**[Run 44676459520](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676459520): SUCCESS**, workflow 420750908, push `sfa-factory-package`, attempt 1; job 136089350283 success. Head `3910a644c7fdab1a438c2b5b39d69afc19361709`.
+
+- Arquivo: `orchestra-sf-factory-linux-x64-baseline.tar.gz`.
+- **archiveSha256 real: `749d8d800a5b7458ca4dbb6507c6f987b8e33d524f8177cbe5bec55a5824811f`.**
+- O empacotador publicou `SF_FACTORY_PACKAGE_QUALIFIED` às 04:47:27Z e o auditor independente confirmou `SF_FACTORY_RECEIPT_VERIFIED` às 04:48:38Z. Ambos contêm o mesmo hash; sourceSHA, checkoutSHA, expectedSourceSHA e workflowSHA vinculam a fonte congelada.
+- **13 pass / 0 fail / 21.348 assertions**: sourcemaps 9/0/73; factory 3/0/1.482; Web/native instalado 1/0/19.793. O último controle registrou 34 spawns Omni e 0 delegações.
+- Auditoria do tar.gz real: 1.413 arquivos, 1.310 Web, zero sourcemaps publicados; 735 inputs do compilador e 24 assets. Execução extraída fora do checkout, origem `http://localhost:4120`.
+- [Artefato 14602393532](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676459520/artifacts/14602393532): `sf-factory-package-44676459520-1-3910a644c7fdab1a438c2b5b39d69afc19361709`, 91.550.445 bytes, quatro arquivos, expira em 2026-11-27T04:48:39Z.
+- Digest da ZIP GitHub, separado do tar.gz: `e33b71ec0dc622e3d58bdbc38fa05ea2ff57776e126f8a3a7e3e2d613e5b9ef2`.
+- Manifest SHA-256: `694cb05d15f615e80a6e91dc791f3c9b204da28b9d4dd5d36bcca6e63daafba3`.
+- Nenhum unbound no factory. Esse resultado não qualifica as jornadas de negócio ou os shards incompletos. Sem GO, deploy ou `SF_ORCHESTRA_WEB_PACKAGE_VERIFIED`.
 
 ## Como retomar
 
