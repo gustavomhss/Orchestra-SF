@@ -7,6 +7,7 @@ import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
@@ -32,7 +33,7 @@ export function createCriterionRuleRegistry(input: {
     try {
       const source = input.host.requestFor(context)
       if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "criterion-access-unavailable" }
-      const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const readCase = () => input.state.read(source, "cases", selectSfCase(request.caseRef.id, context))
       const current = await readCase()
       if (current.status !== "ok") return { status: "unavailable", reason: "criterion-unavailable" }
       const decision = current.value
@@ -63,7 +64,7 @@ export function createCriterionRuleRegistry(input: {
       const source = input.host.requestFor(context)
       const operation = input.operationIdentity(context)
       if (!source || !operation || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "criterion-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const current = await input.state.read(source, "cases", selectSfCase(request.caseRef.id, context))
       const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { existing: state.preferences[criterionRuleKey(request.caseRef, request.criterionId)], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `criterion-rule:${operation}`])] } : undefined)
       if (current.status !== "ok" || preferences.status !== "ok" || !preferences.value) return { status: "unavailable", reason: "criterion-state-unavailable" }
       const decision = current.value
@@ -197,7 +198,7 @@ export function createCriterionResultBindings(input: {
       const criterion = rule.value
       const stored = result.value
       if (criterion.ruleRef !== request.expectedRuleRef || criterion.version !== request.expectedRuleVersion || digestSfValue(criterion) !== request.expectedRuleDigest || stored.kind !== "sensitivity" || stored.requestDigest !== digestSfValue(request.request) || digestSfValue(stored.caseRef) !== digestSfValue(request.caseRef) || request.request.criterion.id !== criterion.criterionId || request.request.criterion.operator !== criterion.operator || request.request.criterion.value !== criterion.value || !criterion.sensitivity || request.request.parameterBounds.parameterRef !== criterion.sensitivity.parameterRef || stored.result.scenarioRef !== request.request.scenarioRef || stored.result.bounds.minimum !== request.request.parameterBounds.minimum || stored.result.bounds.maximum !== request.request.parameterBounds.maximum || stored.result.bounds.steps !== request.request.parameterBounds.steps || stored.result.parameterRef !== criterion.sensitivity.parameterRef || stored.result.engineVersion !== criterion.sensitivity.engineVersion || stored.result.parameterUnit !== criterion.sensitivity.parameterUnit || stored.result.resultUnit !== criterion.sensitivity.resultUnit) return { status: "conflict", reason: "criterion-result-mismatch" }
-      const cases = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const cases = await input.state.read(source, "cases", selectSfCase(request.caseRef.id, context))
       const preferences = await input.state.read(source, "preferences", (_state, authority) => sameAuthority(authority, context))
       if (cases.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(cases.value, request.caseRef, context) || !await input.authorizeCase(cases.value!, context)) return { status: "denied", reason: "criterion-result-access-unavailable" }
       const value = { schema: "sf-criterion-result-v1" as const, caseRef: request.caseRef, resultRef: request.resultRef, resultDigest: stored.resultDigest, request: request.request, requestDigest: stored.requestDigest, criterionId: request.criterionId, ruleRef: criterion.ruleRef, ruleVersion: criterion.version, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, createdAt: input.now(), bindingDigest: "" }
