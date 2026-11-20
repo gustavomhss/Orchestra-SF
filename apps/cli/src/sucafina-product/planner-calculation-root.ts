@@ -6,11 +6,11 @@ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafina
 type Root = { open: boolean; children: number; current: (call: TrustedDomainContext) => boolean }
 type Prepared = { run: <Value>(work: () => Promise<PortResult<Value>>) => Promise<PortResult<Value>> }
 
-/** Prepare sources before the witness, then own only the ancestral replay's physical read root. */
+/** Prepare sources before the witness, then own only the local replay's physical read root. */
 export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) {
   const roots = new AsyncLocalStorage<Root>()
   const unavailable = () => ({ status: "unavailable", reason: "calculation-read-root-unavailable" } as const)
-  const prepare = async (call: TrustedDomainContext, initialize: () => Promise<boolean>,
+  const prepare = async (call: TrustedDomainContext, initialize: () => Promise<boolean | "unsupported">,
     unchanged: () => boolean, ownerCurrent: () => boolean = unchanged): Promise<Prepared | undefined> => {
     try {
       let used = false
@@ -82,8 +82,19 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           return await healthy() ? result : unavailable()
         })
       }
-      if (!await revalidate.call(host, call) || !current() || !await initialize() || !current() ||
-        snapshots.call(persistence) !== undefined) return undefined
+      if (!await revalidate.call(host, call) || !current()) return undefined
+      const initialized = await initialize()
+      if (initialized !== true && initialized !== "unsupported") return undefined
+      if (!current() || snapshots.call(persistence) !== undefined) return undefined
+      if (initialized === "unsupported") {
+        // Eligibility was inspected without opening a root or warming sources.
+        // Preserve the full producer only while these exact observations live.
+        return once(async (work) => {
+          if (!current() || snapshots.call(persistence) !== undefined) return unavailable()
+          const result = await work()
+          return current() && snapshots.call(persistence) === undefined ? result : unavailable()
+        })
+      }
       // The caller opens its original full C08/source witness only after this
       // preparation returns. No prepared observation is accepted as evidence.
       return once(async <Value>(work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
