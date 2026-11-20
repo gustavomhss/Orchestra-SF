@@ -14,12 +14,13 @@ export type SfBiSnapshot = Extract<SfBiBiDataOutput, { request: unknown }>
 export type SfBiFinancialView = "BI01" | "BI02" | "BI03" | "BI04"
 export type SfBiOperationalView = "BI05" | "BI06" | "BI07" | "BI08"
 export type SfBiOwnedView = SfBiFinancialView | SfBiOperationalView
+export type SfBiSourceSelection = Readonly<{ valueId: string; referenceDigest: string }>
 export type SfBiFigureProps<Id extends SfBiOwnedView> = Readonly<{
   viewId: Id
   projection: SfBiSnapshot
   selection: SfRef | null
   onSelect: (selectionRef: SfRef) => void
-  onOpenSource: (sourceRef: SfRef) => void
+  onOpenSource: (sourceRef: SfRef, origin?: SfBiSourceSelection) => void
 }>
 
 export const sfBiKey = (key: string): SfCopyKey => key as SfCopyKey
