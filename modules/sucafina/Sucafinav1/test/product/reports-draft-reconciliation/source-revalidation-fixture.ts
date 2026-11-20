@@ -1,3 +1,14 @@
+import { expect } from "bun:test"
+import type { DomainProjection, PreservedReview } from "../../../product/contracts/context.ts"
+import type { ThreadSourceContext } from "../../../product/collaboration/thread-context.ts"
+import type { ReviewAgendaCatalog } from "../../../product/reviews/agenda-picker.ts"
+import type { ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
+import { reviewProjectionEvidence } from "../../../product/reviews/port.ts"
+import { createSfExtendedBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts"
+import { createSfMemoryServices } from "../../../../../../apps/cli/src/sucafina-product/memory-services.ts"
+import { createSfReviewCollaboration } from "../../../../../../apps/cli/src/sucafina-product/review-collaboration.ts"
+import { createSfResidentReviewReaders, sfResidentReviewSnapshotReaders } from "../../../../../../apps/cli/src/sucafina-product/review-resident-readers.ts"
+import { object } from "../../../runtime/contract.ts"
 import { randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -72,3 +83,75 @@ export async function sourceRevalidationFixture(options: { deferAtlasInitializat
   return { directory, store, persistence, sourceInput, active, guards, authority, business, portfolio, request, read, at, clock, initializeAtlas,
     dispose: async () => { portfolio.dispose(); business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
+
+type Fixture = Awaited<ReturnType<typeof sourceRevalidationFixture>>
+type Options = Parameters<typeof sourceRevalidationFixture>[0]
+type Prepared = Awaited<ReturnType<typeof prepare>>
+const period = { start: "2026-01-01", end: "2026-12-31" }
+
+export async function prepare(fixture: Fixture, afterCompose?: () => void) {
+  const resident = createSfResidentReviewReaders({ authority: fixture.authority, business: fixture.business })
+  const extended = createSfExtendedBusinessServices({ authority: fixture.authority, business: fixture.business,
+    persistence: fixture.persistence, ...fixture.guards, origin: "https://example.test", reviewReaders: resident.readers })
+  const memory = createSfMemoryServices({ authority: fixture.authority,
+    business: { ...fixture.business, planner: extended.portfolioServices.planner }, signalRegistryWrites: new WeakSet<object>() })
+  resident.bindOutcome(memory.reviewOutcome)
+  try {
+    afterCompose?.()
+    const result = async (response: Response | undefined) => {
+      if (!response) throw new Error("Actual Review route unavailable")
+      expect(response.status).toBe(200)
+      const body = object(await response.json())
+      expect(body.status).toBe("ok")
+      return body.value
+    }
+    const post = (mode: string, payload: unknown) => extended.productHttp(new Request("https://example.test/dashboard?sf=" + mode, {
+      method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, body: JSON.stringify(payload),
+    }), "dashboard")
+    const query = new URLSearchParams({ sf: "review-agenda", domain: "dashboard", start: period.start,
+      end: period.end, dashboardTopics: JSON.stringify(["budget"]) })
+    const catalog = await result(await extended.productHttp(new Request("https://example.test/dashboard?" + query), "dashboard")) as ReviewAgendaCatalog
+    expect(catalog.options).toHaveLength(1)
+    const preview = await result(await post("review-agenda", { items: catalog.options.map((option) => option.item) })) as ReviewAgendaPreview
+    const saved = await result(await post("review-preserve", { selectionRef: preview.selectionRef, sectionRefs: preview.sectionRefs })) as PreservedReview
+    const application = extended.reviews
+    if (!application?.readScope) throw new Error("Actual Review scope unavailable")
+    const scope = application.readScope
+    const call = await fixture.read()
+    const request = fixture.authority.host.requestFor(call)
+    if (!request) throw new Error("Actual authenticated Request unavailable")
+    const section = saved.sections[0]
+    if (!section) throw new Error("Actual preserved Budget section unavailable")
+    const source = reviewProjectionEvidence(section.content as DomainProjection).find((ref) => ref.kind === "record" &&
+      ref.target.period && ref.target.period.start <= section.period.start && ref.target.period.end >= section.period.end)
+    if (!source || source.kind !== "record") throw new Error("Actual preserved C17 basis unavailable")
+    const basis: ThreadSourceContext = { sourceRef: source.refId, sourceIncarnation: source.target.incarnation,
+      observedVersion: source.target.version, period: section.period, evidenceRefs: [source] }
+    const collaboration = createSfReviewCollaboration({ authority: fixture.authority, application, evidence: fixture.business.context,
+      readerCurrent: sfResidentReviewSnapshotReaders(resident.readers, fixture.authority.host) })
+    const snapshots = () => fixture.persistence.transactionAll!(async (current) => ({ commit: false, value: digestSfValue(current) }))
+    return { fixture, application, scope, call, request, saved, basis, section, collaboration, resident, extended, snapshots,
+      dispose: () => { fixture.authority.ui.finish(call); extended.dispose() } }
+  } catch (error) { extended.dispose(); throw error }
+}
+
+export async function withReview(options: Options, before: ((fixture: Fixture) => void) | undefined, work: (prepared: Prepared) => Promise<void>) {
+  const fixture = await sourceRevalidationFixture(options)
+  try {
+    before?.(fixture)
+    const prepared = await prepare(fixture)
+    try { await work(prepared) } finally { prepared.dispose() }
+  } finally { await fixture.dispose() }
+}
+
+export async function prepareLease(value: Prepared) {
+  const pin = await value.application.threadContext.prepare({ reviewRef: value.saved.id, sectionId: value.section.id }, value.basis, value.call)
+  expect(pin.status).toBe("ok")
+  if (pin.status !== "ok") throw new Error(pin.reason)
+  expect(await value.collaboration.authorizeReviewThreadContext(pin.value, value.basis, value.call)).toBe(true)
+  const checked = await value.fixture.persistence.transactionAll!(async () => ({ commit: false,
+    value: await value.collaboration.authorizeReviewThreadContext(pin.value, value.basis, value.call) }))
+  expect(checked).toBe(true)
+  return pin.value
+}
+
