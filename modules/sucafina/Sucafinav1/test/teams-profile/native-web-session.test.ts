@@ -9,7 +9,7 @@ import { profileA, profileB } from "./installation-fixture.ts"
 import { oid, other } from "../microsoft-login/oidc-fixture.ts"
 
 const actions = ["read", "create", "prompt", "run", "control"] as const
-const Info = Schema.Struct({ data: Session.Info, namespace: TeamProfile.SessionNamespace })
+const Info = Schema.Struct({ data: Session.Info })
 const List = Schema.Struct({ data: Schema.Array(Session.Info), namespace: TeamProfile.SessionNamespace,
   cursor: Schema.Struct({ previous: Schema.optional(Schema.String), next: Schema.optional(Schema.String) }) })
 const decode = async <A>(response: Response, schema: Schema.Decoder<A>) =>
@@ -41,8 +41,8 @@ test("native-session-fixture-01: real HTTP remains live for create, recorded pro
   expect(response.status).toBe(200)
   const created = await decode(response, Info)
   expect(f.sessionRequests).toContain(original)
-  expect(created.data.namespace).toEqual(created.namespace)
-  expect(created.namespace).toEqual(initial.namespace)
+  expect(created.data.namespace).toBeDefined()
+  expect(created.data.namespace).toEqual(initial.namespace)
   expect(created.data.location).toEqual(f.location)
   const prompt = await f.handle(request(f, "/api/session/" + created.data.id + "/prompt", profileA, f.cookie, {
     id: "msg_native_fixture_prompt", prompt: { text: "Durably admitted, recording-only prompt." },
@@ -78,7 +78,8 @@ test("native-session-fixture-02: an already open SSE sees a later real Created a
     expect(event?.event.type).toBe("session.next.created")
     if (!event || event.event.type !== "session.next.created") throw new Error("Actual incremental Created event required")
     expect(event.event.data.sessionID).toBe(created.data.id)
-    expect(event.namespace).toEqual(created.namespace)
+    expect(created.data.namespace).toBeDefined()
+    expect(event.namespace).toEqual(created.data.namespace)
     const ended = stream.next().catch(() => undefined)
     await f.close()
     expect(await ended).toBeUndefined()
@@ -100,7 +101,7 @@ test("native-session-fixture-03: the existing no-Team admin fixture gains neithe
   const value = await decode(context, SfTeamContextResult)
   expect(value.status).toBe("ok")
   if (value.status !== "ok") throw new Error("Actual zero-Team administrator context required")
-  expect(value.value.profile.administration.available).toBe(true)
+  expect(value.value.profile.administration.status).toBe("available")
   const denied = await f.handle(request(f, "/api/session"))
   expect(denied.status).toBe(401)
   expect(f.sessionCalls.projects).toBe(0)
