@@ -603,7 +603,7 @@ describe("ScheduledTask permanent capability ledger", () => {
       hook.onWake = Effect.gen(function* () {
         yield* tasks.capability.remove(owner, created.id)
         removed = yield* db.select().from(ScheduledTaskTable).where(eq(ScheduledTaskTable.id, created.id)).get().pipe(Effect.orDie)
-      })
+      }).pipe(Effect.orDie)
       const result = yield* tasks.capability.run(owner, created.id, "admitted-before-removal")
       expect(result.reused).toBe(false)
       expect(wakes).toEqual([result.sessionID])
@@ -616,13 +616,14 @@ describe("ScheduledTask permanent capability ledger", () => {
         .toEqual([["admitted-before-removal", "started", result.sessionID]])
       expect(yield* tasks.capability.list(owner)).toEqual([])
       expect(yield* tasks.capability.placed(owner)).toEqual([])
-      for (const denied of [
+      const deniedCalls: readonly Effect.Effect<unknown, ScheduledTask.NotFoundError | ScheduledTask.InvalidError | ScheduledTask.RunError>[] = [
         tasks.capability.get(owner, created.id),
         tasks.capability.resume(owner, created.id),
         tasks.capability.update(owner, created.id, { name: "Must not revive" }),
         tasks.capability.run(owner, created.id, "admitted-before-removal"),
         tasks.capability.run(owner, created.id, "new-key-after-removal"),
-      ]) expect(yield* denied.pipe(Effect.flip)).toBeInstanceOf(ScheduledTask.NotFoundError)
+      ]
+      for (const denied of deniedCalls) expect(yield* denied.pipe(Effect.flip)).toBeInstanceOf(ScheduledTask.NotFoundError)
       expect(wakes).toEqual([result.sessionID])
     }),
   )
@@ -633,7 +634,7 @@ describe("ScheduledTask permanent capability ledger", () => {
       const tasks = yield* ScheduledTask.Service
       const owner = yield* ownerSession()
       const created = yield* tasks.capability.create(owner, hourly)
-      hook.beforeResolve = tasks.capability.update(owner, created.id, { name: "Edited before admission" }).pipe(Effect.asVoid)
+      hook.beforeResolve = tasks.capability.update(owner, created.id, { name: "Edited before admission" }).pipe(Effect.asVoid, Effect.orDie)
       expect(yield* tasks.capability.run(owner, created.id, "revoked-manual").pipe(Effect.flip))
         .toBeInstanceOf(ScheduledTask.RunError)
       expect(yield* inputs).toEqual([])

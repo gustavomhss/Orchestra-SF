@@ -70,7 +70,7 @@ test("schedule-ledger-01: a restarted technical scheduler settles a removed admi
     // Only the technical legacy recovery clock is advanced; this is not corporate authority.
     yield* db.update(ScheduledTaskRunTable).set({ time_claimed: Date.now() - ScheduledTask.LEASE - 1000 })
       .where(eq(ScheduledTaskRunTable.id, receipt.id)).run().pipe(Effect.orDie)
-    return { owner, task, receipt, tombstone }
+    return { owner, task, receipt, messageID: receipt.message_id, tombstone }
   }))
   // A new graph, coordinator and SQLite connection read the retained row after the old Scope closed.
   await run(Effect.gen(function* () {
@@ -79,14 +79,14 @@ test("schedule-ledger-01: a restarted technical scheduler settles a removed admi
     yield* tasks.tick
     const receipt = yield* db.select().from(ScheduledTaskRunTable).get().pipe(Effect.orDie)
     expect(receipt).toMatchObject({ id: saved.receipt.id, task_id: saved.task.id, manual_key: "original-invocation",
-      state: "started", session_id: saved.receipt.session_id, message_id: saved.receipt.message_id })
+      state: "started", session_id: saved.receipt.session_id, message_id: saved.messageID })
     expect(wakes).toBe(1)
     expect(yield* db.select().from(ScheduledTaskTable).where(eq(ScheduledTaskTable.id, saved.task.id)).get().pipe(Effect.orDie))
       .toEqual(saved.tombstone)
     expect(yield* tasks.capability.list(saved.owner)).toEqual([])
     expect(yield* tasks.capability.run(saved.owner, saved.task.id, "original-invocation").pipe(Effect.flip))
       .toBeInstanceOf(ScheduledTask.NotFoundError)
-    expect((yield* db.select().from(SessionInputTable).all().pipe(Effect.orDie)).map((row) => row.id)).toEqual([saved.receipt.message_id])
+    expect((yield* db.select().from(SessionInputTable).all().pipe(Effect.orDie)).map((row) => row.id)).toEqual([saved.messageID])
   }))
 }, 30000)
 
