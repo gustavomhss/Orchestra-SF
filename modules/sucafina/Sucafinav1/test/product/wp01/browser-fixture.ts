@@ -1,6 +1,5 @@
 import type { Browser } from "@playwright/test"
-import { stat } from "node:fs/promises"
-import { resolve } from "node:path"
+import { assertWp01PoolStartup } from "./browser-pool-registration.ts"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 
 // One Node-owned Chromium for the entire sequential Bun selection. The published
@@ -52,36 +51,10 @@ function poison(error: unknown) {
 }
 
 async function requireLifecycleSelection() {
-  // Autodiscovery and selection/order-changing flags cannot guarantee cleanup.
-  // The integrator names every file, startup first and finalizer last; this guard
-  // runs before the driver is started or Chromium is created.
-  // Bun test exposes only the current entry and passthrough in process.argv.
-  // This Linux lane reads its actual OS command line, never a stale request file.
-  const invalid = () => new Error("WP01 browser tests require the Linux lane with explicit test files, browser-startup.test.ts first and browser-lifecycle.test.ts last. Use the named Actions selection; only --timeout is supported. Other platforms, autodiscovery, filters, isolation, sharding and parallel/reordered execution need an integrator-owned lifecycle.")
-  if (process.platform !== "linux") throw invalid()
-  const command = (await bounded(Bun.file("/proc/self/cmdline").text(), "read actual Linux test selection", 5_000)).split("\0")
-  if (command.at(-1) === "") command.pop()
-  const executable = command[0]
-  if (!executable || executable !== "bun" && resolve(executable) !== resolve(process.execPath) || command[1] !== "test") throw invalid()
-  const args = command.slice(2)
-  const files: string[] = []
-  for (let index = 0; index < args.length; index++) {
-    const arg = args[index]
-    if (arg === undefined) throw invalid()
-    if (arg === "--timeout") {
-      if (!/^[1-9]\d*$/.test(args[++index] ?? "")) throw invalid()
-      continue
-    }
-    if (/^--timeout=[1-9]\d*$/.test(arg)) continue
-    if (arg.startsWith("-") || !arg.endsWith(".test.ts") || /[*?\[\]{}]/.test(arg)) throw invalid()
-    files.push(resolve(arg))
-  }
-  const startup = resolve(import.meta.dir, "browser-startup.test.ts")
-  const finalizer = resolve(import.meta.dir, "browser-lifecycle.test.ts")
-  if (files.length < 3 || files[0] !== startup || files.at(-1) !== finalizer || new Set(files).size !== files.length) throw invalid()
-  const entries = await bounded(Promise.allSettled(files.map((file) => stat(file))), "verify named test files", 5_000)
-  if (entries.some((entry) => entry.status !== "fulfilled" || !entry.value.isFile())) throw invalid()
-  console.info("WP01 browser explicit selection admitted", { executable, command: command[1], files, startup, finalizer })
+  // The owned entry has already checked the actual Linux argv and imported each
+  // manifest source once. Only its named startup may launch after all forty
+  // source registrations are sealed; no environment bypass is admitted.
+  assertWp01PoolStartup()
 }
 
 function processExists(pid: number): boolean {
@@ -299,4 +272,29 @@ export async function finishWp01BrowserLifecycle() {
 export function reportWp01BrowserLifecycle() {
   if (!pool.verified || !pool.driverClosed || !pool.driver) throw new Error("WP01 browser proof requires successful finalization")
   pool.driver.report()
+}
+
+/** Physical state is observed from this same pool, independently of Bun's report. */
+export function wp01BrowserLifecycleEvidence() {
+  return { launches: pool.launches, acquisitions: pool.acquisitions, releases: pool.releases,
+    pid: pool.pid, activeLease: pool.lease !== undefined || pool.releasing,
+    contexts: pool.browser?.contexts().length ?? 0, disconnected: pool.disconnected,
+    driverClosed: pool.driverClosed, processExited: pool.processExited,
+    sealed: pool.sealed, verified: pool.verified, failed: pool.failed }
+}
+
+/** Always close the acquired driver, preserving any failure and the named finalizer obligation. */
+export async function ensureWp01BrowserCleanup() {
+  const failures: unknown[] = []
+  if (!pool.sealed) {
+    failures.push(new Error("WP01 named finalizer did not seal the pool"))
+    try { await finishWp01BrowserLifecycle() } catch (error) { failures.push(error) }
+  } else if (!pool.verified) {
+    failures.push(new Error("WP01 named finalizer did not verify the pool"))
+    try { await shutdownBrowser() } catch (error) { failures.push(error) }
+  }
+  if (!pool.driverClosed || !pool.processExited || !pool.disconnected) {
+    failures.push(new Error("WP01 browser physical cleanup was not observed"))
+  }
+  if (failures.length) throw new AggregateError(failures, "WP01 owned entry cleanup failed")
 }
