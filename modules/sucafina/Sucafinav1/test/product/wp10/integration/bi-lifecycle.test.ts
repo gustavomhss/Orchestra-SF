@@ -452,6 +452,7 @@ test("native BI returns from its real Planner source with the same human filters
     await page.locator('[data-sf-field="base-version"]').selectOption(versions[0]!)
     await page.locator('[data-sf-field="candidate-version"]').selectOption(versions[1]!)
     await page.locator('[data-sf-field="currency"]').fill("USD")
+    const capturedData = world.capture(page, (response) => new URL(response.url).searchParams.get("sf") === "bi-data")
     const data = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
     await page.getByRole("button", { name: "View data", exact: true }).click()
     const dataResponse = await data
@@ -465,12 +466,31 @@ test("native BI returns from its real Planner source with the same human filters
     const marker = page.locator("[data-sf-catalog] .sf-bi-source-actions button[data-sf-bi-focus]").first()
     const valueId = await marker.getAttribute("data-sf-bi-focus")
     expect(valueId).toBeTruthy()
+    const rendered = (await capturedData).body as { projection: DomainProjection }
+    const value = rendered.projection.values.find((entry) => entry.id === valueId)
+    expect(value).toBeDefined()
+    if (!value) throw new Error("Selected BI mark is absent from its real response")
+    const origins = [...new Map(value.sourceRefs.map((source) => [source.refDigest, source])).values()]
+    expect(origins).toHaveLength(2)
+    const choices = await page.locator("[data-sf-catalog] .sf-bi-source-actions button[data-sf-bi-focus]").evaluateAll(
+      (buttons, id) => buttons.filter((button) => button.getAttribute("data-sf-bi-focus") === id)
+        .map((button) => ({ digest: button.getAttribute("data-sf-bi-origin"), text: button.textContent ?? "" })), valueId)
+    expect(choices.map((choice) => choice.digest).sort()).toEqual(origins.map((source) => source.refDigest).sort())
+    for (const origin of origins) {
+      const choice = choices.find((entry) => entry.digest === origin.refDigest)
+      expect(choice?.text).toContain(origin.refId)
+      if (origin.kind === "record") expect(choice?.text).toContain(origin.target.recordId)
+    }
+    const originDigest = await marker.getAttribute("data-sf-bi-origin")
+    expect(originDigest).toMatch(/^[a-f0-9]{64}$/)
+    expect(origins.some((source) => source.refDigest === originDigest)).toBe(true)
     const [sourceResponse] = await Promise.all([
       world.capture(page, (response) => new URL(response.url).searchParams.get("sf") === "bi-source"),
       marker.click(),
     ])
     expect(sourceResponse.status).toBe(200)
     expect(new URL(sourceResponse.url).searchParams.get("valueId")).toBe(valueId)
+    expect(new URL(sourceResponse.url).searchParams.get("referenceDigest")).toBe(originDigest)
     const original = sourceResponse.body as { links: { label: string; url: string }[] }
     expect(original.links.length).toBeGreaterThan(0)
     const originalUrl = new URL(original.links[0]!.url, world.origin)
@@ -512,6 +532,7 @@ test("native BI returns from its real Planner source with the same human filters
     expect(await page.locator('[data-sf-field="candidate-version"]').inputValue()).toBe(versions[1]!)
     expect(await page.locator('[data-sf-field="currency"]').inputValue()).toBe("USD")
     expect(await page.evaluate(() => document.activeElement?.getAttribute("data-sf-bi-focus"))).toBe(valueId)
+    expect(await page.evaluate(() => document.activeElement?.getAttribute("data-sf-bi-origin"))).toBe(originDigest)
     expect(await world.owner.evaluate((node) => node.isConnected && node.getAttribute("data-sf-provider-state") === "ready")).toBe(true)
     expect(world.failures).toEqual([])
     await world.dispose()

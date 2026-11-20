@@ -17,7 +17,7 @@ import { useSfPresentation, sfCommonKey } from "../../shared/frame/presentation"
 import { SfFinancialFigure } from "../finance"
 import { SfOperationalFigure } from "../operations"
 import { SfDecisionFigure } from "../decisions"
-import type { SfBiFinancialView, SfBiOperationalView, SfBiSnapshot } from "../finance/model"
+import type { SfBiFinancialView, SfBiOperationalView, SfBiSnapshot, SfBiSourceSelection } from "../finance/model"
 import { sfBiKey } from "../finance/model"
 import "./catalog.css"
 
@@ -50,6 +50,7 @@ type CatalogStore = {
   candidateRef: string
   currency: string
   focus: string
+  focusOrigin: string
   requested: boolean
   options: Options | undefined
   data: CatalogData | undefined
@@ -90,7 +91,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     retained && BI_CATALOG.some((item) => item.id === retained.viewId) ? retained.viewId as ViewId : ""
   const [store, setStore] = createStore<CatalogStore>({
     viewId: initialView, start: retained?.start ?? "", end: retained?.end ?? "", choice: "",
-    baseRef: "", candidateRef: "", currency: "", focus: "", requested: false,
+    baseRef: "", candidateRef: "", currency: "", focus: "", focusOrigin: "", requested: false,
     options: undefined, data: undefined, links: undefined, detail: undefined, selectedSource: null,
     sourceState: "empty", readState: "ready", busy: false, layout: "single",
   })
@@ -104,7 +105,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   const remember = () => retainSfBiSelection(context, props.route.pathname, {
     viewId: store.viewId, start: store.start, end: store.end, choice: store.choice,
     baseRef: store.baseRef, candidateRef: store.candidateRef, currency: store.currency,
-    focus: store.focus, requested: store.requested,
+    focus: store.focus, focusOrigin: store.focusOrigin, requested: store.requested,
   })
   const clearResult = () => {
     activeController?.abort(); activeController = undefined; ticket++
@@ -114,7 +115,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   const revokeReads = () => {
     selectionEpoch++
     clearResult()
-    setStore({ options: undefined, choice: "", baseRef: "", candidateRef: "", currency: "", focus: "", requested: false })
+    setStore({ options: undefined, choice: "", baseRef: "", candidateRef: "", currency: "", focus: "", focusOrigin: "", requested: false })
   }
   onCleanup(() => {
     // Keep only untrusted human input when this same F01 owner remains current.
@@ -169,7 +170,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   const selectionChanged = () => {
     selectionEpoch++
     clearResult()
-    setStore({ requested: false, focus: "" })
+    setStore({ requested: false, focus: "", focusOrigin: "" })
   }
   const prepareRead = () => {
     const ready = context.ready(), fence = sfBiOwnerFence(context)
@@ -266,7 +267,8 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   const restoreFocus = () => {
     if (!store.focus || !store.data?.projection.values.some((value) => value.id === store.focus)) return
     const button = [...(root?.querySelectorAll<HTMLButtonElement>("button[data-sf-bi-focus]") ?? [])]
-      .find((element) => element.dataset.sfBiFocus === store.focus)
+      .find((element) => element.dataset.sfBiFocus === store.focus &&
+        (!store.focusOrigin || element.dataset.sfBiOrigin === store.focusOrigin))
     button?.focus()
   }
   const preview = async () => {
@@ -321,19 +323,20 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       const epoch = selectionEpoch
       if (!await reauthorize() || disposed || epoch !== selectionEpoch) return
       setStore({ choice: retained.choice, baseRef: retained.baseRef, candidateRef: retained.candidateRef,
-        currency: retained.currency, focus: retained.focus, requested: retained.requested })
+        currency: retained.currency, focus: retained.focus, focusOrigin: retained.focusOrigin ?? "", requested: retained.requested })
       if (await chooseContext(true) && epoch === selectionEpoch && retained.requested && dataSelectionValid()) await preview()
     })() })
   }
 
-  const openSource = async (reference: SfRef) => {
+  const openSource = async (reference: SfRef, origin?: SfBiSourceSelection) => {
     // A value's source is resolved only via its original valueId/digest and the
     // installed C08 bi-source producer. This cannot produce arbitrary URLs.
     const result = store.data
     if (!result || !allowedData()) return
-    const focused = store.focus && result.projection.values.some((value) => value.id === store.focus) ? store.focus : undefined
-    const matched = result.projection.values.filter((value) => !focused || value.id === focused).flatMap((value) =>
-      [value.drilldown, ...value.sourceRefs].filter((source) => source?.refId === reference)
+    const focused = origin?.valueId ?? (store.focus && result.projection.values.some((value) => value.id === store.focus) ? store.focus : undefined)
+    const matched = result.projection.values.filter((value) => origin ? value.id === origin.valueId : !focused || value.id === focused).flatMap((value) =>
+      [value.drilldown, ...value.sourceRefs].filter((source) => source?.refId === reference &&
+        (!origin || source.refDigest === origin.referenceDigest))
         .filter((source, index, all) => source && all.findIndex((item) => item?.refDigest === source.refDigest) === index)
         .map((source) => ({ value, source: source! })))
     if (matched.length !== 1) {
@@ -351,7 +354,9 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       setStore({ selectedSource: reference, links: undefined, sourceState: "invalid" })
       return
     }
-    setStore({ selectedSource: reference, links: undefined, sourceState: "loading", busy: true })
+    setStore({ selectedSource: reference, links: undefined, sourceState: "loading", busy: true,
+      focus: matched[0]!.value.id, focusOrigin: matched[0]!.source.refDigest })
+    remember()
     try {
       const output = await request.client["bi.bi-source"]({
         viewId,
@@ -423,7 +428,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
         onFocusIn={(event) => {
           const focus = event.target instanceof HTMLElement ? event.target.dataset.sfBiFocus : undefined
           if (focus && store.data?.projection.values.some((value) => value.id === focus)) {
-            setStore("focus", focus); remember()
+            setStore({ focus, focusOrigin: event.target instanceof HTMLElement ? event.target.dataset.sfBiOrigin ?? "" : "" }); remember()
           }
         }}>
         <SfStatePanel state={ownerState()}
@@ -487,12 +492,13 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                           setStore({ choice: event.currentTarget.value, baseRef: "", candidateRef: "", currency: "" })
                           remember()
                         }}>
-                        <option value="">{t(sfBiKey("sf.u21.chooseSelection"))}</option>
+                        {/* Recreated options must retain the current human choice even when its value did not change. */}
+                        <option value="" selected={store.choice === ""}>{t(sfBiKey("sf.u21.chooseSelection"))}</option>
                         <Show when={store.viewId && isFinancial(store.viewId) && options().versions.length}>
-                          <option value="planner">{t(sfBiKey("sf.u21.plannerComparison"))}</option>
+                          <option value="planner" selected={store.choice === "planner"}>{t(sfBiKey("sf.u21.plannerComparison"))}</option>
                         </Show>
                         <For each={options().choices}>
-                          {(item) => <option value={item.selectionRef}>{item.label}</option>}
+                          {(item) => <option value={item.selectionRef} selected={store.choice === item.selectionRef}>{item.label}</option>}
                         </For>
                       </select>
                     </label>
@@ -504,16 +510,16 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                       <select value={store.baseRef} data-sf-field="base-version" onChange={(event) => {
                         selectionChanged(); setStore("baseRef", event.currentTarget.value); remember()
                       }}>
-                        <option value="">{t(sfBiKey("sf.u21.chooseVersion"))}</option>
-                        <For each={options().versions}>{(version) => <option value={version.ref}>{version.label}</option>}</For>
+                        <option value="" selected={store.baseRef === ""}>{t(sfBiKey("sf.u21.chooseVersion"))}</option>
+                        <For each={options().versions}>{(version) => <option value={version.ref} selected={store.baseRef === version.ref}>{version.label}</option>}</For>
                       </select>
                     </label>
                     <label>{t(sfBiKey("sf.u21.candidateVersion"))}
                       <select value={store.candidateRef} data-sf-field="candidate-version" onChange={(event) => {
                         selectionChanged(); setStore("candidateRef", event.currentTarget.value); remember()
                       }}>
-                        <option value="">{t(sfBiKey("sf.u21.chooseVersion"))}</option>
-                        <For each={options().versions}>{(version) => <option value={version.ref}>{version.label}</option>}</For>
+                        <option value="" selected={store.candidateRef === ""}>{t(sfBiKey("sf.u21.chooseVersion"))}</option>
+                        <For each={options().versions}>{(version) => <option value={version.ref} selected={store.candidateRef === version.ref}>{version.label}</option>}</For>
                       </select>
                     </label>
                     <label>{t(sfBiKey("sf.u21.comparisonCurrency"))}
@@ -548,13 +554,13 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                   <SfFinancialFigure viewId={store.viewId as SfBiFinancialView}
                     projection={data()} selection={store.selectedSource}
                     onSelect={(ref) => setStore("selectedSource", ref)}
-                    onOpenSource={(ref) => { void openSource(ref) }} />
+                    onOpenSource={(ref, origin) => { void openSource(ref, origin) }} />
                 </Show>
                 <Show when={store.viewId && isOperational(store.viewId as ViewId)}>
                   <SfOperationalFigure viewId={store.viewId as SfBiOperationalView}
                     projection={data()} selection={store.selectedSource}
                     onSelect={(ref) => setStore("selectedSource", ref)}
-                    onOpenSource={(ref) => { void openSource(ref) }} />
+                    onOpenSource={(ref, origin) => { void openSource(ref, origin) }} />
                 </Show>
                 <Show when={store.viewId === "BI09" || store.viewId === "BI10" || store.viewId === "BI11"}>
                   <SfDecisionFigure viewId={store.viewId as "BI09" | "BI10" | "BI11"}
@@ -574,7 +580,8 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                 </Show>
                 <Show when={store.viewId !== "BI09" && store.viewId !== "BI10" && store.viewId !== "BI11" ? store.selectedSource : null}>
                   {(ref) => <div class="sf-bi-selected-source">
-                    <button class="mx-btn" type="button" onClick={() => { void openSource(ref()) }}>
+                    <button class="mx-btn" type="button" onClick={() => { void openSource(ref(),
+                      store.focus && store.focusOrigin ? { valueId: store.focus, referenceDigest: store.focusOrigin } : undefined) }}>
                       {t(sfBiKey("sf.u21.resolveSource"))}
                     </button>
                   </div>}
