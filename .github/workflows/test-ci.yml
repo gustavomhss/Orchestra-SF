@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   test:
@@ -48,10 +49,13 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           import { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import { createHash } from 'node:crypto'
           import path from 'node:path'
           import { omniControlScope, validateRequest } from './script/test-ci-request.ts'
           import { locateTestPackage } from './script/test-ci-location.ts'
-          const request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+          const requestBytes = readFileSync('.ci-run.json')
+          const requestBlob = createHash('sha1').update('blob ' + requestBytes.length + '\0').update(requestBytes).digest('hex')
+          const request = validateRequest(JSON.parse(requestBytes.toString('utf8')),
             (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
               realpathSync(file).startsWith(realpathSync('.') + path.sep),
             (selector) => locateTestPackage('.', selector))
@@ -60,7 +64,7 @@ jobs:
           writeFileSync('test-ci-evidence/request.json', JSON.stringify({ request,
             platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))
           appendFileSync(process.env.GITHUB_OUTPUT,
-            `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+            `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\nrequest_blob=${requestBlob}\n`)
           const sf66Args = request.args[0] === '--timeout' && request.args[1] === '120000'
             ? request.args.slice(2) : request.args
           const sf66Exports = request.package === 'sucafina' && request.directory === 'modules/sucafina' &&
@@ -190,6 +194,54 @@ jobs:
           echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
           echo "omni control nonce: $nonce"
 
+      # A current approval belongs to the exact source PR, not to arbitrary
+      # uncommitted changes uploaded by test:ci. The API must prove that this
+      # snapshot changes only its request before any approval is transmitted.
+      - name: Resolve source PR guard approval
+        id: guard_context
+        if: steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun'
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+          REQUEST_BLOB: ${{ steps.request.outputs.request_blob }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from 'node:fs'
+          import { githubGuardReader, resolveGuardContext } from './script/test-ci-guard-context.ts'
+          const result = await resolveGuardContext({
+            repository: process.env.GITHUB_REPOSITORY, eventName: process.env.GITHUB_EVENT_NAME,
+            refName: process.env.GITHUB_REF_NAME, snapshot: process.env.GITHUB_SHA,
+            requestBlob: process.env.REQUEST_BLOB, request: JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+          }, githubGuardReader(process.env.GH_READ_TOKEN ?? ''))
+          writeFileSync('test-ci-evidence/guard-context.json', JSON.stringify(result, null, 2) + '\n')
+          appendFileSync(process.env.GITHUB_OUTPUT,
+            'approved=' + result.approved + '\nbase_sha=' + (result.baseSha ?? '') + '\n')
+          console.log('source PR guard context: ' + result.status + ' (' + result.reason + ')')
+          NODE
+
+      - name: Verify approved source PR guard bases
+        if: steps.guard_context.outputs.approved == 'protected-paths'
+        env:
+          GUARDRAIL_APPROVED: ${{ steps.guard_context.outputs.approved }}
+          SF_GUARD_PR_BASE: ${{ steps.guard_context.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+          git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev "$SF_GUARD_PR_BASE"
+          git cat-file -e "$SF_GUARD_PR_BASE^{commit}"
+          set +e
+          bun run check:guards --base origin/dev > test-ci-evidence/guard-dev.log 2>&1
+          dev_status=$?
+          bun run check:guards --base "$SF_GUARD_PR_BASE" > test-ci-evidence/guard-pr-base.log 2>&1
+          pr_status=$?
+          set -e
+          printf 'guards canonical dev status=%s; source PR base=%s status=%s\n' "$dev_status" "$SF_GUARD_PR_BASE" "$pr_status"
+          test "$dev_status" -eq 0 && test "$pr_status" -eq 0
+
       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
       - name: Run tests
@@ -197,6 +249,8 @@ jobs:
         env:
           ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
           ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
+          # Empty unless the read-only API check admitted the exact source PR.
+          GUARDRAIL_APPROVED: ${{ steps.guard_context.outputs.approved }}
           PACKAGE: ${{ steps.request.outputs.package }}
           DIRECTORY: ${{ steps.request.outputs.directory }}
           RUNNER: ${{ steps.request.outputs.runner }}
@@ -295,6 +349,18 @@ jobs:
               node --experimental-strip-types --test "${args[@]}"
               ;;
           esac
+
+      - name: Upload source PR guard evidence
+        if: always() && steps.guard_context.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: test-ci-guard-context-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            test-ci-evidence/guard-context.json
+            test-ci-evidence/guard-dev.log
+            test-ci-evidence/guard-pr-base.log
+          if-no-files-found: error
+          retention-days: 7
 
       # SF88: bounded reader runs only for the existing, validated export-artifact selection.
       # This reuses the validated surgical request; it does not run another product selection.
