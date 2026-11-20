@@ -4,13 +4,22 @@ import { expect, test } from "@playwright/test"
 import type { Locator, Page, TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
-type Account = { baseURL: string; principal: string; enrollments: Record<string, string> }
+type Account = { baseURL: string; principal: string; projectId: string; installationId: string; enrollments: Record<string, string> }
 type Manifest = { origin: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
 
 test.describe.configure({ retries: 0 })
 
 async function readManifest() {
   return JSON.parse(await readFile(path.join(import.meta.dirname, ".host-manifest.json"), "utf8")) as Manifest
+}
+
+function chapterUrl(account: Account, pathname: string) {
+  if (!account.projectId || !account.installationId) throw new Error("The selected real-host owner is unavailable")
+  const url = new URL(pathname, account.baseURL)
+  url.search = new URLSearchParams({
+    server: url.origin, project: account.projectId, installation: account.installationId,
+  }).toString()
+  return url
 }
 
 async function login(page: Page, account: "first" | "second" | "viewer", scenario: string) {
@@ -20,7 +29,7 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   if (!enrollment) throw new Error("The selected real-host enrollment is unavailable")
   const response = await page.request.get(enrollment, { maxRedirects: 0 })
   expect(response.status()).toBe(303)
-  const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
+  const entry = await page.goto(chapterUrl(selected, "/orchestra/sf-procurement/requests").href)
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
   // The native Requests table exposes the producer-owned C02 provenance.
@@ -44,7 +53,7 @@ function responseFor(page: Page, action: string, id?: string) {
 }
 
 async function createDraft(page: Page, account: Account, title: string) {
-  await page.goto(new URL("/orchestra/sf-procurement/requests/new", account.baseURL).href)
+  await page.goto(chapterUrl(account, "/orchestra/sf-procurement/requests/new").href)
   const form = page.locator("article.sf-u11-detail").locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
@@ -87,7 +96,7 @@ async function openRecord(page: Page, account: Account, id: string) {
   expect(id).toMatch(/^PR-2026-\d+$/)
   const encoded = encodeSfRouteRef(id)
   const nativeOrigin = new URL(account.baseURL)
-  await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, nativeOrigin).href)
+  await page.goto(chapterUrl(account, `/orchestra/sf-procurement/requests/${encoded}`).href)
   await expect(page).toHaveURL((url) => url.origin === nativeOrigin.origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const row = page.locator(`tr[data-sf-row="${id}"]`)
   await expect(row).toHaveCount(1)

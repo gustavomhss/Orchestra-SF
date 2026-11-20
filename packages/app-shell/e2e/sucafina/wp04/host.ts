@@ -125,7 +125,8 @@ const embedded = HttpRouter.toWebHandler(Layer.merge(createEmbeddedRoutes({
   Layer.provide(HttpServer.layerServices),
 ), { disableLogger: true })
 const health = await embedded.handler(new Request(origin + "/api/health"))
-if (health.status !== 200 || !installation.identity()) throw new Error("OPERATIONS_REAL_HOST_NOT_READY")
+const identity = installation.identity()
+if (health.status !== 200 || !identity) throw new Error("OPERATIONS_REAL_HOST_NOT_READY")
 const records = await store.transaction("procurement", async (snapshot) => {
   const actor = { id: people[0]!.id, roles: ["admin", "buyer"], canWrite: true }
   const context = await environment()
@@ -193,7 +194,7 @@ active.handle = async (request) => {
     return new Response("Access denied", { status: 403 })
   return await installation.application(request) ?? new Response("Not found", { status: 404 })
 }
-const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
+const enrolled: Record<string, { baseURL: string; principal: string; projectId: string; installationId: string; enrollments: Record<string, string> }> = {}
 for (const [index, account] of accounts.entries()) {
   const enrollments: Record<string, string> = {}
   for (const scenario of ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) {
@@ -201,7 +202,10 @@ for (const [index, account] of accounts.entries()) {
     enrollmentOwners.set(code, account)
     enrollments[scenario] = origin + mount + "/auth/local?code=" + code
   }
-  enrolled[account.key] = { baseURL: origin + mount, principal: people[index]!.id, enrollments }
+  enrolled[account.key] = {
+    baseURL: origin + mount, principal: people[index]!.id,
+    projectId: identity.projectId, installationId: identity.installationId, enrollments,
+  }
 }
 // Enrollment credentials remain private to this ephemeral test process and are not artifacts.
 await writeFile(manifest, JSON.stringify({ origin, directory, accounts: enrolled, records }), { mode: 0o600 })
