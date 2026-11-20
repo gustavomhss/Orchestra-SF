@@ -74,8 +74,11 @@ function SfProcurementPages(props: Readonly<{ route: SfResolvedRoute }>): JSX.El
     <Match when={props.route.surfaceId === "CAP24"}><SfProcurementOverviewView surfaceId="CAP24" route={props.route as SfSurfaceProps<"CAP24">["route"]} /></Match>
     <Match when={props.route.surfaceId === "CAP25" && (props.route.kind === "sourcing" || props.route.kind === "quotes")}><SfSourcingView surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} /></Match>
     <Match when={props.route.surfaceId === "CAP25"}>
-      <Show when={props.route.kind === "entry"}><SfProcurementQueueView surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} /></Show>
-      <SfRequestsPage surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} />
+      {/* Keep both surfaces in one scroll flow; a growing editor must not collapse the queue. */}
+      <div class="min-h-0 min-w-0 flex-1 overflow-y-auto">
+        <Show when={props.route.kind === "entry"}><SfProcurementQueueView surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} /></Show>
+        <SfRequestsPage surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} />
+      </div>
     </Match>
     <Match when={props.route.surfaceId === "CAP26" && props.route.kind === "review"}><SfRemainingApprovalsView surfaceId="CAP26" route={props.route as SfSurfaceProps<"CAP26">["route"]} /></Match>
     <Match when={props.route.surfaceId === "CAP26"}><SfPrApprovalView surfaceId="CAP26" route={props.route as SfSurfaceProps<"CAP26">["route"]} /></Match>

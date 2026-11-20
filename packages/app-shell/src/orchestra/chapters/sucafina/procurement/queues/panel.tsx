@@ -287,7 +287,7 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       } : undefined}
       secondaryActions={[]}
       density={props.density}
-      layout="work"
+      layout="split"
       onLayoutMode={props.onLayoutMode}
     >
       <Show when={authorized()}>
