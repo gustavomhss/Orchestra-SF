@@ -576,6 +576,10 @@ export function createSfProductAuthority(input: {
               : Object.freeze([Object.freeze({ category: selected, resourceId: Schema.decodeUnknownSync(ConnectionAccess.Identifier)(resourceId) })])
             return run(async () => teamConnections.store.list(await access(), resources))
           },
+          inspect: (key) => {
+            const selected = Object.freeze({ ...Schema.decodeUnknownSync(ConnectionAccess.Key)(key) })
+            return run(async () => teamConnections.store.inspect(await access(), selected))
+          },
           read: (key) => {
             const selected = Object.freeze({ ...Schema.decodeUnknownSync(ConnectionAccess.Key)(key) })
             return run(async () => teamConnections.store.read(await access(), selected))

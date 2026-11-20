@@ -18,6 +18,8 @@ export interface Interface {
   readonly owner: TeamProfile.Owner
   readonly check: (action: ConnectionAccess.Action, resource: ConnectionAccess.Resource) => Effect.Effect<void, Denied>
   readonly list: (category: ConnectionAccess.Category, resourceId?: string) => Effect.Effect<ReadonlyArray<ConnectionAccess.Metadata>, Denied>
+  /** Current record metadata only; this operation never opens the encrypted credential. */
+  readonly inspect: (key: ConnectionAccess.Key) => Effect.Effect<ConnectionAccess.Metadata | undefined, Denied>
   readonly read: (key: ConnectionAccess.Key) => Effect.Effect<Stored | undefined, Denied>
   readonly write: (input: ConnectionAccess.Write) => Effect.Effect<Stored, Denied>
   readonly remove: (input: ConnectionAccess.Remove) => Effect.Effect<void, Denied>
