@@ -5,10 +5,14 @@ import { withReportsInstallation } from "./production-installation.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 
 export const reportsTest = test.extend<{ reports: { app: ReportsInstallation; corpus: ReportsCorpus } }>({
-  baseURL: "http://localhost:4110",
-  reports: [async ({ page }, use, info) => {
+  reports: [async ({ page, trace, video, screenshot }, use, info) => {
+    // Check resolved options before enrollment or the issued host credential can be read.
+    // A CLI override must fail closed instead of recording the authenticated ingress.
+    expect(trace, "Reports ingress requires trace capture to be disabled").toBe("off")
+    expect(video, "Reports ingress requires video capture to be disabled").toBe("off")
+    expect(screenshot, "Reports ingress requires screenshot capture to be disabled").toBe("off")
     expect(info.project.metadata.bundle, "CI-UI-REPORTS requires the existing production config").toBe("production")
-    expect(info.config.workers, "The production installer binds its fixed port 4110").toBe(1)
+    expect(info.config.workers, "The production installer owns one loopback listener").toBe(1)
     expect(info.project.retries, "Do not retry a Reports journey containing mutations").toBe(0)
     const corpus = reportsCorpus()
     await withReportsInstallation({
