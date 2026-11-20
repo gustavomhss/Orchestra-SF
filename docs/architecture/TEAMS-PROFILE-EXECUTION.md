@@ -1,12 +1,14 @@
 # Teams Profile — execução
 
-## Estado atual — checkpoint cf950432
+## Estado atual — checkpoint 5a248303
 
-Implementação em andamento, sem qualificação final. A UI Web nativa, o workspace de sessões, a configuração compartilhada de Team e o adaptador técnico de sessões estão incorporados. A regressão HTTP 500 no boot corporativo foi corrigida no consumidor de Inbox; o corte dirigido de Core Sessions e a barreira real passaram após corrigir a notificação de observadores do Effect. Esses resultados têm escopo e fontes próprios: a migração continua declarando `installationComplete: false`.
+Implementação em andamento, sem qualificação final. A branch isolada já incorpora o provedor privado pelo caminho nativo de SessionRunnerModel/LLMClient, o catálogo HTTP fechado e a interface de conexões pessoais. A execução HTTPS dirigida do provedor passou63 testes; o catálogo HTTP e suas regressões passaram13; os recortes finais de UI e cliente passaram10 e11. Cada resultado pertence à fonte indicada no ledger, sem transferir aprovação ao candidato combinado.
 
-A jornada completa de navegador G02 ainda está vermelha no prazo original de sete segundos, com prompt e leitura de mensagens pendentes. O recorte HTTP/SSE corrigido passou em 12 testes e foi integrado; a próxima observação conjunta do navegador continua pendente. BEFORE e AFTER de desempenho têm 18 execuções completas cada, mas as medianas de troca de abas regrediram **11,4% a 24,8%**, sem causa de tempo demonstrada. O pool G04, o artefato instalado, a recuperação completa e os demais gates permanecem abertos.
+O pacote Linux de uma fonte histórica foi realmente produzido, inventariado, extraído e conferido por um consumidor independente. Seu G09 executou e permanece **DIAGNOSTIC_UNQUALIFIED**:24.178ocorrências e3.285achados de alcançabilidade ainda não têm classificação. O relatório original de606.300.402bytes agora pode ser navegado sem alterar seus bytes;177controles passaram e quatro páginas foram produzidas contra o mesmo artefato. Isso resolve a leitura, sem aprovar qualquer ocorrência.
 
-Fonte integrada deste checkpoint: [cf950432da102f0f6f1806f3079ea5c593187e50](https://github.com/gustavomhss/Orchestra-SF/commit/cf950432da102f0f6f1806f3079ea5c593187e50). Todos os dez gates continuam `NOT_RUN_ON_FINAL_CANDIDATE`. Os checkpoints abaixo são históricos; o novo checkpoint ao final e o ledger JSON atualizam as pendências sem reescrever os runs anteriores.
+A jornada nativa G02 ainda falha no prazo original de sete segundos; o diagnóstico encontrou muitas revalidações atuais por requisição e não autoriza cache de autoridade. A matriz G04 mais recente terminou os206corpos de40fontes, com198retornos e8exceções, além da falha de seu guard de ciclo de vida. A migração F04v2 e os controles privados do host instalado continuam em implementação. O corte permanece limitado a Core Sessions, com `installationComplete:false`. As medianas de abas continuam11,43%–24,79% piores no benchmark completo, sem causa de tempo demonstrada.
+
+Fonte integrada deste checkpoint: [5a248303947039f4542a8f4b1774fc255723e271](https://github.com/gustavomhss/Orchestra-SF/commit/5a248303947039f4542a8f4b1774fc255723e271). Todos os dez gates continuam `NOT_RUN_ON_FINAL_CANDIDATE`. As rodadas estáticas finais do provedor e da UI ficaram15/16: os dois arquivos protegidos já registrados ainda exigem aprovação real. Nenhum tenant real, recuperação Azure ou migração de dados do usuário foi qualificado. Os checkpoints abaixo são históricos; o novo checkpoint ao final e o ledger JSON preservam suas falhas e limites.
 
 ## Base e plano
 
@@ -466,3 +468,55 @@ A estática encontrou erros de tipagem em expectativas de teste (principal com m
 A trilha de pacote reteve todas as falhas: contexto inválido de workflow, teste negativo do source checker, recusa por checkout alterado e import de dependência fora do workspace declarado. Os160 contratos Node passaram depois da correção do checker; o checkout só permaneceu limpo após incorporar o arquivo produzido pelo Bun1.3.14, com blob exato `5ce9c75a60184305cd294f20ed9c3eedf4eb063f`. O diff apenas ordena duas dependências e não troca versões. O primeiro produtor real compilou Omni, mas parou antes do tar por não resolver `effect` na raiz. A correção move somente o helper de processos para o workspace CLI que declara as dependências. Nenhum arquivo tar, G09 ou G07 foi creditado como aprovado.
 
 Os diagnósticos que localizaram a espera de migração e as duas tentativas inválidas do patch Effect também estão registrados. A correção final notifica um snapshot dos observadores e preserva a barreira de interrupção; os cinco testes de Core/barreira e18 de corte/autoridade passaram nas fontes registradas. O corte continua limitado a `core-sessions`, com `installationComplete:false`. Ensaio Azure, recuperação completa, contexto Microsoft instalado e todos os dez gates no mesmo candidato permanecem pendentes.
+
+## Checkpoint 5a248303 — provedor, interface pessoal e auditoria original
+
+Este checkpoint acrescenta40 observações ao ledger, que passa a246 registros dirigidos. As tentativas malsucedidas permanecem registradas com seus próprios commits, snapshots e runs. Contagens de recortes sobrepostos não são somadas como testes únicos.
+
+| Observação | Fonte | Resultado observado | Run |
+|---|---|---|---|
+| Estática conjunta de RoleMaps/HTTP pessoal | cf950432 |15/16; apenas guard de arquivos protegidos |[44730688098](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44730688098) |
+| Pacote Linux e G09 efetivamente executados |48e7110f |tar e consumidor verificados; G09 não qualificado |[44731293244](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44731293244) |
+| Jornada nativa com batch atual |c5cef5a6 |1pass/1fail; prazo original7s |[44732298181](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44732298181) |
+| Diagnóstico privado de política |d2d9ac4d |1pass/1fail; trace não integrado |[44734831169](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44734831169) |
+| Matriz componente completa |c3f53500 |206corpos terminados;198retornos/8exceções |[44730481397](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44730481397) |
+| Parser de receipts nativos |16d5c1cf |166/0; nenhuma execução instalada |[44733911193](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44733911193) |
+| UI pessoal Solid/HappyDOM |1e32fa55 |10/0;119asserções |[44733961568](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44733961568) |
+| Cliente pessoal |1e32fa55 |11/0;91asserções |[44733965484](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44733965484) |
+| Estática da UI |1e32fa55 |15/16; apenas protegidos |[44733970800](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44733970800) |
+| Provedor pelo transporte nativo HTTPS |4e7d44db |63/0;330asserções |[44735466902](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44735466902) |
+| Estática do provedor |4e7d44db |15/16; zero erro TS |[44736046191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44736046191) |
+| Catálogo HTTP e regressões pessoais |0f5ccbde |13/0;191asserções |[44734630961](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44734630961) |
+| Leitor inicial do relatório original |ef6d31cc |173/0; leitura falhou no limite de string V8 |[44735105063](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44735105063) |
+| Leitor segmentado do mesmo relatório |739eac21 |177/0; quatro índices; zero classificação |[44737454948](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44737454948) |
+| Evidência/projeção conjunta de componente |55f8a8d2 |11/0; ainda em branch de trabalho |[44735992805](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44735992805) |
+
+### Provedor e conexões pessoais
+
+Os13paths finais do provedor foram incorporados em91d430de junto aos três paths do catálogo HTTP. A rota privada conserva a referência exata do lease, Owner completo, geração, binding de Team, recurso e revisão da chave. O corpo é recompilado a partir da requisição canônica, com modelo e orçamento fechados; endpoint, cabeçalhos e codec fornecidos pelo chamador não substituem a definição privada. O comprimento permitido é exclusivamente o número de bytes do corpo Uint8Array canônico. O caso negativo continua recusando comprimento fornecido pelo chamador.
+
+A prova dirigida usa o LLMClient e HTTPS reais do caminho nativo, incluindo recusa de referência emprestada/clonada, alterações de modelo/corpo/orçamento, revogação entre frames, escopo cancelado,429/503sem repetição automática e307sem redirecionamento. O wrapper C15 mantém sua própria autorização e recibos, mas recebe a mesma camada privada de LLM. Seu fixture de SessionExecution grava observações; ele não é um tenant real nem prova de G08. O Node efetivo após o composite dessas provas dirigidas foi24.22.3, e o Bun1.3.14; não se apresenta esse run como Node24.15.
+
+A UI pessoal integrada emcc76f005 usa somente chaves de recurso provenientes do catálogo atual, mantém Owner/geração/janela, lê antes do CAS e limpa o segredo em memória ao iniciar o envio. O journal de resultado incerto não contém segredo, rascunho, label ou corpo. Falha ao preservar essa referência impede POST. Um GET posterior pode provar estado atual; nunca prova a autoria do POST anterior nem a aceitação da chave pelo provedor. Não há repetição automática. HappyDOM e testes de cliente não são navegador Chrome instalado.
+
+### Artefato e resíduos
+
+O produtor de48e7110f, treee4570749, gerou `orchestra-sf.tar.gz` comSHA256 `9f3369d185b7d7bded7c5e0833a502c07fd45efc72c698c63496b69b109600bf`,92.446.101bytes,1.414arquivos e dois metadados adicionais. O artefato14626931329 tem digest ZIP `sha256:7ebb284b0270ac110b522cb1b3347c9d15272174daa40d90385470c6211bff07`. O consumidor conferiu API, ZIP original, tar, manifest e inventário antes do audit. Essa fonte é histórica e não equivale ao head atual.
+
+O G09 reteve zero dispositions e registrou24.178ocorrências mais3.285achados de alcançabilidade. Os quatro bloqueios continuam: revisão independente da fonte, ocorrências/alcançabilidade sem classificação, catálogo apenas diagnóstico e obrigações de teste não executadas. Valores zero em activeLegacy/orphan são contagens de classificações existentes, não prova de ausência de legado.
+
+O artefato de evidência14626646947 contém o relatório original de606.300.402bytes, SHA256 `fe545bf0bbcf057421a9725fbac53d2715edfd5d2c6e6b4a55b8ab3d1e0b2f47`. A primeira navegação falhou porque V8 não cria uma string desse tamanho; aumentar heap não muda esse limite. O leitor corrigido valida UTF8, gramática JSON, chaves duplicadas e EOF em todos os bytes. Apenas os dois arrays de expressões de chamada deixam de ser materializados:901.331expressões na fonte e235.665no pacote, cada array preservado por contagem, comprimento e hash dos bytes originais. Não são substituídos por grafo vazio.
+
+O teste acima do limite real de string passou e as quatro páginas foram produzidas sobre o mesmo relatório, com Node24.15.0/Bun1.3.14 e checkout limpo. Os índices têm statusREAD_ONLY_REVIEW_INDEX, qualificationNOT_EVALUATED e dispositionsChanged0. Fonte e pacote continuam separados:21.073arquivos/17.900ocorrências na fonte e1.416arquivos/6.278ocorrências no pacote. Agrupamentos e páginas servem à navegação e não aprovam categorias, prefixes ou achados.
+
+### Obrigações nativas e pendências
+
+O parser nativo preserva as50obrigações originais de U15/U39/U40, com6/22/22casos, sem omissões, repeats, retries ou skips. Fixa configuração de produção Playwright1.59.1, source/tree, role, run/attempt, invocation, tar, inventário e observações privadas do host. Recibos válidos ainda declaramREPORT_VALIDATED e exigem verificação independente de F04 e do gate final. Os specs novos de Teams e recuperação continuam pendentes; ainda falta o host instalado, com seus atores e contextos autenticados independentes.
+
+A revisão estática identificou um falso positivo do guard em uma string de código inválido usada como entrada negativa. A construção dessa mesma entrada foi tornada explícita, sem pular o corpo nem remover a rejeição. Também foi acrescentada a declaração TypeScript de candidateSource. As177provas do leitor incluem novamente todas as provas nativas anteriores.
+
+O diagnóstico G02 mediu67avaliações de política durante a criação de sessão, sem encontrar HTTP500 ou erro de runtime no ponto de falha. Os intervalos de estágios e requisições se sobrepõem e não podem ser somados. O trace privado permanece fora da branch principal de implementação. Qualquer redução de trabalho repetido deve preservar observações atuais independentes nas fronteiras assíncronas, no efeito e na saída.
+
+A matriz G04 terminou todos os206corpos; seus oito erros não foram convertidos em timeout incompleto nem removidos. As correções de observação conjunta e de Work seguem em ramo isolado com provas reais de revogação e material antes da próxima matriz. O resultado dirigido não antecipa o resultado dos40arquivos.
+
+MCP, os consumidores restantes, F04v2, a migração de todas as categorias e a recuperação instalada ainda precisam de implementação e provas. Corporate Inbox continua indisponível de forma explícita; o dado de negócio é da instalação e não será fragmentado por Team por conveniência. Os dez gates, a aprovação dos dois arquivos protegidos e o contexto real Microsoft/Azure continuam abertos.

@@ -11,8 +11,8 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "cf950432da102f0f6f1806f3079ea5c593187e50",
-    "latestIntegratedSource": "cf950432da102f0f6f1806f3079ea5c593187e50",
+    "preCheckpointHead": "5a248303947039f4542a8f4b1774fc255723e271",
+    "latestIntegratedSource": "5a248303947039f4542a8f4b1774fc255723e271",
     "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
@@ -7915,8 +7915,8 @@
     {
       "id": "F04",
       "owner": "teams-profile-native",
-      "scope": "Shared installed-manifest validation and actual producer/reader round-trip; v1 retained until protocol migration",
-      "status": "DIRECTED_TESTS_PASSED_INTEGRATED"
+      "scope": "Existing strict installed v1 contract remains integrated; Web F04v2 fullTeam/candidate/tree/run/archive and private host-control migration is in progress. Original6/22/22obligations retained. No actual installed-host qualification.",
+      "status": "V1_INTEGRATED_V2_IN_PROGRESS_NO_LIVE_QUALIFICATION"
     },
     {
       "id": "WP1D",
@@ -7963,8 +7963,8 @@
     {
       "id": "WP3",
       "owner": "teams-session-owner/teams-session-runtime",
-      "scope": "Durable SessionOwner, private original-request admission, canonical namespace, mounted HTTP/SDK, TeamConfig and personal vault are integrated. Eager corporate Inbox discovery and graph-construction boot regressions are corrected in directed tests; positive private provider/MCP and remaining consumers are unfinished. Personal key metadata/commands are wired through original Microsoft Request and current owner;10 directed HTTP/body tests passed.",
-      "status": "HOST_OWNER_GRAPH_VAULT_PERSONAL_HTTP_INTEGRATED_PROVIDER_MCP_PENDING"
+      "scope": "Current Owner and generation, original Microsoft Request, personal vault/HTTP/UI and actual private SessionRunnerModel/LLMClient HTTPS execution are integrated. Exact private provider endpoint/model/budget, per-frame current checks and closed metadata Catalog HTTP have directed evidence. MCP and remaining consumers are unfinished.",
+      "status": "PRIVATE_PROVIDER_AND_PERSONAL_UI_INTEGRATED_DIRECTED_PASSED_MCP_PENDING"
     },
     {
       "id": "WP4-GENERATION",
@@ -25348,6 +25348,789 @@
       "status": "FAILURE",
       "observation": "14/16 commands passed; source/inventory/execution valid. The remaining type error is unrelated Active HTTP expected object literal widening atserver.test.ts70; protected-path guard also fails. All batch/Sucafina/Core/Server/CLI/client/generator/build commands passed. Batch and private entry/type wiring integrated270959.",
       "qualification": "Not a passing aggregate gate."
+    },
+    {
+      "id": "COMBINED_STATIC_CURRENT_ROLES_AND_PERSONAL_HTTP",
+      "source": "cf950432da102f0f6f1806f3079ea5c593187e50",
+      "snapshot": "70418d919e347ce134e1ef4c42bf533d5ad6375d",
+      "tree": "94b70fca95d0b046c4a1ad16ce543fcdf2832737",
+      "runId": 44730688098,
+      "jobId": 136269358191,
+      "status": "FAILURE",
+      "checks": {
+        "passed": 15,
+        "total": 16,
+        "sourceValid": true,
+        "inventoryValid": true,
+        "executionValid": true
+      },
+      "observation": "All generators, compiler/config checks, Web build, spawn imports and PR-base guard passed. Only guard-dev rejected the two previously recorded protected paths.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRODUCTION_ARCHIVE_EIGHT_PREFLIGHT",
+      "source": "621d051de08f59662a5bc37d23d719c85e631992",
+      "workSource": "d6c0ab3a9628ee0744fbd965c3a151d83bc8f8af",
+      "tree": "69811961a3c8e56dbe52dccc254ce643ae26665c",
+      "runId": 44730329282,
+      "jobId": 136268120929,
+      "status": "SUCCESS",
+      "nodeReported": {
+        "pass": 160,
+        "fail": 0
+      },
+      "observation": "Exact Node24.15.0 and Bun1.3.14; tracked checkout remained clean.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRODUCTION_ARCHIVE_EIGHT_PRODUCER",
+      "source": "621d051de08f59662a5bc37d23d719c85e631992",
+      "tree": "69811961a3c8e56dbe52dccc254ce643ae26665c",
+      "runId": 44730329282,
+      "jobId": 136268612520,
+      "status": "SUCCESS",
+      "archiveSha256": "3d578167771c481afa7091e36ad8848a9bf47a7ed2465fce86418ff7ab3c7e82",
+      "archiveBytes": 92442172,
+      "archiveFileCount": 1416,
+      "fileCount": 1414,
+      "webFileCount": 1311,
+      "artifact": {
+        "id": 14625863163,
+        "bytes": 92349298,
+        "digest": "sha256:4ddc70f21a69ee47c629d6bd28b3fc07cb7c2fd42db48d6349971fb23cb3b1f9"
+      },
+      "observation": "Actual Linux production archive and extracted inventory verified; no installed browser proof.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRODUCTION_ARCHIVE_EIGHT_CONSUMER_PATH_FAILURE",
+      "source": "621d051de08f59662a5bc37d23d719c85e631992",
+      "runId": 44730329282,
+      "jobId": 136269704050,
+      "status": "FAILURE",
+      "observation": "Independent artifact API and original ZIP digest/size verified, then ENOENT because the exact-ID download was nested beneath its artifact name. Fixed one-artifact merge-multiple placement; no selection or digest relaxation.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRODUCTION_ARCHIVE_NINE_PREFLIGHT",
+      "source": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+      "workSource": "5af351e8f27066fc7c6d51bd517cfc18a0e230a7",
+      "tree": "e4570749938a138377a01142ac5943223f225a34",
+      "runId": 44731293244,
+      "jobId": 136271414970,
+      "status": "SUCCESS",
+      "nodeReported": {
+        "pass": 160,
+        "fail": 0
+      },
+      "observation": "Exact Node24.15.0 and Bun1.3.14; tracked checkout remained clean.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRODUCTION_ARCHIVE_NINE_PRODUCER",
+      "source": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+      "tree": "e4570749938a138377a01142ac5943223f225a34",
+      "runId": 44731293244,
+      "jobId": 136272069458,
+      "status": "SUCCESS",
+      "schema": "sf-teams-production-artifact-v1",
+      "proofRole": "sf-production-archive",
+      "sourceSHA": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+      "sourceTreeSHA": "e4570749938a138377a01142ac5943223f225a34",
+      "target": "linux-x64-baseline",
+      "version": "1.18.27",
+      "archiveFile": "orchestra-sf.tar.gz",
+      "archiveSha256": "9f3369d185b7d7bded7c5e0833a502c07fd45efc72c698c63496b69b109600bf",
+      "archiveBytes": 92446101,
+      "manifestSha256": "acfbefcb11d507ab9ed2ee61588d8c5e1f835c7ce6778c1a6cf42b3d7570239c",
+      "inventoryFile": "orchestra-sf.tar.gz.inventory.json",
+      "inventorySha256": "1f82eed7bd84ea0eeed640b426f9e861d81e63820b7acc9e0d786beeb040176c",
+      "fileCount": 1414,
+      "archiveFileCount": 1416,
+      "webFileCount": 1311,
+      "brand": "sucafina",
+      "channel": "prod",
+      "viteEnvironmentInputs": 0,
+      "extractedVerified": true,
+      "nativeBrowserProof": "REQUIRED_SEPARATELY",
+      "fullSfCi": "REQUIRED_SEPARATELY",
+      "artifact": {
+        "id": 14626931329,
+        "bytes": 92349171,
+        "digest": "sha256:7ebb284b0270ac110b522cb1b3347c9d15272174daa40d90385470c6211bff07"
+      },
+      "observation": "Actual 1.18.27 linux-x64-baseline production archive; extracted manifest/inventory verified. Separate consumer independently verified API, original ZIP and exact tar. This candidate is historical and unqualified.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "RESIDUE_NINE_ACTUAL_DIAGNOSTIC",
+      "source": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+      "tree": "e4570749938a138377a01142ac5943223f225a34",
+      "runId": 44731293244,
+      "jobId": 136273234403,
+      "status": "FAILURE_DIAGNOSTIC_UNQUALIFIED",
+      "report": {
+        "status": "DIAGNOSTIC_UNQUALIFIED",
+        "binding": {
+          "sourceSHA": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+          "sourceTreeSHA": "e4570749938a138377a01142ac5943223f225a34",
+          "catalogSha256": "cb86d968f3c08709360c756a3071f60fcb8e1c6733a4ce41970f6cbebf15fd59",
+          "inventorySha256": "5412378f591eba50fd0361dd9b0266226a6472e4cb9c243e46fb4be2ad838603",
+          "occurrencesSha256": "e0465dd6b1aae55789850903f99bfb987a3b38a4a5cb290a3e53239d488df5ab",
+          "graphSha256": "e8b0372d6cada03335f0178a44da1784de00df923215257aeb5a979e1bc5414f",
+          "gapsSha256": "a1d9cd4fdca285fcc7aa104f51b5ae55ecdd3aaabd7b6ad1c5742a2eb6bd4bbc"
+        },
+        "counts": {
+          "occurrences": 24178,
+          "classified": 0,
+          "unknownOccurrences": 24178,
+          "unknownReachability": 3285,
+          "unclassified": 27463,
+          "activeLegacy": 0,
+          "orphan": 0
+        },
+        "blockers": [
+          "independent-current-source-review-missing",
+          "unclassified-occurrences-or-reachability",
+          "catalog-diagnostic-only",
+          "executed-test-obligations-missing"
+        ],
+        "output": "/home/runner/work/_temp/teams-profile-residue/team-profile-residue.json"
+      },
+      "artifact": {
+        "id": 14626646947,
+        "bytes": 72616836,
+        "digest": "sha256:b7cdacef70dce81cb94d25356554a3d17d397c7a1307d6cbbe50baea6d5bcf1e"
+      },
+      "observation": "Audit executed on exact source and extracted archive:24178 occurrences and3285 reachability findings remain unclassified. Zero classified active-legacy/orphan does not mean absence. All four qualification blockers remain.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "NATIVE_G02_CURRENT_ROLE_BATCH",
+      "source": "c5cef5a69b44988d147f09b1912845c7a76dcae8",
+      "sourceTree": "e91821558acbcf9bd52f82e075332231a30723f4",
+      "snapshot": "a45b6d06bf2ce380d93e1b6a29d0d1459881fb81",
+      "snapshotTree": "8e6b2ac9cc6b255bda414d6a7ae4af144e46dabc",
+      "runId": 44732298181,
+      "jobId": 136274863825,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "expects": 38,
+        "tests": 2,
+        "elapsedSeconds": 104.65
+      },
+      "cleanup": {
+        "jobId": 136276362836,
+        "status": "SUCCESS"
+      },
+      "observation": "Startup7387ms satisfied original15s. Original7s session journey failed: create200/3135ms, list200/1013ms; prompt and message read remained pending. No500/runtime errors. authenticateAll is already wired. Cleanup produced499 after abort; GET/messages and all original budgets retained.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "NATIVE_G02_POLICY_TIMING_DIAGNOSTIC",
+      "source": "d2d9ac4d1737a88d8e27ec60811b1e1423f5030a",
+      "sourceTree": "9bb077ac3d5a62897546a2b94cdaca4fb7df8834",
+      "snapshot": "f1a4664e0321912ab49e530e125dfc8d78bee9fc",
+      "runId": 44734831169,
+      "jobId": 136283487727,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "expects": 38,
+        "tests": 2,
+        "elapsedSeconds": 96.45
+      },
+      "cleanup": {
+        "jobId": 136284782944,
+        "status": "SUCCESS"
+      },
+      "integrated": false,
+      "observation": "Diagnostic-only private Request WeakMap, no caching or authority reuse. Startup6331ms; original7s action failed. Create2787ms made67policy calls totaling2124.561ms; prompt45calls1597.149ms; messages39calls1428.967ms. Stages overlap and cannot be summed. After cleanup pending0; observer overhead at most0.388ms/request plus microtasks. Source trace is not integrated.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "COMPONENT_POOL_COMPLETE_MATRIX_C3",
+      "source": "c3f53500b880d132fb78a0733376b9109ca211a2",
+      "sourceTree": "f37f9dddb1e1f57318870c98bfa5d6e6dc6d3d21",
+      "snapshot": "f599dc0b9019827c7af2e15dbff8fb271751f669",
+      "runId": 44730481397,
+      "jobId": 136268648512,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 198,
+        "fail": 9,
+        "expects": 3195,
+        "tests": 207,
+        "elapsedSeconds": 829.8
+      },
+      "observed": {
+        "sources": 40,
+        "bodyStarted": 206,
+        "bodyFinished": 206,
+        "returned": 198,
+        "threw": 8,
+        "forcedFinalization": false,
+        "leases": 48,
+        "releases": 48
+      },
+      "cleanup": {
+        "jobId": 136275555422,
+        "status": "SUCCESS"
+      },
+      "observation": "Complete genuine component matrix, not the prior truncated execution. Eight failed bodies plus lifecycle guard: WholeReview options1, contextual navigation1, Work listPresentation2, C12 ACK4. Real OIDC/Graph/current maps; no installed console/G08 claim.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "COMPONENT_ADMISSION_CONTROLS_C3",
+      "source": "c3f53500b880d132fb78a0733376b9109ca211a2",
+      "snapshot": "edc4ae4db8c4ffffb16d6dafccf5fa75a1319f8b",
+      "runId": 44730499177,
+      "jobId": 136268708102,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 3,
+        "fail": 0,
+        "expects": 28,
+        "elapsedSeconds": 2.93
+      },
+      "cleanup": {
+        "jobId": 136269601063,
+        "status": "SUCCESS"
+      },
+      "observation": "Directed component authority controls only.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "NATIVE_RECEIPT_PARSER_FIRST",
+      "source": "41b17dd4552efd151d93d4629bc4f0c0f2bff99c",
+      "snapshot": "41f2ccb24ab2b788eb37aebdd7efee93e7a6f072",
+      "runId": 44733631359,
+      "jobId": 136279394818,
+      "status": "SUCCESS",
+      "nodeReported": {
+        "pass": 166,
+        "fail": 0
+      },
+      "observation": "Five-role receipt parser/control tests, original inventories6/22/22, exact production config, source/host/archive/run binding, private files and negative controls. No installed G08 run.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "NATIVE_RECEIPT_PARSER_STRICT_JSON",
+      "source": "16d5c1cfda7b918aeb05a8dc074c14a62bee27f1",
+      "sourceTree": "1f09a3f747760e567183d33513115747b7a4acab",
+      "snapshot": "e942d93aa32deb9a5f5ebf506b1251cd2ac7f6ac",
+      "runId": 44733911193,
+      "jobId": 136280364476,
+      "status": "SUCCESS",
+      "nodeReported": {
+        "pass": 166,
+        "fail": 0
+      },
+      "observation": "Canonical Playwright1.59.1 JSON and invalid UTF8/duplicates fail closed. Exact Node24.15.0/Bun1.3.14 and clean source. Output is REPORT_VALIDATED, never live qualification. Four paths integrated16d5c1cf.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_CLIENT_FIRST",
+      "source": "512ac0dc43aa259f17a97d6ff487df7bfcdeeaa1",
+      "snapshot": "c9bebb95079333616bd112d0c4b6767f4db219be",
+      "runId": 44731658524,
+      "jobId": 136272687277,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 11,
+        "fail": 0,
+        "expects": 91,
+        "files": 1
+      },
+      "cleanup": {
+        "jobId": 136273377322,
+        "status": "SUCCESS"
+      },
+      "observation": "Strict client DTO/origin/body and current owner controls; fetch-port tests, not Chrome or installed browser.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10.",
+      "sourceTree": "e6f26616958db2ee04c8d6c30321f379a9c77a94"
+    },
+    {
+      "id": "PERSONAL_UI_INVALID_LANE",
+      "source": "79eaac3edc1c7607cd314f0001c0b0b3414746eb",
+      "snapshot": "638d4d6425ad97dca6405574e2fd0a61b597abc8",
+      "runId": 44732665830,
+      "jobId": 136276117986,
+      "status": "FAILURE_NO_TEST_EXECUTION",
+      "cleanup": {
+        "jobId": 136276328307,
+        "status": "SUCCESS"
+      },
+      "observation": "Request used unsupported package app-shell; corrected to actual app lane. No tests credited.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_UI_PROXY_FAILURE",
+      "source": "79eaac3edc1c7607cd314f0001c0b0b3414746eb",
+      "snapshot": "cc4cd703910666580402cdf97222c83d980f3524",
+      "runId": 44732967316,
+      "jobId": 136277126198,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 28,
+        "fail": 9,
+        "expects": 302,
+        "files": 3,
+        "tests": 37,
+        "elapsedSeconds": 9.47
+      },
+      "cleanup": {
+        "jobId": 136278029220,
+        "status": "SUCCESS"
+      },
+      "observation": "Existing28config/runtime cases passed;9new cases failed because Solid Proxy was sent to strict PersonalKey codec before GET/POST. Fixed unwrapping at boundary, no schema weakening or deadline increase.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_UI_REMAINING_PROXY_FAILURE",
+      "source": "6922f5e5d2efe6cf5dcfecba7f379616d90a185b",
+      "snapshot": "ce95b7df061e2fe38a07cb61a82959ddbc66483e",
+      "runId": 44733496126,
+      "jobId": 136278943274,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 6,
+        "fail": 4,
+        "expects": 96,
+        "files": 1,
+        "tests": 10,
+        "elapsedSeconds": 0.961
+      },
+      "cleanup": {
+        "jobId": 136279671860,
+        "status": "SUCCESS"
+      },
+      "observation": "Actual form rendered; three refresh inputs retained Proxy and one aggregate matcher mishandled Proxy. Fixed remaining unwrap and replaced matcher with six exact individual assertions.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_UI_STATIC_FIRST",
+      "source": "79eaac3edc1c7607cd314f0001c0b0b3414746eb",
+      "snapshot": "d4d36060bc0718092ee26f0e252e27da49dfc2ee",
+      "runId": 44732722164,
+      "jobId": 136276312346,
+      "status": "FAILURE",
+      "observation": "Client generic decoder return unknown at104/108 and protected-path gate. Concrete typed decoder fixed types without cast or assertion changes.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_UI_FINAL",
+      "source": "1e32fa559147364e19d276a9afe943883acebe42",
+      "sourceTree": "09bab39a54bcb8ea7e224eb3972a7a283371f0f3",
+      "snapshot": "1815cc367ecce1476ec8fc19dcd2677a9c605574",
+      "runId": 44733961568,
+      "jobId": 136280539757,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 10,
+        "fail": 0,
+        "expects": 119,
+        "files": 1,
+        "elapsedSeconds": 0.902
+      },
+      "observation": "Real Solid form through HappyDOM and private controller: owner/generation/window binding, exact resource choices, CAS and secret clearing, no automatic mutation retry, uncertainty journal and explicit current-state acknowledgement. Eleven client/UI paths integratedcc76f005.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_CLIENT_FINAL",
+      "source": "1e32fa559147364e19d276a9afe943883acebe42",
+      "snapshot": "7ea4b5359033d290bf363e10280b4a53c916a339",
+      "runId": 44733965484,
+      "jobId": 136280553137,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 11,
+        "fail": 0,
+        "expects": 91,
+        "files": 1,
+        "elapsedSeconds": 0.182
+      },
+      "observation": "Bounded closed client protocol; response metadata is neither provider acceptance nor authorship of an uncertain command.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PERSONAL_UI_STATIC_FINAL",
+      "source": "1e32fa559147364e19d276a9afe943883acebe42",
+      "snapshot": "c7a1127e5cd5f93820ae12cd7bc526cf34fed07b",
+      "runId": 44733970800,
+      "jobId": 136280572549,
+      "status": "FAILURE",
+      "checks": {
+        "passed": 15,
+        "total": 16,
+        "sourceValid": true,
+        "inventoryValid": true,
+        "executionValid": true
+      },
+      "observation": "All own static checks passed. Same two protected files still block aggregate guard-dev.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_FIRST_FIXTURE_SERVICE",
+      "source": "1281d7895150d5961846aa3aa307430c3aee3759",
+      "snapshot": "218f148ef0b8ee81be67a1c8cce5531ec7d25284",
+      "runId": 44730864707,
+      "jobId": 136269949623,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 48,
+        "fail": 12,
+        "expects": 258,
+        "files": 5
+      },
+      "observation": "Fixture omitted SessionExecution export before provider call. Repaired same actual graph; route-body integrity review blocker fixed in next source.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_EFFECT_TRY_FAILURE",
+      "source": "11ebdc29a7421614b079c6b0d4ce84faf820ec17",
+      "snapshot": "4f16a5a98dbc5de19eb7d6a64c8618d1c510159b",
+      "runId": 44731862718,
+      "jobId": 136273395275,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 51,
+        "fail": 10,
+        "expects": 288,
+        "files": 5,
+        "elapsedSeconds": 76.31
+      },
+      "observation": "Effect4.try requires try/catch object. Fixed API shape; no weaker endpoint/body validation.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_FIXTURE_IMPORT_FAILURE",
+      "source": "a97425c09dc55193037bee969d21c579dfbc4644",
+      "snapshot": "4700e404ecd2ff163f1ff6dcd455553f07465d1a",
+      "runId": 44732791919,
+      "jobId": 136276545037,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 48,
+        "fail": 0,
+        "moduleErrors": 1,
+        "expects": 206,
+        "files": 5
+      },
+      "observation": "None of14new provider tests ran: engine is not a Core declared dependency. Fixed test-only workspace relative import. No production dependency added.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10.",
+      "sourceTree": "6bd8c0a2180852185efeba92b9849947ed25deee"
+    },
+    {
+      "id": "PRIVATE_PROVIDER_GENERATION_CLASS_FAILURE",
+      "source": "0ea6e19629fd813bc2f83106f3767f974902922b",
+      "snapshot": "523c75cb3876759eef0a0042c45be785a6cbcdf6",
+      "runId": 44733389015,
+      "jobId": 136278563048,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 53,
+        "fail": 10,
+        "expects": 304,
+        "files": 5,
+        "elapsedSeconds": 66.23
+      },
+      "observation": "Fixture used plain object instead of GenerationOptions Schema.Class. Repaired fixture with actual constructor.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_CANONICAL_LENGTH_FAILURE",
+      "source": "34c4b160192b6e42486bb6be5b1454f174cc7bcd",
+      "snapshot": "a0be0f633aa1c45a64d548d3c89503757baa260c",
+      "runId": 44734478726,
+      "jobId": 136282291110,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 54,
+        "fail": 9,
+        "expects": 307,
+        "files": 5,
+        "elapsedSeconds": 133.38
+      },
+      "observation": "Canonical HttpClient body adds a derived content-length; private transport rejected it before HTTPS. Final fix permits only exact canonical Uint8Array byteLength; caller supplied body length remains rejected.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_FINAL_NATIVE_TRANSPORT",
+      "source": "4e7d44db3e683eb38badc239b2c6f68f82aa3365",
+      "sourceTree": "17b8421d08bd78cd52623e327d8b24127f4509a8",
+      "snapshot": "6557d8468e367ae934a5bbf6068eff1656b4eb75",
+      "runId": 44735466902,
+      "jobId": 136285610226,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 63,
+        "fail": 0,
+        "expects": 330,
+        "files": 5,
+        "elapsedSeconds": 128.69
+      },
+      "cleanup": {
+        "jobId": 136287318154,
+        "status": "SUCCESS"
+      },
+      "runtime": {
+        "bun": "1.3.14",
+        "nodeAfterComposite": "24.22.3"
+      },
+      "observation": "15new actual native SessionRunnerModel/LLMClient HTTPS controls plus48regressions. Exact private endpoint/model/budget/body, current Owner/credential revision and every-frame checks, clone/borrow denial, no429/503 retry or307 follow; C15 wrapper shares private LLM layer. SessionExecution recorder fixture is not live tenant proof.13paths integrated91d430de.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_STATIC_FINAL",
+      "source": "4e7d44db3e683eb38badc239b2c6f68f82aa3365",
+      "snapshot": "e9657953a4aa699063636ad5dbda7282128af8c8",
+      "runId": 44736046191,
+      "jobId": 136287579310,
+      "status": "FAILURE",
+      "checks": {
+        "passed": 15,
+        "total": 16,
+        "sourceValid": true,
+        "inventoryValid": true,
+        "executionValid": true
+      },
+      "observation": "No TS errors. All generators/build/compiler/spawn and PR-base guard passed. Only two known protected paths block guard-dev.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_C15_REGRESSION_FIRST",
+      "source": "0ea6e19629fd813bc2f83106f3767f974902922b",
+      "snapshot": "03cc3f86f8bf8e9a1cae530df74d91bf0fc802d8",
+      "runId": 44733394183,
+      "jobId": 136278581764,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 7,
+        "fail": 0,
+        "expects": 39,
+        "files": 3,
+        "elapsedSeconds": 1.043
+      },
+      "observation": "Existing C15 token-gate contracts.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_C15_REGRESSION_FINAL",
+      "source": "34c4b160192b6e42486bb6be5b1454f174cc7bcd",
+      "snapshot": "372ea9fa023870d1b3d0a4e8dd9b506e39a016e2",
+      "runId": 44734483693,
+      "jobId": 136282306485,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 7,
+        "fail": 0,
+        "expects": 39,
+        "files": 3,
+        "elapsedSeconds": 1.036
+      },
+      "cleanup": {
+        "jobId": 136283265568,
+        "status": "SUCCESS"
+      },
+      "observation": "Existing C15 token-gate contracts; final4e only transport content-length plus negative test differs.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_CATALOG_HTTP",
+      "source": "0f5ccbde447cccd0f6fd3cd77d5f25eaeaea823d",
+      "sourceTree": "2f702e588587f2fc8f6451358e044ef94fe19d5c",
+      "snapshot": "13c61080a8621982a4544276dc899e9fd69286a3",
+      "runId": 44734630961,
+      "jobId": 136282796078,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 13,
+        "fail": 0,
+        "expects": 191,
+        "files": 3,
+        "elapsedSeconds": 15
+      },
+      "cleanup": {
+        "jobId": 136283706606,
+        "status": "SUCCESS"
+      },
+      "observation": "Three new actual mounted HTTP metadata controls plus10personal/body regressions. Original Microsoft Request, exact HTTPS origin, fullOwner/current resourceACL, noLocation/sessionaction/decrypt/providerexecution, no endpoint leakage, empty success only for genuinely empty authorized bindings. Denied and unavailable stay explicit. Root3paths integrated91d430de.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "RESIDUE_ORIGINAL_REVIEW_SINGLE_STRING_LIMIT",
+      "source": "ef6d31ccd3ce00689754633e237e2cf7cdf7de3d",
+      "sourceTree": "420ad23c8bce4aeff5e1c2adb1106d0d33ced220",
+      "snapshot": "1254b3906d0a09eff4e015f1200eb45e991c3bcc",
+      "runId": 44735105063,
+      "jobId": 136284397185,
+      "status": "FAILURE",
+      "nodeReported": {
+        "pass": 173,
+        "fail": 0
+      },
+      "originalReport": {
+        "source": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+        "artifactId": 14626646947,
+        "bytes": 606300402,
+        "sha256": "fe545bf0bbcf057421a9725fbac53d2715edfd5d2c6e6b4a55b8ab3d1e0b2f47"
+      },
+      "observation": "173unit/control tests passed; exact original artifact API, ZIP and606300402report bytes verified. First navigation failed V8 maximum single-string0x1fffffe8, despite6GiB heap. No new G09 run, dispositions or qualification. Segmented parser repair is under a separate pending source.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "COMPONENT_SOURCE_COMBINED_OBSERVATION",
+      "source": "55f8a8d28abd5c897ef4809b43e0b24c8d2f60dd",
+      "snapshot": "7163101336002d03c8c75f4935c3c3a99e1d44f5",
+      "runId": 44735992805,
+      "jobId": 136287396558,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 11,
+        "fail": 0,
+        "expects": 96,
+        "elapsedSeconds": 11.01
+      },
+      "cleanup": {
+        "jobId": 136287978967,
+        "status": "SUCCESS"
+      },
+      "observation": "Initial evidence/projection combined at synchronous boundary; independent final fullscope/material/day/authority retained. No Request cache. Adapters without observe retain legacy sequence; refused observe cannot fall back. Two scoped checks/58 provider calls versus six/117 in corresponding control. Not integrated yet.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "COMPONENT_SOURCE_STATIC_FIRST",
+      "source": "55f8a8d28abd5c897ef4809b43e0b24c8d2f60dd",
+      "runId": 44735994111,
+      "jobId": 136287401325,
+      "status": "FAILURE",
+      "checks": {
+        "passed": 13,
+        "total": 16,
+        "sourceValid": true,
+        "inventoryValid": true,
+        "executionValid": true
+      },
+      "observation": "New test needs runtime union narrowing; root workflow-source.mjs lacks declaration. Guard also matches a deliberately invalid source string in native parser negative test at915, not an actual skipped body. Fixes preserve exact negative input and all assertions; protected2remain.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_STATIC_ATTEMPT_1",
+      "source": "1281d7895150d5961846aa3aa307430c3aee3759",
+      "snapshot": "ccde958bc98d8a3b1850dde322d73873effe3594",
+      "runId": 44730878164,
+      "jobId": 136269995972,
+      "status": "FAILURE",
+      "observation": "15/16; only known protected2.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_STATIC_ATTEMPT_2",
+      "source": "11ebdc29a7421614b079c6b0d4ce84faf820ec17",
+      "snapshot": "df650ffa53c4f761a93392a43c056013a8d59c64",
+      "runId": 44731866614,
+      "jobId": 136273407652,
+      "status": "FAILURE",
+      "observation": "Effect.try API TypeScript errors plus protected2.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_STATIC_ATTEMPT_3",
+      "source": "a97425c09dc55193037bee969d21c579dfbc4644",
+      "runId": 44732795309,
+      "jobId": 136276556105,
+      "status": "FAILURE",
+      "observation": "Fixture package import and Node implementation layer types/dependencies plus protected2.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_STATIC_ATTEMPT_4",
+      "source": "0ea6e19629fd813bc2f83106f3767f974902922b",
+      "snapshot": "6b5acefe102626d9d630f848dc85806bbd1f3a77",
+      "runId": 44733397443,
+      "jobId": 136278590797,
+      "status": "FAILURE",
+      "observation": "Two typed-layer errors plus protected2.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "PRIVATE_PROVIDER_STATIC_ATTEMPT_5",
+      "source": "34c4b160192b6e42486bb6be5b1454f174cc7bcd",
+      "snapshot": "208b680dd7a7615e1a9bf35b80fba012611f8065",
+      "runId": 44734486091,
+      "jobId": 136282314375,
+      "status": "FAILURE",
+      "observation": "15/16; only known protected2.",
+      "qualification": "Directed observation only; not final same-candidate qualification, installed G08 or G10."
+    },
+    {
+      "id": "RESIDUE_ORIGINAL_REVIEW_SEGMENTED_BYTES",
+      "source": "739eac21f094227879c3f4635d469525f65abd98",
+      "sourceTree": "9f08425998a760b0444bb24c30f2169c38ec3419",
+      "snapshot": "b984f24051a0f03d8aee56daca463f54f5719594",
+      "snapshotTree": "30b98070c925ca5791856a0e47dbbdd95d775158",
+      "runId": 44737454948,
+      "jobId": 136292320750,
+      "status": "SUCCESS",
+      "nodeReported": {
+        "tests": 177,
+        "pass": 177,
+        "fail": 0,
+        "skip": 0,
+        "cancelled": 0,
+        "elapsedSeconds": 3.227908347
+      },
+      "runtime": {
+        "node": "24.15.0",
+        "bun": "1.3.14"
+      },
+      "originalReport": {
+        "source": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+        "tree": "e4570749938a138377a01142ac5943223f225a34",
+        "artifactId": 14626646947,
+        "bytes": 606300402,
+        "sha256": "fe545bf0bbcf057421a9725fbac53d2715edfd5d2c6e6b4a55b8ab3d1e0b2f47"
+      },
+      "navigation": {
+        "pages": 4,
+        "sourceFiles": 21073,
+        "archiveFiles": 1416,
+        "sourceOccurrences": 17900,
+        "archiveOccurrences": 6278,
+        "unknownReachability": 3285,
+        "unclassified": 27463,
+        "dispositionsChanged": 0,
+        "qualification": "NOT_EVALUATED",
+        "lexicalCallArrays": [
+          {
+            "path": "reachability.source.calls",
+            "jsonType": "array",
+            "notMaterialized": true,
+            "elements": 901331,
+            "byteLength": 433004633,
+            "sha256": "80ad30eff0e87314231a6164931b8fdbf6f1ae748e35015e19c517c39ec09870"
+          },
+          {
+            "path": "reachability.archive.calls",
+            "jsonType": "array",
+            "notMaterialized": true,
+            "elements": 235665,
+            "byteLength": 104223401,
+            "sha256": "4136a78eb48993874d7397380135bba6cbceffedd21fc52bb12bd04fc8707242"
+          }
+        ]
+      },
+      "indexArtifact": {
+        "id": 14629486420,
+        "bytes": 27443,
+        "digest": "sha256:641247f08ce5f29646deb3529f72d5441dd2edb4587898675e6c6d4116c0eb5a"
+      },
+      "observation": "All original bytes, UTF8 and JSON tokens validated; only exact call-expression arrays are not materialized and retain count/length/digest. Actual >MAX_STRING_LENGTH test passed; same606MB report navigated successfully without rewrite, re-audit, grouping approval or missing-graph substitution. Tracked checkout clean. Three reader paths integrated5a248303; native negative test fixture remains executed.",
+      "qualification": "Successful read-only navigation, not G09 or any final gate qualification."
     }
   ],
   "infrastructureReconciliation": [
@@ -25933,11 +26716,11 @@
     },
     {
       "package": "WP2",
-      "work": "Qualify the integrated native Team workspace and first-prompt/SSE journey with unchanged15s startup/7s action deadlines. Preserve GET/message and original assertions. Finish the personal connection panel against the real closed HTTP contract. BEFORE18 and AFTER18 are complete; tab median regression11.4–24.8% remains OPEN without causal attribution."
+      "work": "Finish native G02 session/prompt/message journey within unchanged15s/7s budgets. Personal connection client/controller/Solid form are integrated with directed10/11tests; native installed UI remains unqualified. BEFORE18/AFTER18 tab median regression11.43–24.79% remains OPEN."
     },
     {
       "package": "WP3",
-      "work": "Complete positive private provider and MCP contracts and remaining Jobs/Relay/RAG/Atlas/Inbox consumers. Permanent scheduled-task claims/tombstones are integrated and passed21 directed tests. Corporate Inbox remains explicitly unavailable; no environment credential fallback. Current RoleMap batch and canonical SSE slice are integrated; native combined observation remains pending."
+      "work": "Private provider actual HTTPS execution and closed catalog HTTP are integrated with directed63/13tests. Complete private MCP and remaining Jobs/Relay/RAG/Atlas/Inbox consumers; Inbox remains explicit unavailable and installation-wide business data must not be split by Team. No ambient credential fallback."
     },
     {
       "package": "WP4",
@@ -25945,7 +26728,7 @@
     },
     {
       "package": "WP5",
-      "work": "Build and inventory the exact production archive, finish conservative residue classification and source/tree/artifact provenance, implement the installed G08 spec/report, and run all ten gates on one final candidate. Real Microsoft/Azure observations and protected-path approval remain absent."
+      "work": "Historical exact production archive C48e7110f/tar9f3369d1, actual G09 audit and immutable606MB report navigation are bound;27463findings remain unclassified. Complete independent exact dispositions, finish F04v2 with independently admitted host/contexts, Teams/recovery native specs and five-role receipts, and execute ten gates on one final source/tree/archive. No real tenant/Azure context or protected-path approval observed."
     }
   ],
   "reviewLimits": [
@@ -25954,7 +26737,7 @@
     "No user data migration or cutover executed.",
     "Directed contracts, native UI, real HTTP, SDK and bootstrap observations belong to their exact individual sources; no final same-candidate qualification is implied.",
     "Generation fences, actual host drain and disposable Core Session cut/recovery now have directed passing evidence. The migration result remains scope core-sessions and installationComplete:false; no complete installed migration or G10 proof.",
-    "Eager corporate boot credential probing is corrected without adding fixture grants. Positive model/MCP execution remains unqualified; metadata state does not prove provider acceptance or the authorship of an uncertain POST.",
+    "Corporate boot, personal UI and native private provider have directed evidence; MCP and other consumers remain unfinished. Metadata never proves provider acceptance or authorship of an uncertain POST. No real installed Microsoft tenant proof.",
     "Full native G02 still fails at the original action deadline; earlier cold-start failures and the actual later prompt/message requests remain visible. Component Chrome is not installed G08.",
     "All18 BEFORE and18 AFTER benchmark executions completed, but tab observation medians regressed11.4–24.8%; the performance finding stays OPEN. The corrected technical Active-envelope mismatch is not yet a demonstrated timing cause.",
     "No final candidate, production archive, live Microsoft tenant or disposable Azure restore has been jointly qualified."
@@ -26289,16 +27072,21 @@
       "actionDeadlineMs": 7000,
       "testDeadlineMs": 180000,
       "status": "RED",
-      "latestRun": 44726765097,
+      "latestRun": 44732298181,
       "readMessagesPreserved": true,
       "qualification": "Actual compiled Web + signed fixture OIDC/SQLite is focused G02. It never becomes installed G08 or LIVE Microsoft proof.",
-      "next": "Qualified SSE source ef695c74 is integrated at265d3811. Await the qualified current-role-map batch and coherent source before repeating the original browser journey."
+      "next": "Private timing trace identified repeated current-policy resolutions. Any optimization must preserve independent current checks at actual await/effect/egress boundaries; no Request cache or deadline increase.",
+      "latestDiagnosticRun": 44734831169
     },
     "personalConnections": {
       "schemaSource": "070140a243b428796eb3b4827a7ae652a8860909",
       "metadataSource": "d46d061b4f321ad3dc3d416d4ab3fa5a1d29a7f0",
-      "httpAndUi": "IN_PROGRESS",
-      "positivePrivateProvider": "NOT_QUALIFIED"
+      "httpAndUi": "INTEGRATED_DIRECTED_HTTP_CLIENT_AND_SOLID_FORM_PASSED",
+      "positivePrivateProvider": "DIRECTED_NATIVE_HTTPS_PASSED_NOT_LIVE_QUALIFIED",
+      "uiSource": "1e32fa559147364e19d276a9afe943883acebe42",
+      "integratedAt": "cc76f005404a0dad3a687cfe9266577e2c7eca96",
+      "providerSource": "4e7d44db3e683eb38badc239b2c6f68f82aa3365",
+      "providerIntegratedAt": "91d430de672ab1f04721d466c283335f70410453"
     }
   },
   "sourceIdentityReconciliation": {
@@ -26320,5 +27108,19 @@
     "correctionSource": "4cb2a2f0fe675607e61ebc8bc6bfa36fa96d4ec6",
     "installedArtifactProof": false,
     "qualification": "Node-contract PASS does not replace the refused preflight or prove a packaged archive/G09/G07. Earlier sourceValid:false remains a failed observation. Root will add the complete ci-evidence04/05/06 and artifact records."
+  },
+  "productionArchiveObservation": {
+    "candidate": "48e7110f4b72ffda14cfc2443ac24989f4b7060a",
+    "tree": "e4570749938a138377a01142ac5943223f225a34",
+    "tarSha256": "9f3369d185b7d7bded7c5e0833a502c07fd45efc72c698c63496b69b109600bf",
+    "producerRun": 44731293244,
+    "status": "HISTORICAL_DIAGNOSTIC_CANDIDATE_ONLY",
+    "g09": {
+      "status": "DIAGNOSTIC_UNQUALIFIED",
+      "unknownOccurrences": 24178,
+      "unknownReachability": 3285,
+      "dispositions": 0
+    },
+    "sameFinalCandidate": false
   }
 }
