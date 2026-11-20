@@ -68,6 +68,10 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     ? "filtered-empty" : store.status
   const invalidatePreview = () => {
     if (store.phase === "outcome-unknown" || store.phase === "submitting") return
+    // Selection edits invalidate the pending read as well as its displayed result.
+    // Its response must never restore a preview for the previous record set.
+    commandAbort?.abort()
+    commandAbort = undefined
     setStore({ preview: undefined, preserved: undefined, phase: "selecting" })
   }
   const discover = async (page: string) => {

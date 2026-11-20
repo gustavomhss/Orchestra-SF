@@ -33,11 +33,16 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
       const url = new URL(response.url())
       return response.request().method() === "GET" && url.pathname.endsWith("/api/ui/projections/review") &&
         url.searchParams.get("page") === pageName
+    }).then(async (discovery) => {
+      expect(discovery.status()).toBe(200)
+      // Retain this original response body as soon as headers arrive, while the
+      // click may still be settling. Never refetch a changed source to replace it.
+      return object(await discovery.json())
     })
-    await agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click()
-    const discovery = await found
-    expect(discovery.status()).toBe(200)
-    const discovered = object(await discovery.json())
+    const [discovered] = await Promise.all([
+      found,
+      agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click(),
+    ])
     expect(discovered.status).toBe("ok")
     const items = object(discovered.value).items
     expect(Array.isArray(items)).toBe(true)
@@ -92,12 +97,12 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await expect(shown.locator("li").nth(reportPages.indexOf("Hot Topics & Actions"))).toContainText(/Authorized records: 0|Registros autorizados: 0/)
   const confirm = agenda.getByRole("button", { name: /Confirm preservation|Confirmar preservação/ })
   await expect(confirm).toBeEnabled()
-  const pendingPreserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST"))
-  await confirm.click()
-  const response = await pendingPreserve
-  expect(response.status()).toBe(200)
-  expect(object(response.request().postDataJSON())).toEqual({ selectionRef, sectionRefs: sectionIds })
-  const body = object(await response.json())
+  const pendingPreserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST")).then(async (response) => {
+    expect(response.status()).toBe(200)
+    expect(object(response.request().postDataJSON())).toEqual({ selectionRef, sectionRefs: sectionIds })
+    return object(await response.json())
+  })
+  const [body] = await Promise.all([pendingPreserve, confirm.click()])
   expect(body.status).toBe("ok")
   const saved = review(body.value)
   expect(saved.sections.map((section) => section.id)).toEqual(sectionIds)
@@ -125,9 +130,9 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
 async function previewDashboardAgenda(page: Page, app: ReportsInstallation): Promise<DashboardPreview> {
   const preview = page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ })
   await expect(preview).toBeEnabled()
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
-  await preview.click()
-  return dashboardAgendaResult(await pending)
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST")).then(dashboardAgendaResult)
+  const [prepared] = await Promise.all([pending, preview.click()])
+  return prepared
 }
 
 async function dashboardAgendaResult(response: Response): Promise<DashboardPreview> {
@@ -204,11 +209,14 @@ export async function readSourceData(request: APIRequestContext, app: ReportsIns
 
 export async function preserveNewRevision(page: Page, app: ReportsInstallation, prior: PreservedReview, corpus: ReportsCorpus) {
   const preparation = page.locator('[data-sf-surface="UI48"]')
-  const available = page.waitForResponse(responseFor(app.dashboardURL, "review-update", "GET"))
-  await preparation.getByRole("button", { name: "Check whether a new review can be prepared", exact: true }).click()
-  const update = await available
-  expect(update.status()).toBe(200)
-  const updateBody = object(await update.json())
+  const available = page.waitForResponse(responseFor(app.dashboardURL, "review-update", "GET")).then(async (update) => {
+    expect(update.status()).toBe(200)
+    return object(await update.json())
+  })
+  const [updateBody] = await Promise.all([
+    available,
+    preparation.getByRole("button", { name: "Check whether a new review can be prepared", exact: true }).click(),
+  ])
   expect(updateBody.status).toBe("ok")
   const successor = object(updateBody.value)
   expect(successor.available).toBe(true)
@@ -241,10 +249,13 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
     if (!retainedIds.includes(text(choice.recordId))) await checkbox.uncheck()
   }
   await expect(records.locator('input[type="checkbox"]:checked')).toHaveCount(24)
-  const load = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
-  await preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
-  const preparedResponse = await load
-  const selected = await dashboardAgendaResult(preparedResponse)
+  const load = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST")).then(async (preparedResponse) => ({
+    preparedResponse, selected: await dashboardAgendaResult(preparedResponse),
+  }))
+  const [{ preparedResponse, selected }] = await Promise.all([
+    load,
+    preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click(),
+  ])
   const preparedRequest = object(preparedResponse.request().postDataJSON())
   expect(Array.isArray(preparedRequest.sections)).toBe(true)
   const submittedSections = (preparedRequest.sections as unknown[]).map(object)
@@ -268,14 +279,17 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   await expect(revisionPreview.locator(`[data-section-id="${budget[0]!.id}"]`)).toContainText(
     `${corpus.forecastField}: ${corpus.after} unspecified · ${corpus.annual.start} – ${corpus.annual.end}`,
   )
-  const preserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST"))
-  await preparation.getByRole("button", { name: "Preserve this review", exact: true }).click()
-  const response = await preserve
-  expect(response.status()).toBe(200)
-  expect(response.request().postDataJSON()).toEqual({
-    previousReviewRef: prior.id, selectionRef: selected.selectionRef, sectionRefs: selected.sections.map((section) => section.id),
+  const preserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST")).then(async (response) => {
+    expect(response.status()).toBe(200)
+    expect(response.request().postDataJSON()).toEqual({
+      previousReviewRef: prior.id, selectionRef: selected.selectionRef, sectionRefs: selected.sections.map((section) => section.id),
+    })
+    return object(await response.json())
   })
-  const body = object(await response.json())
+  const [body] = await Promise.all([
+    preserve,
+    preparation.getByRole("button", { name: "Preserve this review", exact: true }).click(),
+  ])
   expect(body.status).toBe("ok")
   const next = review(body.value)
   expect(next.id).not.toBe(prior.id)
@@ -288,11 +302,11 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   await expect(result.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
   const open = result.getByRole("link", { name: "Open preserved revision", exact: true })
   await expect(open).toHaveAttribute("href", "/orchestra/sf-reviews/reviews/" + encodeReviewRef(next.id))
-  const reloaded = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
-  await open.click()
-  const read = await reloaded
-  expect(read.status()).toBe(200)
-  expect(object(await read.json()).value).toEqual(next)
+  const reloaded = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET")).then(async (read) => {
+    expect(read.status()).toBe(200)
+    expect(object(await read.json()).value).toEqual(next)
+  })
+  await Promise.all([reloaded, open.click()])
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
   await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
@@ -318,12 +332,15 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
   }
   source.on("request", recordMutation)
   try {
-    const loaded = source.waitForResponse(pageRead)
-    await source.goto("/orchestra/sf-dashboard/opex/" + encodeReviewRef("reports-opex") +
-      "?" + new URLSearchParams({ year: String(corpus.year) }))
-    const loadedResponse = await loaded
-    expect(loadedResponse.status()).toBe(200)
-    const loadedBody = object(await loadedResponse.json())
+    const loaded = source.waitForResponse(pageRead).then(async (loadedResponse) => {
+      expect(loadedResponse.status()).toBe(200)
+      return object(await loadedResponse.json())
+    })
+    const [loadedBody] = await Promise.all([
+      loaded,
+      source.goto("/orchestra/sf-dashboard/opex/" + encodeReviewRef("reports-opex") +
+        "?" + new URLSearchParams({ year: String(corpus.year) })),
+    ])
     expect(loadedBody.status).toBe("ok")
     const versions = object(object(loadedBody.value).versions)
     const version = Number(versions["opexEntries:reports-opex-01"])
@@ -356,29 +373,31 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
       return request.method() === "POST" && url.origin === app.origin &&
         url.pathname === new URL(app.dashboardURL).pathname && url.searchParams.get("page") === "OPEX Detail" &&
         object(request.postDataJSON()).action === "save-entry"
+    }).then(async (applyResponse) => {
+      expect(applyResponse.status()).toBe(200)
+      expect(object(applyResponse.request().postDataJSON())).toMatchObject({
+        page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
+        values: { ownerId: "reports-opex", year: corpus.year, month: 1, budget: 100, actual: 100, forecast: 190, versions },
+      })
+      expect(object(await applyResponse.json())).toMatchObject({ ok: true })
     })
-    const refreshed = source.waitForResponse(pageRead)
+    const refreshed = source.waitForResponse(pageRead).then(async (refreshedResponse) => {
+      expect(refreshedResponse.status()).toBe(200)
+      return object(await refreshedResponse.json())
+    })
     await expect(confirmation.getByRole("button", { name: "Save", exact: true })).toBeEnabled()
-    await confirmation.getByRole("button", { name: "Save", exact: true }).click()
-    const applyResponse = await applied
-    expect(applyResponse.status()).toBe(200)
-    expect(object(applyResponse.request().postDataJSON())).toMatchObject({
-      page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
-      values: { ownerId: "reports-opex", year: corpus.year, month: 1, budget: 100, actual: 100, forecast: 190, versions },
-    })
-    expect(object(await applyResponse.json())).toMatchObject({ ok: true })
-    const refreshedResponse = await refreshed
-    expect(refreshedResponse.status()).toBe(200)
-    const refreshedBody = object(await refreshedResponse.json())
+    const [, refreshedBody] = await Promise.all([
+      applied, refreshed, confirmation.getByRole("button", { name: "Save", exact: true }).click(),
+    ])
     expect(refreshedBody.status).toBe("ok")
     expect(object(object(refreshedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
     expect(mutations, "One explicit confirmation must submit once").toHaveLength(1)
     await expect(editor).toHaveCount(0)
-    const reloaded = source.waitForResponse(pageRead)
-    await source.reload()
-    const reloadedResponse = await reloaded
-    expect(reloadedResponse.status()).toBe(200)
-    const reloadedBody = object(await reloadedResponse.json())
+    const reloaded = source.waitForResponse(pageRead).then(async (reloadedResponse) => {
+      expect(reloadedResponse.status()).toBe(200)
+      return object(await reloadedResponse.json())
+    })
+    const [reloadedBody] = await Promise.all([reloaded, source.reload()])
     expect(reloadedBody.status).toBe("ok")
     expect(object(object(reloadedBody.value).versions)["opexEntries:reports-opex-01"]).toBe(version + 1)
     await expect(month.getByRole("button", { name: "Save month", exact: true })).toBeEnabled()
@@ -418,13 +437,16 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   for (const pageName of reportPages) await expect(form.getByRole("checkbox", { name: pageName, exact: true })).toBeChecked()
   const button = form.getByRole("button", { name: "Generate Report", exact: true })
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
-  const downloaded = page.waitForResponse(responseFor(app.dashboardURL, "review-download", "GET"))
-  await button.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.request().postDataJSON()).toEqual({ reviewRef: saved.id, sectionRefs, format })
-  const body = object(await response.json())
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST")).then(async (response) => {
+    expect(response.status()).toBe(200)
+    expect(response.request().postDataJSON()).toEqual({ reviewRef: saved.id, sectionRefs, format })
+    return object(await response.json())
+  })
+  const downloaded = page.waitForResponse(responseFor(app.dashboardURL, "review-download", "GET")).then(async (download) => {
+    expect(download.status()).toBe(200)
+    return { download, bytes: await download.body() }
+  })
+  const [body, { download, bytes }] = await Promise.all([pending, downloaded, button.click()])
   expect(body.status).toBe("ok")
   const material = object(body.result)
   expect(material.reviewSelectionRef).toBe(saved.id)
@@ -434,8 +456,6 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const artifact = text(refs[0])
   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
   expect(text(body.outputRef)).toBe(artifact)
-  const download = await downloaded
-  expect(download.status()).toBe(200)
   const mime = format === "docx"
     ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     : "application/vnd.openxmlformats-officedocument.presentationml.presentation"
@@ -448,7 +468,7 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
   expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
   const file = info.outputPath(`preserved-${format}.${format}`)
-  await writeFile(file, Buffer.from(await download.body()))
+  await writeFile(file, Buffer.from(bytes))
   await info.attach(`preserved-${format}`, { path: file, contentType: mime })
   const semantics = await inspectReport(file, format, saved, corpus, info)
   const packaged = officePackageText(await readFile(file), format)
@@ -458,11 +478,11 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
 }
 
 export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
-  await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(object(await response.json()).value).toEqual(saved)
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET")).then(async (response) => {
+    expect(response.status()).toBe(200)
+    expect(object(await response.json()).value).toEqual(saved)
+  })
+  await Promise.all([pending, page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))])
   const article = page.locator('[data-sf-surface="UI48"]').locator('article[data-review-ref="' + saved.id + '"]')
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   const surface = page.locator('[data-sf-surface="UI48"]')
@@ -476,11 +496,11 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   await expect(meeting).toHaveCount(1)
   await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
   const url = page.url()
-  const reload = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
-  await page.reload()
-  const reopened = await reload
-  expect(reopened.status()).toBe(200)
-  expect(object(await reopened.json()).value).toEqual(saved)
+  const reload = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET")).then(async (reopened) => {
+    expect(reopened.status()).toBe(200)
+    expect(object(await reopened.json()).value).toEqual(saved)
+  })
+  await Promise.all([reload, page.reload()])
   await expect(surface).toHaveAttribute("data-sf-presentation", "false")
   await expect(article).toHaveAttribute("data-review-version", String(saved.version))
   await expect(meeting.getByRole("status")).toContainText("Preserved review " + saved.id + " v" + saved.version)
@@ -532,14 +552,15 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const navigation = page.getByRole("list", { name: "Preserved source navigation", exact: true })
   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
-  const read = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
-  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
-  await link.click()
-  expect(object(await (await read).json()).value).toEqual(saved)
-  const resolved = await resolution
-  expect(resolved.status()).toBe(200)
-  expect(resolved.headers()["cache-control"]).toBe("no-store")
-  const links = object(await resolved.json()).links
+  const read = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET")).then(async (response) => {
+    expect(object(await response.json()).value).toEqual(saved)
+  })
+  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET")).then(async (resolved) => {
+    expect(resolved.status()).toBe(200)
+    expect(resolved.headers()["cache-control"]).toBe("no-store")
+    return object(await resolved.json()).links
+  })
+  const [, links] = await Promise.all([read, resolution, link.click()])
   expect(Array.isArray(links)).toBe(true)
   expect(links).toHaveLength(1)
   const authorized = object((links as unknown[])[0])
@@ -559,11 +580,11 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
     const url = new URL(response.url())
     return response.request().method() === "GET" && url.origin === app.origin &&
       url.pathname === `${app.mount}/api/ui/pages/CAP03` && url.searchParams.get("year") === String(corpus.year)
+  }).then(async (currentSource) => {
+    expect(currentSource.status()).toBe(200)
+    return object(await currentSource.json())
   })
-  await open.click()
-  const currentSource = await sourceRead
-  expect(currentSource.status()).toBe(200)
-  const sourceBody = object(await currentSource.json())
+  const [sourceBody] = await Promise.all([sourceRead, open.click()])
   expect(sourceBody.status).toBe("ok")
   const sourceValue = object(sourceBody.value)
   expect(object(sourceValue.selection).year).toBe(corpus.year)
