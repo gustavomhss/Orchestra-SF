@@ -106,6 +106,30 @@ A política compartilhada é mantida em tabelas próprias do SQLite privado da i
 
 Esta etapa prepara o leitor vinculado à sessão autenticada. A seleção de perfil por Team, sua admissão, o isolamento dos dados e a comprovação corporativa da migração continuam sujeitos às etapas e aos gates do [plano Teams Profile](../../../../docs/architecture/teams-profile-migration.md). A opção, por si só, não qualifica a instalação para produção.
 
+## Permissões explícitas para sessões corporativas
+
+A seleção de uma Team determina o contexto compartilhado. Para sessões privadas do Core, cada registro de `grants` pode declarar `sessionActions` para o `principalRef` corporativo já verificado. A ausência da propriedade equivale a uma lista vazia; nenhum papel de superfície ou grupo supremo preenche essa lista.
+
+| Ação | Uso autorizado, ainda sujeito ao owner e ao recurso atual |
+| --- | --- |
+| `read` | Listar e consultar sessões, mensagens, eventos e contexto privados. |
+| `create` | Criar um novo ID no owner atual ou repetir a mesma criação. |
+| `fork` | Solicitar uma cópia de sessão autorizada; a nova sessão também exige `create`. |
+| `move` | Alterar a localização técnica sem transferir o owner. |
+| `write` | Renomear, arquivar, remover e alterar o estado de reversão. |
+| `prompt` | Registrar prompt ou contexto sintético. |
+| `run` | Iniciar ou retomar execução, compactar, executar comando/skill ou gerar resposta. |
+| `model` | Escolher agente/modelo ou alterar políticas de modelo e permissão. |
+| `control` | Interromper uma execução ou processo autorizado. |
+
+Para acrescentar leitura e gravação de prompts a um grant existente, por exemplo, declare `"sessionActions": ["read", "prompt"]`. Isso não permite iniciar execução. Um prompt com retomada automática exige também `run` antes de registrar trabalho; sem esse grant, use somente o fluxo explícito de gravação sem retomada. Definir agente/modelo em uma nova sessão exige `model`. Os controles de execução C15, seleção, recibos de skills, provedor e recursos continuam obrigatórios.
+
+Os campos separados `referenceActions` (valor conhecido: `list`) e `migrationActions` (valores conhecidos: `map`, `cut`, `recover`) também têm ausência equivalente a lista vazia. Esses catálogos não ativam endpoints: referências exigem uma ACL instalada para a fonte real; migração exige o fluxo de manutenção, grupo supremo atual, mapeamentos de owners e journal verificados. A configuração sozinha não autoriza um corte ou restore. `replay` não é um grant de sessão comum; bytes históricos só entram pelo mapeamento privado de recuperação.
+
+Todos os arrays recusam valores desconhecidos, repetidos, nulos ou de outro tipo. O servidor relê a política privada e os direitos de recursos durante cada operação; mudar um desses conjuntos invalida admissões anteriores. Sessões vinculadas a um caso continuam sujeitas à ACL corrente desse caso. Uma falha ou lista de exceções incompleta não vira acesso irrestrito.
+
+A ativação de um armazenamento corporativo exige a migração e seu controle de geração persistente separado dos backups de negócio. Selecionar uma Team não executa migração, cria um grant, copia dados legados nem reatribui IDs existentes. Os gates de isolamento, recuperação e instalação do plano continuam sendo requisitos de aceite.
+
 ## Evidência histórica do console aposentado (não é aceite da Edition)
 
 Os antigos componentes e estilos de sidebar verde descritos abaixo são apenas registro da implementação desativada; a Edition usa exclusivamente a interface Orchestra.

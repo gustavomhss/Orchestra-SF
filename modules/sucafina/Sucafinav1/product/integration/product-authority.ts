@@ -24,7 +24,7 @@ import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
 
-export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[] }>
+export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[]; migrationActions?: readonly ("map" | "cut" | "recover")[] }>
 
 /** Private verified resolver; the transport supplies only a sealed selection intent. */
 export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
@@ -179,7 +179,7 @@ export function createSfProductAuthority(input: {
       roles, roleMaps: mapped, scopes: scoped, canWrite,
       grant: grant ? { namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(),
         humanActions: [...grant.humanActions ?? []].toSorted(), sessionActions: [...grant.sessionActions ?? []].toSorted(),
-        referenceActions: [...grant.referenceActions ?? []].toSorted() } : null,
+        referenceActions: [...grant.referenceActions ?? []].toSorted(), migrationActions: [...grant.migrationActions ?? []].toSorted() } : null,
       policyVersion: input.policyVersion,
     })
     return { principalRef, policyVersion: input.policyVersion, accessRevision, canWrite, grant, roles, profile,
@@ -564,7 +564,10 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
           grant.sessionActions.some((action: unknown) => !SessionAccess.Actions.some((known) => known === action))) ||
         grant.referenceActions !== undefined && (!Array.isArray(grant.referenceActions) ||
           new Set(grant.referenceActions).size !== grant.referenceActions.length ||
-          grant.referenceActions.some((action: unknown) => action !== "list"))))
+          grant.referenceActions.some((action: unknown) => action !== "list")) ||
+        grant.migrationActions !== undefined && (!Array.isArray(grant.migrationActions) ||
+          new Set(grant.migrationActions).size !== grant.migrationActions.length ||
+          grant.migrationActions.some((action: unknown) => action !== "map" && action !== "cut" && action !== "recover"))))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
   return Object.freeze(value.map((grant: SfProductGrant) => Object.freeze({
     principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
@@ -572,5 +575,6 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
     humanActions: Object.freeze([...grant.humanActions ?? []].toSorted()),
     sessionActions: Object.freeze([...grant.sessionActions ?? []].toSorted()),
     referenceActions: Object.freeze([...grant.referenceActions ?? []].toSorted()),
+    migrationActions: Object.freeze([...grant.migrationActions ?? []].toSorted()),
   })).toSorted((left, right) => left.principalRef.localeCompare(right.principalRef)))
 }

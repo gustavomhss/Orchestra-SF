@@ -87,6 +87,7 @@ export const list = Effect.fn("SessionArchive.list")(function* (db: Database.Int
   const owners = Option.getOrUndefined(yield* Effect.serviceOption(SessionOwner.Service))
   const scope = owners ? yield* SessionOwner.scopeForDatabase(owners, db).pipe(Effect.orDie) : undefined
   if (!owners) yield* SessionOwner.ensureTechnical(db)
+  if (owners && scope && input.anchor) yield* owners.assert(scope, input.anchor.id, "read").pipe(Effect.orDie)
   const built = query(db, input, owners && scope ? yield* owners.predicate(scope).pipe(Effect.orDie) : undefined)
   const rows = yield* built.statement.all().pipe(Effect.orDie)
   if (owners && scope) yield* owners.verify(scope).pipe(Effect.orDie)

@@ -151,7 +151,8 @@ test("owner-05: a projector failure rolls back the owner and Created together an
     const events = yield* EventV2.Service
     const sessions = yield* SessionV2.Service
     const failure = new Error("deliberate failure after private owner projection")
-    const unsubscribe = yield* events.project(SessionOwnerEvent.Bound, () => Effect.die(failure))
+    let inject = true
+    yield* events.project(SessionOwnerEvent.Bound, () => inject ? Effect.die(failure) : Effect.void)
     const lease = yield* f.capture()
     const exit = yield* SessionOwner.withLease(lease, sessions.create({ id, location: f.location })).pipe(Effect.exit)
     expect(Exit.isFailure(exit)).toBe(true)
@@ -159,7 +160,7 @@ test("owner-05: a projector failure rolls back the owner and Created together an
     expect(f.business.all("SELECT session_id FROM session_owner WHERE session_id = ?", [id])).toEqual([])
     expect(f.business.all("SELECT id FROM session WHERE id = ?", [id])).toEqual([])
     expect(f.business.all("SELECT id FROM event WHERE aggregate_id = ?", [id])).toEqual([])
-    yield* unsubscribe
+    inject = false
     expect((yield* SessionOwner.withLease(lease, sessions.create({ id, location: f.location }))).id).toBe(id)
   }))
 })
@@ -344,4 +345,101 @@ test("owner-14: private worker binding reaches the global coordinator and a revo
     }).pipe(Effect.timeout("2 seconds"))
     expect(drained).toEqual([session.id])
   }))
+})
+
+test("owner-15: actual Case ACL and Team predicates precede LIMIT in both directions, and a foreign cursor is rejected", async () => {
+  await using f = await teamSessionFixture()
+  await f.run(Effect.gen(function* () {
+    const sessions = yield* SessionV2.Service
+    const a = yield* f.capture(f.businessRequest(profileA))
+    const b = yield* f.capture(f.businessRequest(profileB))
+    const first = yield* SessionOwner.withLease(a, sessions.create({ location: f.location }))
+    const foreignFirst = yield* SessionOwner.withLease(b, sessions.create({ location: f.location }))
+    const allowed = yield* SessionOwner.withLease(a, sessions.create({ location: f.location }))
+    yield* SessionOwner.withLease(b, sessions.create({ location: f.location }))
+    const last = yield* SessionOwner.withLease(a, sessions.create({ location: f.location }))
+    const firstCase = yield* Effect.promise(() => f.linkCaseResource(first.id))
+    const lastCase = yield* Effect.promise(() => f.linkCaseResource(last.id))
+    expect((yield* SessionOwner.withLease(a, sessions.get(first.id))).id).toBe(first.id)
+    yield* Effect.promise(() => firstCase.participants([]))
+    yield* Effect.promise(() => lastCase.participants([]))
+    for (const order of ["asc", "desc"] as const)
+      expect((yield* SessionOwner.withLease(a, sessions.list({ order, limit: 1 }))).map((value) => value.id)).toEqual([allowed.id])
+    yield* denied(SessionOwner.withLease(a, sessions.get(first.id)))
+    yield* denied(SessionOwner.withLease(a, sessions.list({
+      limit: 1, order: "asc", anchor: { id: foreignFirst.id, time: DateTime.toEpochMillis(foreignFirst.time.created), direction: "next" },
+    })))
+    expect((yield* SessionOwner.withLease(a, sessions.list({ order: "asc" }))).map((value) => value.id)).toEqual([allowed.id])
+  }))
+}, 60000)
+
+test("owner-16: Case access revoked after the SQL predicate was captured closes the page before egress", async () => {
+  await using f = await teamSessionFixture()
+  await f.run(Effect.gen(function* () {
+    const sessions = yield* SessionV2.Service
+    const owners = yield* SessionOwner.Service
+    const { db } = yield* Database.Service
+    const lease = yield* f.capture()
+    const session = yield* SessionOwner.withLease(lease, sessions.create({ location: f.location }))
+    const resource = yield* Effect.promise(() => f.linkCaseResource(session.id))
+    const gate = barrier()
+    // Only delay the real private predicate; no identity, ACL or SQL result is fabricated.
+    const delayed = { ...owners, predicate: (scope: SessionOwner.Scope) => owners.predicate(scope).pipe(
+      Effect.tap(() => Effect.promise(gate.hold)),
+    ) }
+    const listing = yield* SessionOwner.withLease(lease, SessionArchive.list(db).pipe(
+      Effect.provideService(SessionOwner.Service, delayed),
+    )).pipe(Effect.forkScoped)
+    yield* Effect.promise(() => gate.entered)
+    yield* Effect.promise(() => resource.participants([]))
+    gate.release()
+    const result = yield* Fiber.await(listing)
+    expect(Exit.isFailure(result)).toBe(true)
+    if (Exit.isFailure(result)) expect(Cause.squash(result.cause)).toBeInstanceOf(SessionOwner.Denied)
+    yield* denied(SessionOwner.withLease(lease, sessions.get(session.id)))
+  }))
+})
+
+test("owner-17: oversized or malformed current resource exceptions fail closed instead of truncating a visible page", async () => {
+  await using f = await teamSessionFixture()
+  await f.run(Effect.gen(function* () {
+    const sessions = yield* SessionV2.Service
+    const lease = yield* f.capture()
+    yield* SessionOwner.withLease(lease, sessions.create({ location: f.location }))
+    yield* Effect.promise(() => f.store.transaction("dashboard", async (snapshot) => {
+      const runs = Object.fromEntries(Array.from({ length: 501 }, (_, index) => [
+        "synthetic-linked-run-" + index,
+        { principalRef: oid, caseRef: { id: "missing-case", incarnation: "gone" },
+          native: { sessionID: SessionV2.ID.make("ses_denied_resource_" + index) } },
+      ]))
+      const product = Schema.decodeUnknownSync(Schema.Record(Schema.String, Schema.Unknown))(snapshot.data.__sfProductV1 ?? {})
+      snapshot.data.__sfProductV1 = { ...product, nativeRuns: runs }
+      return { commit: true, value: undefined }
+    }))
+    yield* denied(SessionOwner.withLease(lease, sessions.list({ limit: 1 })))
+    yield* Effect.promise(() => f.store.transaction("dashboard", async (snapshot) => {
+      const product = Schema.decodeUnknownSync(Schema.Record(Schema.String, Schema.Unknown))(snapshot.data.__sfProductV1)
+      snapshot.data.__sfProductV1 = { ...product, nativeRuns: [] }
+      return { commit: true, value: undefined }
+    }))
+    yield* denied(SessionOwner.withLease(lease, sessions.list({ limit: 1 })))
+  }))
+})
+
+test("owner-18: an empty corporate generation marker is never mistaken for a technical store", async () => {
+  await using f = await teamSessionFixture()
+  // Explicit corruption injection in synthetic storage, after the real cut fixture.
+  f.business.execute("DELETE FROM sf_authority_generation")
+  const result = await Effect.runPromise(Effect.gen(function* () {
+    const { db } = yield* Database.Service
+    return yield* SessionArchive.list(db)
+  }).pipe(Effect.provide(Database.layerFromPath(f.filename)), Effect.scoped, Effect.exit))
+  expect(Exit.isFailure(result)).toBe(true)
+  if (Exit.isFailure(result)) {
+    const error = Cause.squash(result.cause)
+    expect(error instanceof SessionOwner.Denied || error instanceof AuthorityGeneration.GenerationError ||
+      error !== null && typeof error === "object" && "cause" in error &&
+      error.cause instanceof AuthorityGeneration.GenerationError).toBe(true)
+  }
+  expect(f.business.all("SELECT id FROM session")).toEqual([])
 })

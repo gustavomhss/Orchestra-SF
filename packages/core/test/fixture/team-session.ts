@@ -1,4 +1,8 @@
 import path from "node:path"
+import { randomUUID } from "node:crypto"
+import { createDecisionCasePort } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port"
+import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical"
+import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract"
 import { Effect, Layer, Scope } from "effect"
 import { Database } from "../../src/database/database"
 import { AuthorityControl } from "../../src/database/authority-control"
@@ -35,11 +39,12 @@ type Services = Database.Service | EventV2.Service | SessionV2.Service | Session
  * real Core projectors and two durable SQLite files. The execution replacement is
  * explicitly recording-only; these tests never claim a model/provider run.
  */
-export async function teamSessionFixture(input: {
+export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, unknown, LayerNode.Tag | undefined> = never>(input: {
   actions?: readonly SessionAccess.Action[]
   roles?: boolean
   grants?: readonly SfProductGrant[]
   legacyID?: SessionV2.ID
+  extraNodes?: readonly Extra[]
 } = {}) {
   const declared = input.actions ?? SessionAccess.Actions
   const f = await teamProductFixture({
@@ -67,7 +72,7 @@ export async function teamSessionFixture(input: {
   }))
   const layer = () => Layer.fresh(AppNodeBuilder.build(
     LayerNode.group([Database.node, EventV2.node, SessionProjector.node, SessionStore.node,
-      SessionV2.node, SessionOwner.node, AuthorityGenerationRuntime.node]),
+      SessionV2.node, SessionOwner.node, AuthorityGenerationRuntime.node, ...input.extraNodes ?? []]),
     [
       [Database.node, Database.layerFromPath(filename)],
       [ProjectV2.node, projects],
@@ -76,7 +81,7 @@ export async function teamSessionFixture(input: {
         cache: f.directory, state: f.directory })],
     ],
   ))
-  const run = <A, E>(body: Effect.Effect<A, E, Services | Scope.Scope>) =>
+  const run = <A, E>(body: Effect.Effect<A, E, Services | LayerNode.Output<Extra> | Scope.Scope>) =>
     Effect.runPromise(body.pipe(Effect.provide(layer()), Effect.scoped))
   const location = Location.Ref.make({ directory: AbsolutePath.make(f.workspaceDirectory) })
   await run(Effect.gen(function* () {
@@ -107,6 +112,44 @@ export async function teamSessionFixture(input: {
   })
   const admitted = <A, E, R>(request: Request, effect: Effect.Effect<A, E, R>) =>
     Effect.flatMap(capture(request), (lease) => SessionOwner.withLease(lease, effect))
+  /** A real Case producer supplies the ACL; the persisted association is only fixture metadata, never a C15 grant. */
+  const linkCaseResource = async (sessionID: SessionV2.ID) => {
+    const value = { objective: "Current private session resource", horizon: { start: "2027-01-01", end: "2027-12-31" },
+      currency: "USD", criteria: ["cost", "risk"], sourceRefs: [] }
+    const request = f.businessRequest(profileA, f.cookie, { method: "POST", headers: { "Idempotency-Key": randomUUID() } })
+    const lease = await f.authority.ui.admit(request, "sf_case_draft", digestSfValue(value))
+    if (lease.status !== "ok") throw new Error("Actual Case admission required")
+    const cases = createDecisionCasePort({
+      state: f.authority.state, host: f.authority.host, creationTarget: f.authority.creationTarget,
+      operationIdentity: (context) => context.kind === "ui" ? f.authority.ui.operationIdentity(context) : undefined,
+      authorizeCase: async (record, context) => record.participants.includes(context.binding.principalRef) &&
+        await f.authority.host.revalidate(context),
+      verifyScenarioOperations: async (record, context) => !record.alternatives.length && !record.choices.length &&
+        await f.authority.host.revalidate(context),
+      evidence: { context: async () => [], recall: async () => [],
+        resolve: async () => { throw new Error("No evidence in the session ownership fixture") },
+        emitFromLedger: async () => { throw new Error("No ledger emission in the session ownership fixture") } },
+      createId: randomUUID, now: () => new Date(f.provider.clock.value).toISOString(),
+    })
+    const result = await cases.draft(value, lease.value)
+    f.authority.ui.finish(lease.value)
+    if (result.status !== "ok") throw new Error("Actual Case persistence required")
+    const ref = result.value
+    await f.store.transaction("dashboard", async (snapshot) => {
+      const product = object(snapshot.data.__sfProductV1)
+      snapshot.data.__sfProductV1 = { ...product, nativeRuns: { ...object(product.nativeRuns),
+        [randomUUID()]: { principalRef: oid, caseRef: { id: ref.id, incarnation: ref.incarnation }, native: { sessionID } } } }
+      return { commit: true, value: undefined }
+    })
+    const participants = (value: readonly string[]) => f.store.transaction("dashboard", async (snapshot) => {
+      const product = object(snapshot.data.__sfProductV1)
+      const entries = object(product.cases)
+      const current = object(entries[ref.id])
+      snapshot.data.__sfProductV1 = { ...product, cases: { ...entries, [ref.id]: { ...current, participants: [...value] } } }
+      return { commit: true, value: undefined }
+    })
+    return { ref, participants }
+  }
   let generation = 1
   const advance = () => {
     control.beginMaintenance(storage, generation)
@@ -119,7 +162,7 @@ export async function teamSessionFixture(input: {
     generation = next
   }
   return {
-    ...f, filename, location, productHooks: f.hooks, hooks, calls, run, capture, admitted, business, controlDriver, control, storage, marker, advance,
+    ...f, filename, location, productHooks: f.hooks, hooks, calls, run, capture, admitted, business, controlDriver, control, storage, marker, advance, linkCaseResource,
     async [Symbol.asyncDispose]() {
       if (business.inTransaction()) business.execute("ROLLBACK")
       business.close()
