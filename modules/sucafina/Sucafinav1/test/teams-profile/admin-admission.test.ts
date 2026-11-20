@@ -13,6 +13,7 @@ async function fixture(input: Parameters<typeof teamProfileFixture>[0] = {}) {
   return f
 }
 const enable = (expectedRevision = 0, profile = profileA) => ({ action: "enable", profile, expectedRevision })
+const principalId = Schema.decodeUnknownSync(TeamProfile.PrincipalObjectId)
 const select = (profile = profileA) => ({ contractRevision: "sf-team-profile/1", kind: "team", profile })
 
 test("admin-admission-01: current corporate admin has an independent empty configuration with zero Teams", async () => {
@@ -42,7 +43,7 @@ test("admin-admission-01: enable first verified Team without membership, disable
   expect(f.provider.requests.slice(before).some((entry) => new URL(entry.url).pathname.startsWith("/v1.0/teams/") || new URL(entry.url).pathname.endsWith("/joinedTeams"))).toBe(false)
   expect(await f.resolver.list(request)).toEqual({ status: "ok", configRevision: 3, profiles: [] })
   expect((await f.profiles.audit()).map((entry) => ({ action: entry.action, principal: entry.principal.principalObjectId }))).toEqual([
-    { action: "enable", principal: oid }, { action: "disable", principal: oid }, { action: "remove", principal: oid },
+    { action: "enable", principal: principalId(oid) }, { action: "disable", principal: principalId(oid) }, { action: "remove", principal: principalId(oid) },
   ])
 })
 
@@ -214,8 +215,8 @@ test("profile admission is nonserializable and remains personal even when config
   const b = await f.resolver.resolve(f.request(undefined, second), select())
   if (a.status !== "authenticated" || b.status !== "authenticated" || !a.admission || !b.admission) throw new Error("Both current principals require independently admitted profiles")
   expect(a.admission).not.toBe(b.admission)
-  expect(a.admission.principal.principalObjectId).toBe(oid)
-  expect(b.admission.principal.principalObjectId).toBe(other)
+  expect(a.admission.principal.principalObjectId).toBe(principalId(oid))
+  expect(b.admission.principal.principalObjectId).toBe(principalId(other))
   expect(await f.resolver.revalidate(JSON.parse(JSON.stringify(a.admission)))).toBe(false)
   expect(await f.resolver.revalidate(a.admission)).toBe(true)
   f.provider.directTeams.set(oid, [])
