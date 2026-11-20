@@ -1,13 +1,16 @@
 export * as ScheduledTask from "./scheduled-task"
 
 import { and, asc, desc, eq, lt, lte, min, ne, notInArray } from "drizzle-orm"
-import { Cause, Clock, Context, Duration, Effect, Layer, Queue, Schema } from "effect"
+import { Cause, Clock, Context, Duration, Effect, Fiber, Layer, Queue, Schema } from "effect"
 import { ScheduledTask } from "@orchestra/schema/scheduled-task"
 import { AgentV2 } from "./agent"
 import { Database } from "./database/database"
 import { makeGlobalNode } from "./effect/app-node"
+import { HostMaintenance } from "./host-maintenance"
 import { AbsolutePath } from "./schema"
 import { SessionV2 } from "./session"
+import { SessionOwner } from "./session/owner"
+import type { Capability } from "@orchestra/schema/capability"
 import { SessionInput } from "./session/input"
 import { ScheduledTaskCapability } from "./scheduled-task/capability"
 import { ScheduledTaskModel } from "./scheduled-task/model"
@@ -80,6 +83,8 @@ type Outcome = ScheduledTaskShared.Outcome
 const layer = Layer.effect(
   Service,
   Effect.gen(function* () {
+    const maintenance = yield* HostMaintenance.Service
+    const owners = yield* SessionOwner.Service
     const { db } = yield* Database.Service
     const sessions = yield* SessionV2.Service
     // At most one pending wake: the daemon needs to know that something was written, not how many times.
@@ -346,9 +351,35 @@ const layer = Layer.effect(
       yield* Effect.race(Effect.sleep(delay), Queue.take(woken))
     })
 
-    const capability = cap.api({ dispatch, settle })
+    const technical = <A, E>(work: Effect.Effect<A, E>) => Effect.gen(function* () {
+      const scope = yield* owners.open().pipe(Effect.orDie)
+      if (owners.owner(scope)) return yield* Effect.die(new SessionOwner.Denied({ reason: "missing-admission" }))
+      yield* SessionOwner.ensureTechnical(db)
+      const value = yield* work
+      yield* owners.verify(scope).pipe(Effect.orDie)
+      yield* SessionOwner.ensureTechnical(db)
+      return value
+    })
+    const owned = <A, E>(owner: Capability.Owner, action: "read" | "write" | "run" | "control", work: Effect.Effect<A, E>) =>
+      SessionOwner.guard(owners, owner.sessionID, action, (scope) => action === "read" ? work :
+        owners.withWriter(scope, work).pipe(
+          Effect.catchTag("SessionOwner.Denied", (error) => Effect.die(error)),
+          Effect.catchTag("AuthorityGenerationError", (error) => Effect.die(error)),
+        ))
+    const capApi = cap.api({ dispatch, settle })
+    const capability: ScheduledTaskCapability.Interface = {
+      create: (owner, ...args) => maintenance.admit(owned(owner, "write", capApi.create(owner, ...args))),
+      list: (owner, ...args) => maintenance.admit(owned(owner, "read", capApi.list(owner, ...args))),
+      placed: (...args) => maintenance.admit(technical(capApi.placed(...args))),
+      get: (owner, ...args) => maintenance.admit(owned(owner, "read", capApi.get(owner, ...args))),
+      update: (owner, ...args) => maintenance.admit(owned(owner, "write", capApi.update(owner, ...args))),
+      pause: (owner, ...args) => maintenance.admit(owned(owner, "control", capApi.pause(owner, ...args))),
+      resume: (owner, ...args) => maintenance.admit(owned(owner, "control", capApi.resume(owner, ...args))),
+      remove: (owner, ...args) => maintenance.admit(owned(owner, "control", capApi.remove(owner, ...args))),
+      run: (owner, ...args) => maintenance.admit(owned(owner, "run", capApi.run(owner, ...args))),
+    }
     yield* ScheduledTaskPort.bind(capability)
-    return Service.of({
+    const service = Service.of({
       list: Effect.fn("ScheduledTask.list")(function* (directory) {
         const tasks = yield* db
           .select()
@@ -475,10 +506,19 @@ const layer = Layer.effect(
       untilDue,
       capability,
     })
+    return Service.of({
+      ...service,
+      list: (...args) => maintenance.admit(technical(service.list(...args))),
+      create: (...args) => maintenance.admit(technical(service.create(...args))),
+      update: (...args) => maintenance.admit(technical(service.update(...args))),
+      remove: (...args) => maintenance.admit(technical(service.remove(...args))),
+      run: (...args) => maintenance.admit(technical(service.run(...args))),
+      tick: maintenance.admit(technical(service.tick)),
+    })
   }),
 )
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, SessionV2.node] })
+export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, SessionV2.node, HostMaintenance.node, SessionOwner.node] })
 
 
 /** Serves due slots on the server whether or not any client is open, starting with a pass at boot. */
@@ -486,10 +526,11 @@ export const daemonNode = makeGlobalNode({
   name: "scheduled-task-daemon",
   layer: Layer.effectDiscard(
     Effect.gen(function* () {
+      const maintenance = yield* HostMaintenance.Service
       const tasks = yield* Service
       // A failed pass (the database was busy, say) must not stop later passes.
-      yield* tasks.tick.pipe(
-        Effect.catchCause(logFailure),
+      const daemon = yield* tasks.tick.pipe(
+        Effect.catchCause((cause) => logFailure(cause).pipe(Effect.andThen(Effect.sleep(TICK)))),
         Effect.andThen(
           tasks.untilDue.pipe(
             Effect.catchCause((cause) => logFailure(cause).pipe(Effect.andThen(Effect.sleep(TICK)))),
@@ -498,9 +539,10 @@ export const daemonNode = makeGlobalNode({
         Effect.forever,
         Effect.forkScoped,
       )
+      yield* maintenance.register("scheduled-task-daemon", Fiber.interrupt(daemon).pipe(Effect.asVoid))
     }),
   ),
-  deps: [node],
+  deps: [node, HostMaintenance.node],
 })
 
 function legacy(task: Task): task is LegacyTask {

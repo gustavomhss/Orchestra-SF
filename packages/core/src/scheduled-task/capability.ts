@@ -212,7 +212,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
       const next = firstSlot({ cadence: input.cadence, timezone, catchUp, enabled }, now)
       if (typeof next !== "number") return yield* next
       const id = ScheduledTask.ID.create()
-      yield* db
+      yield* immediate(db
         .insert(ScheduledTaskTable)
         .values({
           id,
@@ -231,8 +231,7 @@ export function make(store: ScheduledTaskShared.Store, sessions: SessionV2.Inter
           time_created: now,
           time_updated: now,
         })
-        .run()
-        .pipe(Effect.orDie)
+        .run())
       return yield* getOwned(owner, id).pipe(Effect.orDie)
     }),
     list: Effect.fn("ScheduledTask.capability.list")(function* (owner) {
