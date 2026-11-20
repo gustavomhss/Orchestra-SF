@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -22,6 +23,7 @@ import { inspectWp05Browser } from "./browser.ts"
 const period = { start: "2026-01-01", end: "2026-12-31" }
 
 test("real procurement registry and port supply scoped BI stock and deny revoked access", async () => {
+  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "procurement-bi-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)

@@ -42,6 +42,8 @@ jobs:
           esac
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 2
 
       - name: Setup request validator Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -51,20 +53,33 @@ jobs:
       - name: Read request
         id: request
         run: |
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
           node --input-type=module <<'NODE'
           import { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import { execFileSync } from 'node:child_process'
+          import { verifyShardRequest } from './script/sf-ci/shard-adoption.mjs'
           import { createHash } from 'node:crypto'
           import path from 'node:path'
           import { omniControlScope, validateRequest } from './script/test-ci-request.ts'
           import { locateTestPackage } from './script/test-ci-location.ts'
           const requestBytes = readFileSync('.ci-run.json')
           const requestBlob = createHash('sha1').update('blob ' + requestBytes.length + '\0').update(requestBytes).digest('hex')
-          const request = validateRequest(JSON.parse(requestBytes.toString('utf8')),
+          const raw = JSON.parse(requestBytes.toString('utf8'))
+          const binding = Object.hasOwn(raw, 'sfShard') || process.env.GITHUB_REF_NAME.startsWith('ci-run-linux-sfshard-')
+            ? verifyShardRequest(raw, {
+              plan: JSON.parse(execFileSync('node', ['script/sf-ci/gate.mjs', 'plan', 'CI-SF'], { encoding: 'utf8' })),
+              snapshotSha: process.env.GITHUB_SHA,
+              parentShas: execFileSync('git', ['show', '-s', '--format=%P', 'HEAD'], { encoding: 'utf8' }).trim().split(' '),
+              changedPaths: execFileSync('git', ['diff', '--name-only', 'HEAD^', 'HEAD'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean),
+              refName: process.env.GITHUB_REF_NAME,
+            }) : undefined
+          const request = validateRequest(raw,
             (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
               realpathSync(file).startsWith(realpathSync('.') + path.sep),
             (selector) => locateTestPackage('.', selector))
           writeFileSync('.ci-run.json', JSON.stringify(request))
           mkdirSync('test-ci-evidence', { recursive: true })
+          if (binding) writeFileSync('test-ci-evidence/shard-binding.json', JSON.stringify(binding, null, 2) + '\n')
           writeFileSync('test-ci-evidence/request.json', JSON.stringify({ request,
             platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))
           appendFileSync(process.env.GITHUB_OUTPUT,
@@ -92,18 +107,13 @@ jobs:
       - name: Setup Bun
         if: steps.request.outputs.runner != 'pytest'
         uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
 
       # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
       - name: ripgrep
         if: steps.request.outputs.runner != 'pytest'
         uses: ./.github/actions/ripgrep
-
-      # setup-bun selects Node 24; match the existing e2e lane's extraction workaround afterwards.
-      - name: Setup Playwright Node
-        if: steps.request.outputs.runner == 'playwright'
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: "24.15"
 
       - name: Install Chromium
         if: steps.request.outputs.runner == 'playwright'
@@ -250,6 +260,8 @@ jobs:
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
       - name: Run tests
         id: sf66_product_run
+        # Keep room inside the existing 45-minute job for failure diagnostics.
+        timeout-minutes: 40
         env:
           ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
           ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
@@ -341,6 +353,11 @@ jobs:
                 fi
                 exit $status
               fi
+              if [ "$PACKAGE" = sucafina ]; then
+                GITHUB_ACTIONS=false bun test "${args[@]}" --reporter=junit \
+                  "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/report.xml" 2>&1 | tee "$GITHUB_WORKSPACE/test-ci-evidence/run.log"
+                exit "${PIPESTATUS[0]}"
+              fi
               GITHUB_ACTIONS=false bun test "${args[@]}"
               ;;
             node)
@@ -353,6 +370,39 @@ jobs:
               node --experimental-strip-types --test "${args[@]}"
               ;;
           esac
+
+      - name: Preserve focused SF performance observations
+        if: always() && !cancelled() && steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun' && steps.sf66_product_run.outcome != 'skipped'
+        env:
+          TEST_CONCLUSION: ${{ steps.sf66_product_run.outcome }}
+        run: |
+          python3 script/sf-ci/timings.py \
+            --report test-ci-evidence/report.xml --output test-ci-evidence/timings.json \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite CI-SF --directory modules/sucafina \
+            --file-root "$GITHUB_WORKSPACE/modules/sucafina" --conclusion "$TEST_CONCLUSION" --partial
+
+      - name: Upload SF timing and selection observations
+        if: always() && !cancelled() && steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun' && steps.sf66_product_run.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: test-ci-performance-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            test-ci-evidence/timings.json
+            test-ci-evidence/shard-binding.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload focused SF failure diagnostics
+        if: failure() && steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: test-ci-sf-failure-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            test-ci-evidence/run.log
+            test-ci-evidence/report.xml
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload source PR guard evidence
         if: always() && steps.guard_context.outcome != 'skipped'
