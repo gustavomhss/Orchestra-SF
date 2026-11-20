@@ -6,6 +6,7 @@ import type { DecisionMutationOperation } from "../../../../modules/sucafina/Suc
 import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { createPlannerSensitivityUnits } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+import { observePlannerSensitivity } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-observation.ts"
 import { createPlannerExactThreshold } from "../../../../modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts"
 import { comparePlannerPreview } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
@@ -66,18 +67,24 @@ export function createSfPortfolioServices(input: {
     const identity = business.operationIdentity(call)
     return identity && await authority.host.revalidate(call) ? `extended:${digestSfValue({ identity, digest })}` : undefined
   }
-  const units = scenarios ? createPlannerSensitivityUnits({ host: authority.host, cases: business.cases, scenarios, store: business.results,
-    evidence: business.context, rules: registries.rules }) : undefined
+  const observedSensitivity = scenarios ? observePlannerSensitivity({
+    units: createPlannerSensitivityUnits({ host: authority.host, cases: business.cases, scenarios, store: business.results,
+      evidence: business.context, rules: registries.rules }),
+    preview: (request, call) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources,
+      scenarios, planner: registries.planner }, request, call),
+    observe: (request, call, work) => business.withPlannerObservation(request, call, work),
+  }) : undefined
+  const units = observedSensitivity?.units
+  const sensitivityPreview = observedSensitivity?.preview
   const resolveCoverageAuthority = createSfPortfolioCoverageAuthority({ authority, business, registries })
-  const sensitivityPreview = scenarios ? (request: Parameters<typeof comparePlannerPreview>[1], call: Parameters<typeof comparePlannerPreview>[2]) =>
-    comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call) : undefined
   // Evaluation and durable recertification use the same current Planner proof.
   const threshold = units && sensitivityPreview ? createPlannerExactThreshold({ units, preview: sensitivityPreview }) : undefined
   const exactThreshold: Parameters<typeof createPortfolioProduct>[0]["exactThreshold"] = threshold
-    ? (request, binding, call) => threshold(request, binding.baselineRef, call) : undefined
+    ? (request, binding, call) => business.withPlannerObservation({ request, binding }, call,
+      () => threshold(request, binding.baselineRef, call)) : undefined
   const coveragePreview = units && sensitivityPreview ? createPortfolioCoveragePreview({ units, preview: sensitivityPreview, resolveAuthority: resolveCoverageAuthority }) : undefined
   const createReceipt: Parameters<typeof createPortfolioProduct>[0]["createReceipt"] = async (call, operation, digest, result) => business.receipt(call, operation, digest, result)
-  if (scenarios && units) verification.proof = createPortfolioProofVerifier({ cases: business.cases, planner: registries.planner,
+  if (scenarios && units && sensitivityPreview) verification.proof = createPortfolioProofVerifier({ cases: business.cases, planner: registries.planner,
     sources: business.plannerSources, evidence: business.context, results: business.results, revalidate: authority.host.revalidate,
     readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences, caseFor: business.resolveCase,
     idempotencyKey, decisions: mutations, createReceipt, units, coveragePreview, exactThreshold,
@@ -94,7 +101,7 @@ export function createSfPortfolioServices(input: {
       const bound = await registries.comparisonBindings.read({ caseRef: comparison.value.caseRef, resultRef: analysis.comparisonRef }, call)
       return bound.status === "ok" && await authority.host.revalidate(call)
     },
-    sensitivityPreview: (request, call) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call),
+    sensitivityPreview,
   })
   const reconciliation = createSfPortfolioReconciliationServices({ authority, business, registries })
   const rawProduct = scenarios ? createPortfolioProduct({ host: authority.host, cases: business.cases, evidence: business.context,
@@ -102,6 +109,7 @@ export function createSfPortfolioServices(input: {
     rules: registries.rules, selection: registries.selection, sensitivityBindings: registries.sensitivityBindings,
     comparisonBindings: registries.comparisonBindings, portfolioBindings: registries.portfolioBindings,
     decisions: mutations, createReceipt, caseFor: business.resolveCase,
+    observePlannerRead: (request, call, work) => business.withPlannerObservation(request, call, work),
     idempotencyKey, exactThreshold, resolveCoverageAuthority, reconciliation: { readPortfolio: reconciliation.readPortfolio },
   }) : undefined
   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
