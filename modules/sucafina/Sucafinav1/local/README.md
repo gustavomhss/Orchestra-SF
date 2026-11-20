@@ -78,6 +78,28 @@ Uploads são recusados quando o scanner está ausente ou não responde com resul
 
 No perfil local, notificações destinadas à conta real do operador são entregues à caixa de entrada durável do aplicativo. Destinatários externos ou do diretório corporativo não são redirecionados para essa conta: permanecem pendentes. No perfil Microsoft, o envio continua dependendo de um transporte corporativo real; não são fabricados recibos de e-mail ou Teams. A existência destes adaptadores e de testes com provedor sintético não prova login, consentimento, grupos ou antivírus reais. A ativação só fica concluída após a validação com a organização.
 
+## Leitura de Teams no perfil Microsoft HTTPS
+
+O perfil corporativo `deployment: "azure-https"`, `authentication: "microsoft"` aceita a opção privada `"teams": "direct"`. Ela habilita a leitura das Teams das quais a pessoa autenticada é membro direto. A configuração é carregada pelo servidor; uma seleção, parâmetro ou cabeçalho do navegador não pode habilitar essa capacidade. A opção não se aplica ao cliente público de loopback descrito acima.
+
+Para habilitar a capacidade, acrescente esta propriedade ao arquivo privado de configuração Microsoft já preparado:
+
+```json
+{
+  "teams": "direct"
+}
+```
+
+Mescle essa propriedade à configuração existente; o bloco não substitui o arquivo completo. O valor deve ser exatamente `"direct"`; para desabilitar, remova a propriedade e recarregue a configuração da instância. `false`, `null` e outros valores são recusados. A identidade fixa da instalação, definida pelo tenant e pela aplicação, permanece a mesma.
+
+Sem a opção, o login HTTPS solicita somente `openid profile offline_access User.Read`. Com ela, acrescenta a permissão **delegada** Microsoft Graph `Team.ReadBasic.All`. O consentimento deve ser concedido no tenant de recurso conforme suas políticas; habilitar a opção no arquivo não comprova esse consentimento e não concede papéis ou permissões de negócio. Não são necessárias permissões de aplicação, escrita de Teams ou enumeração de usuários/grupos para essa leitura. Consulte a [API joinedTeams](https://learn.microsoft.com/en-us/graph/api/user-list-joinedteams?view=graph-rest-1.0) para o contrato de associação direta e as permissões.
+
+Tokens e escopos retornados ficam na sessão privada cifrada. Uma credencial antiga sem o escopo confirmado não é promovida por essa opção. Quando uma renovação retorna token sem informar os escopos, a leitura de Teams permanece indisponível com `consent_required` até uma nova autenticação confirmar o conjunto solicitado. A omissão de escopos no resgate inicial do código segue o contrato do [fluxo authorization code da Microsoft](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow); ela não é usada para inferir o consentimento de um refresh token antigo.
+
+A leitura não transforma acesso a um canal compartilhado em associação à Team anfitriã. Também não altera os mapas de papéis existentes, inclusive mapas vazios, nem as concessões explícitas da instalação. Falha de consentimento, indisponibilidade do provedor ou paginação incompleta retorna um estado de erro, sem apresentar uma lista vazia como prova de ausência de Teams.
+
+Esta etapa prepara o leitor vinculado à sessão autenticada. A seleção de perfil por Team, sua admissão, o isolamento dos dados e a comprovação corporativa da migração continuam sujeitos às etapas e aos gates do [plano Teams Profile](../../../../docs/architecture/teams-profile-migration.md). A opção, por si só, não qualifica a instalação para produção.
+
 ## Evidência histórica do console aposentado (não é aceite da Edition)
 
 Os antigos componentes e estilos de sidebar verde descritos abaixo são apenas registro da implementação desativada; a Edition usa exclusivamente a interface Orchestra.
