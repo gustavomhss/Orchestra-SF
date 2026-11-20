@@ -8,7 +8,7 @@ import { createSfDashboardApplicationIntents } from "../../../../../../../apps/c
 import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
 import {
   applicationPanel, assertPrivateCorrelation, correlations, createConsumerReadFixture, editNewDraft, initialCaseRef,
-  loadPrivateOptions, modeUrl, observedApplication, openWorkbench, pendingSaveMessage, prepareApply, privatePanel,
+  loadPrivateOptions, modeUrl, observedApplication, openPreparation, openWorkbench, pendingSaveMessage, prepareApply, privatePanel,
   receive, recoveredMessage, recoveryPrefix, reloadApply, unknownMessage,
 } from "./fixture.ts"
 
@@ -447,5 +447,67 @@ test("F01 purges a still-valid original correlation on owner reload outside Dash
       if (result.status === "rejected") failures.push(result.reason)
   }
   if (failures.length) throw new AggregateError(failures, "F01 cross-owner original correlation purge failed")
+  driver.report()
+}, 60000)
+
+test("native preparation reauthorizes the chosen case and purges private UI on real revocation before any application", async () => {
+  expectSpawn(import.meta.path)
+  const fixture = await createConsumerReadFixture()
+  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const failures: unknown[] = []
+  try {
+    const page = await driver.browser.newPage(), errors: string[] = [], applications: string[] = []
+    page.on("pageerror", (error) => errors.push(error.message))
+    page.on("request", (request) => {
+      if (modeUrl("dashboard-hot-topic-apply")(new URL(request.url()))) applications.push(request.url())
+    })
+    const action = "Private preparation revoked before confirmation"
+    const panel = await openPreparation(page, fixture, action)
+    expect(await panel.textContent()).toContain(action)
+    expect(await panel.textContent()).toContain("Private recovery explanation")
+    const before = await observedApplication(fixture)
+    expect(before.decision.preparedChanges).toEqual([])
+    expect(before.decision.receipts).toEqual([])
+    expect(before.domain.action).toBe("Original action")
+    const current = await fixture.authority.state.read(fixture.request(), "cases", (state) => state.cases[initialCaseRef.id])
+    if (current.status !== "ok" || !current.value) throw new Error("Case unavailable before preparation revocation")
+    const removed = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion,
+      targetRef: initialCaseRef.id, targetIncarnation: initialCaseRef.incarnation, idempotencyKey: "native-prepare-revoke",
+      commandDigest: digestSfValue({ participants: [] }) }, async (state) => {
+      const decision = state.cases[initialCaseRef.id]!
+      state.cases[decision.id] = { ...decision, version: decision.version + 1, participants: [] }
+      return { commit: true, value: true }
+    })
+    expect(removed.status).toBe("ok")
+    const revoked = await observedApplication(fixture)
+    const retained = await panel.elementHandle()
+    expect(retained).not.toBeNull()
+    const denied = receive(page, "dashboard-hot-topic-prepare")
+    await panel.getByRole("button", { name: "Review before applying", exact: true }).click()
+    const response = await denied
+    expect(response.status).toBe(403)
+    expect(object(response.body).status).toBe("denied")
+    await page.locator('[data-sf-f01="denied"]').waitFor()
+    expect(await applicationPanel(page).count()).toBe(0)
+    expect(await page.locator("body").textContent()).not.toContain(action)
+    expect(await page.locator("body").textContent()).not.toContain("Private recovery explanation")
+    expect(await retained!.evaluate((element) => element.querySelectorAll("input,textarea,select,button").length)).toBe(0)
+    expect(await retained!.evaluate((element) => element.textContent)).not.toContain(action)
+    expect(await retained!.evaluate((element) => element.textContent)).not.toContain("Private recovery explanation")
+    await retained!.dispose()
+    const historyValue = JSON.stringify(await page.evaluate(() => history.state))
+    expect(historyValue).not.toContain(action)
+    expect(historyValue).not.toContain("Private recovery explanation")
+    expect(await correlations(page)).toEqual([])
+    expect(applications).toEqual([])
+    expect(await observedApplication(fixture)).toEqual(revoked)
+    expect((await observedApplication(fixture)).domain).toEqual(before.domain)
+    expect(errors).toEqual([])
+  } catch (error) { failures.push(error) }
+  finally {
+    for (const result of await Promise.allSettled([driver.close(), fixture.close()]))
+      if (result.status === "rejected") failures.push(result.reason)
+  }
+  if (failures.length) throw new AggregateError(failures, "Native preparation revocation and cleanup failed")
   driver.report()
 }, 60000)
