@@ -58,7 +58,7 @@ const booleanInput = (item: string | boolean | undefined): boolean | "true" | "f
 
 export function prFromRecord(row?: SfRequest): SfPrEdit {
   const pr = row?.pr
-  return {
+  const values: SfPrEdit = {
     // Existing title belongs to W19. Never send it in a residual PR save.
     ...(row ? {} : { title: "" }),
     type: pr?.type, description: pr?.description,
@@ -69,6 +69,8 @@ export function prFromRecord(row?: SfRequest): SfPrEdit {
     frequency: pr?.frequency, estAnnual: numberInput(pr?.estAnnual),
     expenseType: pr?.expenseType, category: pr?.category,
   }
+  // Omitted source values stay absent; the native JSON codec rejects explicit undefined.
+  return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined)) as SfPrEdit
 }
 export function postedPoLine(line: SfPoLine): SfPoLine {
   return {
@@ -82,7 +84,7 @@ export function postedPoLine(line: SfPoLine): SfPoLine {
 }
 export function poFromRecord(row: SfRequest): SfPoEdit {
   const po = row.po
-  return {
+  const values: SfPoEdit = {
     currency: po?.currency, expenseType: po?.expenseType,
     supplier: po?.supplier, supplierId: po?.supplierId,
     description: po?.description,
@@ -96,6 +98,7 @@ export function poFromRecord(row: SfRequest): SfPoEdit {
     billingAddress: po?.billingAddress, deliveryAddress: po?.deliveryAddress,
     acceptance: po?.acceptance, warranty: po?.warranty, notes: po?.notes,
   }
+  return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined)) as SfPoEdit
 }
 export function isPrWritable(row: SfRequest) {
   return (row.status === "draft" || row.status === "pr_rejected") &&

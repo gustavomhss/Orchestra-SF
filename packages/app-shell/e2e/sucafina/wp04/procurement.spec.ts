@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { expect, test } from "@playwright/test"
-import type { Locator, Page, TestInfo } from "@playwright/test"
+import type { Locator, Page, Request, TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { selectSfProfile } from "../native/select-profile"
 
@@ -9,6 +9,99 @@ type Account = { baseURL: string; principal: string; projectId: string; installa
 type Manifest = { origin: string; directory: string; accounts: { first: Account; second: Account; viewer: Account }; records: { supplier: string; comparison: string } }
 
 test.describe.configure({ retries: 0 })
+
+type SafeEvent = Readonly<Record<string, string | number>>
+const observedPages = new Map<Page, { events: SafeEvent[]; stop: () => void }>()
+const commandPages = new Set(["Requests", "My approvals", "Suppliers", "Settings"])
+const commandActions = new Set(["create", "save", "submit_pr", "submit_sourcing", "select_quote", "submit_po", "approve", "reject", "issue", "cancel", "delete", "activate", "block", "inactivate", "change-bank", "reset"])
+
+function observedOperation(request: Request): SafeEvent | undefined {
+  const pathname = new URL(request.url()).pathname
+  const projection = pathname.match(/\/api\/ui\/pages\/(CAP2[4-8])$/)
+  if (request.method() === "GET" && projection) return { method: "GET", path: "/api/ui/pages/" + projection[1] }
+  if (request.method() !== "POST" || !pathname.endsWith("/procurement")) return undefined
+  try {
+    const input = request.postDataJSON() as { page?: unknown; action?: unknown }
+    return { method: "POST", path: "/procurement",
+      page: typeof input.page === "string" && commandPages.has(input.page) ? input.page : "unrecognized",
+      action: typeof input.action === "string" && commandActions.has(input.action) ? input.action : "unrecognized" }
+  } catch { return { method: "POST", path: "/procurement", action: "unrecognized" } }
+}
+
+function observeProcurement(page: Page) {
+  if (observedPages.has(page)) return
+  const events: SafeEvent[] = []
+  const record = (event: SafeEvent) => { events.push(event); if (events.length > 24) events.shift() }
+  const request = (value: Request) => { const operation = observedOperation(value); if (operation) record({ event: "request", ...operation }) }
+  const response = (value: import("@playwright/test").Response) => {
+    const operation = observedOperation(value.request())
+    if (operation) record({ event: "response", ...operation, status: value.status() })
+  }
+  const failed = (value: Request) => { const operation = observedOperation(value); if (operation) record({ event: "requestfailed", ...operation }) }
+  const pageError = (error: Error) => record({ event: "pageerror",
+    name: ["Error", "TypeError", "RangeError", "DataCloneError", "InvalidStateError", "SecurityError"].includes(error.name) ? error.name : "unrecognized" })
+  page.on("request", request)
+  page.on("response", response)
+  page.on("requestfailed", failed)
+  page.on("pageerror", pageError)
+  observedPages.set(page, { events, stop: () => {
+    page.off("request", request); page.off("response", response)
+    page.off("requestfailed", failed); page.off("pageerror", pageError)
+  } })
+}
+
+test.afterEach(async ({ page }, info) => {
+  const entries = [...observedPages]
+  observedPages.clear()
+  entries.forEach(([, observed]) => observed.stop())
+  if (info.status === info.expectedStatus) return
+  // Fixed route/action/state names only: never log bodies, bank fields, headers,
+  // credentials, URL queries, arbitrary console messages or error messages.
+  console.info("SF_WP04_FAILURE_NETWORK", JSON.stringify(entries.map(([observed, trace], index) =>
+    ({ page: index, primary: observed === page, closed: observed.isClosed(), events: trace.events }))))
+  for (const [index, [observed]] of entries.entries()) {
+    if (observed.isClosed()) continue
+    let deadline: ReturnType<typeof setTimeout> | undefined
+    const snapshot = await Promise.race([
+      observed.evaluate(() => {
+        const states = new Set(["ready", "loading", "partial", "empty", "filtered-empty", "not-found", "denied",
+          "session-expired", "unavailable", "stale", "invalid", "conflict", "outcome-unknown", "resolving", "unmounted"])
+        const state = (value: string | null) => value && states.has(value) ? value : "unrecognized"
+        const count = (selector: string) => document.querySelectorAll(selector).length
+        const messages = Array.from(document.querySelectorAll(".sf-state-message, [role=alert], [role=status]"))
+          .map((node) => node.textContent ?? "")
+        const notices = {
+          "request-unavailable": "Required producer capability is not available in this context.",
+          "request-unknown": "The response may have been lost after the command.",
+          "request-version-required": "A current request version is required for this action.",
+          "request-invalid": "The requisition values are incomplete or invalid.",
+          "supplier-conflict": "Supplier version or authority changed.",
+          "supplier-unknown": "Command outcome is unknown.",
+          "supplier-unavailable": "The authorized supplier source is unavailable.",
+          "supplier-invalid": "The producer returned an invalid projection.",
+          "supplier-refused": "The producer refused the change.",
+          "supplier-confirmed": "The producer acknowledged the command;",
+        }
+        return {
+          provider: Array.from(document.querySelectorAll("[data-sf-provider-state]")).slice(0, 2)
+            .map((node) => state(node.getAttribute("data-sf-provider-state"))),
+          review: Array.from(document.querySelectorAll('[data-component="sf-change-review"]')).slice(0, 2)
+            .map((node) => state(node.getAttribute("data-state"))),
+          panels: Array.from(document.querySelectorAll("[data-sf-state]")).slice(0, 8)
+            .map((node) => state(node.getAttribute("data-sf-state"))),
+          counts: { requests: count('[data-component="sf-requests-pr-po"]'), prEditors: count("[data-sf-pr-form]"),
+            poEditors: count("[data-sf-po-form]"), supplierEditors: count(".sf-u14-editor"),
+            supplierDetails: count(".sf-u14-detail"), settings: count("form.sf-n21-settings-form"),
+            alerts: count("[role=alert]"), statuses: count("[role=status]") },
+          notices: Object.entries(notices).filter(([, text]) => messages.some((message) => message.includes(text))).map(([key]) => key),
+        }
+      }).catch(() => null),
+      new Promise<null>((resolve) => { deadline = setTimeout(() => resolve(null), 1_000) }),
+    ])
+    if (deadline) clearTimeout(deadline)
+    console.info("SF_WP04_FAILURE_UI", JSON.stringify({ page: index, state: snapshot ?? "unavailable" }))
+  }
+})
 
 async function readManifest() {
   return JSON.parse(await readFile(path.join(import.meta.dirname, ".host-manifest.json"), "utf8")) as Manifest
@@ -24,6 +117,7 @@ const poEditor = (page: Page, id: string) => requestDetail(page, id).locator("[d
 const requestSummary = (page: Page, id: string) => page.locator('[data-request-summary="' + id + '"]')
 
 async function login(page: Page, account: "first" | "second" | "viewer", scenario: string) {
+  observeProcurement(page)
   const manifest = await readManifest()
   const selected = manifest.accounts[account]
   const enrollment = selected.enrollments[scenario]

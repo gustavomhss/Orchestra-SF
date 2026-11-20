@@ -59,18 +59,21 @@ export function sourcingSourceFields(request: SourcingRequest): readonly string[
 /** Preserve source IDs, quote metadata, criteria and each score byte. */
 export function editableSourcing(request: SourcingRequest): SourcingEdit {
   const source = request.sourcing
-  return {
+  const values: SourcingEdit = {
     quotes: source?.quotes?.map((quote) => ({ ...quote })) ?? [],
     evaluator: source?.evaluator,
     selectedId: source?.selectedId,
     fewQuotesJustification: source?.fewQuotesJustification,
     selectionJustification: source?.selectionJustification,
     contractStrategy: source?.contractStrategy,
-    weights: source?.weights
-      ? { ...source.weights,criteria:source.weights.criteria?.map((entry)=>({...entry})),
-          commCriteria:source.weights.commCriteria?.map((entry)=>({...entry})) }
-      : undefined,
+    ...(source?.weights ? { weights: {
+      ...source.weights,
+      ...(source.weights.criteria === undefined ? {} : { criteria: source.weights.criteria.map((entry) => ({ ...entry })) }),
+      ...(source.weights.commCriteria === undefined ? {} : { commCriteria: source.weights.commCriteria.map((entry) => ({ ...entry })) }),
+    } } : {}),
   }
+  // Absence remains absent; null scores and source-provided IDs are preserved.
+  return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined)) as SourcingEdit
 }
 export function uniqueRequest(page: Cap25PageOk, requestRef: string): SourcingRequest | null {
   const matches = page.value.data.requests.filter((r)=>r.number === requestRef)
