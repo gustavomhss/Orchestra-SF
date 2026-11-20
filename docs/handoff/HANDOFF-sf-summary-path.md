@@ -6,7 +6,13 @@
 - Base de integração: `573678d0acf9e91654efb7e67af7d30ebe45312b` (`sf-join-four`).
 - SHA de código: `7f01fc965802ee642439b049d12b9b71bdc73e20`.
 - Árvore de código: `f4e10dcfa6167ba23dbccc24954d7beb2c1ba78e`.
-- Estado: **PARTIAL**. Reparo mínimo preparado e publicado; typecheck e teste focal ainda dependem da qualificação da composição pelo integrador.
+- Estado: **PARTIAL; SUPERSEDED para integração**. Reparo mínimo publicado, mas o #425 recebeu uma correção concorrente equivalente. Usar o reparo do #425 na composição e não integrar esta branch em duplicidade.
+
+## Atualização concorrente
+
+O readback final observou o #425 avançar de `a08a2b7d5eb3455da143ed6ce2bd259ae9a1dc9a` para `b5312caba2a8825c2061dfafab926a3feed370cf`. O novo head aplica `AbsolutePath.make(...)`, importado de `@orchestra/core/schema`, à mesma expressão original de `mkdtemp`. O módulo Core reexporta o schema canônico; `packages/core/src/project.ts:132` já utiliza esse constructor. O blob concorrente é `f1cb6764a4f99b2c9b8a78ac3a0bafa3ba20c3c4` e preserva as mesmas 58 linhas de `expect(`.
+
+Esse novo head ainda não herda conclusão success do run anterior, que testou a fonte `a08a2b7d…` e terminou failure. O reparo desta branch fica como alternativa auditável, sem PR, merge ou gate adicional. O próximo gate deve qualificar a composição que contém apenas o reparo escolhido.
 
 ## Causa observada
 
@@ -42,4 +48,4 @@ Os erros `agent-scratch` do mesmo run são consequência de logs produzidos pelo
 
 Nada foi mergeado por esta branch. O unbound original é `modules/sucafina/Sucafinav1/test/native-ui-contract/summary-settings.test.ts:76:48` no snapshot falho; a expressão correspondente passa à linha 78 apenas pelos dois imports adicionados.
 
-Revisar o delta de três linhas adicionadas e uma removida, compor com os heads finais de #395/#425 e executar uma qualificação genuína da composição. Registrar os resultados reais antes de declarar este reparo COMPLETE. Esta branch não produz baseline, pacote final, digest de pacote ou GO.
+O delta desta alternativa é de três linhas adicionadas e uma removida. Preferir a correção equivalente já incluída no head final de #425, compor com #395 e executar uma qualificação genuína da composição. Não mergear esta branch em duplicidade. Registrar os resultados reais antes de declarar a causa corrigida e qualificada. Esta branch não produz baseline, pacote final, digest de pacote ou GO.
