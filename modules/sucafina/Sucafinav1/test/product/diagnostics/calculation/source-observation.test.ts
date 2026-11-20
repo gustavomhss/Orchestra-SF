@@ -80,11 +80,14 @@ test("Planner source consolidation retains fresh authority and ABA fences with t
       })
       expect(revoked.result.status).toBe("stale")
       expect(Object.hasOwn(revoked.result, "value")).toBe(false)
+      // The failed egress revalidation removed the original UI admission.
+      // Its next use must stop before another source read or authority callback.
+      expect(fixture.authority.host.requestFor(call)).toBeUndefined()
       const denied = await candidate.read("candidate-next-invocation-denied", reissued.value.evidence.refId)
-      expect(denied.result.status).toBe("denied")
+      expect(denied.result).toEqual({ status: "denied", reason: "source-authority-unavailable" })
       expect(Object.hasOwn(denied.result, "value")).toBe(false)
       expect(denied.counts).toMatchObject({
-        sourceTransactions: 0, authenticate: 0, revalidate: 1, preparedReads: 0,
+        sourceTransactions: 0, authenticate: 0, revalidate: 0, legacyReads: 0, preparedReads: 0,
       })
       expect(await inspectDurableState(fixture)).toEqual(beforeRevocation)
     } finally { fixture.authority.ui.finish(call) }
