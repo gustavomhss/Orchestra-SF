@@ -27,7 +27,9 @@ Only protected-paths can be transmitted. Other approval labels do not grant othe
 
 ## Guards and evidence
 
-For an admitted context the workflow retains the canonical origin/dev guard and adds an independent check against the actual source PR base SHA. Both commands must exit zero; no warn mode or assertion change is used. The existing static tests retain their own dev check. History is fetched so the engine can resolve the real merge-base.
+For an admitted context the surgical workflow runs the canonical origin/dev guard and an independent check against the actual source PR base SHA. Both commands must exit zero; no warn mode or assertion change is used. History is fetched so the engine can resolve the real merge-base.
+
+[PR #413](https://github.com/gustavomhss/Orchestra-SF/pull/413) transferred the four historical product-suite static wrappers to explicit wiring contracts. Their five cases verify the mandatory `sf/static-and-contracts` owner, the actual compiler and guard commands, and rejection of unsuccessful or missing static conclusions by `sf/verify`. The static job performs the typechecks and repository guards once for the product workflow. The surgical runner's conditional source-PR guard step remains responsible for the admitted approval context described here. Passing a focused wiring contract supplies no compiler-execution or guard-execution receipt.
 
 The Run tests step receives an empty GUARDRAIL_APPROVED value unless the resolver admitted the context. Unapproved ordinary tests can still run, while tests that require protected-paths clearance remain red.
 

@@ -146,3 +146,113 @@ test("the checked-in profile remains advisory and cannot narrow coverage", () =>
   assert.ok(planned.every((shard) => shard.files.length > 0))
   for (const { path } of data.exclusionsFromCostProfile) assert.equal(parsed.weights.has(path), false)
 })
+
+
+function measured() {
+  const data = profile()
+  data.schemaVersion = 2
+  data.status = "OBSERVED_TIMINGS"
+  data.measurement = "junit-case-seconds"
+  data.sources = [{
+    id: "green-run-1", runId: 123, runAttempt: 1, jobName: "unit-sf",
+    headSha: "a".repeat(40), suiteId: "CI-SF", directory: "modules/sucafina",
+    status: "success", conclusionScope: "test-step", partial: false,
+    observedFiles: 3, passedTests: 3, failedTests: 0, skippedTests: 0,
+    reportSha256: "b".repeat(64), shardIndex: 1, shardCount: 8,
+  }]
+  data.costs = data.costs.map(([file, cost]) => [file, cost, "green-run-1"])
+  return data
+}
+
+test("v2 admits green and explicitly partial observations without altering coverage", () => {
+  for (const status of ["success", "failure", "cancelled", "timed_out"]) {
+    const data = measured()
+    data.sources[0].status = status
+    data.sources[0].partial = status !== "success"
+    if (status === "failure") {
+      data.sources[0].passedTests = 2
+      data.sources[0].failedTests = 1
+    }
+    const parsed = parseShardCosts(data)
+    assert.equal(parsed.profileStatus, "OBSERVED_TIMINGS")
+    const files = ["test/slow.test.ts", "test/medium.test.ts", "test/new.test.ts", "test/changed.test.ts"]
+    assert.deepEqual(planShards(files, 2, parsed).flatMap((part) => part.files).sort(), files.sort())
+    assert.equal(parsed.weights.has("test/changed.test.ts"), false)
+  }
+  const focused = measured()
+  focused.sources[0].partial = true
+  assert.equal(parseShardCosts(focused).weights.size, 2)
+  const mixed = measured()
+  mixed.sources.push({ ...mixed.sources[0], id: "red-run-2", runId: 124, status: "failure", partial: true,
+    observedFiles: 1, passedTests: 0, failedTests: 1 })
+  mixed.sourceCount++
+  mixed.observedFiles++
+  mixed.costs.push(["red.test.ts", 30, "red-run-2"])
+  mixed.weightedFiles++
+  assert.equal(parseShardCosts(mixed).weights.size, 3)
+})
+
+test("v2 rejects contradictory conclusions, incomplete provenance and unknown schema fields", () => {
+  const mutations = [
+    (value) => { value.status = "PASS" },
+    (value) => { delete value.measurement },
+    (value) => { value.measurement = "wall-seconds" },
+    (value) => { value.unexpected = true },
+    (value) => { value.sources[0].unexpected = true },
+    (value) => { value.exclusionsFromCostProfile[0].unexpected = true },
+    (value) => { value.sources[0].status = "in_progress" },
+    (value) => { value.sources[0].status = "failure" },
+    (value) => { value.sources[0].status = "cancelled" },
+    (value) => { value.sources[0].failedTests = 1 },
+    (value) => { value.sources[0].skippedTests = 1 },
+    (value) => { value.sources[0].passedTests = 0 },
+    (value) => { value.sources[0].partial = "false" },
+    (value) => { value.sources[0].runAttempt = 0 },
+    (value) => { value.sources[0].jobId = 0 },
+    (value) => { delete value.sources[0].jobName },
+    (value) => { value.sources[0].jobName = "sf/test-CI-SF-1" },
+    (value) => { value.sources[0].suiteId = "CI SF" },
+    (value) => { value.sources[0].directory = "../modules/sucafina" },
+    (value) => { delete value.sources[0].directory },
+    (value) => { value.sources[0].conclusionScope = "whole-workflow" },
+    (value) => { value.sources[0].reportSha256 = "missing" },
+    (value) => { delete value.sources[0].reportSha256 },
+    (value) => { value.sources[0].shardCount = 0 },
+    (value) => { delete value.sources[0].shardIndex },
+    (value) => { value.sources[0].observedFiles = 4; value.observedFiles = 4 },
+    (value) => { value.sources[0].passedTests = Number.MAX_SAFE_INTEGER; value.sources[0].skippedTests = 1 },
+  ]
+  for (const mutate of mutations) {
+    const value = measured()
+    mutate(value)
+    assert.throws(() => parseShardCosts(value), /SF_CI_FAIL_CLOSED/)
+  }
+})
+
+test("v2 provenance identities and per-source row counts cannot be fabricated", () => {
+  const duplicate = measured()
+  duplicate.sources.push({ ...duplicate.sources[0], id: "another-id" })
+  duplicate.sourceCount++
+  duplicate.observedFiles += 3
+  assert.throws(() => parseShardCosts(duplicate), /duplicate observed execution/)
+  duplicate.sources[1].runId++
+  duplicate.sources[1].directory = "apps/cli"
+  assert.throws(() => parseShardCosts(duplicate), /mixed suite or directory observations/)
+
+  const sparse = measured()
+  sparse.sources[0].observedFiles = 1
+  sparse.sources.push({ ...sparse.sources[0], id: "another-run", runId: 124, observedFiles: 2 })
+  sparse.sourceCount++
+  assert.throws(() => parseShardCosts(sparse), /cost rows exceed source observations/)
+})
+
+test("v2 can retain measured fast files with an explicit threshold and positive weights", () => {
+  const data = measured()
+  data.minimumObservedSeconds = 0.001
+  data.costs[0][1] = 0.05
+  assert.equal(parseShardCosts(data).weights.get("test/slow.test.ts"), 0.05)
+  for (const cost of [0, -1, NaN, Infinity, "0.05"]) {
+    data.costs[0][1] = cost
+    assert.throws(() => parseShardCosts(data), /SF_CI_FAIL_CLOSED/)
+  }
+})

@@ -91,12 +91,16 @@ export function createHotTopicDraftStore(input: {
         const previous = request.draftRef ? state.preferences[historyKey(request.draftRef)] : undefined
         return { previous, active: isDraft(previous) ? state.preferences[activeKey(previous.id)] : undefined, prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `hot-topic-draft:${operation}`])] }
       })
-      if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
+      // Only an already committed operation may be read against a later case version.
+      // Keep the original request intact for its exact command digest and human grant.
+      const replayCaseRef = preferences.status === "ok" && preferences.value?.prior && current.status === "ok" && current.value && current.value.version >= request.caseRef.version
+        ? { ...request.caseRef, version: current.value.version } : request.caseRef
+      if (current.status !== "ok" || !allowed(current.value, replayCaseRef, context) || !await input.authorizeCase(current.value!, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
       if (preferences.value.prior) {
         if (preferences.value.prior.commandDigest !== digestSfValue(request) || preferences.value.prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
         const saved = preferences.value.prior.value
         if (!saved || typeof saved !== "object" || !("draftRef" in saved) || typeof saved.draftRef !== "string") return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
-        const checked = await readCurrent({ caseRef: request.caseRef, draftRef: saved.draftRef }, context)
+        const checked = await readCurrent({ caseRef: replayCaseRef, draftRef: saved.draftRef }, context)
         if (checked.status !== "ok" || !await input.authorizeDraft(request, context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
         return { status: "ok", value: { draftRef: checked.value.draftRef, version: checked.value.version } }
       }

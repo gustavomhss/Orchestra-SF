@@ -192,7 +192,8 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
     stage = "data.private-table"
     await content.locator("table").first().waitFor({ state: "visible" })
     for (const reference of input.privateReferences) expect(await content.textContent()).toContain(reference)
-    const sourceButton = content.getByRole("button", { name: "Abrir origem", exact: true }).first()
+    const sourceButton = content.getByRole("button", { name: /^Abrir origem(?: [A-Z0-9]+ · |$)/ }).first()
+    expect(await sourceButton.getAttribute("data-bi-origin")).toMatch(/^[a-f0-9]{64}$/)
     const sourceResponse = observe("bi-source")
     stage = "source.authorized"
     await sourceButton.evaluate((button) => (button as HTMLButtonElement).click())

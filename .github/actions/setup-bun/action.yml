@@ -1,6 +1,10 @@
 name: "Setup Bun"
 description: "Setup Bun with caching and install dependencies"
 inputs:
+  reuse-node:
+    description: "Reuse a caller-prepared Node 24; its major is checked before use"
+    required: false
+    default: "false"
   install-flags:
     description: "Additional flags to pass to 'bun install'"
     required: false
@@ -24,7 +28,19 @@ runs:
   steps:
     # node-gyp@latest (invoked via bunx for native install scripts) requires Node >=22;
     # some runner images ship an older system Node on PATH
+    - name: Validate prepared Node
+      shell: bash
+      env:
+        REUSE_NODE: ${{ inputs.reuse-node }}
+      run: |
+        case "$REUSE_NODE" in
+          true) node -e 'if (process.versions.node.split(".")[0] !== "24") throw new Error("CACHE_NODE_24_REQUIRED")' ;;
+          false) ;;
+          *) echo "::error::reuse-node must be true or false"; exit 2 ;;
+        esac
+
     - name: Setup Node
+      if: inputs.reuse-node != 'true'
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
         node-version: "24"
@@ -59,34 +75,31 @@ runs:
 
     # Computed once, before install: a hashFiles('**/...') key evaluated after install walks
     # node_modules (about 70 s on Windows) and can hash files inside it, so save would miss restore.
+    # Includes the admitted source inputs and installer ABI. New inputs cannot
+    # silently reuse an installed tree produced by a different installation recipe.
+    - name: Fingerprint installed dependency inputs
+      id: fingerprint
+      shell: bash
+      run: ORCHESTRA_CACHE_NODE_ABI="$(node -p 'process.versions.modules')" bun script/ci-cache-inputs.ts >> "$GITHUB_OUTPUT"
+
     - name: Compute dependency cache keys
       id: keys
       shell: bash
       run: |
         echo "bun=${{ runner.os }}-${{ runner.arch }}-bun-v3-${{ hashFiles('bun.lock') }}" >> "$GITHUB_OUTPUT"
-        echo "modules=${{ runner.os }}-${{ runner.arch }}-modules-v4-${{ hashFiles('bun.lock', 'patches/**', 'package.json') }}" >> "$GITHUB_OUTPUT"
+        echo "modules=${{ runner.os }}-${{ runner.arch }}-modules-v5-${{ steps.fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
 
     # Every platform reuses the installed tree: on Linux a restore takes about 15 s where `bun install` from Bun's
     # package cache took about 50 s, and Windows cannot reuse Bun's package cache at all (see the install step).
-    # The key covers everything that shapes node_modules; a partial tree from another lockfile is never restored.
-    # Every workspace directory must be listed (native/omni/bindings/node sits one level deeper than the others): a
-    # hit skips install, so an unlisted workspace restores without its links. Bump the modules key version whenever
-    # this list changes, so no entry saved with the old list is restored.
+    # The fingerprint covers the admitted installation inputs; unsupported source hooks fail before restore.
+    # The pre-install workspace inventory also emits exact cache paths. Restore and save
+    # share that one list, so newly admitted layouts restore all their workspace links.
     - name: Restore node_modules
       id: modules-cache
       if: inputs.install-flags == ''
       uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
-        path: |
-          node_modules
-          packages/*/node_modules
-          packages/*/*/node_modules
-          apps/*/node_modules
-          modules/*/node_modules
-          modules/*/*/node_modules
-          tooling/*/node_modules
-          native/*/*/node_modules
-          native/*/*/*/node_modules
+        path: ${{ steps.fingerprint.outputs.modules-paths }}
         key: ${{ steps.keys.outputs.modules }}
 
     - name: Restore Bun dependencies
@@ -103,6 +116,7 @@ runs:
           ${{ runner.os }}-${{ runner.arch }}-bun-v3-
 
     - name: Install setuptools for distutils compatibility
+      if: steps.modules-cache.outputs.cache-hit != 'true'
       run: python3 -m pip install setuptools || pip install setuptools || true
       shell: bash
 
@@ -123,14 +137,14 @@ runs:
           for attempt in 1 2 3 4 5; do
             rm -rf "$cache_dir"
             rm -rf node_modules
-            if bun install --no-cache --cache-dir "$cache_dir" --linker hoisted ${{ inputs.install-flags }}; then
+            if bun install --no-cache --cache-dir "$cache_dir" --linker hoisted ${{ inputs.install-flags }} --frozen-lockfile; then
               exit 0
             fi
             echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"
           done
           exit 1
         else
-          bun install ${{ inputs.install-flags }}
+          bun install ${{ inputs.install-flags }} --frozen-lockfile
         fi
       shell: bash
 
@@ -150,16 +164,7 @@ runs:
       if: inputs.install-flags == '' && steps.modules-cache.outputs.cache-hit != 'true' && (inputs.save == 'true' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/consolidate/00-baseline-green' || github.ref == 'refs/heads/consolidate/90-integration')
       uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
-        path: |
-          node_modules
-          packages/*/node_modules
-          packages/*/*/node_modules
-          apps/*/node_modules
-          modules/*/node_modules
-          modules/*/*/node_modules
-          tooling/*/node_modules
-          native/*/*/node_modules
-          native/*/*/*/node_modules
+        path: ${{ steps.fingerprint.outputs.modules-paths }}
         key: ${{ steps.keys.outputs.modules }}
 
     - name: Report dependency cache reuse

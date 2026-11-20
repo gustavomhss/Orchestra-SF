@@ -21,7 +21,7 @@ type Mode = "allowed" | "not-authorized" | "aborted" | "wrong-request" | "owner-
 
 /**
  * Boundary-only doubles deliberately cannot read a native record or execute a Task. They exercise gating and
- * descriptor removal, not admission/Relay evidence. plan/admission-records tests use real DB/EventV2 separately.
+ * publication readiness and invocation gating, not admission/Relay evidence. plan/admission-records tests use real DB/EventV2 separately.
  */
 function boundaryFixture(mode: Mode = "allowed") {
   const counter = { reads: 0, effects: 0 }
@@ -98,7 +98,7 @@ function boundaryFixture(mode: Mode = "allowed") {
   }
 }
 
-test("operation descriptors follow the live native binding and never advertise a watch function that only returns unavailable", () => {
+test("operation descriptors follow publication readiness while native invocations require the live owner", async () => {
   for (const missing of ["resources", "owners", "publication", "installation", "scope"] as const) {
     const fixture = boundaryFixture()
     expect(fixture.adapter.available()).toBe(true)
@@ -110,7 +110,12 @@ test("operation descriptors follow the live native binding and never advertise a
     fixture.remove(missing)
     expect(fixture.adapter.available()).toBe(false)
     expect(fixture.adapter.native()).toBeUndefined()
-    expect(fixture.services.descriptors).toEqual([])
+    expect(fixture.services.descriptors.map((descriptor) => descriptor.id).sort()).toEqual(missing === "publication" ? [] : [
+      "sf_routine_catalog", "sf_routine_prepare", "sf_routine_result", "sf_routine_run", "sf_routine_status",
+    ])
+    expect(await fixture.services.routines.readAdmission("fixture-admission", fixture.context)).toEqual({
+      status: "unavailable", reason: "native-routine-admission-reader-unavailable",
+    })
     expect(fixture.counter).toEqual({ reads: 0, effects: 0 })
   }
 })
