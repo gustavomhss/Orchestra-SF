@@ -1,8 +1,8 @@
 import { Schema } from "effect"
 import {
   SfContextResult as SfContextResultSchema,
-  SfTeamContextResult as SfTeamContextResultSchema,
-  type SfTeamContextResult, type SfTeamContextQuery,
+  SfTeamContextResult,
+  type SfTeamContextQuery,
   sfIsCatalogResource,
   type SfContext, type SfContextResult, type SfExpectedContextBinding,
 } from "@orchestra/schema/sucafina/context"
@@ -112,7 +112,7 @@ export function createSfContextHandler(
     const result = await producer.readTeamContext(request, expected).catch((): SfTeamContextResult =>
       ({ status: "unavailable", reason: "host-unavailable" }))
     if (request.signal.aborted || deps.runtime() !== services || producer.currentBinding?.() !== binding ||
-      !Schema.is(SfTeamContextResultSchema)(result)) return { status: "unavailable", reason: "contract-mismatch" }
+      !Schema.is(SfTeamContextResult)(result)) return { status: "unavailable", reason: "contract-mismatch" }
     if (result.status !== "ok") return result
     const value = result.value
     if (!sameBinding(binding, value.stamp) || value.profile.principal.tenantId !== expected.tenantId ||

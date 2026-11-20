@@ -13,7 +13,7 @@ import { readTeamContextQuery } from "../../../../../modules/sucafina/Sucafinav1
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import {
   SfContext as SfContextSchema,
-  SfTeamContext as SfTeamContextSchema,
+  SfTeamContext,
   type SfTeamContextResult,
   type SfTeamContextQuery,
   SfOperationAvailability as SfOperationAvailabilitySchema,
@@ -344,7 +344,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
         stamp: { ...admitted.technical, ...(admitted.binding ? { team: admitted.binding } : {}) },
         profile: admitted.projection, destinations, availability: [],
       }
-      const parsed = Schema.decodeUnknownOption(SfTeamContextSchema)(value)
+      const parsed = Schema.decodeUnknownOption(SfTeamContext)(value)
       return Option.isSome(parsed) ? structuredClone(parsed.value) : undefined
     }
     const readAdmission = () => teams.admit(request).catch((): SfLiveTeamContextAdmission =>
@@ -371,7 +371,7 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     const currentAvailability = admitted.stamp.team ? availability(after) : []
     if (!currentAvailability) return { status: "unavailable", reason: "contract-mismatch" }
     const value = { ...admitted, availability: currentAvailability }
-    return Schema.is(SfTeamContextSchema)(value)
+    return Schema.is(SfTeamContext)(value)
       ? { status: "ok", value } : { status: "unavailable", reason: "contract-mismatch" }
   }
   return Object.freeze({ currentBinding,
