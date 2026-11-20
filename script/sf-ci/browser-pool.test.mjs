@@ -333,6 +333,8 @@ test("a hook-shaped missing consumer still reaches named finalization and remain
   // Bun omits this scope's consumer when its beforeAll fails.
   await input.native.records[2].fn()
   assert.deepEqual(visited, ["start", "close"])
+  assert.deepEqual(input.registry.observations(), { sourceCount: 3, declaredCases: 3,
+    bodiesStarted: 2, bodiesFinished: 2, bodiesReturned: 2, bodiesThrew: 0, activeCase: null, forcedFinalization: true })
   assert.equal(input.events.some((item) => item.type === "case-incomplete"), true)
   assert.throws(() => input.registry.complete(), /incomplete execution/)
 })

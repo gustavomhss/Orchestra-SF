@@ -228,6 +228,13 @@ export function createPoolRegistry(sources, emit) {
     assertStartup() {
       if (!sealed || current?.source !== POOL_STARTUP || cursor !== 1) fail("browser startup is outside its named fully registered case")
     },
+    observations() {
+      return { sourceCount: registered.length, declaredCases: cases.length,
+        bodiesStarted: startedIds.size, bodiesFinished: outcomes.length,
+        bodiesReturned: outcomes.filter((item) => item.bodyStatus === "returned").length,
+        bodiesThrew: outcomes.filter((item) => item.bodyStatus === "threw").length,
+        activeCase: current?.id ?? null, forcedFinalization: incomplete }
+    },
     complete() {
       if (incomplete) fail("incomplete execution required forced finalization")
       if (!sealed || current || cursor !== cases.length || outcomes.length !== cases.length) fail("missing, active or unexecuted cases")

@@ -53,6 +53,10 @@ export async function openWp01PoolRegistration() {
       emit({ type: "run-complete", observationsComplete: true, ...counts })
       console.info("SF_BROWSER_POOL_OBSERVED", JSON.stringify(counts))
     },
-    incomplete() { emit({ type: "run-incomplete", observationsComplete: false }) },
+    incomplete() {
+      const observations = registry.observations()
+      emit({ type: "run-incomplete", observationsComplete: false, ...observations })
+      console.info("SF_BROWSER_POOL_INCOMPLETE", JSON.stringify(observations))
+    },
   }
 }

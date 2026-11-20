@@ -34,6 +34,10 @@ export type PoolRegistry = {
     nativeTest: typeof import("bun:test").test, describe: typeof import("bun:test").describe): void
   seal(): void
   assertStartup(): void
+  observations(): {
+    sourceCount: number; declaredCases: number; bodiesStarted: number; bodiesFinished: number
+    bodiesReturned: number; bodiesThrew: number; activeCase: string | null; forcedFinalization: boolean
+  }
   complete(): { sourceCount: number; caseCount: number }
 }
 export const POOL_DIRECTORY: string
