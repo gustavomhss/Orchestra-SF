@@ -1,16 +1,16 @@
 # Handoff — sf-ops-artifact-audit
 
-SHA: 54185fd76427e92c56e3b0dcd77f6810cf68244c (código do diagnóstico; este documento é um commit posterior somente de documentação)
+SHA: a8e030290685ea7ff3b2cea56f6f238b6cf6af25 (código do diagnóstico; este documento é um commit posterior somente de documentação)
 Base congelada: 392cecab68288d4b669828adc5d1aaa738693d80 (sf-join-four)
 Branch: sf-ops-artifact-audit
-Data: 2026-11-20T02:27:00.511Z
+Data: 2026-11-20T02:35:03.011Z
 Estado: partial
 Escopo: diagnóstico isolado de evidência já produzida; não é gate 3 de Operations, não qualifica produto e não é candidato a integração.
 
 ## Feito
 
-- Preparado leitor Node do relatório HTML retido de Operations2, sem import de produto, Playwright/browser, rede no parser, processos filhos ou replay.
-- Reutilizado o formato do leitor de evidência anterior em `8d42f7c8dd4c21f47b819fdd32e9bfa8fb00a649`, cujo run `44651646714` terminou success. O novo parser ainda não foi executado; esse sucesso histórico não o qualifica.
+- Preparado leitor Node dos relatórios retidos de Operations2 (HTML embutido ou JSON original estritamente identificado), sem import de produto, Playwright/browser, rede no parser, processos filhos ou replay.
+- Reutilizado o formato do leitor de evidência anterior em `8d42f7c8dd4c21f47b819fdd32e9bfa8fb00a649`, cujo run `44651646714` terminou success. A primeira versão deste parser falhou na seleção do arquivo HTML; a revisão atual ainda não foi executada. Esse sucesso histórico não a qualifica.
 - Preservado o workflow canônico da base, adicionando somente `actions: read`, um seletor derivado do request exato, uma verificação de metadata e o download pinned condicionado a esse seletor.
 - Verificação de metadata exige igualdade de repositório de destino, artifact id, run id, snapshot, digest, nome e tamanho, além de artefato não expirado. Uma resposta ausente ou divergente interrompe o diagnóstico.
 - O token de leitura do GitHub é restrito à etapa de metadata e ao action de download. Não é exportado para o parser.
@@ -34,12 +34,18 @@ Escopo: diagnóstico isolado de evidência já produzida; não é gate 3 de Oper
 - Nome: `playwright-ubuntu-24.04-1`
 - Tamanho: `2075937` bytes
 - Digest declarado pelo GitHub: `sha256:623d31906142b886aeb3401aed58bd2b9e5ed809a7709726366e13c17e59a2a1`
-- O workflow compara esse digest à metadata atual antes do download. O action pinned faz o download e sua validação própria; o parser recebe arquivos extraídos e não alega recalcular o SHA do ZIP original.
+- O workflow compara esse digest à metadata atual antes do download. No diagnóstico 44661091906, o action pinned registrou o SHA256 calculado do download com exatamente esse valor. O parser recebe arquivos extraídos e não alega recalcular o SHA do ZIP original; isso não certifica produto ou pacote.
 - Nenhum baseline é criado ou atualizado. Nenhum `sf-ci`, pacote, GO, deploy ou `SF_ORCHESTRA_WEB_PACKAGE_VERIFIED` está associado a este diagnóstico.
 
 ## Saída permitida e limites
 
-O parser abre somente o `index.html` retido e o ZIP de relatório embutido. Lê `report.json` e JSONs de arquivos com nomes hexadecimais. Não abre attachments, DOM, error-context, screenshots, stdout/stderr ou traces.
+O parser inventaria arquivos sem emitir nomes e considera HTMLs somente sob `packages/app-shell/e2e/playwright-report/`, fora de `data/`. Seleciona pelo ZIP Playwright embutido, não pela unicidade do basename `index.html`. Lê `report.json` e JSONs de arquivos com nomes hexadecimais; exige um único relatório HTML válido com os cinco casos.
+
+Se não houver um relatório HTML válido, o caminho alternativo consome exclusivamente `test-ci-evidence/playwright-runtime.json` e seu `test-ci-evidence/request.json`. A fonte original prova a produção desse JSON em `.github/workflows/test-ci.yml:229–232` e o upload em `:349–352`; o log original registra 51 arquivos e a raiz do repositório como raiz comum do artefato. Isso é evidência de produção/publicação configurada, não uma afirmação de que o HTML esteja ausente.
+
+Antes do fallback, o leitor exige no request original o SHA do snapshot, plataforma Linux/x64, package/directory, runner Playwright, config e o único spec selecionado. Exige cinco casos, arquivo/linhas de declaração correspondentes ao spec original, projeto Chromium e retry zero. Se o JSON não tiver `steps`, emite `stepEvidence: not-recorded`, lista vazia e contagem zero; nenhuma etapa é inferida.
+
+Não abre attachments, error-context, screenshots ou traces. Corpos, stdout/stderr, DOM e campos não permitidos dos relatórios não são percorridos nem emitidos.
 
 A saída aceita somente:
 
@@ -50,17 +56,19 @@ A saída aceita somente:
 - Classes fixas de erro; nunca mensagens, GUIDs, títulos arbitrários, snippets, URLs/querystrings, corpos, parâmetros, cabeçalhos, cookies ou credenciais.
 - Primeiro nó com erro registrado na ordem DFS, último nó anterior nessa ordem registrado sem erro e um recorte limitado das demais. `recorded-without-error` descreve o relatório, sem inventar uma prova de conclusão externa.
 
-Tamanho de HTML/ZIP/JSON, quantidade de entradas, árvore, profundidade e quantidade de passos são limitados. Arquivos simbólicos são recusados. Erros internos inesperados viram uma mensagem fixa, evitando serialização de dados do artefato pelo reporter TAP. O leitor exige exatamente cinco árvores detalhadas; se o formato não corresponder, falha fechado e não infere a fase.
+Tamanho de HTML/ZIP/JSON, quantidade de entradas, árvore, profundidade e quantidade de passos são limitados. Arquivos simbólicos são recusados. Erros internos inesperados viram uma mensagem fixa, evitando serialização de dados do artefato pelo reporter TAP. O leitor exige exatamente cinco resultados identificados. Múltiplos relatórios HTML válidos são recusados. Ausência de passos é declarada; ausência ou ambiguidade de um relatório admissível falha fechado. Não infere a fase.
 
 ## Validação e revisão
 
-- Revisão estática do diff feita por GitHub: dois arquivos de código alterados, sem alteração de produto.
+- Revisão estática do diff feita por GitHub: dois arquivos de código alterados na branch; esta revisão muda apenas o parser, sem mudança de workflow ou produto.
 - Workflow: 49 linhas adicionadas; sem remoções do workflow canônico.
-- Parser: `apps/cli/audit-operations-retained.node-smoke.mjs`.
+- Parser: `apps/cli/audit-operations-retained.node-smoke.mjs` (299 linhas na revisão atual).
 - Revisão independente de `reports_failure`: sem bloqueio de vazamento ou contrato. Removida uma entrada inexistente da allowlist e corrigido o quinto nome fixo para `Operations Requests ready for the original operator`, exatamente como `operations-support/runtime.ts:95` no snapshot original; nenhuma ampliação de leitura.
 - `firstRecordedError` e `lastBeforeFirstRecordedError` seguem a ordem DFS da árvore, não uma ordem temporal comprovada. O primeiro nó com erro pode ser um `test.step` pai que contém a falha.
 - `file:line` é extraído do relatório após validar caminho permitido e limites numéricos. O leitor não compara o conteúdo dessa linha ao snapshot fonte; essa confirmação cabe à triagem posterior.
-- Actions do diagnóstico: não executado. Guards: não executados por esta entrega. A mudança temporária de workflow não é destinada a merge.
+- Primeiro diagnóstico [44661091906](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661091906), snapshot `3ba359484852e926a9532afed8e83a3d65231dc4`: FAILURE, 0 pass / 1 fail no leitor. Metadata e download SUCCESS. Falha original em `audit-operations-retained.node-smoke.mjs:165`, `EXACTLY_ONE_RETAINED_HTML_REQUIRED`; catch em `:206`. Nenhuma fase de produto foi emitida.
+- Correção concreta: substituir a exigência de um único basename HTML pela identificação estrutural do relatório, emitir contagens numéricas antes das guardas e oferecer o JSON original comprovado pela fonte como fallback estrito.
+- Actions da revisão atual: não executado. Revisão independente desta revisão (`reports_failure`): concluída sem bloqueio de segurança ou contrato por leitura; nenhuma execução. JSON sem passos pode comprovar resultados sem determinar a fase causal e não é prova da hipótese do perfil. Guards: não executados por esta entrega. A mudança temporária de workflow não é destinada a merge.
 - `sf-ci` por job: não aplicável; este diagnóstico usa apenas o runner Node cirúrgico se o integrador autorizar sua execução.
 - Pacote/sha256 de pacote: não aplicável. O digest acima pertence exclusivamente ao artefato Playwright original.
 
@@ -68,7 +76,7 @@ Tamanho de HTML/ZIP/JSON, quantidade de entradas, árvore, profundidade e quanti
 
 1. O integrador revisa esta branch e cria um snapshot temporário de CI cujo único delta sobre o HEAD seja o request abaixo.
 2. Executa somente o leitor Node. Não selecione `operations.spec.ts`, Playwright ou qualquer código de produto.
-3. Leia as linhas `AUDIT_OPS_RETAINED_SOURCE`, `AUDIT_OPS_RETAINED_RESULT` e `AUDIT_OPS_RETAINED_SUMMARY`. O sucesso significa apenas que a evidência existente foi lida com esse contrato.
+3. Leia `AUDIT_OPS_RETAINED_INVENTORY`, `AUDIT_OPS_RETAINED_REPORT_SELECTION`, `AUDIT_OPS_RETAINED_SOURCE`, `AUDIT_OPS_RETAINED_RESULT` e `AUDIT_OPS_RETAINED_SUMMARY`. O sucesso significa apenas que a evidência existente foi lida com esse contrato.
 4. Compare a primeira fase não concluída/erro registrado com o código do snapshot original. Só então proponha uma correção causal e um futuro gate de produto separado.
 5. Não mergeie esta branch nem inclua seus arquivos na composição ou no pacote final.
 
