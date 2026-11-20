@@ -62,10 +62,12 @@ function fields(settings: Readonly<Settings>, names: readonly (keyof Settings)[]
   }))
 }
 export function settingsReview(
-  current: SettingsProjection, proposed: Readonly<Settings>, operationRef: SfOperationRef,
+  current: SettingsProjection, proposed: Readonly<Settings>, operationRef: SfOperationRef, action: "save" | "reset" = "save",
 ): Omit<SfChangeReviewProps, "onConfirm" | "onRevise" | "onCancel"> {
   const sourceVersion = current.value.versions.settings?.version
-  const names = changedSettings(current.value.data.settings, proposed)
+  const names = action === "reset"
+    ? (Object.keys(settingsLabel) as (keyof Settings)[]).filter((name) => Object.hasOwn(current.value.data.settings, name))
+    : changedSettings(current.value.data.settings, proposed)
   const base: SfReviewSnapshot = sourceVersion === undefined
     ? { kind: "not-provided", reason: message("sf.common.previousValuesUnavailable") }
     : { kind: "persisted", ref: SETTINGS_REF, version: sourceVersion as SfVersion,
@@ -74,17 +76,24 @@ export function settingsReview(
     kind: "draft", intentRef: SETTINGS_INTENT, sourceRef: SETTINGS_REF,
     sourceVersion: sourceVersion ?? null, fields: fields(proposed, names),
   }
-  const blocked = sourceVersion === undefined || names.length === 0
+  const blocked = sourceVersion === undefined || action === "save" && names.length === 0
   const reasons: SfMessage[] = blocked
     ? [message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.changesPending")]
     : []
   return {
     operation: {
       ref: operationRef,
-      label: message("sf.u36.save"),
+      label: message(action === "reset" ? "sf.u36.reset" : "sf.u36.save"),
       scope: { kind: "message", message: message("sf.cap28.title") },
     },
-    base, current: base, proposed: draft, effects: [],
+    base, current: base,
+    // The producer owns the baseline. Do not invent target values in the browser.
+    proposed: action === "reset" ? { kind: "not-provided", reason: message("sf.u36.resetHelp") } : draft,
+    effects: action === "reset" ? [{
+      id: "reset", domain: "procurement", state: "proposed",
+      title: { kind: "message", message: message("sf.u36.reset") },
+      details: [], reason: message("sf.u36.resetHelp"),
+    }] : [],
     coverage: {
       state: sourceVersion === undefined ? "unavailable" : "partial",
       summary: message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.partial"),
@@ -95,10 +104,10 @@ export function settingsReview(
       ? { kind: "blocked", labelKey: message("sf.common.unavailable").key, reasons }
       : {
           kind: "admitted",
-          labelKey: message("sf.common.save").key,
-          purpose: "save",
+          labelKey: message(action === "reset" ? "sf.u36.reset" : "sf.common.save").key,
+          purpose: action,
           binding: {
-            kind: "catalog-command", operationId: "domain.command.CAP28.save",
+            kind: "catalog-command", operationId: action === "reset" ? "domain.command.CAP28.reset" : "domain.command.CAP28.save",
             version: { kind: "record", expectedVersion: sourceVersion! },
             confirmation: "presentation-only",
           },

@@ -642,22 +642,31 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     }
   }
   const field = (name: typeof generalFields[number] | typeof bankFields[number]): JSX.Element => {
-    const item = draftValue()[name]
+    const item = () => {
+      const edited = draftValue()
+      // Privileged values come only from the current authorized projection.
+      // Unedited bank fields never become part of the submitted partial update.
+      return ui.mode === "bank" && bankAuthorized() && !Object.hasOwn(edited, name)
+        ? supplier()?.[name] : edited[name]
+    }
     const isBoolean = booleanFields.includes(name)
     const isMultiline = multilineFields.includes(name)
     const isList = name === "categories" || name === "certifications"
-    const shown = isList && Array.isArray(item) ? item.join("\n") : display(item)
-    const locked = ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "outcome-unknown"
+    const shown = () => {
+      const current = item()
+      return isList && Array.isArray(current) ? current.join("\n") : display(current)
+    }
+    const locked = () => ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "outcome-unknown"
     return <label class="sf-u14-field" for={"sf-u14-" + name}>
       <span>{language.t(fieldKey(name) as Parameters<typeof language.t>[0])}</span>
       <Show when={isBoolean} fallback={
         <Show when={isMultiline} fallback={<input
           id={"sf-u14-" + name} name={name} type={name === "contactEmail" || name === "financeEmail" ? "email" :
             name === "sanctionsDate" ? "date" : "text"}
-          value={shown} disabled={locked}
+          value={shown()} disabled={locked()}
           onInput={(event) => edit(name, event.currentTarget.value)}
         />}>
-          <textarea id={"sf-u14-" + name} name={name} value={shown} disabled={locked}
+          <textarea id={"sf-u14-" + name} name={name} value={shown()} disabled={locked()}
             aria-describedby={isList ? "sf-u14-list-hint" : undefined}
             onInput={(event) => edit(name, isList
               ? event.currentTarget.value.split("\n").map((row) => row.trim()).filter(Boolean)
@@ -665,8 +674,8 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           />
         </Show>
       }>
-        <input id={"sf-u14-" + name} name={name} type="checkbox" disabled={locked}
-          checked={item === true || item === "true" || item === "on"}
+        <input id={"sf-u14-" + name} name={name} type="checkbox" disabled={locked()}
+          checked={item() === true || item() === "true" || item() === "on"}
           onChange={(event) => edit(name, event.currentTarget.checked)}
         />
       </Show>
@@ -677,7 +686,8 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     if (!controller || snapshot?.availability !== "active")
       return <SfStatePanel state="unavailable" messageKey={k("sf.u14.readOnly")} />
     const bank = ui.mode === "bank"
-    return <section class="sf-u14-editor" aria-label={t(bank ? "sf.u14.bank" : "sf.u14.general")}>
+    return <section class="sf-u14-editor" aria-label={t(bank ? "sf.u14.bank" : "sf.u14.general")}
+      data-sf-supplier-ref={supplier()?.id} data-version={version() ?? undefined}>
       <h2>{t(ui.mode === "new" ? "sf.u14.create" : bank ? "sf.u14.bank" : "sf.u14.general")}</h2>
       <Show when={bank} fallback={
         <>
@@ -735,7 +745,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       return <SfStatePanel state="not-found" messageKey={k("sf.u14.notFound")} />
     const linked = linkedRequests(current,selected.id)
     const id = selected.id
-    return <div class="sf-u14-detail">
+    return <div class="sf-u14-detail" data-sf-supplier-ref={id} data-version={version() ?? undefined}>
       <SfRecordDetail
         title={data(selected.legalName ?? selected.number ?? id)}
         secondaryId={data(selected.number ?? id)}
@@ -757,15 +767,17 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
             }</For></ul>},
           {id:"commercial",titleKey:k("sf.u14.commercial"),state:"ready",content:<p>{selected.commercial?.notes ?? t("sf.u14.missing")}</p>},
           {id:"compliance",titleKey:k("sf.u14.compliance"),state:"ready",content:<p>{selected.compliance?.notes ?? t("sf.u14.missing")}</p>},
-          {id:"bank",titleKey:k("sf.u14.bank"),state:bankAuthorized() ? "ready" : "denied",
+          {id:"bank",titleKey:k("sf.u14.bank"),state:"ready",
             content:<div>
-              <p>{t("sf.u14.bankMasked")}</p>
+              <Show when={!bankAuthorized()}><p>{t("sf.u14.bankMasked")}</p></Show>
               <Show when={selected.status === "pending" && selected.validatedAt === null &&
                 selected.validatedBy === null && (selected.history ?? []).some((entry) => bankSet.has(entry.field))}>
                 <p role="status">{t("sf.u14.reactivation")}</p>
               </Show>
-              <button class="mx-btn" type="button" disabled={!bankAuthorized() || active(ui.phase)}
-                onClick={() => setUi("mode","bank")}>{t("sf.u14.changeBank")}</button>
+              <Show when={bankAuthorized()}>
+                <button class="mx-btn" type="button" disabled={active(ui.phase)}
+                  onClick={() => setUi("mode","bank")}>{t("sf.u14.changeBank")}</button>
+              </Show>
             </div>},
           {id:"linked",titleKey:k("sf.u14.linked"),state:"ready",
             content:<Show when={linked.length} fallback={<p>{t("sf.u14.noLinked")}</p>}>
