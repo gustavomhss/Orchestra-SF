@@ -47,12 +47,19 @@ export function createSfStaleAnalysisAccess(input: {
     try {
       const snapshots = input.persistence.currentSnapshots?.()
       const snapshotIdentity = digestSfValue(snapshots)
+      const originalBinding = call.binding, originalLease = call.lease, originalHeaders = headers()
+      const originalIdentity = digestSfValue([call.kind, call.binding])
+      const originalCurrent = () => input.request === request && !request.signal.aborted &&
+        call.binding === originalBinding && call.lease === originalLease && input.authority.host.requestFor(call) === request &&
+        headers() === originalHeaders && digestSfValue([call.kind, call.binding]) === originalIdentity
+
       if (preparing) prepared.delete(call)
       if (!snapshots || identity !== accessIdentity(record, call, output) || record.state !== "stale" || record.runRef !== proof.runRef || record.contextFingerprint !== proof.contextFingerprint ||
         digestSfValue(record.caseRef) !== digestSfValue(proof.caseRef) || request.signal.aborted ||
         input.authority.host.requestFor(call) !== request || record.principalRef !== call.binding.principalRef ||
         record.policyVersion !== call.binding.policyVersion || record.accessRevision !== call.binding.accessRevision ||
-        !await input.authority.human.authorize(call, "analysis.start", start) || !await input.authority.host.revalidate(call)) return denied()
+        !originalCurrent() || !await input.authority.human.authorize(call, "analysis.start", start) || !originalCurrent() ||
+        !await input.authority.host.revalidate(call) || !originalCurrent()) return denied()
       const prior = prepared.get(call)
       if (!preparing && (!prior || prior.identity !== recordIdentity(record, call, output) || prior.fences !== fences(snapshots) || prior.headers !== headers()))
         return { status: "stale", reason: "analysis-stale-source-changed" }
@@ -62,30 +69,53 @@ export function createSfStaleAnalysisAccess(input: {
       const refs = refsFor(output)
       const valid = (ref: BusinessEvidenceRef) => ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && ref.refDigest === digestSfEvidenceRef(ref)
       if (refs.some((ref) => !valid(ref))) return denied()
-      const sources = await input.context.context({ refs: structuredClone(refs) }, call)
-      if (sources.length !== refs.length || sources.some((source, index) => digestSfValue(source.ref) !== digestSfValue(refs[index]) ||
-        source.accessRevision !== call.binding.accessRevision || !source.currentRef || !valid(source.currentRef) || !source.authorizedProjection ||
-        (source.state === "fresh" ? digestSfValue(source.currentRef) !== digestSfValue(source.ref)
-          : source.state !== "historical" || !Array.isArray(source.differences)))) return denied()
-      const sourceIdentity = digestSfValue(sources)
-      if (memory) {
-        // Source authorization does not validate its persisted Atlas capture.
-        // Consume the real reader attached to this exact BCS observation under
-        // C08; each invocation reads again, without retaining an access grant.
-        if (!memory.ok || digestSfValue(memory.value.currentCase) !== digestSfValue(proof.caseRef) ||
-          memory.value.query !== object(object(start).request).objective ||
-          !await readSfMemoryCaptureIntegrity(sources, {
-            caseRefs: structuredClone(memory.value.recallScope.cases), query: memory.value.query,
-          }, call)) return denied()
+      // The original historical Analysis selection must never become a current
+      // read scope. Admit this protected read through the same human intent and
+      // exact Request, and release its distinct lease before returning to C08.
+      const admitted = await input.authority.human.admit(request, "analysis.start", start)
+      if (admitted.status !== "ok") return denied()
+      const reader = admitted.value
+      // A provider returning the caller did not create a lease that we own.
+      if (reader === call) return denied()
+      try {
+        if (!originalCurrent()) return denied()
+        const readerBinding = reader.binding, readerLease = reader.lease
+        const readerIdentity = digestSfValue([reader.kind, reader.binding])
+        const readerCurrent = () => originalCurrent() && reader.kind === "ui" && reader.binding === readerBinding &&
+          reader.lease === readerLease && readerLease !== originalLease && input.authority.host.requestFor(reader) === request &&
+          digestSfValue([reader.kind, reader.binding]) === readerIdentity &&
+          (["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"] as const)
+            .every((field) => reader.binding[field] === originalBinding[field]) && originalCurrent()
+        if (!readerCurrent() || !await input.authority.human.authorize(reader, "analysis.start", start) || !readerCurrent() ||
+          !await input.authority.host.revalidate(reader) || !readerCurrent()) return denied()
+        const sources = await input.context.context({ refs: structuredClone(refs) }, reader)
+        if (!readerCurrent() || sources.length !== refs.length || sources.some((source, index) => digestSfValue(source.ref) !== digestSfValue(refs[index]) ||
+          source.accessRevision !== call.binding.accessRevision || !source.currentRef || !valid(source.currentRef) || !source.authorizedProjection ||
+          (source.state === "fresh" ? digestSfValue(source.currentRef) !== digestSfValue(source.ref)
+            : source.state !== "historical" || !Array.isArray(source.differences)))) return denied()
+        const sourceIdentity = digestSfValue(sources)
+        if (memory) {
+          // Capture integrity belongs to this exact BCS array and live reader,
+          // never to the caller's original historical selection or a past read.
+          if (!memory.ok || digestSfValue(memory.value.currentCase) !== digestSfValue(proof.caseRef) ||
+            memory.value.query !== object(object(start).request).objective ||
+            !await readSfMemoryCaptureIntegrity(sources, {
+              caseRefs: structuredClone(memory.value.recallScope.cases), query: memory.value.query,
+            }, reader) || !readerCurrent()) return denied()
+        }
+        // Recheck both real leases after the producer/capture awaits. The source
+        // bytes and original shared snapshot still fence the final observation.
+        if (!readerCurrent() || !await input.authority.human.authorize(reader, "analysis.start", start) || !readerCurrent() ||
+          !await input.authority.host.revalidate(reader) || !readerCurrent() ||
+          !await input.authority.human.authorize(call, "analysis.start", start) || !readerCurrent() ||
+          !await input.authority.host.revalidate(call) || !readerCurrent() ||
+          identity !== accessIdentity(record, call, output) || sourceIdentity !== digestSfValue(sources) ||
+          digestSfValue(input.persistence.currentSnapshots?.()) !== snapshotIdentity) return denied()
+        if (preparing) prepared.set(call, { identity: recordIdentity(record, call, output), fences: fences(snapshots), headers: headers() })
+        return { status: "ok", value: { sourceFence: sfRunSourceFence(snapshots.dashboard) } }
+      } finally {
+        input.authority.human.finish(reader)
       }
-      // Pin bytes before the awaits: currentSnapshots can return the same mutable
-      // object, and Request identity alone does not pin its authorization headers.
-      if (!await input.authority.human.authorize(call, "analysis.start", start) || !await input.authority.host.revalidate(call) ||
-        input.authority.host.requestFor(call) !== request || request.signal.aborted ||
-        identity !== accessIdentity(record, call, output) || sourceIdentity !== digestSfValue(sources) ||
-        digestSfValue(input.persistence.currentSnapshots?.()) !== snapshotIdentity) return denied()
-      if (preparing) prepared.set(call, { identity: recordIdentity(record, call, output), fences: fences(snapshots), headers: headers() })
-      return { status: "ok", value: { sourceFence: sfRunSourceFence(snapshots.dashboard) } }
     } catch {
       return { status: "unavailable", reason: "analysis-stale-access-unavailable" }
     }

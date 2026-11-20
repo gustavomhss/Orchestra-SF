@@ -351,10 +351,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         ? final : { status: "denied", reason: "calculation-case-authority-changed" }
     } finally { if (scope) releaseCaseScope(call, scope) }
   }
-  // A historical calculation may replay the current authorized coverage of its
-  // case while its caller still retains the original Analysis selection. Keep
-  // that read-only selection lexical and private to historical coverage; it must never
-  // replace caseBindings or upgrade selectedCase/resolveCase for fresh work.
+  // Historical coverage replays through its own authorized read context. An
+  // original historical Analysis scope cannot become that context. Keep the
+  // read-only selection lexical; never replace caseBindings or upgrade the
+  // selectedCase/resolveCase capability used for fresh work.
   const historicalCalculations = new AsyncLocalStorage<{ call: TrustedDomainContext; selected: CaseRef; request: Request; binding: string; originalScope: CaseScope | undefined; open: boolean }>()
   const historicalSelection = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
     const scope = historicalCalculations.getStore()
@@ -374,7 +374,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     egress?: (result: PortResult<T>) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const request = host.requestFor(call), binding = callBindingDigest(call), captured = structuredClone(selected), originalScope = caseBindings.get(call)
     const held = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : originalScope?.selected
-    if (!request || request.signal.aborted || held && (held.id !== captured.id || held.incarnation !== captured.incarnation || held.version > captured.version || call.kind === "native" && held.version !== captured.version) ||
+    if (!request || request.signal.aborted || call.kind === "ui" && originalScope?.historical ||
+      held && (held.id !== captured.id || held.incarnation !== captured.incarnation || held.version > captured.version || call.kind === "native" && held.version !== captured.version) ||
       originalScope && (originalScope.request !== request || originalScope.bindingDigest !== binding)) return { status: "denied", reason: "historical-calculation-case-scope-mismatch" }
     const scope = { call, selected: captured, request, binding, originalScope, open: true }
     return historicalCalculations.run(scope, async (): Promise<PortResult<T>> => {
