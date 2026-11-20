@@ -3,71 +3,19 @@ import { lstat, readFile, realpath } from "node:fs/promises"
 import path from "node:path"
 import { expect } from "@playwright/test"
 import type { Locator, Page } from "@playwright/test"
+import { validateNativeManifest } from "./manifest-contract.ts"
+import type { NativeManifest, NativeTarget } from "./manifest-contract.ts"
+
+export { validateNativeTarget } from "./manifest-contract.ts"
+export type { NativeActor, NativeManifest, NativeTarget } from "./manifest-contract.ts"
 
 type RecordValue = Record<string, unknown>
 function record(value: unknown): value is RecordValue {
   return value !== null && typeof value === "object" && !Array.isArray(value)
 }
-function exactKeys(value: RecordValue, keys: readonly string[]): boolean {
-  return Object.keys(value).length === keys.length && keys.every((key) => Object.hasOwn(value, key))
-}
 function requiredText(value: unknown): string {
   if (typeof value !== "string" || !value.trim()) throw new Error("F04_REQUIRED_REAL_TEXT_MISSING")
   return value
-}
-
-export type NativeTarget = Readonly<{
-  serverKey: string
-  discoveryOrigin: string // approved Orchestra connection, NOT the SF host
-  shellOrigin: string // production shell entry
-  publicOrigin: string // installed SF host
-  installationId: string
-  projectId: string
-  hostId: string
-  mount: string
-  chapterHref: string
-}>
-export type NativeActor = "requester" | "holder" | "denied" | "dashboardAdmin"
-export type NativeManifest = Readonly<{
-  schema: "sf2h.native-installed-manifest.v1"
-  candidateSha: string
-  target: NativeTarget
-  wrongServer: NativeTarget
-  wrongProject: NativeTarget
-  wrongInstallation: NativeTarget
-  actors: Readonly<{ requester: string; holder: string; denied: string; dashboardAdmin?: string }>
-  scratchRoot: string
-}>
-
-export function validateNativeTarget(value: unknown): NativeTarget {
-  if (!record(value) || !exactKeys(value, [
-    "serverKey", "discoveryOrigin", "shellOrigin", "publicOrigin", "installationId",
-    "projectId", "hostId", "mount", "chapterHref",
-  ])) throw new Error("F04_MISSING_OR_EXTRA_REAL_TARGET_FIELD")
-  const result: NativeTarget = {
-    serverKey: requiredText(value.serverKey),
-    discoveryOrigin: requiredText(value.discoveryOrigin),
-    shellOrigin: requiredText(value.shellOrigin),
-    publicOrigin: requiredText(value.publicOrigin),
-    installationId: requiredText(value.installationId),
-    projectId: requiredText(value.projectId),
-    hostId: requiredText(value.hostId),
-    mount: requiredText(value.mount),
-    chapterHref: requiredText(value.chapterHref),
-  }
-  for (const source of [result.discoveryOrigin, result.shellOrigin, result.publicOrigin]) {
-    const origin = new URL(source)
-    if (origin.origin !== source || origin.username || origin.password ||
-        (origin.protocol !== "https:" &&
-          !(origin.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))))
-      throw new Error("F04_TARGET_ORIGIN_INVALID")
-  }
-  if (!/^\/[A-Za-z0-9_/-]+$/.test(result.mount) ||
-      result.mount.includes("//") || result.mount.endsWith("/") ||
-      !result.chapterHref.startsWith("/") || result.chapterHref.startsWith("//") ||
-      new URL(result.chapterHref, result.shellOrigin).origin !== result.shellOrigin)
-    throw new Error("F04_TARGET_MOUNT_OR_CHAPTER_INVALID")
-  return result
 }
 
 export async function requirePrivateNativeRoot(root: string): Promise<string> {
@@ -92,41 +40,10 @@ export async function readNativeManifest(): Promise<NativeManifest> {
       (typeof process.getuid === "function" && metadata.uid !== process.getuid()))
     throw new Error("F04_PRIVATE_MANIFEST_ISOLATION_REQUIRED")
   const raw: unknown = JSON.parse(await readFile(file, "utf8"))
-  if (!record(raw) || !exactKeys(raw, [
-    "schema", "candidateSha", "target", "wrongServer", "wrongProject",
-    "wrongInstallation", "actors", "scratchRoot",
-  ]) || raw.schema !== "sf2h.native-installed-manifest.v1" || !record(raw.actors) ||
-      !(exactKeys(raw.actors, ["requester", "holder", "denied"]) ||
-        exactKeys(raw.actors, ["requester", "holder", "denied", "dashboardAdmin"])))
-    throw new Error("F04_REAL_INSTALLED_MANIFEST_INVALID")
-  const actors = {
-    requester: requiredText(raw.actors.requester),
-    holder: requiredText(raw.actors.holder),
-    denied: requiredText(raw.actors.denied),
-    ...(raw.actors.dashboardAdmin === undefined ? {} :
-      { dashboardAdmin: requiredText(raw.actors.dashboardAdmin) }),
-  }
-  const manifest: NativeManifest = {
-    schema: "sf2h.native-installed-manifest.v1",
-    candidateSha: requiredText(raw.candidateSha),
-    target: validateNativeTarget(raw.target),
-    wrongServer: validateNativeTarget(raw.wrongServer),
-    wrongProject: validateNativeTarget(raw.wrongProject),
-    wrongInstallation: validateNativeTarget(raw.wrongInstallation),
-    actors,
-    scratchRoot: requiredText(raw.scratchRoot),
-  }
+  const manifest = validateNativeManifest(raw)
   if (!process.env.SF_NATIVE_CANDIDATE_SHA ||
       process.env.SF_NATIVE_CANDIDATE_SHA !== manifest.candidateSha)
     throw new Error("F04_INSTALLED_CANDIDATE_NOT_BOUND_TO_RUNNER")
-  if (!/^[0-9a-f]{40}$/.test(manifest.candidateSha) ||
-      new Set(Object.values(manifest.actors)).size !== Object.values(manifest.actors).length ||
-      manifest.target.serverKey === manifest.wrongServer.serverKey ||
-      manifest.target.projectId === manifest.wrongProject.projectId ||
-      manifest.target.installationId === manifest.wrongInstallation.installationId ||
-      manifest.target.publicOrigin !== manifest.wrongProject.publicOrigin ||
-      manifest.target.publicOrigin !== manifest.wrongInstallation.publicOrigin)
-    throw new Error("F04_REAL_HOST_BOUNDARIES_NOT_DISTINCT")
   await requirePrivateNativeRoot(manifest.scratchRoot)
   if (path.dirname(path.resolve(file)) !== manifest.scratchRoot)
     throw new Error("F04_MANIFEST_MUST_BE_INSIDE_PRIVATE_INSTALLATION_ROOT")
