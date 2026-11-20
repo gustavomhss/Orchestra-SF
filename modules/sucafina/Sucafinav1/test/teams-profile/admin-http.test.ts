@@ -346,7 +346,7 @@ test("admin-http: streamed complete JSON is admitted only after EOF; an untermin
   const bytes = new TextEncoder().encode(JSON.stringify(f.command()))
   const hanging = new ReadableStream<Uint8Array>({
     start(controller) { controller.enqueue(bytes) },
-    cancel() { stopped.value = true },
+    cancel() { stopped.value = true; return new Promise<void>(() => undefined) },
   })
   const timeout = await f.request(`${route}?${f.query}`, { method: "POST", headers: { cookie, origin: publicOrigin, "content-type": "application/json" }, body: hanging, duplex: "half" } as RequestInit)
   expect(timeout.status).toBe(408)

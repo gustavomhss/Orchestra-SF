@@ -47,6 +47,7 @@ export function createTeamProfileHttp(options: {
 
     if (request.method === "GET") {
       const result = await resolver.list(request).catch(() => ({ status: "unavailable" as const, reason: "invalid-response" as const }))
+      if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
       if (!Schema.is(TeamProfile.AdminListResult)(result) ||
           (result.status === "ok" && result.profiles.some((entry) => entry.profile.installationId !== installationId || entry.profile.tenantId !== tenantId))) return respond({ status: "unavailable", reason: "invalid-response" }, 503)
       return respond(result, statusCode(result))
@@ -60,7 +61,9 @@ export function createTeamProfileHttp(options: {
     if (body.status !== "parsed") return respond({ status: "invalid-request" }, body.status)
     if (!Schema.is(TeamProfile.AdminCommand)(body.value)) return respond({ status: "invalid-request" }, 400)
     if (body.value.profile.installationId !== installationId || body.value.profile.tenantId !== tenantId) return respond({ status: "denied" }, 403)
+    if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
     const result = await resolver.configure(request, body.value).catch(() => ({ status: "unavailable" as const, reason: "invalid-response" as const }))
+    if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
     if (!Schema.is(TeamProfile.AdminConfigureResult)(result)) return respond({ status: "unavailable", reason: "invalid-response" }, 503)
     return respond(result, statusCode(result))
   }
