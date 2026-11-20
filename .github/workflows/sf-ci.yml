@@ -738,8 +738,13 @@ jobs:
           set -euo pipefail
           test "$SOURCE_REVISION" = "$(git rev-parse --verify HEAD)"
           mkdir -p "$SF_ARTIFACT_OUTPUT"
+          set +e
           bun sf/ci/assemble-orchestra-web.mjs "$SF_ARTIFACT_OUTPUT/orchestra-sf.tar.gz" \
             > "$SF_ARTIFACT_OUTPUT/assembler.log" 2>&1
+          assembler_status=$?
+          set -e
+          tail -n 100 "$SF_ARTIFACT_OUTPUT/assembler.log"
+          test "$assembler_status" -eq 0
           node --input-type=module <<'NODE'
           import { appendFileSync, readFileSync, writeFileSync } from "node:fs"
           import { createHash } from "node:crypto"
@@ -787,14 +792,6 @@ jobs:
       contents: read
       actions: read
     env:
-      SF_TEAMS_RESIDUE_ROOT: ${{ runner.temp }}/teams-profile-residue
-      SF_TEAMS_RESIDUE_ARCHIVE_ROOT: ${{ runner.temp }}/teams-profile-residue/archive
-      SF_TEAMS_RESIDUE_COMMIT_FILE: ${{ runner.temp }}/teams-profile-residue/source.commit
-      SF_TEAMS_RESIDUE_TRACKED_FILE: ${{ runner.temp }}/teams-profile-residue/source.tree
-      SF_TEAMS_RESIDUE_CONTROLS_FILE: ${{ runner.temp }}/teams-profile-residue/controls.json
-      SF_TEAMS_RESIDUE_INVENTORY_FILE: ${{ runner.temp }}/teams-profile-residue/archive/orchestra-sf.tar.gz.inventory.json
-      SF_TEAMS_RESIDUE_RECEIPT_FILE: ${{ runner.temp }}/teams-profile-residue/archive/orchestra-sf.tar.gz.receipt.json
-      SF_TEAMS_RESIDUE_PROVENANCE_FILE: ${{ runner.temp }}/teams-profile-residue/provenance.json
       SF_TEAMS_RESIDUE_ARTIFACT_ID: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
     steps:
       - name: Checkout the identical product candidate
@@ -809,6 +806,15 @@ jobs:
           node-version: "24.15.0"
       - name: Bind actual Git objects before executing controls
         id: evidence
+        env:
+          SF_TEAMS_RESIDUE_ROOT: ${{ runner.temp }}/teams-profile-residue
+          SF_TEAMS_RESIDUE_ARCHIVE_ROOT: ${{ runner.temp }}/teams-profile-residue/archive
+          SF_TEAMS_RESIDUE_COMMIT_FILE: ${{ runner.temp }}/teams-profile-residue/source.commit
+          SF_TEAMS_RESIDUE_TRACKED_FILE: ${{ runner.temp }}/teams-profile-residue/source.tree
+          SF_TEAMS_RESIDUE_CONTROLS_FILE: ${{ runner.temp }}/teams-profile-residue/controls.json
+          SF_TEAMS_RESIDUE_INVENTORY_FILE: ${{ runner.temp }}/teams-profile-residue/archive/orchestra-sf.tar.gz.inventory.json
+          SF_TEAMS_RESIDUE_RECEIPT_FILE: ${{ runner.temp }}/teams-profile-residue/archive/orchestra-sf.tar.gz.receipt.json
+          SF_TEAMS_RESIDUE_PROVENANCE_FILE: ${{ runner.temp }}/teams-profile-residue/provenance.json
         shell: bash
         run: |
           set -euo pipefail
@@ -821,6 +827,9 @@ jobs:
           test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
           mkdir -m 700 "$SF_TEAMS_RESIDUE_ROOT"
           mkdir -m 700 "$SF_TEAMS_RESIDUE_ARCHIVE_ROOT"
+          for residue_path_name in SF_TEAMS_RESIDUE_ROOT SF_TEAMS_RESIDUE_ARCHIVE_ROOT SF_TEAMS_RESIDUE_COMMIT_FILE SF_TEAMS_RESIDUE_TRACKED_FILE SF_TEAMS_RESIDUE_CONTROLS_FILE SF_TEAMS_RESIDUE_INVENTORY_FILE SF_TEAMS_RESIDUE_RECEIPT_FILE SF_TEAMS_RESIDUE_PROVENANCE_FILE; do
+            printf '%s=%s\n' "$residue_path_name" "${!residue_path_name}" >> "$GITHUB_ENV"
+          done
           git cat-file commit "$SF_PRODUCT_SOURCE_SHA" > "$SF_TEAMS_RESIDUE_COMMIT_FILE"
           git ls-tree -rz --full-tree "$SF_PRODUCT_SOURCE_SHA" > "$SF_TEAMS_RESIDUE_TRACKED_FILE"
           printf 'SF_CHECKOUT_TREE_SHA=%s\n' "$(git rev-parse 'HEAD^{tree}')" >> "$GITHUB_ENV"
@@ -828,8 +837,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          set +e
           node --test script/sf-ci/team-profile-residue.test.mjs > "$SF_TEAMS_RESIDUE_ROOT/controls.log" 2>&1
+          controls_status=$?
+          set -e
           cat "$SF_TEAMS_RESIDUE_ROOT/controls.log"
+          test "$controls_status" -eq 0
       - name: Download only the immutable archive produced in this run
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:

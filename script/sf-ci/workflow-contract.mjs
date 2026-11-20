@@ -207,5 +207,6 @@ export function assertWorkflowSourceSelection(workflow) {
   requireContract(!workflow.includes('test "$GITHUB_SHA"'), "workflow identity used as product checkout identity")
   requireContract(!workflow.includes("if (sha !== process.env.GITHUB_SHA)"), "guard receipt uses the synthetic merge SHA")
   requireContract(workflow.includes("workflowSHA: process.env.GITHUB_SHA"), "raw workflow provenance was erased")
+  requireContract(!/^      [A-Z_]+: \$\{\{ runner\./m.test(workflow), "runner context is not available in job-level env")
   return checkouts.length
 }
