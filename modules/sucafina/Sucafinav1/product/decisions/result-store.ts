@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -231,11 +232,21 @@ export function createSfDecisionResultStore(input: {
     const request = structuredClone(incoming)
     const source = input.host.requestFor(context)
     if (!source || !request.idempotencyKey.trim() || !/^[a-f0-9]{64}$/.test(request.requestDigest) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-    const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `decision-result:${request.idempotencyKey}`])] } : undefined).catch(() => undefined)
+    const current = await input.state.read(source, "cases", (state, authority) => {
+      if (!(sameAuthority(authority, context))) return undefined
+      const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `decision-result:${request.idempotencyKey}` })
+      if (savedIntent.status === "ambiguous") return undefined
+      return { decision: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+    }).catch(() => undefined)
     if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "result-unavailable" }
     if (!allowedCase(current.value.decision, request.caseRef, context) || !await authorizeCase(current.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (!current.value.prior) {
-      const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `decision-result:${request.idempotencyKey}`])] } : undefined).catch(() => undefined)
+      const again = await input.state.read(source, "cases", (state, authority) => {
+        if (!(sameAuthority(authority, context))) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `decision-result:${request.idempotencyKey}` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { decision: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+      }).catch(() => undefined)
       if (!again || again.status !== "ok" || !again.value || again.value.prior || !allowedCase(again.value.decision, request.caseRef, context) || !await authorizeCase(again.value.decision!, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "result-state-changed" }
       return { status: "ok", value: { state: "not-found" } }
     }

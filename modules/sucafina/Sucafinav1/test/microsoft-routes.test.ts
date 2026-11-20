@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { writeFile } from "node:fs/promises"
+import { admitMicrosoftFixtureTeam } from "./microsoft-login/team-admission-fixture.ts"
 import { Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { createSfHostRuntime } from "../../../../apps/cli/src/sucafina-product/host-context.ts"
@@ -20,7 +21,7 @@ import { microsoftRequest, prepareMicrosoftInstallation } from "../runtime/micro
 import { microsoftPolicy } from "../runtime/microsoft-policy.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import { createSfProductAuthority, type SfProductGrant } from "../product/integration/product-authority.ts"
-import { microsoftFixture, oid, other } from "./microsoft-login/oidc-fixture.ts"
+import { microsoftFixture, oid, other, group } from "./microsoft-login/oidc-fixture.ts"
 import { privateFixture, listenerOrigin, ingressOrigin, publicOrigin } from "./microsoft-login/private-fixture.ts"
 
 const cleanups: (() => Promise<void>)[] = []
@@ -31,8 +32,8 @@ async function fixture(grants: readonly SfProductGrant[] = [oid, other].map((pri
   const disk = await privateFixture()
   cleanups.push(disk.close)
   // Native Requests invokes the real queue reader; no write, namespace or human-action grant is implied.
-  await writeFile(disk.file, JSON.stringify({ ...disk.config, grants }), { mode: 0o600 })
-  const provider = await microsoftFixture({ claims: { name: "Same synthetic display name", email: "same-synthetic@example.test", preferred_username: "same-synthetic@example.test", roles: ["admin"] } })
+  await writeFile(disk.file, JSON.stringify({ ...disk.config, teams: "direct", supremeAdminGroupId: group, grants }), { mode: 0o600 })
+  const provider = await microsoftFixture({ teams: "direct", claims: { name: "Same synthetic display name", email: "same-synthetic@example.test", preferred_username: "same-synthetic@example.test", roles: ["admin"] } })
   provider.account.name = "Same synthetic display name"
   provider.second.name = provider.account.name
   const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, disk.file, disk.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
@@ -58,9 +59,13 @@ async function fixture(grants: readonly SfProductGrant[] = [oid, other].map((pri
     { disableLogger: true },
   )
   cleanups.push(router.dispose)
+  const rawRequest = (pathname: string, init: RequestInit = {}) => router.handler(new Request(`${ingressOrigin}${pathname}`, {
+    ...init, headers: { host: new URL(ingressOrigin).host, ...Object.fromEntries(new Headers(init.headers)) },
+  }))
+  const team = await admitMicrosoftFixtureTeam({ installation, provider, request: rawRequest })
   const request = (suffix: string, cookie?: string, body?: Record<string, unknown>) => router.handler(new Request(`${ingressOrigin}/sucafina${suffix}`, {
     method: body === undefined ? "GET" : "POST",
-    headers: { host: new URL(ingressOrigin).host, ...(cookie ? { cookie } : {}), ...(body === undefined ? {} : { origin: publicOrigin, "content-type": "application/json" }) },
+    headers: { host: new URL(ingressOrigin).host, ...(!suffix.startsWith("/auth/") ? { "x-sf-team-profile": team.selector } : {}), ...(cookie ? { cookie } : {}), ...(body === undefined ? {} : { origin: publicOrigin, "content-type": "application/json" }) },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   }))
   const login = async (user = oid) => {

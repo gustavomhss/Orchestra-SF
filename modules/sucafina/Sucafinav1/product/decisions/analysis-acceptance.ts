@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfContribution, digestSfValue } from "../contracts/canonical.ts"
 import { enqueueSfLedgerEvent } from "../integration/ledger-outbox.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
@@ -33,7 +34,12 @@ export function createAnalysisAcceptance(input: {
     const operation = input.operationIdentity(context)
     if (!source || !operation || source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
     const commandDigest = digestSfValue(request)
-    const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { value: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${operation}:accept-analysis`])] } : undefined).catch(() => undefined)
+    const current = await input.state.read(source, "cases", (state, authority) => {
+      if (!(sameAuthority(authority, context))) return undefined
+      const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `${operation}:accept-analysis` })
+      if (savedIntent.status === "ambiguous") return undefined
+      return { value: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+    }).catch(() => undefined)
     if (!current || current.status !== "ok") return { status: "unavailable", reason: "case-unavailable" }
     const decision = current.value?.value
     if (!decision || decision.incarnation !== request.caseRef.incarnation || !decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(decision, context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }

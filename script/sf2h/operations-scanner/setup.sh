@@ -7,7 +7,7 @@ test "${GITHUB_ACTIONS:-}" = true
 test "${GITHUB_REPOSITORY:-}" = gustavomhss/Orchestra-SF
 test "${RUNNER_OS:-}" = Linux
 test "${RUNNER_ARCH:-}" = X64
-[[ "${GITHUB_REF_NAME:-}" =~ ^ci-run-linux-operations63-[a-z0-9-]+$ || "${GITHUB_REF_NAME:-}" =~ ^sf-ops75-[a-f0-9]{12}[cj][a-f0-9]{12}[1-9][0-9]?$ ]]
+[[ "${GITHUB_REF_NAME:-}" =~ ^ci-run-linux-operations63-[a-z0-9-]+$ || "${GITHUB_REF_NAME:-}" =~ ^sf-ops75-[a-f0-9]{12}[cj][a-f0-9]{12}[1-9][0-9]?$ || "${GITHUB_REF_NAME:-}" =~ ^tp-scan-[a-f0-9]{24}[1-9][0-9]{0,2}$ ]]
 [[ "${GITHUB_RUN_ID:-}" =~ ^[0-9]+$ && "${GITHUB_RUN_ATTEMPT:-}" =~ ^[0-9]+$ ]]
 test -d "${RUNNER_TEMP:?}"
 test -f "${GITHUB_ENV:?}"
@@ -17,7 +17,13 @@ done
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 scanner_mission=63
 if [[ "${GITHUB_REF_NAME:-}" == sf-ops75-* ]]; then scanner_mission=75; fi
-state=$(mktemp -d "$RUNNER_TEMP/sf-operations${scanner_mission}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.XXXXXX")
+state_prefix="sf-operations${scanner_mission}"
+if [[ "${GITHUB_REF_NAME:-}" == tp-scan-* ]]; then
+  # The new namespace is accepted only after exact candidate/request admission.
+  node "$script_dir/../../sf-ci/team-profile-scanner.mjs" integrity
+  state_prefix=sf-teams-profile-scan
+fi
+state=$(mktemp -d "$RUNNER_TEMP/${state_prefix}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.XXXXXX")
 [[ "$state" != *[[:space:]]* ]] || { echo OPERATIONS_SCANNER_PATH_HAS_WHITESPACE >&2; exit 2; }
 mkdir -p "$state/evidence" "$state/database" "$state/root" "$state/pids" "$state/tmp"
 node "$script_dir/service.mjs" initialize "$state"

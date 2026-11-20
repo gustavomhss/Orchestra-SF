@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-coverage.ts"
 import { enqueueSfLedgerEvent } from "../integration/ledger-outbox.ts"
@@ -12,7 +13,7 @@ import { createChoiceSnapshot } from "./choice.ts"
 import { verifyHotTopicDraftBinding } from "./hot-topic-draft.ts"
 import type { HotTopicDraft } from "./hot-topic-draft.ts"
 import { prepareDomainChange } from "./prepared-change.ts"
-import { applicationAttempts } from "./application-attempt.ts"
+import { hasApplicationAttempt } from "./application-attempt.ts"
 
 export type DecisionMutationOperation = "add-alternative" | "prepare-changes" | "reject-change" | "add-question" | "answer-question" | "record-choice"
 type CaseRef = { id: string; incarnation: string; version: number }
@@ -55,8 +56,8 @@ export function createDecisionMutations(input: MutationHost) {
       const caseRef = { ...request.caseRef, version: request.caseRef.version + 1 }
       const event = { id: input.createId(), caseRef, kind: "reconsideration-accepted" as const, principalRef: context.binding.principalRef, at: input.now(), consideredActions: [`reject-change:${change.id}`], factualGaps: [], lifecycleState: loaded.value.case.state, rationale: request.rationale, evidenceRefs: loaded.value.case.sourceRefs, outputDigest: digestSfValue({ change, disposition: "rejected" }) }
       if (!event.id.trim() || !Number.isFinite(Date.parse(event.at)) || loaded.value.case.ledger.some((item) => item.id === event.id)) return { status: "unavailable", reason: "rejection-identity-unavailable" }
-      return saveCase(input, loaded.value, context, "reject-change", request, (value) => ({ ...value, preparedChanges: value.preparedChanges.map((item) => item.id === change.id ? { ...item, state: "cancelled" as const } : item), ledger: [...value.ledger, event] }), undefined, (state) => {
-        if (applicationAttempts(state, request).length) return false
+      return saveCase(input, loaded.value, context, "reject-change", request, (value) => ({ ...value, preparedChanges: value.preparedChanges.map((item) => item.id === change.id ? { ...item, state: "cancelled" as const } : item), ledger: [...value.ledger, event] }), undefined, (state, authority) => {
+        if (hasApplicationAttempt(state, request, authority)) return false
         const matches = (receipt: unknown) => !!receipt && typeof receipt === "object" && "surface" in receipt && receipt.surface === change.target.surface && "targetIncarnation" in receipt && receipt.targetIncarnation === change.target.incarnation && "idempotencyKey" in receipt && receipt.idempotencyKey === change.idempotencyKey
         return !Object.values(state.receipts).some(matches) && !Object.values(state.transactions).some((transaction) => transaction.namespace === "receipts" && matches(transaction.value))
       })
@@ -66,7 +67,12 @@ export function createDecisionMutations(input: MutationHost) {
       const source = input.host.requestFor(context)
       const identity = input.operationIdentity(context)
       if (context.kind !== "ui" || !source || !identity || !await input.host.revalidate(context)) return { status: "denied", reason: "portfolio-replay-access-unavailable" }
-      const read = () => input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? { current: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${identity}:${request.operation}`])], results: state.decisionResults } : undefined)
+      const read = () => input.state.read(source, "cases", (state, authority) => {
+        if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: request.caseRef.id, idempotencyKey: `${identity}:${request.operation}` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { current: state.cases[request.caseRef.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined, results: state.decisionResults }
+      })
       const loaded = await read()
       if (loaded.status !== "ok" || !loaded.value?.current || loaded.value.current.incarnation !== request.caseRef.incarnation || !loaded.value.current.participants.includes(context.binding.principalRef) || !await input.authorizeCase(loaded.value.current, context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "portfolio-replay-access-unavailable" }
       if (!loaded.value.prior) return { status: "ok", value: { state: "not-found" } }
@@ -232,10 +238,13 @@ async function replayMutation(input: MutationHost, ref: CaseRef, context: Truste
   if (!source || !identity || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
   const result = await input.state.read(source, "cases", (state, authority) => {
     if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
-    return { current: state.cases[ref.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", ref.id, `${identity}:${operation}`])], results: state.decisionResults }
+    const savedIntent = sfTransactionLookup(state, authority, { namespace: "cases", targetRef: ref.id, idempotencyKey: `${identity}:${operation}` })
+    if (savedIntent.status === "ambiguous") return undefined
+    return { current: state.cases[ref.id], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined, results: state.decisionResults }
   }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
   if (result.status !== "ok") return failure(result)
-  if (!result.value?.prior) return undefined
+  if (!result.value) return { status: "unavailable", reason: "mutation-receipt-unavailable" }
+  if (!result.value.prior) return undefined
   const current = result.value.current
   const prior = result.value.prior
   if (!current || current.incarnation !== ref.incarnation || !current.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
@@ -251,7 +260,7 @@ async function replayMutation(input: MutationHost, ref: CaseRef, context: Truste
   return { status: "ok", value: { caseRef } }
 }
 
-async function saveCase(input: MutationHost, loaded: LoadedCase, context: TrustedDomainContext, operation: DecisionMutationOperation, request: unknown, update: (value: DecisionCase) => DecisionCase, scenario?: { request: ScenarioRequest; result: ScenarioResult; sourceFence?: (snapshot: import("../../runtime/contract.ts").Snapshot) => boolean }, verifyState?: (state: import("../contracts/state.ts").SfProductState) => boolean): Promise<PortResult<MutationReceipt>> {
+async function saveCase(input: MutationHost, loaded: LoadedCase, context: TrustedDomainContext, operation: DecisionMutationOperation, request: unknown, update: (value: DecisionCase) => DecisionCase, scenario?: { request: ScenarioRequest; result: ScenarioResult; sourceFence?: (snapshot: import("../../runtime/contract.ts").Snapshot) => boolean }, verifyState?: (state: import("../contracts/state.ts").SfProductState, authority: import("../contracts/state.ts").SfStateAuthority) => boolean): Promise<PortResult<MutationReceipt>> {
   const nextValue = { ...update(loaded.case), version: loaded.case.version + 1 }
   const caseRef = { id: nextValue.id, incarnation: nextValue.incarnation, version: nextValue.version }
   const resultRef = scenario ? decisionScenarioResultRef(caseRef, digestSfValue(scenario.request)) : undefined
@@ -261,7 +270,7 @@ async function saveCase(input: MutationHost, loaded: LoadedCase, context: Truste
   if (outbox && outbox.status !== "ok") return failure(outbox)
   if (outbox && !outbox.value) return { status: "denied", reason: "outbox-access-unavailable" }
   const saved = await input.state.transaction(loaded.source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion, ...(outbox ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: outbox.storageVersion }] } : {}), targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
-    if (!input.verifyMutation(snapshot, operation, request, context) || (verifyState && !verifyState(state))) return { commit: false, value: null }
+    if (!input.verifyMutation(snapshot, operation, request, context) || (verifyState && !verifyState(state, authority))) return { commit: false, value: null }
     if (scenario?.sourceFence && !scenario.sourceFence(snapshot)) return { commit: false, value: null }
     const actual = state.cases[loaded.case.id]
     if (!actual || actual.version !== loaded.case.version || actual.incarnation !== loaded.case.incarnation || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: null }

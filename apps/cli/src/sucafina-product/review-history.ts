@@ -1,3 +1,4 @@
+import { sfTransactionBelongsTo, sfTransactionIdentity } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -60,13 +61,19 @@ export function createSfReviewHistory(input: {
     if (!request || !await host.revalidate(call)) return undefined
     const found = await authority.state.read(request, "reviews", (state, actor) => {
       if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion) return undefined
-      const receipts = Object.values(state.transactions).filter((receipt) => receipt.namespace === "reviews" && receipt.principalRef === actor.principalRef &&
+      const receipts = Object.entries(state.transactions).filter(([, receipt]) => receipt.namespace === "reviews" && receipt.principalRef === actor.principalRef &&
         receipt.targetRef === authority.creationTarget.ref && receipt.targetIncarnation === authority.creationTarget.incarnation)
-      return Object.values(state.reviews).filter((review) => receipts.some((receipt) => {
-        const value = object(receipt.value)
-        return value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 && value.reviewRef === review.id && value.reviewDigest === digestSfValue(review) ||
-          value.schema === undefined && value.id === review.id && Array.isArray(value.sections) && Array.isArray(value.sourceRefs) && digestSfValue(value) === digestSfValue(review)
-      })).map((review) => structuredClone(review))
+      return Object.values(state.reviews).filter((review) => {
+        const matching = receipts.filter(([, receipt]) => {
+          const value = object(receipt.value)
+          return value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 && value.reviewRef === review.id && value.reviewDigest === digestSfValue(review) ||
+            value.schema === undefined && value.id === review.id && Array.isArray(value.sections) && Array.isArray(value.sourceRefs) && digestSfValue(value) === digestSfValue(review)
+        })
+        return matching.length > 0 && matching.every(([key, receipt]) => {
+          const identity = sfTransactionIdentity(key)
+          return sfTransactionBelongsTo(actor, key) && identity?.namespace === receipt.namespace && identity.targetRef === receipt.targetRef
+        })
+      }).map((review) => structuredClone(review))
     })
     if (request.signal.aborted || host.requestFor(call) !== request || !await host.revalidate(call) || host.requestFor(call) !== request) return undefined
     if (found.status === "denied") return undefined

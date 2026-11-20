@@ -11486,25 +11486,49 @@ export type InstallationUpgradeOutput = { readonly success: true; readonly versi
 
 export type ServerSucafinaInstallationsInput = {
   readonly select: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
   }["select"]
+  readonly contractRevision?: {
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["contractRevision"]
+  readonly tenantId?: {
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
+    readonly installationId?: string | undefined
+    readonly projectId?: string | undefined
+    readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
+  }["tenantId"]
   readonly installationId?: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
   }["installationId"]
   readonly projectId?: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
   }["projectId"]
   readonly location?: {
-    readonly select: "ids" | "location"
+    readonly select: "ids" | "location" | "installation" | "current"
+    readonly contractRevision?: "sf-team-profile/1" | undefined
+    readonly tenantId?: string | undefined
     readonly installationId?: string | undefined
     readonly projectId?: string | undefined
     readonly location?: { readonly directory: string; readonly workspace?: string | undefined } | undefined
@@ -11512,15 +11536,27 @@ export type ServerSucafinaInstallationsInput = {
 }
 
 export type ServerSucafinaInstallationsOutput = {
-  readonly installations: ReadonlyArray<{
-    readonly installationId: string
-    readonly projectId: string
-    readonly hostId: string
-    readonly publicOrigin: string
-    readonly mount: string
-    readonly contractRevision: "sf-native-ui/1"
-    readonly authMode: "microsoft" | "local-operator"
-  }>
+  readonly installations: ReadonlyArray<
+    | {
+        readonly installationId: string
+        readonly projectId: string
+        readonly hostId: string
+        readonly publicOrigin: string
+        readonly mount: string
+        readonly contractRevision: "sf-native-ui/1"
+        readonly authMode: "microsoft" | "local-operator"
+      }
+    | {
+        readonly installationId: string
+        readonly tenantId: string
+        readonly projectId: string
+        readonly hostId: string
+        readonly publicOrigin: string
+        readonly mount: string
+        readonly contractRevision: "sf-team-profile/1"
+        readonly authMode: "microsoft"
+      }
+  >
 }
 
 export type GuardrailRulesInput = {
