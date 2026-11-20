@@ -279,12 +279,123 @@ describe("Teams profile canonical contracts", () => {
       TeamProfile.AccessRevision, TeamProfile.Ref, TeamProfile.Principal, TeamProfile.Revisions,
       TeamProfile.Owner, TeamProfile.Binding, TeamProfile.Selector, TeamProfile.Choice,
       TeamProfile.UnavailableReason, TeamProfile.TeamState, TeamProfile.Administration,
-      TeamProfile.Authenticated, TeamProfile.Projection,
+      TeamProfile.Authenticated, TeamProfile.Projection, TeamProfile.AdminUnavailableReason,
+      TeamProfile.AdminCommand, TeamProfile.AdminProfile, TeamProfile.AdminListResult, TeamProfile.AdminConfigureResult,
     ]
     const identifiers = schemas.map((schema) =>
       schema.ast.checks?.at(-1)?.annotations?.identifier ?? schema.ast.annotations?.identifier)
     expect(identifiers.every((identifier) =>
       typeof identifier === "string" && identifier.startsWith("Sucafina.TeamProfile."))).toBe(true)
     expect(new Set(identifiers).size).toBe(schemas.length)
+  })
+})
+
+
+describe("Teams profile administration wire contracts", () => {
+  const command = { action: "enable", profile, expectedRevision: 0 }
+  const listed = { status: "ok", configRevision: 0, profiles: [{ profile, enabled: true }] }
+
+  test("configuration intents roundtrip all three actions without a claimed authority", () => {
+    for (const action of ["enable", "disable", "remove"]) {
+      for (const expectedRevision of [0, 1, Number.MAX_SAFE_INTEGER]) {
+        const value = { ...command, action, expectedRevision }
+        expect(Schema.encodeSync(TeamProfile.AdminCommand)(Schema.decodeUnknownSync(TeamProfile.AdminCommand)(value))).toEqual(value)
+      }
+    }
+    for (const extra of [
+      { principal }, { admin: true }, { supremeAdminGroupId: profile.teamObjectId },
+      { accessRevision: "claimed" }, { grants: [] }, { token: "private" },
+      { contractRevision: "sf-team-profile/1" }, { expectedPolicyRevision: 0 },
+    ]) expect(Schema.is(TeamProfile.AdminCommand)({ ...command, ...extra })).toBe(false)
+    for (const action of ["create", "delete", "rename", "", null]) expect(Schema.is(TeamProfile.AdminCommand)({ ...command, action })).toBe(false)
+  })
+
+  test("administration revisions require safe integers without string coercion", () => {
+    for (const revision of [-1, 0.5, "0", "", null, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+      expect(Schema.is(TeamProfile.AdminCommand)({ ...command, expectedRevision: revision })).toBe(false)
+      expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, configRevision: revision })).toBe(false)
+      expect(Schema.is(TeamProfile.AdminConfigureResult)({ status: "ok", configRevision: revision, changed: true })).toBe(false)
+      expect(Schema.is(TeamProfile.AdminConfigureResult)({ status: "conflict", configRevision: revision })).toBe(false)
+    }
+  })
+
+  test("lists preserve empty, disabled and same-named identities without extra operational data", () => {
+    for (const profiles of [[], listed.profiles, [...listed.profiles, { profile: otherProfile, enabled: false }]]) {
+      const value = { ...listed, profiles }
+      expect(Schema.encodeSync(TeamProfile.AdminListResult)(Schema.decodeUnknownSync(TeamProfile.AdminListResult)(value))).toEqual(value)
+    }
+    for (const extra of [{ displayName: "Admin" }, { groupId: profile.teamObjectId }, { grants: [] }, { accessToken: "private" }]) {
+      expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, profiles: [{ ...listed.profiles[0], ...extra }] })).toBe(false)
+    }
+    for (const extra of [{ audit: [] }, { principal }, { accessRevision: "claimed" }, { epoch: "private" }]) {
+      expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, ...extra })).toBe(false)
+    }
+  })
+
+  test("lists reject duplicate profiles, cross-binding rows and more than ten thousand records", () => {
+    expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, profiles: [...listed.profiles, ...listed.profiles] })).toBe(false)
+    for (const foreign of [
+      { ...otherProfile, installationId: "other-installation" },
+      { ...otherProfile, tenantId: "eeeeeeee-2222-4333-8444-555555555555" },
+    ]) expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, profiles: [...listed.profiles, { profile: foreign, enabled: true }] })).toBe(false)
+    const profiles = Array.from({ length: 10001 }, (_, index) => ({
+      profile: { ...profile, teamObjectId: `${index.toString(16).padStart(8, "0")}-2222-4333-8444-555555555555` },
+      enabled: true,
+    }))
+    expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, profiles: profiles.slice(0, 10000) })).toBe(true)
+    expect(Schema.is(TeamProfile.AdminListResult)({ ...listed, profiles })).toBe(false)
+  })
+
+  test("configuration outcomes distinguish committed changes, no-ops, conflicts and absence", () => {
+    for (const value of [
+      { status: "ok", configRevision: 1, changed: true },
+      { status: "ok", configRevision: 1, changed: false },
+      { status: "conflict", configRevision: 1 },
+      { status: "not-found" },
+    ]) expect(Schema.encodeSync(TeamProfile.AdminConfigureResult)(Schema.decodeUnknownSync(TeamProfile.AdminConfigureResult)(value))).toEqual(value)
+    for (const value of [
+      { status: "ok", configRevision: 0 },
+      { status: "conflict", configRevision: 1, changed: false },
+      { status: "not-found", configRevision: 1 },
+      { status: "ok", configRevision: 1, changed: true, handle: "private" },
+      { status: "ok", configRevision: 1, changed: true, profile },
+    ]) expect(Schema.is(TeamProfile.AdminConfigureResult)(value)).toBe(false)
+  })
+
+  test("denied, unauthenticated and transport errors carry no retained configuration", () => {
+    for (const status of ["unauthenticated", "denied", "invalid-request"]) {
+      for (const schema of [TeamProfile.AdminListResult, TeamProfile.AdminConfigureResult]) {
+        expect(Schema.is(schema)({ status })).toBe(true)
+        expect(Schema.is(schema)({ status, profiles: listed.profiles })).toBe(false)
+        expect(Schema.is(schema)({ status, configRevision: 0 })).toBe(false)
+        expect(Schema.is(schema)({ status, principal })).toBe(false)
+      }
+    }
+  })
+
+  test("provider, policy and store failures remain closed unavailable reasons", () => {
+    for (const reason of [
+      "identity-unavailable", "capability-disabled", "consent-required", "forbidden",
+      "rate-limited", "timeout", "incomplete", "invalid-response", "provider-unavailable",
+      "policy-unavailable", "policy-changed", "store-unavailable",
+    ]) {
+      for (const schema of [TeamProfile.AdminListResult, TeamProfile.AdminConfigureResult]) {
+        expect(Schema.is(schema)({ status: "unavailable", reason })).toBe(true)
+        expect(Schema.is(schema)({ status: "unavailable", reason, profiles: [] })).toBe(false)
+      }
+    }
+    for (const reason of ["", "administrator", "use-repo", "token_expired", undefined]) {
+      expect(Schema.is(TeamProfile.AdminListResult)({ status: "unavailable", reason })).toBe(false)
+      expect(Schema.is(TeamProfile.AdminConfigureResult)({ status: "unavailable", reason })).toBe(false)
+    }
+  })
+
+  test("closed administrative shapes reject nested and outer excess even under an ignoring caller", () => {
+    const decode = Schema.decodeUnknownSync(TeamProfile.AdminCommand, { onExcessProperty: "ignore" })
+    expect(() => decode({ ...command, authority: true })).toThrow()
+    expect(() => decode({ ...command, profile: { ...profile, projectId: "legacy" } })).toThrow()
+    const read = Schema.decodeUnknownSync(TeamProfile.AdminListResult, { onExcessProperty: "ignore" })
+    expect(() => read({ ...listed, profiles: [{ profile, enabled: true, audit: [] }] })).toThrow()
+    expect(() => read({ ...listed, credential: "private" })).toThrow()
   })
 })

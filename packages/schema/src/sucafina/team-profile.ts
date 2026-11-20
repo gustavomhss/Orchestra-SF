@@ -261,3 +261,89 @@ export const Projection = Schema.Union([
   parseOptions: { onExcessProperty: "error" },
 })
 export type Projection = Schema.Schema.Type<typeof Projection>
+
+/** Administration has no Team selection or transferable authority revision. */
+export const AdminUnavailableReason = Schema.Literals([
+  "identity-unavailable",
+  "capability-disabled",
+  "consent-required",
+  "forbidden",
+  "rate-limited",
+  "timeout",
+  "incomplete",
+  "invalid-response",
+  "provider-unavailable",
+  "policy-unavailable",
+  "policy-changed",
+  "store-unavailable",
+]).annotate({ identifier: "Sucafina.TeamProfile.AdminUnavailableReason" })
+export type AdminUnavailableReason = typeof AdminUnavailableReason.Type
+
+/** A configuration intent; the server separately verifies current supreme membership. */
+export const AdminCommand = Schema.Struct({
+  action: Schema.Literals(["enable", "disable", "remove"]),
+  profile: Ref,
+  expectedRevision: NonNegativeInt,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.AdminCommand",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface AdminCommand extends Schema.Schema.Type<typeof AdminCommand> {}
+
+export const AdminProfile = Schema.Struct({
+  profile: Ref,
+  enabled: Schema.Boolean,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.AdminProfile",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface AdminProfile extends Schema.Schema.Type<typeof AdminProfile> {}
+
+const AdminProfiles = Schema.Array(AdminProfile).check(
+  Schema.isMaxLength(10000),
+  Schema.makeFilter(
+    (profiles) => new Set(profiles.map((entry) => JSON.stringify([
+      entry.profile.installationId, entry.profile.tenantId, entry.profile.teamObjectId,
+    ]))).size === profiles.length && profiles.every((entry) =>
+      entry.profile.installationId === profiles[0]?.profile.installationId &&
+      entry.profile.tenantId === profiles[0]?.profile.tenantId),
+    { message: "Administrative profiles must be unique and belong to one installation and resource tenant" },
+  ),
+)
+
+const AdminFailure = Schema.Union([
+  Schema.Struct({ status: Schema.Literal("unauthenticated") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({ status: Schema.Literal("invalid-request") }),
+  Schema.Struct({ status: Schema.Literal("unavailable"), reason: AdminUnavailableReason }),
+])
+
+/** Shared configuration only; no groups, grants, audit rows, tokens or session handles. */
+export const AdminListResult = Schema.Union([
+  Schema.Struct({
+    status: Schema.Literal("ok"),
+    configRevision: NonNegativeInt,
+    profiles: AdminProfiles,
+  }),
+  AdminFailure,
+]).annotate({
+  identifier: "Sucafina.TeamProfile.AdminListResult",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type AdminListResult = Schema.Schema.Type<typeof AdminListResult>
+
+/** Compare-and-swap outcome; revision numbers are safe integers and are never coerced. */
+export const AdminConfigureResult = Schema.Union([
+  Schema.Struct({
+    status: Schema.Literal("ok"),
+    configRevision: NonNegativeInt,
+    changed: Schema.Boolean,
+  }),
+  Schema.Struct({ status: Schema.Literal("conflict"), configRevision: NonNegativeInt }),
+  Schema.Struct({ status: Schema.Literal("not-found") }),
+  AdminFailure,
+]).annotate({
+  identifier: "Sucafina.TeamProfile.AdminConfigureResult",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type AdminConfigureResult = Schema.Schema.Type<typeof AdminConfigureResult>
