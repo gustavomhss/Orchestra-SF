@@ -2,17 +2,17 @@
 
 ## SHA e estado
 
-- Data deste checkpoint: 2026-11-20 02:18 UTC.
+- Data deste checkpoint: 2026-11-20 02:33 UTC.
 - Estado: **PARTIAL / IN_PROGRESS**. Não há declaração de GO, deploy ou SF_ORCHESTRA_WEB_PACKAGE_VERIFIED.
 - Base pedida e preservada: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
-- Branch desta sessão: `sf-continuation`, head antes desta atualização documental `782d388bfdbd1e09838ad76be4a9cc68a205389e`.
-- Último SHA integrado observado: **`392cecab68288d4b669828adc5d1aaa738693d80`**, em `sf-join-four`. Ainda não congelado.
+- Branch desta sessão: `sf-continuation`, head antes desta atualização documental `fddab3d8457e831b72630849509335767a1bfc77`.
+- Último SHA integrado observado: **`7c42282e8b910cc0e10381980f040dee72cb2b19`**, em `sf-join-four`. Ainda não congelado.
 - Toda leitura/escrita foi pelo GitHub; verificações executadas em Actions. Nenhum shell ou teste local.
 - O único `sf-ci` final ainda **NOT_RUN**. Guards finais **NOT_RUN**. Pacote final **NOT_PRODUCED**. A corrida completa permanece reservada para depois do último merge elegível.
 
 ## O que foi mergeado e em que ordem
 
-Os seis merges abaixo foram observados na branch compartilhada durante o trabalho das sessões concorrentes. Esta sessão verificou os SHAs e as conclusões; não atribui a si a execução desses merges.
+Os oito merges abaixo estão na ancestry efetiva da branch compartilhada. Os seis primeiros e #413 foram executados em sessões concorrentes; #411 foi revisado, documentado, marcado ready e mergeado pela Sessão5. A primeira parent de #411 confirma que #413 entrou antes dele.
 
 | Ordem | PR | Merge em sf-join-four | Gate concluído |
 |---|---|---|---|
@@ -22,6 +22,9 @@ Os seis merges abaixo foram observados na branch compartilhada durante o trabalh
 | 4 | [#401 — BI cost proofs](https://github.com/gustavomhss/Orchestra-SF/pull/401) | `18a913220a6805bef1c62a58a26a310f991d6a0a` | [44657153397](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657153397), success, 9 pass / 0 fail / 376 expects |
 | 5 | [#402 — source PR guard context](https://github.com/gustavomhss/Orchestra-SF/pull/402) | `08854f14d83ab12d8665b0e3787881edbfaabd53` | [44658251806](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658251806), success, 59 pass / 0 fail / 361 expects |
 | 6 | [#400 — Planner answer scope](https://github.com/gustavomhss/Orchestra-SF/pull/400) | `392cecab68288d4b669828adc5d1aaa738693d80` | [44656420362](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656420362): original test passed, new fixture failed; concrete fixture repair `50ce9319b03ae52ec3871043161c19b17c49a1b3` then [44658520809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658520809) success, 1 pass / 0 fail / 32 expects |
+
+| 7 | [#413 — CI shard/cache rescue](https://github.com/gustavomhss/Orchestra-SF/pull/413) | `72830e53adfcb2059575b249e76c88753beb04e8` | [44658705334](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658705334), success no probe; revisão de integração descrita abaixo |
+| 8 | [#411 — executive signals/native links](https://github.com/gustavomhss/Orchestra-SF/pull/411) | `7c42282e8b910cc0e10381980f040dee72cb2b19` | [44660432596](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660432596), success, 14 pass / 0 fail / 183 expects / 4 arquivos |
 
 The #402 resolver grants nothing without actual current GitHub approval evidence. Its controlled API regression fixtures are not owner approval. No approval label was applied by this session. Final workflow_dispatch remains without a PR label and must retain the two inherited protected-path findings.
 
@@ -56,9 +59,9 @@ Read on the supplied base: HANDOFF-lastmile-wp1..wp5 and the recent finish-ingre
 
 ## Correções e verificações desta sessão
 
-### Package/evidence — COMPLETE, PR #395 ready, aguardando sua ordem
+### Package/evidence — reparo anterior COMPLETE; reconciliação pós-#413 em andamento
 
-[PR #395](https://github.com/gustavomhss/Orchestra-SF/pull/395), branch `sf-continuation-package`, code `98e56b260a2b36030f6edd9711d77b1cebc907be`, current head `9b3de4e82df44274e45e9f2f63ca61ecd46b8ae0` differs only by complete handoff.
+[PR #395](https://github.com/gustavomhss/Orchestra-SF/pull/395) retornou temporariamente a draft em02:33Z pela Sessão5 para qualificar a composição com#413. A prova prévia abaixo continua válida somente no código registrado. Branch `sf-continuation-package`, code `98e56b260a2b36030f6edd9711d77b1cebc907be`, current head `9b3de4e82df44274e45e9f2f63ca61ecd46b8ae0` differs only by complete handoff.
 
 - Real compiled/extracted factory listener, configuration, request Origin and receipt checker use 4120. Original antiforgery, outside-checkout, Web and runtime assertions remain.
 - UI baseline-candidate retention requires actual journey success and successful sanitizer first; PENDING baseline still fails the original receipt. Only minimized report.json is retained, under a distinct candidate artifact name.
@@ -81,7 +84,7 @@ Read on the supplied base: HANDOFF-lastmile-wp1..wp5 and the recent finish-ingre
 - Response repair `sf-reports-response@f1ba888b8dbef32d2169e8529d1d845ec3281c4c`, code `edb8ec2c9aeab49440a1110bd08549fa233ecd93`: capture/validate the same original Response body immediately in the registered response promise, before click completion; no new request or replay.
 - **[PR #407](https://github.com/gustavomhss/Orchestra-SF/pull/407), shared observer**, source code `d93f7f482b9b24cd895b8f6406727f0f8aab0dd7`, head `6c37fd3675d092ebc79758be2da846451a6bc670`. Real registry/router/dependency identities, original human authority, installation/project/principal/policy/access revision and two original C08 namespace observations; preserve also requires original reviews.preserve human action. No preview, producer dispatch or write while observing.
 - Observer gate [44657226869](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657226869), snapshot `c182dd60b9b96cd2a0559dcc7236c3a71c0c0dbd`: **success, 4 pass / 0 fail / 27 expects**. Test136026320826 and cleanup136027044889 success. No Omni spawn proof claimed for a no-spawn focused unit.
-- Next composition `sf-reports-observed` is being prepared against the current Session 1 UI plus merged shared source through `18a913220a6805bef1c62a58a26a310f991d6a0a`, retaining the permitted ingress and concrete observer/response repairs. No new Reports gate yet.
+- Composição publicada: `sf-reports-observed@d5bd89238af3485b3327be3657b744abee7a30e2`, código `4ccf99576e6886b178c5502fc02bfa41bef6730c`, parents reais UI `f34b80103f91cc9c075f9679cb9030e5258a1793` e shared `18a913220a6805bef1c62a58a26a310f991d6a0a`. Preserva19blobs de origem e altera o helper mantendo18waits/232linhas deexpect. Gate [44660375065](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660375065), snapshot `4cdba6118ff547d9ed23cd5cdb284e55e218d675`, está em execução; sem conclusão antecipada.
 
 ### Operations — duas causas tratadas, jornada ainda UNBOUND
 
@@ -103,21 +106,21 @@ Read on the supplied base: HANDOFF-lastmile-wp1..wp5 and the recent finish-ingre
 - First assertion: **`decisions-support/planner-sources.ts:19:24`**, exact selected Planner version count expected1/got0 after real creation/copy returns to the authorized list.
 - Procurement: **`decisions.spec.ts:26`**, 180000ms timeout in genuine requisition bootstrap; no causal inner stack.
 - Discovery: **`decisions-support/journey.ts:124:24`**, obsolete “Create decision” control after the helper already reviewed creation.
-- Bounded test/control recut `sf-decisions-controls` in progress: select actual authorized Planner row by exact producer ID/name, use native confirmation/open controls, apply criteria before review. No gate until the remaining product contracts are bound.
+- Bounded test/control recut `sf-decisions-controls@caed56eb465eefc80fe5ab2ae0b4e4f8f00dc621`, code `bdbd8e0c455064d9c1a22c78d3a2c60f9f689dd2`, PARTIAL and without a new gate: select actual authorized Planner row by exact producer ID/name, use native confirmation/open controls, apply criteria before review. No gate until the remaining product contracts are bound.
 - Deeper native gaps remain: `SfAlternativeAuthoring` requires an existing alternative anchor for a fresh case; native portfolio/scenarios controls are not equivalent to the original demanded decision-portfolio-catalog producer. Do not replace those assertions with a different contract or create the case through a bypass API.
 
 ## O que continua aberto
 
 - #393: missing actual PR-head success checks; source proof is not a transferable check.
 - #396 and #407: isolated ingress/observer PRs awaiting composed Reports qualification as declared above.
-- #395: complete and ready, awaiting its qualified-leftovers order.
+- #395: factory repair previously complete; draft while the concrete #413 fixture-dependency reconciliation is prepared and tested. Preserve its qualified-leftovers order.
 - #403, #405, #406, #409 and #411: other-session shared work; re-read real gate conclusions, source SHAs and handoffs before merge.
 - UI and A/B/C handoffs remain partial at last inventory. C PR#397 and B PR#410 are draft. Do not infer whole-branch qualification from one passing narrow repair.
 - #392 and #237 remain intentionally draft. #408 cache-warmer draft targets a separate default-branch concern, outside this integration.
 
 ## Guards, sf-ci por job e baseline
 
-- Final canonical command: `bun run check:guards --base origin/dev`, through Actions and the existing original guard test. **NOT_RUN on final source.**
+- Final canonical command: `bun run check:guards --base origin/dev`, through Actions against the exact frozen source and real origin/dev. **NOT_RUN on final source.** After#413, guards.test.ts is an ownership contract and no longer executes the command; it cannot be used as evidence that the final command ran.
 - Expected inherited findings: `godfile-waivers.json` and `script/spawn-allowlist.json`; zero errors and two GATE. No --warn, fabricated label, waiver edit or baseline substitution.
 - Workflow420530405 / sf-ci.yml: **NOT_DISPATCHED by this session**. Consequently no final job conclusions or baseline-candidate artifact exist yet.
 - Final job families to record: preflight; static-and-contracts; linux-native-omni; procurement-queue-integration; CI-CLI; CI-APP-SRC; CI-APP-BROWSER; CI-ATLAS-BUSINESS; CI-SF shards1–8; CI-UI-OPERATIONS; CI-UI-DECISIONS; CI-UI-REPORTS; verify.
@@ -143,3 +146,32 @@ Read on the supplied base: HANDOFF-lastmile-wp1..wp5 and the recent finish-ingre
 ## Preservação de regras
 
 No edit to runtime/application.ts; no new/use of listener4110; no push to close-final-candidate, sf-red-clusters, go-live-close or sf-frontend-bundle; no loosened assertion, fabricated coverage/baseline/digest/approval/GO. reviews.export.docx/pptx remain Schema.Never; real bytes remain on original GET ?sf=review-download.
+
+
+## Checkpoint de integração concreta — 02:33Z
+
+### CI rescue #413
+
+The actual parent of merge#411 is#413, not#400. Its diff preserves sf/ci/suites.json and the PENDING baselines, but changes scheduling to LPT using observed historical weights, cache producer/consumer ordering, export artifact logging, and five static wrappers. Eight shards and original file selection remain declared by the source; the final manifest/coverage must still be measured.
+
+A concrete integration incompatibility was found with#395: gate.mjs now imports script/sf-ci/shard-plan.mjs and reads sf/ci/shard-costs.json. The four isolated workflow-tail cases in#395 currently copy only gate.mjs. The reconciliation will copy both real dependencies into the fixture, retaining all previous expected status/body/minimization/receipt assertions. One new focused gate is justified by that code change. The factory implementation remains the previously qualified one; no identical factory gate is requested.
+
+The final guard command must execute directly through Actions, because the former guard wrapper now checks static ownership. No approval label or suppression is supplied.
+
+### Diagnóstico de Operations sem replay
+
+- Composição preparada, ainda semgate3: `sf-ops-current@69340e89c46825b6556d36e8d6a09dce2122c901`, code `25bca572d434bf00322b0fc0ef1e4c834e15888d`; parents UI f34b8010 e shared392cecab. Exact20Ops+17shared+5infra, retaining the newer profile and original idle-timeout repair. The #393 dependency remains test-only.
+- Evidence-only reader `sf-ops-artifact-audit@d988e4c825f94b7158ced8a9c528525ee98ffd95`, snapshot `3ba359484852e926a9532afed8e83a3d65231dc4`.
+- Diagnostic [44661091906](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661091906): failure in the parser, not in a replay of Operations. Exact failure `apps/cli/audit-operations-retained.node-smoke.mjs:165`: EXACTLY_ONE_RETAINED_HTML_REQUIRED, rethrown at206.
+- Metadata and actual download succeeded for original artifact14594546715, run44656358971,2075937bytes. Observed downloaded ZIP SHA256 `623d31906142b886aeb3401aed58bd2b9e5ed809a7709726366e13c17e59a2a1` agrees with the pinned artifact.
+- No minimized step records were emitted, so no causal phase is claimed. Parser selection is being corrected to identify the retained Playwright report by its embedded ZIP or its exact original JSON path, with count-only diagnostics and unchanged secrecy/output bounds. No browser or product is launched by this audit.
+
+### Other-owner qualification at this checkpoint
+
+- #403:44658317657 failure,11pass/1fail; original scenarios test `wp12/native-execution-scenarios-review.test.ts:55:25`, scenario-or-authority-changed.
+- #405:44657814166 failure,9pass/2fail; `wp13/coverage-sensitivity-integration.test.ts:22` timeout and `wp11/fixture-trace.ts:15:15` bootstrap deadline. Stilldraft/unbound.
+- #406: no completed source gate observed; stilldraft.
+- #409: old head05e2 failed44660248357; new concrete fixture headb07ed52 has gate44661234622 inprogress. Do not transfer an old failure or invent new success.
+- UI f34's Reports44659828913 failed before the journey in `native/select-profile.ts:111:23`, expectedready/receivedhost-unavailable, using the owner's old listener4110. This session's composed Reports uses4174 and is separately undergate44660375065.
+- UI has since advanced to9b51a7ab with strict JSON snapshot changes. It is not yet whole-branchqualified; current root compositions remain pinned and do not silently claim that newer code.
+- No whole UI/shard is merged. Final guards/sf-ci/package remain reserved for the final integrated cut.
