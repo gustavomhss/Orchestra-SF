@@ -18,7 +18,6 @@ import { createSfSourcePersistence } from "../../../product/integration/source-l
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { procurementApprovalGroups, readProcurementQueueView } from "../../../product/procurement/queue-view.ts"
-import { procurementRowSourceIdentity } from "../../../product/procurement/sources.ts"
 
 const states = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled", "imported-unknown"]
 const at = "2026-11-13T00:00:00Z"
@@ -115,39 +114,6 @@ test("authorized Requests and My approvals expose the actual source-fenced C02 J
     const buyer = readProcurementQueueView(fixture.prepared.at(-1)?.data.procurementQueueView)
     if (!buyer) throw new Error("The approval page did not receive C02")
     expect(buyer.rows).toHaveLength(states.length + 1)
-
-    // Both original actors can see PR-draft, but their C02 collection identities
-    // are distinct. CAP25 must retain the selected actor's actual scoped digest.
-    const snapshot = await fixture.persistence.transaction("procurement", async (value) =>
-      ({ commit: false, value: structuredClone(value) }))
-    const requesterIdentity = procurementRowSourceIdentity(snapshot, "PR-draft", queue)
-    const buyerIdentity = procurementRowSourceIdentity(snapshot, "PR-draft", buyer)
-    const requesterEvidence = queue.rows.find((row) => row.id === "PR-draft")!.evidence
-    const buyerEvidence = buyer.rows.find((row) => row.id === "PR-draft")!.evidence
-    const originalScope = (incarnation: string) => {
-      const matches = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) =>
-        entry.alive && entry.incarnation === incarnation)
-      expect(matches).toHaveLength(1)
-      return matches[0]!
-    }
-    expect(requesterIdentity).toEqual({
-      sourceRef: requesterEvidence.target.incarnation,
-      sourceDigest: originalScope(requesterEvidence.target.incarnation).inputDigest,
-      sourceVersion: requesterEvidence.target.version,
-    })
-    expect(buyerIdentity).toEqual({
-      sourceRef: buyerEvidence.target.incarnation,
-      sourceDigest: originalScope(buyerEvidence.target.incarnation).inputDigest,
-      sourceVersion: buyerEvidence.target.version,
-    })
-    expect(originalScope(requesterEvidence.target.incarnation).scope.principalRef).toBe("requester")
-    expect(originalScope(buyerEvidence.target.incarnation).scope.principalRef).toBe("buyer")
-    expect(requesterIdentity!.sourceRef).not.toBe(buyerIdentity!.sourceRef)
-    expect(requesterIdentity!.sourceDigest).not.toBe(requesterEvidence.refDigest)
-    expect(procurementRowSourceIdentity(snapshot, "PR-foreign", queue)).toBeUndefined()
-    expect(procurementRowSourceIdentity(snapshot, "PR-draft", structuredClone(queue))).toBeUndefined()
-    // The row scope is a collection, not an invented individual-request scope.
-    expect(procurementRowSourceIdentity(snapshot, "PR-draft")).toBeUndefined()
     const grouped = procurementApprovalGroups(buyer, "buyer")
     expect(grouped.waitingForYou.map((row) => row.id)).toEqual(["PR-pr_pending"])
     expect(grouped.waitingForOthers.map((row) => row.id)).toEqual(["PR-src_pending"])

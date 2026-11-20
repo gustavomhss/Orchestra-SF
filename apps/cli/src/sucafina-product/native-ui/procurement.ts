@@ -218,11 +218,11 @@ function approvalGroups(
     unassigned: groups.unassigned.map((row) => selectRequest(row, true, actor, formSettings)),
   }
 }
-function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number, queue: ProcurementQueueView | undefined) {
+function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot, formSettings: unknown, version: number) {
   const baseCurrency = text(object(formSettings).currency)
   const facts = procurementMonetaryFacts(row, baseCurrency, formSettings)
   const order = procurementOrderPresentation(row, baseCurrency, formSettings)
-  const identity = typeof row.number === "string" ? procurementRowSourceIdentity(snapshot, row.number, queue) : undefined
+  const identity = typeof row.number === "string" ? procurementRowSourceIdentity(snapshot, row.number) : undefined
   return {
     monetaryState: facts.monetaryState,
     sourceRef: identity?.sourceRef ?? null,
@@ -262,7 +262,7 @@ function pageData(
     data: {
       requests: requests.map((row) => ({
         ...selectRequest(row, true, actor, data.formSettings),
-        ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0, queue),
+        ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0),
       })),
       suppliers: suppliers.map((row) => selectSupplier(row, false)),
       directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,
