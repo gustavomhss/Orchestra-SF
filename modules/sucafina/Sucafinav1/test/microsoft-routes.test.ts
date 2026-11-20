@@ -149,11 +149,12 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
   expect(JSON.stringify(created)).not.toContain("synthetic-access-")
   expect(JSON.stringify(created)).not.toContain("synthetic-refresh-")
 
-  for (const [cookie, visibleId, visibleTitle, hiddenId, hiddenTitle] of [
+  // These six reads observe the same committed snapshot; each actor remains independently authenticated.
+  await Promise.all(([
     [first, firstId, firstTitle, secondId, secondTitle],
     [second, secondId, secondTitle, firstId, firstTitle],
-  ] as const) {
-    for (const suffix of ["/api/ui/pages/CAP25", "/procurement?download=register"]) {
+  ] as const).map(async ([cookie, visibleId, visibleTitle, hiddenId, hiddenTitle]) => {
+    await Promise.all(["/api/ui/pages/CAP25", "/procurement?download=register"].map(async (suffix) => {
       const response = await f.request(suffix, cookie)
       expect(response.status).toBe(200)
       const body = await response.text()
@@ -161,11 +162,11 @@ test("actual Procurement HTTP ownership uses resource-tenant oid despite matchin
       expect(body).toContain(visibleId)
       expect(body).not.toContain(hiddenTitle)
       expect(body).not.toContain(hiddenId)
-    }
+    }))
     const deepLink = await f.request(`/api/ui/pages/CAP25?request=${encodeURIComponent(hiddenId)}`, cookie)
     expect(deepLink.status).toBe(200)
     expect(await deepLink.text()).not.toContain(hiddenTitle)
-  }
+  }))
 
   const before = await f.snapshot("procurement")
   const denied = await f.post(first, "save", { pr: { title: "ATTACKER-REPLACEMENT" } }, secondId, 1)

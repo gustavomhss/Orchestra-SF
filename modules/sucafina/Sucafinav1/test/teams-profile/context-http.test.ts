@@ -1,5 +1,6 @@
 import { afterEach, expect, test } from "bun:test"
 import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { oid, tenant } from "../microsoft-login/oidc-fixture.ts"
 import { profileA, profileB } from "./installation-fixture.ts"
@@ -28,7 +29,7 @@ test("Teams context: signed session and current product authority project full o
   const f = await fixture()
   const request = f.contextRequest("team")
   const value = await context(await f.handler.handle(request))
-  expect(value.profile.principal.principalObjectId).toBe(oid)
+  expect(value.profile.principal.principalObjectId).toBe(Schema.decodeUnknownSync(TeamProfile.PrincipalObjectId)(oid))
   expect(value.profile.teams.status).toBe("ready")
   expect(value.stamp.team?.owner.profile).toEqual(profileA)
   expect(value.stamp.team?.owner.principal).toEqual(value.profile.principal)

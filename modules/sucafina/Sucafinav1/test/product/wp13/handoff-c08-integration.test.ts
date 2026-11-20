@@ -6,7 +6,7 @@ import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
-import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+import { requireApplicationAttempts } from "../application-attempt-fixture.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
@@ -233,7 +233,7 @@ for (const failurePoint of ["before-dispatch", "after-reservation"] as const) te
     expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
     expect(domain.procurementCalls).toBe(0)
     expect(await amounts()).toEqual([40, 50])
-    const reserved = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, secondAttemptRequest))
+    const reserved = await state.read(admittedRequest, "cases", (productState, authority) => requireApplicationAttempts(productState, secondAttemptRequest, authority))
     expect(reserved.status).toBe("ok")
     if (reserved.status !== "ok") throw new Error("application reservation unavailable")
     expect(reserved.value).toHaveLength(failurePoint === "after-reservation" ? 1 : 0)
@@ -243,9 +243,9 @@ for (const failurePoint of ["before-dispatch", "after-reservation"] as const) te
     if (failurePoint === "after-reservation") {
       // Once dispatch was reserved, a recovered provider and no receipt do not
       // authorize another application. Preserve the real indeterminate tail.
-      const readBlocked = () => state.read(admittedRequest, "cases", (productState) => ({
+      const readBlocked = () => state.read(admittedRequest, "cases", (productState, authority) => ({
         decision: productState.cases[decision.id],
-        attempts: applicationAttempts(productState, secondAttemptRequest),
+        attempts: requireApplicationAttempts(productState, secondAttemptRequest, authority),
         receipts: Object.values(productState.receipts),
       }))
       const beforeBlocked = await readBlocked()
