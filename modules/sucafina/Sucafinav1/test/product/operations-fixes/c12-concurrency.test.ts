@@ -111,6 +111,7 @@ test("I-OPS-02 preserves unrelated concurrent edits through receipt-first UI ret
     expect(bound.proof.commandDigest).toBe(receiptReviewBinding(change, proof))
     expect(consumer.current().receiptCommits).toHaveLength(1)
     expect(await apply.and(page.locator(":enabled")).count()).toBe(0)
+    expect(await review.and(page.locator(":enabled")).count()).toBe(0)
 
     const retried = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "decision-apply")
     await retry.click()
