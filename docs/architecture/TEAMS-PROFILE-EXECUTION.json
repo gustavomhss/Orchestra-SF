@@ -11,8 +11,8 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
-    "latestIntegratedSource": "bb02bd52d654699db2db0bb33ec1dd42c1f0716a",
+    "preCheckpointHead": "265d3811d6c44ed3f62908d3b455122fbbf65b88",
+    "latestIntegratedSource": "265d3811d6c44ed3f62908d3b455122fbbf65b88",
     "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
@@ -7957,20 +7957,20 @@
     {
       "id": "WP2",
       "owner": "teams-shell-web",
-      "scope": "Per-window Team selection, full-owner private state, native Solid Web composition and independent admin",
-      "status": "NATIVE_UI_AND_ADMIN_DIRECTED_PASSED_ISOLATED_G02_RED"
+      "scope": "Native Solid Web Team selection and administration, full-owner per-window session workspace, canonical Client/SSE namespace validation and shared TeamConfig CAS are integrated. Complete native G02 journey and performance regression remain open.",
+      "status": "NATIVE_UI_INTEGRATED_DIRECTED_TESTS_PASSED_G02_RED_PERFORMANCE_OPEN"
     },
     {
       "id": "WP3",
       "owner": "teams-session-owner/teams-session-runtime",
-      "scope": "Durable SessionOwner, private request/worker admission, canonical namespace, mounted HTTP/SDK and technical operator refusal; TeamConfig and remaining effect/capability consumers unfinished.",
-      "status": "HOST_OWNER_GRAPH_VAULT_INTEGRATED_NATIVE_BOOT_REGRESSION_PENDING"
+      "scope": "Durable SessionOwner, private original-request admission, canonical namespace, mounted HTTP/SDK, TeamConfig and personal vault are integrated. Eager corporate Inbox discovery and graph-construction boot regressions are corrected in directed tests; positive private provider/MCP and remaining consumers are unfinished.",
+      "status": "HOST_OWNER_GRAPH_VAULT_INTEGRATED_BOOT_FIXED_PROVIDER_PENDING"
     },
     {
       "id": "WP4-GENERATION",
       "owner": "teams-generation-fence",
-      "scope": "Private generation control, SQL fence, canonical census and opaque migration administration are integrated. Current roleMap/access and coupled C08 frontier survive business restore; Core journal/cut, global drain and operational restore remain unfinished.",
-      "status": "HOST_BARRIER_INTEGRATED_CORE_CUT_ISOLATED_UNQUALIFIED"
+      "scope": "Private generation control, SQL fences, host drain, Core Session census/checkpoint/backfill/cut and interrupted-cut recovery have directed evidence. Scope remains core-sessions with installationComplete:false; other persisted categories and installed recovery/G10 remain unqualified.",
+      "status": "CORE_SESSION_CUT_DIRECTED_PASSED_INTEGRATED_INSTALLATION_INCOMPLETE"
     }
   ],
   "gates": [
@@ -8018,8 +8018,8 @@
   "qualification": {
     "qualified": false,
     "liveTenant": "NOT_OBSERVED",
-    "native": "NOT_RUN",
-    "migration": "NOT_RUN",
+    "native": "COMPONENTS_OBSERVED_FULL_NATIVE_JOURNEY_RED_FINAL_NOT_RUN",
+    "migration": "CORE_SESSION_DIRECTED_FIXTURES_PASSED_INSTALLATION_NOT_QUALIFIED",
     "restore": "NOT_RUN",
     "release": "NOT_REQUESTED_OR_PERFORMED"
   },
@@ -20299,6 +20299,4634 @@
         "status": "SUCCESS"
       },
       "qualification": "32 fail-to-pass and one pass-to-fail compared with the preceding same 40-source matrix. Gate remains RED; component fixtures and remaining producer corrections are isolated work."
+    },
+    {
+      "id": "TEAMS_NATIVE_OWNERS",
+      "source": "efed8a3e128152f3bf7067104f4c4130bd829523",
+      "snapshot": "6a493fa7c67d84994650ae62ecf6330c7f9cc8fb",
+      "runId": 44690717123,
+      "jobId": 136135570219,
+      "status": "FAILURE",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/context/team-profile-selection.test.ts",
+          "./src/utils/team-profile-storage.test.ts",
+          "./src/orchestra/chapters/sucafina/navigation-state/owner.test.ts",
+          "./test-browser/sucafina-native/context.test.ts",
+          "./test-browser/sucafina-native/decisions-pages-route.test.ts",
+          "./test-browser/sucafina-native/draft-quarantine.test.ts",
+          "./test-browser/sucafina-native/extended-routes.test.ts",
+          "./test-browser/sucafina-native/files-route.test.ts",
+          "./test-browser/sucafina-native/fixture/selection.test.ts",
+          "./test-browser/sucafina-native/home-pages-route.test.ts",
+          "./test-browser/sucafina-native/host-binding231.test.ts",
+          "./test-browser/sucafina-native/memory-route.test.ts",
+          "./test-browser/sucafina-native/operations-route.test.ts",
+          "./test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "./test-browser/sucafina-native/owner-ready.test.ts",
+          "./test-browser/sucafina-native/people-route.test.ts",
+          "./test-browser/sucafina-native/planner-pages-route.test.ts",
+          "./test-browser/sucafina-native/portfolio-route.test.ts",
+          "./test-browser/sucafina-native/reviews-route.test.ts",
+          "./test-browser/sucafina-native/fixture/journeys.test.ts",
+          "./test-browser/sucafina-native/routines-route.test.ts",
+          "./test-browser/sucafina-native/shell-guard237.test.ts",
+          "./test-browser/sucafina-native/work-route.test.ts",
+          "./test/sucafina-native/bi-route.test.ts",
+          "./test/sucafina-native/dashboard-route.test.ts",
+          "./test/sucafina-native/native-chapter-entry.test.ts",
+          "./test/sucafina-native/navigation-consent-recheck.test.ts",
+          "./test/sucafina-native/owner-exit.test.ts",
+          "./test/sucafina-native/planner-route.test.ts",
+          "./test/sucafina-native/procurement-route.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 137,
+        "fail": 1,
+        "skip": 0,
+        "files": 30,
+        "tests": 138,
+        "expects": 1131
+      },
+      "executionReports": [
+        {
+          "pass": 64,
+          "fail": 1,
+          "skip": 0,
+          "expects": 532,
+          "tests": 65,
+          "files": 10
+        },
+        {
+          "pass": 73,
+          "fail": 0,
+          "skip": 0,
+          "expects": 599,
+          "tests": 73,
+          "files": 20
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136135955630,
+        "status": "SUCCESS"
+      },
+      "qualification": "Original owner-selector slice failed one of65 unit cases while73 HappyDOM cases passed. The fixture did not cover the actual extended decision route family; later138/0 evidence already exists in this ledger.",
+      "observedFailure": [
+        "error: expect(received).toBeDefined()",
+        "Received: undefined",
+        "(fail) versioned Teams native owner selectors > all fifteen native route families accept only a complete versioned owner alongside their source query [2.46ms]",
+        "(fail) versioned Teams native owner selectors > all fifteen native route families accept only a complete versioned owner alongside their source query [2.46ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_UI",
+      "source": "046d70475f8a67b9372c70cc359721eafb28d385",
+      "snapshot": "bbf86a77f2ab241bf00d9873d9f9f962d6bd3300",
+      "runId": 44694721200,
+      "jobId": 136148607162,
+      "status": "FAILURE",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/context/team-profile-selection.test.ts",
+          "./src/utils/team-profile-storage.test.ts",
+          "./src/orchestra/chapters/sucafina/navigation-state/owner.test.ts",
+          "./test-browser/sucafina-native/context.test.ts",
+          "./test-browser/sucafina-native/decisions-pages-route.test.ts",
+          "./test-browser/sucafina-native/draft-quarantine.test.ts",
+          "./test-browser/sucafina-native/extended-routes.test.ts",
+          "./test-browser/sucafina-native/files-route.test.ts",
+          "./test-browser/sucafina-native/fixture/selection.test.ts",
+          "./test-browser/sucafina-native/home-pages-route.test.ts",
+          "./test-browser/sucafina-native/host-binding231.test.ts",
+          "./test-browser/sucafina-native/memory-route.test.ts",
+          "./test-browser/sucafina-native/operations-route.test.ts",
+          "./test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "./test-browser/sucafina-native/owner-ready.test.ts",
+          "./test-browser/sucafina-native/people-route.test.ts",
+          "./test-browser/sucafina-native/planner-pages-route.test.ts",
+          "./test-browser/sucafina-native/portfolio-route.test.ts",
+          "./test-browser/sucafina-native/reviews-route.test.ts",
+          "./test-browser/sucafina-native/fixture/journeys.test.ts",
+          "./test-browser/sucafina-native/routines-route.test.ts",
+          "./test-browser/sucafina-native/shell-guard237.test.ts",
+          "./test-browser/sucafina-native/work-route.test.ts",
+          "./test/sucafina-native/bi-route.test.ts",
+          "./test/sucafina-native/dashboard-route.test.ts",
+          "./test/sucafina-native/native-chapter-entry.test.ts",
+          "./test/sucafina-native/navigation-consent-recheck.test.ts",
+          "./test/sucafina-native/owner-exit.test.ts",
+          "./test/sucafina-native/planner-route.test.ts",
+          "./test/sucafina-native/procurement-route.test.ts",
+          "./test/sucafina-native/team-web-bootstrap.test.ts",
+          "./test-browser/sucafina-native/team-web-runtime.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 153,
+        "fail": 1,
+        "skip": 0,
+        "files": 32,
+        "tests": 154,
+        "expects": 1257
+      },
+      "executionReports": [
+        {
+          "pass": 71,
+          "fail": 0,
+          "skip": 0,
+          "expects": 597,
+          "tests": 71,
+          "files": 11
+        },
+        {
+          "pass": 82,
+          "fail": 1,
+          "skip": 0,
+          "expects": 660,
+          "tests": 83,
+          "files": 21
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136149002378,
+        "status": "SUCCESS"
+      },
+      "qualification": "71 unit cases passed; HappyDOM reported82 pass/1 fail because a discarded route returned aborted while the fixture expected denied. The failure is preserved, followed by154/0 on the corrected source.",
+      "observedFailure": [
+        "error: expect(received).toBe(expected)",
+        "Expected: \"denied\"",
+        "Received: \"aborted\"",
+        "(fail) changed source authority after discard consent prevents landing and purges the old draft [5.23ms]",
+        "(fail) changed source authority after discard consent prevents landing and purges the old draft [5.23ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_AUTH",
+      "source": "046d70475f8a67b9372c70cc359721eafb28d385",
+      "snapshot": "de41369f9bc1930e122ac56057e0fd7393fbb123",
+      "runId": 44694725686,
+      "jobId": 136148621085,
+      "status": "SUCCESS",
+      "request": {
+        "package": "client",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina/team-context.test.ts",
+          "./test/sucafina/team-auth.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 11,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 11,
+        "expects": 47
+      },
+      "executionReports": [
+        {
+          "pass": 11,
+          "fail": 0,
+          "skip": 0,
+          "expects": 47,
+          "tests": 11,
+          "files": 2
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136149122066,
+        "status": "SUCCESS"
+      },
+      "qualification": "Native logout/auth transport contract tests passed; no Team/grant/Basic fallback added."
+    },
+    {
+      "id": "TEAMS_NATIVE_RETURN",
+      "source": "046d70475f8a67b9372c70cc359721eafb28d385",
+      "snapshot": "294e8e812e17d22defe2be084a1cc31b7e6604ee",
+      "runId": 44694728811,
+      "jobId": 136148631301,
+      "status": "SUCCESS",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/microsoft-session.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 47,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 47,
+        "expects": 393
+      },
+      "executionReports": [
+        {
+          "pass": 47,
+          "fail": 0,
+          "skip": 0,
+          "expects": 393,
+          "tests": 47,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136149259462,
+        "status": "SUCCESS"
+      },
+      "qualification": "Real Microsoft session safe-return regression including native root route passed; no retired HTML entry or broadened return whitelist."
+    },
+    {
+      "id": "TEAMS_NATIVE_UI2",
+      "source": "bd119a044b4fa6c7277d0488e8d027120a19a7c9",
+      "snapshot": "d469185be4749cc5c8e1c885d222bf66a3c5b306",
+      "runId": 44696321506,
+      "jobId": 136153811804,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/context/team-profile-selection.test.ts",
+          "./src/utils/team-profile-storage.test.ts",
+          "./src/orchestra/chapters/sucafina/navigation-state/owner.test.ts",
+          "./test-browser/sucafina-native/context.test.ts",
+          "./test-browser/sucafina-native/decisions-pages-route.test.ts",
+          "./test-browser/sucafina-native/draft-quarantine.test.ts",
+          "./test-browser/sucafina-native/extended-routes.test.ts",
+          "./test-browser/sucafina-native/files-route.test.ts",
+          "./test-browser/sucafina-native/fixture/selection.test.ts",
+          "./test-browser/sucafina-native/home-pages-route.test.ts",
+          "./test-browser/sucafina-native/host-binding231.test.ts",
+          "./test-browser/sucafina-native/memory-route.test.ts",
+          "./test-browser/sucafina-native/operations-route.test.ts",
+          "./test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "./test-browser/sucafina-native/owner-ready.test.ts",
+          "./test-browser/sucafina-native/people-route.test.ts",
+          "./test-browser/sucafina-native/planner-pages-route.test.ts",
+          "./test-browser/sucafina-native/portfolio-route.test.ts",
+          "./test-browser/sucafina-native/reviews-route.test.ts",
+          "./test-browser/sucafina-native/fixture/journeys.test.ts",
+          "./test-browser/sucafina-native/routines-route.test.ts",
+          "./test-browser/sucafina-native/shell-guard237.test.ts",
+          "./test-browser/sucafina-native/work-route.test.ts",
+          "./test/sucafina-native/bi-route.test.ts",
+          "./test/sucafina-native/dashboard-route.test.ts",
+          "./test/sucafina-native/native-chapter-entry.test.ts",
+          "./test/sucafina-native/navigation-consent-recheck.test.ts",
+          "./test/sucafina-native/owner-exit.test.ts",
+          "./test/sucafina-native/planner-route.test.ts",
+          "./test/sucafina-native/procurement-route.test.ts",
+          "./test/sucafina-native/team-web-bootstrap.test.ts",
+          "./test-browser/sucafina-native/team-web-runtime.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 154,
+        "fail": 0,
+        "skip": 0,
+        "files": 32,
+        "tests": 154,
+        "expects": 1261
+      },
+      "executionReports": [
+        {
+          "pass": 71,
+          "fail": 0,
+          "skip": 0,
+          "expects": 597,
+          "tests": 71,
+          "files": 11
+        },
+        {
+          "pass": 83,
+          "fail": 0,
+          "skip": 0,
+          "expects": 664,
+          "tests": 83,
+          "files": 21
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136154224032,
+        "status": "SUCCESS"
+      },
+      "qualification": "71 Bun unit plus83 HappyDOM tests passed; no Chromium claim. Includes the corrected source-authority abort/discard behavior."
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER",
+      "source": "bd119a044b4fa6c7277d0488e8d027120a19a7c9",
+      "snapshot": "8428bb0496bb36d2bb6c606de5531145aaa7c5b7",
+      "runId": 44696324538,
+      "jobId": 136153821970,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 0
+      },
+      "executionReports": [
+        {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136154357973,
+        "status": "SUCCESS"
+      },
+      "qualification": "Pre-execution fixture import failed on a non-exported Protocol group path. No native user journey executed; later import uses the actual canonical API.",
+      "observedFailure": [
+        "error: Cannot find module '@orchestra/protocol/groups/sucafina' from '/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/teams-profile/native-web-fixture.ts'"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER2",
+      "source": "a9ac04bf4cada119e9147630ba2492f2077c82c3",
+      "snapshot": "12acec3f6cd57793b4d46486ba2d47fbb5f9e33c",
+      "runId": 44696960632,
+      "jobId": 136155984848,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 0
+      },
+      "executionReports": [
+        {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136156321718,
+        "status": "SUCCESS"
+      },
+      "qualification": "Pre-execution fixture import failed on non-exported authorization middleware path. No native user journey executed; later import uses the canonical package source.",
+      "observedFailure": [
+        "error: Cannot find module '@orchestra/protocol/middleware/authorization' from '/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/teams-profile/native-web-fixture.ts'"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER3",
+      "source": "4c584026ee91d5afbf14cba1774cc14e423fe27e",
+      "snapshot": "6b0b35559464c478ffb643af2fd883edb3314c49",
+      "runId": 44697239906,
+      "jobId": 136156833292,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 7
+      },
+      "executionReports": [
+        {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "expects": 7,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136157607752,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "error: expect(received).toBe(expected)",
+        "Expected: true",
+        "Received: false",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [49682.51ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER4",
+      "source": "df5d29529f2e50d32d79ed34d4da39f31ce9d047",
+      "snapshot": "f2efea84b20d5b6c31591e8b8f9ddfedc85c3697",
+      "runId": 44697847954,
+      "jobId": 136158804260,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 6
+      },
+      "executionReports": [
+        {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "expects": 6,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136159615874,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "TimeoutError: forFunction: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [56022.54ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER5",
+      "source": "5909c220b2521bbf847e2639845daa1fce7359c2",
+      "snapshot": "52b1af61ca028c8060f08b9ea035978b80f54ca8",
+      "runId": 44698466343,
+      "jobId": 136160808061,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 15
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 15,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136161573294,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "TimeoutError: forFunction: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [52321.91ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER6",
+      "source": "d5551b83d6e22a100be9b8a270fd259b00635627",
+      "snapshot": "2625660c8ee73d92909269e2defb11b75b68d74e",
+      "runId": 44698884533,
+      "jobId": 136162179245,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 16
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 16,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136163032438,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "TimeoutError: forFunction: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [52830.99ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER7",
+      "source": "9acd7e18d57311c7ab79995ca85d6d249c8a3c17",
+      "snapshot": "06ecd0aca71cd4361fbe07a24e9fc32345fce3ad",
+      "runId": 44700102401,
+      "jobId": 136166113934,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 33
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 33,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136166919659,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "TimeoutError: forFunction: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [52471.69ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER8",
+      "source": "4952a14794298436e84fcf9f8ed857d9a9fc5b49",
+      "snapshot": "315d2bd1bb29c8a7f01875121ec9e7e03e23b192",
+      "runId": 44700689182,
+      "jobId": 136168050177,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 28
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 28,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136168835070,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "error: Node browser driver exited 1: SF_WP02_BROWSER_BRIDGE_FAILURE {\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":95,\"framesFromBrowser\":254,\"peakQueuedBytes\":3567,\"peakBufferedBytes\":7163587,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432},\"lifecycle\":{\"bridgeClosed\":false,\"listenerClosed\":false,\"socketClosed\":false,\"pipeEnded\":false,\"webSocketOpened\":true,\"webSocketClosed\":false,\"webSocketCloseCode\":0,\"webSocketCloseWasClean\":false,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":false,\"directoryRemoved\":false}}",
+        "Error: read ECONNRESET",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [39511.95ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER9",
+      "source": "bb5a9a57e243c4a2b4395d52846d89444e58ba97",
+      "snapshot": "dee342873e31102fa4f137c9eebb6dc441a74beb",
+      "runId": 44701184185,
+      "jobId": 136169686351,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 33
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 33,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136170717752,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "TimeoutError: forFunction: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [56670.03ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "selection-and-history",
+          "name": "TimeoutError",
+          "message": "forFunction: Timeout 7000ms exceeded."
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER10",
+      "source": "12621543ec3fdf8c59c0a005975b2f2a5ea42c8e",
+      "snapshot": "41fb167b6f127533f1a95d7fc74e5b8152382d41",
+      "runId": 44701805573,
+      "jobId": 136171726635,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 12
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 12,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136172694127,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "error: Browser driver launch exceeded 14666 ms",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [49187.34ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "build",
+          "name": "Error",
+          "message": "Browser driver launch exceeded 14666 ms"
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER11",
+      "source": "b20a5bbdc5e74ce05e71a0274b5c2ab46da7fa98",
+      "snapshot": "22df817f00864bd87025e1e3aed2e407376a4cfc",
+      "runId": 44702255326,
+      "jobId": 136173201815,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 28
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 28,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136174179940,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "error: goto: Navigation to \"https://mvp.example.test/\" is interrupted by another navigation to \"chrome-error://chromewebdata/\"",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [53139.72ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "microsoft-login",
+          "name": "Error",
+          "message": "goto: Navigation to \"https://mvp.example.test/\" is interrupted by another navigation to \"chrome-error://chromewebdata/\""
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER12",
+      "source": "e48918dd3b9bc687515be4e0415ea7c908944d0d",
+      "snapshot": "485d449c3447cb09a64f7c5259a3bb07e644b74a",
+      "runId": 44703025992,
+      "jobId": 136175753442,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 12
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 12,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136176710890,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "error: Browser driver launch exceeded 14674 ms",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [48037.19ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "build",
+          "name": "Error",
+          "message": "Browser driver launch exceeded 14674 ms"
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER13",
+      "source": "9fedb965245a8ce19a4155731c769b151f162fe6",
+      "snapshot": "c5090156bc71129491b26b72164ac7adea9cf230",
+      "runId": 44703610364,
+      "jobId": 136177655459,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 33
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 33,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136178513265,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "TimeoutError: forFunction: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [56334.45ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "selection-and-history",
+          "name": "TimeoutError",
+          "message": "forFunction: Timeout 7000ms exceeded."
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_BROWSER14",
+      "source": "b0bee48d07d496d971325dbcba76158262c0ff11",
+      "snapshot": "7abd04a9b62104df3469e97dc07bd2ec20fede7e",
+      "runId": 44704048417,
+      "jobId": 136179111650,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 6
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 6,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136179734424,
+        "status": "SUCCESS"
+      },
+      "qualification": "Incomplete compiled native Web journey; exact observed failure is retained below. No complete G02 or installed G08 qualification.",
+      "observedFailure": [
+        "error: Browser driver launch exceeded 14666 ms",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [17040.48ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "browser-start",
+          "name": "Error",
+          "message": "Browser driver launch exceeded 14666 ms"
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_NETWORK01",
+      "source": "658f8c9a217bc05719e3605766a8f84edf552925",
+      "snapshot": "2b27dc5338adf740fb988f5853259ddc0c165708",
+      "runId": 44706924749,
+      "jobId": 136188760877,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web-network.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 0
+      },
+      "executionReports": [
+        {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136189127159,
+        "status": "SUCCESS"
+      },
+      "qualification": "First network fixture failed with invalid fetch URL before the native browser journey. Transport was corrected to real bounded CONNECT/TLS, preserving exact-host allowlist.",
+      "observedFailure": [
+        "TypeError: fetch() URL is invalid",
+        "(fail) native Web TLS proxy admits only exact fixture hosts and streams the original request [13.02ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_NETWORK02",
+      "source": "d8ccf144e8b4e2c5c1e214efa1eca6489d890d0b",
+      "snapshot": "9f494ba9234b801486a8de7b94cd9d2a6d3cb781",
+      "runId": 44707285844,
+      "jobId": 136189947348,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web-network.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 13
+      },
+      "executionReports": [
+        {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "expects": 13,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136190386885,
+        "status": "SUCCESS"
+      },
+      "qualification": "Real TLS network assertions ran, but cleanup reported an unobserved tunnel close. Later implementation awaits actual acquired socket close events; no false successful cleanup.",
+      "observedFailure": [
+        "error: Native TLS proxy cleanup was incomplete",
+        "(fail) native Web TLS proxy admits only exact fixture hosts and streams the original request [30.55ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_NETWORK03",
+      "source": "398cf7b246deb5945b51c1cd29836f73effb13d6",
+      "snapshot": "2ee39b71181ff72bbae9f2f9b96f76cdfae38f84",
+      "runId": 44707715130,
+      "jobId": 136191393787,
+      "status": "SUCCESS",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web-network.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 13
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "expects": 13,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136191812574,
+        "status": "SUCCESS"
+      },
+      "qualification": "Real loopback TLS CONNECT allowlist, incremental response and observed closure passed. Test certificate is explicit; this is a network fixture control, not a complete Web or installed journey."
+    },
+    {
+      "id": "TEAMS_NATIVE_WEB15",
+      "source": "398cf7b246deb5945b51c1cd29836f73effb13d6",
+      "snapshot": "d40c661005c0250e2a3d7485a9d045479ea9179a",
+      "runId": 44708088087,
+      "jobId": 136192608455,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 28
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 28,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136193749674,
+        "status": "SUCCESS"
+      },
+      "qualification": "Real TLS/native journey exposed reading the URL before the history transition completed: expected original Team, observed previous Team. A later test waits for the exact completed user-visible transition; assertions and deadlines remain.",
+      "observedFailure": [
+        "error: expect(received).toBe(expected)",
+        "Expected: \"77777777-7777-4777-8777-777777777777\"",
+        "Received: \"88888888-8888-4888-8888-888888888888\"",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [56662.57ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "selection-and-history",
+          "name": "Error",
+          "message": "expect(received).toBe(expected)"
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_WEB16",
+      "source": "17d74522d2c18dcfd40296f17029814b7da2ca92",
+      "snapshot": "1f528273f8b73296b183c3ff3d9e56c4aaacbf08",
+      "runId": 44709934791,
+      "jobId": 136198783402,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 6
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 6,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136199612171,
+        "status": "SUCCESS"
+      },
+      "qualification": "Cold Chromium launch exceeded its remaining budget inside the original absolute15s deadline. Browser.getVersion sent once without a response; no application HTTP. Cleanup observed Node/Chrome absent at2026ms; not normal bridge proof.",
+      "observedFailure": [
+        "error: Browser driver launch exceeded 14671 ms",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [17038.36ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "browser-start",
+          "name": "Error",
+          "message": "Browser driver launch exceeded 14671 ms"
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_WORKSPACE_APP1",
+      "source": "9b821ce5c3a8323a464ee83a1658347437b3687d",
+      "snapshot": "8511ad7b38e6b8bfa82c990a46ffec1b56ab0e4a",
+      "runId": 44714785830,
+      "jobId": 136215288032,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/context/team-session-live.test.ts",
+          "./src/context/team-profile-selection.test.ts",
+          "./src/utils/team-profile-storage.test.ts",
+          "./src/orchestra/chapters/sucafina/navigation-state/owner.test.ts",
+          "./test-browser/sucafina-native/team-sessions.test.ts",
+          "./test-browser/sucafina-native/team-web-runtime.test.ts",
+          "./test-browser/sucafina-native/owner-ready.test.ts",
+          "./test-browser/sucafina-native/owner-mount-integration.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 64,
+        "fail": 0,
+        "skip": 0,
+        "files": 8,
+        "tests": 64,
+        "expects": 527
+      },
+      "executionReports": [
+        {
+          "pass": 37,
+          "fail": 0,
+          "skip": 0,
+          "expects": 286,
+          "tests": 37,
+          "files": 4
+        },
+        {
+          "pass": 27,
+          "fail": 0,
+          "skip": 0,
+          "expects": 241,
+          "tests": 27,
+          "files": 4
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136215965221,
+        "status": "SUCCESS"
+      },
+      "qualification": "37 Bun unit plus27 HappyDOM cases, not Chromium. Native Team workspace state and existing Team boundaries passed on this source."
+    },
+    {
+      "id": "TEAMS_WORKSPACE_CLIENT1",
+      "source": "9b821ce5c3a8323a464ee83a1658347437b3687d",
+      "snapshot": "975dd0e90998b1f4f3a9b2080c946c2a6795931a",
+      "runId": 44714801156,
+      "jobId": 136215342967,
+      "status": "SUCCESS",
+      "request": {
+        "package": "client",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina/team-sessions.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 12,
+        "expects": 91
+      },
+      "executionReports": [
+        {
+          "pass": 12,
+          "fail": 0,
+          "skip": 0,
+          "expects": 91,
+          "tests": 12,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136215974332,
+        "status": "SUCCESS"
+      },
+      "qualification": "Twelve strict Session-client contract cases passed before the real-wire null mismatch was exposed; this directed unit result did not qualify the installed wire."
+    },
+    {
+      "id": "TEAMS_NATIVE_WORKSPACE1",
+      "source": "67a19fe8bb24b0f25eb75419d6d67913e971937b",
+      "snapshot": "294e811718f2c7910fc501e0fb4b993075ec2e6f",
+      "runId": 44715806009,
+      "jobId": 136218802221,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 37
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 37,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136219874749,
+        "status": "SUCCESS"
+      },
+      "qualification": "Compiled native Web reached the Session empty-list boundary, where the domain decoder rejected canonical optional JSON null. Journey failed at7s; canonical JSON-codec correction followed, with all namespace negatives retained.",
+      "observedFailure": [
+        "TimeoutError: for: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [73712.57ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "native-session-creation",
+          "name": "TimeoutError",
+          "message": "for: Timeout 7000ms exceeded."
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_CLIENT1",
+      "source": "e997bdf755f432c5c4e4a1032435f5433d170bc7",
+      "snapshot": "181bbbb4fee2f0824fdb151b6b607721988b9679",
+      "runId": 44717013786,
+      "jobId": 136222897980,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-session-client.test.ts",
+          "./Sucafinav1/test/teams-profile/native-web-network.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 2,
+        "tests": 2,
+        "expects": 18
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 18,
+          "tests": 2,
+          "files": 2
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136223691561,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual installed Client reproduced SF_TEAM_SESSION_PROTOCOL on the first canonical JSON response; network control passed. Subsequent correction uses Schema.toCodecJson rather than weakening domain or namespace validation.",
+      "observedFailure": [
+        "SfTeamSessionError: SF_TEAM_SESSION_PROTOCOL",
+        "(fail) official Teams Client consumes the installed HTTP namespace and durable prompt contract [1274.39ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_CLIENT2",
+      "source": "f19f05e5468ccceb4bd4d8a702c8dfd6d77cd133",
+      "snapshot": "603546324109d6a68e1fab1b67e8bdc41e834912",
+      "runId": 44717373651,
+      "jobId": 136224133907,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-session-client.test.ts",
+          "./Sucafinav1/test/teams-profile/native-web-network.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 2,
+        "tests": 2,
+        "expects": 24
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 24,
+          "tests": 2,
+          "files": 2
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136224651156,
+        "status": "SUCCESS"
+      },
+      "qualification": "Canonical JSON decoding correction passed the network control, but actual installed Client case reached its original10000ms deadline. No timeout increase or weakening.",
+      "observedFailure": [
+        "(fail) official Teams Client consumes the installed HTTP namespace and durable prompt contract [10005.54ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_WORKSPACE_CLIENT2",
+      "source": "f19f05e5468ccceb4bd4d8a702c8dfd6d77cd133",
+      "snapshot": "f2182add9b5ba3a9a03bf43fa51837c65a0d800b",
+      "runId": 44717390436,
+      "jobId": 136224170585,
+      "status": "SUCCESS",
+      "request": {
+        "package": "client",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina/team-sessions.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 13,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 13,
+        "expects": 98
+      },
+      "executionReports": [
+        {
+          "pass": 13,
+          "fail": 0,
+          "skip": 0,
+          "expects": 98,
+          "tests": 13,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136224546058,
+        "status": "SUCCESS"
+      },
+      "qualification": "Thirteen Session-client contract cases retain the negatives and decode actual wire values through canonical JSON codecs."
+    },
+    {
+      "id": "TEAMS_NATIVE_CLIENT_PHASES",
+      "source": "9fe550f2a43ade3cfb941c97236b072b97b948f7",
+      "snapshot": "6e700ee2417706d77b259c5afa9312492b6cbdbe",
+      "runId": 44718358264,
+      "jobId": 136227508412,
+      "status": "SUCCESS",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-session-client.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 1,
+        "expects": 20
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "expects": 20,
+          "tests": 1,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136228104183,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual OIDC/Core/SQLite/generated Client through mounted HTTP, recording-only execution. list→create→get→prompt→list passed at9894.94ms within the original10000ms case deadline; prior timeout is retained and narrow margin is not stability proof."
+    },
+    {
+      "id": "TEAMS_NATIVE_WORKSPACE2",
+      "source": "be6484a6c83e3eefaad9d1c2545b5c7d4e5e45e3",
+      "snapshot": "0fda5717b84c3ef2584300767b2c257581d315ec",
+      "runId": 44718969010,
+      "jobId": 136229485364,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 38
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 38,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136230546476,
+        "status": "SUCCESS"
+      },
+      "qualification": "Compiled native Web reached actual create and an open SSE; first prompt was still pending at7s. This source predates the separately diagnosed and corrected corporate Inbox boot probe. Do not infer that this timeout itself proved that root cause.",
+      "observedFailure": [
+        "TimeoutError: for: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [71669.06ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "native-session-creation",
+          "name": "TimeoutError",
+          "message": "for: Timeout 7000ms exceeded."
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_NATIVE_WORKSPACE3",
+      "source": "e275c25f114d8f18920c954be572516bd1d5fbb0",
+      "snapshot": "622eaf211f4629649c2bccb87ae9c57aa70311c4",
+      "runId": 44719765541,
+      "jobId": 136232255673,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 6
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 6,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136232911236,
+        "status": "SUCCESS"
+      },
+      "qualification": "Cold Chromium startup failure before instrumented application HTTP. No conclusion about prompt latency can be drawn from this run; original15s startup deadline and cleanup remain.",
+      "observedFailure": [
+        "error: Browser driver launch exceeded 14657 ms",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [17034.44ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "browser-start",
+          "name": "Error",
+          "message": "Browser driver launch exceeded 14657 ms"
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_CONFIG_APP",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "snapshot": "80c42eb8a4f47381aa391a40bcccc5e29fc6222a",
+      "runId": 44720291866,
+      "jobId": 136234029904,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/context/team-session-live.test.ts",
+          "./src/context/team-profile-selection.test.ts",
+          "./src/utils/team-profile-storage.test.ts",
+          "./src/orchestra/chapters/sucafina/navigation-state/owner.test.ts",
+          "./test-browser/sucafina-native/team-sessions.test.ts",
+          "./test-browser/sucafina-native/team-web-runtime.test.ts",
+          "./test-browser/sucafina-native/owner-ready.test.ts",
+          "./test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "./test-browser/sucafina-native/team-configuration.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 73,
+        "fail": 0,
+        "skip": 0,
+        "files": 9,
+        "tests": 73,
+        "expects": 628
+      },
+      "executionReports": [
+        {
+          "pass": 37,
+          "fail": 0,
+          "skip": 0,
+          "expects": 286,
+          "tests": 37,
+          "files": 4
+        },
+        {
+          "pass": 36,
+          "fail": 0,
+          "skip": 0,
+          "expects": 342,
+          "tests": 36,
+          "files": 5
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136234655930,
+        "status": "SUCCESS"
+      },
+      "qualification": "37 Bun unit plus36 HappyDOM cases, not Chromium. Covers shared TeamConfig native form/CAS and native session lifecycle with full-owner state fences."
+    },
+    {
+      "id": "TEAMS_CONFIG_CLIENT",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "snapshot": "6ff51dcb6ca3d8490ba9d73a2d747767995f2364",
+      "runId": 44720305051,
+      "jobId": 136234079379,
+      "status": "SUCCESS",
+      "request": {
+        "package": "client",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina/team-sessions.test.ts",
+          "./test/sucafina/team-configuration.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 18,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 18,
+        "expects": 128
+      },
+      "executionReports": [
+        {
+          "pass": 18,
+          "fail": 0,
+          "skip": 0,
+          "expects": 128,
+          "tests": 18,
+          "files": 2
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136234744985,
+        "status": "SUCCESS"
+      },
+      "qualification": "Canonical shared-configuration and Session client contracts; request/response negatives retained. No browser, external provider or installed G08 claim."
+    },
+    {
+      "id": "TEAMS_CONFIG_JOURNAL",
+      "source": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
+      "snapshot": "673bfd3458c83d3c512ca5ce410a951ce4daa345",
+      "runId": 44722950069,
+      "jobId": 136243178984,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/context/team-session-live.test.ts",
+          "./src/context/team-profile-selection.test.ts",
+          "./src/utils/team-profile-storage.test.ts",
+          "./src/orchestra/chapters/sucafina/navigation-state/owner.test.ts",
+          "./test-browser/sucafina-native/team-sessions.test.ts",
+          "./test-browser/sucafina-native/team-web-runtime.test.ts",
+          "./test-browser/sucafina-native/owner-ready.test.ts",
+          "./test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "./test-browser/sucafina-native/team-configuration.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 76,
+        "fail": 0,
+        "skip": 0,
+        "files": 9,
+        "tests": 76,
+        "expects": 680
+      },
+      "executionReports": [
+        {
+          "pass": 37,
+          "fail": 0,
+          "skip": 0,
+          "expects": 286,
+          "tests": 37,
+          "files": 4
+        },
+        {
+          "pass": 39,
+          "fail": 0,
+          "skip": 0,
+          "expects": 394,
+          "tests": 39,
+          "files": 5
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136243849991,
+        "status": "SUCCESS"
+      },
+      "qualification": "37 Bun unit plus39 HappyDOM cases, not Chromium. Shared configuration uncertainty retains only full-owner/window/revision/command/document hashes; no draft/config/secret persistence. Re-admission and current GET establish observed state, never authorship or success of an uncertain POST."
+    },
+    {
+      "id": "TEAMS_NATIVE_WORKSPACE4",
+      "source": "452e5bbfac3488cfc739ccff2fffe8a24d6604cf",
+      "snapshot": "615b120423ce4acc2b827a3ffb760b304772bfd2",
+      "runId": 44725633820,
+      "jobId": 136252201405,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 6
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 6,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136253342542,
+        "status": "SUCCESS"
+      },
+      "qualification": "Cold Chromium startup failed before any application HTTP after the qualified corporate boot fix. Global15s startup deadline preserved; owned Node/Chrome pids observed absent in2018ms. Cleanup is not normal bridge or user-journey proof.",
+      "observedFailure": [
+        "error: Browser driver launch exceeded 14681 ms",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [17026.99ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "browser-start",
+          "name": "Error",
+          "message": "Browser driver launch exceeded 14681 ms"
+        }
+      ],
+      "startup": {
+        "source": "452e5bbfac3488cfc739ccff2fffe8a24d6604cf",
+        "snapshot": "615b120423ce4acc2b827a3ffb760b304772bfd2",
+        "run": 44725633820,
+        "job": 136252201405,
+        "passed": 1,
+        "failed": 1,
+        "assertions": 6,
+        "phase": "browser-start",
+        "deadlineMs": 15000,
+        "launchRemainingMs": 14681,
+        "httpObserved": false,
+        "normalBridgeProof": false,
+        "cleanup": {
+          "elapsedMs": 2018,
+          "allKnownPids": "observed-absent"
+        },
+        "diagnosis": "Chrome D/folio_wait_bit_common for first ten observed seconds then S/futex; one Browser.getVersion sent and no protocol response. No application HTTP or boot observation in this run."
+      }
+    },
+    {
+      "id": "TEAMS_ACTIVE_REPRO",
+      "source": "793142107335b8c0db79ede9e77dc3c5d693a8e1",
+      "snapshot": "0d8769df151876148adf49a17a0a88d663dea3f9",
+      "runId": 44725841005,
+      "jobId": 136252902735,
+      "status": "FAILURE",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/utils/server.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 4,
+        "fail": 4,
+        "skip": 0,
+        "files": 1,
+        "tests": 8,
+        "expects": 9
+      },
+      "executionReports": [
+        {
+          "pass": 4,
+          "fail": 4,
+          "skip": 0,
+          "expects": 9,
+          "tests": 8,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136253532516,
+        "status": "SUCCESS"
+      },
+      "qualification": "Reproduction before the production correction: four unchanged auth cases pass and all four added Active-envelope cases fail. Used a global fetch spy; later replaced with real loopback HTTP under AGENTS. No timing attribution.",
+      "observedFailure": [
+        "(fail) technical active-session adapter > returns only the running IDs through the real generated Client [0.27ms]",
+        "error: ",
+        "(fail) technical active-session adapter > refuses a corporate namespace in the technical adapter [0.19ms]",
+        "error: ",
+        "(fail) technical active-session adapter > refuses malformed data or additional authority fields instead of seeding them [0.31ms]"
+      ]
+    },
+    {
+      "id": "TEAMS_ACTIVE_FIX",
+      "source": "708729b32c9f7a3d871bcfe4755db9c0d4ff3c00",
+      "snapshot": "18892b7bef07531de6c35d810bf93656c85f423a",
+      "runId": 44726210964,
+      "jobId": 136254170042,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/utils/server.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 8,
+        "expects": 24
+      },
+      "executionReports": [
+        {
+          "pass": 8,
+          "fail": 0,
+          "skip": 0,
+          "expects": 24,
+          "tests": 8,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136254958071,
+        "status": "SUCCESS"
+      },
+      "qualification": "Intermediate contract proof with a global fetch spy; superseded for qualification by44727277080 using real loopback HTTP. Keep this observation, do not present it as the final transport proof."
+    },
+    {
+      "id": "TEAMS_NATIVE_STARTUP_OBSERVATION",
+      "source": "02893ed14a53c014874b989b587db831c5a6d9fe",
+      "snapshot": "5ad97cb0efcaf03e2dd144c345e769007087b257",
+      "runId": 44726765097,
+      "jobId": 136256041038,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/native-web.browser.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 38
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 38,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136257445076,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual compiled native Web/Chrome with signed OIDC, original HTTPS Requests and shared Core/SQLite. Cold startup completed inside15s; create200 and SSE200 were observed, then prompt and GET/message remained pending at the unchanged7s action deadline. This is G02 component evidence, not a completed journey or G08.",
+      "observedFailure": [
+        "TimeoutError: for: Timeout 7000ms exceeded.",
+        "(fail) native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team [73735.35ms]"
+      ],
+      "primaryFailure": [
+        {
+          "phase": "native-session-creation",
+          "name": "TimeoutError",
+          "message": "for: Timeout 7000ms exceeded."
+        }
+      ],
+      "startup": {
+        "globalElapsedMs": 11050,
+        "driverElapsedMs": 10459,
+        "deadlineMs": 15000,
+        "sampleCount": 12,
+        "elapsedLaunchMs": 10459,
+        "maxSampleMs": 0.959,
+        "first": {
+          "state": "observed",
+          "stat": {
+            "minflt": "1705",
+            "majflt": "63",
+            "utimeTicks": "0",
+            "stimeTicks": "0",
+            "starttimeTicks": "14500"
+          },
+          "io": {
+            "rchar": "73924",
+            "read_bytes": "17264640",
+            "syscr": "92"
+          },
+          "threadCount": 1,
+          "tasks": [
+            {
+              "tid": 3309,
+              "name": "chrome",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "observationMs": 0.287
+        },
+        "last": {
+          "state": "observed",
+          "stat": {
+            "minflt": "17866",
+            "majflt": "1302",
+            "utimeTicks": "7",
+            "stimeTicks": "13",
+            "starttimeTicks": "14500"
+          },
+          "io": {
+            "rchar": "37642366",
+            "read_bytes": "174157824",
+            "syscr": "598"
+          },
+          "threadCount": 29,
+          "observationMs": 0.23
+        },
+        "readBytesDifference": 156893184,
+        "majorFaultDifference": 1239,
+        "systemIoPressureDelta": {
+          "some": 6795663,
+          "full": 6724342
+        },
+        "interpretation": "Observed Chrome I/O/page faults during cold launch; exact responsible file/thread not established. System pressure is system-wide. No warmup, retries, flag or timeout changes."
+      },
+      "httpPhases": [
+        {
+          "fixture": "business",
+          "path": "/sucafina/api/session",
+          "method": "GET",
+          "startedMs": 64082,
+          "elapsedMs": 296,
+          "status": 200
+        },
+        {
+          "fixture": "business",
+          "path": "/sucafina/api/event",
+          "method": "GET",
+          "startedMs": 64403,
+          "elapsedMs": 168,
+          "status": 200
+        },
+        {
+          "fixture": "business",
+          "path": "/sucafina/api/session",
+          "method": "POST",
+          "startedMs": 66341,
+          "elapsedMs": 1929,
+          "status": 200
+        },
+        {
+          "fixture": "business",
+          "path": "/sucafina/api/session",
+          "method": "GET",
+          "startedMs": 68031,
+          "elapsedMs": 610,
+          "status": 200
+        },
+        {
+          "fixture": "business",
+          "path": "/sucafina/api/session/:sessionId/prompt",
+          "method": "POST",
+          "startedMs": 68293,
+          "pendingMs": 5079
+        },
+        {
+          "fixture": "business",
+          "path": "/sucafina/api/session/:sessionId/message",
+          "method": "GET",
+          "startedMs": 68656,
+          "pendingMs": 4716
+        }
+      ],
+      "deadlines": {
+        "driverMs": 15000,
+        "actionMs": 7000,
+        "testMs": 180000
+      },
+      "orderAnalysis": {
+        "observed": "Created-list request starts before create response; prompt starts after create; message GET starts just after the list completes.",
+        "inference": "The serialized Created-event handler can await refreshRecent and then see the newly installed thread, issuing readMessages. Specific event.type was not instrumented in this run.",
+        "decision": "Preserve GET/message and7s; await qualified Server SSE/current-observation change before combined replay."
+      }
+    },
+    {
+      "id": "TEAMS_ACTIVE_HTTP",
+      "source": "0ce81f7d42fe155f59a2410026e31606930f8e7c",
+      "snapshot": "6a561593b20ddea198ff6472f0a6889013e34124",
+      "runId": 44727277080,
+      "jobId": 136257770840,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "./src/utils/server.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 8,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 8,
+        "expects": 24
+      },
+      "executionReports": [
+        {
+          "pass": 8,
+          "fail": 0,
+          "skip": 0,
+          "expects": 24,
+          "tests": 8,
+          "files": 1
+        }
+      ],
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "processVersionProbe": "Ordered setup observations; no separate process.version probe inferred."
+      },
+      "cleanup": {
+        "jobId": 136258539928,
+        "status": "SUCCESS"
+      },
+      "qualification": "Final Active-adapter regression uses real Bun.serve loopback HTTP, the generated Client and native fetch, with awaited shutdown; no global patch. Four original auth cases and four envelope/namespace negatives pass. The production decoder rejects corporate namespace in the technical App."
+    },
+    {
+      "id": "NATIVE_UI_INITIAL_STATIC",
+      "source": "046d70475f8a67b9372c70cc359721eafb28d385",
+      "snapshot": "046d70475f8a67b9372c70cc359721eafb28d385",
+      "runId": 44694829888,
+      "jobId": 136148963119,
+      "status": "FAILURE",
+      "qualification": "Actual static run exposes owner brand/union narrowing issues and inherited dependency errors. Schema decoding and contextual types corrected later; this source remains RED.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0,
+          "complete": true
+        }
+      ],
+      "sourceValid": true,
+      "inventoryValid": true,
+      "executionValid": true
+    },
+    {
+      "id": "NATIVE_UI_NARROWING_STATIC",
+      "source": "a9ac04bf4cada119e9147630ba2492f2077c82c3",
+      "snapshot": "a9ac04bf4cada119e9147630ba2492f2077c82c3",
+      "runId": 44697283892,
+      "jobId": 136156965617,
+      "status": "FAILURE",
+      "qualification": "Actual static run preserves one remaining own impossible capability-disabled comparison plus inherited dependency/protected-path errors. Subsequent narrowing fix is not retroactively credited to this source.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0,
+          "complete": true
+        }
+      ],
+      "sourceValid": true,
+      "inventoryValid": true,
+      "executionValid": true
+    },
+    {
+      "id": "NATIVE_WORKSPACE_INITIAL_STATIC",
+      "source": "9b821ce5c3a8323a464ee83a1658347437b3687d",
+      "snapshot": "9b821ce5c3a8323a464ee83a1658347437b3687d",
+      "runId": 44714806451,
+      "jobId": 136215348499,
+      "status": "FAILURE",
+      "qualification": "Actual static commands expose the Client fetch type requiring Bun-only preconnect, an impossible event branch and inherited dependency errors. Generator source and consumers corrected through canonical types; this source remains RED.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 1,
+          "complete": true
+        }
+      ],
+      "sourceValid": true,
+      "inventoryValid": true,
+      "executionValid": true
+    },
+    {
+      "id": "PORTABLE_CLIENT_FETCH_OFFICIAL_GENERATION",
+      "source": "e684464c129639537e18efce7156e75d627e7cfd",
+      "snapshot": "a74f58bd258f713a0aec69292e2c55e0f5fa72a3",
+      "runId": 44716387866,
+      "jobId": 136220886644,
+      "status": "SUCCESS",
+      "qualification": "Official bun run generate emits the single changed generated Client blob. Imported bytes preserve the reported Git blobSHA; no fabricated preconnect or manual generated modification.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.3"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "generation": {
+        "sourceSha": "e684464c129639537e18efce7156e75d627e7cfd",
+        "sourceTree": "a9391308d6e28c9f25e35a9938b272aeefedb6b8",
+        "snapshotSha": "a74f58bd258f713a0aec69292e2c55e0f5fa72a3",
+        "snapshotTree": "f948db87f8fa4a1b1114b054d17088dccba88b48",
+        "command": "bun run generate",
+        "directory": "packages/client",
+        "commandExit": 0,
+        "runId": "44716387866",
+        "files": [
+          {
+            "path": "packages/client/src/generated/client.ts",
+            "deleted": false,
+            "gitBlobSha": "4fa6d4a25d7d4cab798e147edc3cea8e6fb236e7",
+            "byteLength": 170259,
+            "encoding": "base64"
+          }
+        ]
+      },
+      "exactImportSource": "569db8758dfa97d38c4d171bb4a37a76cfb5619e"
+    },
+    {
+      "id": "NATIVE_JSON_CODEC_STATIC",
+      "source": "f19f05e5468ccceb4bd4d8a702c8dfd6d77cd133",
+      "snapshot": "f19f05e5468ccceb4bd4d8a702c8dfd6d77cd133",
+      "runId": 44717437073,
+      "jobId": 136224308267,
+      "status": "FAILURE",
+      "qualification": "Static detects a branded namespace comparison in native-session-client fixture, plus inherited protected paths. Later canonical schema/narrowing fix preserves the runtime assertion; no casts or synthetic authority added.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 2,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0,
+          "complete": true
+        }
+      ],
+      "sourceValid": true,
+      "inventoryValid": true,
+      "executionValid": true
+    },
+    {
+      "id": "PORTABLE_CLIENT_FETCH_GENERATOR_TESTS",
+      "source": "f19f05e5468ccceb4bd4d8a702c8dfd6d77cd133",
+      "snapshot": "c2eacb8adc4ec9be7e4bed5b2ad0811281325644",
+      "runId": 44717516693,
+      "jobId": 136224593461,
+      "status": "SUCCESS",
+      "qualification": "Official generator/imported canonical schema regression passes66 cases; no generated client edits by hand.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "httpapi-codegen",
+        "runner": "bun",
+        "args": [
+          "./test/generate.test.ts",
+          "./test/imported-refinement.test.ts"
+        ]
+      },
+      "bunReported": {
+        "pass": 66,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 66,
+        "expects": 139
+      },
+      "executionReports": [
+        {
+          "pass": 66,
+          "fail": 0,
+          "skip": 0,
+          "expects": 139,
+          "tests": 66,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136225025396,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "NATIVE_CONFIGURATION_STATIC",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "snapshot": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "runId": 44720308128,
+      "jobId": 136234051326,
+      "status": "FAILURE",
+      "qualification": "All15 non-guard-dev commands pass, including every generator/typecheck/E2E/Web command. Aggregate FAILURE for inherited protected paths; before the later be15 uncertainty-journal change, so not current-source qualification.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0,
+          "complete": true
+        }
+      ],
+      "sourceValid": true,
+      "inventoryValid": true,
+      "executionValid": true
+    },
+    {
+      "id": "CORPORATE_BOOT_FIRST_SF",
+      "source": "c95328168a4c9379670ce20a56f2df548429751f",
+      "snapshot": "7ea2fb3acd67e5a23a697a71d65e0dda9439421e",
+      "runId": 44720824780,
+      "jobId": 136235782575,
+      "status": "FAILURE",
+      "qualification": "Prompt still returned500 (CredentialVault.Denied), not a timeout. First Catalog/plugin-only attempt did not remove the actual eager caller.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/teams-profile/native-web-session.test.ts",
+          "./Sucafinav1/test/teams-profile/configuration-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 6,
+        "fail": 1,
+        "skip": 0,
+        "files": 2,
+        "tests": 7,
+        "expects": 74
+      },
+      "executionReports": [
+        {
+          "pass": 6,
+          "fail": 1,
+          "skip": 0,
+          "expects": 74,
+          "tests": 7,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136236352777,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_FIRST_CORE",
+      "source": "c95328168a4c9379670ce20a56f2df548429751f",
+      "snapshot": "25c8a7c73b5f849f1848ba2f85926959eaa27ad6",
+      "runId": 44720831567,
+      "jobId": 136235805849,
+      "status": "FAILURE",
+      "qualification": "First correction introduced a third Catalog regression. Negative evidence retained; the attempted source is not qualified.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/catalog.test.ts",
+          "./test/models.test.ts",
+          "./test/plugin-boot.test.ts",
+          "./test/plugin.test.ts",
+          "./test/team-provider-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 31,
+        "fail": 3,
+        "skip": 0,
+        "files": 5,
+        "tests": 34,
+        "expects": 95
+      },
+      "executionReports": [
+        {
+          "pass": 31,
+          "fail": 3,
+          "skip": 0,
+          "expects": 95,
+          "tests": 34,
+          "files": 5
+        }
+      ],
+      "cleanup": {
+        "jobId": 136236199470,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_TECHNICAL_BASELINE",
+      "source": "f628694d7134210687bd1949c98b9c3b285bb2c2",
+      "snapshot": "bc88bbb3211c9c0515291e3acb91d100dc938bbc",
+      "runId": 44721384282,
+      "jobId": 136237714530,
+      "status": "FAILURE",
+      "qualification": "Actual prior graph baseline exposes two Catalog failures caused by nested graph/layer reuse; comparison separates preexisting failures from the first attempted correction.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/catalog.test.ts",
+          "./test/models.test.ts",
+          "./test/plugin-boot.test.ts",
+          "./test/plugin.test.ts",
+          "./test/team-provider-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 32,
+        "fail": 2,
+        "skip": 0,
+        "files": 5,
+        "tests": 34,
+        "expects": 100
+      },
+      "executionReports": [
+        {
+          "pass": 32,
+          "fail": 2,
+          "skip": 0,
+          "expects": 100,
+          "tests": 34,
+          "files": 5
+        }
+      ],
+      "cleanup": {
+        "jobId": 136238314731,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_CONTEXT_CORE",
+      "source": "ff0100dbfb6d6229d1b0cfd89b53632398c86dc6",
+      "snapshot": "eb0d24f92c88eee4b87657d327dcbffe9016ee1b",
+      "runId": 44721885665,
+      "jobId": 136239433558,
+      "status": "SUCCESS",
+      "qualification": "Catalog and Integration construct their private Effect interface in the actual node context, avoiding a nested Layer.build memo from another graph; all34 technical cases pass.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/catalog.test.ts",
+          "./test/models.test.ts",
+          "./test/plugin-boot.test.ts",
+          "./test/plugin.test.ts",
+          "./test/team-provider-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 34,
+        "fail": 0,
+        "skip": 0,
+        "files": 5,
+        "tests": 34,
+        "expects": 103
+      },
+      "executionReports": [
+        {
+          "pass": 34,
+          "fail": 0,
+          "skip": 0,
+          "expects": 103,
+          "tests": 34,
+          "files": 5
+        }
+      ],
+      "cleanup": {
+        "jobId": 136239850794,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_CONTEXT_SF",
+      "source": "ff0100dbfb6d6229d1b0cfd89b53632398c86dc6",
+      "snapshot": "11e8bcd4848c7b535a7d21e62fa0d19f78cbfe54",
+      "runId": 44721890347,
+      "jobId": 136239448665,
+      "status": "FAILURE",
+      "qualification": "Despite technical graph repair, native recording-only prompt still500. Preserve this failure; no fixture grants were added.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/teams-profile/native-web-session.test.ts",
+          "./Sucafinav1/test/teams-profile/configuration-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 6,
+        "fail": 1,
+        "skip": 0,
+        "files": 2,
+        "tests": 7,
+        "expects": 74
+      },
+      "executionReports": [
+        {
+          "pass": 6,
+          "fail": 1,
+          "skip": 0,
+          "expects": 74,
+          "tests": 7,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136240085187,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_STACK_DIAGNOSTIC",
+      "source": "c81ea2fc02acb992353467b56edc46b15b1e170f",
+      "snapshot": "8823ca1d0dc6b95e794315467fc70fc995af712e",
+      "runId": 44722225129,
+      "jobId": 136240590009,
+      "status": "FAILURE",
+      "qualification": "Diagnostic source only, not integrated. Actual stack identifies inbox/install.ts:117 calling Credential.all during Location boot without an Inbox operation. This located the consumer; no authorization guard changed.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/teams-profile/native-web-session.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 2,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 3,
+        "expects": 41
+      },
+      "executionReports": [
+        {
+          "pass": 2,
+          "fail": 1,
+          "skip": 0,
+          "expects": 41,
+          "tests": 3,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136241211743,
+        "status": "SUCCESS"
+      },
+      "integrated": false
+    },
+    {
+      "id": "CORPORATE_BOOT_SF_FINAL",
+      "source": "67326c41417b0f6277597c7fc38bfe574305c334",
+      "snapshot": "56669b5d583d747cfdb7310364e6c887c960e4de",
+      "runId": 44723059269,
+      "jobId": 136243439657,
+      "status": "SUCCESS",
+      "qualification": "Actual signed OIDC, shared graph, SQLite and mounted Session HTTP now return200 for create+recorded prompt+list (6.814s); incremental SSE remains15.47s. Recording-only, not a model/provider or complete browser proof.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/teams-profile/native-web-session.test.ts",
+          "./Sucafinav1/test/teams-profile/configuration-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 7,
+        "expects": 85
+      },
+      "executionReports": [
+        {
+          "pass": 7,
+          "fail": 0,
+          "skip": 0,
+          "expects": 85,
+          "tests": 7,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136244174700,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_INBOX_FIRST_CORE",
+      "source": "67326c41417b0f6277597c7fc38bfe574305c334",
+      "snapshot": "fbe15c8667183ec0830e96d0b6f21da7a1fda420",
+      "runId": 44723063168,
+      "jobId": 136243452119,
+      "status": "FAILURE",
+      "qualification": "66 cases pass; a new test module fails because its location helper omitted the required reference. Runtime evidence is not a complete green gate; later fixture correction uses the real helper.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/catalog.test.ts",
+          "./test/models.test.ts",
+          "./test/plugin-boot.test.ts",
+          "./test/plugin.test.ts",
+          "./test/team-provider-boundary.test.ts",
+          "./test/team-inbox-boundary.test.ts",
+          "./test/inbox/service.test.ts",
+          "./test/inbox/unmounted-list.test.ts",
+          "./test/inbox/work-service.test.ts",
+          "./test/inbox/slack-auth.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 66,
+        "fail": 1,
+        "skip": 0,
+        "files": 10,
+        "tests": 67,
+        "expects": 235
+      },
+      "executionReports": [
+        {
+          "pass": 66,
+          "fail": 1,
+          "skip": 0,
+          "expects": 235,
+          "tests": 67,
+          "files": 10
+        }
+      ],
+      "cleanup": {
+        "jobId": 136243995303,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_INBOX_INSPECTION_FIRST",
+      "source": "a08978540994a68ef0ef02bc63262b1c752f65f2",
+      "snapshot": "47a25fc7b3e7697be24cc4662aaf4c8dc64fbbdc",
+      "runId": 44723542537,
+      "jobId": 136245116198,
+      "status": "FAILURE",
+      "qualification": "The runtime guard correctly refuses a malformed corporate marker; the new test tried to inspect via that guarded adapter. Later inspection uses an independent SQLite readonly connection, preserving zero effects and all assertions.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/team-inbox-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 1,
+        "fail": 1,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 17
+      },
+      "executionReports": [
+        {
+          "pass": 1,
+          "fail": 1,
+          "skip": 0,
+          "expects": 17,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136245475833,
+        "status": "SUCCESS"
+      },
+      "observedFailure": [
+        "error: Failed query: SELECT * FROM inbox_row",
+        "(fail) team-inbox-02: an already constructed technical Inbox refuses a subsequently marked corporate database [63.10ms]",
+        "error: Cause([Fail(effect/sql/SqlError: Failed to execute statement (cause: effect/sql/SqlError/UnknownError: Failed to execute statement (cause: SQLiteError: no such column: generation)))])"
+      ]
+    },
+    {
+      "id": "G04_COMPONENT_CURRENT_ADMISSION",
+      "source": "ab742c30fb48e762f63fc36d3b5333f6d95b7af4",
+      "snapshot": "3ca608169d0001a37576b392ab5a1c76d65d9e94",
+      "runId": 44723828258,
+      "jobId": 136246116423,
+      "status": "SUCCESS",
+      "qualification": "Real component admission/receipt boundaries pass three cases. Does not replace the mandatory40-source matrix or installed navigation.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/component-admission.test.ts",
+          "--timeout",
+          "15000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 3,
+        "expects": 28
+      },
+      "executionReports": [
+        {
+          "pass": 3,
+          "fail": 0,
+          "skip": 0,
+          "expects": 28,
+          "tests": 3,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136246614612,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "G04_CAUSAL_COMPONENT_MATRIX",
+      "source": "ab742c30fb48e762f63fc36d3b5333f6d95b7af4",
+      "snapshot": "0966af5d10981266a30afc5d49c0c8dbf72576dc",
+      "runId": 44723832160,
+      "jobId": 136246130328,
+      "status": "FAILURE",
+      "qualification": "Full40-source matrix executes/finalizes all206 bodies;198 return and8 throw, with final gate refusal giving Bun9fail.48leases/releases and no forced finalization. G04 stays RED.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 198,
+        "fail": 9,
+        "skip": 0,
+        "files": 1,
+        "tests": 207,
+        "expects": 3194
+      },
+      "executionReports": [
+        {
+          "pass": 198,
+          "fail": 9,
+          "skip": 0,
+          "expects": 3194,
+          "tests": 207,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136252786079,
+        "status": "SUCCESS"
+      },
+      "bodyEvidence": {
+        "sources": 40,
+        "declared": 206,
+        "started": 206,
+        "finished": 206,
+        "returned": 198,
+        "threw": 8,
+        "forcedFinalization": false
+      },
+      "browserLeases": {
+        "acquired": 48,
+        "released": 48
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_INBOX_INSPECTION_FIXED",
+      "source": "d7b83abc8e3f7c84ad1152543c9bcf9c9f43639f",
+      "snapshot": "28035def11608cdd9779f3d73b0ac7f082b0422b",
+      "runId": 44724597317,
+      "jobId": 136248698919,
+      "status": "SUCCESS",
+      "qualification": "Both new real OIDC/Owner/SQLite Inbox boundaries pass. Corporate boot does not initialize global adoption/sync/accounts, and an already constructed technical handle refuses a marked store; historical bytes remain unchanged.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/team-inbox-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 2,
+        "expects": 19
+      },
+      "executionReports": [
+        {
+          "pass": 2,
+          "fail": 0,
+          "skip": 0,
+          "expects": 19,
+          "tests": 2,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136249142716,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_CORE_FINAL",
+      "source": "3d212cb7ef1443ce5dd39d7cf81a9b55e6f7163c",
+      "snapshot": "3fdfac5c003a2aa02c0f427895931548bfb6535b",
+      "runId": 44724909866,
+      "jobId": 136249745127,
+      "status": "SUCCESS",
+      "qualification": "All68 Core regression cases pass on3d212. Catalog/Integration contexts and corporate Inbox boot are corrected without grants, environment fallback, empty-success conversion or weakened guards.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/catalog.test.ts",
+          "./test/models.test.ts",
+          "./test/plugin-boot.test.ts",
+          "./test/plugin.test.ts",
+          "./test/team-provider-boundary.test.ts",
+          "./test/team-inbox-boundary.test.ts",
+          "./test/inbox/service.test.ts",
+          "./test/inbox/unmounted-list.test.ts",
+          "./test/inbox/work-service.test.ts",
+          "./test/inbox/slack-auth.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 68,
+        "fail": 0,
+        "skip": 0,
+        "files": 10,
+        "tests": 68,
+        "expects": 254
+      },
+      "executionReports": [
+        {
+          "pass": 68,
+          "fail": 0,
+          "skip": 0,
+          "expects": 254,
+          "tests": 68,
+          "files": 10
+        }
+      ],
+      "cleanup": {
+        "jobId": 136250253307,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORPORATE_BOOT_STATIC_FINAL",
+      "source": "1dcac9dc247d046d9e5dd71cb26eb94a76321d8a",
+      "snapshot": "1dcac9dc247d046d9e5dd71cb26eb94a76321d8a",
+      "runId": 44724924590,
+      "jobId": 136249793406,
+      "status": "FAILURE",
+      "qualification": "All15 non-guard-dev commands pass; aggregate remains FAILURE because guard-dev refuses two inherited protected paths. Source/inventory/execution identity all true. No approval supplied.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.3"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0,
+          "complete": true
+        }
+      ],
+      "sourceValid": true,
+      "inventoryValid": true,
+      "executionValid": true,
+      "equivalentProductSource": "3d212cb7ef1443ce5dd39d7cf81a9b55e6f7163c"
+    },
+    {
+      "id": "CORE_CUT_EFFECT_OBSERVER_AND_HOST",
+      "source": "42ebfe46e66cd53b11070dec1a60a540eaec9af9",
+      "snapshot": "87e5fed2e440bd8a3bff702c6dfd3ea43f6fa380",
+      "runId": 44725029044,
+      "jobId": 136250145408,
+      "status": "SUCCESS",
+      "qualification": "Actual Effect fiber observer mutation was the drain hang: removing one observer during notification skipped a later waiter. Corrected notification preserves every waiter. The real same-graph HostMaintenance barrier still waits for finalizers, native process and schedule daemon; it was not weakened.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/effect-fiber-observers.test.ts",
+          "./test/host-maintenance.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 5,
+        "expects": 38
+      },
+      "executionReports": [
+        {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "expects": 38,
+          "tests": 5,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136251006184,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "CORE_SESSION_CUT_DIRECTED",
+      "source": "42ebfe46e66cd53b11070dec1a60a540eaec9af9",
+      "snapshot": "a658b4d728b1818d629a8f984617185bf5faebe1",
+      "runId": 44725031927,
+      "jobId": 136250155371,
+      "status": "SUCCESS",
+      "qualification": "Disposable actual Core Session migration passes dry-run, full-owner mapping/quarantine, current admin/grant, producer drain, physical checkpoint, additive backfill, SQL rollback, crash-after-COMMIT recovery and exact repetition. Scope core-sessions, installationComplete:false; unsupported categories fail closed. Not G10 or a user-data cut.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/core-migration.test.ts",
+          "./Sucafinav1/test/teams-profile/migration-authority.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 18,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 18,
+        "expects": 156
+      },
+      "executionReports": [
+        {
+          "pass": 18,
+          "fail": 0,
+          "skip": 0,
+          "expects": 156,
+          "tests": 18,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136250814305,
+        "status": "SUCCESS"
+      },
+      "migration": {
+        "scope": "core-sessions",
+        "installationComplete": false,
+        "realUserData": false,
+        "g10Qualification": false
+      }
+    },
+    {
+      "id": "PERSONAL_PROVIDER_SCHEMAS",
+      "source": "070140a243b428796eb3b4827a7ae652a8860909",
+      "snapshot": "cb18ce6669660f08bd66b94744f51aa2bb610cc7",
+      "runId": 44725691953,
+      "jobId": 136252399648,
+      "status": "SUCCESS",
+      "qualification": "Strict public personal commands/slot metadata and declared provider metadata schemas pass52 cases including10 new cases. GET metadata never contains secrets or endpoints and never proves provider acceptance or POST authorship; positive runtime provider remains pending.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "schema",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/provider-access.test.ts",
+          "./test/sucafina-team-context.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 52,
+        "fail": 0,
+        "skip": 0,
+        "files": 2,
+        "tests": 52,
+        "expects": 429
+      },
+      "executionReports": [
+        {
+          "pass": 52,
+          "fail": 0,
+          "skip": 0,
+          "expects": 429,
+          "tests": 52,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136253327969,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "PERSONAL_METADATA_INSPECTION_SF",
+      "source": "d46d061b4f321ad3dc3d416d4ab3fa5a1d29a7f0",
+      "snapshot": "e14f74e81401a981710ab927ba70a70e89110acc",
+      "runId": 44725848432,
+      "jobId": 136252922941,
+      "status": "SUCCESS",
+      "qualification": "Metadata-only inspection checks original current owner, key ACL, revision/audit and generation without opening ciphertext. Stored active/removed/absent state is not evidence that an uncertain POST was authored or that a provider accepts the key.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/teams-profile/connection-store.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 9,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 9,
+        "expects": 76
+      },
+      "executionReports": [
+        {
+          "pass": 9,
+          "fail": 0,
+          "skip": 0,
+          "expects": 76,
+          "tests": 9,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136253462263,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "PERSONAL_METADATA_INSPECTION_CORE",
+      "source": "d46d061b4f321ad3dc3d416d4ab3fa5a1d29a7f0",
+      "snapshot": "96a222540a49b17403ca16935301f55b93547f05",
+      "runId": 44725864530,
+      "jobId": 136252977386,
+      "status": "SUCCESS",
+      "qualification": "Core metadata-only vault inspection passes all7 cases with current Owner/ACL/generation and no ciphertext decryption. Positive private provider/MCP execution remains pending.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/team-connections.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "tests": 7,
+        "expects": 92
+      },
+      "executionReports": [
+        {
+          "pass": 7,
+          "fail": 0,
+          "skip": 0,
+          "expects": 92,
+          "tests": 7,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136253840120,
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "id": "G04_REAL_REVIEW_INCOMPLETE",
+      "source": "e1bd80d837a3c443a7fd5a3455f12792c0b5fb37",
+      "snapshot": "1c877d5b9397257a7efac840b5ab2f68bb85f390",
+      "runId": 44726542137,
+      "jobId": 136255290725,
+      "status": "FAILURE",
+      "qualification": "BeforeAll actual review exceeds35s and causes a cascade.49 bodies start/finish (46return/3throw), not146 executed failures;40sources206declared and forced finalization. G04 remains incomplete/RED. No deadline enlargement.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 46,
+        "fail": 146,
+        "skip": 0,
+        "files": 1,
+        "tests": 192,
+        "expects": 1160
+      },
+      "executionReports": [
+        {
+          "pass": 46,
+          "fail": 146,
+          "skip": 0,
+          "expects": 1160,
+          "tests": 192,
+          "files": 1
+        }
+      ],
+      "cleanup": {
+        "jobId": 136257995880,
+        "status": "SUCCESS"
+      },
+      "bodyEvidence": {
+        "sources": 40,
+        "declared": 206,
+        "started": 49,
+        "finished": 49,
+        "returned": 46,
+        "threw": 3,
+        "forcedFinalization": true
+      },
+      "currentReviewObservations": {
+        "dashboardWorkbench": {
+          "calls": 1164,
+          "elapsedMs": 4443
+        },
+        "agenda": {
+          "calls": 512,
+          "elapsedMs": 1956
+        },
+        "reviewPreserve": {
+          "calls": 2206,
+          "elapsedMs": 8864,
+          "otherFixtureElapsedMs": 9393
+        },
+        "interpretation": "Measured observations, not a proven optimization or completed matrix."
+      }
+    },
+    {
+      "id": "SSE_CURRENT_OBSERVATION_FIRST",
+      "source": "6c7ea52423d94b9553805afbc84d6aed726c7f17",
+      "snapshot": "6a64f53b42c8aa4923af56a993bb4657856f1dbe",
+      "runId": 44727058224,
+      "jobId": 136257028311,
+      "status": "FAILURE",
+      "qualification": "Three new real cases pass: two current observations at canonical listener and five at egress, RoleMap removal and session expiry. Existing finite-history case05 returns401 because its fixture lacks the now-required current TeamConfig document; official admin setup is being corrected. Gate11/1 remains RED, not imported as qualified.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "request": {
+        "package": "server",
+        "runner": "bun",
+        "args": [
+          "./test/team-profile-events.test.ts",
+          "./test/event-stream.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 11,
+        "fail": 1,
+        "skip": 0,
+        "files": 2,
+        "tests": 12,
+        "expects": 116
+      },
+      "executionReports": [
+        {
+          "pass": 11,
+          "fail": 1,
+          "skip": 0,
+          "expects": 116,
+          "tests": 12,
+          "files": 2
+        }
+      ],
+      "cleanup": {
+        "jobId": 136258021453,
+        "status": "SUCCESS"
+      },
+      "observedFailure": [
+        "error: expect(received).toBe(expected)",
+        "Expected: 200",
+        "Received: 401",
+        "(fail) http-events-05: burst order and finite history replay keep canonical payloads and private owner records off the wire [8797.80ms]"
+      ]
+    },
+    {
+      "id": "SSE_CURRENT_OBSERVATION_STATIC",
+      "source": "6c7ea52423d94b9553805afbc84d6aed726c7f17",
+      "snapshot": "6c7ea52423d94b9553805afbc84d6aed726c7f17",
+      "runId": 44727060363,
+      "jobId": 136257035186,
+      "status": "FAILURE",
+      "qualification": "Fifteen commands exit0 and guard-dev refuses two protected paths, but source identity is false while command inventory/execution are true. Cause of invalid source identity not established at this checkpoint; aggregate FAILURE, not a static PASS.",
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.22.2"
+        ],
+        "processVersionProbe": "Ordered setup observations; no independent process.version claim."
+      },
+      "checks": [
+        {
+          "id": "atlas-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "client-generated",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-atlas",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-sucafina",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-core",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-server",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-client",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-cli",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "typecheck-app",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-config",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-typecheck",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "e2e-inclusion",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "web-build",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "spawn-imports",
+          "status": 0,
+          "complete": true
+        },
+        {
+          "id": "guard-dev",
+          "status": 1,
+          "complete": true
+        },
+        {
+          "id": "guard-pr-base",
+          "status": 0,
+          "complete": true
+        }
+      ],
+      "sourceValid": false,
+      "inventoryValid": true,
+      "executionValid": true
+    },
+    {
+      "id": "SESSION_PERFORMANCE_BEFORE_COHERENT_INCOMPLETE",
+      "source": "92e7a0919528bfff82cafe86564afc438c155e42",
+      "snapshot": "a9a04cfae6266737e565f862344d70fffbf60dfa",
+      "runId": 44700392728,
+      "jobId": 136167070600,
+      "status": "INCOMPLETE",
+      "reported": "15 of 18 completed before workflow budget; incomplete baseline",
+      "qualification": "Only15 of18 executions completed before the original workflow budget. Not a complete baseline; later immutable partitions retain every case and repetition."
+    },
+    {
+      "id": "SESSION_PERFORMANCE_BEFORE_COMBINED_PARTIAL",
+      "source": "531aad70b4c6f2c2d686c4254c812b2f8395f9ad",
+      "snapshot": "062b7e04d3bb0f6189479b41daf879dba14b95da",
+      "runId": 44707564055,
+      "jobId": 136190861101,
+      "status": "INCOMPLETE",
+      "reported": "10 pass, 1 test deadline failure, 1 incomplete; not a qualified twelve-case partition",
+      "qualification": "Closed plain stream repeat1 reached original420s; final closed-with-diffs repeat2 incomplete at45-minute workflow budget."
+    },
+    {
+      "id": "SESSION_PERFORMANCE_AFTER1_TABS",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "snapshot": "00f0fa01a5a2ae818c634ffa712576f509a74a8e",
+      "runId": 44720702122,
+      "jobId": 136235404232,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/performance/playwright.config.ts",
+        "benchmarkRenderer": "current",
+        "args": [
+          "e2e/performance/timeline/session-tab-switch-benchmark.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "playwrightReported": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "retries": 0,
+        "workers": 1,
+        "repeatEach": 3
+      },
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3",
+          "24.15.0"
+        ],
+        "finalPlaywrightNodeSetup": "24.15.0",
+        "processVersionProbe": "not emitted separately; ordered setup logs retained",
+        "bunSetup": [
+          "Obtained version 1.3.14 from package.json",
+          "1.3.14+0d9b296af"
+        ]
+      },
+      "metricRecords": 6,
+      "artifact": {
+        "path": "docs/architecture/teams-profile-native-ui-performance.json",
+        "source": "708729b32c9f7a3d871bcfe4755db9c0d4ff3c00",
+        "blob": "9b028897b234d0940f80ad1ecb38b69a23e73dc1"
+      },
+      "qualification": "All six unchanged executions of this AFTER partition completed. Performance regression remains OPEN; a passing test result is not a no-regression gate or complete native journey."
+    },
+    {
+      "id": "SESSION_PERFORMANCE_AFTER1_CLOSED",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "snapshot": "11c686368cc7f5f587e1833f39ee14f316b7e14d",
+      "runId": 44720715029,
+      "jobId": 136235436750,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/performance/playwright.config.ts",
+        "benchmarkRenderer": "current",
+        "args": [
+          "e2e/performance/timeline/session-timeline-benchmark.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "playwrightReported": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "retries": 0,
+        "workers": 1,
+        "repeatEach": 3
+      },
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3",
+          "24.15.0"
+        ],
+        "finalPlaywrightNodeSetup": "24.15.0",
+        "processVersionProbe": "not emitted separately; ordered setup logs retained",
+        "bunSetup": [
+          "Obtained version 1.3.14 from package.json",
+          "1.3.14+0d9b296af"
+        ]
+      },
+      "metricRecords": 6,
+      "artifact": {
+        "path": "docs/architecture/teams-profile-native-ui-performance.json",
+        "source": "708729b32c9f7a3d871bcfe4755db9c0d4ff3c00",
+        "blob": "9b028897b234d0940f80ad1ecb38b69a23e73dc1"
+      },
+      "qualification": "All six unchanged executions of this AFTER partition completed. Performance regression remains OPEN; a passing test result is not a no-regression gate or complete native journey."
+    },
+    {
+      "id": "SESSION_PERFORMANCE_AFTER1_OPEN_AND_REVIEW",
+      "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+      "snapshot": "0e0e855ca8b20c41ba9fcfbe6e3316cdbb39499e",
+      "runId": 44720731505,
+      "jobId": 136235548532,
+      "status": "SUCCESS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/performance/playwright.config.ts",
+        "benchmarkRenderer": "current",
+        "args": [
+          "e2e/performance/timeline/session-timeline-open-review-benchmark.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "playwrightReported": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "retries": 0,
+        "workers": 1,
+        "repeatEach": 3
+      },
+      "toolchain": {
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3",
+          "24.15.0"
+        ],
+        "finalPlaywrightNodeSetup": "24.15.0",
+        "processVersionProbe": "not emitted separately; ordered setup logs retained",
+        "bunSetup": [
+          "Obtained version 1.3.14 from package.json",
+          "1.3.14+0d9b296af"
+        ]
+      },
+      "metricRecords": 6,
+      "artifact": {
+        "path": "docs/architecture/teams-profile-native-ui-performance.json",
+        "source": "708729b32c9f7a3d871bcfe4755db9c0d4ff3c00",
+        "blob": "9b028897b234d0940f80ad1ecb38b69a23e73dc1"
+      },
+      "qualification": "All six unchanged executions of this AFTER partition completed. Performance regression remains OPEN; a passing test result is not a no-regression gate or complete native journey."
+    },
+    {
+      "id": "SSE_CURRENT_OBSERVATION_QUALIFIED",
+      "source": "ef695c74f549c153d6d1905035a306b07cacb67b",
+      "snapshot": "3f2c2b11b23a312a422b1f77072e854918e1aed6",
+      "runId": 44728583115,
+      "jobId": 136262186850,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 12,
+        "fail": 0,
+        "skip": 0,
+        "expects": 119,
+        "files": 2,
+        "tests": 12,
+        "elapsedSeconds": 65.56
+      },
+      "cleanup": {
+        "jobId": 136263194544,
+        "status": "SUCCESS"
+      },
+      "scope": {
+        "technicalCases": 4,
+        "existingCorporateCases": 5,
+        "newCorporateCases": 3,
+        "listenerCurrentObservations": 2,
+        "egressCurrentObservations": 5
+      },
+      "qualification": "The Server fixture prepares its current empty TeamConfig through actual admin HTTP before capturing leases; no Core fixture default or guard weakened. Existing history/SSE and new current-role-map/expiry cases all pass. Await integrated combined source before native G02 replay; not installed G08 or a prompt latency claim."
+    },
+    {
+      "id": "MICROSOFT_CURRENT_ROLE_MAP_BATCH",
+      "source": "5299c900765c464841c63168377b0d6f0a63ee49",
+      "snapshot": "a3a93e988c04c9c082e4b8e6c2c2011561f0e73b",
+      "runId": 44729433808,
+      "jobId": 136265104695,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 97,
+        "fail": 0,
+        "skip": 0,
+        "expects": 945,
+        "files": 4,
+        "tests": 97,
+        "elapsedSeconds": 29.05
+      },
+      "cleanup": {
+        "jobId": 136265854197,
+        "status": "SUCCESS"
+      },
+      "suites": {
+        "newCases": 12,
+        "microsoftSession": 47,
+        "productAuthority": 32,
+        "corePolicy": 6
+      },
+      "observations": {
+        "threeCurrentMaps": {
+          "beforeGraphCalls": 6,
+          "afterGraphCalls": 2
+        },
+        "partialAdminViewerNull": {
+          "beforeGraphCalls": 5,
+          "afterGraphCalls": 2
+        },
+        "sameActorProjection": true
+      },
+      "qualification": "One current original-session observation handles the requested RoleMaps; no cache between operations. Group/map/intent change during await, logout, expiry, refresh and improper fallback remain denied. Directed slice passed; static44729435312 and coherent integration were pending at this checkpoint. Not a measured improvement of the full native prompt."
     }
   ],
   "infrastructureReconciliation": [
@@ -20880,32 +25508,396 @@
   "remainingImplementation": [
     {
       "package": "WP1",
-      "work": "Finish same-candidate qualification and resolve protected-path gate through real independent approval. Preserve all RoleRows, empty maps and exact action/resource grants."
+      "work": "Run same-candidate qualification and resolve protected-path gates through actual independent approval. Preserve current RoleRows, empty maps, exact action/resource grants and generated-source identity."
     },
     {
       "package": "WP2",
-      "work": "Integrate and qualify the native Team workspace, administration form, browser/window/Dock/draft/cache fencing and first-prompt/SSE journey; compare all 18 AFTER benchmark executions."
+      "work": "Qualify the integrated native Team workspace and first-prompt/SSE journey with unchanged15s startup/7s action deadlines. Preserve GET/message and original assertions. Finish the personal connection panel against the real closed HTTP contract. BEFORE18 and AFTER18 are complete; tab median regression11.4–24.8% remains OPEN without causal attribution."
     },
     {
       "package": "WP3",
-      "work": "Correct corporate provider discovery at boot; complete private positive provider and MCP contracts, permanent scheduled task ledgers and remaining Jobs/Relay/RAG/Atlas/Inbox ownership consumers. No environment credential fallback."
+      "work": "Complete positive private provider and MCP contracts, permanent scheduled-task ledgers and remaining Jobs/Relay/RAG/Atlas/Inbox consumers. Corporate Inbox remains explicitly unavailable, never an empty successful result. No environment credential fallback. The qualified12-case SSE slice is integrated; qualify the pending current-role-map batch before a combined native run."
     },
     {
       "package": "WP4",
-      "work": "Qualify actual Core census/checkpoint/backfill/cut; locate the pending real-cut hang; complete explicit non-Session category mapping and forward recovery preserving the current authority and confirmed effect frontier."
+      "work": "Extend beyond the qualified disposable core-sessions cut to explicit mapping/quarantine of all persisted categories and installed forward recovery preserving current authority and confirmed effects. installationComplete remains false; no user data cut or G10 claim."
     },
     {
       "package": "WP5",
-      "work": "Build and inventory the exact production archive, finish conservative residue classification and exact source/tree/artifact provenance, run all ten gates on one final candidate, and obtain real independently admitted Microsoft/Azure observations."
+      "work": "Build and inventory the exact production archive, finish conservative residue classification and source/tree/artifact provenance, implement the installed G08 spec/report, and run all ten gates on one final candidate. Real Microsoft/Azure observations and protected-path approval remain absent."
     }
   ],
   "reviewLimits": [
     "Snapshot restore is not a qualified physical SQLite rewind or full audit reconstruction.",
     "MAX(audit)=revision does not prove gap-free historical integrity.",
     "No user data migration or cutover executed.",
-    "Full current business authority/context is tested on isolated sources; coherent receipt consumer integration and static qualification are still pending.",
-    "Generation fences and the actual host drain are integrated and directed-tested; isolated Core cut is not yet qualified. No real tenant data was migrated.",
-    "Personal connection audit validates count and maximum revision, but positive corporate model/MCP configuration remains incomplete and a native boot regression is open.",
+    "Directed contracts, native UI, real HTTP, SDK and bootstrap observations belong to their exact individual sources; no final same-candidate qualification is implied.",
+    "Generation fences, actual host drain and disposable Core Session cut/recovery now have directed passing evidence. The migration result remains scope core-sessions and installationComplete:false; no complete installed migration or G10 proof.",
+    "Eager corporate boot credential probing is corrected without adding fixture grants. Positive model/MCP execution remains unqualified; metadata state does not prove provider acceptance or the authorship of an uncertain POST.",
+    "Full native G02 still fails at the original action deadline; earlier cold-start failures and the actual later prompt/message requests remain visible. Component Chrome is not installed G08.",
+    "All18 BEFORE and18 AFTER benchmark executions completed, but tab observation medians regressed11.4–24.8%; the performance finding stays OPEN. The corrected technical Active-envelope mismatch is not yet a demonstrated timing cause.",
     "No final candidate, production archive, live Microsoft tenant or disposable Azure restore has been jointly qualified."
-  ]
+  ],
+  "nativePerformanceComparison": {
+    "status": "OPEN_REGRESSION",
+    "beforeSource": "531aad70b4c6f2c2d686c4254c812b2f8395f9ad",
+    "afterSource": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+    "beforeExecutions": 18,
+    "afterExecutions": 18,
+    "artifact": {
+      "path": "docs/architecture/teams-profile-native-ui-performance.json",
+      "source": "708729b32c9f7a3d871bcfe4755db9c0d4ff3c00",
+      "blob": "9b028897b234d0940f80ad1ecb38b69a23e73dc1"
+    },
+    "split": {
+      "unchanged": [
+        "test bodies and assertions",
+        "per-test budgets",
+        "workers:1",
+        "retries:0",
+        "repeatEach:3",
+        "renderer:current",
+        "stream CPU throttle:30",
+        "stream history turns:320",
+        "stream deltas:160"
+      ],
+      "note": "Timeline streaming/review helpers were extracted without changing the bodies. The final before runs use three independent jobs to keep all eighteen executions inside the workflow budget."
+    },
+    "after": [
+      {
+        "partition": "tabs",
+        "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+        "snapshot": "00f0fa01a5a2ae818c634ffa712576f509a74a8e",
+        "runId": 44720702122,
+        "jobId": 136235404232,
+        "result": "6 pass, 0 fail",
+        "request": {
+          "package": "app",
+          "runner": "playwright",
+          "config": "e2e/performance/playwright.config.ts",
+          "benchmarkRenderer": "current",
+          "args": [
+            "e2e/performance/timeline/session-tab-switch-benchmark.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+            "ORCHESTRA_CHANNEL": "prod"
+          }
+        },
+        "toolchain": {
+          "nodeSetupSequence": [
+            "24.15.0",
+            "24.22.3",
+            "24.15.0"
+          ],
+          "finalPlaywrightNodeSetup": "24.15.0",
+          "processVersionProbe": "not emitted separately; ordered setup logs retained",
+          "bunSetup": [
+            "Obtained version 1.3.14 from package.json",
+            "1.3.14+0d9b296af"
+          ]
+        }
+      },
+      {
+        "partition": "closed",
+        "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+        "snapshot": "11c686368cc7f5f587e1833f39ee14f316b7e14d",
+        "runId": 44720715029,
+        "jobId": 136235436750,
+        "result": "6 pass, 0 fail",
+        "request": {
+          "package": "app",
+          "runner": "playwright",
+          "config": "e2e/performance/playwright.config.ts",
+          "benchmarkRenderer": "current",
+          "args": [
+            "e2e/performance/timeline/session-timeline-benchmark.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+            "ORCHESTRA_CHANNEL": "prod"
+          }
+        },
+        "toolchain": {
+          "nodeSetupSequence": [
+            "24.15.0",
+            "24.22.3",
+            "24.15.0"
+          ],
+          "finalPlaywrightNodeSetup": "24.15.0",
+          "processVersionProbe": "not emitted separately; ordered setup logs retained",
+          "bunSetup": [
+            "Obtained version 1.3.14 from package.json",
+            "1.3.14+0d9b296af"
+          ]
+        }
+      },
+      {
+        "partition": "open-and-review",
+        "source": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+        "snapshot": "0e0e855ca8b20c41ba9fcfbe6e3316cdbb39499e",
+        "runId": 44720731505,
+        "jobId": 136235548532,
+        "result": "6 pass, 0 fail",
+        "request": {
+          "package": "app",
+          "runner": "playwright",
+          "config": "e2e/performance/playwright.config.ts",
+          "benchmarkRenderer": "current",
+          "args": [
+            "e2e/performance/timeline/session-timeline-open-review-benchmark.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+            "ORCHESTRA_CHANNEL": "prod"
+          }
+        },
+        "toolchain": {
+          "nodeSetupSequence": [
+            "24.15.0",
+            "24.22.3",
+            "24.15.0"
+          ],
+          "finalPlaywrightNodeSetup": "24.15.0",
+          "processVersionProbe": "not emitted separately; ordered setup logs retained",
+          "bunSetup": [
+            "Obtained version 1.3.14 from package.json",
+            "1.3.14+0d9b296af"
+          ]
+        }
+      }
+    ],
+    "firstCorrectTabMedians": [
+      {
+        "group": "cold",
+        "metric": "firstCorrectObservedMs",
+        "samplesBefore": 15,
+        "samplesAfter": 15,
+        "beforeMedianMs": 111.09999999997672,
+        "afterMedianMs": 123.80000000004657,
+        "ratio": 1.114311431143767
+      },
+      {
+        "group": "hot",
+        "metric": "firstCorrectObservedMs",
+        "samplesBefore": 15,
+        "samplesAfter": 15,
+        "beforeMedianMs": 59.29999999998836,
+        "afterMedianMs": 74,
+        "ratio": 1.2478920741992332
+      },
+      {
+        "group": "closed.cold",
+        "metric": "firstCorrectObservedMs",
+        "samplesBefore": 15,
+        "samplesAfter": 15,
+        "beforeMedianMs": 105.40000000002328,
+        "afterMedianMs": 128.90000000002328,
+        "ratio": 1.2229601518026072
+      },
+      {
+        "group": "closed.hot",
+        "metric": "firstCorrectObservedMs",
+        "samplesBefore": 15,
+        "samplesAfter": 15,
+        "beforeMedianMs": 62.699999999953434,
+        "afterMedianMs": 69.90000000002328,
+        "ratio": 1.1148325358863667
+      },
+      {
+        "group": "open.cold",
+        "metric": "firstCorrectObservedMs",
+        "samplesBefore": 15,
+        "samplesAfter": 15,
+        "beforeMedianMs": 106.09999999997672,
+        "afterMedianMs": 128.30000000004657,
+        "ratio": 1.2092365692749738
+      },
+      {
+        "group": "open.hot",
+        "metric": "firstCorrectObservedMs",
+        "samplesBefore": 15,
+        "samplesAfter": 15,
+        "beforeMedianMs": 82.79999999998836,
+        "afterMedianMs": 94.59999999997672,
+        "ratio": 1.1425120772945654
+      }
+    ],
+    "streamCompletionMedians": [
+      {
+        "case": "performance: session timeline streaming > streams assistant text in v2 with review pane closed",
+        "metric": "completionObservedMs",
+        "before": [
+          255017.40000000002,
+          274423.30000000005,
+          275735.30000000005
+        ],
+        "after": [
+          269533,
+          282012.5,
+          279674.30000000005
+        ],
+        "beforeMedian": 274423.30000000005,
+        "afterMedian": 279674.30000000005,
+        "ratio": 1.0191346726025086
+      },
+      {
+        "case": "performance: session timeline streaming > streams assistant text in v2 with review diffs and pane closed",
+        "metric": "completionObservedMs",
+        "before": [
+          276666.1,
+          288074.5,
+          261399.80000000005
+        ],
+        "after": [
+          264612.6,
+          265780.80000000005,
+          273307.90000000014
+        ],
+        "beforeMedian": 276666.1,
+        "afterMedian": 265780.80000000005,
+        "ratio": 0.9606554615834758
+      },
+      {
+        "case": "performance: session timeline streaming > streams assistant text in v2 with review pane open",
+        "metric": "completionObservedMs",
+        "before": [
+          347272.8999999999,
+          344635.19999999995,
+          335329.40000000014
+        ],
+        "after": [
+          366983.1,
+          326948.3999999999,
+          311073.6000000001
+        ],
+        "beforeMedian": 344635.19999999995,
+        "afterMedian": 326948.3999999999,
+        "ratio": 0.9486796473488487
+      }
+    ],
+    "correctness": {
+      "streamRuns": 9,
+      "allDelivered160": true,
+      "streamRowReplaced": false,
+      "streamMarkdownReplaced": false
+    },
+    "investigation": {
+      "finding": {
+        "beforeSource": "531aad70b4c6f2c2d686c4254c812b2f8395f9ad",
+        "afterSource": "a4e247dd17a3b92cc2a27f418726db23a97b3218",
+        "generatedBefore": "ad8cec3aa70619bc19ce772096050706dfd0bef1",
+        "generatedAfter": "4fa6d4a25d7d4cab798e147edc3cea8e6fb236e7",
+        "finding": "active SDK now returns {data,namespace?}; unchanged technical adapter forwards it as Record, seedActiveSessionStatuses iterates keys including data.",
+        "causality": "Not yet reproduced in actual request trace; no attribution of timing regression yet.",
+        "reproduction": {
+          "source": "793142107335b8c0db79ede9e77dc3c5d693a8e1",
+          "snapshot": "0d8769df151876148adf49a17a0a88d663dea3f9",
+          "run": 44725841005,
+          "job": 136252902735,
+          "passed": 4,
+          "failed": 4,
+          "assertions": 9,
+          "files": 1,
+          "note": "All four unchanged auth tests pass; each new actual generated Client/technical adapter contract test fails before the correction."
+        }
+      },
+      "productionFix": {
+        "source": "708729b32c9f7a3d871bcfe4755db9c0d4ff3c00",
+        "path": "packages/app-shell/src/utils/server.ts",
+        "blob": "ae5f3bf3d7c4c05e2af63ca773837219ceb5e66c"
+      },
+      "realHttpQualification": {
+        "source": "0ce81f7d42fe155f59a2410026e31606930f8e7c",
+        "snapshot": "6a561593b20ddea198ff6472f0a6889013e34124",
+        "run": 44727277080,
+        "job": 136257770840,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "assertions": 24,
+        "files": 1,
+        "nodeSetupSequence": [
+          "24.15.0",
+          "24.22.3"
+        ],
+        "bun": "1.3.14",
+        "transport": "real Bun.serve loopback HTTP, generated Client, native fetch, awaited shutdown; no global patch"
+      },
+      "causalTimingAttribution": "NOT_ESTABLISHED",
+      "afterCorrectionBenchmark": "NOT_RUN"
+    },
+    "rule": "No rerun to select a better sample. Repeat only after a concrete correction or final-source requirement, preserving the same18 executions, partitioning, CPU30x, workloads, workers, retries and original deadlines.",
+    "initialReportedTabRangePercent": [
+      11.1,
+      24.8
+    ],
+    "currentCalculatedTabRangePercent": [
+      11.431143114376695,
+      24.789207419923322
+    ],
+    "roundingCorrection": "Initial prose reported11.1–24.8%. The preserved raw medians calculate11.43–24.79%; current rounded range11.4–24.8%. Raw observations are unchanged."
+  },
+  "nativeUiCheckpoint": {
+    "source": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
+    "integratedAt": "e0e40c814c1cce879566b4826a27edee6d4d4b0f",
+    "manifest": {
+      "source": "386e55cb105c43049f740f25fd25151130f1e38b",
+      "path": "docs/architecture/teams-profile-native-ui-manifest.json",
+      "ownPaths": 128,
+      "officialGeneratedPaths": 1,
+      "selfExcluded": true
+    },
+    "currentStatus": "INTEGRATED_WIP_FULL_G02_NOT_QUALIFIED",
+    "administration": {
+      "source": "be15d176e08b37ee6a6f65f95fc21918e24baae3",
+      "metadata": [
+        "full owner (installation + tenant + principal + Team)",
+        "window id",
+        "expected config revision",
+        "whole-command SHA-256",
+        "document SHA-256"
+      ],
+      "restore": "Only after current administration admission and a successful current configuration GET; matching hashes establish observed state, never original POST authorship/success.",
+      "privateContentPersisted": false,
+      "automaticRetry": false,
+      "storageFailure": "No POST is sent if the original-owner uncertainty reference cannot be retained."
+    },
+    "g02": {
+      "driverDeadlineMs": 15000,
+      "actionDeadlineMs": 7000,
+      "testDeadlineMs": 180000,
+      "status": "RED",
+      "latestRun": 44726765097,
+      "readMessagesPreserved": true,
+      "qualification": "Actual compiled Web + signed fixture OIDC/SQLite is focused G02. It never becomes installed G08 or LIVE Microsoft proof.",
+      "next": "Qualified SSE source ef695c74 is integrated at265d3811. Await the qualified current-role-map batch and coherent source before repeating the original browser journey."
+    },
+    "personalConnections": {
+      "schemaSource": "070140a243b428796eb3b4827a7ae652a8860909",
+      "metadataSource": "d46d061b4f321ad3dc3d416d4ab3fa5a1d29a7f0",
+      "httpAndUi": "IN_PROGRESS",
+      "positivePrivateProvider": "NOT_QUALIFIED"
+    }
+  },
+  "sourceIdentityReconciliation": {
+    "status": "CORRECTION_INTEGRATED_NOT_YET_FINAL_QUALIFIED",
+    "latestIntegratedSource": "265d3811d6c44ed3f62908d3b455122fbbf65b88",
+    "diagnosticRun": {
+      "source": "101bbd92f8836c8d9ffe10613c89f6360e7ab25d",
+      "runId": 44728622875,
+      "jobId": 136262323409,
+      "status": "FAILURE",
+      "nodeContracts": {
+        "pass": 160,
+        "fail": 0
+      },
+      "preflight": "Tracked worktree dirty after Bun setup; positive artifact evidence refused."
+    },
+    "finding": "Bun1.3.14 rewrote the ordering of two devDependencies in bun.lock without a version change. The observed lock bytes, not a handcrafted substitute or updated historical proof, were imported.",
+    "observedLockBlob": "5ce9c75a60184305cd294f20ed9c3eedf4eb063f",
+    "correctionSource": "4cb2a2f0fe675607e61ebc8bc6bfa36fa96d4ec6",
+    "installedArtifactProof": false,
+    "qualification": "Node-contract PASS does not replace the refused preflight or prove a packaged archive/G09/G07. Earlier sourceValid:false remains a failed observation. Root will add the complete ci-evidence04/05/06 and artifact records."
+  }
 }
