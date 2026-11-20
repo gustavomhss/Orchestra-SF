@@ -295,3 +295,74 @@ test("native Settings leaves a rejected command visible without automatic refres
       value: { currency: "CHF" }, dirty: true })
   } finally { view.close() }
 })
+
+test("native Settings cancels the reviewed save or reset while its real digest is pending", async () => {
+  for (const action of ["save", "reset"] as const) {
+    for (const exit of ["Cancel review", "Revise"] as const) {
+      const view = fixture()
+      const releaseDigest = deferred()
+      const digestReturned = deferred()
+      const originalDigest = crypto.subtle.digest.bind(crypto.subtle)
+      const captured: unknown[] = []
+      let realDigests = 0
+      let restoreDigest: (() => void) | undefined
+      try {
+        await waitFor(() => view.node.querySelector("#sf-u36-field-currency"))
+        view.source.set("actor-one", { currency: "EUR", version: 2 })
+        view.timer.tick()
+        await waitFor(() => currency(view.node).value === "EUR")
+        const before = structuredClone([...view.source])
+        if (action === "save") {
+          edit(view.node, "CHF")
+          button(view.node, "Review changes").click()
+        } else button(view.node, "Reset settings").click()
+        expect(view.node.querySelector('[data-component="sf-change-review"]')).not.toBeNull()
+        // Delay only the actual command digest, after initial owner/source reads.
+        // The returned bytes still come from the runtime's original WebCrypto.
+        const digestSpy = spyOn(crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+          expect(algorithm).toBe("SHA-256")
+          captured.push(JSON.parse(new TextDecoder().decode(data)))
+          await releaseDigest.promise
+          realDigests += 1
+          const digest = await originalDigest(algorithm, data)
+          digestReturned.release()
+          return digest
+        })
+        restoreDigest = () => { digestSpy.mockRestore() }
+        const review = view.node.querySelector('[data-component="sf-change-review"]')
+        if (!review) throw new Error("Native settings review is unavailable")
+        button(review, action === "save" ? "Save" : "Reset settings").click()
+        await waitFor(() => captured.length === 1)
+        expect(view.writes).toHaveLength(0)
+        expect(captured[0]).toEqual({ page: "Settings", action, version: 2,
+          values: action === "save" ? { settings: { currency: "CHF" } } : {} })
+        button(review, exit).click()
+        expect(view.node.querySelector('[data-component="sf-change-review"]')).toBeNull()
+        expect(view.draft()?.snapshot()).toMatchObject({ availability: "active", baseVersion: 2,
+          pendingOperation: null, dirty: action === "save",
+          value: { currency: action === "save" ? "CHF" : "EUR" } })
+        if (exit === "Revise") {
+          // A new review of the same action must not accept the previous review's
+          // digest. This exercises reviewRef as well as the cancelled mode.
+          button(view.node, action === "save" ? "Review changes" : "Reset settings").click()
+          expect(view.node.querySelector('[data-component="sf-change-review"]')).not.toBeNull()
+        }
+        releaseDigest.release()
+        await digestReturned.promise
+        // Let the original save/reset continuation inspect the cancelled/replaced
+        // review after WebCrypto settles; the real typed POST boundary is observed.
+        await new Promise<void>((resolve) => setTimeout(resolve, 0))
+        expect(realDigests).toBe(1)
+        expect(view.writes).toHaveLength(0)
+        expect([...view.source]).toEqual(before)
+        expect(view.draft()?.snapshot()).toMatchObject({ availability: "active", baseVersion: 2,
+          pendingOperation: null, dirty: action === "save",
+          value: { currency: action === "save" ? "CHF" : "EUR" } })
+      } finally {
+        releaseDigest.release()
+        restoreDigest?.()
+        view.close()
+      }
+    }
+  }
+})
