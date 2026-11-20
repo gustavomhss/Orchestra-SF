@@ -1,8 +1,9 @@
 # Handoff — sf-shard-c
 
-SHA de código C: 4758184b6ef9abc61bf57ec7b08481bb78d5c8c3
+SHA de código C: 3e23044944a59c2544b3d09451960d22e3bec47f
 Base original: f7dd58e32bc834f1485df20b91adbf759b4c4ad0
-Integração observada: sf-join-four em 08854f14d83ab12d8665b0e3787881edbfaabd53
+Integração observada: sf-join-four em 1222022bd54282c8086b1da45b0be6ad2f6520ea
+C incorpora a integração até 08854f14d83ab12d8665b0e3787881edbfaabd53; os merges posteriores ainda serão compostos antes dos consumidores nativos.
 Estado: IN_PROGRESS — pedido atualizado exige todas as falhas corrigidas e mergeadas verdes.
 Checkpoint: 2026-11-20. PR principal: [#397](https://github.com/gustavomhss/Orchestra-SF/pull/397).
 
@@ -16,6 +17,14 @@ Já mergeados:
 - [#404](https://github.com/gustavomhss/Orchestra-SF/pull/404), identidade estável de ready dentro da mesma admissão, invalidada por geração/owner/reload/revogação; source4d8c7866df5e7b8146b7b0ff2fedf4b293cd59a7, merge5efe5a3ff3a2c382a18b28f0d575825eafab5ede. Três testes de componente verdes; não substituem instalação completa.
 - [#401](https://github.com/gustavomhss/Orchestra-SF/pull/401), prova BI completa reaproveitada somente no escopo original, mantendo autoridade/fontes/dia UTC/imutabilidade; source29021f31f9ea0a46807e60f25176a272a8c93096, merge18a913220a6805bef1c62a58a26a310f991d6a0a. Nove testes verdes incluem ambos os renderings C7.
 - [#402](https://github.com/gustavomhss/Orchestra-SF/pull/402), transporte verificável de aprovação real do PR fonte para guards; sourcecd7c1e082394ab105f507d38bf3d656953827f1b, merge08854f14d83ab12d8665b0e3787881edbfaabd53. Cinquenta e nove testes de resolver/runner verdes. Não concede aprovação e não elimina os dois gates protegidos.
+
+
+- [#400](https://github.com/gustavomhss/Orchestra-SF/pull/400), fonte Planner na resposta humana; source 50ce9319b03ae52ec3871043161c19b17c49a1b3, merge 392cecab68288d4b669828adc5d1aaa738693d80. Original C7 passou no primeiro gate; a nova fixture recebeu a linha real de acesso do destinatário e passou no segundo (1/0, 32 asserções).
+- [#411](https://github.com/gustavomhss/Orchestra-SF/pull/411), prioridade e destinos nativos de Signals; source 492c06aa5d34e30db3859db3f411f948891d02a3, merge 7c42282e8b910cc0e10381980f040dee72cb2b19. Gate 44660432596: 12/0 em unidades mais 2/0 em browser de rota, 183 asserções. A lista elegível mantém as 21 identidades; CAP13 não se torna produtor.
+- [#409](https://github.com/gustavomhss/Orchestra-SF/pull/409), estado de busca/filtro Portfolio admitido novamente por owner/geração; source b07ed52c5e3d96567f0051520b229313e5b4b04a, merge f4b62403fc2d9c74c6302d745bb4a057cfdd4439. Primeiro gate 4/3 revelou remount incorreto da fixture. O segundo, após keyed render-prop real, passou 4/0, 60 asserções, sem ampliar wait.
+- [#415](https://github.com/gustavomhss/Orchestra-SF/pull/415), restauração de 14 blobs documentais históricos exatos; source fa25e59bbcadc41823cdad47b24e75fac3095d37, merge 1222022bd54282c8086b1da45b0be6ad2f6520ea. Gate 44661599225: 8/0, 401 asserções. Nenhum pin alterado; evidência de corpus/contratos, não execução dos journeys.
+
+Outras fatias concretas: C bcbc0a30c8d9f9dfb1ed78829ffe62939d07163e compõe os helpers C04 de B; C 8e71e07e907b02be635d4f98aaf0638816f7b429 corrige o chooser BI com duas fontes reais e controles HTTP negativos; C 3e23044944a59c2544b3d09451960d22e3bec47f migra o Dashboard completo ao host nativo. Os dois últimos ainda aguardam seus gates. A fixture nativa conserva todos os controles originais e o limite de 60 s.
 
 AM02, pin de produtor, recuperação Atlas, revogação de observação, import/report nativo e planner-origins também passaram nos gates focados abaixo. Não houve execução integrada dos oito shards após todos os fixes. Recortes não são somados aos totais da base.
 
@@ -34,12 +43,12 @@ Snapshots:7=0cc9380fdc452c2da328a787e207396c4040c5e1;8=13f88387091b7db295a73aca0
 
 | Causa | Falhas originais (file:line) | Evidência atual / próximo passo |
 | --- | --- | --- |
-| C7.1 validade da autoridade durante preparo | product/wp12/native-execution-scenarios-review.test.ts:39:72 | PR403 b84fd723c35e0532a0dfadbdaf5ddbb731cd9964; gate44658317657 em execução após fix de observação completa; não aumentar lease/timeout |
-| C7.2 período/campos + baseline observado | product/wp12/native-execution-dependencies.test.ts:60:21 | Fix C ba7200ea39f7bc56a97c33301b2d8ccd06ad3d77; helperB C04 publicado dda42a61a089094f6560363449fdc734ad0566de, composição/gate pendentes |
-| C7.3 resposta Planner | product/wp12/native-execution-questions.test.ts:340:73 | Original passou no44656420362. Novo teste parou em planner-answer-scope.test.ts:25 sem recipient access; fixture corrigida50ce9319b03ae52ec3871043161c19b17c49a1b3, gate novo em andamento; PR400 ainda não mergeado |
+| C7.1 validade da autoridade durante preparo | product/wp12/native-execution-scenarios-review.test.ts:39:72 | Primeiro gate 44658317657: 11/1, original avançou até :55 com scenario-or-authority-changed após 719650.91 ms; não distingue comparação/replay. Novo source 0c15b8a5cb996d3d40c2489e23346d78680a04b5 observa cada comparação pública somente de leitura; gate 44662130965 em andamento, 23 controles + original |
+| C7.2 período/campos + baseline observado | product/wp12/native-execution-dependencies.test.ts:60:21 | Fix ba7200ea39f7bc56a97c33301b2d8ccd06ad3d77 + helpers B dda42a61, composição C bcbc0a30. Gate 44658954003: 0/1, 139 asserções; preparo das quatro alternativas passou, depois timeout de 420000 ms (545422.65 ms reportados). Próximo await é chooseWp12Alternative; custo interno ainda unbound, sem rerun |
+| C7.3 resposta Planner | product/wp12/native-execution-questions.test.ts:340:73 | Original passou no 44656420362. Nova fixture corrigida em 50ce9319b03ae52ec3871043161c19b17c49a1b3 passou 1/0 no 44658520809; PR400 mergeado |
 | C7.4 custo BI09,2casos | product/bi-cost-waterfall/rendering.test.ts:20:11;112:7 | Gate44657153397:ambos PASS62.1s/57.6s dentro dos105s; PR401 mergeado |
 | C7.5 import/report legado | product/wp02/import-report-consumer.test.ts:100:25 | Migração nativa4758184b6ef9abc61bf57ec7b08481bb78d5c8c3; gate44656058658:1/0,71expects |
-| C7.5 Dashboard legado | product/wp02/dashboard-browser.test.ts:74:66 | Migração nativa3d075de17897b3af45f81b9c79691b24fe92b3c7 preparada; depende OPEX409/lateedits,Portfolio viewstate,Signals; PR404 já mergeado. Sem gate ainda |
+| C7.5 Dashboard legado | product/wp02/dashboard-browser.test.ts:74:66 | Migração nativa em C 3e23044944a59c2544b3d09451960d22e3bec47f, 52 asserções e 60 s mantidos. Pré-requisitos 399/404/409/411 mergeados; OPEX #412 ainda não qualificado. Gate do original aguarda composição |
 | C7.6 cache Atlas single-use | product/wp10/analysis-composition/historical-memory.test.ts:292:100 | PR398 mergeado; gate44654168008:15/0,1495expects em5arquivos |
 | C7.7 recuperação Atlas | product/wp10/atlas-business/atlas-recovery.test.ts:137:32 | Fix36c7989ecf8b836af893de22a293092e4cbd09ba; gate44650347644:1/0,37expects |
 | C7.8 estático | product/work-split/work-reuse/static-gates.test.ts:12;budget:28 | Typecheck canônico corrigido/verde PR399. Canal guard PR402 verde, mas aprovação real dos2paths ainda necessária; não declarar static gate verde |
@@ -66,37 +75,46 @@ Snapshots:7=0cc9380fdc452c2da328a787e207396c4040c5e1;8=13f88387091b7db295a73aca0
 | Owner-ready | [44657002119](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657002119) | 3/0 | 366a84276250b782ab46c4b1809dd1d77a43babf | 4d8c786;41expects,1.69s |
 | BI completo | [44657153397](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657153397) | 9/0 | 3d6bce8f3a4828ed2cd0fddd59118c76f6356eee | 29021f3;376expects,420.63s;drilldownA2 não incluído no filtro |
 | Contexto approval guards | [44658251806](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658251806) | 59/0 | b893ed5fb43e1bbcf66972f08634a7fd55578271 | cd7c1e0;361expects,215ms;testes não são aprovação real |
-| Cenários Planner | [44658317657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658317657) | em execução | 577f5d4c91bc144a41afbb40075ab0ae95438339 | b84fd723;11regressões+originalC7 |
-| Planner recipient fixture | descoberta do run pendente | em execução | 103b0b4f8c23c49741a254f34fd24949e9c05bff | 50ce9319;apenas novo teste;original já passou |
+| Cenários Planner inicial | [44658317657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658317657) | 11/1 | 577f5d4c91bc144a41afbb40075ab0ae95438339 | b84fd723; 201 asserções; original :55 scenario-or-authority-changed |
+| Planner recipient fixture | [44658520809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658520809) | 1/0 | 103b0b4f8c23c49741a254f34fd24949e9c05bff | 50ce9319; 32 asserções, 14.42 s; original já passou |
+| Dependencies C04 | [44658954003](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44658954003) | 0/1 | 9f37bb3281b788a880b5b94ce9d0f524a106950d | bcbc0a30; 139 asserções; timeout após preparo completo, sem aumento |
+| Portfolio inicial | [44660248357](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660248357) | 4/3 | a8bae72fe29c80a6282b94af14c6ccd921017e07 | 05e2d751; 31 asserções; fixture não remontava, não falha da admissão inicial |
+| Signals | [44660432596](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660432596) | 14/0 | fff4d205916ad9896b6d93270358c4373df17b10 | 492c06aa; 183 asserções, duas invocações 12/0 + 2/0 |
+| Result selection + B6 | [44660844009](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660844009) | 30/1 + 1 error | c88eebfd04eff94b1ba300fda409eb83198e5cb4 | debed39; 223 asserções; semantic-union-source-scenario.test.ts:50 portfolio-analysis-changed, 180007.25 ms; PR414 continua draft |
+| Portfolio remount real | [44661234622](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661234622) | 4/0 | 739472f5450cc0f590e3fe5c0eb4e88acd661966 | b07ed52; 60 asserções, 1.493 s |
+| OPEX captura inicial | [44661576715](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661576715) | 0/2 | c7b7a1a455504ebfbd2d11f95e85227164f833c3 | cf961ffd; budget-conflict.test.ts:48/115; captura structuredClone do Proxy Solid diverge da serialização JSON real; correção em preparação |
+| WP00 docs exatos | [44661599225](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661599225) | 8/0 | 6999937050aeeb5d6839f87027dc26d2c7ab094c | fa25e59; 401 asserções, 358 ms |
+| Cenários, comparação pública | [44662130965](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662130965) | em andamento | 96b53bb186df47815ce7189b77e8db7a2b45d754 | 0c15b8a; novo escopo por comparação/replay, C09 fora do escopo |
+| WP00 contrato11 | [44662549289](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662549289) | em andamento | d9284bc1079b580af9d6224c5d2b141ee02a0d6f | f86d423; 38 artefatos preservados, 3 pins produtivos com proveniência + narrativa; aceitação BLOCKED intacta |
 
 O incidente Chrome do sentinel foi investigado: importsBun329ms/Node217ms, ChromePID4178 em espera deIO(folio_wait_bit_common) por~11s e depois futex, Browser.getVersion1sent0received; cleanup3.239s confirmou ausência dos2PIDs. **unbound de infraestrutura**, não prova de bug de privacidade. Nenhum rerun idêntico nem aumento de prazo foi feito.
 
 ## Tabela agregada dos oito shards
 
-Contagens abaixo são enumerações da base. Valores parciais são marcadores observados, não sumários reconstruídos. Fontes: Actions, handoffA blobc571aa613bddb069bdeb6ecd31defbf679716752 (head01a884c5ec6f544f214003002c44ab63e0557cd9), handoffB blob628a72522d02fb596947ebe8ea5b7fada1a78fdb (head543e619a51c78d5fd5386e5a150085f34361f42c). Pedidos de resultados e coordenação publicados em #397, comentários7027765228,7027925258,7028102866.
+Contagens abaixo são enumerações da base. Valores parciais são marcadores observados, não sumários reconstruídos. Última leitura: handoff A blob b3815051bccf3a00c799cce1c146f6b12a46224a; handoff B blob f90050bd01b416a627eee64a416fdcc5e411b2cd. Novos pedidos de resultados e coordenação: [PR397 comentário7028651757](https://github.com/gustavomhss/Orchestra-SF/pull/397#issuecomment-7028651757). Evidências posteriores constam na última coluna, sem substituir os totais da enumeração original.
 
 | Shard | Branch | Run | Pass | Fail | Causas | Unbound / qualificação pendente |
 | --- | --- | --- | ---: | ---: | --- | --- |
 | 1 | sf-shard-a | [44646013868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646013868) | ≥558 | ≥22 | UI/porta legadas;desempenho;C12 recoveryUI;baselinePortfolio;HTTP/injeções históricas;descriptor | Cancelado45min;102/113files.21FAIL+assertadaptersemfooter. Fixdescriptor243c083 em gate completo44657265518; demais ainda pendentes |
-| 2 | sf-shard-a | [44646018333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646018333) | 504 | 10 | Deadlines;Chrome;SQLITE_IOERR;C08oracle;BIdrilldown;Atlasrevocation | 1skip1error. Atlas e Chrome focados verdes porC; Aoracle d582fe3 em gate44657300808. Integração completa pendente |
-| 3 | sf-shard-a | [44651344557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651344557) | ≥255 | ≥21 | UIlegada;sentinelprivado;Portfolio/BIcost;C12oracle;linksBudget;inventáriodocumental | Cancelado45min;66/99files. Sentinelcorrigido masnovoChromeinfra;BIsharedmergeado sem declarar3verde;inventário não pode ser fabricado |
-| 4 | sf-shard-b | [44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692) | 497 | 14 | Identity/replay;verifierinputmutation;C12;baselinePortfolio;draft;authUI;guards;AM01 | C01/C08gates lançados;C08 avançou para147 comoracle de recibo.14fatias testpublicadas;shared405/406 separados;desempenho/guards/UIpendentes |
-| 5 | sf-shard-b | [44645913808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645913808) | ≥576 | ≥21 | Sensibilidade;Atlas;linksBI;coverageorder;freeze;UI;transport;threshold;instrumentação | Cancelado45min;105/119files;20FAIL+assertworkbridge,1skipLinux. Atlasfocadoverde;freeze precisa proveniência, outrascausaspendentes |
+| 2 | sf-shard-a | [44646018333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646018333) | 504 | 10 | Deadlines;Chrome;SQLITE_IOERR;C08oracle;BIdrilldown;Atlasrevocation | 1skip1error. Atlas e Chrome focados verdes porC; A oracle d582fe3: gate 44657300808 = 507/7/1skip/1error; novo 2ee5e96 em gate 44661562191. Chooser BI corrigido em C 8e71e07, ainda sem gate. Integração completa pendente |
+| 3 | sf-shard-a | [44651344557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651344557) | ≥255 | ≥21 | UIlegada;sentinelprivado;Portfolio/BIcost;C12oracle;linksBudget;inventáriodocumental | Cancelado45min;66/99files. Sentinelcorrigido masnovoChromeinfra;BIsharedmergeado sem declarar3verde;WP00 corpus restaurado exatamente e verde 8/0, sem declarar shard3 verde |
+| 4 | sf-shard-b | [44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692) | 497 | 14 | Identity/replay;verifierinputmutation;C12;baselinePortfolio;draft;authUI;guards;AM01 | C01 cancelou 45min sem sumário; C08 0/1 avançou para :147, novo C17 concreto ainda sem gate. C04 gate 44660393378 em andamento. Shared405 gate 9/2 por deadlines; 406 pendente. Desempenho/guards/UI abertos |
+| 5 | sf-shard-b | [44645913808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645913808) | ≥576 | ≥21 | Sensibilidade;Atlas;linksBI;coverageorder;freeze;UI;transport;threshold;instrumentação | Cancelado45min;105/119files;20FAIL+assertworkbridge,1skipLinux. Atlas focado verde; C06 gate 44662186554 em andamento; freeze #417 tem revisão proveniente e gate em andamento, demais causas pendentes |
 | 6 | sf-shard-b | [44651628624](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651628624) | 409 | 23 | UIconsumer;Portfolio180s;CAS;humananswer;Forecastpayload;baseline;filelocator;proposalbody;ancestry105s;BIsourcechooser;hostlifecycle7;previewlink | 2skip;434tests109files;7243expects2226.61s,824spawns0delegations. Todos23mapeadosB;fixesC12–C16 publicados;restantes dependências abertas |
-| 7 | sf-shard-c | [44645952434](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645952434) | 518 | 12 | Cenários;dependencies;Planneranswer;BI2;import;Dashboard;Atlas;static;revogação;AM02 | Pendentescenários/dependencies/novaregressãoPlanner/Dashboard/staticapproval. Outroscasos comgates focadosverdes;semfullshardnovo |
+| 7 | sf-shard-c | [44645952434](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645952434) | 518 | 12 | Cenários;dependencies;Planneranswer;BI2;import;Dashboard;Atlas;static;revogação;AM02 | Pendentes cenários, dependencies/performance, Dashboard composto e aprovação real do static guard. Planner original e nova regressão verdes; sem full shard novo |
 | 8 | sf-shard-c | [44645956665](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645956665) | 618 | 2 | Pinprodutor;driverbrowser | Ambascausasfocadasverdes;fullshardintegrado ainda pendente |
 
 Não existe total global de execução completa:1/3/5 foram interrompidos. Não somar recortes de correção ao baseline. Não há GO, cobertura final ou inferência de agente alegada.
 
 ## Pendente
 
-1. Concluir gates403 e400; corrigir somente novo ponto concreto, nunca repetir o mesmo gate idêntico.
-2. Compor dependênciasC7 com dois helpersC04 deB, preservando hipóteses, fonteobservada e totaisexatos. Gate causal conjunto próprio; B cobre seus consumidores.
-3. Publicar/revisar sharedOPEX409/lateedits, Portfolio e Signals; integrar fixture Dashboard nativa mantendo todos os controles e60s originais.
-4. Validar guards com aprovação real elegível. Dois paths protegidos da base: godfile-waivers.json e script/spawn-allowlist.json; o canal402 não é autorização.
-5. A/B continuam causas de seus shards; solicitarSHAs/resultados e coordenar UIlegada/performance. Shareds verdes entram antes dos consumidores.
-6. Após fixes, integrarC/A/B e rederivar os oito shards da árvore real (novos arquivos mudam inventário). Gates no máximo2 simultâneos desta sessão; snapshots exatos, sem sf-ci.
-7. Toda falha restante deve ser endereçada para o objetivo atualizado; unbound registra um bloqueio com evidência e não equivale à entrega verde.
+1. Concluir gates 403 e 417 e revisar seus resultados terminais antes de merge; nunca repetir gate idêntico sem mudança.
+2. Corrigir a captura JSON da fixture OPEX #412 e verificar o mesmo 409/CAS/recordId/review. Compor todos os shareds nativos em C e executar o Dashboard original de 60 s.
+3. Gate do chooser BI A2, source C 8e71e07. São mantidos 409 sem escolha, 403 fora do digest e o destino Planner exato após escolha.
+4. PR414 permanece draft: os 30 controles passaram, mas B6 ainda falhou. Revisar PR420 (batch C09, source 2c186534587c5e94f3031d3edcf6cecabd0584d7) e compor o próximo gate apenas depois dessa correção concreta. Não interpretar métricas incompletas como speedup. Dependencies C7 permanece unbound no await após preparo; mixed-source não será admitido no escopo Planner só por desempenho.
+5. PR421 prepara summary read/configure nativo, com fonte real e guards originais. Revisão independente identificou idempotencyKey ausente no painel; corrigir antes de gate. A migração A1 runtime-http mantém os três testes HTTP e as garantias do browser, sem substituir clique/save por POST direto.
+6. Validar guards com aprovação real elegível. Dois paths protegidos herdados: godfile-waivers.json e script/spawn-allowlist.json; PR402 é transporte verificável, não autorização. A/B continuam suas causas; solicitar resultados/SHAs e integrar somente fatias qualificadas.
+7. Após os fixes, integrar C/A/B e rederivar os oito shards da árvore real (novos arquivos mudam inventário). No máximo dois gates simultâneos desta sessão, snapshots exatos, sem sf-ci. Unbound identifica um bloqueio com evidência e não equivale à entrega verde.
 
 ## Decisões e justificativas
 
@@ -118,7 +136,7 @@ Nenhum comando foi executado em shell. Requisições Actions usam package sucafi
 - check:guards --base origin/dev: resultado original2GATE,194WARN,0errors. Sem posteriorPASSreal; aprovação específica ainda pendente.
 - Testes de transporte de aprovação:59/0 no44658251806, sem efeitos de aprovação.
 - sf-ci: nunca executado.
-- Merges:399/398/404/401/402 em sf-join-four, SHAs registrados acima.
+- Merges próprios qualificados: 399/398/404/401/402/400/409/411/415 em sf-join-four; SHAs acima. Outros merges da sessão de integração devem ser consultados no handoff sf-continuation.
 
 ## Apêndice — evidência original detalhada de C7/C8
 
