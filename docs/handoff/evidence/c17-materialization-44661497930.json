@@ -1,0 +1,3810 @@
+{
+  "schema": "sf-c17-materialization-profile-v1",
+  "scope": "CI-only diagnostic; not a product qualification or full successful ancestry traversal",
+  "repository": "gustavomhss/Orchestra-SF",
+  "baseProductSha": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+  "profilePreparationSha": "1a45249af737abdf52c6cb0ff1c121017e2be52f",
+  "snapshotSha": "ddd9f670b61e45213c0fe4d9c73a93782f07d026",
+  "snapshotTree": "35c90512eea5a2ebc54480ebad22599623288456",
+  "requestBlob": "b52417707c4a64e83edf890bfc7007788c5498e9",
+  "run": {
+    "id": 44661497930,
+    "jobId": 136040554251,
+    "cleanupJobId": 136041746620,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661497930",
+    "conclusion": "failure"
+  },
+  "compiler": {
+    "id": 44660976919,
+    "jobId": 136038853715,
+    "snapshotSha": "3bc924d7736e5b1386b083293661bb9ec05df746",
+    "productMarker": "1a45249af737abdf52c6cb0ff1c121017e2be52f",
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "sucafinaMs": 33133.705622,
+    "cliMs": 33314.694048,
+    "totalMs": 66502.756396
+  },
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+    "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+    "cooperativeDeadlineMs": 105000,
+    "bunPerTestBudgetMs": 120000,
+    "requestTimeoutMs": 30000,
+    "omniSpawner": "1",
+    "passed": 0,
+    "failed": 1,
+    "assertions": 2,
+    "durationMs": 105009.7,
+    "suiteSeconds": 105.38,
+    "failure": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+    "phases": [
+      {
+        "phase": "initialize",
+        "elapsedMs": 32
+      },
+      {
+        "phase": "produce-inner",
+        "elapsedMs": 1621,
+        "canonicalResultReads": 14,
+        "canonicalResultReadsCompleted": 14,
+        "aborted": false
+      },
+      {
+        "phase": "produce-outer",
+        "elapsedMs": 103344,
+        "canonicalResultReads": 1040,
+        "canonicalResultReadsCompleted": 1040,
+        "aborted": true
+      }
+    ],
+    "unreached": [
+      "reopen",
+      "persisted-cycle-rejection",
+      "revoked-authority-rejection"
+    ]
+  },
+  "originEnums": {
+    "0": "other",
+    "1": "scenario-request-store.ts",
+    "2": "planner-calculation-read-scope.ts",
+    "3": "unclassified"
+  },
+  "interpretation": {
+    "recordCount": 22,
+    "cumulative": true,
+    "asyncSpansInclusiveAndOverlapping": true,
+    "doNotSumAsyncSpansAsCpuTime": true,
+    "lastRecordEmittedAtFirstObservedAbortBeforeAllUnwindFinalizers": true,
+    "classificationOverheadMsAtLastRecord": 204.332,
+    "otherInstrumentationOverheadNotSeparatelyMeasured": true,
+    "noRawStackOrProductRequestPayloadsLogged": true,
+    "allFullStateClonesMsAtLastRecord": 828.185,
+    "allFullStateClonesFractionOfElapsed": 0.00788649976669555,
+    "staticFullSuccessReadPrediction": 1952,
+    "staticPredictionIsNotObservedCount": true,
+    "diagnosticShowsRepeatedSqlAndSnapshotMaterializationCostsButDoesNotProveAnyProposedOptimizationFitsDeadline": true
+  },
+  "records": [
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 5000,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 125,
+          "totalMs": 5925.872,
+          "maxMs": 1634.062
+        },
+        "bcs.resolveSource": {
+          "count": 125,
+          "totalMs": 5204.243,
+          "maxMs": 1077.609
+        },
+        "calculation.replay": {
+          "count": 8,
+          "totalMs": 3983.746,
+          "maxMs": 524.418
+        },
+        "calculation.simulate.first": {
+          "count": 8,
+          "totalMs": 403.679,
+          "maxMs": 54.865
+        },
+        "calculation.simulate.last": {
+          "count": 8,
+          "totalMs": 382.213,
+          "maxMs": 50.344
+        },
+        "calculation.verifySources": {
+          "count": 134,
+          "totalMs": 187.828,
+          "maxMs": 3.171
+        },
+        "instrumentation.stack": {
+          "count": 618,
+          "totalMs": 11.269,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 190,
+          "totalMs": 32.359,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 20,
+          "totalMs": 3.169,
+          "maxMs": 0.448
+        },
+        "snapshot.encode": {
+          "count": 11,
+          "totalMs": 1.747,
+          "maxMs": 0.404
+        },
+        "snapshot.materialize": {
+          "count": 22816,
+          "totalMs": 569.371,
+          "maxMs": 1.739
+        },
+        "snapshot.plan": {
+          "count": 9,
+          "totalMs": 1.435,
+          "maxMs": 0.411
+        },
+        "sqlite.begin": {
+          "count": 7933,
+          "totalMs": 47.958,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 7932,
+          "totalMs": 388.926,
+          "maxMs": 0.304
+        },
+        "sqlite.connect": {
+          "count": 7934,
+          "totalMs": 1086.945,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 1761,
+          "totalMs": 18.347,
+          "maxMs": 0.157
+        },
+        "sqlite.select.snapshot": {
+          "count": 23797,
+          "totalMs": 244.562,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 461,
+          "totalMs": 31.688,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 105,
+          "totalMs": 7.213,
+          "maxMs": 0.134
+        },
+        "state.authorize.first.2": {
+          "count": 52,
+          "totalMs": 3.524,
+          "maxMs": 0.098
+        },
+        "state.authorize.last.0": {
+          "count": 461,
+          "totalMs": 23.091,
+          "maxMs": 1.741
+        },
+        "state.authorize.last.1": {
+          "count": 105,
+          "totalMs": 4.829,
+          "maxMs": 0.086
+        },
+        "state.authorize.last.2": {
+          "count": 52,
+          "totalMs": 2.987,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 461,
+          "totalMs": 93.647,
+          "maxMs": 1.84
+        },
+        "state.callback.1": {
+          "count": 105,
+          "totalMs": 30.071,
+          "maxMs": 0.422
+        },
+        "state.callback.2": {
+          "count": 52,
+          "totalMs": 105.576,
+          "maxMs": 4.804
+        },
+        "state.fullClone.0": {
+          "count": 8,
+          "totalMs": 1.191,
+          "maxMs": 0.175
+        },
+        "state.fullClone.1": {
+          "count": 105,
+          "totalMs": 16.22,
+          "maxMs": 0.216
+        },
+        "state.fullClone.2": {
+          "count": 52,
+          "totalMs": 8.109,
+          "maxMs": 0.188
+        },
+        "state.toCallbackEnd.0": {
+          "count": 461,
+          "totalMs": 236.592,
+          "maxMs": 2.35
+        },
+        "state.toCallbackEnd.1": {
+          "count": 105,
+          "totalMs": 62.645,
+          "maxMs": 0.84
+        },
+        "state.toCallbackEnd.2": {
+          "count": 52,
+          "totalMs": 122.173,
+          "maxMs": 5.151
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 10000,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 268,
+          "totalMs": 16611.482,
+          "maxMs": 1634.062
+        },
+        "bcs.resolveSource": {
+          "count": 268,
+          "totalMs": 14086.241,
+          "maxMs": 1077.609
+        },
+        "calculation.replay": {
+          "count": 17,
+          "totalMs": 8361.802,
+          "maxMs": 524.418
+        },
+        "calculation.simulate.first": {
+          "count": 17,
+          "totalMs": 834.858,
+          "maxMs": 54.865
+        },
+        "calculation.simulate.last": {
+          "count": 17,
+          "totalMs": 812.079,
+          "maxMs": 50.344
+        },
+        "calculation.verifySources": {
+          "count": 286,
+          "totalMs": 382.493,
+          "maxMs": 3.171
+        },
+        "instrumentation.stack": {
+          "count": 1279,
+          "totalMs": 21.697,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 370,
+          "totalMs": 62.94,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 20,
+          "totalMs": 3.169,
+          "maxMs": 0.448
+        },
+        "snapshot.encode": {
+          "count": 11,
+          "totalMs": 1.747,
+          "maxMs": 0.404
+        },
+        "snapshot.materialize": {
+          "count": 46865,
+          "totalMs": 1183.274,
+          "maxMs": 2
+        },
+        "snapshot.plan": {
+          "count": 9,
+          "totalMs": 1.435,
+          "maxMs": 0.411
+        },
+        "sqlite.begin": {
+          "count": 16242,
+          "totalMs": 88.629,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 16241,
+          "totalMs": 777.488,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 16243,
+          "totalMs": 2196.827,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 3592,
+          "totalMs": 35.837,
+          "maxMs": 0.157
+        },
+        "sqlite.select.snapshot": {
+          "count": 48724,
+          "totalMs": 483.086,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 955,
+          "totalMs": 62.725,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 218,
+          "totalMs": 14.659,
+          "maxMs": 0.134
+        },
+        "state.authorize.first.2": {
+          "count": 106,
+          "totalMs": 7.136,
+          "maxMs": 0.105
+        },
+        "state.authorize.last.0": {
+          "count": 955,
+          "totalMs": 44.571,
+          "maxMs": 1.741
+        },
+        "state.authorize.last.1": {
+          "count": 218,
+          "totalMs": 11.166,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 106,
+          "totalMs": 6.017,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 955,
+          "totalMs": 186.708,
+          "maxMs": 1.84
+        },
+        "state.callback.1": {
+          "count": 218,
+          "totalMs": 63.346,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 106,
+          "totalMs": 214.065,
+          "maxMs": 4.804
+        },
+        "state.fullClone.0": {
+          "count": 12,
+          "totalMs": 1.86,
+          "maxMs": 0.185
+        },
+        "state.fullClone.1": {
+          "count": 218,
+          "totalMs": 34.138,
+          "maxMs": 0.232
+        },
+        "state.fullClone.2": {
+          "count": 106,
+          "totalMs": 16.591,
+          "maxMs": 0.205
+        },
+        "state.toCallbackEnd.0": {
+          "count": 955,
+          "totalMs": 470.257,
+          "maxMs": 2.35
+        },
+        "state.toCallbackEnd.1": {
+          "count": 218,
+          "totalMs": 134.21,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 106,
+          "totalMs": 247.237,
+          "maxMs": 5.151
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 15000,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 411,
+          "totalMs": 25605.155,
+          "maxMs": 1634.062
+        },
+        "bcs.resolveSource": {
+          "count": 411,
+          "totalMs": 21822.405,
+          "maxMs": 1077.609
+        },
+        "calculation.replay": {
+          "count": 26,
+          "totalMs": 12670.307,
+          "maxMs": 524.418
+        },
+        "calculation.simulate.first": {
+          "count": 27,
+          "totalMs": 1306.387,
+          "maxMs": 54.865
+        },
+        "calculation.simulate.last": {
+          "count": 26,
+          "totalMs": 1230.174,
+          "maxMs": 50.344
+        },
+        "calculation.verifySources": {
+          "count": 437,
+          "totalMs": 576.557,
+          "maxMs": 3.171
+        },
+        "instrumentation.stack": {
+          "count": 1947,
+          "totalMs": 32.179,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 550,
+          "totalMs": 91.066,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 20,
+          "totalMs": 3.169,
+          "maxMs": 0.448
+        },
+        "snapshot.encode": {
+          "count": 11,
+          "totalMs": 1.747,
+          "maxMs": 0.404
+        },
+        "snapshot.materialize": {
+          "count": 71251,
+          "totalMs": 1807.067,
+          "maxMs": 2
+        },
+        "snapshot.plan": {
+          "count": 9,
+          "totalMs": 1.435,
+          "maxMs": 0.411
+        },
+        "sqlite.begin": {
+          "count": 24682,
+          "totalMs": 128.243,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 24681,
+          "totalMs": 1166.336,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 24683,
+          "totalMs": 3314.508,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 5456,
+          "totalMs": 53.185,
+          "maxMs": 0.157
+        },
+        "sqlite.select.snapshot": {
+          "count": 74046,
+          "totalMs": 717.789,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 1455,
+          "totalMs": 94.102,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 332,
+          "totalMs": 22.018,
+          "maxMs": 0.134
+        },
+        "state.authorize.first.2": {
+          "count": 160,
+          "totalMs": 10.786,
+          "maxMs": 0.111
+        },
+        "state.authorize.last.0": {
+          "count": 1455,
+          "totalMs": 69.586,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 332,
+          "totalMs": 16.111,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 160,
+          "totalMs": 8.875,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 1455,
+          "totalMs": 283.439,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 332,
+          "totalMs": 94.42,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 160,
+          "totalMs": 313.138,
+          "maxMs": 4.804
+        },
+        "state.fullClone.0": {
+          "count": 18,
+          "totalMs": 2.828,
+          "maxMs": 0.185
+        },
+        "state.fullClone.1": {
+          "count": 332,
+          "totalMs": 51.791,
+          "maxMs": 0.232
+        },
+        "state.fullClone.2": {
+          "count": 160,
+          "totalMs": 24.978,
+          "maxMs": 0.205
+        },
+        "state.toCallbackEnd.0": {
+          "count": 1455,
+          "totalMs": 709.469,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 332,
+          "totalMs": 200.411,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 160,
+          "totalMs": 362.97,
+          "maxMs": 5.151
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 20001,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 545,
+          "totalMs": 37036.08,
+          "maxMs": 1787.311
+        },
+        "bcs.resolveSource": {
+          "count": 545,
+          "totalMs": 31312.133,
+          "maxMs": 1188.474
+        },
+        "calculation.replay": {
+          "count": 35,
+          "totalMs": 17362.276,
+          "maxMs": 548.399
+        },
+        "calculation.simulate.first": {
+          "count": 35,
+          "totalMs": 1715.134,
+          "maxMs": 54.865
+        },
+        "calculation.simulate.last": {
+          "count": 35,
+          "totalMs": 1690.144,
+          "maxMs": 55.061
+        },
+        "calculation.verifySources": {
+          "count": 573,
+          "totalMs": 759.093,
+          "maxMs": 3.171
+        },
+        "instrumentation.stack": {
+          "count": 2556,
+          "totalMs": 41.974,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 730,
+          "totalMs": 133.378,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 22,
+          "totalMs": 4.587,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 12,
+          "totalMs": 2.144,
+          "maxMs": 0.404
+        },
+        "snapshot.materialize": {
+          "count": 93290,
+          "totalMs": 2575.529,
+          "maxMs": 2.033
+        },
+        "snapshot.plan": {
+          "count": 10,
+          "totalMs": 2.088,
+          "maxMs": 0.653
+        },
+        "sqlite.begin": {
+          "count": 32279,
+          "totalMs": 168.583,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 32279,
+          "totalMs": 1538.758,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 32281,
+          "totalMs": 4352.66,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 7122,
+          "totalMs": 69.338,
+          "maxMs": 0.157
+        },
+        "sqlite.select.snapshot": {
+          "count": 96837,
+          "totalMs": 995.16,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 1908,
+          "totalMs": 123.935,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 434,
+          "totalMs": 28.885,
+          "maxMs": 0.134
+        },
+        "state.authorize.first.2": {
+          "count": 214,
+          "totalMs": 14.487,
+          "maxMs": 0.111
+        },
+        "state.authorize.last.0": {
+          "count": 1908,
+          "totalMs": 88.401,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 434,
+          "totalMs": 20.677,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 214,
+          "totalMs": 12.006,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 1908,
+          "totalMs": 370.755,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 434,
+          "totalMs": 129.895,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 214,
+          "totalMs": 448.011,
+          "maxMs": 5.996
+        },
+        "state.fullClone.0": {
+          "count": 24,
+          "totalMs": 4.302,
+          "maxMs": 0.279
+        },
+        "state.fullClone.1": {
+          "count": 434,
+          "totalMs": 74.767,
+          "maxMs": 0.284
+        },
+        "state.fullClone.2": {
+          "count": 214,
+          "totalMs": 37.451,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 1908,
+          "totalMs": 948.233,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 434,
+          "totalMs": 270.876,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 214,
+          "totalMs": 519.125,
+          "maxMs": 6.372
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 25001,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 674,
+          "totalMs": 46353.008,
+          "maxMs": 1787.311
+        },
+        "bcs.resolveSource": {
+          "count": 674,
+          "totalMs": 39263.819,
+          "maxMs": 1201.181
+        },
+        "calculation.replay": {
+          "count": 43,
+          "totalMs": 21633.644,
+          "maxMs": 548.399
+        },
+        "calculation.simulate.first": {
+          "count": 44,
+          "totalMs": 2183.3,
+          "maxMs": 58.478
+        },
+        "calculation.simulate.last": {
+          "count": 43,
+          "totalMs": 2107.557,
+          "maxMs": 55.061
+        },
+        "calculation.verifySources": {
+          "count": 709,
+          "totalMs": 943.726,
+          "maxMs": 3.232
+        },
+        "instrumentation.stack": {
+          "count": 3152,
+          "totalMs": 51.562,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 890,
+          "totalMs": 175.903,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 22,
+          "totalMs": 4.587,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 12,
+          "totalMs": 2.144,
+          "maxMs": 0.404
+        },
+        "snapshot.materialize": {
+          "count": 115134,
+          "totalMs": 3396.998,
+          "maxMs": 2.033
+        },
+        "snapshot.plan": {
+          "count": 10,
+          "totalMs": 2.088,
+          "maxMs": 0.653
+        },
+        "sqlite.begin": {
+          "count": 39843,
+          "totalMs": 206.777,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 39843,
+          "totalMs": 1908.74,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 39845,
+          "totalMs": 5388.953,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 8792,
+          "totalMs": 85.176,
+          "maxMs": 0.157
+        },
+        "sqlite.select.snapshot": {
+          "count": 119529,
+          "totalMs": 1266.756,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 2354,
+          "totalMs": 153.118,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 536,
+          "totalMs": 35.702,
+          "maxMs": 0.134
+        },
+        "state.authorize.first.2": {
+          "count": 262,
+          "totalMs": 17.741,
+          "maxMs": 0.111
+        },
+        "state.authorize.last.0": {
+          "count": 2354,
+          "totalMs": 108.508,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 536,
+          "totalMs": 25.339,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 262,
+          "totalMs": 14.702,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 2354,
+          "totalMs": 457.969,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 536,
+          "totalMs": 167.778,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 262,
+          "totalMs": 571.116,
+          "maxMs": 5.996
+        },
+        "state.fullClone.0": {
+          "count": 28,
+          "totalMs": 5.337,
+          "maxMs": 0.288
+        },
+        "state.fullClone.1": {
+          "count": 536,
+          "totalMs": 100.041,
+          "maxMs": 0.294
+        },
+        "state.fullClone.2": {
+          "count": 262,
+          "totalMs": 49.363,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 2354,
+          "totalMs": 1185.509,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 536,
+          "totalMs": 346.444,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 262,
+          "totalMs": 659.58,
+          "maxMs": 6.372
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 30001,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 805,
+          "totalMs": 58167.771,
+          "maxMs": 1816.625
+        },
+        "bcs.resolveSource": {
+          "count": 805,
+          "totalMs": 49083.058,
+          "maxMs": 1210.065
+        },
+        "calculation.replay": {
+          "count": 52,
+          "totalMs": 26494.212,
+          "maxMs": 550.886
+        },
+        "calculation.simulate.first": {
+          "count": 52,
+          "totalMs": 2611.074,
+          "maxMs": 58.478
+        },
+        "calculation.simulate.last": {
+          "count": 52,
+          "totalMs": 2581.064,
+          "maxMs": 55.061
+        },
+        "calculation.verifySources": {
+          "count": 839,
+          "totalMs": 1124.306,
+          "maxMs": 3.232
+        },
+        "instrumentation.stack": {
+          "count": 3741,
+          "totalMs": 61.33,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 1085,
+          "totalMs": 227.893,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 136500,
+          "totalMs": 4227.919,
+          "maxMs": 2.033
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 47214,
+          "totalMs": 244.789,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 47214,
+          "totalMs": 2271.26,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 47215,
+          "totalMs": 6403.386,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 10410,
+          "totalMs": 100.511,
+          "maxMs": 0.157
+        },
+        "sqlite.select.snapshot": {
+          "count": 141642,
+          "totalMs": 1539.347,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 2789,
+          "totalMs": 182.047,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 636,
+          "totalMs": 42.561,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 316,
+          "totalMs": 21.433,
+          "maxMs": 0.111
+        },
+        "state.authorize.last.0": {
+          "count": 2789,
+          "totalMs": 130.145,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 636,
+          "totalMs": 29.865,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 316,
+          "totalMs": 17.961,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 2789,
+          "totalMs": 545.562,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 636,
+          "totalMs": 206.486,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 316,
+          "totalMs": 723.239,
+          "maxMs": 5.996
+        },
+        "state.fullClone.0": {
+          "count": 34,
+          "totalMs": 7.018,
+          "maxMs": 0.343
+        },
+        "state.fullClone.1": {
+          "count": 636,
+          "totalMs": 126.073,
+          "maxMs": 0.358
+        },
+        "state.fullClone.2": {
+          "count": 316,
+          "totalMs": 63.697,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 2789,
+          "totalMs": 1426.385,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 636,
+          "totalMs": 421.515,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 316,
+          "totalMs": 831.6,
+          "maxMs": 6.372
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 35002,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 931,
+          "totalMs": 67182.237,
+          "maxMs": 1833.554
+        },
+        "bcs.resolveSource": {
+          "count": 931,
+          "totalMs": 56684.234,
+          "maxMs": 1220.182
+        },
+        "calculation.replay": {
+          "count": 60,
+          "totalMs": 30924.604,
+          "maxMs": 566.139
+        },
+        "calculation.simulate.first": {
+          "count": 60,
+          "totalMs": 3046.648,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 60,
+          "totalMs": 3005.832,
+          "maxMs": 55.705
+        },
+        "calculation.verifySources": {
+          "count": 975,
+          "totalMs": 3758.346,
+          "maxMs": 2412.181
+        },
+        "instrumentation.stack": {
+          "count": 4323,
+          "totalMs": 70.846,
+          "maxMs": 0.055
+        },
+        "snapshot.clone": {
+          "count": 1225,
+          "totalMs": 273.198,
+          "maxMs": 2.268
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 157602,
+          "totalMs": 5102.814,
+          "maxMs": 2.033
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 54512,
+          "totalMs": 281.025,
+          "maxMs": 1.639
+        },
+        "sqlite.close": {
+          "count": 54512,
+          "totalMs": 2637.185,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 54514,
+          "totalMs": 7412.533,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 12014,
+          "totalMs": 117.339,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 163536,
+          "totalMs": 1830.221,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 3228,
+          "totalMs": 211.154,
+          "maxMs": 0.848
+        },
+        "state.authorize.first.1": {
+          "count": 737,
+          "totalMs": 49.344,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 358,
+          "totalMs": 24.228,
+          "maxMs": 0.111
+        },
+        "state.authorize.last.0": {
+          "count": 3228,
+          "totalMs": 148.471,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 737,
+          "totalMs": 34.559,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 358,
+          "totalMs": 20.475,
+          "maxMs": 0.137
+        },
+        "state.callback.0": {
+          "count": 3228,
+          "totalMs": 629.852,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 737,
+          "totalMs": 248.147,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 358,
+          "totalMs": 847.776,
+          "maxMs": 5.996
+        },
+        "state.fullClone.0": {
+          "count": 39,
+          "totalMs": 8.438,
+          "maxMs": 0.343
+        },
+        "state.fullClone.1": {
+          "count": 737,
+          "totalMs": 155.117,
+          "maxMs": 0.519
+        },
+        "state.fullClone.2": {
+          "count": 358,
+          "totalMs": 75.451,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 3228,
+          "totalMs": 1669.476,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 737,
+          "totalMs": 500.86,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 358,
+          "totalMs": 971.706,
+          "maxMs": 6.372
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 40002,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1055,
+          "totalMs": 75697.007,
+          "maxMs": 1851.1
+        },
+        "bcs.resolveSource": {
+          "count": 1055,
+          "totalMs": 63776.108,
+          "maxMs": 1234.01
+        },
+        "calculation.replay": {
+          "count": 68,
+          "totalMs": 35433.221,
+          "maxMs": 580.298
+        },
+        "calculation.simulate.first": {
+          "count": 69,
+          "totalMs": 3533.013,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 68,
+          "totalMs": 3455.756,
+          "maxMs": 63.563
+        },
+        "calculation.verifySources": {
+          "count": 1111,
+          "totalMs": 8853.728,
+          "maxMs": 2432.204
+        },
+        "instrumentation.stack": {
+          "count": 4886,
+          "totalMs": 82.034,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 1345,
+          "totalMs": 311.642,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 178430,
+          "totalMs": 5976.837,
+          "maxMs": 2.037
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 61754,
+          "totalMs": 321.125,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 61754,
+          "totalMs": 2997.379,
+          "maxMs": 1.318
+        },
+        "sqlite.connect": {
+          "count": 61756,
+          "totalMs": 8409.808,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 13609,
+          "totalMs": 132.927,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 185262,
+          "totalMs": 2136.133,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 3656,
+          "totalMs": 241.963,
+          "maxMs": 1.749
+        },
+        "state.authorize.first.1": {
+          "count": 836,
+          "totalMs": 56.213,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 394,
+          "totalMs": 26.787,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 3656,
+          "totalMs": 168.419,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 836,
+          "totalMs": 39.189,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 394,
+          "totalMs": 22.694,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 3656,
+          "totalMs": 716.695,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 836,
+          "totalMs": 288.946,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 394,
+          "totalMs": 957.405,
+          "maxMs": 6.693
+        },
+        "state.fullClone.0": {
+          "count": 43,
+          "totalMs": 9.637,
+          "maxMs": 0.343
+        },
+        "state.fullClone.1": {
+          "count": 836,
+          "totalMs": 183.148,
+          "maxMs": 0.519
+        },
+        "state.fullClone.2": {
+          "count": 394,
+          "totalMs": 85.672,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 3656,
+          "totalMs": 1914.865,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 836,
+          "totalMs": 579.955,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 394,
+          "totalMs": 1095.348,
+          "maxMs": 7.063
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 45002,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1180,
+          "totalMs": 84771.927,
+          "maxMs": 1851.1
+        },
+        "bcs.resolveSource": {
+          "count": 1181,
+          "totalMs": 72661.268,
+          "maxMs": 1243.315
+        },
+        "calculation.replay": {
+          "count": 76,
+          "totalMs": 39903.033,
+          "maxMs": 585.011
+        },
+        "calculation.simulate.first": {
+          "count": 77,
+          "totalMs": 3968.243,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 76,
+          "totalMs": 3907.238,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 1245,
+          "totalMs": 11481.595,
+          "maxMs": 2432.204
+        },
+        "instrumentation.stack": {
+          "count": 5456,
+          "totalMs": 91.128,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 1485,
+          "totalMs": 358.699,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 199256,
+          "totalMs": 6848.35,
+          "maxMs": 5.447
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 68962,
+          "totalMs": 357.972,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 68962,
+          "totalMs": 3359.891,
+          "maxMs": 1.386
+        },
+        "sqlite.connect": {
+          "count": 68964,
+          "totalMs": 9401.427,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 15191,
+          "totalMs": 148.21,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 206886,
+          "totalMs": 2443.977,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 4086,
+          "totalMs": 272.292,
+          "maxMs": 1.749
+        },
+        "state.authorize.first.1": {
+          "count": 934,
+          "totalMs": 62.942,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 436,
+          "totalMs": 29.797,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 4086,
+          "totalMs": 188.236,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 934,
+          "totalMs": 43.865,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 436,
+          "totalMs": 25.467,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 4086,
+          "totalMs": 803.811,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 934,
+          "totalMs": 329.793,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 436,
+          "totalMs": 1085.548,
+          "maxMs": 6.693
+        },
+        "state.fullClone.0": {
+          "count": 47,
+          "totalMs": 10.815,
+          "maxMs": 0.343
+        },
+        "state.fullClone.1": {
+          "count": 934,
+          "totalMs": 211.338,
+          "maxMs": 0.519
+        },
+        "state.fullClone.2": {
+          "count": 436,
+          "totalMs": 97.642,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 4086,
+          "totalMs": 2159.526,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 934,
+          "totalMs": 657.464,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 436,
+          "totalMs": 1239.456,
+          "maxMs": 7.063
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 50003,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1307,
+          "totalMs": 95853.607,
+          "maxMs": 1873.266
+        },
+        "bcs.resolveSource": {
+          "count": 1307,
+          "totalMs": 80422.303,
+          "maxMs": 1243.315
+        },
+        "calculation.replay": {
+          "count": 84,
+          "totalMs": 44439.755,
+          "maxMs": 590.319
+        },
+        "calculation.simulate.first": {
+          "count": 85,
+          "totalMs": 4405.789,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 84,
+          "totalMs": 4347.992,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 1379,
+          "totalMs": 14160.802,
+          "maxMs": 2457.043
+        },
+        "instrumentation.stack": {
+          "count": 6016,
+          "totalMs": 100.198,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 1615,
+          "totalMs": 399.253,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 219887,
+          "totalMs": 7714.877,
+          "maxMs": 5.447
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 76115,
+          "totalMs": 394.625,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 76114,
+          "totalMs": 3720.078,
+          "maxMs": 1.386
+        },
+        "sqlite.connect": {
+          "count": 76116,
+          "totalMs": 10386.501,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 16758,
+          "totalMs": 163.478,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 228345,
+          "totalMs": 2763.516,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 4511,
+          "totalMs": 301.66,
+          "maxMs": 1.749
+        },
+        "state.authorize.first.1": {
+          "count": 1031,
+          "totalMs": 69.699,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 474,
+          "totalMs": 32.469,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 4511,
+          "totalMs": 208.437,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1031,
+          "totalMs": 48.602,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 474,
+          "totalMs": 27.743,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 4511,
+          "totalMs": 891.028,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1031,
+          "totalMs": 370.943,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 474,
+          "totalMs": 1199.56,
+          "maxMs": 6.693
+        },
+        "state.fullClone.0": {
+          "count": 51,
+          "totalMs": 11.958,
+          "maxMs": 0.343
+        },
+        "state.fullClone.1": {
+          "count": 1031,
+          "totalMs": 239.717,
+          "maxMs": 0.62
+        },
+        "state.fullClone.2": {
+          "count": 474,
+          "totalMs": 108.488,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 4511,
+          "totalMs": 2410.099,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1031,
+          "totalMs": 735.792,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 474,
+          "totalMs": 1369.896,
+          "maxMs": 7.063
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 55003,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1430,
+          "totalMs": 104387.123,
+          "maxMs": 1873.266
+        },
+        "bcs.resolveSource": {
+          "count": 1430,
+          "totalMs": 87531.771,
+          "maxMs": 1243.466
+        },
+        "calculation.replay": {
+          "count": 92,
+          "totalMs": 48953.295,
+          "maxMs": 590.319
+        },
+        "calculation.simulate.first": {
+          "count": 93,
+          "totalMs": 4842.52,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 92,
+          "totalMs": 4781.228,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 1513,
+          "totalMs": 19290.7,
+          "maxMs": 2460.22
+        },
+        "instrumentation.stack": {
+          "count": 6592,
+          "totalMs": 109.514,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 1755,
+          "totalMs": 440.534,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 240620,
+          "totalMs": 8580.52,
+          "maxMs": 5.447
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 83282,
+          "totalMs": 430.847,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 83281,
+          "totalMs": 4076.798,
+          "maxMs": 1.386
+        },
+        "sqlite.connect": {
+          "count": 83283,
+          "totalMs": 11372.404,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 18333,
+          "totalMs": 178.772,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 249846,
+          "totalMs": 3082.332,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 4941,
+          "totalMs": 330.826,
+          "maxMs": 1.749
+        },
+        "state.authorize.first.1": {
+          "count": 1133,
+          "totalMs": 76.857,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 518,
+          "totalMs": 35.471,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 4940,
+          "totalMs": 226.764,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1133,
+          "totalMs": 53.593,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 518,
+          "totalMs": 30.482,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 4940,
+          "totalMs": 974.691,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1133,
+          "totalMs": 413.903,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 518,
+          "totalMs": 1324.719,
+          "maxMs": 6.693
+        },
+        "state.fullClone.0": {
+          "count": 56,
+          "totalMs": 13.441,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1133,
+          "totalMs": 269.171,
+          "maxMs": 0.62
+        },
+        "state.fullClone.2": {
+          "count": 518,
+          "totalMs": 120.873,
+          "maxMs": 0.485
+        },
+        "state.toCallbackEnd.0": {
+          "count": 4940,
+          "totalMs": 2651.291,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1133,
+          "totalMs": 817.324,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 518,
+          "totalMs": 1511.881,
+          "maxMs": 7.063
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 60003,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1554,
+          "totalMs": 113561.506,
+          "maxMs": 1873.266
+        },
+        "bcs.resolveSource": {
+          "count": 1554,
+          "totalMs": 95276.095,
+          "maxMs": 1250.796
+        },
+        "calculation.replay": {
+          "count": 100,
+          "totalMs": 53467.967,
+          "maxMs": 592.885
+        },
+        "calculation.simulate.first": {
+          "count": 101,
+          "totalMs": 5265.819,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 100,
+          "totalMs": 5218.969,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 1646,
+          "totalMs": 21954.721,
+          "maxMs": 2460.22
+        },
+        "instrumentation.stack": {
+          "count": 7159,
+          "totalMs": 118.757,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 1895,
+          "totalMs": 490.428,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 261341,
+          "totalMs": 9446.12,
+          "maxMs": 5.447
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 90455,
+          "totalMs": 467.435,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 90455,
+          "totalMs": 4432.717,
+          "maxMs": 1.386
+        },
+        "sqlite.connect": {
+          "count": 90457,
+          "totalMs": 12358.169,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 19912,
+          "totalMs": 193.906,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 271365,
+          "totalMs": 3387.38,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 5369,
+          "totalMs": 360.161,
+          "maxMs": 1.749
+        },
+        "state.authorize.first.1": {
+          "count": 1230,
+          "totalMs": 83.483,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 560,
+          "totalMs": 38.502,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 5369,
+          "totalMs": 245.437,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1230,
+          "totalMs": 58.192,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 560,
+          "totalMs": 33.144,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 5369,
+          "totalMs": 1058.958,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1230,
+          "totalMs": 454.53,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 560,
+          "totalMs": 1458.227,
+          "maxMs": 6.693
+        },
+        "state.fullClone.0": {
+          "count": 61,
+          "totalMs": 14.854,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1230,
+          "totalMs": 297.411,
+          "maxMs": 0.62
+        },
+        "state.fullClone.2": {
+          "count": 560,
+          "totalMs": 134.819,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 5369,
+          "totalMs": 2895.091,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1230,
+          "totalMs": 895.023,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 560,
+          "totalMs": 1661.808,
+          "maxMs": 7.063
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 65003,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1682,
+          "totalMs": 125060.418,
+          "maxMs": 1873.266
+        },
+        "bcs.resolveSource": {
+          "count": 1682,
+          "totalMs": 104734.534,
+          "maxMs": 1250.796
+        },
+        "calculation.replay": {
+          "count": 109,
+          "totalMs": 58474.61,
+          "maxMs": 592.885
+        },
+        "calculation.simulate.first": {
+          "count": 109,
+          "totalMs": 5700.535,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 109,
+          "totalMs": 5698.787,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 1778,
+          "totalMs": 24567.702,
+          "maxMs": 2460.22
+        },
+        "instrumentation.stack": {
+          "count": 7725,
+          "totalMs": 127.929,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2045,
+          "totalMs": 539.533,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 282235,
+          "totalMs": 10316.819,
+          "maxMs": 5.447
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 97695,
+          "totalMs": 504.021,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 97695,
+          "totalMs": 4790.868,
+          "maxMs": 1.386
+        },
+        "sqlite.connect": {
+          "count": 97697,
+          "totalMs": 13351.288,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 21502,
+          "totalMs": 209.203,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 293085,
+          "totalMs": 3667.71,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 5793,
+          "totalMs": 388.928,
+          "maxMs": 1.749
+        },
+        "state.authorize.first.1": {
+          "count": 1328,
+          "totalMs": 90.188,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 604,
+          "totalMs": 41.539,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 5793,
+          "totalMs": 267.965,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1328,
+          "totalMs": 62.992,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 604,
+          "totalMs": 35.789,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 5793,
+          "totalMs": 1145.527,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1328,
+          "totalMs": 495.819,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 604,
+          "totalMs": 1595.773,
+          "maxMs": 6.847
+        },
+        "state.fullClone.0": {
+          "count": 65,
+          "totalMs": 15.979,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1328,
+          "totalMs": 325.777,
+          "maxMs": 0.62
+        },
+        "state.fullClone.2": {
+          "count": 604,
+          "totalMs": 147.487,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 5793,
+          "totalMs": 3135.156,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1328,
+          "totalMs": 972.437,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 604,
+          "totalMs": 1815.536,
+          "maxMs": 7.229
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 70004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1805,
+          "totalMs": 133631.127,
+          "maxMs": 1873.266
+        },
+        "bcs.resolveSource": {
+          "count": 1805,
+          "totalMs": 111873.32,
+          "maxMs": 1250.796
+        },
+        "calculation.replay": {
+          "count": 117,
+          "totalMs": 63029.274,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 117,
+          "totalMs": 6138.332,
+          "maxMs": 58.659
+        },
+        "calculation.simulate.last": {
+          "count": 117,
+          "totalMs": 6136.865,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 1912,
+          "totalMs": 29702.766,
+          "maxMs": 2474.099
+        },
+        "instrumentation.stack": {
+          "count": 8288,
+          "totalMs": 137.34,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2175,
+          "totalMs": 581.403,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 302821,
+          "totalMs": 11193.204,
+          "maxMs": 5.447
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 104829,
+          "totalMs": 540.296,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 104829,
+          "totalMs": 5142.253,
+          "maxMs": 1.386
+        },
+        "sqlite.connect": {
+          "count": 104831,
+          "totalMs": 14328.739,
+          "maxMs": 2.001
+        },
+        "sqlite.queue": {
+          "count": 23067,
+          "totalMs": 224.329,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 314487,
+          "totalMs": 3965.991,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 6219,
+          "totalMs": 421.604,
+          "maxMs": 1.916
+        },
+        "state.authorize.first.1": {
+          "count": 1425,
+          "totalMs": 96.833,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 644,
+          "totalMs": 44.464,
+          "maxMs": 0.122
+        },
+        "state.authorize.last.0": {
+          "count": 6219,
+          "totalMs": 286.55,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1425,
+          "totalMs": 67.76,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 644,
+          "totalMs": 38.165,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 6219,
+          "totalMs": 1232.97,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1425,
+          "totalMs": 536.746,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 644,
+          "totalMs": 1713.78,
+          "maxMs": 6.847
+        },
+        "state.fullClone.0": {
+          "count": 70,
+          "totalMs": 17.443,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1425,
+          "totalMs": 354.037,
+          "maxMs": 0.62
+        },
+        "state.fullClone.2": {
+          "count": 644,
+          "totalMs": 159.018,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 6219,
+          "totalMs": 3377.983,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1425,
+          "totalMs": 1050.12,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 644,
+          "totalMs": 1948.944,
+          "maxMs": 7.229
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 75004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 1927,
+          "totalMs": 142946.281,
+          "maxMs": 1902.227
+        },
+        "bcs.resolveSource": {
+          "count": 1927,
+          "totalMs": 119739.287,
+          "maxMs": 1273.295
+        },
+        "calculation.replay": {
+          "count": 125,
+          "totalMs": 67634.233,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 125,
+          "totalMs": 6590.953,
+          "maxMs": 66.917
+        },
+        "calculation.simulate.last": {
+          "count": 125,
+          "totalMs": 6578.228,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2042,
+          "totalMs": 32387.599,
+          "maxMs": 2477.24
+        },
+        "instrumentation.stack": {
+          "count": 8844,
+          "totalMs": 146.939,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2305,
+          "totalMs": 623.193,
+          "maxMs": 2.613
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 323101,
+          "totalMs": 12084.122,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 111857,
+          "totalMs": 576.079,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 111856,
+          "totalMs": 5494.725,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 111858,
+          "totalMs": 15298.128,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 24613,
+          "totalMs": 239.335,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 335571,
+          "totalMs": 4280.379,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 6637,
+          "totalMs": 452.2,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 1522,
+          "totalMs": 103.558,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 684,
+          "totalMs": 49.237,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 6637,
+          "totalMs": 304.794,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1522,
+          "totalMs": 72.516,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 684,
+          "totalMs": 40.662,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 6637,
+          "totalMs": 1317.61,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1522,
+          "totalMs": 578.4,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 684,
+          "totalMs": 1835.105,
+          "maxMs": 6.847
+        },
+        "state.fullClone.0": {
+          "count": 75,
+          "totalMs": 18.973,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1522,
+          "totalMs": 382.953,
+          "maxMs": 0.882
+        },
+        "state.fullClone.2": {
+          "count": 684,
+          "totalMs": 170.496,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 6637,
+          "totalMs": 3619.49,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1522,
+          "totalMs": 1131.374,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 684,
+          "totalMs": 2085.883,
+          "maxMs": 7.229
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 80004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2049,
+          "totalMs": 151592.856,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2050,
+          "totalMs": 127560.541,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 133,
+          "totalMs": 72198.404,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 133,
+          "totalMs": 7026.104,
+          "maxMs": 66.917
+        },
+        "calculation.simulate.last": {
+          "count": 133,
+          "totalMs": 7023.07,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2173,
+          "totalMs": 35121.98,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 9399,
+          "totalMs": 156.25,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2445,
+          "totalMs": 672.37,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 343508,
+          "totalMs": 12959.606,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 118924,
+          "totalMs": 611.96,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 118924,
+          "totalMs": 5847.879,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 118926,
+          "totalMs": 16271.775,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 26166,
+          "totalMs": 254.358,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 356772,
+          "totalMs": 4605.334,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 7057,
+          "totalMs": 480.884,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 1618,
+          "totalMs": 110.2,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 724,
+          "totalMs": 52.082,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 7057,
+          "totalMs": 323.282,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1618,
+          "totalMs": 77.163,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 724,
+          "totalMs": 43.175,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 7057,
+          "totalMs": 1400.676,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1618,
+          "totalMs": 618.842,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 724,
+          "totalMs": 1968.89,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 79,
+          "totalMs": 20.155,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1618,
+          "totalMs": 410.896,
+          "maxMs": 0.882
+        },
+        "state.fullClone.2": {
+          "count": 724,
+          "totalMs": 182.144,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 7057,
+          "totalMs": 3858.835,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1618,
+          "totalMs": 1208.353,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 724,
+          "totalMs": 2237.278,
+          "maxMs": 11.483
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 85004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2173,
+          "totalMs": 160782.43,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2174,
+          "totalMs": 135967.599,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 141,
+          "totalMs": 76748.48,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 141,
+          "totalMs": 7464.316,
+          "maxMs": 66.917
+        },
+        "calculation.simulate.last": {
+          "count": 141,
+          "totalMs": 7457.881,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2309,
+          "totalMs": 40274.692,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 9960,
+          "totalMs": 167.208,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2575,
+          "totalMs": 719.887,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 364123,
+          "totalMs": 13836.146,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 126069,
+          "totalMs": 652.868,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 126069,
+          "totalMs": 6206.696,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 126071,
+          "totalMs": 17249.269,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 27733,
+          "totalMs": 269.471,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 378207,
+          "totalMs": 4905.832,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 7481,
+          "totalMs": 511.197,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 1715,
+          "totalMs": 117.067,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 764,
+          "totalMs": 54.814,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 7481,
+          "totalMs": 341.583,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1715,
+          "totalMs": 81.835,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 764,
+          "totalMs": 45.669,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 7481,
+          "totalMs": 1484.559,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1715,
+          "totalMs": 660.628,
+          "maxMs": 1.721
+        },
+        "state.callback.2": {
+          "count": 764,
+          "totalMs": 2091.981,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 83,
+          "totalMs": 21.31,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1715,
+          "totalMs": 439.73,
+          "maxMs": 0.882
+        },
+        "state.fullClone.2": {
+          "count": 764,
+          "totalMs": 193.718,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 7481,
+          "totalMs": 4100.844,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1715,
+          "totalMs": 1287.153,
+          "maxMs": 2.92
+        },
+        "state.toCallbackEnd.2": {
+          "count": 764,
+          "totalMs": 2376.056,
+          "maxMs": 11.483
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 90004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2294,
+          "totalMs": 171864.362,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2295,
+          "totalMs": 144349.538,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 149,
+          "totalMs": 81289.602,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 150,
+          "totalMs": 11715.196,
+          "maxMs": 3808.718
+        },
+        "calculation.simulate.last": {
+          "count": 149,
+          "totalMs": 7896.056,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2435,
+          "totalMs": 40452.31,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 10517,
+          "totalMs": 176.506,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2725,
+          "totalMs": 772.329,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 384551,
+          "totalMs": 14735.332,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 133147,
+          "totalMs": 688.652,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 133147,
+          "totalMs": 6557.987,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 133149,
+          "totalMs": 18216.71,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 29298,
+          "totalMs": 284.626,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 399441,
+          "totalMs": 5201.831,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 7898,
+          "totalMs": 539.58,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 1811,
+          "totalMs": 123.95,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 808,
+          "totalMs": 57.91,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 7898,
+          "totalMs": 359.894,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1811,
+          "totalMs": 86.471,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 808,
+          "totalMs": 48.307,
+          "maxMs": 0.141
+        },
+        "state.callback.0": {
+          "count": 7898,
+          "totalMs": 1566.558,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1811,
+          "totalMs": 707.486,
+          "maxMs": 6.368
+        },
+        "state.callback.2": {
+          "count": 808,
+          "totalMs": 2230.33,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 88,
+          "totalMs": 22.803,
+          "maxMs": 0.349
+        },
+        "state.fullClone.1": {
+          "count": 1811,
+          "totalMs": 473.768,
+          "maxMs": 6.094
+        },
+        "state.fullClone.2": {
+          "count": 808,
+          "totalMs": 206.601,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 7898,
+          "totalMs": 4342.812,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1811,
+          "totalMs": 1372.392,
+          "maxMs": 6.921
+        },
+        "state.toCallbackEnd.2": {
+          "count": 808,
+          "totalMs": 2531.384,
+          "maxMs": 11.483
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 95004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2420,
+          "totalMs": 181697.793,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2421,
+          "totalMs": 153342.573,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 157,
+          "totalMs": 85797.971,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 158,
+          "totalMs": 12151.18,
+          "maxMs": 3808.718
+        },
+        "calculation.simulate.last": {
+          "count": 157,
+          "totalMs": 8332.463,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2566,
+          "totalMs": 43146.47,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 11084,
+          "totalMs": 185.832,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2875,
+          "totalMs": 814.666,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 405195,
+          "totalMs": 15618.711,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 140283,
+          "totalMs": 724.421,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 140282,
+          "totalMs": 6914.837,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 140284,
+          "totalMs": 19196.7,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 30863,
+          "totalMs": 299.649,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 420849,
+          "totalMs": 5514.051,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 8322,
+          "totalMs": 567.931,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 1908,
+          "totalMs": 130.528,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 854,
+          "totalMs": 61.126,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 8322,
+          "totalMs": 378.4,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 1908,
+          "totalMs": 91.126,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 854,
+          "totalMs": 53.145,
+          "maxMs": 2.045
+        },
+        "state.callback.0": {
+          "count": 8322,
+          "totalMs": 1649.131,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 1908,
+          "totalMs": 748.007,
+          "maxMs": 6.368
+        },
+        "state.callback.2": {
+          "count": 854,
+          "totalMs": 2369.881,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 93,
+          "totalMs": 24.337,
+          "maxMs": 0.362
+        },
+        "state.fullClone.1": {
+          "count": 1908,
+          "totalMs": 501.884,
+          "maxMs": 6.094
+        },
+        "state.fullClone.2": {
+          "count": 854,
+          "totalMs": 219.678,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 8322,
+          "totalMs": 4583.316,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 1908,
+          "totalMs": 1449.635,
+          "maxMs": 6.921
+        },
+        "state.toCallbackEnd.2": {
+          "count": 854,
+          "totalMs": 2688.528,
+          "maxMs": 11.483
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 100004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2547,
+          "totalMs": 190089.088,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2548,
+          "totalMs": 160319.237,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 165,
+          "totalMs": 90225.905,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 166,
+          "totalMs": 12579.49,
+          "maxMs": 3808.718
+        },
+        "calculation.simulate.last": {
+          "count": 165,
+          "totalMs": 8755.887,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2708,
+          "totalMs": 48193.427,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 11668,
+          "totalMs": 195.23,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 2995,
+          "totalMs": 850.978,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 426445,
+          "totalMs": 16480.559,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 147647,
+          "totalMs": 761.023,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 147647,
+          "totalMs": 7282.908,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 147649,
+          "totalMs": 20205.964,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 32479,
+          "totalMs": 315.021,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 442941,
+          "totalMs": 5816.974,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 8767,
+          "totalMs": 597.777,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 2011,
+          "totalMs": 137.443,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 890,
+          "totalMs": 63.494,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 8767,
+          "totalMs": 396.882,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 2011,
+          "totalMs": 97.388,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 890,
+          "totalMs": 55.298,
+          "maxMs": 2.045
+        },
+        "state.callback.0": {
+          "count": 8767,
+          "totalMs": 1734.165,
+          "maxMs": 5.019
+        },
+        "state.callback.1": {
+          "count": 2011,
+          "totalMs": 791.48,
+          "maxMs": 6.368
+        },
+        "state.callback.2": {
+          "count": 890,
+          "totalMs": 2477.979,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 97,
+          "totalMs": 25.49,
+          "maxMs": 0.362
+        },
+        "state.fullClone.1": {
+          "count": 2011,
+          "totalMs": 530.946,
+          "maxMs": 6.094
+        },
+        "state.fullClone.2": {
+          "count": 890,
+          "totalMs": 229.766,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 8767,
+          "totalMs": 4827.286,
+          "maxMs": 5.413
+        },
+        "state.toCallbackEnd.1": {
+          "count": 2011,
+          "totalMs": 1532.289,
+          "maxMs": 6.921
+        },
+        "state.toCallbackEnd.2": {
+          "count": 890,
+          "totalMs": 2810.205,
+          "maxMs": 11.483
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 105004,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2676,
+          "totalMs": 200788.832,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2676,
+          "totalMs": 167824.608,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 173,
+          "totalMs": 94590.296,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 175,
+          "totalMs": 13059.029,
+          "maxMs": 3808.718
+        },
+        "calculation.simulate.last": {
+          "count": 173,
+          "totalMs": 9174.76,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2844,
+          "totalMs": 50764.13,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 12249,
+          "totalMs": 204.317,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 3135,
+          "totalMs": 896.569,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 447797,
+          "totalMs": 17341.03,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 155051,
+          "totalMs": 800.924,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 155050,
+          "totalMs": 7650.471,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 155052,
+          "totalMs": 21221.491,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 34106,
+          "totalMs": 330.717,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 465153,
+          "totalMs": 6099.674,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 9206,
+          "totalMs": 627.244,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 2110,
+          "totalMs": 144.158,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 932,
+          "totalMs": 66.409,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 9206,
+          "totalMs": 415.22,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 2110,
+          "totalMs": 102.111,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 932,
+          "totalMs": 57.877,
+          "maxMs": 2.045
+        },
+        "state.callback.0": {
+          "count": 9206,
+          "totalMs": 1823.487,
+          "maxMs": 5.845
+        },
+        "state.callback.1": {
+          "count": 2110,
+          "totalMs": 832.352,
+          "maxMs": 6.368
+        },
+        "state.callback.2": {
+          "count": 932,
+          "totalMs": 2602.315,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 102,
+          "totalMs": 26.965,
+          "maxMs": 0.362
+        },
+        "state.fullClone.1": {
+          "count": 2110,
+          "totalMs": 559.353,
+          "maxMs": 6.094
+        },
+        "state.fullClone.2": {
+          "count": 932,
+          "totalMs": 241.458,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 9206,
+          "totalMs": 5077.626,
+          "maxMs": 6.37
+        },
+        "state.toCallbackEnd.1": {
+          "count": 2110,
+          "totalMs": 1610.716,
+          "maxMs": 6.921
+        },
+        "state.toCallbackEnd.2": {
+          "count": 932,
+          "totalMs": 2950.275,
+          "maxMs": 11.483
+        }
+      }
+    },
+    {
+      "product": "094d8919819dcbad73dc6d7f02ef7b8dd4faefd4",
+      "elapsedMs": 105013,
+      "aborted": true,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "metrics": {
+        "bcs.ancestry": {
+          "count": 2676,
+          "totalMs": 200788.832,
+          "maxMs": 1913.491
+        },
+        "bcs.resolveSource": {
+          "count": 2676,
+          "totalMs": 167824.608,
+          "maxMs": 1277.872
+        },
+        "calculation.replay": {
+          "count": 174,
+          "totalMs": 95016.522,
+          "maxMs": 594.857
+        },
+        "calculation.simulate.first": {
+          "count": 175,
+          "totalMs": 13059.029,
+          "maxMs": 3808.718
+        },
+        "calculation.simulate.last": {
+          "count": 174,
+          "totalMs": 9174.808,
+          "maxMs": 68.119
+        },
+        "calculation.verifySources": {
+          "count": 2845,
+          "totalMs": 50765.409,
+          "maxMs": 2519.79
+        },
+        "instrumentation.stack": {
+          "count": 12250,
+          "totalMs": 204.332,
+          "maxMs": 1.779
+        },
+        "snapshot.clone": {
+          "count": 3135,
+          "totalMs": 896.569,
+          "maxMs": 6.09
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.76,
+          "maxMs": 0.908
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.633,
+          "maxMs": 0.436
+        },
+        "snapshot.materialize": {
+          "count": 447836,
+          "totalMs": 17342.538,
+          "maxMs": 6.045
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 2.943,
+          "maxMs": 0.854
+        },
+        "sqlite.begin": {
+          "count": 155062,
+          "totalMs": 800.989,
+          "maxMs": 1.729
+        },
+        "sqlite.close": {
+          "count": 155062,
+          "totalMs": 7651.146,
+          "maxMs": 1.6
+        },
+        "sqlite.connect": {
+          "count": 155063,
+          "totalMs": 21223.121,
+          "maxMs": 2.213
+        },
+        "sqlite.queue": {
+          "count": 34109,
+          "totalMs": 330.752,
+          "maxMs": 1.325
+        },
+        "sqlite.select.snapshot": {
+          "count": 465186,
+          "totalMs": 6100.151,
+          "maxMs": 6.747
+        },
+        "state.authorize.first.0": {
+          "count": 9207,
+          "totalMs": 627.308,
+          "maxMs": 1.937
+        },
+        "state.authorize.first.1": {
+          "count": 2111,
+          "totalMs": 144.251,
+          "maxMs": 0.14
+        },
+        "state.authorize.first.2": {
+          "count": 932,
+          "totalMs": 66.409,
+          "maxMs": 1.978
+        },
+        "state.authorize.last.0": {
+          "count": 9207,
+          "totalMs": 415.259,
+          "maxMs": 4.822
+        },
+        "state.authorize.last.1": {
+          "count": 2111,
+          "totalMs": 102.176,
+          "maxMs": 1.478
+        },
+        "state.authorize.last.2": {
+          "count": 932,
+          "totalMs": 57.877,
+          "maxMs": 2.045
+        },
+        "state.callback.0": {
+          "count": 9207,
+          "totalMs": 1823.639,
+          "maxMs": 5.845
+        },
+        "state.callback.1": {
+          "count": 2111,
+          "totalMs": 832.927,
+          "maxMs": 6.368
+        },
+        "state.callback.2": {
+          "count": 932,
+          "totalMs": 2602.315,
+          "maxMs": 10.944
+        },
+        "state.fullClone.0": {
+          "count": 102,
+          "totalMs": 26.965,
+          "maxMs": 0.362
+        },
+        "state.fullClone.1": {
+          "count": 2111,
+          "totalMs": 559.762,
+          "maxMs": 6.094
+        },
+        "state.fullClone.2": {
+          "count": 932,
+          "totalMs": 241.458,
+          "maxMs": 2.04
+        },
+        "state.toCallbackEnd.0": {
+          "count": 9207,
+          "totalMs": 5078.17,
+          "maxMs": 6.37
+        },
+        "state.toCallbackEnd.1": {
+          "count": 2111,
+          "totalMs": 1611.849,
+          "maxMs": 6.921
+        },
+        "state.toCallbackEnd.2": {
+          "count": 932,
+          "totalMs": 2950.275,
+          "maxMs": 11.483
+        }
+      }
+    }
+  ]
+}
