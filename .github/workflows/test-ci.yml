@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   test:
@@ -176,6 +177,15 @@ jobs:
 
       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
+      # Snapshot-only sanitized reader of retained Reports evidence.
+      - name: Download retained Reports nominal evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          run-id: 44647936470
+          artifact-ids: 14591195417
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/audit-reports-evidence
+
       - name: Run tests
         id: sf66_product_run
         env:
