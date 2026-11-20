@@ -25,7 +25,7 @@ export function supplierEdit(source: Supplier): SupplierEdit {
   return Object.fromEntries([
     ...generalFields.map((field) => [field, source[field]]),
     ["contacts", source.contacts], ["commercial", source.commercial], ["compliance", source.compliance],
-  ]) as SupplierEdit
+  ].filter(([, value]) => value !== undefined)) as SupplierEdit
 }
 
 export function supplierVersion(page: Cap27PageOk, ref: string): number | null {

@@ -1,5 +1,5 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { useSfContext } from "../../context"
@@ -10,6 +10,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import { SfRecordDetail } from "../../shared/detail"
 import { SfChangeReview } from "../../shared/change-review"
+import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import {
   createSfProcurementClient, exportSfSupplierCsv, sfSupplierCsvBindingInstalled,
 } from "@orchestra/client/sucafina/procurement"
@@ -533,11 +534,13 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       sending = false
       return
     }
+    // Materialize the reviewed fields for the digest and the strict wire codec.
+    const value = structuredClone(unwrap(intent.value))
     const opRef = crypto.randomUUID() as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
-    const requestBody = { page: "Suppliers", action: intent.action, id: intent.ref ?? undefined,
-      version: intent.version,
-      values: ["create","save","change-bank"].includes(intent.action) ? { supplier: intent.value } : {} }
+    const requestBody = { page: "Suppliers", action: intent.action,
+      ...(intent.ref ? { id: intent.ref } : {}), version: intent.version,
+      values: ["create","save","change-bank"].includes(intent.action) ? { supplier: value } : {} }
     let payloadDigest: string
     try {
       const bytes = new Uint8Array(await crypto.subtle.digest(
@@ -562,14 +565,14 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     try {
       const client = createSfProcurementClient(host.ready()!.transport)
       const options = { signal: controller.signal, idempotencyKey }
-      const record = { page:"Suppliers" as const, id:intent.ref ?? undefined,version:intent.version }
+      const record = { page:"Suppliers" as const, ...(intent.ref ? { id: intent.ref } : {}), version:intent.version }
       const response =
         intent.action === "create"
-          ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.create"]({ ...record, action:"create", values: {supplier:value} }, options)
         : intent.action === "save"
-          ? await client["domain.command.CAP27.save"]({ ...record, action:"save", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.save"]({ ...record, action:"save", values: {supplier:value} }, options)
         : intent.action === "change-bank"
-          ? await client["domain.command.CAP27.change-bank"]({ ...record, action:"change-bank", values: {supplier:intent.value} }, options)
+          ? await client["domain.command.CAP27.change-bank"]({ ...record, action:"change-bank", values: {supplier:value} }, options)
         : intent.action === "activate"
           ? await client["domain.command.CAP27.activate"]({ ...record, action:"activate", values:{} }, options)
         : intent.action === "block"
@@ -735,7 +738,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       return <SfStatePanel state="not-found" messageKey={k("sf.u14.notFound")} />
     const linked = linkedRequests(current,selected.id)
     const id = selected.id
-    return <div class="sf-u14-detail">
+    return <div class="sf-u14-detail" data-sf-supplier-ref={id} data-source-version={version() ?? undefined}>
       <SfRecordDetail
         title={data(selected.legalName ?? selected.number ?? id)}
         secondaryId={data(selected.number ?? id)}
@@ -767,6 +770,14 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               <button class="mx-btn" type="button" disabled={!bankAuthorized() || active(ui.phase)}
                 onClick={() => setUi("mode","bank")}>{t("sf.u14.changeBank")}</button>
             </div>},
+          {id:"attachments",titleKey:k("sf.u14.attachments"),state:"ready",
+            content:<Show when={version() !== null}>
+              <SfBoundAssets surface="procurement" page="Suppliers"
+                uploadKind={can("save") ? "supplier" : undefined}
+                recordRef={id} recordVersion={version()!} assets={selected.attachments ?? []}
+                disabled={active(ui.phase) || !can("save")}
+                onReconcile={() => { const token = authority(); if (token) void refresh(token, id) }} />
+            </Show>},
           {id:"linked",titleKey:k("sf.u14.linked"),state:"ready",
             content:<Show when={linked.length} fallback={<p>{t("sf.u14.noLinked")}</p>}>
               <ul><For each={linked}>{(request) => <li>{request.number ?? t("sf.u14.missing")} · {request.pr?.title ?? ""}</li>}</For></ul>
