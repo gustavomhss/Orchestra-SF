@@ -7,7 +7,7 @@ import { tmpdir } from "./fixture/tmpdir"
 const runtime = { bunVersion: Bun.version, nodeAbi: "137" }
 const rootManifest = {
   name: "cache-fixture", packageManager: "bun@" + Bun.version,
-  workspaces: { packages: ["packages/*", "nested/worker"] },
+  workspaces: { packages: ["packages/*", "nested/worker", "modules/sucafina"] },
   scripts: { postinstall: "bun run --cwd packages/core fix-node-pty", prepare: "husky" },
   patchedDependencies: { "fixture@1": "patches/fixture.patch" },
 }
@@ -28,6 +28,10 @@ const sources = {
   "packages/core/vendor/local.tgz": "local archive bytes",
   "packages/other/package.json": JSON.stringify({ name: "@fixture/other", version: "1" }),
   "nested/worker/package.json": JSON.stringify({ name: "@fixture/worker", version: "1" }),
+  "modules/sucafina/package.json": JSON.stringify({
+    name: "@fixture/sucafina", dependencies: { xlsx: "./Sucafinav1/vendor/xlsx-0.20.3.tgz" },
+  }),
+  "modules/sucafina/Sucafinav1/vendor/xlsx-0.20.3.tgz": "bare-relative xlsx archive bytes",
   "patches/fixture.patch": "reviewed patch bytes",
 }
 
@@ -43,7 +47,15 @@ test.each(Object.keys(sources))("installed cache fingerprint changes when %s cha
 test("fingerprint is deterministic across roots and creation order", async () => {
   await using first = await fixture()
   await using second = await fixture(true)
-  expect(await dependencyFingerprint(first.path, runtime)).toEqual(await dependencyFingerprint(second.path, runtime))
+  const result = await dependencyFingerprint(first.path, runtime)
+  expect(result).toEqual(await dependencyFingerprint(second.path, runtime))
+  expect(result.modulesPaths).toEqual([
+    "modules/sucafina/node_modules",
+    "nested/worker/node_modules",
+    "node_modules",
+    "packages/core/node_modules",
+    "packages/other/node_modules",
+  ])
 })
 
 test("new admitted workspace is included while docs and installed trees are ignored", async () => {
@@ -62,6 +74,7 @@ test("new admitted workspace is included while docs and installed trees are igno
   const added = await dependencyFingerprint(directory.path, runtime)
   expect(added.fingerprint).not.toBe(before.fingerprint)
   expect(added.inputs).toContain("packages/new/package.json")
+  expect(added.modulesPaths).toContain("packages/new/node_modules")
 })
 
 test("optional root config removal, installer ABI and production mode invalidate installed trees", async () => {
@@ -99,12 +112,40 @@ test("unsafe paths, unsupported globs and untracked local dependency directories
     await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_")
   }
   await write(directory.path, "package.json", sources["package.json"])
-  for (const dependency of ["file:./directory", "link:./directory", "file:../../../../outside.tgz"]) {
+  for (const dependency of [
+    "file:./directory", "./directory", "../directory", "link:./directory",
+    "file:../../../../outside.tgz", "../../../../outside.tgz", "/outside.tgz", "C:/outside.tgz", "~/outside.tgz",
+  ]) {
     await write(directory.path, "packages/core/package.json", JSON.stringify({
       ...coreManifest, dependencies: { archive: dependency },
     }))
     await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_")
   }
+})
+
+test("bare parent-relative archives inside the repository contribute their bytes", async () => {
+  await using directory = await fixture()
+  await write(directory.path, "packages/shared.tgz", "first archive bytes")
+  await write(directory.path, "packages/core/package.json", JSON.stringify({
+    ...coreManifest, dependencies: { archive: "../shared.tgz" },
+  }))
+  const before = await dependencyFingerprint(directory.path, runtime)
+  expect(before.inputs).toContain("packages/shared.tgz")
+  await write(directory.path, "packages/shared.tgz", "changed archive bytes")
+  expect((await dependencyFingerprint(directory.path, runtime)).fingerprint).not.toBe(before.fingerprint)
+})
+
+test("cache paths reject control characters and glob metacharacters in admitted workspace names", async () => {
+  await using directory = await fixture()
+  for (const workspace of ["nested/with\nnewline", "nested/with\rcarriage", "nested/[glob]", "nested/!glob"]) {
+    await write(directory.path, "package.json", JSON.stringify({
+      ...rootManifest, workspaces: { packages: [workspace] },
+    }))
+    await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_")
+  }
+  await write(directory.path, "package.json", sources["package.json"])
+  await write(directory.path, "packages/bad[glob]/package.json", '{"name":"@fixture/unsafe"}')
+  await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_WORKSPACE_PATTERN_UNSUPPORTED")
 })
 
 test("source files and workspace symlinks cannot import an outside tree", async () => {

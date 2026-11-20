@@ -71,6 +71,7 @@ export async function dependencyFingerprint(
       : [parent]
     if (directories.length > 256) throw new Error("CACHE_WORKSPACE_LIMIT")
     for (const workspace of directories) {
+      if (/[*?![\]{}]/.test(workspace)) throw new Error("CACHE_WORKSPACE_PATTERN_UNSUPPORTED: " + workspace)
       const file = workspace + "/package.json"
       const value = await manifest(file, wildcard)
       if (value) manifests.set(file, value)
@@ -88,17 +89,24 @@ export async function dependencyFingerprint(
           (hook === "prepare" && scripts[hook] === "husky"))
       if (!admitted) throw new Error("CACHE_INSTALL_HOOK_UNADMITTED: " + file + "#" + hook)
     }
-    for (const field of ["dependencies", "devDependencies", "optionalDependencies"]) {
+    for (const field of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
       const dependencies = value[field]
       if (dependencies === undefined) continue
       if (!isRecord(dependencies)) throw new Error("CACHE_DEPENDENCIES_INVALID: " + file)
       for (const spec of Object.values(dependencies)) {
         if (typeof spec !== "string") throw new Error("CACHE_DEPENDENCY_SPEC_INVALID: " + file)
-        if (spec.startsWith("link:")) throw new Error("CACHE_LOCAL_DEPENDENCY_UNSUPPORTED: " + file)
-        if (!spec.startsWith("file:")) continue
-        const target = spec.slice(5)
-        if (path.posix.isAbsolute(target) || target.includes("\\") || !/\.(?:tgz|tar\.gz)$/.test(target))
-          throw new Error("CACHE_LOCAL_DEPENDENCY_UNSUPPORTED: " + file)
+        if (
+          spec.startsWith("link:") || spec.startsWith("~/") || spec.includes("\\") ||
+          path.posix.isAbsolute(spec) || /^[A-Za-z]:/.test(spec)
+        ) throw new Error("CACHE_LOCAL_DEPENDENCY_UNSUPPORTED: " + file)
+        const target = spec.startsWith("file:")
+          ? spec.slice(5)
+          : spec.startsWith("./") || spec.startsWith("../") ? spec : undefined
+        if (target === undefined) continue
+        if (
+          path.posix.isAbsolute(target) || /^[A-Za-z]:/.test(target) ||
+          target.includes("\\") || !/\.(?:tgz|tar\.gz)$/.test(target)
+        ) throw new Error("CACHE_LOCAL_DEPENDENCY_UNSUPPORTED: " + file)
         await add(path.posix.normalize(path.posix.join(path.posix.dirname(file), target)))
       }
     }
@@ -134,12 +142,18 @@ export async function dependencyFingerprint(
     if (!bytes) throw new Error("CACHE_INPUT_DISAPPEARED: " + file)
     hash.update(file + "\0" + bytes.length + "\0").update(bytes).update("\0")
   }
-  return { fingerprint: hash.digest("hex"), inputs }
+  const modulesPaths = [...new Set([
+    "node_modules",
+    ...[...manifests.keys()].filter((file) => file !== "package.json")
+      .map((file) => path.posix.dirname(file) + "/node_modules"),
+  ])].sort()
+  return { fingerprint: hash.digest("hex"), inputs, modulesPaths }
 }
 
 function safePath(file: string) {
   if (
-    !file || path.posix.isAbsolute(file) || /^[A-Za-z]:/.test(file) || file.includes("\\") ||
+    !file || path.posix.isAbsolute(file) || /^[A-Za-z]:/.test(file) ||
+    file.includes("\\") || /[\x00-\x1f\x7f]/.test(file) ||
     file.split("/").some((part) => part === "" || part === "." || part === ".." || part === "node_modules" || part === ".git")
   ) throw new Error("CACHE_INPUT_PATH_INVALID: " + file)
 }
@@ -156,4 +170,7 @@ if (import.meta.main) {
   })
   console.log("fingerprint=" + result.fingerprint)
   console.log("input-count=" + result.inputs.length)
+  console.log("modules-paths<<CACHE_MODULE_PATHS")
+  console.log(result.modulesPaths.join("\n"))
+  console.log("CACHE_MODULE_PATHS")
 }

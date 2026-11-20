@@ -92,24 +92,14 @@ runs:
     # Every platform reuses the installed tree: on Linux a restore takes about 15 s where `bun install` from Bun's
     # package cache took about 50 s, and Windows cannot reuse Bun's package cache at all (see the install step).
     # The fingerprint covers the admitted installation inputs; unsupported source hooks fail before restore.
-    # Every workspace directory must be listed (native/omni/bindings/node sits one level deeper than the others): a
-    # hit skips install, so an unlisted workspace restores without its links. Bump the modules key version whenever
-    # this list changes, so no entry saved with the old list is restored.
+    # The pre-install workspace inventory also emits exact cache paths. Restore and save
+    # share that one list, so newly admitted layouts restore all their workspace links.
     - name: Restore node_modules
       id: modules-cache
       if: inputs.install-flags == ''
       uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
-        path: |
-          node_modules
-          packages/*/node_modules
-          packages/*/*/node_modules
-          apps/*/node_modules
-          modules/*/node_modules
-          modules/*/*/node_modules
-          tooling/*/node_modules
-          native/*/*/node_modules
-          native/*/*/*/node_modules
+        path: ${{ steps.fingerprint.outputs.modules-paths }}
         key: ${{ steps.keys.outputs.modules }}
 
     - name: Restore Bun dependencies
@@ -174,16 +164,7 @@ runs:
       if: inputs.install-flags == '' && steps.modules-cache.outputs.cache-hit != 'true' && (inputs.save == 'true' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/consolidate/00-baseline-green' || github.ref == 'refs/heads/consolidate/90-integration')
       uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
-        path: |
-          node_modules
-          packages/*/node_modules
-          packages/*/*/node_modules
-          apps/*/node_modules
-          modules/*/node_modules
-          modules/*/*/node_modules
-          tooling/*/node_modules
-          native/*/*/node_modules
-          native/*/*/*/node_modules
+        path: ${{ steps.fingerprint.outputs.modules-paths }}
         key: ${{ steps.keys.outputs.modules }}
 
     - name: Report dependency cache reuse
