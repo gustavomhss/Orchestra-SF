@@ -1,0 +1,570 @@
+{
+  "schema": "orchestra.audit.c17-mixed.v1",
+  "product": {
+    "branch": "audit-mixed-scope",
+    "commit": "1542afe3a79550d6f3002eff8dcdbc442c981a79",
+    "tree": "06d5a4e4afb84aa4e2f4fd0e6e8e19f2447e1841",
+    "baseline": "0e606232022c7d881a676a802a2ec018d36ad81c",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "blob": "62f21082b6a133750fe2a72dc6604fce08d83556"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "blob": "c6df413eda5cd650fad8c9034c18a2d5979fbd21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-mixed-fixture.ts",
+        "blob": "3600f6b3bd1bc59a93dec692067ae38cd2b316ef"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "blob": "7284d86b907b602809f5e1eeb3aa1694f79b5455"
+      }
+    ]
+  },
+  "gate": {
+    "run": 44672916081,
+    "job": 136077850294,
+    "cleanup": 136081727191,
+    "passed": 63,
+    "failed": 2,
+    "expects": 420,
+    "testCount": 65,
+    "files": 8,
+    "elapsedSeconds": 571.5,
+    "failures": [
+      {
+        "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+        "durationMs": 105007.27,
+        "reason": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+        "phase": "produce-outer",
+        "phaseMs": 103239,
+        "canonicalResultReads": 1330,
+        "completed": 1330,
+        "aborted": true
+      },
+      {
+        "name": "the actual mixed producer admits both calculation siblings concurrently inside one owned root",
+        "durationMs": 121860.73,
+        "reason": "this test timed out after 120000ms"
+      }
+    ],
+    "snapshot": "60e7b6dd65b83c0fd1ba568353ed5ae446719778",
+    "tree": "823d6d742dfdcbeec4585fc2043e41f24e93a7b8",
+    "requestBlob": "b581956abcfe2a39f7c12482b8832b121f56186d",
+    "event": "push",
+    "attempt": 1,
+    "workflow": "test-ci",
+    "originalC17Blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+    "originalRootSpecBlob": "e3874e2335f16a2ea95d0102cad2ef53df15e8b3",
+    "request": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+        "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "omni": {
+      "status": "pass",
+      "declared": 10,
+      "spawns": 20,
+      "delegated": 0
+    },
+    "phases": [
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "initialize",
+        "state": "started",
+        "elapsedMs": 2
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "initialize",
+        "state": "returned",
+        "phaseMs": 32,
+        "elapsedMs": 34,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-inner",
+        "state": "started",
+        "elapsedMs": 34
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-inner",
+        "state": "returned",
+        "phaseMs": 1721,
+        "elapsedMs": 1755,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-outer",
+        "state": "started",
+        "elapsedMs": 1762
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-outer",
+        "state": "returned",
+        "phaseMs": 103239,
+        "elapsedMs": 105001,
+        "aborted": true
+      }
+    ],
+    "ancestryCounts": [
+      {
+        "phase": "produce-inner",
+        "elapsedMs": 1721,
+        "canonicalResultReads": 14,
+        "canonicalResultReadsCompleted": 14,
+        "aborted": false
+      },
+      {
+        "phase": "produce-outer",
+        "elapsedMs": 103239,
+        "canonicalResultReads": 1330,
+        "canonicalResultReadsCompleted": 1330,
+        "aborted": true
+      }
+    ],
+    "tests": [
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+        "status": "fail",
+        "durationMs": 105007.27
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "name": "Late captured calculation settles its original output after case advance without changing the active selector, and survives restart",
+        "status": "pass",
+        "durationMs": 18416.81
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "name": "Late calculation settlement rejects another case, a later producer, missing ledger/capture and changed sources without writing output",
+        "status": "pass",
+        "durationMs": 10217.81
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "name": "Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease",
+        "status": "pass",
+        "durationMs": 13783.52
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "name": "concurrent calculation admissions retain one case scope across two real replays and release it after the last replay",
+        "status": "pass",
+        "durationMs": 4479.18
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "name": "a real calculation retains a withCase owner's selection after the outer action completes",
+        "status": "pass",
+        "durationMs": 3812.47
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "name": "calculation replay cannot borrow another selected case even when the same principal belongs to both",
+        "status": "pass",
+        "durationMs": 3861.75
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "name": "two real calculation replays refuse revoke during overlap and release every retention",
+        "status": "pass",
+        "durationMs": 3733.43
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "name": "two real calculation replays refuse abort during overlap and release every retention",
+        "status": "pass",
+        "durationMs": 3707.15
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an unsupported preparation preserves the complete producer without owning a root and remains one-shot",
+        "status": "pass",
+        "durationMs": 21.11
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an unsupported token refuses a foreign C08 scope that appeared after preparation",
+        "status": "pass",
+        "durationMs": 12.59
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "failed initializer false cannot become an unsupported legacy attempt",
+        "status": "pass",
+        "durationMs": 12.99
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "failed initializer throw cannot become an unsupported legacy attempt",
+        "status": "pass",
+        "durationMs": 10.8
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "failed initializer drift cannot become an unsupported legacy attempt",
+        "status": "pass",
+        "durationMs": 12.22
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "unsupported legacy work refuses revoked authority before-work",
+        "status": "pass",
+        "durationMs": 11.37
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "unsupported legacy work refuses revoked authority during-work",
+        "status": "pass",
+        "durationMs": 13.32
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an existing owned scope skips the mixed initializer entirely",
+        "status": "pass",
+        "durationMs": 12.44
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "an existing foreign scope skips the mixed initializer entirely",
+        "status": "pass",
+        "durationMs": 13.58
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a mixed replay prepares an actual auxiliary source before its witness without replacing its cited source",
+        "status": "pass",
+        "durationMs": 54490.93
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "the actual mixed producer admits both calculation siblings concurrently inside one owned root",
+        "status": "fail",
+        "durationMs": 121860.73
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a real mixed request with another Planner base preserves the complete unsupported producer",
+        "status": "pass",
+        "durationMs": 3434.94
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a mixed preparation that changes its original Request cannot execute the producer as fallback",
+        "status": "pass",
+        "durationMs": 40848.36
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a poisoned mixed replay cannot retry outside its owned root or publish a result",
+        "status": "pass",
+        "durationMs": 40435.36
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-mixed-root.test.ts",
+        "name": "a mixed replay under a foreign C08 owner keeps its full producer without another root or warmup",
+        "status": "pass",
+        "durationMs": 53774.98
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "a cold Planner source prepares before the witness and is re-read inside one accepted root",
+        "status": "pass",
+        "durationMs": 35.35
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "a value stays private until the adapter accepts the root and is detached from the producer",
+        "status": "pass",
+        "durationMs": 15.83
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "a swallowed nested write poisons the owned root and never retries the producer outside",
+        "status": "pass",
+        "durationMs": 12.27
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "a foreign C08 owner runs the original path without source preparation or a new root",
+        "status": "pass",
+        "durationMs": 12.8
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "a poisoned foreign root cannot become a fresh owned or legacy attempt",
+        "status": "pass",
+        "durationMs": 10.19
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "foreign root poison before-work refuses without a new root or retry",
+        "status": "pass",
+        "durationMs": 13.06
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "foreign root poison during-work refuses without a new root or retry",
+        "status": "pass",
+        "durationMs": 11.16
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses headers changes after work without fallback",
+        "status": "pass",
+        "durationMs": 12.93
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses request changes after work without fallback",
+        "status": "pass",
+        "durationMs": 12.06
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses provider changes after work without fallback",
+        "status": "pass",
+        "durationMs": 13.17
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses method changes after work without fallback",
+        "status": "pass",
+        "durationMs": 11.84
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses owner changes after work without fallback",
+        "status": "pass",
+        "durationMs": 13.19
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses abort changes after work without fallback",
+        "status": "pass",
+        "durationMs": 11.03
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "owned replay refuses authority changes after work without fallback",
+        "status": "pass",
+        "durationMs": 12.89
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "adapter no-callback cannot publish a staged replay",
+        "status": "pass",
+        "durationMs": 10.66
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "adapter twice cannot publish a staged replay",
+        "status": "pass",
+        "durationMs": 11.8
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "adapter after-callback-error cannot publish a staged replay",
+        "status": "pass",
+        "durationMs": 9.94
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "different admitted calls cannot join a physical root and closed descendants cannot fall back",
+        "status": "pass",
+        "durationMs": 13.15
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "two joined descendants execute their real transactions concurrently within one owner",
+        "status": "pass",
+        "durationMs": 11.22
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "an unfinished descendant prevents its owner from publishing and loses access after close",
+        "status": "pass",
+        "durationMs": 12.01
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "a Request changed between preparation and the witness cannot enter an owned replay",
+        "status": "pass",
+        "durationMs": 9.98
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "the real calculation service keeps direct issues unscoped and joins a valid ancestral child",
+        "status": "pass",
+        "durationMs": 6409.6
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts",
+        "name": "the real service refuses an escaped owned descendant before selecting a new route",
+        "status": "pass",
+        "durationMs": 4137.19
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+        "name": "Memory integrity preflight rejects a corrupted Atlas original without rewriting the capture",
+        "status": "pass",
+        "durationMs": 21765.78
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+        "name": "Memory integrity keeps authorized metadata-only stale preservation and rejects a later source change",
+        "status": "pass",
+        "durationMs": 16015.29
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+        "name": "Memory integrity retains the original Request despite replacement of constructor input",
+        "status": "pass",
+        "durationMs": 7301.37
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+        "name": "Memory integrity rejects record mutation after the real Atlas capture reader awaited",
+        "status": "pass",
+        "durationMs": 7318.35
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+        "name": "Memory integrity rejects an in-place source change after the real Atlas capture reader awaited",
+        "status": "pass",
+        "durationMs": 6479.22
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+        "name": "Memory integrity respects principal revocation after the last real capture read",
+        "status": "pass",
+        "durationMs": 8979.23
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+        "name": "Memory integrity rejects headers changed after the final real revalidation",
+        "status": "pass",
+        "durationMs": 9851.45
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation",
+        "status": "pass",
+        "durationMs": 68.73
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "the joint alternative reader samples real C08 once for both projections and repeats authorization on every call",
+        "status": "pass",
+        "durationMs": 68.13
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "a joint admission sample refuses a private input mutation between its real run reads",
+        "status": "pass",
+        "durationMs": 45.51
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "a joint admission sample refuses a committed C08 run change between its real run reads",
+        "status": "pass",
+        "durationMs": 35.36
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "a joint admission sample refuses revocation between passes and exposes no input",
+        "status": "pass",
+        "durationMs": 29.02
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "a joint admission sample observes a private holder mutation during its final authentication",
+        "status": "pass",
+        "durationMs": 41.79
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "alternative publication adapter cannot grant arbitrary preferences or provenance writes and clears both private guards",
+        "status": "pass",
+        "durationMs": 24.6
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "the C08 final publication guard rejects native revocation during authentication after the work callback",
+        "status": "pass",
+        "durationMs": 22.05
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "actual run-store publication exposes no ready preview after native capture veto=%s",
+        "status": "pass",
+        "durationMs": 36.14
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "actual run-store publication exposes no ready preview after native capture veto=%s",
+        "status": "pass",
+        "durationMs": 28.97
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "name": "decision registry HTTP routes reject malformed or foreign-origin inputs and never upgrade a read grant",
+        "status": "pass",
+        "durationMs": 26.64
+      }
+    ]
+  },
+  "compiler": {
+    "run": 44672909102,
+    "job": 136077828293,
+    "cleanup": 136078605440,
+    "snapshot": "068b170b33c6e8b23deb88a8557dc4ef6abbbad0",
+    "tree": "4b9b3c6db2d54e078f51a655b8c267f9f0a3d11f",
+    "requestBlob": "9a567f8e072bc831605e60c7ab989d8c65ef5623",
+    "harnessPath": "apps/cli/audit-mixed-scope-compiler.node-smoke.mjs",
+    "harnessBlob": "50df086cc474d91ad2bc0381542897de259f442c",
+    "marker": "1542afe3a79550d6f3002eff8dcdbc442c981a79",
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 83180.008538,
+    "sucafinaMs": 43674.59929,
+    "cliMs": 39445.639964
+  },
+  "limits": {
+    "requestTimeoutMs": 30000,
+    "newTestTimeoutMs": 120000,
+    "c17OuterTimeoutMs": 120000,
+    "c17CooperativeDeadlineMs": 105000
+  },
+  "interpretation": [
+    "The gate is red. No nominal Decisions, sf-ci or automatic retry was triggered.",
+    "C17 stopped during produce-outer before reopen, reopened ancestry, persisted-cycle rejection and final revocation. The 1330 reads are an aborted prefix, not a complete-work count or a controlled speed comparison.",
+    "The sibling test exceeded its unchanged new-test budget without phase telemetry or an assertion payload; this log alone does not prove whether fixture production or the concurrency barrier had been reached.",
+    "All other 14 mixed controls passed; every original test except C17 passed. Pending fixture cost coverage is not financial, human or native execution approval.",
+    "The real package compilers are green on the exact product marker. Compiler success does not qualify the two timed-out contracts."
+  ]
+}
