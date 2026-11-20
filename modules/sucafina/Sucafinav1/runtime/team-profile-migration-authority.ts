@@ -81,6 +81,25 @@ export function createTeamProfileMigrationAuthority(input: {
     } catch { held.invalidated = true; return false }
   }
   return Object.freeze({
+    /** Metadata-only census: the original current administrator needs an explicit map grant. */
+    async inspect(request: Request, read: () => TeamProfileCensus.Report): Promise<TeamProfileCensus.Report | undefined> {
+      try {
+        if (!eligible(request)) return undefined
+        const intent = fingerprint(request)
+        const resolution = await resolver.resolve(request, selector)
+        if (resolution.status !== "authenticated" || resolution.administration.status !== "available" ||
+            resolution.principal.tenantId !== tenantId) return undefined
+        const [catalog, grants] = await Promise.all([resolver.list(request), readGrants()])
+        if (catalog.status !== "ok" || catalog.configRevision !== resolution.configRevision ||
+            !grants.find((entry) => entry.principalRef === resolution.principal.principalObjectId)?.migrationActions?.includes("map") ||
+            !await resolver.revalidateResolution(resolution) || !eligible(request) || fingerprint(request) !== intent) return undefined
+        const report = read()
+        const [latestCatalog, latestGrants] = await Promise.all([resolver.list(request), readGrants()])
+        if (digestSfValue(latestCatalog) !== digestSfValue(catalog) || digestSfValue(latestGrants) !== digestSfValue(grants) ||
+            !await resolver.revalidateResolution(resolution) || !eligible(request) || fingerprint(request) !== intent) return undefined
+        return report
+      } catch { return undefined }
+    },
     async admit(request: Request, operation: MigrationOperation, plan: TeamProfileCensus.Plan): Promise<MigrationLease | undefined> {
       try {
         if (!eligible(request) || !["map", "cut", "recover"].includes(operation) || !plan ||
