@@ -469,7 +469,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences }),
     recordedPlanner: createSfRecordedPlannerOperationAccess({ host, state: input.authority.state, resolveEvidence: context.resolve }) })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
-  const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
+  const calculationProducer = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
     writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
     // The historical reader alone receives this coverage route. The exposed
     // Planner and baseline registry continue using the strict original selector.
@@ -481,11 +481,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return decisionDomain.current ? historicalCoverage.resolveForecastCoverage(ref, call)
         : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
     } })
-  calculationVerifier.current = calculations.verifyCalculationSources
   // Standalone and composite Procurement previews are transient. Only the
   // existing explicit human promotion may publish their C08 result.
-  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
-    ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculations.persist(incoming, callId, call, replay)
+  const persist: typeof calculationProducer.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
+    ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculationProducer.persist(incoming, callId, call, replay)
+  // Atlas and callers share the same service facade. A caller observing this
+  // producer before Atlas initialization must observe the producer Atlas uses.
+  const calculations = { ...calculationProducer, persist }
+  calculationVerifier.current = calculations.verifyCalculationSources
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
     ...input.extraDescriptors ?? [],
@@ -732,7 +735,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations: { ...calculations, persist }, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
     withMemoryObservation,
     bindReviewCollaboration: reviewCollaboration.bind,
