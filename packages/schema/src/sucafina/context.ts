@@ -45,6 +45,8 @@ export type SfOwnerSelection = Readonly<{
 export type SfResolvedQuery = Readonly<{
   /** Prefills only the native agenda source; discovery remains an explicit action. */
   sourcePage?: string
+  /** Original personal view identity only; private filters are reread after admission. */
+  savedView?: SfRef
   year?: number
   month?: number
   /** CAP01 presentation priorities only; never forwarded as a producer input or authority. */
