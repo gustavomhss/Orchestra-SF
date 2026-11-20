@@ -107,11 +107,15 @@ export function createPlannerSensitivity(input: {
         const currentSource = structuredClone(await readScenario(request.scenarioRef, trusted))
         const currentBaseline = structuredClone(await readScenario(binding.baselineRef, trusted))
         if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
-        const checked = await Promise.all(samples.map(async (sample) => {
+        // Each preview owns a fresh read observation for this authority. Finish
+        // that observation before starting the next sample; overlapping siblings
+        // cannot borrow its lexical proof. Still execute every pair after a non-ok result.
+        const checked: boolean[] = []
+        for (const sample of samples) {
           const stored = structuredClone(await input.results.read({ kind: "scenario", resultRef: sample.resultRef }, trusted))
           const current = structuredClone(await input.preview({ baselineRef: binding.baselineRef, scenario: structuredClone(sample.request) }, trusted))
-          return stored.status === "ok" && stored.value.kind === "scenario" && current.status === "ok" && plannerPreviewDigest(current.value) === sample.digest && plannerScenarioDigest(stored.value.result) === plannerScenarioDigest(current.value.sample)
-        }))
+          checked.push(stored.status === "ok" && stored.value.kind === "scenario" && current.status === "ok" && plannerPreviewDigest(current.value) === sample.digest && plannerScenarioDigest(stored.value.result) === plannerScenarioDigest(current.value.sample))
+        }
         if (!checked.every(Boolean) || !await input.revalidate(structuredClone(binding), trusted)) return false
         if (interval?.status === "ok" && (!input.coveragePreview || !await input.coveragePreview.revalidate(interval.value.intervalRef, trusted))) return false
         if (!exactEvidence.value) return true
