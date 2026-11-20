@@ -417,8 +417,10 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
         path.join(fixture.root, "browser-members-export.xlsx")),
     ])
     expect(exportResponse.status()).toBe(200)
+    const downloadedBytes = await memberDownload.arrayBuffer()
+    expect(Buffer.from(downloadedBytes)).toEqual(await exportResponse.body())
     console.info("browser IO: Members XLSX parse starting")
-    await membersExport.xlsx.load(await memberDownload.arrayBuffer())
+    await membersExport.xlsx.load(downloadedBytes)
     console.info("browser IO: Members XLSX parse complete")
     const allMembers = membersExport.getWorksheet("All Members")
     expect(allMembers?.rowCount).toBe(2)
