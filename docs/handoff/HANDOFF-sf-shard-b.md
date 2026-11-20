@@ -131,12 +131,12 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 
 | Causa | SHA do fix | Arquivo:linha e decisão | Gate |
 | --- | --- | --- | --- |
-| C01 | 122e311c4950e8846cb221ad554fd53d3d9b41de | integrated-proofs/am01/recall-five-profiles.test.ts:28 — Set da união completa de operações; remove somente duplicatas | [44656693207](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656693207) — em andamento (in_progress) |
+| C01 | 122e311c4950e8846cb221ad554fd53d3d9b41de | integrated-proofs/am01/recall-five-profiles.test.ts:28 — Set da união completa de operações; remove somente duplicatas | [44656693207](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656693207) — sem sumário final; cancelled |
 | C02 | 6e5dd957823b937665b91ba0020246d3bca7770d | proof234/am04-c12-return.test.ts:78 — recuperação Alice permanece negada; Bob já autorizado observa e compara o estado completo | pendente |
 | C03 | d61fe54b772e244c194789f43f94429026bc1906 | wp07/browser-ui.test.ts:242 — inscrição real sem seguir redirect; afirma 303/Location /, abre componente isolado existente | pendente |
 | C04 | dda42a61a089094f6560363449fdc734ad0566de | wp12/native-portfolio-preparation.ts:139–153; native-procurement-preparation.ts:190–199 — baseline conhecido exato 240000 e cobertura completa; hipóteses/null preservados | [44660393378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660393378) — em andamento (in_progress) |
 | C05 | 4bcbffc7160c3f0a47c98155c4e40d139cc8b433 | wp11/source-promotion-coverage.test.ts:182 — igualdade exata com ordem de fontes da avaliação humana já validada | pendente |
-| C06 | 6248b54d66f1d35b996c1c3e10c2836bf11b3c37 | wp12/native-execution-bi.test.ts:85; wp10/integration/work-bridge.test.ts:386 — URL e label nativos completos com fonte, versão, período e ano | pendente |
+| C06 | 6248b54d66f1d35b996c1c3e10c2836bf11b3c37 | wp12/native-execution-bi.test.ts:85; wp10/integration/work-bridge.test.ts:386 — URL e label nativos completos com fonte, versão, período e ano | [44662186554](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662186554) — em andamento (in_progress) |
 | C07 | e062c6f06142d223c5b8dfd59bd181d9ec5a3b16 + extensão 8d84b40e83b0d3c5e7466ffc2fd64da8d0396f3e | wp13/handoff-c08-predispatch.test.ts:242; handoff-canonical-integration.test.ts:162,176 — versão alterada conflita; replay da request original devolve recibo completo idêntico; extensão handoff-persistence.test.ts:170 | pendente |
 | C08 | b91d281808c5428e0e0643bc49fd9400cad5ddbc | wp13/handoff-persistence.test.ts:58; handoff-domain-integration.test.ts:358 — mesma Request admitida durante a operação; gate persistence, domain coberto por C09 | [44656700681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656700681) — 0 pass / 1 fail; failure |
 | C09 | 0e5a457f4d3728a149016b972eee88b2afcdf861 | wp13/handoff-domain-integration.test.ts:391 — intenção de rascunho confirmed:false; não é aprovação | pendente |
@@ -168,10 +168,11 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 
 | Causa | Run | SHA do request | Resultado |
 | --- | --- | --- | --- |
-| C01 | [44656693207](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656693207) | a0010a3b9f37d0e762cf4bd3a043ea6d9a4eb773 | em andamento (in_progress) |
+| C01 | [44656693207](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656693207) | a0010a3b9f37d0e762cf4bd3a043ea6d9a4eb773 | sem sumário final; cancelled |
 | C08 | [44656700681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656700681) | 9a699a80ee693cb257abe147d707ad073426143a | 0 pass / 1 fail; failure |
 | S10 | [44657814166](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657814166) | 1642f3229d99624550da44cedfc8df52848e537b | 9 pass / 2 fail; failure |
 | C04 | [44660393378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660393378) | be8321dfa6fb969650264c7282bc759940a0320c | em andamento (in_progress) |
+| C06 | [44662186554](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662186554) | 2c3b227d23205cfd82ea42181e4cc2942acdaf33 | em andamento (in_progress) |
 
 Os requests estão nos commits indicados, em .ci-run.json. Cada run testa o fix SHA associado, acrescido somente do request. Os dois slots contam workflows até o encerramento completo.
 
@@ -179,6 +180,7 @@ C07+C17 compartilham um único gate de três arquivos porque a fixture persisten
 
 ### Falhas dos gates e evolução
 
+- **C01 — [44656693207](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656693207):** Job cancelado no limite de 45 minutos, sem sumário Bun, sem marcadores pass/fail e sem checagem Omni final. Portanto N pass / M fail indisponível (0/0 marcadores não significa aprovação). Local: integrated-proofs/am01/recall-five-profiles.test.ts:24, entrada do teste; nenhum throw/asserção falha foi emitido. A configuração avançou além do antigo CONFIG_INVALID: catálogo inicial vazio, preparação canônica e negativos foram observados para finance, procurement, portfolio e maestro. Os marcadores de disponibilidade registram inferenceExecuted:false, outputRef:null, consumerRef:null e gnativeAccepted:false. O quinto perfil e a reabertura não foram comprovados. Classificação: unbound — execução/desempenho ou lifecycle sem raiz interna demonstrada. Nenhum rerun.
 - **C08 — [44656700681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656700681):** 0 pass / 1 fail em wp13/handoff-persistence.test.ts:147. A identidade estável ultrapassou a falha inicial :95; o novo ponto esperava reconciliação pendente onde o produtor atual reconcilia normalmente. C17 substitui esse pressuposto por perda explícita da resposta após receipt real. O resultado histórico não é apagado; a nova fixture será verificada no gate C07+C17. Omni não aplicável, zero spawns.
 - **S10 — [44657814166](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657814166):** 9 pass / 2 fail, 260 asserções, 11 testes/2 arquivos, 1143,59 s. Falhas em wp13/coverage-sensitivity-integration.test.ts:22 (timeout 300000 ms, duração reportada 395894,04 ms) e :141–142 → wp11/fixture-trace.ts:15 (bootstrap-start, deadline 180000 ms, trace 290514 ms). Classificação: unbound — desempenho/deadlines. O corpo confirmed continuou após o timeout e se sobrepôs ao bootstrap seguinte; a raiz interna não está demonstrada. omitted/bundled chegaram aos markers posteriores a :115, incluindo injeção de mutação, revogação e caso preservado; isso não aprova o teste fora do prazo. Cinco casos de integração e os quatro de sensitivity-read-scope passaram. Omni não aplicável, zero spawns. PR #405 permanece draft, sem qualificação de merge; nenhum limite ampliado.
 
@@ -192,6 +194,7 @@ Caminhos relativos a modules/sucafina/; a árvore exata está no SHA do request.
 | C08 | Sucafinav1/test/product/wp13/handoff-persistence.test.ts |
 | S10 | Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts; Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts |
 | C04 | Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts; Sucafinav1/test/product/wp12/native-execution-purchase.test.ts; Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts |
+| C06 | Sucafinav1/test/product/wp12/native-execution-bi.test.ts; Sucafinav1/test/product/wp10/integration/work-bridge.test.ts ; filtro -t: ^(native contextual BI \[\|actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key$) |
 
 ## Produção compartilhada — PRs separados
 
@@ -208,7 +211,7 @@ PRs alheios apenas inspecionados: [#398 Atlas](https://github.com/gustavomhss/Or
 
 ## Pendente e como retomar
 
-1. Aguardar os gates ativos C01 (44656693207), C04 (44660393378) e registrar os resultados. Nunca repetir gate idêntico sem mudança.
+1. Aguardar os gates ativos C04 (44660393378), C06 (44662186554) e registrar os resultados. Nunca repetir gate idêntico sem mudança.
 2. Gatear os commits pendentes por causa, até dois workflows ativos. C04/C06 agrupam arquivos com mesma raiz. Não declarar shard verde por recorte.
 3. Verificar a correção C17 do ponto C08:147 no gate conjunto C07+C17, preservando reconciliação durável e execução única.
 4. Timeouts/processos unbound não têm raiz interna provada; não elevar prazos por palpite.
