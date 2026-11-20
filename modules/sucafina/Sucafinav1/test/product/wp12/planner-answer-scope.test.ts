@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
+import { object } from "../../../runtime/contract.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
@@ -8,13 +9,26 @@ import { dispatchWp12Ui, withWp12NativeMissionHost } from "./native-mission-harn
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12QuestionSource, WP12_QUESTION_PERIOD } from "./native-question-preparation.ts"
 
+const label = "planner-answer-scope"
+
 test("Planner answer dispatch and confirmation retain the complete source through host reopen", async () => {
-  await withWp12NativeMissionHost({ label: "planner-answer-scope",
+  await withWp12NativeMissionHost({ label,
     operations: ["sf_context_get", "sf_answer_read"],
     humanActions: ["collaboration.thread.create", "collaboration.thread.reply", "collaboration.answer.confirm"],
     namespaces: ["cases", "preferences", "documents", "contributions", "receipts", "outbox", "atlas", "threads", "relations", "confirmations"],
-    initialize: initializeWp12QuestionSource }, async (harness) => {
+    initialize: async (persistence) => {
+      await initializeWp12QuestionSource(persistence)
+      // The real recipient directory requires this actor's existing Dashboard
+      // access row as well as its authenticated identity and directory entry.
+      await persistence.transaction("dashboard", async (snapshot) => {
+        snapshot.data.access = { ...object(snapshot.data.access), [`wp12-synthetic-${label}-principal`]: { role: "admin" } }
+        return { commit: true, value: undefined }
+      })
+    } }, async (harness) => {
     const initial = await harness.open("initial", async (context) => {
+      const recipients = ok(await context.ui("sf_context_get", { purpose: "planner-answer-recipient" },
+        (call) => context.business.collaboration.listRecipients(call)), "Planner recipient directory")
+      expect(recipients.map((person) => person.id)).toEqual([context.principalRef])
       const source = ok(await context.ui("sf_context_get", { purpose: "planner-answer-source" },
         (call) => context.business.plannerProduct.issueSource("wp12-question-source", call)), "Planner source").evidence
       expect(source.target.surface).toBe("planner")
