@@ -26,6 +26,7 @@ import { createSfDraft } from "../shared/draft"
 import { createSfNavigationState, type SfNativeNavigationState } from "../navigation-state"
 import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
 import { useSfContext } from "../context"
+import { clearSfBiRetention, reconcileSfBiRetention } from "../bi/lifecycle-retention"
 import type { SfContextDependencies, SfContextHandle, SfSurfaceProps } from "../context/contracts"
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
@@ -226,19 +227,23 @@ function MountedSurface(props: Readonly<{
   const language = useLanguage()
   const [authBusy, setAuthBusy] = createSignal(false)
   const [authFailed, setAuthFailed] = createSignal(false)
+  let active = true
   const signOut = async () => {
-    const state = handle.state(), ready = handle.ready(), generation = handle.generation()
+    const state = handle.state(), ready = handle.ready()
     if (state.status !== "ready" || !ready || authBusy()) return
     setAuthBusy(true); setAuthFailed(false)
     try {
-      await createSfAuthActions({
+      // Start the genuine POST while its transport is still current, then
+      // fence every private read before waiting for the identity response.
+      const logout = createSfAuthActions({
         binding: state.binding, transport: ready.transport,
         navigate: (url) => window.location.assign(url),
       }).logout()
-      if (handle.generation() === generation && handle.ready()?.transport === ready.transport) {
-        handle.invalidate("logout")
-        await handle.reload()
-      }
+      clearSfBiRetention(handle)
+      handle.invalidate("logout")
+      const generation = handle.generation()
+      await logout
+      if (active && handle.generation() === generation) await handle.reload()
     } catch (error) {
       console.warn("Sucafina sign-out failed", error instanceof Error && /^SF_NATIVE_[A-Z_]+$/.test(error.message)
         ? error.message : error instanceof Error ? error.name : "unknown")
@@ -255,9 +260,10 @@ function MountedSurface(props: Readonly<{
   props.bind(handle)
   createEffect(() => {
     const state = handle.state()
+    reconcileSfBiRetention(handle)
     props.status(state.status, handle.generation(), "reason" in state ? state.reason : undefined)
   })
-  onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
+  onCleanup(() => { active = false; clearSfBiRetention(handle); props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
     <>
