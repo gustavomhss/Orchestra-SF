@@ -1,10 +1,11 @@
 import { NodeFileSystem } from "@effect/platform-node"
-import { compile, emitEffectImported, emitPromise, write } from "@orchestra/httpapi-codegen"
+import { compileImported, emitEffectImported, emitPromise, write } from "@orchestra/httpapi-codegen"
 import { ClientApi, endpointNames, groupNames, omitEndpoints } from "../src/contract"
 import { Effect } from "effect"
 import { fileURLToPath } from "url"
 
-const contract = compile(ClientApi, { groupNames, endpointNames, omitEndpoints })
+const source = { module: "../contract", api: "ClientApi" }
+const contract = compileImported(ClientApi, source, { groupNames, endpointNames, omitEndpoints })
 const splitGroups = new Set([
   "research",
   "schedules",
@@ -39,7 +40,7 @@ await Effect.runPromise(
         fileURLToPath(new URL("../src/generated", import.meta.url)),
       ),
       write(
-        emitEffectImported(contract, { module: "../contract", api: "ClientApi" }, { splitGroups }),
+        emitEffectImported(contract, source, { splitGroups }),
         fileURLToPath(new URL("../src/generated-effect", import.meta.url)),
       ),
     ],
