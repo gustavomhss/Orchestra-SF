@@ -136,9 +136,8 @@ export async function prepareWp12PortfolioCase(context: Wp12NativeMissionContext
     return { alternative: alternatives[0]!, resultRef: receipt.resultRef }
   }
   const baseline = get("baseline"), lowerCost = get("lowerCost"), trainingChange = get("trainingChange"), combined = get("combined")
-  // The real category inventory is complete for every selected operation. Its
-  // coverage does not turn a simulated result, including a no-op, into an
-  // applied or complete financial result.
+  // Fully covered source observations are complete. Hypothetical operations
+  // remain conditional and do not apply any domain command.
   for (const [value, amount, serviceAmount, trainingAmount, hypotheticalCount] of [
     [baseline, 240_000, 240_000, 0, 0],
     [lowerCost, 200_000, 200_000, 0, 1],
@@ -147,10 +146,20 @@ export async function prepareWp12PortfolioCase(context: Wp12NativeMissionContext
   ] as const) {
     const result = value.alternative.result
     expect(result.knownSubtotal).toBe(amount)
-    expect(result.total).toBeNull()
-    expect(result.comparisonStatus).toBe("conditioned")
-    expect(result.unresolvedConditions).toContain("scenario-is-hypothetical")
-    expect(result.restrictions).toContain("preview-not-applied")
+    if (value === baseline) {
+      expect(value.alternative.scenario.operations).toEqual([])
+      expect(value.alternative.scenario.assumptions).toEqual([])
+      expect(result.id.startsWith("source-scenario:")).toBe(true)
+      expect(result.total).toBe(amount)
+      expect(result.comparisonStatus).toBe("complete")
+      expect(result.unresolvedConditions).toEqual([])
+      expect(result.restrictions).toEqual([])
+    } else {
+      expect(result.total).toBeNull()
+      expect(result.comparisonStatus).toBe("conditioned")
+      expect(result.unresolvedConditions).toContain("scenario-is-hypothetical")
+      expect(result.restrictions).toContain("preview-not-applied")
+    }
     expect(result.costCoverage.basisId).toBe(basis.id)
     expect(result.costCoverage.basisVersion).toBe(basis.version)
     expect(result.costCoverage.alternativeId).toBe(value.alternative.id)
