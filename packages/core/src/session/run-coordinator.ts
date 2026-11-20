@@ -78,18 +78,23 @@ export const make = <Key, E>(options: {
       stopping: false,
     })
 
-    const start = (key: Key, entry: Entry<E>, work: Effect.Effect<void, E>, successor = false) => {
+    const start = (key: Key, entry: Entry<E>, work: Effect.Effect<void, E>, successor = false): Deferred.Deferred<void, E> => {
       const ready = Deferred.makeUnsafe<void>()
+      const completed = Deferred.makeUnsafe<void, E>()
       const owner = fork(
         (successor ? Effect.yieldNow : Deferred.await(ready)).pipe(
           Effect.andThen(work),
-          Effect.onExit((exit) => Effect.sync(() => settle(key, entry, exit))),
+          Effect.onExit((exit) => Effect.sync(() => {
+            settle(key, entry, exit)
+            Deferred.doneUnsafe(completed, exit)
+          })),
           Effect.exit,
           Effect.asVoid,
         ),
       )
       entry.owner = owner
       if (!successor) Deferred.doneUnsafe(ready, Effect.void)
+      return completed
     }
 
     const settle = (key: Key, entry: Entry<E>, exit: Exit.Exit<void, E>) => {
@@ -169,12 +174,13 @@ export const make = <Key, E>(options: {
         active.set(key, next)
         const result = Deferred.makeUnsafe<A, E2>()
         // The caller hears the effect's own outcome; the entry only settles ownership, so it never fails.
-        start(key, next, bind(effect.pipe(Effect.onExit((exit) => Deferred.done(result, exit)), Effect.ignore)))
+        const completed = start(key, next, bind(effect.pipe(Effect.onExit((exit) => Deferred.done(result, exit)), Effect.ignore)))
         // The inner result may settle before the private binding's final
         // authority recheck and before ownership is released. Await that whole
-        // owned execution first; an interrupt before work starts settles only
-        // entry.done and must never wait for a result which cannot be produced.
-        return yield* restore(Deferred.await(next.done).pipe(
+        // owned execution first, without waiting for a coalesced successor drain.
+        // An interrupt before work starts settles completed and must never wait
+        // for a result which cannot be produced.
+        return yield* restore(Deferred.await(completed).pipe(
           Effect.orDie,
           Effect.andThen(Deferred.await(result)),
         )).pipe(Effect.map(Option.some))
