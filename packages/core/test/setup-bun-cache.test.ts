@@ -61,7 +61,7 @@ describe("setup-bun cache architecture repair", () => {
       rows.forEach((row) => {
         expect(row.outputs).toEqual({
           bun: `${row.os}-${row.arch}-bun-v3-${hash}`,
-          modules: `${row.os}-${row.arch}-modules-v4-${hash}`,
+          modules: `${row.os}-${row.arch}-modules-v5-${hash}`,
         })
         const prefixes = expand(text(bunRestore.with?.["restore-keys"], "BUN_RESTORE_PREFIX_MISSING"), row)
           .trim()
@@ -152,6 +152,7 @@ function expand(source: string, runner: { os: string; arch: string }) {
         return runner.arch
       case "hashFiles('bun.lock')":
       case "hashFiles('bun.lock', 'patches/**', 'package.json')":
+      case "steps.fingerprint.outputs.fingerprint":
         return hash
       default:
         throw new Error(`CACHE_EXPRESSION_UNSUPPORTED: ${expression.trim()}`)
