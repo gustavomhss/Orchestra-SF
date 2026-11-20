@@ -76,10 +76,11 @@ export const forecastAnalysisScript = `
         headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
         body: typeof payload === 'string' ? payload : JSON.stringify(payload), signal: controller.signal })
       if (!live(element, generation)) throw new Error('inactive')
-      if (response.status === 401 || response.status === 403) { dispatchEvent(new Event('sf-access-revoked')); throw new Error('denied') }
+      // A denied analysis closes these controllers; only the shell's own signal removes the whole view.
+      if (response.status === 401 || response.status === 403) { revoke(); throw new Error('denied') }
       const result = await response.json()
       if (!live(element, generation)) throw new Error('inactive')
-      if (result?.status === 'denied') { dispatchEvent(new Event('sf-access-revoked')); throw new Error('denied') }
+      if (result?.status === 'denied') { revoke(); throw new Error('denied') }
       if (!response.ok || result?.status !== 'ok') {
         const rejected = [400, 422].includes(response.status) || ['stale', 'needs-input'].includes(result?.status)
         throw new Error(rejected ? 'rejected' : response.status === 409 || result?.status === 'conflict' ? 'conflict' : 'unavailable')
