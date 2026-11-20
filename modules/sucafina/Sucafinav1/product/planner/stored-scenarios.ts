@@ -14,6 +14,43 @@ type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
 type CaseObservation = Awaited<ReturnType<DecisionCasePort["read"]>>
 type PreparedScenario = { reference: string; stored: StoredScenario; caseDigest: string; value: ResolvedScenario }
 
+type ScenarioBatch = NonNullable<PlannerScenarioHost["resolveMany"]>
+// Constructor provenance only. No case, result, source observation or authority
+// is retained here; each call still starts all canonical observation phases.
+const storedScenarioBatches = new WeakMap<PlannerScenarioHost["resolve"], ScenarioBatch>()
+
+/** Group siblings only through the original scalar/batch pair. An opaque or
+ * modified facade keeps the caller's explicit scalar observation schedule. */
+export async function resolveStoredPlannerScenarios(
+  scenarios: PlannerScenarioHost,
+  incoming: readonly string[],
+  context: TrustedDomainContext,
+  fallback: "parallel" | "sequential" = "parallel",
+): Promise<PortResult<ResolvedScenario>[]> {
+  const references = [...incoming]
+  if (!references.length) return []
+  const scalar = scenarios.resolve, batch = scenarios.resolveMany
+  if (batch && storedScenarioBatches.get(scalar) === batch) {
+    const observed = await batch.call(scenarios, [...references], context)
+    // Once an observation starts, a changed facade must not inherit its result
+    // or silently restart it through another admission path.
+    if (scenarios.resolve !== scalar || scenarios.resolveMany !== batch)
+      return references.map(() => ({ status: "denied", reason: "scenario-reader-changed" }))
+    if (observed.length !== references.length)
+      return references.map(() => ({ status: "unavailable", reason: "scenario-batch-invalid" }))
+    return structuredClone(observed).map((entry) => structuredClone(entry))
+  }
+  // The metric observer takes each detached snapshot before the next scalar
+  // call. C09 retains Promise.all and its final joint clone by default.
+  // Neither path may invoke a copied or replaced resolveMany capability.
+  if (fallback === "sequential") {
+    const observed: PortResult<ResolvedScenario>[] = []
+    for (const reference of references) observed.push(structuredClone(await scenarios.resolve(reference, context)))
+    return observed
+  }
+  return structuredClone(await Promise.all(references.map((reference) => scenarios.resolve(reference, context))))
+}
+
 /** Resolve stored scenarios only when they are exact current, authorized case alternatives. */
 export function createStoredPlannerScenarioHost(input: {
   store: ReturnType<typeof createSfDecisionResultStore> & { readHistoricalScenario?: (request: { resultRef: string }, context: TrustedDomainContext) => ReturnType<ReturnType<typeof createSfDecisionResultStore>["read"]> }
@@ -92,5 +129,7 @@ export function createStoredPlannerScenarioHost(input: {
     }
     return result
   }
-  return { resolveMany, resolve: async (reference, context) => (await resolveMany([reference], context))[0]! }
+  const resolve: PlannerScenarioHost["resolve"] = async (reference, context) => (await resolveMany([reference], context))[0]!
+  storedScenarioBatches.set(resolve, resolveMany)
+  return { resolveMany, resolve }
 }
