@@ -1,11 +1,15 @@
 import { afterEach, expect, test } from "bun:test"
-import { Effect, Layer, Option, Schema } from "effect"
+import { createServer, request as nodeRequest } from "node:http"
+import { NodeHttpServer } from "@effect/platform-node"
+import { composeSfInstallation } from "../../../apps/cli/src/sucafina-product/installation"
+import { Context, Effect, Layer, Option, Schema } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder, HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi"
-import { SucafinaGroup } from "@orchestra/protocol/groups/sucafina"
+import { SucafinaGroup } from "../../protocol/src/groups/sucafina"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
 import { SchemaErrorMiddleware } from "@orchestra/protocol/middleware/schema-error"
 import { ServerAuth } from "../src/auth"
+import { hostPolicyLayer } from "../src/host-policy"
 import { SucafinaHandler } from "../src/handlers/sucafina"
 import { authorizationLayerWith } from "../src/middleware/authorization"
 import { schemaErrorLayer } from "../src/middleware/schema-error"
@@ -38,17 +42,16 @@ function fixture(value: Awaited<ReturnType<SfTrustedInstallationSource["current"
     const read = () => Effect.sync(() => { observations.privateCalls++; return "private" })
     return handlers.handle("private", read).handle("other", read).handle("post", read)
   })
-  const layer = HttpApiBuilder.layer(api).pipe(
+  const routes = HttpApiBuilder.layer(api).pipe(
     Layer.provide(Layer.mergeAll(SucafinaHandler, probeHandlers)),
     Layer.provide(Layer.succeed(SfInstallationSource, source)),
     Layer.provide(authorizationLayerWith(source)),
     Layer.provide(schemaErrorLayer),
     Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some("configured-host-secret") })),
-    Layer.provide(HttpServer.layerServices),
   )
-  const web = HttpRouter.toWebHandler(layer, { disableLogger: true })
+  const web = HttpRouter.toWebHandler(routes.pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
   cleanups.push(web.dispose)
-  return { ...web, observations }
+  return { ...web, routes, observations }
 }
 
 function request(path = current, input: RequestInit = {}, publicOrigin = origin) {
@@ -131,4 +134,63 @@ test("absent, local-operator, incomplete or failed metadata never creates a publ
     fixture({ ...installed, identity: () => undefined }),
     fixture(installed, true),
   ]) expect((await f.handler(request())).status).toBe(401)
+})
+
+test("the production Node ingress accepts configured HTTPS-proxy metadata while preserving installed mount normalization", async () => {
+  const f = fixture()
+  await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const server = createServer()
+    const installation = Layer.unwrap(Effect.gen(function* () {
+      const http = yield* HttpServer.HttpServer
+      if (http.address._tag !== "TcpAddress") throw new Error("Actual TCP listener required")
+      const listenerOrigin = "http://127.0.0.1:" + http.address.port
+      const composed = yield* Effect.promise(() => composeSfInstallation({
+        mount: "/sucafina", dispose: () => {},
+        transport: { kind: "explicit-https-proxy", listenerOrigin,
+          ingressOrigin: "http://sf.example.test", publicOrigin: origin },
+        handler: async (original: Request) => new Response(original.url),
+      }, listenerOrigin))
+      return composed.layer
+    }))
+    const services = yield* Layer.build(
+      HttpRouter.serve(Layer.merge(f.routes, installation).pipe(
+        Layer.provide(hostPolicyLayer(["sf.example.test"])),
+      ), { disableLogger: true, disableListenLog: true }).pipe(
+        Layer.provideMerge(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 })),
+      ),
+    )
+    yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections()))
+    const address = Context.get(services, HttpServer.HttpServer).address
+    if (address._tag !== "TcpAddress") throw new Error("Actual TCP listener required")
+    const send = (pathname: string, headers: Record<string, string>) => Effect.promise((signal) =>
+      new Promise<{ status: number; body: string; headers: import("node:http").IncomingHttpHeaders }>((resolve, reject) => {
+        const outgoing = nodeRequest({ hostname: "127.0.0.1", port: address.port, path: pathname,
+          method: "GET", headers, signal }, (response) => {
+          let body = ""
+          response.setEncoding("utf8")
+          response.on("data", (chunk) => { body += chunk })
+          response.once("end", () => resolve({ status: response.statusCode ?? 0, body, headers: response.headers }))
+          response.once("error", reject)
+        })
+        outgoing.once("error", reject)
+        outgoing.end()
+      }),
+    )
+    const publicHeaders = { host: "sf.example.test", origin }
+    const metadata = yield* send(current, publicHeaders)
+    expect(metadata.status).toBe(200)
+    expect(metadata.headers["cache-control"]).toBe("no-store")
+    expect(JSON.parse(metadata.body).installations[0]).toMatchObject({ publicOrigin: origin, mount: "/sucafina", contractRevision: "sf-team-profile/1" })
+    const normalized = yield* send("/sucafina/transport-check", { ...publicHeaders, "x-forwarded-host": "ignored.example.test" })
+    expect(normalized.status).toBe(200)
+    expect(normalized.body).toBe(origin + "/sucafina/transport-check")
+    const reads = f.observations.current
+    const forged = yield* send(current, { host: "wrong.example.test", origin,
+      forwarded: "host=sf.example.test;proto=https", "x-forwarded-host": "sf.example.test" })
+    expect(forged.status).toBe(421)
+    expect(f.observations.current).toBe(reads)
+    expect((yield* send("/api/private", publicHeaders)).status).toBe(401)
+    expect(f.observations.privateCalls).toBe(0)
+    expect(f.observations.locations).toBe(0)
+  })))
 })
