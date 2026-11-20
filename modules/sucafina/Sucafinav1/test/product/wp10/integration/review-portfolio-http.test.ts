@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DomainProjection, SourceRef } from "../../../../product/contracts/context.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
@@ -541,6 +542,7 @@ for (const revocation of ["case", "session"] as const) {
 }
 
 test("Review browser clears selected content after case revocation while the session remains authenticated", async () => {
+  expectSpawn(import.meta.path)
   await withReviewPortfolio("browser-case-revocation", async ({ deadline, browserChecks, http, assets, original, period, mutate, caseRef, fixture, authority, call, get, getSource }) => {
     await deadline.phase("browser.prepare", async () => {
       // Own the browser before phase's post-await deadline check can throw.

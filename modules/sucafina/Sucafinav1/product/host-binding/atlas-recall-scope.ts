@@ -11,6 +11,9 @@ type CaseRef = { id: string; incarnation: string; version: number }
 type CalculationRef = Extract<BusinessEvidenceRef, { kind: "calculation" }>
 type PlannerRef = Extract<BusinessEvidenceRef, { kind: "record" }>
 type RecallResult = Awaited<ReturnType<ReturnType<typeof createSfAtlasMemory>["recall"]>>
+/** Host-private scope for a completed read proof; callers keep publication outside. */
+export type SfAtlasReadObservation = <Value>(incoming: { id: string; incarnation: string }, call: TrustedDomainContext,
+  work: () => Promise<PortResult<Value>>) => Promise<PortResult<Value>>
 export type SfCalculationCaseScope = <Value>(call: TrustedDomainContext, selected: CaseRef,
   work: () => Promise<PortResult<Value>>, egress?: (value: PortResult<Value>) => Promise<PortResult<Value>>) => Promise<PortResult<Value>>
 type Proof = { incoming: BusinessEvidenceRef; ref: CalculationRef; refDigest: string; fence: string; resolution: BusinessEvidenceResolution }
@@ -19,7 +22,7 @@ type Scope = { call: TrustedDomainContext; request: Request; binding: string; in
 type SnapshotProof = { kind: "current"; digest: string; baseRef: string } | { kind: "unsupported" } | undefined
 type Fence = { kind: "current"; digest: string } | { kind: "unsupported" } | undefined
 
-/** Reuse one completed record-only calculation inside one authenticated Atlas recall. */
+/** Reuse one completed record-only calculation inside one authenticated Atlas read. */
 export function createSfAtlasRecallScope(input: {
   host: DomainPortHost
   state: SfProductStatePort
@@ -110,10 +113,12 @@ export function createSfAtlasRecallScope(input: {
       return { ...result, checkedAt: input.now() }
     } finally { scope.busy = false }
   }
-  const recall = async (incoming: { id: string; incarnation: string }, call: TrustedDomainContext, work: () => Promise<RecallResult>): Promise<RecallResult> => {
+  const observe: SfAtlasReadObservation = async <Value>(incoming: { id: string; incarnation: string }, call: TrustedDomainContext,
+    work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const unavailable = (): PortResult<Value> => ({ status: "unavailable", reason: "atlas-read-observation-changed" })
     if (call.kind !== "ui") return work()
     const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), inputDigest = digestSfValue(incoming)
-    if (!request || request.signal.aborted || active.has(call) || !await input.host.revalidate(call)) return { status: "unavailable" }
+    if (!request || request.signal.aborted || active.has(call) || !await input.host.revalidate(call)) return unavailable()
     const selected = await input.state.read(request, "cases", (state, actor) => {
       const value = state.cases[incoming.id]
       if (!value || value.incarnation !== incoming.incarnation || !value.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef ||
@@ -122,7 +127,7 @@ export function createSfAtlasRecallScope(input: {
       return { selected, eligible: value.sourceRefs.some((ref) => ref.kind === "calculation" && recordOnlyRequest(state, selected, ref) !== undefined) }
     })
     if (selected.status !== "ok" || !selected.value || active.has(call) || input.host.requestFor(call) !== request || request.signal.aborted ||
-      binding !== digestSfValue([call.kind, call.binding]) || inputDigest !== digestSfValue(incoming)) return { status: "unavailable" }
+      binding !== digestSfValue([call.kind, call.binding]) || inputDigest !== digestSfValue(incoming)) return unavailable()
     // Preserve the original historical/mixed-domain path, including its case
     // semantics. Merely having Atlas mounted does not enable proof reuse.
     if (!selected.value.eligible) return work()
@@ -130,8 +135,8 @@ export function createSfAtlasRecallScope(input: {
     active.add(call)
     try {
       return await local.run(scope, async () => {
-        const result = await input.withCalculationCase<RecallResult>(call, scope.selected, async () => ({ status: "ok", value: await work() }), async (result) => {
-          if (result.status !== "ok" || result.value.status !== "ok" || !scope.proof) return result
+        const result = await input.withCalculationCase<Value>(call, scope.selected, work, async (result) => {
+          if (result.status !== "ok" || !scope.proof) return result
           // The private case wrapper calls this AFTER its own final await while
           // retaining the exact CaseScope needed by the real coverage callback.
           scope.busy = true
@@ -141,12 +146,19 @@ export function createSfAtlasRecallScope(input: {
               ? result : { status: "unavailable", reason: "atlas-recall-proof-changed" }
           } finally { scope.busy = false }
         })
-        return result.status === "ok" && current(scope) ? result.value : { status: "unavailable" }
+        return result.status === "ok" && current(scope) ? result : unavailable()
       })
-    } catch { return { status: "unavailable" } }
+    } catch { return unavailable() }
     finally { scope.closed = true; scope.proof = undefined; active.delete(call) }
   }
-  return { recall, resolve }
+  const recall = async (incoming: { id: string; incarnation: string }, call: TrustedDomainContext, work: () => Promise<RecallResult>): Promise<RecallResult> => {
+    const result = await observe(incoming, call, async (): Promise<PortResult<RecallResult>> => {
+      const value = await work()
+      return value.status === "ok" ? { status: "ok", value } : { status: "unavailable", reason: "atlas-recall-unavailable" }
+    })
+    return result.status === "ok" ? result.value : { status: "unavailable" }
+  }
+  return { recall, resolve, observe }
 }
 
 /** Eligibility never replaces the first canonical request/result-store read. */
