@@ -58,7 +58,7 @@ test("Risk collection component labels select values and apply the original Stat
     const context = Schema.decodeUnknownSync(SfContext, { onExcessProperty: "error" })({
       stamp: { installationId: "fixture-install", projectId: "fixture-project", hostId: "fixture-host",
         principalRef: "fixture-actor", policyVersion: "fixture-policy", accessRevision: "fixture-access" },
-      contractRevision: "sf-native-ui/1", authMode: "microsoft",
+      contractRevision: "sf-native-ui/1", authMode: "local-operator",
       destinations: [{ capabilityId: "CAP13", surface: "dashboard", page: "IT Risks", canRead: true, allowedActionIds: ["save"] }],
       availability: [{ family: "domain-read", resource: "CAP13", state: "ready", operations: [
         { operationId: "domain.page.CAP13", state: "ready", reason: null, operational: true },
