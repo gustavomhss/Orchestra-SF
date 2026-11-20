@@ -54,6 +54,7 @@ test("Planner answer dispatch and confirmation retain the complete source throug
         if (!reuse) throw new Error("The Planner answer reuse producer is missing")
         return { answerRef: answer.refId, observation: ok(await reuse.prepare(thread.id, answer.refId, call), "Planner answer observation") }
       })
+      if (source.target.period === undefined) throw new Error("The canonical Planner source has no period")
       expect(prepared.observation.scope).toEqual({ sourceRef: { surface: "planner", type: source.target.recordType, id: source.target.recordId, incarnation: source.target.incarnation },
         fields: source.target.fields, period: source.target.period, materialDependencies: [], scopeDefinitionVersion: "planner-answer-c06-v1" })
       expect(prepared.observation.observation.state).toBe("available")
