@@ -1,4 +1,4 @@
-import { expect, spyOn, test } from "bun:test"
+import { expect, test } from "bun:test"
 import { Schema } from "effect"
 import { solidDom } from "../real-ui-solid"
 import type { SfContext, SfEditScopeKey, SfHref, SfOwnerSelection, SfRef, SfResolvedRoute, SfServerKey } from "@orchestra/schema/sucafina/context"
@@ -63,21 +63,33 @@ function edit(node: ParentNode, value: string) {
   field.dispatchEvent(new Event("input", { bubbles: true }))
   field.blur()
 }
+function replaceProperty(target: object, key: PropertyKey, value: unknown) {
+  const descriptor = Object.getOwnPropertyDescriptor(target, key)
+  Object.defineProperty(target, key, { configurable: true, writable: true, value })
+  return () => {
+    if (descriptor) Object.defineProperty(target, key, descriptor)
+    else Reflect.deleteProperty(target, key)
+  }
+}
 function clock() {
   const intervals = new Map<Parameters<typeof clearInterval>[0], () => void>()
   const schedule = globalThis.setInterval.bind(globalThis)
   const cancel = globalThis.clearInterval.bind(globalThis)
-  const start = spyOn(globalThis, "setInterval").mockImplementation((handler, delay, ...args) => {
-    const id = schedule(handler, delay, ...args)
-    if (delay === 30000 && typeof handler === "function") intervals.set(id, () => handler(...args))
+  // Replace the property, leaving the captured runtime function untouched.
+  // The wrapper must not re-enter itself when it schedules the real interval.
+  const restoreStart = replaceProperty(globalThis, "setInterval", (...args: Parameters<typeof setInterval>) => {
+    const [handler, delay, ...parameters] = args
+    const id = schedule(...args)
+    if (delay === 30000 && typeof handler === "function") intervals.set(id, () => handler(...parameters))
     return id
   })
-  const stop = spyOn(globalThis, "clearInterval").mockImplementation((id) => {
+  const restoreStop = replaceProperty(globalThis, "clearInterval", (...args: Parameters<typeof clearInterval>) => {
+    const [id] = args
     if (id !== undefined) intervals.delete(id)
-    cancel(id)
+    cancel(...args)
   })
   return { intervals, tick: () => { for (const fire of [...intervals.values()]) fire() },
-    close: () => { for (const id of intervals.keys()) cancel(id); intervals.clear(); stop.mockRestore(); start.mockRestore() } }
+    close: () => { for (const id of intervals.keys()) cancel(id); intervals.clear(); restoreStop(); restoreStart() } }
 }
 function fixture() {
   const timer = clock()
@@ -150,7 +162,7 @@ function fixture() {
   const dispose = render(() => withBrowserPlatform(() => createComponent(LanguageProvider, { locale: "en",
     get children() { return createComponent(Router, {
       get children() { return createComponent(Route, { path: "*", component: () =>
-        createComponent(SfContextProvider, { selection: selected, dependencies,
+        createComponent(SfContextProvider, { selection: () => ({ ...selected() }), dependencies,
           get children() { return createComponent(child, {}) } }) }) },
     }) },
   })), node)
@@ -319,7 +331,7 @@ test("native Settings cancels the reviewed save or reset while its real digest i
         expect(view.node.querySelector('[data-component="sf-change-review"]')).not.toBeNull()
         // Delay only the actual command digest, after initial owner/source reads.
         // The returned bytes still come from the runtime's original WebCrypto.
-        const digestSpy = spyOn(crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+        restoreDigest = replaceProperty(crypto.subtle, "digest", async (...[algorithm, data]: Parameters<typeof crypto.subtle.digest>) => {
           expect(algorithm).toBe("SHA-256")
           captured.push(JSON.parse(new TextDecoder().decode(data)))
           await releaseDigest.promise
@@ -328,7 +340,6 @@ test("native Settings cancels the reviewed save or reset while its real digest i
           digestReturned.release()
           return digest
         })
-        restoreDigest = () => { digestSpy.mockRestore() }
         const review = view.node.querySelector('[data-component="sf-change-review"]')
         if (!review) throw new Error("Native settings review is unavailable")
         button(review, action === "save" ? "Save" : "Reset settings").click()

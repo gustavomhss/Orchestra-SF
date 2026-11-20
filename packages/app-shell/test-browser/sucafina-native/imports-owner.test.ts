@@ -116,7 +116,8 @@ function fixture(continuation: Continuation, holdContext = false) {
       if (!owner) throw new Error("Unexpected transport owner")
       const transport: SfTransport = { async execute(operation, input, options) {
         Schema.decodeUnknownSync(operation.input, { onExcessProperty: "error" })(input)
-        const read = { operationId: operation.operationId, owner, signal: options.signal, returned: false }
+        // Capture authority at read start, before a later owner can be installed.
+        const read = { operationId: operation.operationId, owner: { ...owner }, signal: options.signal, returned: false }
         reads.push(read)
         const value = reference(owner, continuation !== "review")
         let body: unknown
@@ -150,10 +151,11 @@ function fixture(continuation: Continuation, holdContext = false) {
   }
   const node = document.createElement("div")
   document.body.append(node)
+  // F01 reconciles its store: give it a detached selection, not the fixture oracle.
   const dispose = render(() => withBrowserPlatform(() => createComponent(LanguageProvider, {
     locale: "en", get children() { return createComponent(Router, {
       get children() { return createComponent(Route, { path: "*", component: () =>
-        createComponent(SfContextProvider, { selection: selected, dependencies,
+        createComponent(SfContextProvider, { selection: () => ({ ...selected() }), dependencies,
           get children() { return createComponent(child, {}) } }) }) },
     }) },
   })), node)
