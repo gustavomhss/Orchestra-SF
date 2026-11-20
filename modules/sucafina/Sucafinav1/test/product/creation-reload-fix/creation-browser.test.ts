@@ -160,6 +160,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       page.on("pageerror", (error) => pageErrors.push(error.message))
       const main = origin + "/sf/dashboard?sf=workbench"
       const fill = async () => {
+        // The real normal form opens only when the person expands its summary.
+        await page.locator("details:has(form[data-decision-create]) > summary").click()
         await page.getByLabel("Decision objective").fill("Same deliberate wording")
         await page.getByLabel("Start", { exact: true }).fill("2027-01-01")
         await page.getByLabel("End", { exact: true }).fill("2027-12-31")

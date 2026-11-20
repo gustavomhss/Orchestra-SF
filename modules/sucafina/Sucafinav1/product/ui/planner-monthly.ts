@@ -38,10 +38,15 @@ document.querySelectorAll('table').forEach((table) => {
   let key = crypto.randomUUID()
   let busy = false
   let approved = false
-  let operationBusy = false; let operationUncertain = false
+  let pending = null; let uncertain = false; let reconciliation = false
+  let revoked = false; let generation = 0; let controller = null
   const idFor = (row, kind, month) => JSON.stringify([row, kind, month])
   const update = (input) => {
     const id = idFor(input.dataset.row, input.dataset.measure, Number(input.dataset.month))
+    if (busy || pending || reconciliation || revoked) {
+      input.value = changes.get(id)?.text ?? input.dataset.original
+      return
+    }
     invalidCells.delete(id); input.removeAttribute('aria-invalid')
     if (input.value === input.dataset.original) changes.delete(id)
     else changes.set(id, { rowId: input.dataset.row, measure: input.dataset.measure, month: Number(input.dataset.month), text: input.value })
@@ -60,7 +65,7 @@ document.querySelectorAll('table').forEach((table) => {
         input.type = 'text'; input.inputMode = 'decimal'; input.setAttribute('aria-label', row.label + ' ' + kind + ' month ' + (index + 1)); input.setAttribute('aria-describedby', status.id)
         input.dataset.row = row.id; input.dataset.measure = kind; input.dataset.month = String(index + 1); input.dataset.rowIndex = String(rowIndex); input.dataset.original = row.values[prefix + index] ?? ''
         input.value = changes.get(idFor(row.id, kind, index + 1))?.text ?? input.dataset.original
-        input.disabled = !!row.saved || !Object.hasOwn(row.values, prefix + index)
+        input.disabled = busy || !!pending || reconciliation || revoked || !!row.saved || !Object.hasOwn(row.values, prefix + index)
         if (invalidCells.has(idFor(row.id, kind, index + 1))) input.setAttribute('aria-invalid', 'true')
         input.addEventListener('input', () => update(input))
         input.addEventListener('paste', (event) => {
@@ -78,79 +83,140 @@ document.querySelectorAll('table').forEach((table) => {
       })
     })
   }
+  const revoke = () => {
+    if (revoked) return
+    revoked = true; generation++; controller?.abort(); controller = null
+    pending = null; changes.clear(); invalidCells.clear(); rows.splice(0); records.clear()
+    delete dirtyGuard.dataset.dirty
+    table.replaceChildren()
+    section.replaceChildren(status); status.textContent = 'Planning access changed. Reopen the page with your current access.'
+  }
+  const validRows = (value, drafts) => Array.isArray(value) && value.length === drafts.length &&
+    new Set(value.map((item) => item?.draft?.rowId)).size === drafts.length && value.every((item) => {
+      const expected = drafts.find((draft) => draft.rowId === item?.draft?.rowId)
+      return expected && item.draft.revision === expected.revision &&
+        Array.isArray(item.draft.cells) && item.draft.cells.length === expected.cells.length &&
+        item.draft.cells.every((cell, index) => cell.measure === expected.cells[index].measure &&
+          cell.month === expected.cells[index].month && cell.text === expected.cells[index].text) &&
+        Array.isArray(item.errors) && item.errors.every((error) => error && typeof error.reason === 'string') &&
+        (item.errors.length || typeof item.result?.ok === 'boolean')
+    })
   const send = async (action) => {
-    if (busy || operationBusy || operationUncertain || !changes.size) return
-    const drafts = rows.flatMap((row) => { const cells = [...changes.values()].filter((cell) => cell.rowId === row.id).map(({ measure, month, text }) => ({ measure, month, text })); return cells.length ? [{ rowId: row.id, revision: row.revision, cells }] : [] })
+    if (busy || reconciliation || revoked || !section.isConnected || !changes.size ||
+        action === 'preview' && pending || action === 'apply' && !approved && !pending) return
+    const drafts = rows.flatMap((row) => {
+      const cells = [...changes.values()].filter((cell) => cell.rowId === row.id).map(({ measure, month, text }) => ({ measure, month, text }))
+      return cells.length ? [{ rowId: row.id, revision: row.revision, cells }] : []
+    })
+    if (action === 'apply' && !pending) pending = { body: JSON.stringify({ action, input: { page, versionId, drafts } }), key, drafts }
+    const held = action === 'apply' ? pending : { body: JSON.stringify({ action, input: { page, versionId, drafts } }), key, drafts }
+    const wasUncertain = uncertain
+    const observed = generation
+    const live = () => !revoked && section.isConnected && observed === generation && (action !== 'apply' || pending === held)
     const url = new URL(location.href); url.search = '?sf=workbench-planner'
-    busy = true; preview.disabled = true; save.disabled = true; measure.disabled = true; grid.querySelectorAll('input').forEach((input) => { input.disabled = true }); status.textContent = action === 'preview' ? 'Checking changes…' : 'Saving changes…'
+    busy = true; preview.disabled = true; save.disabled = true; measure.disabled = true
+    grid.querySelectorAll('input').forEach((input) => { input.disabled = true })
+    status.textContent = action === 'preview' ? 'Checking changes…' : 'Saving changes…'
+    controller = new AbortController()
+    const active = controller
+    // The same deadline owns response headers and body; an unfinished body cannot hold a draft forever.
+    const deadline = setTimeout(() => active.abort(), 10_000)
     try {
-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify({ action, input: { page, versionId, drafts } }) })
+      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: active.signal,
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': held.key }, body: held.body })
+      if (!live()) return
+      if (response.status === 401 || response.status === 403) { revoke(); return }
       const result = await response.json()
-      if (!response.ok || result.status !== 'ok' || !Array.isArray(result.value?.rows)) throw new Error('unavailable')
+      if (!live()) return
+      if (action === 'apply' && !wasUncertain && [400, 422].includes(response.status) && ['needs-input', 'rejected'].includes(result?.status)) {
+        pending = null; approved = false; key = crypto.randomUUID()
+        status.textContent = 'The save was rejected. Your entries are preserved; review them and preview again.'
+        return
+      }
+      if (!response.ok || result.status !== 'ok' || !validRows(result.value?.rows, held.drafts)) throw new Error('unavailable')
       invalidCells.clear()
       const problems = result.value.rows.filter((row) => row.errors.length || !row.result?.ok)
-      if (action === 'apply') result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => { const saved = rows.find((entry) => entry.id === row.draft.rowId); if (saved) saved.saved = true; for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id) })
+      if (action === 'apply' && wasUncertain && problems.length) {
+        reconciliation = true; approved = false
+      } else {
+        if (action === 'apply') result.value.rows.filter((row) => !row.errors.length && row.result?.ok).forEach((row) => {
+          const saved = rows.find((entry) => entry.id === row.draft.rowId)
+          if (saved) {
+            for (const cell of row.draft.cells) {
+              const prefix = cell.measure === 'budget' ? 'b' : cell.measure === 'actual' ? 'a' : 'f'
+              saved.values[prefix + (cell.month - 1)] = cell.text
+            }
+            saved.saved = true
+          }
+          for (const [id, cell] of changes) if (cell.rowId === row.draft.rowId) changes.delete(id)
+        })
+        if (action === 'apply') { pending = null; uncertain = false; key = crypto.randomUUID() }
+      }
       if (!changes.size) delete dirtyGuard.dataset.dirty
       status.replaceChildren()
-      const message = document.createElement('p'); message.textContent = problems.length ? 'Some rows need attention. Your entries remain in the grid.' : action === 'preview' ? 'Preview complete. Review the entries and save when ready.' : 'Changes saved. Refresh before editing these rows again.'; status.append(message)
-      problems.forEach((item) => { const row = rows.find((entry) => entry.id === item.draft.rowId); const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ': ' + (item.errors.some((error) => error.reason === 'row-unavailable') ? 'Row unavailable or changed.' : item.result?.status === 409 ? 'Changed by another user. Refresh and compare before retrying.' : 'Check the values and your access.'); status.append(detail) })
+      const message = document.createElement('p')
+      message.textContent = reconciliation ? 'The retry could not reconcile the earlier save. Your entries remain locked; reopen and compare the current record before another change.'
+        : problems.length ? 'Some rows need attention. Your entries remain in the grid.'
+        : action === 'preview' ? 'Preview complete. Review the entries and save when ready.'
+        : 'Changes saved. Refresh before editing these rows again.'
+      status.append(message)
+      problems.forEach((item) => {
+        const row = rows.find((entry) => entry.id === item.draft.rowId)
+        const detail = document.createElement('p')
+        detail.textContent = (row?.label || 'Row') + ': ' + (item.errors.some((error) => error.reason === 'row-unavailable')
+          ? 'Row unavailable or changed.' : item.result?.status === 409
+          ? 'Changed by another user. Refresh and compare before retrying.' : 'Check the values and your access.')
+        status.append(detail)
+      })
       problems.forEach((item) => item.errors.forEach((error) => {
         if (!error.cell) return
         invalidCells.add(idFor(item.draft.rowId, error.cell.measure, error.cell.month))
-        const row = rows.find((entry) => entry.id === item.draft.rowId); const labels = { 'invalid-number': 'Enter a valid number.', 'budget-requires-value': 'Budget requires a value.', 'invalid-month': 'Month is invalid.', 'duplicate-cell': 'The same cell appears twice.' }
-        const detail = document.createElement('p'); detail.textContent = (row?.label || 'Row') + ' · ' + error.cell.measure + ' · month ' + error.cell.month + ': ' + (labels[error.reason] || 'Check this value.'); status.append(detail)
+        const row = rows.find((entry) => entry.id === item.draft.rowId)
+        const labels = { 'invalid-number': 'Enter a valid number.', 'budget-requires-value': 'Budget requires a value.', 'invalid-month': 'Month is invalid.', 'duplicate-cell': 'The same cell appears twice.' }
+        const detail = document.createElement('p')
+        detail.textContent = (row?.label || 'Row') + ' · ' + error.cell.measure + ' · month ' + error.cell.month + ': ' + (labels[error.reason] || 'Check this value.')
+        status.append(detail)
       }))
       problems.filter((item) => item.result?.status === 409).forEach((item) => item.draft.cells.forEach((cell) => {
         const stored = item.result.stored; const prefix = cell.measure === 'budget' ? 'b' : cell.measure === 'actual' ? 'a' : 'f'
         const current = stored && Array.isArray(stored[prefix]) ? stored[prefix][cell.month - 1] : undefined
-        const detail = document.createElement('p'); detail.textContent = cell.measure + ' month ' + cell.month + ': current ' + (current === undefined ? 'unavailable' : current === null ? 'empty' : String(current)) + '; your entry ' + cell.text; status.append(detail)
+        const detail = document.createElement('p')
+        detail.textContent = cell.measure + ' month ' + cell.month + ': current ' + (current === undefined ? 'unavailable' : current === null ? 'empty' : String(current)) + '; your entry ' + cell.text
+        status.append(detail)
       }))
       approved = action === 'preview' && !problems.length
-      if (action === 'apply') { approved = false; key = crypto.randomUUID() }
-    } catch { status.textContent = 'Could not confirm the operation. Your entries are preserved; retry the same request.' }
-    finally { busy = false; preview.disabled = false; measure.disabled = false; save.disabled = !approved; render() }
+    } catch {
+      if (!live()) return
+      if (action === 'apply') {
+        uncertain = true; approved = false
+        status.textContent = 'Could not confirm the operation. Your entries are preserved and locked; retry the same save request.'
+      } else {
+        approved = false
+        status.textContent = 'Could not confirm the preview. Your entries are preserved; try again.'
+      }
+    } finally {
+      clearTimeout(deadline)
+      if (controller === active) controller = null
+      busy = false
+      if (!revoked && section.isConnected) {
+        preview.disabled = !!pending || reconciliation
+        measure.disabled = !!pending || reconciliation
+        save.disabled = reconciliation || !(approved || pending && uncertain)
+        render()
+      }
+    }
   }
   preview.addEventListener('click', () => send('preview'))
   save.addEventListener('click', () => send('apply'))
-  measure.addEventListener('change', render)
-  const recordLabel = document.createElement('label'); recordLabel.textContent = 'Budget record '; const recordSelect = document.createElement('select'); recordSelect.setAttribute('aria-label', 'Budget record'); rows.forEach((row, index) => { const option = document.createElement('option'); option.value = String(index); option.textContent = row.label; recordSelect.append(option) }); recordLabel.append(recordSelect)
-  const annualInput = document.createElement('input'); annualInput.type = 'text'; annualInput.inputMode = 'decimal'; annualInput.setAttribute('aria-label', 'Annual budget')
-  const applyBudget = document.createElement('button'); applyBudget.type = 'button'; applyBudget.textContent = 'Apply budget change'; applyBudget.disabled = true
-  const budgetStatus = document.createElement('div'); budgetStatus.setAttribute('role', 'status'); budgetStatus.setAttribute('aria-live', 'polite')
-  const budgetButtons = []; let operationKey = crypto.randomUUID(); let operationApproved = false; let pending = null
-  const phrases = { 'row-unavailable': 'This row changed or is unavailable.', 'invalid-revision': 'This row cannot be saved as shown.', 'invalid-annual': 'Enter a valid annual amount.', 'operation-rejected': 'The change was not accepted.', 'operation-unavailable': 'The change could not be checked.' }
-  const amount = (cell) => !cell || cell.value === null ? 'empty' : typeof cell.value === 'number' && Number.isFinite(cell.value) ? String(cell.value) : 'unavailable'
-  const annualValue = () => { const text = annualInput.value.trim(); return text !== '' && Number.isFinite(Number(text)) ? Number(text) : undefined }
-  const freeze = (locked) => { recordSelect.disabled = locked; annualInput.disabled = locked; budgetButtons.forEach((button) => { button.disabled = locked }); preview.disabled = locked; save.disabled = locked || !approved; if (locked) applyBudget.disabled = true }
-  const invalidate = () => { if (operationBusy) return; pending = null; operationApproved = false; applyBudget.disabled = true; operationKey = crypto.randomUUID() }
-  recordSelect.addEventListener('change', invalidate); annualInput.addEventListener('input', () => { invalidate(); dirtyGuard.dataset.dirty = 'true' })
-  const runBudget = async (action, request) => {
-    if (operationBusy || busy || request !== pending) return
-    operationBusy = true; freeze(true); budgetStatus.textContent = action === 'preview' ? 'Checking the budget change…' : 'Saving the budget change…'
-    try {
-      const url = new URL(location.href); url.search = '?sf=workbench-planner'
-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': operationKey }, body: JSON.stringify({ action, input: request }) })
-      const result = await response.json()
-      const operation = result?.value?.operation
-      if (request !== pending) return
-      if (!response.ok || result.status !== 'ok' || !operation || !Array.isArray(operation.errors) || !Array.isArray(operation.before) || !Array.isArray(operation.after) || !Array.isArray(operation.changedMonths)) throw new Error('unavailable')
-      budgetStatus.replaceChildren()
-      operation.errors.forEach((reason) => { const line = document.createElement('p'); line.textContent = phrases[reason] || 'Check this budget change.'; budgetStatus.append(line) })
-      operation.changedMonths.forEach((month) => { const line = document.createElement('p'); line.textContent = (rows.find((entry) => entry.id === request.operation.rowId)?.label || 'This row') + ', month ' + month + ': current ' + amount(operation.before.find((cell) => cell.month === month)) + ', proposed ' + amount(operation.after.find((cell) => cell.month === month)); budgetStatus.append(line) })
-      operationUncertain = false
-      const applied = action === 'apply' && operation.errors.length === 0
-      operationApproved = action === 'preview' && request === pending && operation.errors.length === 0
-      if (applied) { const line = document.createElement('p'); line.textContent = 'Budget change saved. Refresh before editing these months again.'; budgetStatus.append(line); pending = null; if (!changes.size) delete dirtyGuard.dataset.dirty }
-      else if (action === 'apply') { const line = document.createElement('p'); line.textContent = 'The budget change was not saved. Your monthly entries remain.'; budgetStatus.append(line) }
-      else if (!operation.changedMonths.length && !operation.errors.length) { const line = document.createElement('p'); line.textContent = 'Preview complete. No monthly budget change was returned.'; budgetStatus.append(line) }
-      if (action === 'apply') { operationApproved = false; operationKey = crypto.randomUUID() }
-    } catch { if (request === pending) { operationUncertain = action === 'apply'; operationApproved = action === 'apply'; budgetStatus.textContent = action === 'apply' ? 'Could not confirm the budget change. Your monthly entries are preserved; retry the same request.' : 'Could not confirm the preview. Your monthly entries are preserved.' } }
-    finally { operationBusy = false; freeze(operationUncertain); applyBudget.disabled = !(operationApproved && request === pending) }
-  }
-  ;[['annual', 'Preview annual budget'], ['spread', 'Preview spread'], ['reset', 'Preview reset']].forEach(([kind, text]) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = text; budgetButtons.push(button); button.addEventListener('click', () => { if (operationBusy) return; const row = rows[Number(recordSelect.value)]; const annual = annualValue(); if (!row || (kind === 'annual' && annual === undefined)) { operationApproved = false; applyBudget.disabled = true; budgetStatus.textContent = 'Choose a record and enter an annual amount.'; return } operationKey = crypto.randomUUID(); operationApproved = false; applyBudget.disabled = true; pending = { page, versionId, operation: { rowId: row.id, revision: row.revision, kind, ...(kind === 'annual' ? { annual } : {}) } }; runBudget('preview', pending) }); section.append(button) })
-  applyBudget.addEventListener('click', () => { if (operationBusy || !operationApproved || !pending) return; runBudget('apply', pending) })
-  section.append(heading, label, instructions, scroll, preview, save, recordLabel, annualInput, applyBudget, budgetStatus, status, dirtyGuard)
+  measure.addEventListener('change', () => { if (!pending && !busy && !revoked) render() })
+  const contract = document.createElement('p')
+  contract.textContent = 'This grid saves monthly values. For annual budgets, spread and reset, use the actions available on each record below.'
+  section.append(heading, label, instructions, contract, scroll, preview, save, status, dirtyGuard)
   table.closest('.table-scroll')?.before(section)
+  window.addEventListener('sf-access-revoked', revoke)
+  window.addEventListener('pagehide', revoke)
+  const observer = new MutationObserver(() => { if (!section.isConnected) { observer.disconnect(); revoke() } })
+  observer.observe(document.body, { childList: true, subtree: true })
   render()
 })
 `

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { plannerMonthlyScript } from "../../../product/ui/planner-monthly.ts"
-import { caseQuestionScript } from "../../../product/ui/work-collaboration.ts"
+import { caseQuestionScript, caseQuestionThreads } from "../../../product/ui/work-collaboration.ts"
 import { forecastAnalysisScript } from "../../../product/ui/forecast-analysis.ts"
 import { decisionChoiceForm, decisionChoiceScript } from "../../../product/ui/decision-choice.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
@@ -29,6 +29,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     if (browser) await closeWp01Browser(browser)
   }, 25_000)
 
+  const waiters = new WeakMap<Page, Promise<PromiseSettledResult<unknown>>[]>()
+  function observe<T>(page: Page, operation: Promise<T>): Promise<T> {
+    const owned = waiters.get(page)
+    if (!owned) throw new Error("Recovery page has no waiter owner")
+    // Observe rejection immediately, but retain the original result for the exact assertion.
+    owned.push(operation.then((value) => ({ status: "fulfilled", value }), (reason) => ({ status: "rejected", reason })))
+    return operation
+  }
+
   async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
     const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
       ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
@@ -36,13 +45,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     let context: BrowserContext | undefined
     let page: Page | undefined
     let failure: unknown
+    const owned: Promise<PromiseSettledResult<unknown>>[] = []
     try {
       if (!browser?.isConnected()) throw new Error("Recovery browser is unavailable")
       context = await within(browser.newContext(), "open isolated browser context")
       page = await within(context.newPage(), "open browser page")
+      waiters.set(page, owned)
       page.setDefaultTimeout(5_000)
       page.setDefaultNavigationTimeout(8_000)
-      await page.goto(server.url.href)
+      await page.goto(new URL('/sucafina/dashboard', server.url).href)
       expect(await within(page.evaluate(() => document.characterSet), "read fixture character set")).toBe("UTF-8")
       await check(page)
     } catch (error) { failure = error; throw error }
@@ -52,6 +63,11 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       // isolated context. Preserve the original assertion if cleanup also fails.
       try { release?.() } catch (error) { cleanup.push(error) }
       try { if (page && !page.isClosed()) await within(page.close({ runBeforeUnload: false }), "close page") } catch (error) { cleanup.push(error) }
+      try {
+        const outcomes = await within(Promise.all(owned), "settle owned browser waiters")
+        for (const outcome of outcomes) if (outcome.status === "rejected") cleanup.push(outcome.reason)
+      } catch (error) { cleanup.push(error) }
+      if (page) waiters.delete(page)
       try { if (context) await within(context.close(), "close isolated browser context") } catch (error) { cleanup.push(error) }
       try { await within(Promise.resolve(server.stop(true)), "stop fixture server") } catch (error) { cleanup.push(error) }
       if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Recovery fixture failed during cleanup")
@@ -150,8 +166,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await cell.fill("42")
       await page.getByRole("button", { name: "Preview changes", exact: true }).click()
       await page.getByText("Preview complete. Review the entries and save when ready.").waitFor()
-      const headers = page.waitForResponse((response) => response.headers()["x-fixture-body-pending"] === "yes")
-      const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "workbench-planner", timeout: 15_000 })
+      const headers = observe(page, page.waitForResponse((response) => response.headers()["x-fixture-body-pending"] === "yes"))
+      const aborted = observe(page, page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "workbench-planner", timeout: 15_000 }))
       await page.getByRole("button", { name: "Save changes", exact: true }).click()
       expect((await headers).status()).toBe(200)
       expect(await cell.isDisabled()).toBe(true)
@@ -249,7 +265,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     })
   }, 30_000)
 
-  const forecast = `<form data-forecast-analysis data-config='${JSON.stringify({ ...request, skillId: "sf-explicar-forecast", models: [{ id: "model", providerID: "provider" }] })}'><label>Baseline<select name="baseRef"><option>base</option></select></label><label>Comparison<select name="candidateRef"><option>candidate</option></select></label><label>Start<input name="start" value="2027-01-01"></label><label>End<input name="end" value="2027-12-31"></label><label>Currency<input name="currency" value="USD"></label><label>Model<select name="model"><option value="0">Model</option></select></label><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status"></p></form><script>${forecastAnalysisScript}</script>`
+  const forecast = `<form data-forecast-analysis data-config='${JSON.stringify({ ...request, skillId: "sf-explicar-forecast", models: [{ id: "model", providerID: "provider" }] })}'><label>Baseline<select name="baseRef"><option>base</option></select></label><label>Comparison<select name="candidateRef"><option>candidate</option></select></label><label>Start<input name="start" value="2027-01-01"></label><label>End<input name="end" value="2027-12-31"></label><label>Currency<input name="currency" value="USD"></label><label>Model<select name="model"><option value="0">Model</option></select></label><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><button type="button" data-analysis-retry hidden>Refresh analysis status</button><p role="status"></p></form><script>${forecastAnalysisScript}</script>`
 
   test("forecast start recovers an uncertain admission without changing its model or payload", async () => {
     const starts: { body: string; key: string | null }[] = []
@@ -389,7 +405,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await within(started, "comparison read entered delayed handler")
       await page.evaluate(() => window.dispatchEvent(new Event("sf-access-revoked")))
       await page.getByText("Decision access changed. Reopen it with your current access.", { exact: true }).waitFor()
-      const released = page.waitForResponse((response) => response.headers()["x-fixture-choice-released"] === "yes")
+      const released = observe(page, page.waitForResponse((response) => response.headers()["x-fixture-choice-released"] === "yes"))
       delayed.release?.()
       expect(await within((await released).finished(), "finish stale comparison response")).toBeNull()
       await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
@@ -411,8 +427,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       return Response.json({ status: "ok", value: { caseRef: { ...caseRef, version: 2 } } })
     }, async (page) => {
       await prepareChoice(page)
-      const headers = page.waitForResponse((response) => response.headers()["x-fixture-choice-body-pending"] === "yes")
-      const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "decision-choose", timeout: 15_000 })
+      const headers = observe(page, page.waitForResponse((response) => response.headers()["x-fixture-choice-body-pending"] === "yes"))
+      const aborted = observe(page, page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "decision-choose", timeout: 15_000 }))
       await page.getByRole("button", { name: "Record choice", exact: true }).click()
       expect((await headers).status()).toBe(200)
       expect((await aborted).failure()?.errorText).toContain("ERR_ABORTED")
@@ -430,7 +446,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     await browserCase(choice, async (incoming) => {
       if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
       calls.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
-      return Response.json({ status: "needs-input" }, { status: 400 })
+      return Response.json({ status: "needs-input", reason: "invalid-decision-input" }, { status: 400 })
     }, async (page) => {
       await prepareChoice(page)
       await page.getByRole("button", { name: "Record choice", exact: true }).click()
@@ -604,7 +620,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       state.starts++; return Response.json({ status: "ok", value: { runRef: "should-not-start" } })
     }, async (page) => {
       await page.getByRole("button", { name: "Open result", exact: true }).click()
-      const released = page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes", { timeout: 5_000 })
+      const released = observe(page, page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes", { timeout: 5_000 }))
       await page.getByRole("button", { name: "Request independent review", exact: true }).click()
       await within(started, "review preparation entered delayed handler")
       const late = await within(released, "observe review preparation headers before revocation")
@@ -690,15 +706,23 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     })
   }, 30_000)
 
-  const conversation = `<article data-case-thread data-thread="question" data-case='${JSON.stringify(caseRef)}' data-question-state="open" data-principal="operator"><h4>Restricted question</h4><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status"></p></article><script>${caseQuestionScript}</script>`
+  // Use the current renderer's scope label. This component fixture supplies a
+  // synthetic authorized projection; it does not prove installed admission.
+  function conversation(answerRef?: string) {
+    const projection: AuthorizedCaseProjection = { ...choiceProjection,
+      context: { ...choiceProjection.context, principalRef: "operator" },
+      case: { ...choiceProjection.case, participants: ["operator"],
+        questions: [{ id: "question", text: "Restricted question", state: "open", ...(answerRef ? { answerRef } : {}) }] } }
+    return `${caseQuestionThreads(projection)}<script>${caseQuestionScript}</script>`
+  }
 
   test("conversation refresh asks before discarding an unsent reply and preserves it when reading fails", async () => {
     const state = { mode: "ready", reads: 0 }
-    await browserCase(conversation, () => {
+    await browserCase(conversation(), () => {
       state.reads++
       if (state.mode === "transient") return Response.json({ status: "unavailable" }, { status: 503 })
       if (state.mode === "denied") return Response.json({ status: "denied" }, { status: 403 })
-      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", body: "Private question body" }] } })
+      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Private question body" }] } })
     }, async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       const reply = page.getByLabel("Reply", { exact: true })
@@ -725,15 +749,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("reply retry preserves the exact thread mutation after an uncertain write", async () => {
     const replies: { body: string; key: string | null }[] = []
-    await browserCase(conversation, async (request) => {
+    await browserCase(conversation(), async (request) => {
       const mode = new URL(request.url).searchParams.get("sf")
       if (mode === "collaboration-storage-version") return Response.json({ status: "ok", value: 4 })
       if (mode === "collaboration-thread-reply") {
         replies.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
         if (replies.length === 1) return new Response("response interrupted after admission")
-        return Response.json({ status: "ok", value: { id: "question", state: "open", messages: [{ id: "question", body: "Question" }, { id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] } })
+        return Response.json({ status: "ok", value: { id: "question", state: "open", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Question" }, { id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] } })
       }
-      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", body: "Question" }, ...(replies.length ? [{ id: "reply", body: "Confirmed answer" }] : [])] } })
+      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Question" }, ...(replies.length ? [{ id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] : [])] } })
     }, async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       await page.getByLabel("Reply", { exact: true }).fill("Confirmed answer")
@@ -837,8 +861,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("answer confirmation preflight failure restores the reply and conversation controls", async () => {
     // The transport component receives an already authorized selector; its producer is outside this fixture.
-    await browserCase(conversation.replace('data-thread="question"', 'data-thread="question" data-answer="published-answer-selector"'), (request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read"
-      ? Response.json({ status: "ok", value: { state: "open", recipientRef: "recipient", messages: [{ id: "question", body: "Question" }, { id: "answer", authorRef: "recipient", body: "Answer" }] } })
+    await browserCase(conversation("published-answer-selector"), (request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read"
+      ? Response.json({ status: "ok", value: { state: "open", recipientRef: "recipient", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Question" }, { id: "answer", incarnation: "answer-incarnation", version: 1, authorRef: "recipient", body: "Answer" }] } })
       : Response.json({ status: "unavailable" }, { status: 503 }), async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       await page.getByLabel("Reply", { exact: true }).fill("Unsent draft")
@@ -876,7 +900,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.locator('[data-case-question] input, [data-case-question] select, [data-case-question] textarea, [data-case-question] button').count()).toBe(0)
       expect(await page.locator('[data-case-question]').getAttribute("data-context")).toBeNull()
       expect(await page.locator('[data-case-question]').getAttribute("data-dirty")).toBeNull()
-      const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "question-recipients")
+      const late = observe(page, page.waitForResponse((response) => response.headers()["x-late-fixture"] === "question-recipients"))
       gate.release?.()
       expect(await within((await late).finished(), "finish the older recipient response")).toBeNull()
       await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))), "settle the older recipient response")
