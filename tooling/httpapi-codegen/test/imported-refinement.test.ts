@@ -28,6 +28,13 @@ test("an import-only contract cannot be cloned, retargeted, or reconstructed as 
   ]) expect(() => emitEffectImported(contract, target)).toThrow("Authoritative API import does not match")
   expect(() => emitEffectImported({ ...contract }, source)).toThrow("Authoritative API import does not match")
   expect(Object.isFrozen(contract)).toBe(true)
+  const group = contract.groups[0]!
+  const endpoint = group.endpoints[0]!
+  expect(Reflect.set(group, "sourceIdentifier", "foreign")).toBe(false)
+  expect(Reflect.set(endpoint.operation, "name", "replaced")).toBe(false)
+  expect(Reflect.set(endpoint.successes, "0", Schema.String)).toBe(false)
+  expect(Reflect.set(group.endpoints, "length", 0)).toBe(false)
+  expect(() => emitEffectImported(contract, source)).not.toThrow()
 })
 
 test("the authoritative export is captured before caller options can change", () => {

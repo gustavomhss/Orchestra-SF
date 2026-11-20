@@ -104,7 +104,21 @@ export function compileImported<Id extends string, Groups extends HttpApiGroup.A
     throw new GenerationError({ reason: "Invalid authoritative API import" })
   }
   const contract: Contract = Object.freeze({
-    ...compileContract(api, options, true),
+    groups: Object.freeze(compileContract(api, options, true).groups.map((group) => Object.freeze({
+      ...group,
+      endpoints: Object.freeze(group.endpoints.map((endpoint) => Object.freeze({
+        ...endpoint,
+        payloads: Object.freeze([...endpoint.payloads]),
+        successes: Object.freeze([...endpoint.successes]),
+        errors: Object.freeze(endpoint.errors.map((error) => Object.freeze({ ...error }))),
+        input: Object.freeze(endpoint.input.map((field) => Object.freeze({ ...field }))),
+        operation: Object.freeze({
+          ...endpoint.operation,
+          input: Object.freeze(endpoint.operation.input.map((field) => Object.freeze({ ...field }))),
+          errors: Object.freeze([...endpoint.operation.errors]),
+        }),
+      }))),
+    }))),
     authoritativeImport: true,
   })
   authoritativeImports.set(contract, Object.freeze({ module: source.module, api: source.api }))
@@ -387,7 +401,7 @@ function assertPromiseEndpoint(endpoint: Endpoint) {
   ) {
     throw new GenerationError({ reason: `Unsupported Promise success encoding: ${name}` })
   }
-  if (successEncoding === "Uint8Array") endpoint.binary = true
+  if (successEncoding === "Uint8Array" && endpoint.binary !== true) endpoint.binary = true
   for (const error of endpoint.errors) {
     if (declaredErrorFields(error.schema) === undefined) {
       throw new GenerationError({ reason: `Promise error must have a literal discriminator: ${name}` })
