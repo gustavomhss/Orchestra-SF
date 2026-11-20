@@ -79,7 +79,9 @@ test("native-session-fixture-02: an already open SSE sees a later real Created a
     if (!event || event.event.type !== "session.next.created") throw new Error("Actual incremental Created event required")
     expect(event.event.data.sessionID).toBe(created.data.id)
     expect(created.data.namespace).toBeDefined()
-    expect(event.namespace).toEqual(created.data.namespace)
+    const createdNamespace = created.data.namespace
+    if (!createdNamespace) throw new Error("Corporate Session namespace required")
+    expect(event.namespace).toEqual(createdNamespace)
     const ended = stream.next().catch(() => undefined)
     await f.close()
     expect(await ended).toBeUndefined()
