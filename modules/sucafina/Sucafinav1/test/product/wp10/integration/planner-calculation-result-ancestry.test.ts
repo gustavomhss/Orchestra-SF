@@ -164,7 +164,15 @@ test("a real Planner change after the C09 commit refuses readback while retainin
       expect(after.snapshots.procurement).toEqual(before.snapshots.procurement)
       expect(after.snapshots.planner).not.toEqual(before.snapshots.planner)
       const versions = after.snapshots.planner.data.versions as { id: string; lines: { f: number[] }[] }[]
-      expect(versions.find((version) => version.id === "v0")!.lines[0]!.f[1]).toBe(121)
+      // The public Planner command uses zero-based monthly fields: f2 writes
+      // index 2. Prove the entire real forecast, including untouched months.
+      const beforeVersions = before.snapshots.planner.data.versions as typeof versions
+      const expectedForecast = structuredClone(beforeVersions.find((version) => version.id === "v0")!.lines[0]!.f)
+      expect(expectedForecast[2]).toBe(120)
+      expectedForecast[2] = 121
+      const forecast = versions.find((version) => version.id === "v0")!.lines[0]!.f
+      expect(forecast[2]).toBe(121)
+      expect(forecast).toEqual(expectedForecast)
       return { status: "ok", value: true }
     }))
     expect(completed).toEqual({ status: "ok", value: true })

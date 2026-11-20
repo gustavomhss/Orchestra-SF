@@ -195,6 +195,76 @@ test("an unfinished lexical child cannot publish after its physical owner closes
   }
 }, 120000)
 
+
+test("the optional lexical probe removes only presence captures under a real foreign owner", async () => {
+  const fixture = await observationFixture()
+  const originalSnapshots = fixture.store.currentSnapshots, originalPresence = fixture.store.hasCurrentSnapshots
+  if (!originalSnapshots || !originalPresence) { await fixture.cleanup(); throw new Error("Actual snapshot presence unavailable") }
+  try {
+    const before = await fixture.capture()
+    let captures = 0, probes = 0
+    fixture.store.currentSnapshots = () => { captures++; return originalSnapshots() }
+    const run = async (useProbe: boolean) => {
+      fixture.store.hasCurrentSnapshots = useProbe ? () => { probes++; return originalPresence() } : undefined
+      fixture.reset()
+      captures = 0
+      probes = 0
+      let work = 0
+      const value = await fixture.store.transaction("planner", async () => {
+        const values: Awaited<ReturnType<typeof fixture.canonical>>[] = []
+        for (let index = 0; index < 3; index++) values.push(await fixture.observe(
+          { caseRef: fixture.argument.caseRef }, fixture.context, async () => { work++; return fixture.canonical() }))
+        return { commit: false, value: values }
+      })
+      return { value, work, captures, probes, counts: { ...fixture.counts } }
+    }
+    const control = await run(false)
+    const optimized = await run(true)
+    expect(control.value).toHaveLength(3)
+    expect(control.value.every((result) => result.status === "ok")).toBe(true)
+    expect(optimized.value).toEqual(control.value)
+    expect(control.work).toBe(3)
+    expect(optimized.work).toBe(3)
+    expect(optimized.counts).toEqual(control.counts)
+    expect(optimized.counts.sources).toBeGreaterThan(0)
+    expect(optimized.counts.inSnapshot).toBe(optimized.counts.sources)
+    expect(optimized.counts.roots).toBe(0)
+    expect(control.probes).toBe(0)
+    expect(optimized.probes).toBe(3)
+    expect(control.captures - optimized.captures).toBe(3)
+    expect(await fixture.capture()).toEqual(before)
+  } finally {
+    fixture.store.currentSnapshots = originalSnapshots
+    fixture.store.hasCurrentSnapshots = originalPresence
+    await fixture.cleanup()
+  }
+}, 120000)
+
+test("a replacement lexical probe cannot inherit the completed fixture owner's proof", async () => {
+  const fixture = await observationFixture()
+  const originalPresence = fixture.store.hasCurrentSnapshots
+  if (!originalPresence) { await fixture.cleanup(); throw new Error("Actual snapshot presence unavailable") }
+  try {
+    const before = await fixture.capture()
+    const effects = { outside: false, work: 0, replaced: false }
+    fixture.faults.afterRoot = async () => {
+      effects.outside = fixture.store.currentSnapshots() === undefined
+      fixture.store.hasCurrentSnapshots = () => originalPresence()
+      effects.replaced = fixture.store.hasCurrentSnapshots !== originalPresence
+    }
+    const result = await fixture.observe(fixture.argument, fixture.context, async () => {
+      effects.work++
+      return fixture.canonical()
+    })
+    expect(effects).toEqual({ outside: true, work: 1, replaced: true })
+    expect(result).toEqual({ status: "unavailable", reason: "fixture-read-observation-changed" })
+    expect(await fixture.capture()).toEqual(before)
+  } finally {
+    fixture.store.hasCurrentSnapshots = originalPresence
+    await fixture.cleanup()
+  }
+}, 120000)
+
 async function observationFixture() {
   const fixture = await createRenewalSourceFixture("omitted")
   const faults: { afterRoot?: () => Promise<void>; afterAuthority?: (allowed: boolean) => void; afterEnvelope?: () => void; day?: string; actor?: boolean; actorObserved?: boolean; canonicalWrite?: boolean } = {}

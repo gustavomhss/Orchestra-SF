@@ -54,9 +54,10 @@ export function createFixtureReadObservation(input: {
     }
     const host = input.host, persistence = host.persistence
     const root = persistence.readSnapshotRoot, snapshots = persistence.currentSnapshots
+    const presence = persistence.hasCurrentSnapshots
     // A production verifier may already own this read. Delegate its original
     // callbacks; snapshot presence grants this helper no authority to nest.
-    if (call.kind !== "ui" || !root || !snapshots || snapshots()) return work()
+    if (call.kind !== "ui" || !root || !snapshots || (presence ? presence() : snapshots() !== undefined)) return work()
     const request = host.requestFor(call)
     if (!request || request.signal.aborted) return work()
     const requestFor = host.requestFor, revalidate = host.revalidate, authenticate = host.authenticate, environmentFor = host.environment
@@ -70,7 +71,7 @@ export function createFixtureReadObservation(input: {
       requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
       input.host === host && host.persistence === persistence && host.requestFor === requestFor &&
       host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environmentFor &&
-      persistence.readSnapshotRoot === root && persistence.currentSnapshots === snapshots && persistence.transaction === transaction && persistence.transactionAll === transactionAll &&
+      persistence.readSnapshotRoot === root && persistence.currentSnapshots === snapshots && persistence.hasCurrentSnapshots === presence && persistence.transaction === transaction && persistence.transactionAll === transactionAll &&
       input.state === state && state.read === stateRead && input.identities === identities && sameIdentities(identities(), readers) &&
       input.witness === witness && digestSfValue(witness()) === external
     const owner: Owner = { call, current, pins: new Set(), open: true, accepting: false, invalid: false, children: 0 }
