@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import type { SfNativeRunRecord, SfProductState } from "../../../../product/contracts/state.ts"
 import { decodeSfOperationOutput } from "../../../../product/contracts/schema-admission.ts"
 import { dashboardMetricSelector } from "../../../../product/dashboard/sources.ts"
 import { object } from "../../../../runtime/contract.ts"
@@ -24,7 +25,7 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
     ] as const
     const before = await fixture.snapshot()
     const old = routes.map((row) => ({ route: row.route, call: fixture.call(row.route),
-      sessionID: fixture.admission(row.route).sessionID,
+      sessionID: fixture.admission(row.route).sessionID, runId: fixture.admission(row.route).runId,
       receipt: fixture.admission(row.route).skillReceipts[0]! }))
     for (const row of routes) {
       const admission = fixture.admission(row.route)
@@ -165,14 +166,66 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
       { ...routes[1], payload: { ...routes[1].payload, metricRef: dashboardMetricSelector(freshMetrics.selectionRef, "total-budget") } },
       { ...routes[2], payload: { ...routes[2].payload, selectionRef: freshSeries.selectionRef } },
     ] as typeof routes
+    // Each new human admission creates v1 and attaches the real skill receipt as
+    // v2. Predict those six C08 writes from the original state and the admitted
+    // inputs; never adopt a post-preparation snapshot or omit a namespace.
+    const expected = structuredClone(before)
+    const expectedState = expected.data.__sfProductV1 as SfProductState | undefined
+    if (expectedState?.schemaVersion !== 1 || !expectedState.nativeRuns)
+      throw new Error("Original native runs unavailable")
     for (const row of freshRoutes) {
+      const previous = old.find((item) => item.route === row.route)!
+      const prior = expectedState.nativeRuns[previous.runId]
+      if (!prior || prior.state !== "queued" || prior.version !== 2)
+        throw new Error("Original native preparation was not persisted")
       const ready = await fixture.prepare(row.route)
-      expect(ready.sessionID).not.toBe(old.find((item) => item.route === row.route)!.sessionID)
-      expect(ready.skillReceipts[0]?.loadedMessageId).not.toBe(old.find((item) => item.route === row.route)!.receipt.loadedMessageId)
-      await fixture.bind(row.route)
+      expect(ready.sessionID).not.toBe(previous.sessionID)
+      expect(ready.skillReceipts[0]?.loadedMessageId).not.toBe(previous.receipt.loadedMessageId)
+      expect(Object.hasOwn(expectedState.nativeRuns, ready.runId)).toBe(false)
+      expect(ready.selected).toEqual(prior.selection)
+      expect(ready.caseRef).toEqual(prior.caseRef)
+      const binding = await fixture.bind(row.route)
+      expect(binding).toMatchObject({
+        principalRef: prior.principalRef, policyVersion: prior.policyVersion,
+        accessRevision: prior.accessRevision, runId: ready.runId,
+        nativeSessionId: ready.sessionID, providerGeneration: 2,
+      })
+      const intent = { caseRef: ready.caseRef, profileId: ready.profile.id,
+        skillId: ready.skillReceipts[0]!.skillId, operation: row.operation, period: nativePeriod }
+      expect(prior.requestDigest).toBe(digestSfValue(intent))
+      expect(prior.intentDigest).toBe(digestSfValue(intent))
+      expect(prior.skillInputDigest).toBe(digestSfValue({ operation: row.operation, period: nativePeriod }))
+      const { native, reason, outputRef, ...seed } = prior
+      expect(native).toEqual({ sessionID: previous.sessionID, skillReceipt: previous.receipt })
+      expect(reason).toBeUndefined()
+      expect(outputRef).toBeUndefined()
+      // The business intent, selected model and fixture clock are unchanged.
+      // Only the new run identity and its authorized native attachment differ.
+      const created: SfNativeRunRecord = { ...seed, runRef: ready.runId, version: 1, state: "preparing" }
+      const attached: SfNativeRunRecord = { ...created, version: 2, state: "queued",
+        native: { sessionID: ready.sessionID, skillReceipt: ready.skillReceipts[0]! } }
+      const targetRef = `case:${encodeURIComponent(ready.caseRef.id)}:${encodeURIComponent(ready.caseRef.incarnation)}`
+      for (const record of [created, attached]) {
+        const key = JSON.stringify([binding.principalRef, "contributions", targetRef, `run:${record.runRef}:${record.version}`])
+        expect(Object.hasOwn(expectedState.transactions, key)).toBe(false)
+        expectedState.nativeRuns[ready.runId] = record
+        expectedState.revision += 1
+        expectedState.versions.contributions += 1
+        expectedState.transactions[key] = {
+          namespace: "contributions", principalRef: binding.principalRef,
+          targetRef, targetIncarnation: ready.caseRef.incarnation,
+          scopeDigest: digestSfValue({ scope: { namespaces: ["contributions"], sourceFence: "all" }, checks: ["cases"] }),
+          commandDigest: digestSfValue({ record, output: undefined }),
+          storageVersion: expectedState.versions.contributions, aggregateRevision: expectedState.revision,
+          incarnation: expectedState.incarnation, value: { status: "ok", value: record },
+        }
+      }
+      // Exact equality also fences every old run, receipt, source and business
+      // field: the allowed delta is two commands for this admitted run only.
+      expect(await fixture.snapshot()).toEqual(expected)
     }
     await assertions(freshRoutes, 2)
-    expect(await fixture.snapshot()).toEqual(before)
+    expect(await fixture.snapshot()).toEqual(expected)
 
     // Revoke the principal's real Dashboard role in the persisted domain.
     // The old native binding and new authenticated UI must both fail closed.
