@@ -39,8 +39,9 @@ test("background-owner-01: process reads and control require the current full Se
     expect((yield* f.admitted(request, processes.list(session.id))).map((row) => row.id)).toEqual([launched.id])
     expect(yield* f.admitted(request, processes.cancel(session.id, launched.id))).toBe(true)
     expect(yield* f.admitted(request, processes.list(session.id))).toEqual([])
+    const retained = yield* f.capture(request)
     f.provider.directTeams.set(oid, [])
-    yield* denied(f.admitted(request, processes.get(session.id, launched.id)))
+    yield* denied(SessionOwner.withLease(retained, processes.get(session.id, launched.id)))
   }))
 })
 
@@ -61,7 +62,7 @@ test("background-owner-02: schedules use the durable Session owner and writer fe
     const sessions = yield* SessionV2.Service
     const tasks = yield* ScheduledTask.Service
     const request = f.businessRequest(profileA)
-    const session = yield* f.admitted(request, sessions.create({ location: f.location }))
+    const session = yield* f.admitted(request, sessions.create({ location: f.location, agent: "build" }))
     const owner = Schema.decodeUnknownSync(Capability.Owner)({
       projectID: session.projectID, location: f.location, sessionID: session.id, agentID: session.agent,
     })

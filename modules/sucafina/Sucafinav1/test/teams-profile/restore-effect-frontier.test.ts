@@ -11,7 +11,8 @@ import { createSfSourcePersistence } from "../../product/integration/source-life
 import { createSfSourceScopeProjector } from "../../product/integration/source-projections.ts"
 import { enumerateSfSources } from "../../product/integration/source-inventory.ts"
 import { initializeAbsentSfProductState, inspectSfProductRestoreFrontier } from "../../product/host-binding/state-provider.ts"
-import { object } from "../../runtime/contract.ts"
+import { object, type Snapshot } from "../../runtime/contract.ts"
+import type { BlobTransaction } from "../../runtime/assets.ts"
 import { empty } from "../fixture/persistence.ts"
 import { other } from "../microsoft-login/oidc-fixture.ts"
 import { profileA, profileB } from "./installation-fixture.ts"
@@ -152,14 +153,14 @@ test("restore-frontier-04: a different product incarnation cannot adopt checkpoi
 test("restore-frontier-05: retained product effects prevent an unclassified overwrite of a live private blob", async () => {
   const f = await fixture()
   const key = "private-frontier-object"
-  await f.store.transaction("dashboard", async (snapshot, blobs) => {
+  await f.store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
     snapshot.data.assets = [{ id: "frontier-asset", key, bytes: 3, kind: "contract", record: "test", name: "proof.bin", type: "application/octet-stream" }]
     await blobs.put(key, new Uint8Array([1, 2, 3]), "application/octet-stream")
     return { commit: true, value: undefined }
   })
   const checkpoint = await f.backups.capture(f.store, "dashboard", f.at)
   expect((await draft(f, randomUUID())).status).toBe("ok")
-  await f.store.transaction("dashboard", async (_snapshot, blobs) => {
+  await f.store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
     await blobs.put(key, new Uint8Array([4, 5, 6]), "application/octet-stream")
     return { commit: true, value: undefined }
   })
@@ -168,7 +169,7 @@ test("restore-frontier-05: retained product effects prevent an unclassified over
   await expect(restoreBackup(f.restoration, f.backups.source, "dashboard", checkpoint.id, actor, true,
     before.versions.dataset?.version ?? 0, f.at)).rejects.toThrow("SF_RESTORE_BLOB_FRONTIER_CONFLICT")
   expect(await f.snapshot()).toEqual(before)
-  expect(await f.store.transaction("dashboard", async (_snapshot, blobs) => ({
+  expect(await f.store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => ({
     commit: false, value: Array.from(await blobs.get(key) ?? []),
   }))).toEqual([4, 5, 6])
 })
