@@ -1,5 +1,7 @@
 import { createHash, randomUUID } from "node:crypto"
 import { expect } from "@playwright/test"
+import { Schema } from "effect"
+import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import type { APIResponse, Page, Response, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { captureCommandResponse, chapterURL, login, modeURL, observation } from "./runtime.ts"
@@ -80,12 +82,36 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const { supplier, supplierNumber } = await createDocumentSupplier(page, account, key, name)
   const suppliersURL = "/orchestra/sf-procurement/suppliers"
   const supplierRoute = `/orchestra/sf-procurement/suppliers/${encodeSfRouteRef(supplier)}`
-  expect((await page.goto(chapterURL(account, supplierRoute).href))?.status()).toBe(200)
+  // Observe the UI's original scoped CAP27 reads; never replay a request to supply metadata.
+  const readSupplierProjection = () => page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === account.origin &&
+      url.pathname === new URL(account.baseURL).pathname + "/api/ui/pages/CAP27" &&
+      url.searchParams.get("supplier") === supplier
+  }).then(async (response) => {
+    expect(response.status()).toBe(200)
+    const body: unknown = await response.json()
+    if (!Schema.is(SfProcurement.operations["domain.page.CAP27"].output)(body) || body.status !== "ok")
+      throw new Error("The original supplier readback did not return an admitted CAP27 projection")
+    expect(body.value.selection.supplier).toBe(supplier)
+    return body
+  })
+  const beforeRead = readSupplierProjection()
+  const [detailNavigation, beforeProjection] = await Promise.all([
+    page.goto(chapterURL(account, supplierRoute).href), beforeRead,
+  ])
+  expect(detailNavigation?.status()).toBe(200)
+  const beforeSuppliers = beforeProjection.value.data.suppliers.filter((row) => row.id === supplier)
+  expect(beforeSuppliers).toHaveLength(1)
+  const beforeAssets = beforeSuppliers[0]?.attachments ?? []
+  expect(beforeAssets.filter((asset) => asset.name === filename)).toHaveLength(0)
+  const beforeAssetIds = new Set(beforeAssets.map((asset) => asset.id))
   const supplierDetail = page.locator(`[data-sf-supplier-ref="${supplier}"]`)
   await expect(supplierDetail).toHaveCount(1)
   await expect(supplierDetail).toHaveAttribute("data-source-version", /^\d+$/)
   const beforeVersion = Number(await supplierDetail.getAttribute("data-source-version"))
   expect(Number.isSafeInteger(beforeVersion)).toBe(true)
+  expect(beforeProjection.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion)
   const upload = supplierDetail.locator(`.sf-bound-assets[data-sf-asset-record="${supplier}"]`)
   await expect(upload).toHaveCount(1)
   await upload.getByLabel("Attach a source document (server scan required)", { exact: true })
@@ -94,32 +120,52 @@ export async function documentJourney(page: Page, info: TestInfo) {
     const url = new URL(response.url())
     return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
   })
-  await upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click()
-  const uploadResponse = await uploaded
-  if (uploadResponse.status() !== 200) {
-    const responseBody = await uploadResponse.json().catch(() => null) as { errors?: unknown } | null
-    const knownErrors = new Set([
-      "Attachment limit is not configured.",
-      "Attachment exceeds the configured limit.",
-      "The scanner did not accept this file.",
-      "The file was not accepted by the scanner.",
-      "Unsupported file.",
-    ])
-    await observation(info, "operations-document-upload-blocked", {
-      stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
-      producerErrors: Array.isArray(responseBody?.errors)
-        ? responseBody.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
-        : [],
-      scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
-      bypassedScanner: false,
-    })
-  }
-  expect(uploadResponse.status()).toBe(200)
-  expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
-  const uploadResult = await uploadResponse.json() as { ok: boolean; value?: { id: string; name: string } }
-  expect(uploadResult).toMatchObject({ ok: true, value: { name: filename } })
-  const asset = uploadResult.value?.id
+  const afterRead = readSupplierProjection()
+  const [, afterProjection] = await Promise.all([
+    uploaded.then(async (uploadResponse) => {
+      if (uploadResponse.status() !== 200) {
+        const responseBody = await uploadResponse.json().catch(() => null) as { errors?: unknown } | null
+        const knownErrors = new Set([
+          "Attachment limit is not configured.",
+          "Attachment exceeds the configured limit.",
+          "The scanner did not accept this file.",
+          "The file was not accepted by the scanner.",
+          "Unsupported file.",
+        ])
+        await observation(info, "operations-document-upload-blocked", {
+          stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
+          producerErrors: Array.isArray(responseBody?.errors)
+            ? responseBody.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
+            : [],
+          scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+          bypassedScanner: false,
+        })
+      }
+      expect(uploadResponse.status()).toBe(200)
+      expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
+      expect(new URL(uploadResponse.url()).searchParams.get("name")).toBe(filename)
+      expect(uploadResponse.request().postDataBuffer()).toEqual(bytes)
+      const uploadResult: unknown = await uploadResponse.json()
+      expect(uploadResult).toMatchObject({ ok: true })
+    }),
+    afterRead,
+    upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
+  ])
+  expect(afterProjection.context).toEqual(beforeProjection.context)
+  expect(afterProjection.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 1)
+  const afterSuppliers = afterProjection.value.data.suppliers.filter((row) => row.id === supplier)
+  expect(afterSuppliers).toHaveLength(1)
+  const afterAssets = afterSuppliers[0]?.attachments ?? []
+  expect(afterAssets).toHaveLength(beforeAssets.length + 1)
+  expect(afterAssets.filter((asset) => beforeAssetIds.has(asset.id))).toEqual(beforeAssets)
+  const admittedAssets = afterAssets.filter((asset) => !beforeAssetIds.has(asset.id))
+  expect(admittedAssets).toHaveLength(1)
+  expect(afterAssets.filter((asset) => asset.name === filename)).toHaveLength(1)
+  // The public upload receipt is only { ok: true }; identity comes from its authorized readback.
+  expect(admittedAssets[0]).toMatchObject({ name: filename, type: "text/plain", bytes: bytes.byteLength, size: bytes.byteLength })
+  const asset = admittedAssets[0]?.id
   expect(asset).toMatch(/^[A-Za-z0-9_-]+$/)
+  if (typeof asset !== "string") throw new Error("The original supplier readback did not expose the admitted asset identity")
   await expect(supplierDetail).toHaveAttribute("data-source-version", String(beforeVersion + 1))
   const file = upload.getByRole("listitem").filter({ has: page.getByText(filename, { exact: true }) })
   await expect(file).toHaveCount(1)

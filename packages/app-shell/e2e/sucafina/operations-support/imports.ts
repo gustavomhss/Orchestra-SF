@@ -150,7 +150,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveCount(1)
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
   await expect(root.locator('.sf-state-panel[data-sf-state="ready"]')).toHaveCount(1)
-  await expect(root.getByLabel("source", { exact: true })).toHaveValue("planner")
+  await expect(root.getByRole("combobox", { name: "source", exact: true })).toHaveValue("planner")
   const invalid = await page.request.post(modeURL(account, "planner", "import-preview").href, { maxRetries: 0, headers: { Origin: account.origin, "Idempotency-Key": randomUUID() }, data: { admittedFileRef: "invalid-schema-probe", format: "xlsx", options: { unknown: true } } })
   expect(invalid.status()).toBe(400)
   expect(await invalid.json()).toEqual({ status: "invalid" })
@@ -165,7 +165,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   const target = matched[0]!
   expect(target).toMatchObject({ surface: "planner", formats: expect.arrayContaining(["xlsx"]) })
   expect(target.selectionRef).not.toBe("")
-  const destination = root.getByLabel("Destination", { exact: true })
+  const destination = root.getByRole("combobox", { name: "Destination", exact: true })
   await expect(destination).toBeEnabled()
   await destination.selectOption(target.selectionRef)
   await expect(destination).toHaveValue(target.selectionRef)
