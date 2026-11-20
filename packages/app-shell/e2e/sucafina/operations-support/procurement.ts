@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test"
 import type { Locator, Page, Response } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
+import { chapterURL } from "./runtime"
 import type { Account } from "./runtime"
 
 export function commandResponse(page: Page, action: string, id?: string) {
@@ -11,7 +12,7 @@ export function commandResponse(page: Page, action: string, id?: string) {
 export async function openRequest(page: Page, account: Account, id: string) {
   expect(id).toMatch(/^PR-2026-\d+$/)
   const encoded = encodeSfRouteRef(id)
-  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
+  await page.goto(chapterURL(account, `/orchestra/sf-procurement/requests/${encoded}`).href)
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   await expect(detail).toHaveCount(1)
@@ -23,7 +24,7 @@ export async function openRequest(page: Page, account: Account, id: string) {
 }
 
 export async function createDraft(page: Page, account: Account, title: string) {
-  await page.goto("/orchestra/sf-procurement/requests/new")
+  await page.goto(chapterURL(account, "/orchestra/sf-procurement/requests/new").href)
   const form = page.locator("article.sf-u11-detail").locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
   await form.getByRole("textbox", { name: "Title", exact: true }).fill(title)
@@ -38,13 +39,13 @@ export async function createDraft(page: Page, account: Account, title: string) {
   expect(await response.json()).toMatchObject({ ok: true })
   const posted = response.request().postDataJSON()
   expect(posted).toMatchObject({ page: "Requests", action: "create", values: { pr: { title } } })
-  expect(posted.values.pr.estAmount).toBe("100")
+  expect(posted.values.pr.estAmount).toBe(100)
   const row = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
   await expect(row).toHaveCount(1)
   const id = (await row.getAttribute("data-sf-row")) ?? ""
   expect(id).toMatch(/^PR-2026-\d+$/)
   await expect(row.getByRole("cell").first()).toContainText(id)
-  await expect(row.getByRole("link")).toHaveCount(0)
+  await expect(row.getByRole("link", { name: id, exact: true })).toHaveCount(1)
   const detail = await openRequest(page, account, id)
   await expect(detail.locator(`p[data-request-summary="${id}"]`)).toContainText("Requisition draft")
   expect(await sourceVersion(detail)).toBe(1)
@@ -85,9 +86,10 @@ export async function queueIdentity(page: Page, account: Account, id: string, am
   const href = await link.getAttribute("href")
   if (!href) throw new Error("C02 drilldown is missing")
   const url = new URL(href, page.url())
-  expect(url.origin + url.pathname).toBe(account.baseURL + "/procurement")
+  expect(url.origin).toBe(account.origin)
+  expect(url.pathname).toBe("/orchestra/sf-procurement/requests")
   expect(url.searchParams.get("request")).toBe(id)
-  expect(url.searchParams.get("q")).toBe(id)
+  expect([...url.searchParams.keys()]).toEqual(["request"])
   expect(decodeURIComponent(url.hash.slice(1))).toBe(id)
   return { id, amount, sourceRef: await link.getAttribute("data-source-ref"), refDigest: await link.getAttribute("data-source-digest"), sourceVersion: Number(await link.getAttribute("data-source-version")) }
 }

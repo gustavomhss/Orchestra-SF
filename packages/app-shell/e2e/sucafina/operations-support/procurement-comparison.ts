@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { login, observation, readManifest } from "./runtime"
+import { chapterURL, login, observation, readManifest } from "./runtime"
 
 /** Literal J04 oracle; no test-side scoring or currency formula. */
 export async function procurementComparison(page: Page, info: TestInfo) {
@@ -9,7 +9,7 @@ export async function procurementComparison(page: Page, info: TestInfo) {
   const id = manifest.records.comparison
   expect(id).toMatch(/^PR-2026-\d+$/)
   const encoded = encodeSfRouteRef(id)
-  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
+  await page.goto(chapterURL(account, `/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`).href)
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
   const comparison = page.locator("section.sf-u12-comparison")
   const table = comparison.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Base amount / FX", exact: true }) })
@@ -30,21 +30,22 @@ export async function procurementComparison(page: Page, info: TestInfo) {
   await expect(comparison.getByRole("status").filter({ hasText: "2160 USD (7.14%) above the lowest eligible proposal" })).toHaveText("2160 USD (7.14%) above the lowest eligible proposal")
   const selected = comparison.getByRole("combobox", { name: "Selected quotation", exact: true })
   await expect(selected.locator("option:checked")).toHaveText("Browser quote A · USD 32400")
-  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
+  await page.goto(chapterURL(account, `/orchestra/sf-procurement/requests/${encoded}`).href)
   const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   await expect(detail).toHaveCount(1)
   await expect(detail.locator("p").filter({ hasText: /^Request identity:/ })).toHaveText(`Request identity: ${id}`)
   await expect(detail.locator("p").filter({ hasText: /^Status:/ })).toHaveText("Status: src_pending")
   await expect(detail.locator("p").filter({ hasText: /^Current source version:/ })).toHaveText(/^Current source version: [1-9]\d*$/)
-  await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-  await expect(page.getByRole("status", { name: "Sourcing is not editable in the current request stage.", exact: true })).toBeVisible()
+  await page.goto(chapterURL(account, `/orchestra/sf-procurement/requests/${encoded}/sourcing`).href)
+  await expect(page.getByRole("status").filter({ hasText: /^Sourcing is not editable in the current request stage\.$/ }))
+    .toHaveText("Sourcing is not editable in the current request stage.")
   await expect(page.getByRole("button", { name: "Submit sourcing", exact: true })).toHaveCount(0)
-  await page.goto("/orchestra/sf-procurement/requests")
+  await page.goto(chapterURL(account, "/orchestra/sf-procurement/requests").href)
   const queue = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Value basis", exact: true }) })
   await expect(queue).toHaveCount(1)
   const link = queue.getByRole("link", { name: id, exact: true })
   await expect(link).toHaveAttribute("href", `?request=${id}#${id}`)
-  await expect(queue.getByRole("row").filter({ has: link }).getByRole("cell", { name: "pending-approval", exact: true })).toHaveCount(1)
+  await expect(queue.getByRole("row").filter({ has: page.getByRole("link", { name: id, exact: true }) }).getByRole("cell", { name: "pending-approval", exact: true })).toHaveCount(1)
   await link.click()
   await expect(page).toHaveURL((url) => url.searchParams.get("request") === id && decodeURIComponent(url.hash.slice(1)) === id)
   await expect(page.getByText("Current request value: 32400 USD; base value: 32400 USD; FX: 1 (base).", { exact: true })).toHaveCount(1)

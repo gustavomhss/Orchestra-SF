@@ -2,22 +2,13 @@ import { createHash, randomUUID } from "node:crypto"
 import { expect } from "@playwright/test"
 import type { APIResponse, Page, Response, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
-import { login, modeURL, observation } from "./runtime.ts"
+import { captureCommandResponse, chapterURL, login, modeURL, observation } from "./runtime.ts"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type Schema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
 type Presentation = { title: string; excerpt: string; location: string; href?: string }
-
-function domainPost(page: Page, account: Account, action: string, id?: string) {
-  return page.waitForResponse((response) => {
-    const request = response.request()
-    const url = new URL(request.url())
-    if (request.method() !== "POST" || url.origin !== account.origin || !url.pathname.endsWith("/procurement") || url.searchParams.get("page") !== "Suppliers") return false
-    const body = request.postDataJSON() as { action?: string; id?: string }
-    return body.action === action && (id === undefined || body.id === id)
-  })
-}
 
 async function valueOf<T>(response: APIResponse | Response): Promise<T> {
   expect(response.status()).toBe(200)
@@ -26,19 +17,9 @@ async function valueOf<T>(response: APIResponse | Response): Promise<T> {
   return body.value
 }
 
-/** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
-export async function documentJourney(page: Page, info: TestInfo) {
-  const account = await login(page, "first", "suppliers")
-  const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
-  const text = "Price: 42\nReference: " + key + "\n"
-  const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")
-  const endpoint = (mode: string, query: Record<string, string> = {}) => modeURL(account, "procurement", mode, query).href
-  const isMode = (url: string, mode: string) => {
-    const candidate = new URL(url)
-    return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
-  }
-  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
-  expect((await page.goto("/orchestra/sf-procurement/suppliers"))?.status()).toBe(200)
+/** The original native supplier creation, shared by document admission and its narrow prerequisite proof. */
+export async function createDocumentSupplier(page: Page, account: Account, key: string, name: string) {
+  expect((await page.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href))?.status()).toBe(200)
   const suppliers = page.locator(".sf-u14-layout")
   await expect(suppliers).toHaveCount(1)
   await page.getByRole("button", { name: "New supplier", exact: true }).click()
@@ -64,32 +45,56 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(review).toContainText(name)
   const confirmCreate = review.getByRole("button", { name: "Confirm once", exact: true })
   await expect(confirmCreate).toBeEnabled()
-  const creation = domainPost(page, account, "create")
-  await confirmCreate.click()
-  const created = await creation
-  expect(created.status()).toBe(200)
-  expect(await created.json()).toMatchObject({ ok: true })
-  expect(created.request().postDataJSON()).toMatchObject({
+  const created = await captureCommandResponse(page, account, "procurement", { page: "Suppliers", action: "create" }, confirmCreate)
+  expect(created.status).toBe(200)
+  expect(created.body).toMatchObject({ ok: true })
+  expect(created.command).toMatchObject({
     page: "Suppliers", action: "create", version: 0,
     values: { supplier: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" } },
   })
   const suppliersURL = "/orchestra/sf-procurement/suppliers"
-  expect((await page.goto(suppliersURL))?.status()).toBe(200)
+  expect((await page.goto(chapterURL(account, suppliersURL).href))?.status()).toBe(200)
   const supplierRow = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name, exact: true }) })
   await expect(supplierRow).toHaveCount(1)
+  const numberCell = supplierRow.locator(".sf-s01-cell-value").filter({ hasText: /^SUP-\d+$/ })
+  await expect(numberCell).toHaveCount(1)
+  const supplierNumber = (await numberCell.innerText()).trim()
+  expect(supplierNumber).toMatch(/^SUP-\d+$/)
   const supplier = await supplierRow.getAttribute("data-sf-row")
   if (!supplier || !/^[a-zA-Z0-9_-]+$/.test(supplier)) throw new Error("The supplier chapter did not expose the created supplier identity")
-  const upload = page.locator(`form[data-private-upload="supplier"][data-record="${supplier}"]`)
-  await expect(upload).toHaveCount(1)
-  await expect(upload).toHaveAttribute("data-version", /^\d+$/)
-  const beforeVersion = Number(await upload.getAttribute("data-version"))
+  return { supplier, supplierNumber }
+}
+
+/** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
+export async function documentJourney(page: Page, info: TestInfo) {
+  const account = await login(page, "first", "suppliers")
+  const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
+  const text = "Price: 42\nReference: " + key + "\n"
+  const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")
+  const endpoint = (mode: string, query: Record<string, string> = {}) => modeURL(account, "procurement", mode, query).href
+  const isMode = (url: string, mode: string) => {
+    const candidate = new URL(url)
+    return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
+  }
+  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
+  const { supplier, supplierNumber } = await createDocumentSupplier(page, account, key, name)
+  const suppliersURL = "/orchestra/sf-procurement/suppliers"
+  const supplierRoute = `/orchestra/sf-procurement/suppliers/${encodeSfRouteRef(supplier)}`
+  expect((await page.goto(chapterURL(account, supplierRoute).href))?.status()).toBe(200)
+  const supplierDetail = page.locator(`[data-sf-supplier-ref="${supplier}"]`)
+  await expect(supplierDetail).toHaveCount(1)
+  await expect(supplierDetail).toHaveAttribute("data-source-version", /^\d+$/)
+  const beforeVersion = Number(await supplierDetail.getAttribute("data-source-version"))
   expect(Number.isSafeInteger(beforeVersion)).toBe(true)
-  await upload.getByLabel(name, { exact: true }).setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
+  const upload = supplierDetail.locator(`.sf-bound-assets[data-sf-asset-record="${supplier}"]`)
+  await expect(upload).toHaveCount(1)
+  await upload.getByLabel("Attach a source document (server scan required)", { exact: true })
+    .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const uploaded = page.waitForResponse((response) => {
     const url = new URL(response.url())
     return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
   })
-  await upload.getByRole("button", { name: "Upload document", exact: true }).click()
+  await upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click()
   const uploadResponse = await uploaded
   if (uploadResponse.status() !== 200) {
     const responseBody = await uploadResponse.json().catch(() => null) as { errors?: unknown } | null
@@ -111,24 +116,37 @@ export async function documentJourney(page: Page, info: TestInfo) {
   }
   expect(uploadResponse.status()).toBe(200)
   expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
-  expect(await uploadResponse.json()).toMatchObject({ ok: true })
-  const fileLink = page.getByRole("link", { name: filename, exact: true })
-  await expect(fileLink).toHaveCount(1)
-  const href = await fileLink.getAttribute("href")
-  if (!href) throw new Error("The real uploaded asset has no authorized download link")
-  const assetURL = new URL(href, page.url())
-  expect(assetURL.searchParams.get("asset")).not.toBeNull()
-  const original = await page.request.get(assetURL.href, { maxRetries: 0 })
+  const uploadResult = await uploadResponse.json() as { ok: boolean; value?: { id: string; name: string } }
+  expect(uploadResult).toMatchObject({ ok: true, value: { name: filename } })
+  const asset = uploadResult.value?.id
+  expect(asset).toMatch(/^[A-Za-z0-9_-]+$/)
+  await expect(supplierDetail).toHaveAttribute("data-source-version", String(beforeVersion + 1))
+  const file = upload.getByRole("listitem").filter({ has: page.getByText(filename, { exact: true }) })
+  await expect(file).toHaveCount(1)
+  await expect(file).toContainText("ref: " + asset)
+  const linkedAsset = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === account.origin &&
+      url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("asset") === asset &&
+      url.searchParams.has("expires") && url.searchParams.has("signature")
+  })
+  const downloaded = page.waitForEvent("download")
+  await file.getByRole("button", { name: "Download (verify access)", exact: true }).click()
+  const original = await linkedAsset
   expect(original.status()).toBe(200)
   expect(await original.body()).toEqual(bytes)
-  await expect(upload).toHaveAttribute("data-version", String(beforeVersion + 1))
+  const assetURL = new URL(original.url())
+  expect(assetURL.searchParams.get("asset")).toBe(asset)
+  expect(assetURL.searchParams.get("expires")).toMatch(/^[1-9]\d*$/)
+  expect(assetURL.searchParams.get("signature")).toMatch(/^[a-f0-9]{64}$/)
+  expect((await downloaded).suggestedFilename()).toBe(filename)
   const requests: string[] = []
   page.context().on("request", (request) => {
     const mode = new URL(request.url()).searchParams.get("sf")
     if (request.method() === "POST" && mode && ["document-admit", "document-schema", "document-extract", "document-confirm"].includes(mode) && isMode(request.url(), mode)) requests.push(mode)
   })
   const discovered = waiting("document-sources")
-  expect((await page.goto("/orchestra/sf-documents"))?.status()).toBe(200)
+  expect((await page.goto(chapterURL(account, "/orchestra/sf-documents").href))?.status()).toBe(200)
   const root = page.locator("[data-document-workbench]")
   await expect(root).toHaveCount(1)
   const sources = await valueOf<Source[]>(await discovered)
@@ -194,7 +212,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await readCandidates()).toEqual([confirmed])
   // Keep the confirmed card open in the first page to verify removal of an actual cached value.
   const reader = await page.context().newPage()
-  expect((await reader.goto("/orchestra/sf-documents"))?.status()).toBe(200)
+  expect((await reader.goto(chapterURL(account, "/orchestra/sf-documents").href))?.status()).toBe(200)
   await expect(reader.locator("[data-document-workbench]")).toHaveCount(1)
   await expect(reader.getByLabel("Document", { exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
   const reloadSources = reader.waitForResponse((response) => isMode(response.url(), "document-sources") && response.request().method() === "GET")
@@ -207,7 +225,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
     const url = new URL(response.url())
     return response.request().method() === "GET" && url.origin === account.origin && url.pathname.endsWith("/api/ui/pages/CAP27")
   })
-  expect((await reader.goto("/orchestra/sf-procurement/suppliers"))?.status()).toBe(200)
+  expect((await reader.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href))?.status()).toBe(200)
   const projected = await projection
   expect(projected.status()).toBe(200)
   const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
@@ -219,7 +237,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await readerRow.getByRole("button", { name: "Open record", exact: true }).click()
   const readerDetail = reader.locator("[data-sf-record-detail]")
   await expect(readerDetail).toHaveCount(1)
-  await expect(readerDetail.locator("p.sf-s01-secondary bdi")).toHaveText(supplier)
+  await expect(reader.locator(`[data-sf-supplier-ref="${supplier}"]`)).toHaveCount(1)
+  await expect(readerDetail.locator("p.sf-s01-secondary bdi")).toHaveText(supplierNumber)
   const remove = readerDetail.getByRole("button", { name: "Delete pending supplier", exact: true })
   await expect(remove).toHaveCount(1)
   await expect(remove).toBeEnabled()
@@ -236,16 +255,14 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(deleteReview).toContainText(supplier)
   const confirmDelete = deleteReview.getByRole("button", { name: "Confirm once", exact: true })
   await expect(confirmDelete).toBeEnabled()
-  const deletion = domainPost(reader, account, "delete", supplier)
-  await confirmDelete.click()
-  const deleted = await deletion
-  expect(deleted.status()).toBe(200)
-  expect(await deleted.json()).toMatchObject({ ok: true })
-  expect(deleted.request().postDataJSON()).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
-  expect((await reader.goto(suppliersURL))?.status()).toBe(200)
+  const deleted = await captureCommandResponse(reader, account, "procurement", { page: "Suppliers", action: "delete", id: supplier }, confirmDelete)
+  expect(deleted.status).toBe(200)
+  expect(deleted.body).toMatchObject({ ok: true })
+  expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
+  expect((await reader.goto(chapterURL(account, suppliersURL).href))?.status()).toBe(200)
   await expect(reader.locator(`tr[data-sf-row="${supplier}"]`)).toHaveCount(0)
   await expect(reader.getByRole("cell", { name, exact: true })).toHaveCount(0)
-  await expect(reader.getByRole("link", { name: filename, exact: true })).toHaveCount(0)
+  await expect(reader.getByText(filename, { exact: true })).toHaveCount(0)
   const revokedAsset = await page.request.get(assetURL.href, { maxRetries: 0 })
   expect(revokedAsset.status()).toBe(403)
   expect(await revokedAsset.text()).toBe("Access denied")
