@@ -1,5 +1,5 @@
 import { describe, expect } from "bun:test"
-import { Effect, Fiber, Layer, LayerMap, Option, Queue, Schema } from "effect"
+import { Effect, Fiber, Layer, LayerMap, Option, Queue, Schema, RcMap } from "effect"
 import { Database } from "@orchestra/core/database/database"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
@@ -250,7 +250,7 @@ describe("SessionV2 stops runs on archive and remove", () => {
         Layer.effectContext<LocationServices, never, never>(Effect.sync(() => { locations++ }).pipe(
           Effect.andThen(Effect.die("A deleted Session must not acquire provider/tool services")),
         )),
-      ))
+      ).pipe(Effect.map((map) => ({ ...map, keys: RcMap.keys(map.rcMap) }))))
       yield* Effect.gen(function* () {
         const session = yield* SessionV2.Service
         const runs = yield* SessionExecution.Service

@@ -508,7 +508,7 @@ test("configuration-http: hostile fields, bindings, duplicate JSON and missing C
   expect((await configPost(f, cookie, valid, { headers: { origin: "" } })).status).toBe(403)
   expect((await configPost(f, cookie, " ".repeat(65537))).status).toBe(413)
   expect((await f.request(`${route}/configuration?${f.query}&teamObjectId=${teamId}&teamObjectId=${teamId}`, { headers: { cookie } })).status).toBe(400)
-  expect(await f.policy.read()).toEqual({ configRevision: 1, profiles: [{ profile: f.profile, enabled: true }] })
+  expect(await f.policy.read()).toEqual({ configRevision: 1, profiles: [{ profile: Schema.decodeUnknownSync(TeamProfile.Ref)(f.profile), enabled: true }] })
   expect(await f.policy.audit()).toHaveLength(1)
   expect(await f.snapshot()).toEqual(before)
 })

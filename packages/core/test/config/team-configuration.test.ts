@@ -32,7 +32,7 @@ async function fixture() {
 }
 function configured(ref: Location.Ref) {
   return Config.locationLayer.pipe(
-    Layer.provideMerge(AgentV2.locationLayer),
+    Layer.provideMerge(AgentV2.admittedLayer),
     Layer.provideMerge(Layer.succeed(Location.Service, Location.Service.of(location(ref)))),
     Layer.tap((services) => ConfigAgentPlugin.Plugin.effect(host({
       agent: agentHost(Context.get(services, AgentV2.Service)),
@@ -132,8 +132,15 @@ test("core-team-config-03: a changed Team revision closes old handles and a new 
     const lease = yield* f.capture()
     const context = yield* SessionOwner.withLease(lease, locations.contextEffect(f.location))
     const old = Context.get(context, Config.Service)
+    const oldAgents = Context.get(context, AgentV2.Service)
     yield* Effect.promise(() => configure(f, profileA, "approved/current"))
     yield* refused(old.entries())
+    yield* refused(oldAgents.get(AgentV2.ID.make("analyst")))
+    yield* refused(oldAgents.all())
+    yield* refused(oldAgents.reload())
+    let lateTransforms = 0
+    yield* refused(oldAgents.transform(() => { lateTransforms++ }))
+    expect(lateTransforms).toBe(0)
     yield* refused(SessionOwner.withLease(lease, locations.keys))
     yield* refused(SessionOwner.withLease(lease, locations.contextEffect(f.location)))
     const next = yield* f.capture(f.businessRequest())
