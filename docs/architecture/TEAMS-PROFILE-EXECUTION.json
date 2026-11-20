@@ -11,8 +11,9 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "3936f177457c4cd9532efbe48aa042a648845670",
-    "latestIntegratedSource": "6f9b66a2aaa8b057653244c94183254bb6f008b2"
+    "preCheckpointHead": "b3b3dc5d44dbec39f92052fb4d6e9f13544497b2",
+    "latestIntegratedSource": "b3b3dc5d44dbec39f92052fb4d6e9f13544497b2",
+    "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
     "documentImport": {
@@ -3978,13 +3979,31 @@
       "id": "WP1G",
       "owner": "teams-effective-authority/teams-public-context",
       "scope": "Current business authority, effective AccessRevision, explicit Team selector, F02/host and officially generated clients",
-      "status": "DIRECTED_AUTHORITY_CONTEXT_BOUNDARY_PASSED_RECEIPT_READERS_PENDING"
+      "status": "INTEGRATED_DIRECTED_TESTS_PASSED_STATIC_AND_NATIVE_QUALIFICATION_PENDING"
     },
     {
       "id": "G06-INFRA",
       "owner": "teams-profile-scanner",
       "scope": "Exact candidate/request-only Linux ClamD controls and honest component receipts",
       "status": "REAL_CLAMD_COMPONENT_PASSED_INTEGRATED"
+    },
+    {
+      "id": "WP2",
+      "owner": "teams-shell-web",
+      "scope": "Per-window Team selection, full-owner private state, native Solid Web composition and independent admin",
+      "status": "IMPLEMENTING_DIRECTED_HAPPYDOM_ONLY_NO_INSTALLED_CLAIM"
+    },
+    {
+      "id": "WP3",
+      "owner": "teams-session-owner/teams-session-runtime",
+      "scope": "Durable SessionOwner, private request/worker admission, mounted SDK/Server and generic route refusal",
+      "status": "IMPLEMENTING"
+    },
+    {
+      "id": "WP4-GENERATION",
+      "owner": "teams-generation-fence",
+      "scope": "Private current control, SQLite writer barrier and explicit migration source",
+      "status": "45_DIRECTED_TESTS_PASSED_NOT_INTEGRATED_NOT_CUTOVER"
     }
   ],
   "gates": [
@@ -14368,6 +14387,399 @@
         "2026-11-20T06:28:26.7092481Z (fail) modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts > FIN-IND-004 real keyboard submit reports rejected preparation without starting an analysis [0.02ms]",
         "2026-11-20T06:28:26.8768791Z (pass) modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts > WP01 shares one Chromium across files, releases every lease, and proves final process exit [193.64ms]"
       ]
+    },
+    {
+      "id": "WP1-F02-HTTP",
+      "source": "bc8447d9b9b81f9771e5fb1a99e856af5616d90b",
+      "snapshot": "a3bd4159be977b8fd8adfa6c5c357f321cf40ed3",
+      "runId": 44686602121,
+      "jobId": 136122293658,
+      "counts": {
+        "pass": 55,
+        "fail": 0,
+        "skip": 0,
+        "files": 5
+      },
+      "status": "SUCCESS",
+      "qualification": "Real signed OIDC and SQLite F02 component; no LIVE tenant or installed native proof."
+    },
+    {
+      "id": "WP1-WEB-CLIENTS",
+      "source": "58623fa42d569b288f644a30cf46a0e37abe79aa",
+      "snapshot": "e5654eff8d8f062f5db27ddaff6780fd0536accc",
+      "runId": 44686104440,
+      "jobId": 136120689558,
+      "counts": {
+        "pass": 27,
+        "fail": 0,
+        "skip": 0,
+        "files": 3
+      },
+      "status": "SUCCESS",
+      "qualification": "Production client transport contract; not installed acceptance."
+    },
+    {
+      "id": "WP1-WEB-CHROMIUM",
+      "source": "e024ca44a1f2098bcf401ae3c934c90a775cf83e",
+      "snapshot": "bdfcb9eb09c9d1f3db79cf5c21d2ee0bca334b62",
+      "runId": 44687361580,
+      "jobId": 136124756617,
+      "counts": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0,
+        "files": 2
+      },
+      "status": "SUCCESS",
+      "qualification": "Actual Chromium, production Web clients, signed OIDC, F02/business/admin and SQLite; G02 component, not G04/F04 LIVE/G08."
+    },
+    {
+      "id": "WP1-BOOTSTRAP-DISCOVERY",
+      "source": "bf383ad8dfbfb375167053c85b1e1cca9689e0f8",
+      "runId": 44688423800,
+      "jobId": 136128179552,
+      "counts": {
+        "pass": 11,
+        "fail": 0,
+        "skip": 0,
+        "files": 1
+      },
+      "status": "SUCCESS",
+      "qualification": "Exact current installation discovery; snapshot identity retained in the producing workflow log (not the separate codegen snapshot)."
+    },
+    {
+      "id": "CORE-SESSION-BASELINE",
+      "source": "1a15b8622a52dede83c87fd934c3f6fe60f5e438",
+      "snapshot": "da33c22390952bd7015d2db3fd9699d3ecf36286",
+      "runId": 44687479891,
+      "jobId": 136125140480,
+      "counts": {
+        "pass": 168,
+        "fail": 0,
+        "skip": 0,
+        "files": 20
+      },
+      "status": "SUCCESS",
+      "qualification": "Baseline for SessionOwner regression; does not qualify new ownership."
+    },
+    {
+      "id": "RECEIPTS-FIRST-INTEGRATION",
+      "source": "443fba0829cfff9bdfcf231cd958345348f11b78",
+      "runId": 44687929115,
+      "jobId": 136126603262,
+      "counts": {
+        "pass": 118,
+        "fail": 2,
+        "skip": 0,
+        "files": 32
+      },
+      "status": "FAILURE",
+      "qualification": "One new receipt-absence regression and one historical AM01 installed-host-catalog-empty failure."
+    },
+    {
+      "id": "RECEIPTS-COMPARABLE-BASELINE",
+      "source": "1a15b8622a52dede83c87fd934c3f6fe60f5e438",
+      "runId": 44688207268,
+      "jobId": 136127509162,
+      "counts": {
+        "pass": 115,
+        "fail": 1,
+        "skip": 0,
+        "files": 31
+      },
+      "status": "FAILURE",
+      "qualification": "Same AM01 failed on baseline. No timeout, skip or assertion relaxation."
+    },
+    {
+      "id": "RECEIPTS-FINAL-DIRECTED",
+      "source": "b335c498ac0d0b74f12c785f47332b9d869f7d75",
+      "snapshot": "9c24ffacf6a709a0dffc474971956874759ec76f",
+      "runId": 44691159492,
+      "jobId": 136137013745,
+      "counts": {
+        "pass": 119,
+        "fail": 0,
+        "skip": 0,
+        "files": 31
+      },
+      "status": "SUCCESS",
+      "qualification": "Directed selection explicitly excludes the separate unresolved AM01 installed-inference test; not a full 32-file PASS."
+    },
+    {
+      "id": "WP1-PROXY-BOOTSTRAP",
+      "source": "ecd798c25069377054c43b6fdb54f35dcfed0c20",
+      "snapshot": "cde19b5be1643016c700b4a83d5e61591bca0eb8",
+      "runId": 44692440311,
+      "jobId": 136141191792,
+      "counts": {
+        "pass": 29,
+        "fail": 0,
+        "skip": 0,
+        "files": 4
+      },
+      "status": "SUCCESS",
+      "qualification": "NodeHttpServer with explicit HTTPS proxy; wrong Host remains421 and private generic request without credentials401."
+    },
+    {
+      "id": "WP1-COMPOSED-FIRST",
+      "source": "50389115ac9af07bdc3b951e5686a56edbefece1",
+      "snapshot": "6ffc74e30b7435b5e01fe753b60aced8f72a1632",
+      "runId": 44691581955,
+      "jobId": 136138401574,
+      "counts": {
+        "pass": 674,
+        "fail": 1,
+        "skip": 3,
+        "files": 36
+      },
+      "status": "FAILURE",
+      "qualification": "One ownership HTTP test exceeded its original30s budget. Existing UID fixture skips are not PASS."
+    },
+    {
+      "id": "WP1-COMPOSED-CORRECTED",
+      "source": "b47d294d1633baa336ea5a2388691cc15fcfa681",
+      "snapshot": "b8ba3e4b3d1233851a90ad20cb629ae4a1359ce6",
+      "runId": 44693507647,
+      "jobId": 136144680770,
+      "counts": {
+        "pass": 675,
+        "fail": 0,
+        "skip": 3,
+        "files": 36
+      },
+      "status": "SUCCESS",
+      "qualification": "Independent reads of one committed snapshot run concurrently; same assertions and30s budget. 4750 assertions,210.20s. Existing UID skips remain."
+    },
+    {
+      "id": "GENERATION-WRITER-FIRST",
+      "source": "4449177bb001e41c2f71b1d28cf7344918352b05",
+      "snapshot": "900320df13f1308b47b322df8b0d9061a3757a9d",
+      "runId": 44690569273,
+      "jobId": 136135095128,
+      "counts": {
+        "pass": 39,
+        "fail": 0,
+        "skip": 0,
+        "files": 3
+      },
+      "status": "SUCCESS",
+      "qualification": "Actual SQLite old/prepared writers and EffectDrizzle transactions; not migration/cutover/restore qualification."
+    },
+    {
+      "id": "GENERATION-CONTROL-RESTART",
+      "source": "9fff0a647f90b129b383cf8ac0d5cfbf077e1d2a",
+      "snapshot": "50ee228273e18d87009357a6d5ced9a73187f9e9",
+      "runId": 44692513809,
+      "jobId": 136141427064,
+      "counts": {
+        "pass": 40,
+        "fail": 0,
+        "skip": 0,
+        "files": 3
+      },
+      "status": "SUCCESS",
+      "qualification": "Missing control-history table refuses initialization;402 assertions."
+    },
+    {
+      "id": "GENERATION-PRIVATE-FILE",
+      "source": "a3f8dd36f65ce3a750e31606f615900b503335c1",
+      "snapshot": "d2580a9891cad17bfc8f84e1e20601da669b5be4",
+      "runId": 44693660695,
+      "jobId": 136145171043,
+      "counts": {
+        "pass": 45,
+        "fail": 0,
+        "skip": 0,
+        "files": 4
+      },
+      "status": "SUCCESS",
+      "qualification": "Empty marker refuses technical downgrade; rollback survives corrupt marker; private control rejects symlinks/hardlinks/unsafe modes.419 assertions."
+    },
+    {
+      "id": "WP2-HAPPYDOM-BASELINE",
+      "source": "a712711ffdcdf4628c98a7cc00e52ee229d5509f",
+      "snapshot": "0ea5d2f4c2fcae6a1f68e20090ae3dbbae9d8424",
+      "runId": 44690927761,
+      "jobId": 136136261994,
+      "status": "SUCCESS",
+      "counts": {
+        "pass": 138,
+        "fail": 0,
+        "skip": 0,
+        "files": 30
+      },
+      "groups": [
+        {
+          "runtime": "bun unit",
+          "cases": 65,
+          "files": 10,
+          "assertions": 565
+        },
+        {
+          "runtime": "bun --conditions=browser with HappyDOM",
+          "cases": 73,
+          "files": 20,
+          "assertions": 599
+        }
+      ],
+      "qualification": "Not Chromium, not the new mounted native Web composition and not installed Microsoft acceptance."
+    },
+    {
+      "id": "WP1-OFFICIAL-CLIENT-GENERATE",
+      "sourceSha": "bf383ad8dfbfb375167053c85b1e1cca9689e0f8",
+      "sourceTree": "158567ec96c436872c10a214f7ac5ee1d7aaf10e",
+      "snapshotSha": "d39b3293ec0f1b5be987b923610cff8f8f71bbd9",
+      "snapshotTree": "4f33d7422f7583a8b03098d7d210a08fa2214b15",
+      "command": "bun run generate",
+      "directory": "packages/client",
+      "commandExit": 0,
+      "runId": "44688420617",
+      "files": [
+        {
+          "path": "packages/client/src/generated-effect/client.ts",
+          "deleted": false,
+          "gitBlobSha": "88bf45a4ea71eaa2fb7e69b2a228f46104f47e9e",
+          "byteLength": 198641,
+          "encoding": "base64"
+        },
+        {
+          "path": "packages/client/src/generated/client.ts",
+          "deleted": false,
+          "gitBlobSha": "ad8cec3aa70619bc19ce772096050706dfd0bef1",
+          "byteLength": 170244,
+          "encoding": "base64"
+        },
+        {
+          "path": "packages/client/src/generated/types.ts",
+          "deleted": false,
+          "gitBlobSha": "647f57277dd1d9163a6b275e7349148536bfec8b",
+          "byteLength": 509394,
+          "encoding": "base64"
+        }
+      ],
+      "status": "SUCCESS",
+      "qualification": "Exact generated blobs imported; not a native tenant proof."
+    },
+    {
+      "id": "WP1-OFFICIAL-CLIENT-VERIFY",
+      "source": "50389115ac9af07bdc3b951e5686a56edbefece1",
+      "sourceTree": "0637c08dcf2b07cac9b0851e6813b9bc072ec0ef",
+      "snapshot": "ea37d4a55a679d56293dde7386f33c0c5dd2cb84",
+      "runId": 44691585626,
+      "jobId": 136138413546,
+      "command": "packages/client: bun run check:generated",
+      "status": "SUCCESS",
+      "commandExit": 0,
+      "generatedDiff": [],
+      "qualification": "Official generation comparison on the composed contracts; no generated-file hand editing."
+    },
+    {
+      "id": "G04-COLLABORATION-ROOT",
+      "source": "87f2f96168a2ec48b16640c103e78d2039b4041c",
+      "snapshot": "ba0183c8dddccb7577e29be7a8bc8c431f4bb849",
+      "runId": 44691251659,
+      "jobId": 136137310150,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 87,
+        "fail": 120,
+        "error": 0
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 206,
+        "bodiesFinished": 206,
+        "bodiesReturned": 87,
+        "bodiesThrew": 119,
+        "activeCase": null,
+        "forcedFinalization": false
+      },
+      "qualification": "Complete40-source selection requested; actual bodies recorded separately. Historical recipient fixture uses exact original blobs and external authority singletons, COMPONENT_HISTORICAL only."
+    },
+    {
+      "id": "G04-EXACT-HISTORICAL-COMPONENTS",
+      "source": "62feb940af82db8128be4674ba83e07c6118de17",
+      "snapshot": "83ebd90035e4b1eaa690e00479bc03006767bbd0",
+      "runId": 44693294978,
+      "jobId": 136143993089,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 17,
+        "fail": 46,
+        "error": 0
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 19,
+        "bodiesFinished": 19,
+        "bodiesReturned": 17,
+        "bodiesThrew": 2,
+        "activeCase": null,
+        "forcedFinalization": true
+      },
+      "qualification": "Complete40-source selection requested; actual bodies recorded separately. Historical recipient fixture uses exact original blobs and external authority singletons, COMPONENT_HISTORICAL only."
+    },
+    {
+      "id": "G04-RECIPIENT-RECOVERY-FIRST",
+      "source": "a5700f09b3f068015f2dac371e4a94cc7432c7c5",
+      "snapshot": "5949a30623ef6820f9b15342382fda878431f364",
+      "runId": 44694122500,
+      "jobId": 136146682578,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 16,
+        "fail": 45,
+        "error": 1
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 18,
+        "bodiesFinished": 18,
+        "bodiesReturned": 16,
+        "bodiesThrew": 2,
+        "activeCase": null,
+        "forcedFinalization": true
+      },
+      "qualification": "Complete40-source selection requested; actual bodies recorded separately. Historical recipient fixture uses exact original blobs and external authority singletons, COMPONENT_HISTORICAL only."
     }
   ],
   "infrastructureReconciliation": [
@@ -14680,6 +15092,23 @@
         "PR-base guard now passes; dev guard still blocks only the existing protected godfile-waivers.json and script/spawn-allowlist.json deltas."
       ],
       "qualification": "Not a passing gate. Fixes assigned to the current owning agents, with actual static recheck required."
+    },
+    {
+      "id": "STATIC-WP1-COMPOSED-FIRST",
+      "source": "50389115ac9af07bdc3b951e5686a56edbefece1",
+      "tree": "0637c08dcf2b07cac9b0851e6813b9bc072ec0ef",
+      "branch": "ci-static-sfc-teams-wp1-04",
+      "runId": 44691496935,
+      "jobId": 136138122412,
+      "status": "FAILURE",
+      "findings": [
+        "Receipt consumer narrowing and updated receipt-reader fixture API types",
+        "Team selector/schema brand test input types",
+        "Bootstrap test imported a non-exported protocol path",
+        "Three implicit-any grant validator callbacks",
+        "The same preexisting protected paths still require a real approver; no approval supplied"
+      ],
+      "qualification": "Corrections committed through b3b3dc5; exact static rerun is separate evidence, not inferred PASS."
     }
   ],
   "poolSourceEquivalence": {
@@ -14932,7 +15361,7 @@
   "remainingImplementation": [
     {
       "package": "WP1",
-      "work": "Effective business accessRevision, current product roles/grants/resource authority, full F02/discovery/host transport and regenerated clients remain unfinished."
+      "work": "Composed WP1 authority/F02/host/client/receipt changes are integrated and36-file directed run passed675 with3preexistingUIDskips; finish static fixes, source/resource owner propagation and installed current-candidate qualification."
     },
     {
       "package": "WP2",

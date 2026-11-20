@@ -80,7 +80,7 @@ O verificador passou em **59 testes Node** ([44684026214](https://github.com/gus
 
 O recibo declara `COMPONENT_REAL_CLAMD` e `installedTeamsProof: false`. Esse PASS pertence àquela fonte; G06 continua obrigatório no candidato final.
 
-## WP1 efetivo e transportes: provas isoladas
+## WP1 efetivo e transportes: integração coesa
 
 A autoridade efetiva passou em **111 testes, zero falhas e zero skips** na fonte `1a15b862` ([44686263757](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44686263757)). Ela relê os grants privados atuais, preserva as RoleRows reais e distingue configRevision de accessRevision. O primeiro run falhou porque a fixture não inicializava as fontes reais; a correção fez a mesma inicialização da composição, sem enfraquecer o guard.
 
@@ -88,7 +88,7 @@ O boundary de Request e a composição Microsoft passaram em **76 testes, zero f
 
 Os dois runs anteriores do boundary permanecem no ledger: 63 pass/13 fail e 75 pass/1 fail. O último revelou uma leitura de ambiente antes da resposta de logout, corrigida para admitir a rota antes daquela leitura. Os testes Microsoft antigos agora configuram o Team por login OIDC e endpoint administrativo reais da fixture; todas as assertions de role, ownership e códigos de resposta foram mantidas, com uma negativa nova para ausência de seleção.
 
-Essas fatias ainda não foram integradas isoladamente ao produto: a mudança de chave dos recibos exige todos os consumidores juntos, para não transformar estado legado ou de outra equipe em ausência e repetir um efeito.
+A integração coesa foi feita em `50389115`: os contratos, transportes, boundary e todos os leitores de recibos entraram juntos. As correções seguintes chegaram a `b3b3dc5d`. O recorte de 36 arquivos passou em 675 casos, zero falhas e 3 skips preexistentes na fonte `b47d294d` ([44693507647](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44693507647)); os 4750 asserts incluem o isolamento entre dois usuários Microsoft. A primeira execução 5038 falhou no limite de 30 s desse caso; leituras independentes do mesmo snapshot foram paralelizadas, mantendo todas as assertions e o orçamento original. O caso passou em 23,09 s.
 
 ## Continuação G04 e fronteira de geração
 
@@ -98,9 +98,34 @@ Os waiters de recuperação de edição passaram a ter dono e erro recolhido na 
 
 WP3 e WP4 agora compartilham um contrato privado de geração e ownership, ainda em implementação. A proteção de writer antigo será exercitada com conexões SQLite reais; não basta um if no handler nem uma flag global visível. Nenhum corte está liberado por esses contratos.
 
+
+## Clientes, bootstrap e recibos observados
+
+F02 passou em 55 testes; clientes Web, em 27. A composição real de Chromium com cookies HttpOnly, OIDC assinado, F02, negócio/admin e SQLite passou em 16 testes ([44687361580](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44687361580)). É prova de componente G02, não G04/F04 LIVE/G08. O bootstrap pelo NodeHttpServer real e proxy HTTPS explícito passou em 29 testes; Host incorreto continua421 e rotas privadas não herdam o acesso público à metadata ([44692440311](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44692440311)).
+
+Os três clientes foram produzidos pelo gerador oficial, importando bytes com o mesmo Git blob SHA. A verificação oficial contra 50389115 terminou com exit 0 e diff vazio ([44691585626](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44691585626)).
+
+O recorte final dos consumidores de recibos passou em 119 testes/31 arquivos ([44691159492](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44691159492)). Uma reserva sem recibo final continua indeterminada e impede redispatch; a leitura de recibo ausente permanece not-found. O teste AM01 de inferência instalada foi explicitamente excluído desse recorte: falhou também no baseline 1a15 com installed-host-catalog-empty, sem execução de inferência. Nenhum timeout, skip ou assertion foi alterado para contorná-lo. As primeiras execuções 118/2 e115/1 estão no ledger.
+
+## Sessões, geração e UI em implementação
+
+A baseline de 20 arquivos Core passou em 168 casos. SessionOwner e os handlers Server/CLI continuam em implementação e têm evidência própria, ainda sem qualificação corporativa final.
+
+A fronteira de geração passou em 45 testes reais de SQLite/EffectDrizzle na fonte a3f8dd36 ([44693660695](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44693660695)). Ela bloqueia statements preparados antes do corte, impede empréstimo de conexão por outro fiber, não rouba leases por TTL e mantém rollback. Um marker existente vazio e um control store incompleto são erros, nunca um banco técnico. O control file privado recusa symlink, hardlink, outro UID e permissões abertas. A autoridade fica fora do snapshot de negócio; isso ainda não implementa nem qualifica todo o backfill/corte/restore.
+
+O primeiro gerador oficial  de SessionOwner revelou a emissão de PK textual nullable apesar de .notNull no Drizzle. A revisão acrescentou uma CHECK explícita na fonte; a geração intermediária não será adotada nem tratada como schema final. Não se editaram migrations históricas à mão.
+
+WP2 teve 138 passes em 30 arquivos de Bun/HappyDOM. Esses casos não são Chromium. A composição nativa Solid, a integração de New chat e os testes reais de duas janelas continuam em desenvolvimento.
+
+## Atualização do pool completo de navegador
+
+A fonte 87f2f961 executou todos os 206 corpos: 87 retornos e 119 exceções; o Bun reportou 87 pass/120 fail contando a verificação do pool. G04 continua RED ([44691251659](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44691251659)).
+
+O loader histórico de recipient foi corrigido por cópia dos dois blobs originais exatos, sem atualizar os hashes esperados e sem reverter código de produção. A revisão independente confirmou que somente funções stateless são empacotadas; contexto e autoridade permanecem singletons externos. Isso continua COMPONENT_HISTORICAL. As execuções seguintes 62feb940 e a5700f09 encontraram waiters sem dono e diferenças de controles de reply, terminando com 19 e 18 corpos respectivamente; não se confundem os 63/61 resultados agregados do Bun com 206 casos executados. As correções estão isoladas e ainda não integradas.
+
 ## Trabalho restante
 
-A autoridade efetiva de negócio e a cadeia F02/host têm implementação e testes dirigidos em branches isoladas; a integração coesa, os clientes oficiais e a estática ainda não estão fechados. UI/estado pessoal (WP2), ownership e consumidores de runtime (WP3), backfill/corte/recuperação (WP4) e qualificação/retirada (WP5) permanecem trabalho de implementação. A ausência de contextos externos não deve ser usada para apresentar esse código restante como concluído.
+A autoridade efetiva de negócio, a cadeia F02/host, os clientes oficiais e os leitores de recibos foram integrados. A estática corrigida está sendo executada e não é presumida verde. UI/estado pessoal (WP2), ownership e consumidores de runtime (WP3), backfill/corte/recuperação (WP4) e qualificação/retirada (WP5) permanecem trabalho de implementação. A ausência de contextos externos não deve ser usada para apresentar esse código restante como concluído.
 
 Nenhuma migração real de dados ou troca de autoridade de produção foi executada.
 
