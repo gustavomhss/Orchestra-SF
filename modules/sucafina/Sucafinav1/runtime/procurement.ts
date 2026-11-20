@@ -399,64 +399,66 @@ function inputs(values: Record<string, unknown>, previous?: FormRowContext, erro
     const parts = key.split(".")
     if (parts.length > 7 || parts.some((part) => ["__proto__", "prototype", "constructor"].includes(part)))
       return undefined
-    const name = parts.at(-1)!
-    const numeric =
-      [
-        "estAmount",
-        "estAnnual",
-        "minQuotes",
-        "techWeight",
-        "commWeight",
-        "uploadCap",
-        "reminderDays",
-        "escalationDays",
-        "threshold",
-        "rate",
-        "weight",
-        "tech",
-        "comm",
-        "total",
-        "qty",
-        "unitPrice",
-      ].includes(name) ||
-      parts.includes("scores") ||
-      parts.includes("cscores")
-    const boolean = [
-      "recurring",
-      "dueDiligence",
-      "blockSelfApproval",
-      "requireActiveSupplier",
-      "techPass",
-      "auto",
-      "nda",
-      "dpa",
-      "_remove",
-      "_new",
-    ].includes(name)
-    const normalized =
-      name === "categories" && typeof raw === "string"
-        ? raw
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean)
-        : boolean
-          ? raw === true || raw === "true" || raw === "on"
-          : numeric && typeof raw === "string"
-            ? raw === ""
-              ? null
-              : Number(raw)
-            : raw
+    const normalized = scalarInput(raw, parts)
     const target = parts.slice(0, -1).reduce((parent, part) => {
       if (!Object.hasOwn(parent, part)) parent[part] = {}
       return object(parent[part])
     }, result)
-    target[name] = normalized
+    target[parts.at(-1)!] = normalized
   }
   const normalized = structuredInput(result, [], previous, errors) as Record<string, unknown>
   return errors.length ? undefined : normalized
 }
+function scalarInput(value: unknown, path: string[]): unknown {
+  const name = path.at(-1) ?? ""
+  const numeric =
+    [
+      "estAmount",
+      "estAnnual",
+      "minQuotes",
+      "techWeight",
+      "commWeight",
+      "uploadCap",
+      "reminderDays",
+      "escalationDays",
+      "threshold",
+      "rate",
+      "weight",
+      "tech",
+      "comm",
+      "total",
+      "qty",
+      "unitPrice",
+    ].includes(name) ||
+    path.includes("scores") ||
+    path.includes("cscores")
+  const boolean = [
+    "recurring",
+    "dueDiligence",
+    "blockSelfApproval",
+    "requireActiveSupplier",
+    "techPass",
+    "auto",
+    "nda",
+    "dpa",
+    "_remove",
+    "_new",
+  ].includes(name)
+  return name === "categories" && typeof value === "string"
+    ? value
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+    : boolean
+      ? value === true || value === "true" || value === "on"
+      : numeric && typeof value === "string"
+        ? value === ""
+          ? null
+          : Number(value)
+        : value
+}
 function structuredInput(value: unknown, path: string[] = [], previous?: FormRowContext, errors: FormRowError[] = []): unknown {
-  if (value === null || typeof value !== "object") return value
+  if (value === null || typeof value !== "object") return scalarInput(value, path)
   const record = object(value)
   const keys = Object.keys(record)
   const entries = Array.isArray(value) ? value : keys.length && keys.every((key) => /^\d+$/.test(key)) ? keys.sort((a, b) => Number(a) - Number(b)).map((key) => record[key]) : undefined

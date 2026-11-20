@@ -694,6 +694,34 @@ test("ordinary nested form rows decode and numeric supplier references remain li
   expect(html).not.toContain("[object Object]")
 })
 
+test("native nested form values retain numeric types without changing create authorization", () => {
+  const state = snapshot()
+  const environment = { at, id: () => "native-row", directory: [] }
+  expect(domain.execute(state, actor, { page: "Settings", action: "reset", version: 0, values: {} }, environment)).toMatchObject({ ok: true })
+  const values = { pr: { title: "Native nested form", estAmount: "125", estAnnual: "500", recurring: "false" } }
+  const submitted = structuredClone(values)
+  const command = { page: "Requests", action: "create", version: 0, values }
+  const before = structuredClone(state)
+  for (const denied of [{ ...actor, canWrite: false }, { ...actor, roles: ["viewer"] }]) {
+    expect(domain.execute(state, denied, command, environment)).toMatchObject({ ok: false, status: 403 })
+    expect(state).toEqual(before)
+  }
+  const created = domain.execute(state, actor, command, environment)
+  expect(created).toMatchObject({
+    ok: true,
+    value: { pr: { title: "Native nested form", estAmount: 125, estAnnual: 500, recurring: false } },
+  })
+  expect(values).toEqual(submitted)
+  expect(rows(domain.view(state, actor, environment).data.requests)[0]?.pr).toMatchObject({
+    estAmount: 125, estAnnual: 500, recurring: false,
+  })
+  const invalidBefore = structuredClone(state)
+  expect(domain.execute(state, actor, {
+    ...command, values: { pr: { ...values.pr, estAmount: "invalid" } },
+  }, environment)).toMatchObject({ ok: false, status: 403, errors: ["action_invalid"] })
+  expect(state).toEqual(invalidBefore)
+})
+
 test("dual-role request transitions retain porta authorization without permitting foreign PR edits", () => {
   for (const identity of [
     { roles: ["requester", "buyer"], accountRoles: ["requester", "buyer"] },
