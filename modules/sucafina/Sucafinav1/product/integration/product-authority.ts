@@ -1,3 +1,4 @@
+import { measureTeamAuthority } from "./team-authority-observation.ts"
 import { Effect, Schema } from "effect"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { CredentialVault } from "@orchestra/core/credential/vault"
@@ -126,15 +127,15 @@ export function createSfProductAuthority(input: {
     Object.freeze(copy.location)
     return Object.freeze(copy)
   }
-  const effective = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.(), context = false) => {
+  const effective = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.(), context = false) => measureTeamAuthority(request, "policy-total", async () => {
     if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
       request.headers.get("sec-fetch-site") === "cross-site" ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
     const identityDigest = digestSfValue(current)
-    const pendingResolution = resolveTeams(request)?.catch(() => undefined)
-    const policy = await currentGrants()
+    const pendingResolution = measureTeamAuthority(request, "team-resolution", async () => resolveTeams(request)?.catch(() => undefined))
+    const policy = await measureTeamAuthority(request, "grants-before", currentGrants)
     const resolution = await pendingResolution
     if (teamProfiles && resolution?.status !== "authenticated") return undefined
     const profile = resolution?.status === "authenticated" ? resolution : undefined
@@ -146,12 +147,12 @@ export function createSfProductAuthority(input: {
     }))
     const mapped = maps()
     const mappedDigest = digestSfValue(mapped)
-    const observed = input.authenticateAll
+    const observed = await measureTeamAuthority(request, "role-maps", async () => input.authenticateAll
       ? await input.authenticateAll(request, mapped.map((entry) => ({ surface: entry.surface, roleMap: entry.rows }))).catch(() => null)
       : await Promise.all(mapped.map(async (entry) => ({
           surface: entry.surface,
           actor: await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows }),
-        })))
+        }))))
     if (!observed || observed.length !== mapped.length || observed.some((entry, index) => entry.surface !== mapped[index].surface))
       return undefined
     const present = observed.flatMap((entry) => entry.actor ? [{ ...entry, actor: entry.actor }] : [])
@@ -180,9 +181,9 @@ export function createSfProductAuthority(input: {
     // Directory, role and policy readers are asynchronous. Recheck the retained
     // original session/profile before rereading the current private grant policy.
     if (profile && (!teamProfiles || !(context
-      ? await teamProfiles.revalidateResolution(profile)
-      : profile.admission && await teamProfiles.revalidate(profile.admission)))) return undefined
-    if (digestSfValue(await currentGrants()) !== digestSfValue(policy) ||
+      ? await measureTeamAuthority(request, "team-revalidate", () => teamProfiles.revalidateResolution(profile))
+      : profile.admission && await measureTeamAuthority(request, "team-revalidate", () => teamProfiles.revalidate(profile.admission))))) return undefined
+    if (digestSfValue(await measureTeamAuthority(request, "grants-after", currentGrants)) !== digestSfValue(policy) ||
         digestSfValue(maps()) !== mappedDigest || digestSfValue(scopes()) !== digestSfValue(scoped) ||
         digestSfValue(identity()) !== identityDigest || request.signal.aborted || !sameTeamIntent(request)) return undefined
     const accessRevision = digestSfValue({
@@ -200,17 +201,17 @@ export function createSfProductAuthority(input: {
     })
     return { principalRef, policyVersion: input.policyVersion, accessRevision, canWrite, grant, roles, profile,
       identity: current, observed }
-  }
+  })
   const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
     const actor = await effective(request, dashboard, snapshots)
     return actor?.grant && actor.roles.length && (!teamProfiles || actor.profile?.admission) ? { ...actor, grant: actor.grant } : undefined
   }
-  const resolve = async (request: Request) => {
+  const resolve = async (request: Request) => measureTeamAuthority(request, "resolve-total", async () => {
     if (!input.persistence.currentSnapshots) return undefined
     const snapshots = input.persistence.currentSnapshots()
     if (snapshots) return principal(request, snapshots.dashboard, snapshots)
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
-  }
+  })
   const state = createSfProductState({
     persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, nativePublicationGuards: input.nativePublicationGuards, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
     dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites, analysisSelectionWrites: input.analysisSelectionWrites,

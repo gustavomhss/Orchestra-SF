@@ -435,6 +435,8 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
           .map((element) => ({ value: element.value, disabled: element.disabled })),
       })))))
       console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ phase, errors, runtimeErrors, contextReplies,
+        authorityTimings: { business: f?.authorityTimings(), administration: admin?.authorityTimings() },
+        providerRequestCounts: { business: f?.providerRequestCounts(), administration: admin?.providerRequestCounts() },
         httpPhases: httpPhases.map((item) => ({ ...item, pendingMs: item.elapsedMs === undefined ? Math.round(performance.now() - startedAt - item.startedMs) : undefined })),
         pages: pages.map((page) => page.status === "fulfilled" ? page.value : { inaccessible: true }),
         calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
@@ -444,6 +446,10 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     const driverClosed = await Promise.allSettled([driver?.close()])
     const fixturesClosed = await Promise.allSettled([f?.close(), admin?.close()])
     const buildClosed = await Promise.allSettled([built?.close()])
+    console.info("SF_TEAMS_NATIVE_POLICY_TIMINGS " + JSON.stringify({
+      phase: "after-cleanup", business: f?.authorityTimings(), administration: admin?.authorityTimings(),
+      providerRequestCounts: { business: f?.providerRequestCounts(), administration: admin?.providerRequestCounts() },
+    }))
     const failures = [...browserClosed, ...networkClosed, ...driverClosed, ...fixturesClosed, ...buildClosed]
       .flatMap((entry) => entry.status === "rejected" ? [entry.reason] : [])
     if (failures.length) throw new AggregateError(failures, "Native Teams Web qualification cleanup failed")

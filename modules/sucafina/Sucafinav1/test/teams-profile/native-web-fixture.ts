@@ -1,3 +1,4 @@
+import { measureTeamAuthority, readTeamAuthorityObservation } from "../../product/integration/team-authority-observation.ts"
 import { Effect, Layer, Option, Schema } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
@@ -153,8 +154,9 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
     if (new URL(request.url).pathname === "/api/sucafina/installations") return metadata.handler(request)
     const identity = await f.identity.handle(request)
     if (identity) return identity
-    await f.identity.prepare(request)
-    if (isInstalledSessionPath(new URL(request.url).pathname, f.binding.mount)) return session(request)
+    await measureTeamAuthority(request, "identity-prepare", () => f.identity.prepare(request))
+    if (isInstalledSessionPath(new URL(request.url).pathname, f.binding.mount))
+      return measureTeamAuthority(request, "session-dispatch", () => session(request))
     return await admin(request) ?? await native(request) ?? await business(request) ?? new Response(null, { status: 404 })
   }
   const seedPlannerVersion = async () => f.persistence.transaction("planner", async (snapshot) => {
@@ -174,6 +176,18 @@ export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof 
     if (failure?.status === "rejected") throw failure.reason
   })()
   return { ...f, descriptor, handle, seedPlannerVersion, metadataCalls, configured: Object.freeze(configured),
-    sessionRequests, runtimeState, sessionCalls: f.calls, sessionActions: Object.freeze([...input.sessionActions ?? []]), close,
+    sessionRequests, runtimeState,
+    authorityTimings: () => sessionRequests.flatMap((request) => {
+      const value = readTeamAuthorityObservation(request)
+      return value ? [value] : []
+    }),
+    providerRequestCounts: () => {
+      const paths = f.provider.requests.map((request) => new URL(request.url).pathname)
+      return { scope: "whole-fixture-attempts", me: paths.filter((path) => path === "/v1.0/me").length,
+        joinedTeams: paths.filter((path) => path === "/v1.0/me/joinedTeams").length,
+        groups: paths.filter((path) => /\/v1\.0\/me\/(?:transitiveMemberOf|memberOf|checkMemberGroups)/.test(path)).length,
+        team: paths.filter((path) => /^\/v1\.0\/teams\//.test(path)).length }
+    },
+    sessionCalls: f.calls, sessionActions: Object.freeze([...input.sessionActions ?? []]), close,
     [Symbol.asyncDispose]: close }
 }
