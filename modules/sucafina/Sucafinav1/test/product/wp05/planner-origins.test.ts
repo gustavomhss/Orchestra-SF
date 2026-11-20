@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import path from "node:path"
 import { dispatchBiPresentation, readBiDestination } from "../../../product/analytics/consumer.ts"
 import type { BiSelection } from "../../../product/analytics/catalog.ts"
@@ -10,6 +11,7 @@ import { plannerFixture, plannerPeriod } from "../wp03/planner-fixture.ts"
 import { inspectWp05Browser } from "./browser.ts"
 
 test("real Planner zero and nonzero contributions expose explicit A/B origins through waterfall, bars, tables and current C17 selection", async () => {
+  expectSpawn(import.meta.path)
   const fixture = await plannerFixture()
   try {
     const sourceContext = await fixture.admit("sf-human:planner.read", {}, "finance", true)

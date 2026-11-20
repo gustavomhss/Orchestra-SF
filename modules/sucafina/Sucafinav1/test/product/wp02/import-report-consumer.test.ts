@@ -1,11 +1,13 @@
 import { expect, test } from "bun:test"
+import { Schema } from "effect"
+import { SfDomainPageCap13 } from "@orchestra/schema/sucafina/domain"
 import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
-import { createModule } from "../../../index.ts"
+import { contributions, createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { object, rows } from "../../../runtime/contract.ts"
@@ -19,9 +21,11 @@ import { createSfAtlasScanner } from "../../../product/host-binding/atlas-scanne
 import { createSfImportHttp } from "../../../product/interface/import-http.ts"
 import { createSfDocumentTargetAuthority } from "../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
 import { createSfImportServices } from "../../../../../../apps/cli/src/sucafina-product/import-services.ts"
+import { createSfDomainProjectionHandlers } from "../../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { createSfLiveContext, sfContextDestinationsFromPages } from "../../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 import { prepareAtlasScanner, syntheticScannerControl } from "./atlas-consumer-fixture.ts"
 
-/** Actual application HTTP, encrypted login, C08, import producers and DOCX export.
+/** Actual native Dashboard HTTP projection, encrypted login, C08, import producers and DOCX export.
  * The scanner policy is real Gitleaks for this JSON secrets corpus only; it neither
  * qualifies ClamD/antimalware nor activates or changes an installation's scanner. */
 test("Dashboard app delegates reviewed JSON import and authorized report download to the real producers", async () => {
@@ -67,8 +71,10 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
       return !hit
     } } }
     const runtime = { installationId, directory: stateDirectory, sourceRoot: stateDirectory, origin, mount, persistence, authenticate, environment, assets }
+    const binding = { installationId, hostId: "import-report-host", projectId: "project", location: { directory: AbsolutePath.make(stateDirectory) } }
     const authority = createSfProductAuthority({ installationId, origin, policyVersion: "wp02-import-report-policy", persistence, authenticate, environment,
-      identity: () => ({ installationId, hostId: "import-report-host", projectId: "project", location: { directory: AbsolutePath.make(stateDirectory) } }),
+      identity: () => binding,
+      isAuthenticated: async (request) => Boolean(await identity.person(request)),
       createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => {
         if (request.method === "GET" || request.method === "HEAD") return randomUUID()
         const key = request.headers.get("idempotency-key")
@@ -80,7 +86,44 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
     const service = createSfImportServices({ runtime, authority })
     if (!service) throw new Error("The real import composition is unavailable")
     const product = createSfImportHttp({ origin, mount, runtime: () => ({ ui: authority.ui, human: authority.human, service }) })
-    const module = createModule(mount, { persistence, authenticate, environment, assets, maxJsonBytes: 100000, product })
+    const application = { persistence, authenticate, environment, assets, maxJsonBytes: 100000, product, domains: contributions }
+    const module = createModule(mount, application)
+    // The retired HTML console is no longer a consumer. Mount the same native
+    // DTO producer read by IT Risks, with the original encrypted request and
+    // current source authority. No ready operation or browser context is invented.
+    const live = createSfLiveContext({
+      origin, mount, currentBinding: () => binding,
+      admit: async (request) => {
+        const admitted = await authority.readContextAdmission(request)
+        if (admitted.status !== "ok") return admitted
+        const destinations = sfContextDestinationsFromPages(admitted.pages)
+        if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
+        return { status: "ok", stamp: admitted.stamp, authMode: "local-operator", destinations } as const
+      },
+    })
+    const riskPage = createSfDomainProjectionHandlers({
+      origin, mount, application, runtime: () => undefined,
+      readContext: (request) => live.readRequestContext(request, binding),
+    }).find((handler) => handler.operationId === "domain.page.CAP13")
+    if (!riskPage) throw new Error("The native IT Risks producer is unavailable")
+    const readRisks = (authenticated = true, requestOrigin = origin) => riskPage.handle(new Request(
+      origin + mount + "/api/ui/pages/CAP13?year=2026",
+      { headers: { origin: requestOrigin, ...(authenticated ? { cookie } : {}) } },
+    ))
+    const projectedRisks = async () => {
+      const response = await readRisks()
+      expect(response.status).toBe(200)
+      expect(response.headers.get("content-type")).toContain("application/json")
+      expect(response.headers.get("cache-control")).toContain("no-store")
+      const result = Schema.decodeUnknownSync(SfDomainPageCap13.output, { onExcessProperty: "error" })(await response.json())
+      expect(result.status).toBe("ok")
+      if (result.status !== "ok") throw new Error("The native IT Risks projection was not admitted")
+      expect(result.context).toMatchObject({ installationId, hostId: binding.hostId, projectId: binding.projectId, principalRef })
+      expect(result.value.capabilityId).toBe("CAP13")
+      expect(result.value.selection.year).toBe(2026)
+      expect(JSON.stringify(result.value)).not.toContain("__sfProductV1")
+      return result.value
+    }
     const send = async (query: string | URLSearchParams, init: RequestInit = {}, authenticated = true) => {
       const headers = new Headers(init.headers)
       if (authenticated) headers.set("cookie", cookie)
@@ -96,16 +139,17 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
       dataDigest: digestSfValue(snapshot.data), risks: structuredClone(snapshot.data.risks), roleMap: structuredClone(snapshot.data.roleMap),
       budgetLineIds: structuredClone(snapshot.data.budgetLineIds), auditLength: snapshot.audit.length,
     } }))
-    const page = await send("page=IT+Risks")
-    expect(page.status).toBe(200)
-    const html = await page.text()
-    expect(html).toContain("Import with preview")
-    expect(html).toContain("Apply reviewed import")
-    expect(html).toContain("Reports and backup")
-    const form = /<form method="get" class="report-form">([\s\S]*?)<\/form>/.exec(html)?.[1]
-    expect(form).toContain('name="download"')
-    expect(form).toContain('<option value="docx">Word</option>')
-    expect(form).toContain('name="topic" value="IT Risks"')
+    const beforeRead = await inspect()
+    expect((await projectedRisks()).data.risks).toEqual([
+      expect.objectContaining({ id: "risk-1", name: "Before reviewed import", status: "Open" }),
+    ])
+    const anonymousPage = await readRisks(false)
+    expect(anonymousPage.status).toBe(401)
+    expect(await anonymousPage.json()).toEqual({ status: "unauthenticated" })
+    const foreignPage = await readRisks(true, "https://foreign.example.invalid")
+    expect(foreignPage.status).toBe(403)
+    expect(await foreignPage.json()).toEqual({ status: "denied" })
+    expect(await inspect()).toEqual(beforeRead)
     const target = rows(await ok(await send("sf=import-targets&surface=dashboard"))).find((entry) => entry.label === "Entire Dashboard backup (administrator)")
     if (typeof target?.selectionRef !== "string") throw new Error("The real discovery did not authorize a Dashboard backup destination")
     expect(target.formats).toEqual(["json"])
@@ -154,11 +198,15 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
     expect(after.auditLength).toBeGreaterThan(beforeRefusal.auditLength)
     expect(await ok(await post("import-apply", apply, "apply-reviewed-json"))).toEqual(applied)
     expect(await inspect()).toEqual(after)
-    const reloaded = await send("page=IT+Risks")
-    expect(reloaded.status).toBe(200)
-    expect(await reloaded.text()).toContain(importedName)
+    const reloaded = await projectedRisks()
+    expect(reloaded.data.risks).toEqual([
+      expect.objectContaining({ id: "risk-1", name: importedName, status: "Open" }),
+    ])
+    expect(JSON.stringify(reloaded.data)).not.toContain("Before reviewed import")
+    expect(await inspect()).toEqual(after)
 
-    // Submit the real footer form's public fields, then inspect the generated artifact.
+    // The authenticated download endpoint remains the original DOCX producer.
+    // Exercise its public fields and inspect the actual generated artifact.
     const reportQuery = new URLSearchParams({ page: "IT Risks", download: "docx", year: "2026", title: "Reviewed Dashboard import", topic: "IT Risks" })
     expect((await send(reportQuery, {}, false)).status).toBe(401)
     const report = await send(reportQuery)
@@ -177,7 +225,7 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
     expect(xml).toContain(importedName)
     expect(xml).not.toContain("Before reviewed import")
     expect(xml).not.toContain("__sfProductV1")
-    console.info("SF_DASHBOARD_IMPORT_REPORT", JSON.stringify({ scope: "Authenticated application HTTP and real JSON import / DOCX producers; no browser-click or ClamD qualification assertion",
+    console.info("SF_DASHBOARD_IMPORT_REPORT", JSON.stringify({ scope: "Authenticated native IT Risks projection and real JSON import / DOCX HTTP producers; no browser-click or ClamD qualification assertion",
       scanner: { name: scanner.name, version: pinned.version, scans }, manifestId: preview.id, version: preview.version,
       artifact: { format: "docx", bytes: bytes.byteLength, sha256: new Bun.CryptoHasher("sha256").update(bytes).digest("hex") } }))
   } finally { await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
