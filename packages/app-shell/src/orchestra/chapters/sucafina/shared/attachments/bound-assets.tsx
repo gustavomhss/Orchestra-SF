@@ -12,7 +12,7 @@ import type { SfCopyKey } from "../frame/types"
  * can create an asset; reads require a fresh, actor-bound 5-minute HMAC link.
  * No raw URL, client-side scanner decision, local blob persistence or retry.
  */
-type UploadKind = "contract" | "quote" | "signed-po"
+type UploadKind = "contract" | "quote" | "signed-po" | "supplier"
 type PublicAsset = Readonly<{
   id?: unknown
   name?: unknown
@@ -23,7 +23,7 @@ type PublicAsset = Readonly<{
 export type SfBoundAssetProps = Readonly<{
   surface: "dashboard" | "procurement"
   uploadKind?: UploadKind
-  page: "Vendor Contracts" | "Requests"
+  page: "Vendor Contracts" | "Requests" | "Suppliers"
   recordRef: string
   recordVersion: number
   assets: readonly PublicAsset[]
