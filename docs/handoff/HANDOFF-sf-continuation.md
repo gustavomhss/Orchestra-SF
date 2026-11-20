@@ -60,17 +60,25 @@ A tabela abaixo é a ordem real de primeiro-parent desde a base. A raiz executou
 | 41 | [#460](https://github.com/gustavomhss/Orchestra-SF/pull/460) | `a62ce06fd108d7ea274e80efb69bb18f7fd0728e` | raiz Sessão5 | 44674117714 success3/3 + typecheckE2E; ingresso real |
 | 42 | [#395](https://github.com/gustavomhss/Orchestra-SF/pull/395) | `c32e906a92193ae33d32b5106a82ee47b81c0ba4` | raiz Sessão5 | 44670544483 success143/0; 5 blobs CI/factory qualificados |
 | 43 | [#462](https://github.com/gustavomhss/Orchestra-SF/pull/462) | `7eeb29992852a48fccb72cc42c821a5eca3ba84d` | concorrente externo à raiz | 44675815817 success3/0; Node half-close, C12 continua unbound |
-| 44 | [#433](https://github.com/gustavomhss/Orchestra-SF/pull/433) | `3910a644c7fdab1a438c2b5b39d69afc19361709` | concorrente externo à raiz | 44675050868 success16/0; Review completo |
+| 44 | [#433](https://github.com/gustavomhss/Orchestra-SF/pull/433) | `3910a644c7fdab1a438c2b5b39d69afc19361709` | concorrente externo à raiz | 44675050868 success16/0; suíte review-portfolio-http.test.ts completa |
 
 #432, #423, #425, #443, #451 e #456 exigem preservar os limites descritos na tabela. Em particular, #423 mantém Dashboard unbound em `modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts:97:72`; WP05 de #443 teve falha em `modules/sucafina/Sucafinav1/test/product/wp05/procurement-integration.test.ts:182:24`. #451 não ganhou qualificação só por composição de blobs.
 
 O primeiro candidato foi c32e906a, após #395. Guards reais desse candidato foram executados. Antes do único dispatch final, a leitura fresca detectou os merges externos #462 e #433; seus runs concluíram success, o delta foi inspecionado e o freeze avançou para3910a644. Delta de três paths: `apps/cli/src/sucafina-product/review-read-integrity.ts`, `modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts`, e o novo `browser-bridge-half-close.node-smoke.mjs`. Os blobs de CI/factory/ingresso/baselines permaneceram iguais.
 
+### Avanços posteriores ao freeze — fora deste pacote e desta corrida
+
+Às **04:57:05Z**, outra sessão mergeou **#467**, produzindo `723833ed811117a12b9dca9098a3573ef758a64d` em `sf-join-four`, depois do dispatch final das04:44:39Z. O primeiro-parent é F3910a644. O delta contém somente `wp12/native-execution-bi-kpi.test.ts` e `wp12/native-execution-bi-public-selection.test.ts`.
+
+Esse avanço **não está incluído no SHA do pacote, nos guards finais ou no sf-ci desta sessão**. As branches `sfa-factory-package` e o código de `sf-continuation` preservam F; o head corrente da integração deve ser lido separadamente. Não há segundo dispatch nem deslocamento retroativo dos recibos. Eventuais merges posteriores a esse checkpoint exigem a mesma separação.
+
+Na leitura posterior havia também PRs novos abertos #466, #468, #469 e #470. O inventário de19PRs abaixo é explicitamente o snapshot pré-dispatch; esses trabalhos posteriores não foram promovidos pela raiz.
+
 ## Parte A — auditoria concluída
 
 ### Handoffs e branches antigas
 
-Foram lidos na base os HANDOFF-lastmile-wp1..wp5 e os recentes finish-ingress, finish-operations, finish-ci e finish-units.
+Na base fornecida foram lidos HANDOFF-lastmile-wp1..wp5, finish-ci e finish-units. Os handoffs finish-ingress e finish-operations não constavam desse diretório na base; foram lidos nas respectivas branches antigas, cuja divergência também foi inspecionada.
 
 - `finish-operations-20261119`: comparação inicial49ahead/129behind; handoff parcial, antigo run44625548030 com1pass/4fail. O reparo numérico novo não estava qualificado. Branch original preservada; correções isoladas descritas abaixo.
 - `finish-ingress-20261119`: comparação inicial65ahead/103behind;17arquivos mínimos já iguais à base. C12 já estava integrado por #391, com runs44632508338/44629501930 success; nenhum gate idêntico repetido. Resto nativo Decisions parcial. Branch original preservada.
@@ -209,11 +217,23 @@ O guard anterior44675778676 no candidato c32e906a teve0errors/2GATE/211warnings.
 
 **[44676428710](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710), workflow420530405, eventworkflow_dispatch, refsf-join-four, attempt1, head3910a644c7fdab1a438c2b5b39d69afc19361709.** Único dispatch desta sessão. Driver sf-final-dispatch@dc60b94da88eb9f1d067d4c689b8e966fd3b39f0, run44676417113/job136089209667success; log confirma POSTúnico HTTP204 e ID do run. O único outro workflow_dispatch listado para esse branch era44541767066cancelled, anterior à sessão.
 
-Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já success. CI-APP-BROWSER terminou failure apesar de138testespassarem: receipt acusa inventário de baseline existente em gate.mjs300:5. Decisions terminou failure (0 pass / 2 fail / 3 não executados), primeira asserção em decisions-support/planner-sources.ts:19:24; nenhum candidato de baseline, pois falhou antes da minimização/receipt. Operations terminou failure (0 pass / 2 fail / 3 não executados), antes dos oráculos de negócio, em operations-support/runtime.ts:32:27: esperado /wp04/first, recebido /sucafina. Static terminou failure somente nos dois GATE herdados; geração, typechecks e Web build passaram. Shards SF e Reports ainda sem conclusão final neste checkpoint. Tabela completa será substituída por resultados terminais; nenhuma segunda corrida será disparada.
+Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já success. CI-APP-BROWSER terminou failure apesar de138testespassarem: receipt acusa inventário de baseline existente em gate.mjs300:5. Decisions terminou failure (0 pass / 2 fail / 3 não executados), primeira asserção em decisions-support/planner-sources.ts:19:24; nenhum candidato de baseline, pois falhou antes da minimização/receipt. Operations terminou failure (0 pass / 2 fail / 3 não executados), antes dos oráculos de negócio, em operations-support/runtime.ts:32:27: esperado /wp04/first, recebido /sucafina. Static terminou failure somente nos dois GATE herdados; geração, typechecks e Web build passaram. Reports terminou failure (0 pass / 2 fail / 2 não executados): review-flow.ts:39:47 falhou ao ler o corpo após HTTP200; o segundo caso falhou em :47:23 com Add to agenda disabled. Todos os UI falharam antes do receipt. Somente os oito shards SF e o verificador final permanecem pendentes. Tabela completa será substituída por resultados terminais; nenhuma segunda corrida será disparada.
 
 ## Artefato / baseline
 
-`sf/ci/suites.json` permanece blob57937b0e9df670fb7ccf10a18de5f5a83dec734d. CI-SF,CI-UI-REPORTS,CI-UI-DECISIONS mantêmPENDING_REAL_COMPLETE_RUN. CI-APP-BROWSER tem baseline existente, mas o recibo final já acusou divergência de inventário; essa falha é adicional aos3PENDING. Artefatos finais ainda em produção. Não houve hash inventado, edição de manifesto ou promoção de timing/diagnóstico a baseline.
+`sf/ci/suites.json` permanece byte a byte no blob `57937b0e9df670fb7ccf10a18de5f5a83dec734d`. **CI-SF, CI-UI-REPORTS e CI-UI-DECISIONS mantêm `PENDING_REAL_COMPLETE_RUN`.** Nenhum hash, caso, coverage ou status foi inventado.
+
+**Nenhum candidato de baseline UI foi produzido.** As três jornadas falharam antes de exit0, sanitização e receipt; todos os steps `Preserve minimized UI baseline candidate after receipt rejection` foram skipped. Os artefatos abaixo são diagnóstico original de falha, não baseline completo:
+
+| Suíte | Artefato | Bytes | Digest ZIP informado pelo GitHub |
+|---|---|---:|---|
+| CI-UI-OPERATIONS | [sf-ui-failure-CI-UI-OPERATIONS (14602626515)](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710/artifacts/14602626515) | 22347 | `9416b989d0bd1cc7d11161a36e7a119de4ffffa952ea4c8267f4d6dfc1ae7d83` |
+| CI-UI-DECISIONS | [sf-ui-failure-CI-UI-DECISIONS (14602720895)](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710/artifacts/14602720895) | 726964 | `40a9f80118e65465212aab3bbc375f38813fbe9e75e625b51fe5c33717b41e7b` |
+| CI-UI-REPORTS | [sf-ui-failure-CI-UI-REPORTS (14602174970)](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44676428710/artifacts/14602174970) | 11264 | `05f8b65b3ee9f59165d2f4c3b970a001a8cc7c8d4c16ad1e9aaa3af51cdd164f` |
+
+CI-APP-BROWSER tem baseline histórico com mínimos114casos/32arquivos. Os138casos/37arquivos finais passaram, mas a verificação exata de inventário recusou o receipt em gate.mjs:300:5. Isso é uma divergência adicional aos três PENDING; não se infere qual item mudou apenas das contagens. Foi preservado `sf-timings-CI-APP-BROWSER-1`, artefato14602153529, ZIPsha2563ec109743a8e8f95ebc479a813d8eb1a0bc62a8f1daacbf1889a5d6196169e4c; timing não substitui recibo/candidato completo.
+
+Os recibos válidos de CLI, APP-SRC e Atlas estão nos artefatos14601593937,14602108655 e14602760116, respectivamente. Os artefatos SF ainda estavam em produção neste checkpoint; registrar seus resultados terminais sem tratar execução parcial como baseline.
 
 ## Pacote final e sha256
 
@@ -241,4 +261,4 @@ Estado corrente **IN_PROGRESS**. Preflight/Omni/queue e CLI/APP-SRC/Atlas já su
 
 ## Regras preservadas
 
-Nenhuma edição da raiz em `modules/sucafina/Sucafinav1/runtime/application.ts`; nenhum uso de listener4110 nesta execução; perfis selecionados usam4174 e factory4120. O fallback legado4110 ainda existe para outros seletores não exercitados, portanto não se alega sua remoção universal. Nenhum push para close-final-candidate, sf-red-clusters, go-live-close ou sf-frontend-bundle. Nenhuma asserção enfraquecida, baseline/coverage/digest/GO forjado. reviews.export.docx/pptx continuam Schema.Never; bytes reais somente pelo GET original?sf=review-download. No máximo2 gates controlados pela raiz simultâneos; agentes receberam somente leituras/revisões, sem disparos próprios.
+Nenhuma edição da raiz em `modules/sucafina/Sucafinav1/runtime/application.ts`; nenhum uso de listener4110 nesta execução; perfis selecionados usam4174 e factory4120. O fallback legado4110 ainda existe para outros seletores não exercitados, portanto não se alega sua remoção universal. Nenhum push para close-final-candidate, sf-red-clusters, go-live-close ou sf-frontend-bundle. Nenhuma asserção enfraquecida, baseline/coverage/digest/GO forjado. reviews.export.docx/pptx continuam Schema.Never; bytes reais somente pelo GET original?sf=review-download. No máximo2 gates controlados pela raiz simultâneos; houve implementação autorizada e revisão por agentes, mas nenhum dispatch próprio; os disparos de CI permaneceram centralizados na raiz.
