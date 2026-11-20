@@ -3,6 +3,7 @@ import { LocationServiceMap } from "../location-service-map"
 import { LayerNode } from "./layer-node"
 import { makeGlobalNode, type Node } from "./app-node"
 import { Context, Deferred, Layer } from "effect"
+import { SessionOwner } from "../session/owner"
 
 /** `locationNodes` are appended to every Location map this root builds (Host.Contribution.locationNodes). */
 export function build<A, E>(
@@ -17,7 +18,7 @@ export function build<A, E>(
     // Only build the location service map if it's actually needed
     if (LayerNode.hasUnbound(root, LocationServiceMap.node) && !hasReplacement(replacements, LocationServiceMap.node)) {
       const locationMap = buildLocationServiceMap(replacements, locationNodes)
-      const locationMapNode = makeGlobalNode({ service: LocationServiceMap.Service, layer: locationMap, deps: [] })
+      const locationMapNode = makeGlobalNode({ service: LocationServiceMap.Service, layer: locationMap, deps: [SessionOwner.node] })
       allReplacements = replacements.concat([[LocationServiceMap.node, locationMapNode]])
     }
 

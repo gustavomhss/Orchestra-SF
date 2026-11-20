@@ -115,6 +115,69 @@ export const SessionNamespace = Schema.Struct({
 })
 export interface SessionNamespace extends Schema.Schema.Type<typeof SessionNamespace> {}
 
+/**
+ * Explicitly shared configuration content. These selectors and inline texts do
+ * not authorize a provider, tool, process or filesystem path. Fields with
+ * secret, executable or unclassified provenance are deliberately outside v1.
+ */
+const SharedAgentId = Schema.String.check(
+  Schema.isPattern(/^[a-z][a-z0-9_-]{0,63}$/),
+  Schema.makeFilter((value) => !["__proto__", "prototype", "constructor"].includes(value)),
+)
+const SharedModelSelector = Schema.NonEmptyString.check(
+  Schema.isMaxLength(512), Schema.isTrimmed(),
+  Schema.isPattern(/^[A-Za-z0-9][A-Za-z0-9._-]*\/[A-Za-z0-9][A-Za-z0-9._:/-]*$/),
+)
+const SharedText = Schema.String.check(Schema.isPattern(/^[^\u0000]*$/), Schema.isMaxLength(16384))
+export const ConfigurationAgent = Schema.Struct({
+  name: Schema.optional(SharedText.check(Schema.isMaxLength(256))),
+  description: Schema.optional(SharedText.check(Schema.isMaxLength(2048))),
+  system: Schema.optional(SharedText),
+  model: Schema.optional(SharedModelSelector),
+  variant: Schema.optional(OpaqueText),
+  mode: Schema.optional(Schema.Literals(["subagent", "primary", "all"])),
+  hidden: Schema.optional(Schema.Boolean),
+  disabled: Schema.optional(Schema.Boolean),
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationAgent",
+  parseOptions: { onExcessProperty: "error" },
+})
+export const ConfigurationDocument = Schema.Struct({
+  version: Schema.Literal(1),
+  settings: Schema.Struct({
+    model: Schema.optional(SharedModelSelector),
+    default_agent: Schema.optional(SharedAgentId),
+    agents: Schema.optional(Schema.Record(SharedAgentId, ConfigurationAgent).check(
+      Schema.makeFilter((agents) => Object.keys(agents).length <= 100, { message: "At most 100 shared agents" }),
+    )),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationDocument",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface ConfigurationDocument extends Schema.Schema.Type<typeof ConfigurationDocument> {}
+
+export const ConfigurationSnapshot = Schema.Struct({
+  origin: Schema.Literal("installation-team-store"),
+  profile: Ref,
+  configRevision: NonNegativeInt,
+  document: ConfigurationDocument,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationSnapshot",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface ConfigurationSnapshot extends Schema.Schema.Type<typeof ConfigurationSnapshot> {}
+
+export const ConfigurationCommand = Schema.Struct({
+  profile: Ref,
+  expectedRevision: NonNegativeInt,
+  document: ConfigurationDocument,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationCommand",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface ConfigurationCommand extends Schema.Schema.Type<typeof ConfigurationCommand> {}
+
 export const Binding = Schema.Struct({
   owner: Owner,
   revisions: Revisions,
@@ -370,3 +433,17 @@ export const AdminConfigureResult = Schema.Union([
   parseOptions: { onExcessProperty: "error" },
 })
 export type AdminConfigureResult = Schema.Schema.Type<typeof AdminConfigureResult>
+
+/** Administrative read only; no personal token, connection, run or lease is transported. */
+export const ConfigurationReadResult = Schema.Union([
+  Schema.Struct({ status: Schema.Literal("ok"), configuration: ConfigurationSnapshot }),
+  Schema.Struct({ status: Schema.Literal("not-found") }),
+  Schema.Struct({ status: Schema.Literal("invalid-request") }),
+  Schema.Struct({ status: Schema.Literal("unauthenticated") }),
+  Schema.Struct({ status: Schema.Literal("denied") }),
+  Schema.Struct({ status: Schema.Literal("unavailable"), reason: AdminUnavailableReason }),
+]).annotate({
+  identifier: "Sucafina.TeamProfile.ConfigurationReadResult",
+  parseOptions: { onExcessProperty: "error" },
+})
+export type ConfigurationReadResult = Schema.Schema.Type<typeof ConfigurationReadResult>

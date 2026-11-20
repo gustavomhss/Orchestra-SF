@@ -40,7 +40,7 @@ import { SystemContext } from "@orchestra/core/system-context"
 import { TaskTool } from "@orchestra/core/tool/task"
 import { TaskGovernance } from "@orchestra/core/tool/task-governance"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
-import { Cause, Context, DateTime, Deferred, Effect, Exit, Fiber, Layer, LayerMap, Schema, Stream } from "effect"
+import { Cause, Context, DateTime, Deferred, Effect, Exit, Fiber, Layer, LayerMap, Schema, Stream, RcMap } from "effect"
 import { asc, eq } from "drizzle-orm"
 import { Board } from "@orchestra/schema/board"
 import { testEffect } from "./lib/effect"
@@ -206,7 +206,9 @@ const taskLayer = (location: Location.Interface, resolve: ProjectV2.Interface["r
   }))],
   [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service,
     LayerMap.make((_ref: Location.Ref) =>
-      Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))))],
+      Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))).pipe(
+        Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) })),
+      ))],
   [SessionExecution.node, execution],
   [TaskGovernance.node, governance],
   [ExecutionHost.node, Layer.succeed(ExecutionHost.Service, ExecutionHost.of([host]))],

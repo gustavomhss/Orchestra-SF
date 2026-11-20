@@ -140,7 +140,11 @@ export class PromptBlockedError extends Schema.TaggedErrorClass<PromptBlockedErr
   sessionID: SessionSchema.ID,
   reason: Schema.String,
   detail: Schema.String,
-}) {}
+}) {
+  override get message() {
+    return this.detail
+  }
+}
 export const MessageNotFoundError = SessionRevert.MessageNotFoundError
 export type MessageNotFoundError = SessionRevert.MessageNotFoundError
 

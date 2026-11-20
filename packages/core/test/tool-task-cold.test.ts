@@ -20,7 +20,7 @@ import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionInput } from "@orchestra/core/session/input"
 import { Snapshot } from "@orchestra/core/snapshot"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
-import { Cause, Context, Effect, Exit, Layer, RcMap, Stream } from "effect"
+import { Cause, Context, Effect, Exit, Layer, Stream } from "effect"
 import { tmpdir } from "./fixture/tmpdir"
 import { testEffect } from "./lib/effect"
 
@@ -116,13 +116,13 @@ it.live("cold create → durable admit → resume acquires native Task with the 
     const database = yield* Database.Service
     const parent = yield* sessions.create({ location: Location.Ref.make({ directory: AbsolutePath.make(tmp.path) }), model })
     // Creation/admission must not acquire a Location to make the cold drain work.
-    expect(Array.from(yield* RcMap.keys(locations.rcMap))).toHaveLength(0)
+    expect(Array.from(yield* locations.keys)).toHaveLength(0)
     const admitted = yield* sessions.prompt({ sessionID: parent.id, prompt: { text: "parent" }, resume: false })
     expect((yield* SessionInput.find(database.db, admitted.id))?.id).toBe(admitted.id)
     expect((yield* SessionInput.find(database.db, admitted.id))?.promotedSeq).toBeUndefined()
     expect(yield* sessions.messages({ sessionID: parent.id })).toEqual([])
     expect(requests).toHaveLength(0)
-    expect(Array.from(yield* RcMap.keys(locations.rcMap))).toHaveLength(0)
+    expect(Array.from(yield* locations.keys)).toHaveLength(0)
     yield* sessions.resume(parent.id)
     const children = (yield* sessions.list()).filter((session) => session.parentID === parent.id)
     expect(children).toHaveLength(1)

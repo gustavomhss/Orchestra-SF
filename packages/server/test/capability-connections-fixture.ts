@@ -25,7 +25,7 @@ import { Credential } from "@orchestra/schema/credential"
 import { Integration } from "@orchestra/schema/integration"
 import { AbsolutePath } from "@orchestra/schema/schema"
 import { SessionID } from "@orchestra/schema/session-id"
-import { Context, Effect, Layer, LayerMap, Option } from "effect"
+import { Context, Effect, Layer, LayerMap, Option, RcMap } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi } from "effect/unstable/httpapi"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
@@ -65,7 +65,7 @@ export function make(options: { password?: string } = {}) {
       ])
       return LayerNode.compile(nodes.node).pipe(Layer.fresh,
         Layer.provide(LayerNode.compile(nodes.hoisted, [[Database.node, databaseNode]])))
-    }, { idleTimeToLive: "60 minutes" }))
+    }, { idleTimeToLive: "60 minutes" }).pipe(Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) }))))
     const context = yield* Layer.build(Layer.mergeAll(Layer.succeed(Database.Service, database), map,
       LayerNode.compile(EventV2.node, [[Database.node, databaseNode]])))
     const locations = Context.get(context, LocationServiceMap.Service)

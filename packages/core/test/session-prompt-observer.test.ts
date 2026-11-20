@@ -2,7 +2,7 @@ import { expect } from "bun:test"
 import fs from "node:fs/promises"
 import path from "node:path"
 import { LLMClient, LLMEvent, type LLMRequest } from "@orchestra/llm"
-import { Deferred, Effect, Fiber, Layer, LayerMap, RcMap, Stream } from "effect"
+import { Deferred, Effect, Fiber, Layer, Stream } from "effect"
 import { Database } from "@orchestra/core/database/database"
 import { makeGlobalNode } from "@orchestra/core/effect/app-node"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
@@ -24,6 +24,7 @@ import { SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionInput } from "@orchestra/core/session/input"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionProjector } from "@orchestra/core/session/projector"
 import { SessionInputTable, SessionTable } from "@orchestra/core/session/sql"
@@ -76,9 +77,16 @@ const seed = (directory: AbsolutePath) => Effect.gen(function* () {
 function harness(directory: string, wakes: SessionV2.ID[], make?: (db: Database.Interface) => SessionPrompt.Observer) {
   const replacement = make ? observerNode(make) : undefined
   const contribution = Host.merge(replacement ? [{ id: "observer", replacements: [[SessionPrompt.node, replacement]] }] : [])
-  const locationMap = Layer.effect(LocationServiceMap.Service, LayerMap.make((_ref: Location.Ref) =>
-    Layer.effectContext<LocationServices, never, never>(Effect.die("unexpected Location acquisition")),
-  ))
+  const locationMap = makeGlobalNode({
+    service: LocationServiceMap.Service,
+    deps: [SessionOwner.node],
+    layer: Layer.effect(LocationServiceMap.Service, Effect.gen(function* () {
+      const owners = yield* SessionOwner.Service
+      return yield* LocationServiceMap.makeScoped(owners, (_ref: Location.Ref) =>
+        Layer.effectContext<LocationServices, never, never>(Effect.die("unexpected Location acquisition")),
+      )
+    })),
+  })
   return AppNodeBuilder.build(nodes, [
     ...contribution.replacements,
     [Database.node, Database.layerFromPath(path.join(directory, "test.sqlite"))],
@@ -268,7 +276,7 @@ for (const decision of ["allow", "observer-deny", "task-deny"] as const) {
       yield* sessions.prompt({ sessionID: parent.id, prompt: { text: "parent" }, resume: false })
       expect(parents).toEqual([parent.id])
       expect(constructions.count).toBe(1)
-      expect(Array.from(yield* RcMap.keys(locations.rcMap))).toHaveLength(0)
+      expect(Array.from(yield* locations.keys)).toHaveLength(0)
       yield* sessions.resume(parent.id)
       expect(constructions.count).toBe(1)
       const registry = yield* ToolRegistry.Service.pipe(Effect.provide(locations.get(parent.location)))

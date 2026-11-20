@@ -24,6 +24,7 @@ import { Relay } from "../src/relay"
 import { RelayHookRecovery } from "../src/relay-hook-recovery"
 import { AbsolutePath } from "../src/schema"
 import { SessionSchema } from "../src/session/schema"
+import { SessionOwner } from "../src/session/owner"
 import { SessionTable } from "../src/session/sql"
 import { tmpdir } from "./fixture/tmpdir"
 import { testEffect } from "./lib/effect"
@@ -63,6 +64,7 @@ function fixture<A, E>(
       const database = yield* Database.Service
       const relay = yield* Relay.Service
       const events = yield* EventV2.Service
+      const owners = yield* SessionOwner.Service
       const finished = yield* Queue.unbounded<RelayHookRecovery.Result>()
       // Observe completion without copying the primitive or starting a worker in a service factory.
       const observed = makeLocationNode({
@@ -105,7 +107,7 @@ function fixture<A, E>(
             ),
           ],
           [RelayHookRecovery.node, replacement ?? observed],
-        ])
+        ]).pipe(Layer.provide(Layer.succeed(SessionOwner.Service, owners)))
       const seed = (index: number, placement = location) =>
         Effect.gen(function* () {
           yield* database.db
@@ -154,7 +156,7 @@ function fixture<A, E>(
         })
       return yield* body({ db: database.db, relay, location, seed, map, finished })
     }).pipe(
-      Effect.provide(AppNodeBuilder.build(LayerNode.group([Database.node, EventV2.node, Relay.node]), replacements)),
+      Effect.provide(AppNodeBuilder.build(LayerNode.group([Database.node, EventV2.node, Relay.node, SessionOwner.node]), replacements)),
     )
   }).pipe(Effect.scoped)
 }
