@@ -177,7 +177,7 @@ function installCapture({ origin }: { origin: string }) {
   const document = crypto.randomUUID()
   void bridge({ kind: "document", document })
   const originalFetch = globalThis.fetch
-  globalThis.fetch = async function (this: unknown, ...args: Parameters<typeof fetch>) {
+  const observedFetch = async function (this: unknown, ...args: Parameters<typeof fetch>) {
     const [input, init] = args
     const url = new URL(input instanceof globalThis.Request ? input.url : String(input), location.href)
     const method = (init?.method ?? (input instanceof globalThis.Request ? input.method : "GET")).toUpperCase()
@@ -197,4 +197,5 @@ function installCapture({ origin }: { origin: string }) {
     }
     return response
   }
+  if (!Reflect.set(globalThis, "fetch", observedFetch)) throw new Error("Native response observer installation was rejected")
 }
