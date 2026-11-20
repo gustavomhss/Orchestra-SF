@@ -20,6 +20,9 @@ export type SfNativeOperationRoute = Readonly<{
 
 /** Original dashboard serveDownload supports admin GET ?download=members. */
 export const SfOperationExtensions = Object.freeze({
+  // Original configure-summaries source: a bounded native port preserves admin/CAS/audit.
+  "local-admin.summary-read": {"method":"GET","pathTemplate":"{mount}/api/ui/local-admin/summary-settings","effect":"read","responseMode":"json"},
+  "local-admin.summary-configure": {"method":"POST","pathTemplate":"{mount}/api/ui/local-admin/configure-summaries","effect":"mutation","responseMode":"json","maxRequestBytes":16384},
   // Original Dashboard C08 reads; outcome uses the first save's command identity.
   "dashboard.dashboard-draft-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-draft-read"}},
   "dashboard.dashboard-hot-topic-draft-outcome": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-hot-topic-draft-outcome"}},

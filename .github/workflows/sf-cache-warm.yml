@@ -18,7 +18,12 @@ on:
       - tooling/*/package.json
       - native/*/*/package.json
       - native/*/*/*/package.json
+      - packages/core/bunfig.toml
       - packages/core/script/fix-node-pty.ts
+      - packages/core/vendor/*.tgz
+      - packages/core/vendor/*.tar.gz
+      - modules/sucafina/Sucafinav1/vendor/*.tgz
+      - script/ci-cache-inputs.ts
       - script/sf-ci/cache-source.mjs
       - .github/sf-cache-source.json
       - patches/**

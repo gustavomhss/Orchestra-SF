@@ -5,7 +5,8 @@ import { createHash } from "node:crypto"
 import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { parseShardCosts } from "./shard-plan.mjs"
+import { SHARDED, describeShardPlan, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -643,4 +644,25 @@ test("CI-05 explicit selections reject symlinked parent paths inside the checkou
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
+})
+
+
+test("advisory plan reports the validated v2 status and preserves the complete selection", () => {
+  const costs = parseShardCosts({
+    schemaVersion: 2, status: "OBSERVED_TIMINGS", unit: "seconds", measurement: "junit-case-seconds",
+    pathPrefix: "test/", fallbackSeconds: 10, minimumObservedSeconds: 0.001,
+    sourceCount: 1, observedFiles: 1, weightedFiles: 1, exclusionsFromCostProfile: [],
+    sources: [{ id: "green", runId: 123, runAttempt: 1, jobName: "unit-sf", headSha: sha,
+      suiteId: "CI-SF", directory: "modules/sucafina", status: "success", conclusionScope: "test-step",
+      partial: true, observedFiles: 1, passedTests: 1, failedTests: 0, skippedTests: 0,
+      reportSha256: "b".repeat(64), shardIndex: 1, shardCount: 8 }],
+    costs: [["sf-shard-1.test.ts", 0.05, "green"]],
+  })
+  const planned = describeShardPlan(CI_SF_FILES, "CI-SF", costs)
+  assert.equal(planned.profileStatus, "OBSERVED_TIMINGS")
+  assert.equal(planned.selectedFiles, CI_SF_FILES.length)
+  assert.equal(planned.selectedFilesSha256, sha256Lines(CI_SF_FILES))
+  assert.deepEqual(planned.shards.flatMap((part) => part.files).sort(), [...CI_SF_FILES].sort())
+  assert.equal(planned.shards.length, SHARDED["CI-SF"])
+  assert.equal(describeShardPlan(CI_SF_FILES, "CI-SF").profileStatus, "HISTORICAL_RED_OR_PARTIAL")
 })

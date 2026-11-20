@@ -36,7 +36,7 @@ jobs:
           test "$RUNNER_ARCH" = X64
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           node script/sf-ci/gate.mjs manifest
-          node --test script/sf-ci/gate.test.mjs
+          node --test script/sf-ci/gate.test.mjs script/sf-ci/shard-plan.test.mjs script/sf-ci/shard-adoption.test.mjs script/sf-ci/cache-source.test.mjs
           # Existing preflight, no extra job/runner: generated maintenance QA consistency.
           python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check
           node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
@@ -302,6 +302,8 @@ jobs:
           node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -gt 0 || exit 2
+          # Keep the receipt inventory unchanged; ./ forces Bun's explicit-file mode.
+          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done
 
           # Selection paths are relative to the manifest's suite.directory.
           suite_dir="$(node --input-type=module -e '
@@ -430,6 +432,8 @@ jobs:
           node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -gt 0 || exit 2
+          # Keep the receipt inventory unchanged; ./ forces Bun's explicit-file mode.
+          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done
 
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
