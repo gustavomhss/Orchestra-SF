@@ -19,6 +19,8 @@ export function createPlannerCalculationEvidence(input: {
   loadRecordOnlyRequest: (runId: string, context: TrustedDomainContext) => Promise<PortResult<{ resultRef: string; request: ScenarioRequest; engineVersion: string }>>
   replayRecordOnly: PlannerPort["simulateScenario"]
   nested?: { replayScenario: PlannerPort["simulateScenario"]; evidence: Pick<BusinessContextService, "resolve"> }
+  /** Host-private completed leaf proof; the ancestry guard below always runs first. */
+  observeReplay?: (runId: string, context: TrustedDomainContext, work: () => Promise<PortResult<CalculationEvidence>>) => Promise<PortResult<CalculationEvidence>>
 }) {
   // These are ancestors of one asynchronous replay, not a lock or an authorization cache.
   // Immutable sets keep parallel callbacks descended from the same caller independent.
@@ -97,7 +99,7 @@ export function createPlannerCalculationEvidence(input: {
     const runs = parent?.binding === key ? parent.runs : new Set<string>()
     if (runs.has(runId) || runs.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
     return ancestry.run({ binding: key, runs: new Set([...runs, runId]), checks: parent?.binding === key ? parent.checks : new Set<string>() }, async (): Promise<PortResult<CalculationEvidence>> => {
-      try { return await replay(runId, context) }
+      try { return await (input.observeReplay ? input.observeReplay(runId, context, () => replay(runId, context)) : replay(runId, context)) }
       catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
     })
   }
