@@ -18450,7 +18450,8 @@
           "--repeat-each",
           "1",
           "--grep-invert",
-          "@development-only|@development-channel"
+          "@development-only|@development-channel",
+          "--reporter=json"
         ],
         "env": {
           "ORCHESTRA_CHANNEL": "prod"
@@ -18459,7 +18460,14 @@
           "Bun/dependencies/Chromium",
           "Fix e2e/orchestra/playwright.config.ts metadata.bundle=production (it builds web); align compact fixture expectations with built branch; collect exact mandatory cases"
         ],
-        "proofClass": "GENERIC_SHARED_UI_REGRESSION_NOT_LIVE_SF"
+        "proofClass": "GENERIC_SHARED_UI_REGRESSION_NOT_LIVE_SF",
+        "executionIO": {
+          "stdoutFile": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/orchestra/playwright-results.json",
+          "stderrFile": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/orchestra/playwright-stderr.log",
+          "permissions": "owned directory 0700, regular files 0600, umask077, no symlinks",
+          "capture": "Capture reporter JSON and stderr directly, not tee/public console. Preserve actual exit status. Five exact files, complete expected case inventory; dev-tag exclusions are explicit and may not hide built-mode assertions.",
+          "receipt": "Versioned supplementary validator consumes strict actual reporter JSON, validates cases/exit/no skip/retry/flaky and source/run identity, minimizes/hash-binds into the teams-profile-orchestra-regression receipt. This is shared UI regression, not LIVE."
+        }
       }
     },
     {
@@ -18565,7 +18573,8 @@
           "Extend script/sf-ci/gate.mjs JOBS/requirePrerequisites for mandatory supplementary job results.",
           "Keep the eight baseline suites and exact sf-evidence-* directory inventory; add a separately versioned Teams supplemental receipt validator with exact allowed names/selection and one receipt per required job.",
           "gate.test.mjs covers missing/skipped/cancelled extra job, missing/extra receipt, wrong product/snapshot SHA/tree, wrong artifact hash and duplicate/empty/partial selection.",
-          "New artifact job checks out the exact candidate and sets SOURCE_REVISION to that actual HEAD. Dispatch on candidate is selected route; PR merge SHA is not silently treated as head."
+          "New artifact job checks out the exact candidate and sets SOURCE_REVISION to that actual HEAD. Dispatch on candidate is selected route; PR merge SHA is not silently treated as head.",
+          "The dedicated Orchestra Playwright job uses explicit --reporter=json, owned private stdout/stderr capture and exact actual case inventory. Supplemental validator consumes/minimizes/hash-binds this report; default HTML/line output is not sufficient case evidence."
         ]
       },
       "uiFixtureContract": {
@@ -19103,8 +19112,16 @@
             "GITHUB_ACTIONS": "false",
             "ORCHESTRA_CHANNEL": "prod",
             "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
-            "ORCHESTRA_OMNI_CONTROL": "derived declared; nonce by job"
-          }
+            "ORCHESTRA_OMNI_CONTROL": "declared"
+          },
+          "environmentBindings": {
+            "ORCHESTRA_OMNI_CONTROL_NONCE": {
+              "source": "trusted job setup: fresh cryptographically random 16 bytes rendered as 32 lowercase hexadecimal characters for this outermost invocation",
+              "validation": "/^[0-9a-f]{32}$/; bind this nonce's actual preload verdict to receipt; never reuse test-supplied output as the control",
+              "valueIsPlaceholder": false
+            }
+          },
+          "controlNotes": "ORCHESTRA_OMNI_CONTROL has the exact literal declared. Strict spawner mode and nonce are separate environment inputs. A declared run with no spawn can be not applicable and is not credited as an Omni positive proof."
         },
         {
           "cwd": ".",
@@ -19277,10 +19294,19 @@
             "GITHUB_ACTIONS": "true",
             "SF_NATIVE_INSTALLED_MANIFEST": "<private manifest from approved host registry>",
             "SF_NATIVE_CANDIDATE_SHA": "<candidate SHA>",
-            "ORCHESTRA_OMNI_CONTROL": "declared; per-job nonce and strict Omni setup",
-            "ORCHESTRA_CHANNEL": "prod"
+            "ORCHESTRA_OMNI_CONTROL": "declared",
+            "ORCHESTRA_CHANNEL": "prod",
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
           },
-          "note": "Real guest/malformed-selector requests and zero-network stale-preflight. This step itself does not consume CDP or claim an authenticated browser positive."
+          "note": "Real guest/malformed-selector requests and zero-network stale-preflight. This step itself does not consume CDP or claim an authenticated browser positive.",
+          "environmentBindings": {
+            "ORCHESTRA_OMNI_CONTROL_NONCE": {
+              "source": "trusted job setup: fresh cryptographically random 16 bytes rendered as 32 lowercase hexadecimal characters for this outermost invocation",
+              "validation": "/^[0-9a-f]{32}$/; bind this nonce's actual preload verdict to receipt; never reuse test-supplied output as the control",
+              "valueIsPlaceholder": false
+            }
+          },
+          "controlNotes": "ORCHESTRA_OMNI_CONTROL has the exact literal declared. Strict spawner mode and nonce are separate environment inputs. A declared run with no spawn can be not applicable and is not credited as an Omni positive proof."
         },
         {
           "cwd": "packages/app-shell",
@@ -19296,13 +19322,33 @@
             "--retries",
             "0",
             "--repeat-each",
-            "1"
+            "1",
+            "--reporter=json"
           ],
           "env": {
             "SF_NATIVE_INSTALLED_MANIFEST": "<private manifest from approved host registry>",
             "SF_NATIVE_CANDIDATE_SHA": "<candidate SHA>",
             "SF_NATIVE_BROWSER_ENDPOINT_FILE": "<0600 file pointing to live loopback CDP>",
             "ORCHESTRA_CHANNEL": "prod"
+          },
+          "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
+          "executionIO": {
+            "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+            "role": "teams",
+            "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/teams/<INVOCATION_ID>",
+            "permissions": {
+              "directory": "0700",
+              "regularFiles": "0600",
+              "umask": "077",
+              "symlinks": "reject"
+            },
+            "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+            "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+            "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+            "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+            "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+            "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+            "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
           }
         },
         {
@@ -19316,23 +19362,42 @@
             "e2e/sucafina/native/journeys/u15.spec.ts",
             "--workers=1",
             "--retries=0",
-            "--repeat-each=1"
+            "--repeat-each=1",
+            "--reporter=json"
           ],
-          "envRef": "docs/architecture/teams-profile-pool-review.json#nativeSupportParents.gate.env",
-          "additionalEnv": {
-            "SF_NATIVE_U15_LIST_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LIST_URL",
-            "SF_NATIVE_U15_EDIT_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_EDIT_URL",
-            "SF_NATIVE_U15_DENIED_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_DENIED_URL",
-            "SF_NATIVE_U15_STALE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_STALE_URL",
-            "SF_NATIVE_U15_LOST_RESPONSE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LOST_RESPONSE_URL"
-          },
+          "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
           "preconditions": [
             "CAP14 admitted chapterHref",
             "Complete U15 list/editable/denied/stale/lost bundle",
             "Second original Microsoft editor on the stale case's same original CAS version",
             "Producer-owned isolated data and cleanup"
           ],
-          "outcome": "NOT_RUN; command design only"
+          "outcome": "NOT_RUN; command design only",
+          "additionalEnvBindings": {
+            "SF_NATIVE_U15_LIST_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LIST_URL",
+            "SF_NATIVE_U15_EDIT_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_EDIT_URL",
+            "SF_NATIVE_U15_DENIED_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_DENIED_URL",
+            "SF_NATIVE_U15_STALE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_STALE_URL",
+            "SF_NATIVE_U15_LOST_RESPONSE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LOST_RESPONSE_URL"
+          },
+          "executionIO": {
+            "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+            "role": "u15",
+            "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/u15/<INVOCATION_ID>",
+            "permissions": {
+              "directory": "0700",
+              "regularFiles": "0600",
+              "umask": "077",
+              "symlinks": "reject"
+            },
+            "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+            "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+            "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+            "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+            "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+            "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+            "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
+          }
         },
         {
           "cwd": "packages/app-shell",
@@ -19345,9 +19410,10 @@
             "e2e/sucafina/native/journeys/u39.spec.ts",
             "--workers=1",
             "--retries=0",
-            "--repeat-each=1"
+            "--repeat-each=1",
+            "--reporter=json"
           ],
-          "envRef": "docs/architecture/teams-profile-pool-review.json#nativeSupportParents.gate.env",
+          "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
           "separateInvocationRequired": true,
           "preconditions": [
             "CAP04/2026 admitted chapterHref",
@@ -19355,7 +19421,25 @@
             "Approved real revocation and second-writer callbacks",
             "Producer-owned isolated data, authorization restoration and cleanup"
           ],
-          "outcome": "NOT_RUN; command design only"
+          "outcome": "NOT_RUN; command design only",
+          "executionIO": {
+            "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+            "role": "u39",
+            "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/u39/<INVOCATION_ID>",
+            "permissions": {
+              "directory": "0700",
+              "regularFiles": "0600",
+              "umask": "077",
+              "symlinks": "reject"
+            },
+            "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+            "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+            "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+            "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+            "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+            "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+            "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
+          }
         },
         {
           "cwd": "packages/app-shell",
@@ -19368,9 +19452,10 @@
             "e2e/sucafina/native/journeys/u40.spec.ts",
             "--workers=1",
             "--retries=0",
-            "--repeat-each=1"
+            "--repeat-each=1",
+            "--reporter=json"
           ],
-          "envRef": "docs/architecture/teams-profile-pool-review.json#nativeSupportParents.gate.env",
+          "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
           "separateInvocationRequired": true,
           "preconditions": [
             "CAP05/2026 admitted chapterHref",
@@ -19378,7 +19463,25 @@
             "Approved real revocation and second-writer callbacks",
             "Producer-owned isolated data, authorization restoration and cleanup"
           ],
-          "outcome": "NOT_RUN; command design only"
+          "outcome": "NOT_RUN; command design only",
+          "executionIO": {
+            "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+            "role": "u40",
+            "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/u40/<INVOCATION_ID>",
+            "permissions": {
+              "directory": "0700",
+              "regularFiles": "0600",
+              "umask": "077",
+              "symlinks": "reject"
+            },
+            "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+            "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+            "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+            "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+            "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+            "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+            "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
+          }
         }
       ],
       "support": [
@@ -19554,23 +19657,42 @@
               "e2e/sucafina/native/journeys/u15.spec.ts",
               "--workers=1",
               "--retries=0",
-              "--repeat-each=1"
+              "--repeat-each=1",
+              "--reporter=json"
             ],
-            "envRef": "nativeSupportParents.gate.env",
-            "additionalEnv": {
-              "SF_NATIVE_U15_LIST_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LIST_URL",
-              "SF_NATIVE_U15_EDIT_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_EDIT_URL",
-              "SF_NATIVE_U15_DENIED_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_DENIED_URL",
-              "SF_NATIVE_U15_STALE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_STALE_URL",
-              "SF_NATIVE_U15_LOST_RESPONSE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LOST_RESPONSE_URL"
-            },
+            "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
             "preconditions": [
               "CAP14 admitted chapterHref",
               "Complete U15 list/editable/denied/stale/lost bundle",
               "Second original Microsoft editor on the stale case's same original CAS version",
               "Producer-owned isolated data and cleanup"
             ],
-            "outcome": "NOT_RUN; command design only"
+            "outcome": "NOT_RUN; command design only",
+            "additionalEnvBindings": {
+              "SF_NATIVE_U15_LIST_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LIST_URL",
+              "SF_NATIVE_U15_EDIT_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_EDIT_URL",
+              "SF_NATIVE_U15_DENIED_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_DENIED_URL",
+              "SF_NATIVE_U15_STALE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_STALE_URL",
+              "SF_NATIVE_U15_LOST_RESPONSE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LOST_RESPONSE_URL"
+            },
+            "executionIO": {
+              "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+              "role": "u15",
+              "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/u15/<INVOCATION_ID>",
+              "permissions": {
+                "directory": "0700",
+                "regularFiles": "0600",
+                "umask": "077",
+                "symlinks": "reject"
+              },
+              "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+              "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+              "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+              "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+              "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
+            }
           }
         },
         {
@@ -19587,9 +19709,10 @@
               "e2e/sucafina/native/journeys/u39.spec.ts",
               "--workers=1",
               "--retries=0",
-              "--repeat-each=1"
+              "--repeat-each=1",
+              "--reporter=json"
             ],
-            "envRef": "nativeSupportParents.gate.env",
+            "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
             "separateInvocationRequired": true,
             "preconditions": [
               "CAP04/2026 admitted chapterHref",
@@ -19597,7 +19720,25 @@
               "Approved real revocation and second-writer callbacks",
               "Producer-owned isolated data, authorization restoration and cleanup"
             ],
-            "outcome": "NOT_RUN; command design only"
+            "outcome": "NOT_RUN; command design only",
+            "executionIO": {
+              "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+              "role": "u39",
+              "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/u39/<INVOCATION_ID>",
+              "permissions": {
+                "directory": "0700",
+                "regularFiles": "0600",
+                "umask": "077",
+                "symlinks": "reject"
+              },
+              "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+              "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+              "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+              "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+              "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
+            }
           }
         },
         {
@@ -19614,9 +19755,10 @@
               "e2e/sucafina/native/journeys/u40.spec.ts",
               "--workers=1",
               "--retries=0",
-              "--repeat-each=1"
+              "--repeat-each=1",
+              "--reporter=json"
             ],
-            "envRef": "nativeSupportParents.gate.env",
+            "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
             "separateInvocationRequired": true,
             "preconditions": [
               "CAP05/2026 admitted chapterHref",
@@ -19624,7 +19766,25 @@
               "Approved real revocation and second-writer callbacks",
               "Producer-owned isolated data, authorization restoration and cleanup"
             ],
-            "outcome": "NOT_RUN; command design only"
+            "outcome": "NOT_RUN; command design only",
+            "executionIO": {
+              "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+              "role": "u40",
+              "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/u40/<INVOCATION_ID>",
+              "permissions": {
+                "directory": "0700",
+                "regularFiles": "0600",
+                "umask": "077",
+                "symlinks": "reject"
+              },
+              "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+              "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+              "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+              "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+              "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
+            }
           }
         }
       ],
@@ -19727,12 +19887,12 @@
         "autostart": false,
         "currentInfrastructureLimitation": "No existing generic test-ci request can transport these private installed inputs. This is a planned explicit Linux qualification job, not a claim that such a job already exists or passes.",
         "env": {
-          "CI": "true (actual hosted Actions run)",
-          "GITHUB_ACTIONS": "true (actual hosted Actions run; do not counterfeit a local run)",
+          "CI": "true",
+          "GITHUB_ACTIONS": "true",
           "ORCHESTRA_CHANNEL": "prod",
-          "SF_NATIVE_CANDIDATE_SHA": "exact release candidate SHA, same candidate as the extracted Linux artifact and manifest",
-          "SF_NATIVE_INSTALLED_MANIFEST": "absolute path to the private producer-generated manifest under its 0700 private root; 0600 current-user regular file, not symlink",
-          "SF_NATIVE_BROWSER_ENDPOINT_FILE": "absolute path inside the same private root to the runner-owned 0600 loopback CDP descriptor"
+          "SF_NATIVE_CANDIDATE_SHA": "<CANDIDATE_SHA>",
+          "SF_NATIVE_INSTALLED_MANIFEST": "<PRIVATE_ABSOLUTE_INSTALLED_MANIFEST>",
+          "SF_NATIVE_BROWSER_ENDPOINT_FILE": "<PRIVATE_ABSOLUTE_LOOPBACK_CDP_DESCRIPTOR>"
         },
         "setup": [
           "Download, independently verify and extract the exact immutable SF prod archive from teams-profile-artifact; start that observed artifact on the approved host. Do not rebuild or substitute the tar in native qualification. Resolve the approved registry connection before generating its private manifest.",
@@ -19791,7 +19951,168 @@
         "notGenericTestCi": true,
         "testCiReason": "test-ci.yml allows only channel/Omni request env and explicitly sets GITHUB_ACTIONS=false for app browser Bun runs. Native installed proofs require a real private producer manifest and already authenticated host-owned browser.",
         "countsAsRealBrowserProof": true,
-        "scope": "Existing SFWeb Linux journeys; fixture.desktop is a NOT_RUN marker and supplies no Electron proof."
+        "scope": "Existing SFWeb Linux journeys; fixture.desktop is a NOT_RUN marker and supplies no Electron proof.",
+        "envBindings": {
+          "observedActions": "CI/GITHUB_ACTIONS are verified against actual hosted run metadata; no local counterfeit environment is admissible.",
+          "SF_NATIVE_CANDIDATE_SHA": "Actual frozen product candidate C, matching observed installed source/tree and the exact downloaded prod archive.",
+          "SF_NATIVE_INSTALLED_MANIFEST": "Current invocation's producer-generated regular non-symlink 0600 file under an owned private 0700 directory; complete current admitted tuple/case bundle.",
+          "SF_NATIVE_BROWSER_ENDPOINT_FILE": "Current invocation's runner-owned 0600 loopback CDP descriptor inside its private root; original already authenticated Microsoft contexts only."
+        },
+        "sourceDescription": "Detailed descriptive source env fields in teams-profile-pool-review.json are evidence prose. This normalized env and envBindings are the executable contract."
+      },
+      "nativeReportContract": {
+        "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+        "existingConfig": "packages/app-shell/e2e/playwright.production.config.ts currently uses HTML/line/flaky reporters; each native argv explicitly overrides them with --reporter=json.",
+        "implementation": "Extend script/sf-ci/gate.mjs with record-teams-profile-native and tests in existing script/sf-ci/gate.test.mjs; no additional independent test file.",
+        "outputSchema": "teams-profile-native-receipt.v1",
+        "privateInputRules": "Raw JSON/stdout/stderr and full expected case titles may contain private values. Keep in owned mode-0700 roots/mode-0600 regular files. No HTML reports, traces, videos, screenshots, raw auth bodies or raw JSON uploads.",
+        "validationRules": [
+          "One invocation per declared exact spec/role, workers=1,retries=0,repeat-each=1, same frozen candidate and exact prod archive; every declared original obligation remains.",
+          "Parse the entire JSON strictly, verify actual exit code and selected file/case inventory, unique source-bound case identities, no missing/extra/skip/interrupted/retry/flaky result and no empty selection.",
+          "U15/U39/U40 reconcile their 6/22/22 source registrations and all real per-case fixture obligations. Teams/recovery exact case ledger is implemented/versioned with the new specs and mapped A01-A46, never inferred from a nonempty run.",
+          "Check host/installed manifest/current admitted authority and artifact receipt against independent run/attempt/candidate/tree/archive identity. Passing reporter JSON alone does not prove LIVE tenant/context/artifact.",
+          "Minimize through a strict allowlist: source-relative spec, stable nonsecret case identifier or hash, status, attempt count, counts, candidate/tree, artifact digest and trusted run/attempt/role/invocation references.",
+          "Do not copy raw case titles, URLs, headers, cookies, storageState, CDP endpoints, screenshots, attachments, business payloads, raw errors or stdout/stderr into the receipt.",
+          "Hash original raw JSON and sanitized receipt separately; final aggregator verifies the sanitized receipt's source/run/artifact bindings and actual case coverage. Retain raw evidence only on the admitted private surface."
+        ],
+        "steps": [
+          {
+            "role": "teams",
+            "afterSelector": "e2e/sucafina/native/teams-profile-linux.spec.ts",
+            "cwd": ".",
+            "argv": [
+              "node",
+              "script/sf-ci/gate.mjs",
+              "record-teams-profile-native",
+              "--candidate",
+              "<CANDIDATE_SHA>",
+              "--tree",
+              "<CANDIDATE_TREE>",
+              "--role",
+              "teams",
+              "--raw-report",
+              "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "--expected-inventory",
+              "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "--host-receipt",
+              "<PRIVATE_ROLE_ROOT>/host-receipt.json",
+              "--artifact-receipt",
+              "<PRIVATE_VERIFIED_PROD_ARTIFACT_RECEIPT>",
+              "--output",
+              "<PRIVATE_ROLE_ROOT>/native-receipt.sanitized.json"
+            ],
+            "status": "NEW_MODE_AND_FLAGS_NOT_IMPLEMENTED"
+          },
+          {
+            "role": "u15",
+            "afterSelector": "e2e/sucafina/native/journeys/u15.spec.ts",
+            "cwd": ".",
+            "argv": [
+              "node",
+              "script/sf-ci/gate.mjs",
+              "record-teams-profile-native",
+              "--candidate",
+              "<CANDIDATE_SHA>",
+              "--tree",
+              "<CANDIDATE_TREE>",
+              "--role",
+              "u15",
+              "--raw-report",
+              "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "--expected-inventory",
+              "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "--host-receipt",
+              "<PRIVATE_ROLE_ROOT>/host-receipt.json",
+              "--artifact-receipt",
+              "<PRIVATE_VERIFIED_PROD_ARTIFACT_RECEIPT>",
+              "--output",
+              "<PRIVATE_ROLE_ROOT>/native-receipt.sanitized.json"
+            ],
+            "status": "NEW_MODE_AND_FLAGS_NOT_IMPLEMENTED"
+          },
+          {
+            "role": "u39",
+            "afterSelector": "e2e/sucafina/native/journeys/u39.spec.ts",
+            "cwd": ".",
+            "argv": [
+              "node",
+              "script/sf-ci/gate.mjs",
+              "record-teams-profile-native",
+              "--candidate",
+              "<CANDIDATE_SHA>",
+              "--tree",
+              "<CANDIDATE_TREE>",
+              "--role",
+              "u39",
+              "--raw-report",
+              "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "--expected-inventory",
+              "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "--host-receipt",
+              "<PRIVATE_ROLE_ROOT>/host-receipt.json",
+              "--artifact-receipt",
+              "<PRIVATE_VERIFIED_PROD_ARTIFACT_RECEIPT>",
+              "--output",
+              "<PRIVATE_ROLE_ROOT>/native-receipt.sanitized.json"
+            ],
+            "status": "NEW_MODE_AND_FLAGS_NOT_IMPLEMENTED"
+          },
+          {
+            "role": "u40",
+            "afterSelector": "e2e/sucafina/native/journeys/u40.spec.ts",
+            "cwd": ".",
+            "argv": [
+              "node",
+              "script/sf-ci/gate.mjs",
+              "record-teams-profile-native",
+              "--candidate",
+              "<CANDIDATE_SHA>",
+              "--tree",
+              "<CANDIDATE_TREE>",
+              "--role",
+              "u40",
+              "--raw-report",
+              "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "--expected-inventory",
+              "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "--host-receipt",
+              "<PRIVATE_ROLE_ROOT>/host-receipt.json",
+              "--artifact-receipt",
+              "<PRIVATE_VERIFIED_PROD_ARTIFACT_RECEIPT>",
+              "--output",
+              "<PRIVATE_ROLE_ROOT>/native-receipt.sanitized.json"
+            ],
+            "status": "NEW_MODE_AND_FLAGS_NOT_IMPLEMENTED"
+          },
+          {
+            "role": "recovery",
+            "afterSelector": "e2e/sucafina/native/teams-profile-recovery-linux.spec.ts",
+            "cwd": ".",
+            "argv": [
+              "node",
+              "script/sf-ci/gate.mjs",
+              "record-teams-profile-native",
+              "--candidate",
+              "<CANDIDATE_SHA>",
+              "--tree",
+              "<CANDIDATE_TREE>",
+              "--role",
+              "recovery",
+              "--raw-report",
+              "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+              "--expected-inventory",
+              "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+              "--host-receipt",
+              "<PRIVATE_ROLE_ROOT>/host-receipt.json",
+              "--artifact-receipt",
+              "<PRIVATE_VERIFIED_PROD_ARTIFACT_RECEIPT>",
+              "--output",
+              "<PRIVATE_ROLE_ROOT>/native-receipt.sanitized.json"
+            ],
+            "status": "NEW_MODE_AND_FLAGS_NOT_IMPLEMENTED"
+          }
+        ],
+        "finalAggregation": "verify-teams-profile requires all five role receipts plus F04 operational transport, AZ02 phases and the other G01-G10 proof roles. A sanitized receipt with missing case/raw-report digest/host or artifact binding is rejected."
       }
     },
     {
@@ -19869,7 +20190,8 @@
             "--retries",
             "0",
             "--repeat-each",
-            "1"
+            "1",
+            "--reporter=json"
           ],
           "workflowEnvironment": {
             "CI": "true",
@@ -19878,6 +20200,25 @@
             "SF_NATIVE_INSTALLED_MANIFEST": "<real private manifest of a disposable candidate installation>",
             "SF_NATIVE_CANDIDATE_SHA": "<candidate SHA>",
             "SF_NATIVE_BROWSER_ENDPOINT_FILE": "<private file for actual authenticated loopback CDP>"
+          },
+          "envRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeGateContract",
+          "executionIO": {
+            "status": "PLANNED_WORKFLOW_EXECUTOR_CONTRACT_NOT_EXISTING_CLI_FLAGS",
+            "role": "recovery",
+            "privateRoot": "<RUNNER_TEMP>/teams-profile-private/<RUN_ID>-<RUN_ATTEMPT>/recovery/<INVOCATION_ID>",
+            "permissions": {
+              "directory": "0700",
+              "regularFiles": "0600",
+              "umask": "077",
+              "symlinks": "reject"
+            },
+            "stdoutFile": "<PRIVATE_ROLE_ROOT>/playwright-results.json",
+            "stderrFile": "<PRIVATE_ROLE_ROOT>/playwright-stderr.log",
+            "capture": "Workflow executor opens private files before spawning argv; captures stdout/stderr directly without tee or console publication. Preserve actual exit status. JSON reporter replaces the default HTML/line/flaky reporter for this invocation.",
+            "expectedInventoryFile": "<PRIVATE_ROLE_ROOT>/expected-cases.json",
+            "expectedInventory": "Materialize exact admitted case inventory from the same candidate and explicit spec before execution. Reconcile with preserved U15=6/U39=22/U40=22 source obligations and with versioned new Teams/recovery case obligations; listing alone cannot establish authority or runtime success.",
+            "cleanup": "Minimize and hash before deleting only owned raw files according to private evidence policy; no cookie/CDP/session/URL/body/raw report uploaded to public job artifacts.",
+            "malformedOutput": "Fail on missing/malformed/partial JSON, missing cases, skipped/interrupted/unexpected cases, nonzero exit, retries or flaky outcome. Do not repair output or infer cases from argv."
           }
         }
       ],
@@ -19902,7 +20243,9 @@
         "job run ID/attempt/outcome"
       ],
       "finalAggregator": "verify-teams-profile requires this successful actual receipt before final qualification.",
-      "existingCommandReference": "docs/architecture/teams-profile-qualification-review.json#recoveryRecipe.existingCommands"
+      "existingCommandReference": "docs/architecture/teams-profile-qualification-review.json#recoveryRecipe.existingCommands",
+      "nativeReportContractRef": "docs/architecture/teams-profile-test-plan.json#gates[G08-NATIVE-TEAMS].nativeReportContract",
+      "nativeReportRole": "recovery"
     }
   ],
   "baselinePlan": {
@@ -20384,6 +20727,10 @@
     {
       "id": "OVR-RECEIPTS",
       "decision": "Keep the eight exact sf-evidence-* suites and add separately validated teams-profile-evidence-* receipts. Final verify-teams-profile mode is new work and must require G01-G10, actual run/attempt/source/selection/archive provenance and no missing/skipped required gate."
+    },
+    {
+      "id": "OVR-NATIVE-EXECUTION",
+      "decision": "Native commands and exact env values in this catalog supersede descriptive source recipes: declared is literal, strict/nonce are separate, all five native invocations have private JSON reporter and explicit record-teams-profile-native receipt production. Original source appendices remain unmodified evidence."
     }
   ],
   "sourceEvidence": {
@@ -20614,6 +20961,21 @@
           "reviewedFiles": 264,
           "suites": 8
         }
+      },
+      {
+        "id": "dedicated-env-literals-and-nonce",
+        "result": "OK",
+        "details": "G06/F04 exact declared, separate strict mode and32-hex nonce binding; native CI/GITHUB_ACTIONS true literals separated from bindings."
+      },
+      {
+        "id": "native-report-production-and-privacy",
+        "result": "OK",
+        "details": "All five G08/G10 Playwright invocations require JSON private IO and role-specific minimization/hash receipt step."
+      },
+      {
+        "id": "native-command-mirrors-and-orchestra-report",
+        "result": "OK",
+        "details": "Canonical duplicate native command descriptors agree; dedicated Orchestra step also emits structured private case evidence."
       }
     ],
     "errors": [],
@@ -20654,5 +21016,21 @@
       "rows": 224
     }
   ],
-  "catalogLookup": "Find an exact tests[].path in this index; tests[].detail resolves the complete decision, assertions, preserved guarantees, replacements, body-review level, source rows and execution command. Details are split into linked documents to keep each file reviewable. Helpers and additional structural parents are referenced separately."
+  "catalogLookup": "Find an exact tests[].path in this index; tests[].detail resolves the complete decision, assertions, preserved guarantees, replacements, body-review level, source rows and execution command. Details are split into linked documents to keep each file reviewable. Helpers and additional structural parents are referenced separately.",
+  "consolidationReview": {
+    "status": "CORRECTED_IN_DOCUMENTATION_NOT_EXECUTED",
+    "reviewedCommit": "22c59f406bac42d9072407d9f2356e93c551deb5",
+    "findings": [
+      {
+        "id": "BRV-01",
+        "finding": "Descriptive text was embedded as literal ORCHESTRA_OMNI_CONTROL in G08; analogous G06 and native env descriptions required normalization.",
+        "resolution": "Exact declared literal, separate strict mode and nonce binding, normalized native env and source references."
+      },
+      {
+        "id": "BRV-02",
+        "finding": "Native Playwright commands lacked explicit structured reporter, private destination and report-to-receipt production.",
+        "resolution": "All five native invocations use --reporter=json, private IO, exact case inventory and new record-teams-profile-native mode/validator with minimization/hash assertions in existing gate.test.mjs."
+      }
+    ]
+  }
 }

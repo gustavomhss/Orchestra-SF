@@ -15202,7 +15202,10 @@
       ],
       "assertions": [
         "Cobrir wiring/receipt das lanes suplementares obrigatórias, cobertura completa/disjunta e separação dos 40 consumidores ordenados; preservar reprovação de skip, baseline vazio, artefato extra e SHA diferente.",
-        "Final aggregation rejects absent G08 corporate first-C08/current-choice proof even when G07 factory technical receipt is valid; factory technical verification itself does not require a future G08 receipt."
+        "Final aggregation rejects absent G08 corporate first-C08/current-choice proof even when G07 factory technical receipt is valid; factory technical verification itself does not require a future G08 receipt.",
+        "record-teams-profile-native tests strict report parsing, exact case/source inventories, zero/missing/duplicate/extra/skip/interrupted/retry/flaky rejection, candidate/tree/role/run/archive mismatch, raw and minimized hashes, private-data allowlist and fail-closed missing host receipt.",
+        "Dedicated workflow env uses exact declared/suite literals; invalid/descriptive values and malformed nonce are rejected before execution, preserving the real preload semantics.",
+        "Orchestra supplemental receipt is based on strict actual JSON case output for its five exact files, with explicit allowed dev-tag exclusions and no early-return/empty-case credit; it cannot be promoted to LIVE by the validator."
       ],
       "preserve": [],
       "replacements": [],
