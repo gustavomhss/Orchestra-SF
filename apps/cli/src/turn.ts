@@ -1,9 +1,19 @@
 import type { Orchestra, PermissionsListRequestsOutput, SessionsEventsOutput } from "@orchestra/client"
 
 type Client = ReturnType<typeof Orchestra.make>
-export type Event = SessionsEventsOutput
+export type Event = Extract<SessionsEventsOutput, { readonly type: string }>
 export type PermissionRequest = PermissionsListRequestsOutput["data"][number]
 export type Reply = "once" | "always" | "reject"
+
+export class CorporateSessionTransportError extends Error {
+  constructor() { super("Corporate sessions require an installed Microsoft transport") }
+}
+
+/** A generic CLI client must not adopt a corporate response or recover its inner payload. */
+export function requireTechnicalSession<A extends { readonly namespace?: unknown }>(value: A): A {
+  if (value.namespace !== undefined) throw new CorporateSessionTransportError()
+  return value
+}
 
 /**
  * Drives one admitted prompt (or command) to completion: streams the session's durable events from before the prompt,
@@ -24,7 +34,8 @@ export async function runTurn(
 ) {
   const baseline = await lastSeq(client, input.sessionID)
   const state = { seq: baseline ?? -1, promoted: new Set<string>() }
-  const deliver = (event: Event) => {
+  const deliver = (event: SessionsEventsOutput) => {
+    if ("event" in event) throw new CorporateSessionTransportError()
     const seq = event.durable?.seq
     if (seq !== undefined) {
       if (seq <= state.seq) return
@@ -35,37 +46,45 @@ export async function runTurn(
   }
 
   const stop = new AbortController()
-  input.signal?.addEventListener("abort", () => stop.abort(), { once: true })
+  const cancel = () => stop.abort()
+  input.signal?.addEventListener("abort", cancel, { once: true })
+  let transportFailure: CorporateSessionTransportError | undefined
   const stream = (async () => {
     for await (const event of client.sessions.events({ sessionID: input.sessionID, after: baseline }, { signal: stop.signal })) deliver(event)
-  })().catch(() => undefined)
+  })().catch((error) => {
+    // Connection loss can be reconciled through durable history. A namespace
+    // mismatch is terminal and cannot be replayed through this technical client.
+    if (error instanceof CorporateSessionTransportError) { transportFailure = error; stop.abort() }
+  })
   const permissions = answerPermissions(client, input.sessionID, input.location, stop.signal, input.onPermission)
-
-  const admitted = await input.submit().catch((error) => (error instanceof Error ? error : new Error(JSON.stringify(error))))
-  if (admitted instanceof Error) {
-    stop.abort()
-    await Promise.all([stream, permissions])
-    throw admitted
-  }
-
-  const finished = await (async () => {
+  // Observe immediately, but await the original promise during cleanup so an
+  // unrelated permission-reader failure is never converted into success.
+  void permissions.catch((error) => {
+    if (error instanceof CorporateSessionTransportError) { transportFailure = error; stop.abort() }
+  })
+  try {
+    const admitted = await input.submit()
+    if (transportFailure) throw transportFailure
     for (let attempt = 0; attempt < 40; attempt++) {
+      if (transportFailure) throw transportFailure
       await client.sessions.wait({ sessionID: input.sessionID })
+      if (transportFailure) throw transportFailure
       await flush(client, input.sessionID, state, deliver)
       if (state.promoted.has(admitted.id)) return true
       await Bun.sleep(250)
     }
     return false
-  })()
-  stop.abort()
-  await Promise.all([stream, permissions])
-  return finished
+  } finally {
+    stop.abort()
+    input.signal?.removeEventListener("abort", cancel)
+    await Promise.all([stream, permissions])
+  }
 }
 
 async function lastSeq(client: Client, sessionID: string) {
   let after: number | undefined
   while (true) {
-    const page = await client.sessions.history({ sessionID, after })
+    const page = requireTechnicalSession(await client.sessions.history({ sessionID, after }))
     after = page.data.at(-1)?.durable?.seq ?? after
     if (!page.hasMore) return after
   }
@@ -73,8 +92,8 @@ async function lastSeq(client: Client, sessionID: string) {
 
 async function flush(client: Client, sessionID: string, state: { seq: number }, deliver: (event: Event) => void) {
   while (true) {
-    const page = await client.sessions.history({ sessionID, after: state.seq < 0 ? undefined : state.seq })
-    page.data.forEach((event) => deliver(event as Event))
+    const page = requireTechnicalSession(await client.sessions.history({ sessionID, after: state.seq < 0 ? undefined : state.seq }))
+    page.data.forEach(deliver)
     if (!page.hasMore) return
   }
 }
@@ -92,7 +111,8 @@ async function answerPermissions(
   const belongs = async (id: string): Promise<boolean> => {
     const known = family.get(id)
     if (known !== undefined) return known
-    const parent = (await client.sessions.get({ sessionID: id }).catch(() => undefined))?.parentID
+    const found = await client.sessions.get({ sessionID: id }).catch(() => undefined)
+    const parent = found ? requireTechnicalSession(found).parentID : undefined
     const result = parent ? await belongs(parent) : false
     family.set(id, result)
     return result

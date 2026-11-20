@@ -1,7 +1,7 @@
 import { Option, Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { EntraTeamsResult, MicrosoftProfileSession } from "./local-contract.ts"
-import { sameTeamProfileBinding, teamProfilePolicyBinding, teamProfilePolicyCommand, teamProfilePrincipal, teamProfileRef } from "./team-profile-policy.ts"
+import { sameTeamProfileBinding, teamProfilePolicyBinding, teamProfilePolicyCommand, teamProfilePrincipal, teamProfileRef, teamConfigurationCommand } from "./team-profile-policy.ts"
 import type { TeamProfileCatalog, TeamProfilePolicyBinding, TeamProfilePolicySource } from "./team-profile-policy.ts"
 import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
 
@@ -95,6 +95,20 @@ export function createTeamProfileResolver(input: {
     return verify(observation)
   }
 
+  const revalidate = async (candidate: unknown): Promise<boolean> => {
+      if (typeof candidate !== "object" || candidate === null) return false
+      const held = admissions.get(candidate)
+      if (!held || await verify(held.observation)) return false
+      const catalog = await store.read().catch(() => undefined)
+      if (!catalog || catalog.configRevision !== held.admission.configRevision || !catalog.profiles.some((entry) =>
+        entry.enabled && entry.profile.teamObjectId === held.admission.profile.teamObjectId)) return false
+      if (held.observation.policy.teams !== "direct") return false
+      const teams = await held.observation.session.teams()
+      if (teams.state !== "complete" || teams.tenantId !== binding.tenantId ||
+          teams.principalObjectId !== held.admission.principal.principalObjectId ||
+          !teams.teams.some((entry) => entry.teamObjectId === held.admission.profile.teamObjectId)) return false
+      return !await stableCatalog(held.observation, catalog)
+  }
   return Object.freeze({
     async list(request: Request): Promise<TeamProfileAdminListResult> {
       const captured = await capture(request)
@@ -138,6 +152,45 @@ export function createTeamProfileResolver(input: {
       if (!result) return { status: "unavailable", reason: "store-unavailable" }
       // A committed edit remains in the audit even if access is withdrawn before response publication.
       // Repeating the old CAS cannot repeat that edit or manufacture a second receipt.
+      return await administrator(observation) ?? result
+    },
+    async configuration(request: Request, value: unknown): Promise<TeamProfile.ConfigurationReadResult> {
+      const parsed = Schema.decodeUnknownOption(TeamProfile.Ref)(value)
+      if (Option.isNone(parsed) || !sameTeamProfileBinding(parsed.value, binding)) return { status: "invalid-request" }
+      const profile = Object.freeze({ ...parsed.value })
+      const captured = await capture(request)
+      if (captured.status !== "observed") return captured
+      const observation = captured.observation
+      const denied = await administrator(observation)
+      if (denied) return denied
+      const catalog = await store.read().catch(() => undefined)
+      if (!catalog) return { status: "unavailable", reason: "store-unavailable" }
+      const result = await store.readConfiguration(profile).then((configuration) => ({ configuration })).catch(() => undefined)
+      if (!result) return { status: "unavailable", reason: "store-unavailable" }
+      const final = await administrator(observation) ?? await stableCatalog(observation, catalog)
+      if (final) return final
+      if (!result.configuration) return { status: "not-found" }
+      if (result.configuration.configRevision !== catalog.configRevision) return { status: "unavailable", reason: "policy-changed" }
+      return { status: "ok", configuration: result.configuration }
+    },
+    async configureConfiguration(request: Request, value: unknown): Promise<TeamProfileAdminConfigureResult> {
+      const command = teamConfigurationCommand(value)
+      if (!command || !sameTeamProfileBinding(command.profile, binding)) return { status: "invalid-request" }
+      const captured = await capture(request)
+      if (captured.status !== "observed") return captured
+      const observation = captured.observation
+      const denied = await administrator(observation)
+      if (denied) return denied
+      const observed: { failure?: Failure } = {}
+      const result = await store.configureConfiguration({
+        command, principal: observation.principal, at: now(), signal: request.signal,
+        authorize: async () => {
+          observed.failure = await administrator(observation)
+          return observed.failure === undefined
+        },
+      }).catch(() => undefined)
+      if (observed.failure) return observed.failure
+      if (!result) return { status: "unavailable", reason: "store-unavailable" }
       return await administrator(observation) ?? result
     },
     async resolve(request: Request, value?: unknown): Promise<TeamProfileResolution> {
@@ -193,19 +246,15 @@ export function createTeamProfileResolver(input: {
       return sameResolution(held.result.teams, current) &&
         JSON.stringify(administration) === JSON.stringify(held.result.administration)
     },
-    async revalidate(candidate: unknown): Promise<boolean> {
-      if (typeof candidate !== "object" || candidate === null) return false
+    revalidate,
+    async readConfiguration(candidate: unknown): Promise<TeamProfile.ConfigurationSnapshot | undefined> {
+      if (typeof candidate !== "object" || candidate === null) return undefined
       const held = admissions.get(candidate)
-      if (!held || await verify(held.observation)) return false
-      const catalog = await store.read().catch(() => undefined)
-      if (!catalog || catalog.configRevision !== held.admission.configRevision || !catalog.profiles.some((entry) =>
-        entry.enabled && entry.profile.teamObjectId === held.admission.profile.teamObjectId)) return false
-      if (held.observation.policy.teams !== "direct") return false
-      const teams = await held.observation.session.teams()
-      if (teams.state !== "complete" || teams.tenantId !== binding.tenantId ||
-          teams.principalObjectId !== held.admission.principal.principalObjectId ||
-          !teams.teams.some((entry) => entry.teamObjectId === held.admission.profile.teamObjectId)) return false
-      return !await stableCatalog(held.observation, catalog)
+      if (!held || !await revalidate(candidate)) return undefined
+      const configuration = await store.readConfiguration(held.admission.profile).catch(() => undefined)
+      if (!configuration || configuration.configRevision !== held.admission.configRevision ||
+          !await revalidate(candidate)) return undefined
+      return configuration
     },
   })
 }

@@ -113,7 +113,7 @@ test("admin-http: enabling a verified Team, retrying and removing the last profi
   expect(Schema.is(TeamProfile.AdminConfigureResult)(enabledValue)).toBe(true)
   const result = await f.read(cookie)
   const body = await result.text()
-  expect(JSON.parse(body)).toEqual({ status: "ok", configRevision: 1, profiles: [{ profile: f.profile, enabled: true }] })
+  expect(JSON.parse(body)).toEqual({ status: "ok", configRevision: 1, profiles: [{ profile: Schema.decodeUnknownSync(TeamProfile.Ref)(f.profile), enabled: true }] })
   for (const secret of ["synthetic-access-", "synthetic-refresh-", "supremeAdminGroupId", "principalObjectId", "accessRevision", "audit", "grants", "epoch", group]) expect(body).not.toContain(secret)
   expect(await (await f.post(cookie, f.command("enable", 1))).json()).toEqual({ status: "ok", configRevision: 1, changed: false })
   expect(await f.policy.audit()).toHaveLength(1)
@@ -434,4 +434,109 @@ test("admin-http: owner policy reload is current and a changed immutable tenant 
   expect(invalid.status).toBe(503)
   expect(await invalid.json()).toEqual({ status: "unavailable", reason: "policy-unavailable" })
   await unchanged(f)
+})
+
+const sharedDocument = (model = "provider/shared") => ({
+  version: 1, settings: { model, default_agent: "analyst", agents: { analyst: { name: "Shared analyst", system: "Use approved evidence.", model } } },
+})
+const configPost = (f: Awaited<ReturnType<typeof setup>>, cookie: string, value: unknown, init: RequestInit = {}) =>
+  f.request(`${route}/configuration?${f.query}`, {
+    method: "POST", ...init,
+    headers: { cookie, origin: publicOrigin, "content-type": "application/json", ...Object.fromEntries(new Headers(init.headers)) },
+    body: typeof value === "string" ? value : JSON.stringify(value),
+  })
+const configRead = (f: Awaited<ReturnType<typeof setup>>, cookie: string, teamObjectId = teamId) =>
+  f.request(`${route}/configuration?${f.query}&teamObjectId=${teamObjectId}`, { headers: { cookie } })
+
+test("configuration-http: actual installation exposes only closed shared data and commits its revision with audit", async () => {
+  const f = await setup()
+  f.provider.teamResources.set(teamId, team())
+  const cookie = await f.login()
+  const before = await f.snapshot()
+  expect((await f.post(cookie, f.command())).status).toBe(200)
+  expect((await configRead(f, cookie)).status).toBe(404)
+  const write = await configPost(f, cookie, { profile: f.profile, expectedRevision: 1, document: sharedDocument() })
+  expect(write.status).toBe(200)
+  expect(await write.json()).toEqual({ status: "ok", configRevision: 2, changed: true })
+  const read = await configRead(f, cookie)
+  expect(read.status).toBe(200)
+  expect(read.headers.get("cache-control")).toBe("no-store")
+  const value = await read.json()
+  expect(Schema.is(TeamProfile.ConfigurationReadResult)(value)).toBe(true)
+  expect(value).toEqual({ status: "ok", configuration: {
+    origin: "installation-team-store", profile: f.profile, configRevision: 2, document: sharedDocument(),
+  } })
+  expect(f.provider.directTeams.get(oid)).toEqual([])
+  expect(f.provider.requests.some((request) => request.url.includes("/joinedTeams"))).toBe(false)
+  const audit = await f.policy.audit()
+  expect(audit.map((row) => row.action)).toEqual(["enable", "configuration"])
+  expect(JSON.stringify(audit)).not.toContain("Use approved evidence")
+  expect(await f.snapshot()).toEqual(before)
+})
+
+test("configuration-http: simultaneous edits and semantic retries retain one revision, with no lost update", async () => {
+  const f = await setup()
+  f.provider.teamResources.set(teamId, team())
+  const cookie = await f.login()
+  expect((await f.post(cookie, f.command())).status).toBe(200)
+  const written = await Promise.all(["provider/one", "provider/two"].map((model) =>
+    configPost(f, cookie, { profile: f.profile, expectedRevision: 1, document: sharedDocument(model) })))
+  expect(written.map((response) => response.status).sort()).toEqual([200, 409])
+  const selected = Schema.decodeUnknownSync(TeamProfile.ConfigurationReadResult)(await (await configRead(f, cookie)).json())
+  if (selected.status !== "ok") throw new Error("Actual shared configuration required")
+  const retry = await configPost(f, cookie, { document: selected.configuration.document, expectedRevision: 2, profile: f.profile })
+  expect(await retry.json()).toEqual({ status: "ok", configRevision: 2, changed: false })
+  expect(await f.policy.audit()).toHaveLength(2)
+})
+
+test("configuration-http: hostile fields, bindings, duplicate JSON and missing CSRF origin never reach configuration writes", async () => {
+  const f = await setup()
+  f.provider.teamResources.set(teamId, team())
+  const cookie = await f.login()
+  expect((await f.post(cookie, f.command())).status).toBe(200)
+  const before = await f.snapshot()
+  const valid = { profile: f.profile, expectedRevision: 1, document: sharedDocument() }
+  const invalid: unknown[] = [
+    { ...valid, document: { version: 1, settings: { providers: { personal: { token: "forbidden" } } } } },
+    { ...valid, document: { version: 1, settings: { agents: { analyst: { engine: "claude-code" } } } } },
+    { ...valid, document: { version: 1, settings: { instructions: ["/private/instructions"] } } },
+    { ...valid, expectedRevision: "1" },
+    JSON.stringify(valid).replace('"expectedRevision":1', '"expectedRevision":1,"expectedRevision":1'),
+  ]
+  for (const value of invalid) expect((await configPost(f, cookie, value)).status).toBe(400)
+  expect((await configPost(f, cookie, { ...valid, profile: { ...f.profile, installationId: "foreign" } })).status).toBe(403)
+  expect((await configPost(f, cookie, valid, { headers: { origin: "" } })).status).toBe(403)
+  expect((await configPost(f, cookie, " ".repeat(65537))).status).toBe(413)
+  expect((await f.request(`${route}/configuration?${f.query}&teamObjectId=${teamId}&teamObjectId=${teamId}`, { headers: { cookie } })).status).toBe(400)
+  expect(await f.policy.read()).toEqual({ configRevision: 1, profiles: [{ profile: Schema.decodeUnknownSync(TeamProfile.Ref)(f.profile), enabled: true }] })
+  expect(await f.policy.audit()).toHaveLength(1)
+  expect(await f.snapshot()).toEqual(before)
+})
+
+test("configuration-http: the supreme group is reread inside CAS and after a shared read before publication", async () => {
+  const f = await setup()
+  f.provider.teamResources.set(teamId, team())
+  const cookie = await f.login()
+  expect((await f.post(cookie, f.command())).status).toBe(200)
+  let proofs = 0
+  f.provider.hooks.before = (request) => {
+    if (new URL(request.url).pathname === "/v1.0/me/checkMemberGroups" && ++proofs === 2) f.provider.account.groups = []
+    return undefined
+  }
+  const denied = await configPost(f, cookie, { profile: f.profile, expectedRevision: 1, document: sharedDocument() })
+  expect(denied.status).toBe(403)
+  expect(await f.policy.audit()).toHaveLength(1)
+  expect(await f.policy.readConfiguration(Schema.decodeUnknownSync(TeamProfile.Ref)(f.profile))).toBeUndefined()
+  f.provider.hooks.before = undefined
+  f.provider.account.groups = [group]
+  expect((await configPost(f, cookie, { profile: f.profile, expectedRevision: 1, document: sharedDocument() })).status).toBe(200)
+  proofs = 0
+  f.provider.hooks.before = (request) => {
+    if (new URL(request.url).pathname === "/v1.0/me/checkMemberGroups" && ++proofs === 2) f.provider.account.groups = []
+    return undefined
+  }
+  const hidden = await configRead(f, cookie)
+  expect(hidden.status).toBe(403)
+  expect(await hidden.json()).toEqual({ status: "denied" })
+  expect(await f.policy.audit()).toHaveLength(2)
 })

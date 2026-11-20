@@ -325,3 +325,26 @@ test("native menu snapshots the reactive Team owner without accepting extra wire
     }
   } finally { f.close() }
 })
+
+test("Session 403 scrubs chat without retiring still-admitted business context", async () => {
+  const f = fixture({ teams: [a] })
+  try {
+    await f.runtime.start()
+    const original = f.runtime.current()
+    expect(original?.context.stamp.team).toBeDefined()
+    expect(f.calls.filter((call) => call.path.endsWith("/api/session"))).toEqual([])
+    f.setResource(async () => Response.json({ error: "denied" }, { status: 403, headers: { "cache-control": "no-store" } }))
+    const target = routes.sfTeamSessionHref(binding, a)
+    expect(await f.runtime.navigate(target)).toBe("unavailable")
+    expect(f.runtime.view.kind).toBe("session")
+    expect(f.runtime.sessions.state.status).toBe("unavailable")
+    expect(f.runtime.sessions.state.threads).toEqual({})
+    expect(f.runtime.current()).toBe(original)
+    expect(f.runtime.owner.ready()).toBeDefined()
+    expect(f.broadcasts()).toBe(0)
+    expect(f.calls.filter((call) => call.path.endsWith("/api/session"))).toHaveLength(1)
+    expect(f.calls.every((call) => (call.init?.method ?? "GET") === "GET")).toBe(true)
+    expect(await f.runtime.navigate(href("/orchestra/sf-home"))).toBe("committed")
+    expect(f.runtime.view.kind).toBe("business")
+  } finally { f.close() }
+})

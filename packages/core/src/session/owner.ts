@@ -32,6 +32,8 @@ export interface Admission {
   readonly binding: TeamProfile.Binding
   /** One fresh policy observation may answer several checks at the same boundary; it is never cached across awaits. */
   readonly inspect?: (operations: ReadonlyArray<InspectionOperation>) => Effect.Effect<Inspection | undefined>
+  /** Private current Team configuration; absence never permits directory/global fallback. */
+  readonly configuration?: () => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined>
   readonly authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.Effect<boolean>
   /** Current resource exceptions within this owner; evaluated before SQL pagination. */
   readonly excludedSessions: () => Effect.Effect<ReadonlyArray<SessionSchema.ID>>
@@ -49,6 +51,11 @@ export interface RecoveryMapping {
 /** Only the issuing service recognizes this object. A decoded copy has no authority. */
 export interface Lease { readonly _tag: "SessionOwner.Lease" }
 export interface Scope { readonly _tag: "SessionOwner.Scope" }
+/** A process-local cache partition and revocable constructor context; never a wire namespace. */
+export interface LocationBinding {
+  readonly key: object
+  readonly bind: <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
+}
 export type Operation = SessionAccess.Action | "replay"
 type Failure = Denied | AuthorityGeneration.GenerationError
 
@@ -58,6 +65,8 @@ type LeaseData = Readonly<{
   generation: number
   verifyCurrent: () => Effect.Effect<boolean>
   kind: "request" | "recovery"
+  revisions?: TeamProfile.Revisions
+  configuration?: Admission["configuration"]
   inspect?: Admission["inspect"]
   authorize?: Admission["authorize"]
   excludedSessions?: Admission["excludedSessions"]
@@ -73,6 +82,7 @@ type ScopeData = Readonly<{
 const leases = new WeakMap<Lease, LeaseData>()
 const scopes = new WeakMap<Scope, ScopeData>()
 const listed = new WeakMap<Scope, ReadonlyArray<SessionSchema.ID>>()
+const locationBindings = new WeakMap<Lease, Map<string, LocationBinding>>()
 const CurrentOperation = Context.Reference<Readonly<{ scope: Scope; sessionID: SessionSchema.ID; action: Operation }> | undefined>(
   "@orchestra/SessionOwner/Operation", { defaultValue: () => undefined },
 )
@@ -90,6 +100,8 @@ export interface Interface {
   readonly bind: Effect.Effect<<A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>, Failure>
   /** Undefined means no request lease is installed; it does not prove that this is a technical store. */
   readonly active: Effect.Effect<Scope | undefined, Failure>
+  readonly location: Effect.Effect<LocationBinding | undefined, Failure>
+  readonly configuration: (scope: Scope) => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined, Failure>
   readonly verify: (scope: Scope) => Effect.Effect<void, Failure>
   readonly assert: (scope: Scope, sessionID: SessionSchema.ID, operation: Operation) => Effect.Effect<void, Failure>
   readonly authorize: (scope: Scope, operation: Operation, sessionID?: SessionSchema.ID) => Effect.Effect<void, Failure>
@@ -272,10 +284,14 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         return yield* new Denied({ reason: "missing-admission" })
       const observed = yield* read()
       if (!observed) return undefined
-      const owner = yield* ("binding" in observed
-        ? Schema.decodeUnknownEffect(TeamProfile.Binding)(observed.binding).pipe(Effect.map((binding) => binding.owner))
-        : Schema.decodeUnknownEffect(TeamProfile.Owner)(observed.owner)
-      ).pipe(Effect.mapError(() => new Denied({ reason: "missing-admission" })))
+      const binding = "binding" in observed
+        ? yield* Schema.decodeUnknownEffect(TeamProfile.Binding)(observed.binding)
+          .pipe(Effect.mapError(() => new Denied({ reason: "missing-admission" })))
+        : undefined
+      const owner = freezeOwner(binding?.owner ?? (yield* Schema.decodeUnknownEffect(TeamProfile.Owner)(
+        "owner" in observed ? observed.owner : undefined,
+      ).pipe(Effect.mapError(() => new Denied({ reason: "missing-admission" })))))
+      const revisions = binding ? Object.freeze({ ...binding.revisions }) : undefined
       const sessionIds = "sessionIds" in observed
         ? yield* Schema.decodeUnknownEffect(Schema.Array(SessionSchema.ID))(observed.sessionIds)
           .pipe(Effect.mapError(() => new Denied({ reason: "invalid-recovery" })))
@@ -287,7 +303,12 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         return yield* new Denied({ reason: "missing-admission" })
       const verifyCurrent = observed.verifyCurrent
       const inspection = "binding" in observed ? observed.inspect : undefined
-      if (inspection !== undefined && typeof inspection !== "function")
+      const configuration = "binding" in observed ? observed.configuration : undefined
+      const authorize = "binding" in observed ? observed.authorize : undefined
+      const excludedSessions = "binding" in observed ? observed.excludedSessions : undefined
+      const mappedSessions = sessionIds ? new Set(sessionIds) : undefined
+      if (inspection !== undefined && typeof inspection !== "function" ||
+          configuration !== undefined && typeof configuration !== "function")
         return yield* new Denied({ reason: "missing-admission" })
       yield* verifyProof(verifyCurrent)
       if (!(yield* provider.verifyGeneration(generation))) return yield* new Denied({ reason: "stale-admission" })
@@ -295,9 +316,11 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       leases.set(lease, {
         database, owner: freezeOwner(owner), generation, verifyCurrent,
         kind: recovery ? "recovery" : "request",
-        ...("binding" in observed ? { authorize: observed.authorize, excludedSessions: observed.excludedSessions } : {}),
+        ...(authorize && excludedSessions ? { authorize, excludedSessions } : {}),
         ...(inspection ? { inspect: inspection } : {}),
-        ...(sessionIds ? { sessionIds: new Set(sessionIds) } : {}),
+        ...(revisions ? { revisions } : {}),
+        ...(configuration ? { configuration } : {}),
+        ...(mappedSessions ? { sessionIds: mappedSessions } : {}),
       })
       return lease
     })
@@ -311,6 +334,54 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       return <A, E, R>(effect: Effect.Effect<A, E, R>) => effect.pipe(Effect.provideService(Current, handle))
     }),
     active: Effect.flatMap(Current, (lease) => lease ? open() : Effect.succeed(undefined)),
+    location: Effect.gen(function* () {
+      const scope = yield* open()
+      const handle = yield* Current
+      if (!handle) return undefined
+      if (data(scope).lease?.kind !== "request") return yield* new Denied({ reason: "invalid-recovery" })
+      const operation = yield* CurrentOperation
+      const signature = JSON.stringify(operation ? [operation.action, operation.sessionID] : [])
+      let entries = locationBindings.get(handle)
+      if (!entries) { entries = new Map(); locationBindings.set(handle, entries) }
+      const known = entries.get(signature)
+      if (known) return known
+      const binding: LocationBinding = Object.freeze({
+        key: Object.freeze({}),
+        bind: <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.gen(function* () {
+          yield* verify(scope).pipe(Effect.orDie)
+          const value = yield* effect
+          yield* verify(scope).pipe(Effect.orDie)
+          return value
+        }).pipe(Effect.provideService(Current, handle), Effect.provideService(CurrentOperation, operation)),
+      })
+      entries.set(signature, binding)
+      return binding
+    }),
+    configuration: (scope) => Effect.gen(function* () {
+      yield* verify(scope)
+      const retained = data(scope).lease
+      if (!retained) return undefined
+      if (retained.kind !== "request" || !retained.configuration || !retained.revisions)
+        return yield* new Denied({ reason: "storage-unavailable" })
+      const value = yield* retained.configuration().pipe(Effect.catchCause(() => Effect.succeed(undefined)))
+      const snapshot = yield* Schema.decodeUnknownEffect(TeamProfile.ConfigurationSnapshot)(value)
+        .pipe(Effect.mapError(() => new Denied({ reason: "storage-unavailable" })))
+      if (snapshot.profile.installationId !== retained.owner.profile.installationId ||
+          snapshot.profile.tenantId !== retained.owner.profile.tenantId ||
+          snapshot.profile.teamObjectId !== retained.owner.profile.teamObjectId ||
+          snapshot.configRevision !== retained.revisions.configRevision)
+        return yield* new Denied({ reason: "stale-admission" })
+      yield* verify(scope)
+      return Object.freeze({
+        ...snapshot, profile: Object.freeze({ ...snapshot.profile }),
+        document: Object.freeze({ ...snapshot.document, settings: Object.freeze({
+          ...snapshot.document.settings,
+          ...(snapshot.document.settings.agents ? { agents: Object.freeze(Object.fromEntries(
+            Object.entries(snapshot.document.settings.agents).map(([id, agent]) => [id, Object.freeze({ ...agent })]),
+          )) } : {}),
+        }) }),
+      })
+    }),
     verify,
     assert,
     authorize,

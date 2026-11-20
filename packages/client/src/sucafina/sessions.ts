@@ -266,7 +266,10 @@ export function createSfTeamSessions(input: Readonly<{
       if (query.cursor && !cursors.has(query.cursor)) throw new SfTeamSessionError("protocol")
       const wire = await withCurrent(() => client.messages.list(query, { signal }))
       const result = decode(() => Schema.decodeUnknownSync(Messages, strict)(wire))
-      inspect(result.namespace); remember(result.cursor, cursors); messageCursors.set(query.sessionID, cursors)
+      inspect(result.namespace)
+      if (result.data.some((message) => "sessionID" in message && message.sessionID !== query.sessionID))
+        return invalidate("protocol")
+      remember(result.cursor, cursors); messageCursors.set(query.sessionID, cursors)
       return Schema.encodeSync(Messages)(result)
     },
     async history(value: typeof HistoryInput.Type, signal?: AbortSignal) {

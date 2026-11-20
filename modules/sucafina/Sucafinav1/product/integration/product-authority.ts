@@ -29,6 +29,7 @@ export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readon
 /** Private verified resolver; the transport supplies only a sealed selection intent. */
 export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
   resolve: (request: Request) => Promise<TeamProfileResolution>
+  readConfiguration?: (admission: unknown) => Promise<TeamProfile.ConfigurationSnapshot | undefined>
 }>
 
 const collaborationReads: Record<string, { operation: string; namespaces: readonly SfStateNamespace[] }> = {
@@ -527,6 +528,15 @@ export function createSfProductAuthority(input: {
       binding: Object.freeze({
         owner: Object.freeze({ profile: Object.freeze({ ...binding.owner.profile }), principal: Object.freeze({ ...binding.owner.principal }) }),
         revisions: Object.freeze({ ...binding.revisions }),
+      }),
+      configuration: () => Effect.promise(async () => {
+        const held = initial.profile?.admission
+        if (!held || !teamProfiles.readConfiguration || !same(await resolve(request).catch(() => undefined))) return undefined
+        const value = await teamProfiles.readConfiguration(held).catch(() => undefined)
+        if (!value || value.configRevision !== binding.revisions.configRevision ||
+            digestSfValue(value.profile) !== digestSfValue(binding.owner.profile) ||
+            !same(await resolve(request).catch(() => undefined))) return undefined
+        return value
       }),
       inspect: (operations: ReadonlyArray<SessionOwner.InspectionOperation>) => Effect.promise(async () => {
         const requested = operations.map(({ action, sessionID }) => Object.freeze({ action, sessionID }))

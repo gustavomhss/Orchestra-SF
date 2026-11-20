@@ -1,5 +1,7 @@
 // New Teams Web copy. Terminology checked against Microsoft Teams pt-BR support
 // and Mozilla Firefox pt-BR preferences (account, profile, select and discard).
+// Chat additions also checked against Mozilla pt-BR tabContextMenu.ftl and
+// Microsoft Windows writing-style guidance; shell is an established developer term.
 // Existing English context keys remain unchanged.
 export const SF_TEAMS_COPY = {
   "sf.teams.title": "Team profile",
@@ -55,6 +57,25 @@ export const SF_TEAMS_COPY = {
   "sf.teams.actionFailed": "The action could not be completed. Try again.",
   "sf.teams.windowEphemeral": "Selections in this window will not be restored after it closes.",
   "sf.teams.loading": "Checking Microsoft access…",
+  "sf.teams.chatActionUnavailable": "This chat action is not available. Your draft was kept.",
+  "sf.teams.chatUpdatesStopped": "Chat updates stopped. Refresh access before continuing.",
+  "sf.teams.chatDraftsRemoved": "Chat access changed and the previous drafts were removed.",
+  "sf.teams.chatTabLimit": "Close a chat tab before opening another one.",
+  "sf.teams.chatRecent": "Recent chats",
+  "sf.teams.chatSearch": "Search chats",
+  "sf.teams.chatEmpty": "No chats were found.",
+  "sf.teams.chatOpen": "Open chats",
+  "sf.teams.chatStart": "Write a message to start a new chat in this Team.",
+  "sf.teams.chatCheckRequest": "Check submitted request",
+  "sf.teams.chatSubmitted": "Message accepted. Waiting for execution.",
+  "sf.teams.chatAttachmentsUnavailable": "Attachments cannot be opened from this chat.",
+  "sf.teams.chatSystem": "System message",
+  "sf.teams.chatAgentChanged": "Agent changed",
+  "sf.teams.chatModelChanged": "Model changed",
+  "sf.teams.chatCompacted": "Conversation summary",
+  "sf.teams.chatShell": "Shell transcript",
+  "sf.teams.chatListLimit": "Refine your search to see more chats.",
+  "sf.teams.chatClosed": "Closed chat {{number}}",
 } as const
 
 export const SF_TEAMS_COPY_BR: Record<keyof typeof SF_TEAMS_COPY, string> = {
@@ -111,4 +132,23 @@ export const SF_TEAMS_COPY_BR: Record<keyof typeof SF_TEAMS_COPY, string> = {
   "sf.teams.actionFailed": "Não foi possível concluir a ação. Tente novamente.",
   "sf.teams.windowEphemeral": "As seleções desta janela não serão restauradas depois que ela for fechada.",
   "sf.teams.loading": "Verificando o acesso Microsoft…",
+  "sf.teams.chatActionUnavailable": "Esta ação da conversa está indisponível. Seu rascunho foi mantido.",
+  "sf.teams.chatUpdatesStopped": "As atualizações da conversa foram interrompidas. Atualize o acesso antes de continuar.",
+  "sf.teams.chatDraftsRemoved": "O acesso às conversas mudou e os rascunhos anteriores foram removidos.",
+  "sf.teams.chatTabLimit": "Feche uma aba de conversa antes de abrir outra.",
+  "sf.teams.chatRecent": "Conversas recentes",
+  "sf.teams.chatSearch": "Pesquisar conversas",
+  "sf.teams.chatEmpty": "Nenhuma conversa foi encontrada.",
+  "sf.teams.chatOpen": "Conversas abertas",
+  "sf.teams.chatStart": "Escreva uma mensagem para iniciar uma nova conversa nesta equipe.",
+  "sf.teams.chatCheckRequest": "Verificar solicitação enviada",
+  "sf.teams.chatSubmitted": "Mensagem aceita. Aguardando execução.",
+  "sf.teams.chatAttachmentsUnavailable": "Não é possível abrir anexos nesta conversa.",
+  "sf.teams.chatSystem": "Mensagem do sistema",
+  "sf.teams.chatAgentChanged": "Agente alterado",
+  "sf.teams.chatModelChanged": "Modelo alterado",
+  "sf.teams.chatCompacted": "Resumo da conversa",
+  "sf.teams.chatShell": "Registro do shell",
+  "sf.teams.chatListLimit": "Refine a pesquisa para ver mais conversas.",
+  "sf.teams.chatClosed": "Conversa fechada {{number}}",
 }

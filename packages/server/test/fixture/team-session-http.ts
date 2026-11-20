@@ -76,7 +76,7 @@ export async function teamSessionHttpFixture(
         finally { observations.calls.push({ path: new URL(original.url).pathname, milliseconds: Date.now() - start,
           grants: observations.grants - grants, graph: f.provider.requests.length - graph }) }
       }
-      return yield* body({ mounted: observed, generic: generic.handler, originals }).pipe(
+      return yield* body({ mounted: observed, generic: (original) => generic.handler(original, context), originals }).pipe(
         Effect.tapCause(() => Effect.sync(() => console.info("Installed Session HTTP observations", observations.calls))),
       )
     }))

@@ -240,3 +240,19 @@ test("messages, history and active reads require response namespaces even when e
     } finally { f.close() }
   }
 }))
+
+test("synthetic message identity must match the requested session even with a correct owner envelope", async () => browser(async () => {
+  let first = true
+  const f = fixture(async () => {
+    if (first) { first = false; return list() }
+    return json({ namespace, cursor: {}, data: [
+      { type: "synthetic", id: messageID, sessionID: "ses_other", text: "foreign transcript", time: { created: 1 } },
+    ] })
+  })
+  try {
+    await f.client.list()
+    await expect(f.client.messages({ sessionID: id })).rejects.toThrow("PROTOCOL")
+    expect(f.failures).toEqual(["protocol"])
+    expect(f.client.namespace()).toBeUndefined()
+  } finally { f.close() }
+}))

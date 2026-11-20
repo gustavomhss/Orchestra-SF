@@ -5,6 +5,7 @@ import { Array, Context, Effect, Layer, Types } from "effect"
 import { Agent } from "@orchestra/schema/agent"
 import type { Permission } from "@orchestra/schema/permission"
 import { State } from "./state"
+import { SessionOwner } from "./session/owner"
 
 export const ID = Agent.ID
 export type ID = typeof ID.Type
@@ -107,6 +108,28 @@ const layer = Layer.effect(
   }),
 )
 
+/** Technical utility layer. The application graph installs admittedLayer below. */
 export const locationLayer = layer
 
-export const node = makeLocationNode({ service: Service, layer, deps: [] })
+/** Retained corporate agent handles keep the same revocable lease as their Location. */
+export const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const binding = yield* owners.location.pipe(Effect.orDie)
+  const agents = yield* Service
+  if (!binding) return agents
+  return Service.of({
+    transform: (transform) => binding.bind(agents.transform((draft) => binding.bind(Effect.suspend(() => {
+      const effect = transform(draft)
+      return Effect.isEffect(effect) ? effect : Effect.void
+    })))),
+    reload: () => binding.bind(agents.reload()),
+    withPermissions: (id, use) => binding.bind(agents.withPermissions(id, use)),
+    get: (id) => binding.bind(agents.get(id)),
+    default: () => binding.bind(agents.default()),
+    resolve: (id) => binding.bind(agents.resolve(id)),
+    select: (id) => binding.bind(agents.select(id)),
+    all: () => binding.bind(agents.all()),
+  })
+})).pipe(Layer.provide(layer))
+
+export const node = makeLocationNode({ service: Service, layer: admittedLayer, deps: [SessionOwner.node] })

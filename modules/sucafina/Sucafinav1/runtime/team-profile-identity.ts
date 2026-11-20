@@ -59,6 +59,15 @@ export function createTeamProfileIdentityBoundary(input: {
       const valid = await resolver.revalidate(candidate).catch(() => false)
       return valid && current(captured)
     },
+    async readConfiguration(candidate: unknown) {
+      if (!candidate || typeof candidate !== "object") return undefined
+      const captured = admissions.get(candidate)
+      if (!captured || !current(captured)) return undefined
+      const configuration = await resolver.readConfiguration(candidate).catch(() => undefined)
+      if (!configuration || !current(captured) || !await profiles.revalidate(candidate) || !current(captured))
+        return undefined
+      return configuration
+    },
     async revalidateResolution(candidate: unknown): Promise<boolean> {
       if (!candidate || typeof candidate !== "object") return false
       const captured = resolutions.get(candidate)

@@ -43,12 +43,18 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
   actions?: readonly SessionAccess.Action[]
   roles?: boolean
   grants?: readonly SfProductGrant[]
+  enabled?: NonNullable<Parameters<typeof teamProductFixture>[0]>["enabled"]
+  direct?: NonNullable<Parameters<typeof teamProductFixture>[0]>["direct"]
+  teams?: boolean
+  tokenSeconds?: number
+  sessionSeconds?: number
   legacyID?: SessionV2.ID
   extraNodes?: readonly Extra[]
 } = {}) {
   const declared = input.actions ?? SessionAccess.Actions
   const f = await teamProductFixture({
-    roles: input.roles, enabled: [profileA, profileB],
+    roles: input.roles, enabled: input.enabled ?? (input.teams === false ? [] : [profileA, profileB]),
+    direct: input.direct, teams: input.teams, tokenSeconds: input.tokenSeconds, sessionSeconds: input.sessionSeconds,
     grants: input.grants ?? [oid, other].map((principalRef) => ({ ...productGrant(principalRef), sessionActions: declared })),
   })
   const filename = path.join(f.directory, "core-owned.sqlite")

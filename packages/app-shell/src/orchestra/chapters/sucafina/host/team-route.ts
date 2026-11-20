@@ -1,4 +1,6 @@
-import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Option, Schema } from "effect"
+import { Session } from "@orchestra/schema/session"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfHref, SfOwnerSelection, SfResolvedRoute, SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { sfParseOwnerQuery, sfSameTeamRef, sfOwnerMatchesContext } from "../navigation-state/owner"
 import { matchSfNativeRoutePath } from "../route-registry"
@@ -8,6 +10,7 @@ export type SfTeamWebRoute =
   | Readonly<{ kind: "context"; profile?: TeamProfile.Ref }>
   | Readonly<{ kind: "administration" }>
   | Readonly<{ kind: "business"; profile: TeamProfile.Ref; href: string }>
+  | Readonly<{ kind: "session"; profile: TeamProfile.Ref; sessionID?: Session.ID; href: string }>
   | Readonly<{ kind: "invalid" }>
 const contextPath = "/orchestra/sf-home/context", adminPath = "/orchestra/sf-home/administration"
 
@@ -18,6 +21,16 @@ export function sfTeamContextHref(binding: SfTeamInstallationDescriptor): string
 export function sfTeamAdministrationHref(binding: SfTeamInstallationDescriptor): string {
   return adminPath + "?" + new URLSearchParams({ contractRevision: "sf-team-profile/1",
     server: binding.publicOrigin, installationId: binding.installationId, tenantId: binding.tenantId })
+}
+export function sfTeamSessionHref(binding: SfTeamInstallationDescriptor, profile: TeamProfile.Ref, sessionID?: string): string {
+  if (Option.isNone(Schema.decodeUnknownOption(TeamProfile.Ref, { onExcessProperty: "error" })(Object.fromEntries(Object.entries(profile)))) ||
+      profile.installationId !== binding.installationId || profile.tenantId !== binding.tenantId ||
+      sessionID !== undefined && (!Schema.is(Session.ID)(sessionID) || !/^[A-Za-z0-9_-]{1,256}$/.test(sessionID)))
+    throw new Error("TEAM_SESSION_LINK_INVALID")
+  return "/orchestra/sf-sessions/" + (sessionID ?? "new") + "?" + new URLSearchParams({
+    contractRevision: "sf-team-profile/1", server: binding.publicOrigin,
+    installationId: profile.installationId, tenantId: profile.tenantId, teamObjectId: profile.teamObjectId,
+  })
 }
 function installationQuery(params: URLSearchParams, binding: SfTeamInstallationDescriptor) {
   if (params.size === 0) return true
@@ -44,6 +57,18 @@ export function readSfTeamWebRoute(href: string, binding: SfTeamInstallationDesc
         parsed.profile.installationId !== binding.installationId || parsed.profile.tenantId !== binding.tenantId)
       return { kind: "invalid" }
     return { kind: "context", profile: parsed.profile }
+  }
+  if (url.pathname.startsWith("/orchestra/sf-sessions/")) {
+    const segment = url.pathname.slice("/orchestra/sf-sessions/".length)
+    const parsed = sfParseOwnerQuery(url.searchParams)
+    if (url.hash || url.searchParams.size !== 5 || !/^[A-Za-z0-9_-]{1,256}$/.test(segment) ||
+        parsed.kind !== "team" || parsed.serverKey !== binding.publicOrigin ||
+        parsed.profile.installationId !== binding.installationId || parsed.profile.tenantId !== binding.tenantId)
+      return { kind: "invalid" }
+    const session = segment === "new" ? undefined : Schema.decodeUnknownOption(Session.ID)(segment)
+    if (session && Option.isNone(session)) return { kind: "invalid" }
+    return { kind: "session", profile: parsed.profile, href: url.pathname + url.search,
+      ...(session && Option.isSome(session) ? { sessionID: session.value } : {}) }
   }
   const candidate = matchSfNativeRoutePath(url.pathname)
   if (!candidate) return { kind: "invalid" }

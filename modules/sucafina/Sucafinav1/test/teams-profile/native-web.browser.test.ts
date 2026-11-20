@@ -37,7 +37,8 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     driver = await launchBrowserDriver("teams-web-transport")
     phase = "build"
     built = await buildNativeTeamsWeb()
-    f = await nativeTeamWebFixture({ enabled: [profileA, profileB], direct: [profileA, profileB] })
+    f = await nativeTeamWebFixture({ enabled: [profileA, profileB], direct: [profileA, profileB],
+      sessionActions: ["read", "create", "prompt", "run", "control"] })
     await f.seedPlannerVersion()
     admin = await nativeTeamWebFixture({ roles: false, grants: [], enabled: [], direct: [] })
     admin.provider.teamResources.set(profileA.teamObjectId, teamRow())
@@ -162,6 +163,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     await waitTeam(human.page, profileB.teamObjectId)
     await human.page.goBack()
     await waitTeam(human.page, profileA.teamObjectId)
+    await human.page.waitForURL((url) => url.searchParams.get("teamObjectId") === profileA.teamObjectId)
     expect(new URL(human.page.url()).searchParams.get("teamObjectId")).toBe(profileA.teamObjectId)
 
     phase = "narrow-and-keyboard"
@@ -197,6 +199,79 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     await picker(second).selectOption(profileB.teamObjectId)
     await waitTeam(second, profileB.teamObjectId)
     expect(await picker(human.page).inputValue()).toBe(profileA.teamObjectId)
+
+    phase = "native-session-creation"
+    const chat = (page: Page) => page.locator('[data-sf-session-workspace][data-sf-session-state="ready"]')
+    const editor = (page: Page) => chat(page).locator('[data-slot="prompt-input-v2-editor"] [contenteditable="true"]')
+    const send = (page: Page) => chat(page).locator('[data-action="prompt-submit"]')
+    const openChat = async (page: Page) => {
+      await page.locator(".sf-team-sidebar [data-sf-open-chat]").click()
+      await chat(page).waitFor({ state: "visible" })
+      await page.waitForFunction(() => document.querySelector("[data-sf-session-workspace]")?.getAttribute("data-sf-session-stream") === "open")
+    }
+    const submit = async (page: Page, text: string) => {
+      await editor(page).fill(text)
+      await send(page).click()
+      await chat(page).locator("[data-sf-prompt-admitted]").filter({ hasText: text }).waitFor({ state: "visible" })
+      const id = new URL(page.url()).pathname.split("/").at(-1)!
+      expect(id).toMatch(/^ses_[A-Za-z0-9_-]+$/)
+      return id
+    }
+    await openChat(human.page)
+    expect(await chat(human.page).locator("[data-sf-session-id]").count()).toBe(0)
+    const createdA = await submit(human.page, "Recorded prompt for Team A")
+    expect(observed.some((call) => call.path === f!.binding.mount + "/api/session" && call.method === "POST" &&
+      call.cookie && !call.basic && call.selector === JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: profileA }))).toBe(true)
+    expect(observed.some((call) => call.path === f!.binding.mount + "/api/event" && call.status === 200 && call.cookie && !call.basic)).toBe(true)
+    expect(await chat(human.page).locator("[data-sf-session-id]").getAttribute("data-sf-session-id")).toBe(createdA)
+
+    phase = "native-session-owner-isolation"
+    await openChat(second)
+    expect(await chat(second).locator("[data-sf-session-id]").count()).toBe(0)
+    const createdB = await submit(second, "Recorded prompt for Team B")
+    expect(createdB).not.toBe(createdA)
+    expect(await chat(second).locator('[data-sf-session-id="' + createdA + '"]').count()).toBe(0)
+    expect(await chat(human.page).locator('[data-sf-session-id="' + createdB + '"]').count()).toBe(0)
+
+    phase = "native-session-incremental-stream"
+    await editor(human.page).fill("Private chat draft in A")
+    await picker(second).selectOption(profileA.teamObjectId)
+    await waitTeam(second, profileA.teamObjectId)
+    await openChat(second)
+    await chat(second).locator('[data-sf-session-id="' + createdA + '"]').waitFor({ state: "visible" })
+    const streamReads = observed.filter((call) => call.path === f!.binding.mount + "/api/event").length
+    const peerA = await submit(second, "A new session from the other window")
+    // The first document stays in the background. This title appears through
+    // its already-open, namespace-checked SSE; no focus or refresh is requested.
+    await chat(human.page).locator('[data-sf-session-id="' + peerA + '"]').waitFor({ state: "visible" })
+    expect(observed.filter((call) => call.path === f!.binding.mount + "/api/event")).toHaveLength(streamReads)
+    expect(await editor(human.page).textContent()).toBe("Private chat draft in A")
+    expect(await chat(human.page).locator('[data-sf-session-id="' + createdB + '"]').count()).toBe(0)
+
+    phase = "native-session-close-and-restore"
+    await human.page.bringToFront()
+    await waitTeam(human.page, profileA.teamObjectId)
+    await chat(human.page).waitFor({ state: "visible" })
+    expect(await editor(human.page).textContent()).toBe("Private chat draft in A")
+    await chat(human.page).locator(".sf-team-session-tab[data-active]").getByRole("button", { name: "Close tab", exact: true }).click()
+    await human.page.getByRole("button", { name: "Cancel", exact: true }).click()
+    expect(await editor(human.page).textContent()).toBe("Private chat draft in A")
+    await chat(human.page).locator(".sf-team-session-tab[data-active]").getByRole("button", { name: "Close tab", exact: true }).click()
+    await human.page.locator("[data-sf-confirm-discard]").click()
+    await chat(human.page).locator('[data-sf-session-reopen="' + createdA + '"]').waitFor({ state: "visible" })
+    expect(await editor(human.page).textContent()).toBe("")
+    await chat(human.page).locator('[data-sf-session-reopen="' + createdA + '"]').click()
+    await chat(human.page).locator("[data-sf-prompt-admitted]").filter({ hasText: "Recorded prompt for Team A" }).waitFor({ state: "visible" })
+    const storedChat = await human.page.evaluate(() => Object.values(sessionStorage).join("\n"))
+    expect(storedChat).not.toMatch(/Private chat draft in A|Recorded prompt for Team A|Recorded prompt for Team B/)
+    await human.page.reload({ waitUntil: "domcontentloaded" })
+    await chat(human.page).waitFor({ state: "visible" })
+    await chat(human.page).locator("[data-sf-prompt-admitted]").filter({ hasText: "Recorded prompt for Team A" }).waitFor({ state: "visible" })
+    expect(new URL(human.page.url()).pathname.split("/").at(-1)).toBe(createdA)
+    expect(await editor(human.page).textContent()).toBe("")
+    expect(f.sessionCalls.wakes).toBe(3)
+    expect(f.sessionCalls.resumes).toBe(0)
+    expect(f.business.all("SELECT session_id FROM session_input")).toHaveLength(3)
 
     phase = "native-planner-draft"
     const owner = new URLSearchParams({ contractRevision: "sf-team-profile/1", server: f.binding.origin,

@@ -106,6 +106,30 @@ A política compartilhada é mantida em tabelas próprias do SQLite privado da i
 
 Esta etapa prepara o leitor vinculado à sessão autenticada. A seleção de perfil por Team, sua admissão, o isolamento dos dados e a comprovação corporativa da migração continuam sujeitos às etapas e aos gates do [plano Teams Profile](../../../../docs/architecture/teams-profile-migration.md). A opção, por si só, não qualifica a instalação para produção.
 
+## Permissões explícitas para sessões corporativas
+
+A seleção de uma Team determina o contexto compartilhado. Para sessões privadas do Core, cada registro de `grants` pode declarar `sessionActions` para o `principalRef` corporativo já verificado. A ausência da propriedade equivale a uma lista vazia; nenhum papel de superfície ou grupo supremo preenche essa lista.
+
+| Ação | Uso autorizado, ainda sujeito ao owner e ao recurso atual |
+| --- | --- |
+| `read` | Listar e consultar sessões, mensagens, eventos e contexto privados. |
+| `create` | Criar um novo ID no owner atual ou repetir a mesma criação. |
+| `fork` | Solicitar uma cópia de sessão autorizada; a nova sessão também exige `create`. |
+| `move` | Alterar a localização técnica sem transferir o owner. |
+| `write` | Renomear, arquivar, remover e alterar o estado de reversão. |
+| `prompt` | Registrar prompt ou contexto sintético. |
+| `run` | Iniciar ou retomar execução, compactar, executar comando/skill ou gerar resposta. |
+| `model` | Escolher agente/modelo ou alterar políticas de modelo e permissão. |
+| `control` | Interromper uma execução ou processo autorizado. |
+
+Para acrescentar leitura e gravação de prompts a um grant existente, por exemplo, declare `"sessionActions": ["read", "prompt"]`. Isso não permite iniciar execução. Um prompt com retomada automática exige também `run` antes de registrar trabalho; sem esse grant, use somente o fluxo explícito de gravação sem retomada. Definir agente/modelo em uma nova sessão exige `model`. Os controles de execução C15, seleção, recibos de skills, provedor e recursos continuam obrigatórios.
+
+Os campos separados `referenceActions` (valor conhecido: `list`) e `migrationActions` (valores conhecidos: `map`, `cut`, `recover`) também têm ausência equivalente a lista vazia. Esses catálogos não ativam endpoints: referências exigem uma ACL instalada para a fonte real; migração exige o fluxo de manutenção, grupo supremo atual, mapeamentos de owners e journal verificados. A configuração sozinha não autoriza um corte ou restore. `replay` não é um grant de sessão comum; bytes históricos só entram pelo mapeamento privado de recuperação.
+
+Todos os arrays recusam valores desconhecidos, repetidos, nulos ou de outro tipo. O servidor relê a política privada e os direitos de recursos durante cada operação; mudar um desses conjuntos invalida admissões anteriores. Sessões vinculadas a um caso continuam sujeitas à ACL corrente desse caso. Uma falha ou lista de exceções incompleta não vira acesso irrestrito.
+
+A ativação de um armazenamento corporativo exige a migração e seu controle de geração persistente separado dos backups de negócio. Selecionar uma Team não executa migração, cria um grant, copia dados legados nem reatribui IDs existentes. Os gates de isolamento, recuperação e instalação do plano continuam sendo requisitos de aceite.
+
 ## Evidência histórica do console aposentado (não é aceite da Edition)
 
 Os antigos componentes e estilos de sidebar verde descritos abaixo são apenas registro da implementação desativada; a Edition usa exclusivamente a interface Orchestra.
@@ -161,3 +185,50 @@ Uma réplica e arquivos no mesmo disco não protegem contra perda deste Mac. Um 
 O Planner aceita planilhas `.xlsx` e `.xls` BIFF8 reais, com limites de tamanho, folhas e células, sem executar fórmulas nem aceitar links externos. A exportação All Members do Dashboard pode ser importada diretamente: Summary by Leader é auxiliar e os campos de talento não entram no roster. Em planos desbloqueados, a importação sincroniza as posições atomicamente; em planos bloqueados, apenas o roster é atualizado.
 
 As páginas de negócio consultam alterações a cada 30 segundos enquanto visíveis. Campos modificados e editores abertos impedem a substituição do conteúdo até salvar ou navegar, preservando a escrita em andamento. Os links de notificações abrem o registro correspondente, quando autorizado, inclusive uma requisição fechada.
+
+## Configuração compartilhada de Team (contrato v1)
+
+Uma Team habilitada pode receber um documento compartilhado em
+`<mount>/api/ui/team-profiles/configuration`. A leitura administrativa usa GET
+com a consulta fechada `contractRevision=sf-team-profile/1&installationId=...&tenantId=...&teamObjectId=...`.
+A alteração usa POST com a mesma consulta sem `teamObjectId`, o cookie da sessão
+Microsoft atual, `Origin` igual à origem pública configurada e
+`Content-Type: application/json`.
+
+O corpo contém `profile` completo, `expectedRevision` numérico igual à revisão
+corrente do catálogo e `document: { version: 1, settings: ... }`. A revisão é
+compartilhada com habilitar, desabilitar e remover Teams; uma alteração
+concorrente retorna conflito e exige reler o estado antes de propor outro
+documento. Uma repetição semanticamente idêntica com a revisão corrente não
+cria novo evento de auditoria. A política corrente e o pertencimento ao grupo
+supremo são verificados de novo dentro da escrita.
+
+O subconjunto inicial de `settings` admite `model`, `default_agent` e
+`agents`. Cada agente pode declarar `name`, `description`, `system`,
+`model`, `variant`, `mode`, `hidden` e `disabled`. O identificador de
+modelo usa `provedor/modelo`; o documento não concede acesso ao provedor.
+O leitor recusa campos fora desse contrato, inclusive credenciais, conexões
+pessoais, headers, comandos, providers, MCP, plugins, skills, caminhos,
+permissões e aprovação de ferramentas. Documentos de no máximo 64 KiB e no
+máximo 100 agentes têm limites adicionais por campo.
+
+O GET retorna `origin: "installation-team-store"`, a referência completa da
+Team, a revisão e o documento. Esse rótulo identifica a origem dos dados,
+sem substituir a autorização. O banco privado guarda a configuração e a
+auditoria fora dos snapshots de negócio. Remover uma Team impede a leitura
+ativa de seu documento; a configuração histórica não muda de titular nem é
+reatribuída a outra Team.
+
+No Core corporativo, abrir os serviços de uma localização exige uma
+configuração atual obtida por uma admissão privada de sessão. Um documento
+ausente, uma revisão antiga ou uma sessão revogada impedem a abertura; não
+há descoberta substituta em `orchestra.json`, no diretório global ou em
+`.orchestra`. Serviços mutáveis ficam separados por Team, pessoa, revisões
+e lease da requisição, ainda que usem a mesma pasta técnica. Criar ou ler uma
+sessão continua exigindo as ações explícitas e as ACLs de recurso correntes;
+configurar uma Team não concede essas ações.
+
+Esta fonte fechada ainda não qualifica execução de modelo, credenciais
+pessoais, MCP, plugins, hooks ou tarefas agendadas. Essas fronteiras precisam
+de seus próprios vínculos e verificações de proprietário antes da ativação
+corporativa. Nenhum documento legado é importado ou adotado automaticamente.

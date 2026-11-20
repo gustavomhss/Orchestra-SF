@@ -63,7 +63,7 @@ export const Plugin = define({
         const entries = yield* config.entries()
         // Config lists `.orchestra` folders once, when the location opens. One created later (by the agent
         // file API) is scanned here too, so reloading agents picks it up without reopening the location.
-        const local = location && path.join(location.directory, ".orchestra")
+        const local = config.source !== "team" && location && path.join(location.directory, ".orchestra")
         const late =
           local &&
           !entries.some((entry) => entry.type === "directory" && path.resolve(entry.path) === path.resolve(local))

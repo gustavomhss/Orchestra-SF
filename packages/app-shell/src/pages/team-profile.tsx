@@ -1,5 +1,5 @@
 import { Router, Route, useBeforeLeave, useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, createMemo, createUniqueId, For, Match, onCleanup, onMount, Show, Switch, type JSX } from "solid-js"
+import { createEffect, createMemo, createUniqueId, For, lazy, Match, onCleanup, onMount, Show, Suspense, Switch, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "../context/language"
 import { usePlatform } from "../context/platform"
@@ -15,13 +15,17 @@ import { SfCasesView } from "../orchestra/chapters/sucafina/decisions/cases"
 import { SfIntentView } from "../orchestra/chapters/sucafina/decisions/intent"
 import type { SfSurfaceProps } from "../orchestra/chapters/sucafina/context/contracts"
 import { sfNativeOwnerChapterRequest } from "../orchestra/chapters/sucafina/host/native-chapter-entry"
-import { resolveSfTeamNativeRoute, sfTeamAdministrationHref } from "../orchestra/chapters/sucafina/host/team-route"
+import { resolveSfTeamNativeRoute, sfTeamAdministrationHref, sfTeamSessionHref } from "../orchestra/chapters/sucafina/host/team-route"
 import { navigation as chapterNavigation } from "../orchestra/navigation"
 import type { SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import "./team-profile.css"
 
+const SfTeamSessionWorkspace = lazy(async () => {
+  const { SfTeamSessionWorkspace } = await import("./team-session")
+  return { default: SfTeamSessionWorkspace }
+})
 type CopyKey = Parameters<ReturnType<typeof useLanguage>["t"]>[0]
 const browserStorage = {
   getItem: (key: string) => window.sessionStorage.getItem(key),
@@ -171,9 +175,19 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
     if (typeof event.to === "number" && target === currentHref()) { setUi("notice", "sf.teams.invalidLink"); return }
     void act(() => runtime.navigate(target, typeof event.to === "number" ? "history" : "link", () => event.retry(true)))
   })
-  const unload = (event: BeforeUnloadEvent) => { if (runtime.owner.hasDirtyDrafts()) { event.preventDefault(); event.returnValue = "" } }
+  const unload = (event: BeforeUnloadEvent) => { if (runtime.hasDirtyDrafts()) { event.preventDefault(); event.returnValue = "" } }
   const focus = () => { if (!disposed && !ui.busy && !ui.consent) void act(() => runtime.refresh()) }
   const keyboard = (event: KeyboardEvent) => {
+    if (runtime.view.kind === "session" && (event.ctrlKey || event.metaKey) && !event.altKey && !ui.busy) {
+      const profile = context()?.stamp.team?.owner.profile
+      if (!event.shiftKey && event.key.toLowerCase() === "w" && runtime.sessions.state.active) {
+        event.preventDefault(); void act(() => runtime.closeSession(runtime.sessions.state.active!)); return
+      }
+      const closed = runtime.sessions.state.closed[0]
+      if (event.shiftKey && event.key.toLowerCase() === "t" && profile && closed) {
+        event.preventDefault(); go(sfTeamSessionHref(props.binding, profile, closed)); return
+      }
+    }
     if (!(event.ctrlKey || event.metaKey) || !event.shiftKey || event.key.toLowerCase() !== "p") return
     event.preventDefault()
     const picker = [...document.querySelectorAll<HTMLSelectElement>("[data-sf-team-picker]:not(:disabled)")]
@@ -224,8 +238,13 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
         aria-current={runtime.view.route?.pathname.startsWith(item.href.split("?")[0]!) ? "page" : undefined}
         onClick={() => go(item.href)}>{language.t(item.chapter.label)}</button>}</For>
     </Show>
-    <button type="button" class="sf-team-nav-item" disabled
-      title={language.t("sf.teams.chatUnavailable")}>{language.t("sf.teams.newChat")}</button>
+    <button type="button" class="sf-team-nav-item" disabled={ui.busy || !runtime.owner.ready()}
+      data-sf-open-chat title={!runtime.owner.ready() ? language.t("sf.teams.chatUnavailable") : undefined}
+      aria-current={runtime.view.kind === "session" ? "page" : undefined}
+      onClick={() => {
+        const profile = context()?.stamp.team?.owner.profile
+        if (profile) go(sfTeamSessionHref(props.binding, profile))
+      }}>{language.t("sf.teams.newChat")}</button>
   </>
   const businessRoute = () => runtime.view.kind === "business" && runtime.owner.ready() ? runtime.view.route : undefined
   return <div class="sf-team-shell" data-sf-teams-shell data-sf-teams-state={runtime.state().status}
@@ -246,7 +265,7 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
       <SfTeamPicker runtime={runtime} choose={choose} busy={() => ui.busy} /><nav aria-label={language.t("sf.teams.menu")}>{menu()}</nav>
     </div>
     <aside class="sf-team-sidebar"><nav aria-label={language.t("sf.teams.menu")}>{menu()}</nav></aside>
-    <main class="sf-team-main" id="sf-team-content">
+    <main class="sf-team-main" classList={{ "sf-team-main-chat": runtime.view.kind === "session" }} id="sf-team-content">
       <Show when={ui.notice}><p class="sf-team-notice" role="alert">{language.t(ui.notice!)}</p></Show>
       <Show when={!props.window.persistent}><p class="sf-team-notice" role="status">{language.t("sf.teams.windowEphemeral")}</p></Show>
       <Show when={runtime.view.kind === "invalid"}><p role="alert">{language.t("sf.teams.invalidLink")}</p></Show>
@@ -277,6 +296,11 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
       <Show when={runtime.view.kind === "administration" && context()}>
         <SfTeamProfilesAdministration binding={props.binding} context={context} generation={runtime.generation}
           fetch={runtime.fetch} refresh={runtime.refresh} />
+      </Show>
+      <Show when={runtime.view.kind === "session" && runtime.state().status === "authenticated" && runtime.owner.ready()}>
+        <Suspense fallback={<p role="status">{language.t("session.messages.loading")}</p>}>
+          <SfTeamSessionWorkspace runtime={runtime} busy={ui.busy} act={act} go={go} notice={(key) => setUi("notice", key)} />
+        </Suspense>
       </Show>
       <Show when={businessRoute()} keyed>{(route) =>
         <SfContextBoundary value={runtime.owner}><SfTeamLabelProvider label={teamLabel}>

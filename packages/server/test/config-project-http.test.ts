@@ -21,7 +21,7 @@ import { ConfigGroup } from "@orchestra/protocol/groups/config"
 import { ProjectGroup } from "@orchestra/protocol/groups/project"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
 import { SchemaErrorMiddleware } from "@orchestra/protocol/middleware/schema-error"
-import { Context, Effect, Layer, LayerMap, Option } from "effect"
+import { Context, Effect, Layer, LayerMap, Option, RcMap } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { ServerAuth } from "../src/auth"
@@ -53,7 +53,7 @@ function serve(input: { config: string; locations: Locations }) {
     const routes = HttpApiBuilder.layer(api).pipe(
       Layer.provide(Layer.mergeAll(ProjectHandler, ConfigHandler)),
       Layer.provide(Layer.succeedContext(context)),
-      Layer.provide(Layer.succeed(LocationServiceMap.Service, input.locations)),
+      Layer.provide(Layer.succeed(LocationServiceMap.Service, { ...input.locations, keys: RcMap.keys(input.locations.rcMap).pipe(Effect.map((values) => Array.from(values))) })),
       Layer.provide(authorizationLayer),
       Layer.provide(schemaErrorLayer),
       Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some("secret") })),

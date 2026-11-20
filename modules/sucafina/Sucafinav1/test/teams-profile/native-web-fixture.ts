@@ -1,4 +1,4 @@
-import { Layer, Option, Schema } from "effect"
+import { Effect, Layer, Option, Schema } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { SfTeamInstallationDescriptor, type SfContextStamp } from "@orchestra/schema/sucafina/context"
@@ -19,12 +19,22 @@ import { contributions } from "../../index.ts"
 import { createApplication } from "../../runtime/application.ts"
 import { createTeamProfileIdentityBoundary } from "../../runtime/team-profile-identity.ts"
 import { createTeamProfileHttp } from "../../runtime/team-profile-http.ts"
-import { teamProductFixture } from "./product-fixture.ts"
+import type { SessionAccess } from "@orchestra/schema/session-access"
+import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import type { teamProductFixture } from "./product-fixture.ts"
+import { profileA } from "./installation-fixture.ts"
+import { teamSessionFixture } from "../../../../../packages/core/test/fixture/team-session.ts"
+import { applicationServices } from "../../../../../packages/server/src/routes.ts"
+import { isInstalledSessionPath, makeInstalledSessionHttp } from "../../../../../packages/server/src/session-http.ts"
 
 /** Real private fixture files, signed OIDC, role/grant readers, SQLite and the installed
  * public handlers. No browser-supplied principal, admission handle or access revision. */
-export async function nativeTeamWebFixture(input: Parameters<typeof teamProductFixture>[0] = {}) {
-  const f = await teamProductFixture(input)
+export async function nativeTeamWebFixture(input: NonNullable<Parameters<typeof teamProductFixture>[0]> & {
+  /** Explicit only in the conversation fixture; existing browser cases receive no Session action grant. */
+  sessionActions?: readonly SessionAccess.Action[]
+} = {}) {
+  const enabled = input.enabled ?? (input.teams === false ? [] : [profileA])
+  const f = await teamSessionFixture({ ...input, enabled, actions: input.sessionActions ?? [], extraNodes: [applicationServices] })
   const descriptor = Schema.decodeUnknownSync(SfTeamInstallationDescriptor)({
     installationId: f.technical.installationId, projectId: f.technical.projectId, hostId: f.technical.hostId,
     tenantId: f.binding.tenantId, publicOrigin: f.binding.origin, mount: f.binding.mount,
@@ -90,11 +100,61 @@ export async function nativeTeamWebFixture(input: Parameters<typeof teamProductF
   const native = mountSfNativeProjections({ mount: f.binding.mount, context, handlers })
   const admin = createTeamProfileHttp({ ...f.binding, resolver: f.resolver })
   const business = createApplication(f.binding.mount, application)
+  // Shared data is configured through the actual confidential admin endpoint before any request lease.
+  // These tests only record prompt admission; they never supply a model/provider execution replacement.
+  const configured: TeamProfile.Ref[] = []
+  try {
+    for (const profile of enabled) {
+      const query = new URLSearchParams({ contractRevision: "sf-team-profile/1",
+        installationId: f.binding.installationId, tenantId: f.binding.tenantId })
+      const document: TeamProfile.ConfigurationDocument = { version: 1, settings: {
+        default_agent: "analyst", agents: { analyst: { name: "Shared conversation",
+          system: "Synthetic approved Team conversation instructions." } },
+      } }
+      const request = f.request(`/api/ui/team-profiles/configuration?${query}`, f.cookie, {
+        method: "POST", headers: { origin: f.binding.origin, "content-type": "application/json" },
+        body: JSON.stringify({ profile, expectedRevision: (await f.profiles.read()).configRevision, document }),
+      })
+      await f.identity.prepare(request)
+      const response = await admin(request)
+      if (!response || response.status !== 200 || (await response.json()).status !== "ok")
+        throw new Error("Actual admin configuration admission required before the conversation fixture")
+      configured.push(profile)
+    }
+  } catch (error) {
+    await metadata.dispose()
+    await f[Symbol.asyncDispose]()
+    throw error
+  }
+  const ready = Promise.withResolvers<(request: Request) => Promise<Response>>()
+  const release = Promise.withResolvers<void>()
+  const sessionRequests: Request[] = []
+  const runtimeState = { opened: false, closed: false }
+  // f.run keeps this one AppNodeBuilder graph and its Scope alive until close awaits every finalizer.
+  const runtime = f.run(Effect.gen(function* () {
+    yield* Effect.addFinalizer(() => Effect.sync(() => { runtimeState.closed = true }))
+    const mounted = yield* makeInstalledSessionHttp({
+      origin: f.binding.origin, mount: f.binding.mount, location: () => f.location,
+      readAdmission: (original) => { sessionRequests.push(original); return f.authority.readCoreSessionAdmission(original) },
+    })
+    runtimeState.opened = true
+    ready.resolve(mounted)
+    yield* Effect.promise(() => release.promise)
+  }))
+  void runtime.catch(ready.reject)
+  const session = await ready.promise.catch(async (error) => {
+    release.resolve()
+    await runtime.catch(() => undefined)
+    await metadata.dispose()
+    await f[Symbol.asyncDispose]()
+    throw error
+  })
   const handle = async (request: Request) => {
     if (new URL(request.url).pathname === "/api/sucafina/installations") return metadata.handler(request)
     const identity = await f.identity.handle(request)
     if (identity) return identity
     await f.identity.prepare(request)
+    if (isInstalledSessionPath(new URL(request.url).pathname, f.binding.mount)) return session(request)
     return await admin(request) ?? await native(request) ?? await business(request) ?? new Response(null, { status: 404 })
   }
   const seedPlannerVersion = async () => f.persistence.transaction("planner", async (snapshot) => {
@@ -105,6 +165,15 @@ export async function nativeTeamWebFixture(input: Parameters<typeof teamProductF
     snapshot.data.officials = {}
     return { commit: true, value: undefined }
   })
-  return { ...f, descriptor, handle, seedPlannerVersion, metadataCalls,
-    close: async () => { await metadata.dispose(); await f.close() } }
+  const closing: { result?: Promise<void> } = {}
+  const close = () => closing.result ??= (async () => {
+    release.resolve()
+    const results = await Promise.allSettled([runtime, metadata.dispose()])
+    await f[Symbol.asyncDispose]()
+    const failure = results.find((result) => result.status === "rejected")
+    if (failure?.status === "rejected") throw failure.reason
+  })()
+  return { ...f, descriptor, handle, seedPlannerVersion, metadataCalls, configured: Object.freeze(configured),
+    sessionRequests, runtimeState, sessionCalls: f.calls, sessionActions: Object.freeze([...input.sessionActions ?? []]), close,
+    [Symbol.asyncDispose]: close }
 }
