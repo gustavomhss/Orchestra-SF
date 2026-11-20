@@ -2,6 +2,9 @@
 .sf-u05-overview-intro{display:grid;gap:.35rem;max-width:78ch}
 .sf-u05-overview-intro h2,.sf-u05-overview h2{font-size:1.12rem;font-weight:650;margin:0}
 .sf-u05-overview-intro p{margin:.15rem 0;line-height:1.55}
+.sf-u05-overview-filters{display:flex;flex-wrap:wrap;align-items:end;gap:.75rem}
+.sf-u05-overview-filters label{display:grid;gap:.35rem;min-width:9rem;flex:1}
+.sf-u05-overview-filters input,.sf-u05-overview-filters select{font:inherit;min-height:2.5rem;min-width:0;width:100%}
 .sf-u05-overview-metrics{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
 .sf-u05-overview-metrics div{border:1px solid var(--border,#57607040);border-radius:.75rem;padding:1rem;min-width:0}
 .sf-u05-overview-metrics dt{font-size:.875rem;color:var(--text-muted,inherit)}
