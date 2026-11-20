@@ -165,7 +165,7 @@ test("record observation projects all fields between two real source reads and e
     const observed = await f.read(f.ref, f.call)
     expect(observed.state).toBe("fresh")
     expect(f.reads).toBe(2)
-    if (observed.state !== "fresh" || !observed.authorizedProjection) throw new Error("Actual joint projection unavailable")
+    if (observed.state !== "fresh" || !observed.authorizedProjection || !("values" in observed.authorizedProjection)) throw new Error("Actual joint projection unavailable")
     expect(observed.currentRef).toEqual(f.ref)
     expect(observed.authorizedProjection.values.map(({ value }) => value)).toEqual([120, "Observed vendor"])
     const jointProviderReads = f.provider.requests.length - providerStart
