@@ -38,7 +38,7 @@ export function c17ReadOrigin(): 0 | 1 | 2 | 3 {
   } finally { c17End("instrumentation.stack", started) }
 }
 
-export function c17Clone<T>(value: T, label: string): T {
+export function c17Clone<T>(value: T, label: 0 | 1 | 2 | 3): T {
   const started = c17Clock()
   try { return structuredClone(value) }
   finally { c17End("state.fullClone." + label, started) }
