@@ -185,9 +185,16 @@ test("authority revoked in the last source callback cannot survive the final C08
   try {
     const observed = observeResults(fixture)
     observed.hooks.afterSources = (count) => { if (count === 4) fixture.fixture.access.allowed = false }
-    expect(await readHistoricalScenarios(observed.results, fixture.saved, fixture.context, "parallel-joint"))
-      .toEqual(fixture.saved.map(() => ({ status: "denied", reason: "result-access-unavailable" })))
-    expect(observed.counts.sources).toBe(4)
+    const current = await readHistoricalScenarios(observed.results, fixture.saved, fixture.context, "parallel-joint")
+    // The last sibling is denied by its post-source authority callback. The
+    // earlier sibling reaches C08's final read after revocation; that unavailable
+    // read must not overwrite the denial already recorded for the last sibling.
+    expect(current).toEqual([
+      { status: "unavailable", reason: "result-unavailable" },
+      { status: "denied", reason: "result-access-unavailable" },
+    ])
+    for (const entry of current) expect(entry).not.toHaveProperty("value")
+    expect(observed.counts).toEqual({ reads: 3, cases: 4, sources: 4 })
   } finally { await fixture.close() }
 }, 60000)
 
