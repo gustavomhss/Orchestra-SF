@@ -74,7 +74,7 @@ export async function ancestryProofFixture() {
       hooks.source?.(result)
       return result
     }
-    let coverageReader: Parameters<typeof business.bindForecastCoverage>[0] = async (reference, call) => {
+    const coverageReader: Parameters<typeof business.bindForecastCoverage>[0] = async (reference, call) => {
       counts.coverage++
       const source = await business.plannerSources.resolveForecastSource(reference, call)
       if (source.status !== "ok") return source
@@ -169,7 +169,11 @@ export async function ancestryProofFixture() {
     })
     return { authority, business, store, persistence, control, hooks, counts, caseRef, leaf, eventRef, incoming, request, ui, run,
       canonical, resolve, observe, observation, capture, rawSnapshots, corrupt, changeSource, cleanup,
-      replaceCoverage: () => { const original = coverageReader; coverageReader = (...args) => original(...args); business.bindForecastCoverage(coverageReader) },
+      replaceCoverage: () => {
+        const original = business.plannerSources.resolveForecastCoverage
+        business.plannerSources.resolveForecastCoverage = (...args) => original(...args)
+        return business.plannerSources.resolveForecastCoverage !== original
+      },
       reset: () => { for (const key of Object.keys(counts) as (keyof typeof counts)[]) counts[key] = 0 } }
   } catch (error) { await cleanup(); throw error }
 }
