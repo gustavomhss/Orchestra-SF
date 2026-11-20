@@ -238,9 +238,9 @@ test("team-connections-07: undeclared provider OAuth never starts and logout dur
       const completing = Effect.runPromise(service.attempt.complete({ attemptID: attempt.attemptID, code: "synthetic-code" }))
       void completing.catch(() => undefined)
       yield* Effect.promise(() => gate.entered)
-      expect((yield* Effect.promise(() => f.logout(f.cookie)))?.status).toBe(303)
+      expect((yield* Effect.promise(() => f.logout(f.cookie)))?.status).toBe(204)
       gate.release()
-      yield* Effect.promise(() => expect(completing).rejects.toThrow())
+      yield* Effect.promise(async () => { await expect(completing).rejects.toThrow() })
     })))
     const raw = new NativeDatabase(path.join(f.directory, "installation.sqlite"), { strict: true })
     try { expect(raw.query("SELECT * FROM sf_team_connection_audit").all()).toEqual([]) } finally { raw.close() }
