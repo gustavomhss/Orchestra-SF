@@ -1,3 +1,4 @@
+import { sfCreateReportsDiagnostic } from "./reports-create-diagnostic.ts"
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { constants } from "node:fs"
@@ -90,9 +91,11 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const observeSnapshot = (surface: Surface, payload?: string): { materialize: () => Snapshot; copy?: () => Snapshot } => {
     const prior = materializations.get(surface)
     if (payload !== undefined && prior?.payload === payload) {
+      sfCreateReportsDiagnostic.metric("storage.memo-hit-" + surface, undefined, payload.length)
       const materialize = () => materializeSnapshot(prior)
       return { materialize, copy: materialize }
     }
+    sfCreateReportsDiagnostic.metric("storage.memo-miss-" + surface, undefined, payload?.length ?? 0)
     materializations.delete(surface)
     if (payload === undefined) {
       const empty = (): Snapshot => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
@@ -172,11 +175,23 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       // Serialize writers within this instance instead of making maintenance
       // contend with its own business transaction in WAL. Credential reads
       // remain independent because authentication awaits them inside that transaction.
-      if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
+      if (previous) {
+        const started = sfCreateReportsDiagnostic.start()
+        const owner = sfCreateReportsDiagnostic.blockedBy(previous)
+        try { await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal) }
+        finally {
+          sfCreateReportsDiagnostic.metric("storage.queue-wait-inclusive", started)
+          sfCreateReportsDiagnostic.metric(owner === 1 ? "storage.queue-predecessor-request" : owner === 2 ? "storage.queue-predecessor-local-maintenance" : "storage.queue-predecessor-unattributed", started)
+        }
+      }
       signal?.throwIfAborted()
       const db = connect()
       try {
-        if (write) await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+        if (write) {
+          const started = sfCreateReportsDiagnostic.start()
+          try { await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal) }
+          finally { sfCreateReportsDiagnostic.metric("storage.write-lock-inclusive", started) }
+        }
         signal?.throwIfAborted()
         return await work(db)
       } finally {
@@ -192,6 +207,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     const tail = previous ? previous.then(() => settled) : settled
     if (write) {
       queue.tail = tail
+      sfCreateReportsDiagnostic.queue(tail)
       void tail.then(() => { if (queue.tail === tail) queue.tail = undefined })
     }
     active.add(pending)
@@ -554,15 +570,20 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 export function decodeSnapshot(payload: string): Snapshot {
+  const started = sfCreateReportsDiagnostic.start()
+  try {
   const envelope: unknown = JSON.parse(payload)
   if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
     throw new Error("Unsupported local snapshot encoding")
   return validateSnapshot(decode(envelope[2]))
+  } finally { sfCreateReportsDiagnostic.metric("storage.decode-snapshot", started, payload.length) }
 }
 
 /** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
 function cloneSnapshot(snapshot: Snapshot): Snapshot {
-  return validateSnapshot(copyValue(snapshot))
+  const started = sfCreateReportsDiagnostic.start()
+  try { return validateSnapshot(copyValue(snapshot)) }
+  finally { sfCreateReportsDiagnostic.metric("storage.clone-snapshot", started) }
 }
 
 function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
@@ -625,6 +646,8 @@ const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
 type SnapshotMaterialization = Readonly<{ payload: string; json: string; missing: string; units: number }>
 
 function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
+  const started = sfCreateReportsDiagnostic.start()
+  try {
   if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
   const parts: string[] = []
   const missing: string[] = []
@@ -672,9 +695,12 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
   const json = parts.join("")
   const absent = "[" + missing.join(",") + "]"
   return Object.freeze({ payload, json, missing: absent, units: payload.length + json.length + absent.length })
+  } finally { sfCreateReportsDiagnostic.metric("storage.plan-inclusive", started, payload.length) }
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
+  const started = sfCreateReportsDiagnostic.start()
+  try {
   const snapshot = JSON.parse(plan.json) as Snapshot
   // Null placeholders preserve property order and array density. Only these
   // known own paths need repair; -0 is preserved by its native JSON literal.
@@ -687,4 +713,5 @@ function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
     }
   }
   return snapshot
+  } finally { sfCreateReportsDiagnostic.metric("storage.materialize-plan", started, plan.units) }
 }
