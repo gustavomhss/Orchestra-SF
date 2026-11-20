@@ -1,5 +1,5 @@
-import { createEffect, createMemo, onCleanup, Show, For, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createEffect, createMemo, onCleanup, untrack, Show, For, type JSX } from "solid-js"
+import { createStore, unwrap } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
@@ -159,13 +159,14 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       ready.context.destinations.some((entry) =>
         entry.capabilityId === "CAP28" && entry.canRead && entry.allowedActionIds.includes(action)) &&
       projection.value.allowedActionIds.includes(action))
+    const settings = structuredClone(unwrap(projection.value.data.settings))
     return ready.drafts.acquire<Settings>({
       surfaceId: "CAP28",
       identity: { kind: "record", recordRef: SETTINGS_REF },
       editScopeKey,
       baseVersion: version,
-      base: projection.value.data.settings,
-      value: projection.value.data.settings,
+      base: settings,
+      value: settings,
       revalidation: {
         operationId: "domain.page.CAP28",
         input: selection(),
@@ -178,8 +179,14 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const projection = currentProjection()
     const controller = draft()
     const currentVersion = projection?.value.versions.settings?.version
-    if (projection && controller && currentVersion !== undefined)
-      controller.receiveRemote({ baseVersion: currentVersion, value: projection.value.data.settings })
+    if (!projection || !controller || currentVersion === undefined) return
+    const settings = projection.value.data.settings
+    // Receiving a projection writes the draft signal. Only the projection, never
+    // the draft's own edits/publications, can trigger this synchronization.
+    untrack(() => controller.receiveRemote({
+      baseVersion: currentVersion,
+      value: structuredClone(unwrap(settings)),
+    }))
   })
   const snapshot = () => draft()?.snapshot()
   const active = () => {
@@ -251,7 +258,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       version: page.value.versions.settings!.version, values: {},
     } : {
       page: "Settings" as const, action: "save" as const,
-      version: page.value.versions.settings!.version, values: { settings: structuredClone(state.value) },
+      version: page.value.versions.settings!.version, values: { settings: structuredClone(unwrap(state.value)) },
     }
     const idempotencyKey = crypto.randomUUID()
     // F01/S03 binds the exact reviewed CAS, digest and idempotency key. Never
