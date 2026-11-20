@@ -66,6 +66,10 @@ export const SfDomainDashboardInputs = {
   review: Schema.Struct({
     caseRef: SfDomainProductCaseRef, choiceId: Schema.String, changeId: Schema.String,
   }),
+  recover: Schema.Struct({
+    purpose: Schema.Literal("recover"),
+    caseRef: SfDomainProductCaseRef, choiceId: Schema.String, changeId: Schema.String,
+  }),
   apply: Schema.Struct({
     caseRef: SfDomainProductCaseRef, choiceId: Schema.String, changeId: Schema.String,
     reviewDigest: Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/)),

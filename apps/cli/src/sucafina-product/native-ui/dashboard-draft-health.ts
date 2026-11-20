@@ -8,7 +8,9 @@ import { sfHasOperationalResource } from "./live-context.ts"
 
 type Operation = "dashboard.dashboard-workbench" | "dashboard.dashboard-hot-topic-source" |
   "dashboard.dashboard-draft-read" | "dashboard.dashboard-hot-topic-draft" |
-  "dashboard.dashboard-hot-topic-drafts" | "dashboard.dashboard-hot-topic-draft-outcome" | "dashboard.dashboard-capture"
+  "dashboard.dashboard-hot-topic-drafts" | "dashboard.dashboard-hot-topic-draft-outcome" | "dashboard.dashboard-capture" |
+  "dashboard.dashboard-hot-topic-prepare" | "dashboard.dashboard-hot-topic-review" |
+  "dashboard.dashboard-hot-topic-apply" | "dashboard.dashboard-hot-topic-recover"
 
 type Source = Readonly<{
   producer: object
@@ -38,6 +40,10 @@ export async function observeSfDashboardDraftHealth(input: {
     { id: "dashboard.dashboard-hot-topic-drafts", query: "dashboard-hot-topic-drafts", method: "GET", effect: "read", write: false, human: null },
     { id: "dashboard.dashboard-hot-topic-draft-outcome", query: "dashboard-hot-topic-draft-outcome", method: "POST", effect: "read", write: false, human: "decisions.edit" },
     { id: "dashboard.dashboard-capture", query: "dashboard-capture", method: "POST", effect: "mutation", write: true, human: "reviews.preserve" },
+    { id: "dashboard.dashboard-hot-topic-prepare", query: "dashboard-hot-topic-prepare", method: "POST", effect: "prepare", write: true, human: "decisions.prepare-changes" },
+    { id: "dashboard.dashboard-hot-topic-review", query: "dashboard-hot-topic-review", method: "POST", effect: "read", write: false, human: null },
+    { id: "dashboard.dashboard-hot-topic-apply", query: "dashboard-hot-topic-apply", method: "POST", effect: "mutation", write: true, human: "decisions.apply" },
+    { id: "dashboard.dashboard-hot-topic-recover", query: "dashboard-hot-topic-recover", method: "POST", effect: "mutation", write: true, human: "decisions.apply" },
   ] as const
   const results = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
@@ -71,12 +77,16 @@ export async function observeSfDashboardDraftHealth(input: {
         actor.accessRevision !== stamp.accessRevision || !await ui.validate(admitted.value, "sf_dashboard_read", digest) ||
         ui.requestFor(admitted.value) !== request || !current()) return []
       if (candidate.human && !(await humanActions(request)).includes(candidate.human)) return []
-      // The editor composes the private case and proposal namespaces. A draft save
-      // uses preferences plus the cases CAS. Capture writes only preferences;
-      // first-save recovery remains read-only and retains its original action.
+      // No operation runs during observation. Application/recovery can reconcile
+      // cases and original receipts; private prepared bindings are read-only.
+      // A first-save lookup retains its action but writes no namespace.
       const read = async () => {
-        const entries = await Promise.all((candidate.id === "dashboard.dashboard-capture" ? ["preferences"] as const : ["cases", "preferences"] as const).map(async (namespace) => {
-          const result = await state.read(request, namespace, selectSfNamespaceHealth(namespace, stamp, candidate.write ? "write" : "read"))
+        const application = candidate.id === "dashboard.dashboard-hot-topic-apply" || candidate.id === "dashboard.dashboard-hot-topic-recover"
+        const namespaces = candidate.id === "dashboard.dashboard-capture" ? ["preferences"] as const :
+          application ? ["cases", "preferences", "receipts"] as const : ["cases", "preferences"] as const
+        const entries = await Promise.all(namespaces.map(async (namespace) => {
+          const mode = candidate.write && (!application || namespace === "cases") ? "write" : "read"
+          const result = await state.read(request, namespace, selectSfNamespaceHealth(namespace, stamp, mode))
           if (result.status !== "ok" || !result.value || result.storageVersion !== result.value.storageVersion ||
             result.aggregateRevision !== result.value.aggregateRevision || result.incarnation !== result.value.incarnation || !current()) return undefined
           return result.value

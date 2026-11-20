@@ -62,6 +62,7 @@ export {
   SfDashboardDashboardHotTopicPrepare,
   SfDashboardDashboardHotTopicReview,
   SfDashboardDashboardHotTopicApply,
+  SfDashboardDashboardHotTopicRecover,
 } from "./domain/operations"
 
 export {

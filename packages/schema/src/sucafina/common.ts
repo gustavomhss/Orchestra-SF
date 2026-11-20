@@ -51,6 +51,7 @@ export const SfOperationIds = [
   "dashboard.dashboard-capture",
   "dashboard.dashboard-history",
   "dashboard.dashboard-hot-topic-apply",
+  "dashboard.dashboard-hot-topic-recover",
   "dashboard.dashboard-hot-topic-draft",
   "dashboard.dashboard-hot-topic-drafts",
   "dashboard.dashboard-hot-topic-operation",

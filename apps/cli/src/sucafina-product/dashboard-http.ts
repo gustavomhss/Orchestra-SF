@@ -8,10 +8,11 @@ import type { SfHumanAction } from "../../../../modules/sucafina/Sucafinav1/prod
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { createSfDashboardServices, DashboardAgendaRequest, DashboardReviewRequest } from "./dashboard-services.ts"
 import type { createSfDashboardDecisions, DashboardPrepareRequest, DashboardDraftReadRequest } from "./dashboard-decisions.ts"
+import type { DashboardRecoverRequest } from "./dashboard-application-intent.ts"
 
 type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; dashboard: ReturnType<typeof createSfDashboardServices>; decisions: ReturnType<typeof createSfDashboardDecisions> }
 const modes = ["dashboard-workbench", "dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
-  "dashboard-draft-read", "dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
+  "dashboard-draft-read", "dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply", "dashboard-hot-topic-recover"] as const
 
 /** Same-origin host routes. Browser payloads contain selections and human intent, never private commands. */
 export function createSfDashboardHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
@@ -29,14 +30,14 @@ export function createSfDashboardHttp(input: { origin: string; mount: string; ru
     const payload: unknown = read ? mode === "dashboard-hot-topic-drafts" ? { caseRef: { id: url.searchParams.get("id"), incarnation: url.searchParams.get("incarnation"), version: Number(url.searchParams.get("version")) } } : { id: url.searchParams.get("id") } : await boundedJson(request)
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) return reply({ status: "invalid" }, 400)
     // A missing/malformed original command key is a caller refusal, not host outage.
-    // Check only first-save recovery, before runtime/admission or any lookup work.
-    if (mode === "dashboard-hot-topic-draft-outcome" &&
+    // Check original-intent recovery before runtime/admission or any lookup work.
+    if (["dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-recover"].includes(mode!) &&
       !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers.get("idempotency-key") ?? ""))
       return reply({ status: "denied" }, 403)
     const runtime = input.runtime()
     if (!runtime) return reply({ status: "unavailable" }, 503)
     const action: SfHumanAction | undefined = ["dashboard-review-preserve", "dashboard-capture"].includes(mode!) ? "reviews.preserve" :
-      ["dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome"].includes(mode!) ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
+      ["dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome"].includes(mode!) ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : ["dashboard-hot-topic-apply", "dashboard-hot-topic-recover"].includes(mode!) ? "decisions.apply" : undefined
     const digest = digestSfValue(payload)
     const admitted = action ? await runtime.authority.human.admit(request, action, payload) : await runtime.authority.ui.admit(request, "sf_dashboard_read", digest)
     if (admitted.status !== "ok") {
@@ -97,6 +98,7 @@ async function dispatch(runtime: Runtime, mode: string, value: unknown, context:
   if (mode === "dashboard-hot-topic-prepare" && isPrepare(value)) return runtime.decisions.prepare(value, context)
   if (mode === "dashboard-hot-topic-review" && isApplyRef(value)) return runtime.decisions.review(value, context)
   if (mode === "dashboard-hot-topic-apply" && isApply(value)) return runtime.decisions.apply(value, context)
+  if (mode === "dashboard-hot-topic-recover" && isRecover(value)) return runtime.decisions.recover(value, context)
   return undefined
 }
 function text(value: unknown): value is string { return typeof value === "string" && !!value.trim() && value.length <= 16_384 }
@@ -108,6 +110,7 @@ function isCaseRef(value: unknown): value is PreparedApplyRequest["caseRef"] {
 }
 function isApplyRef(value: unknown): value is PreparedApplyRequest { const request = object(value); return keys(request, ["caseRef", "choiceId", "changeId"]) && isCaseRef(request.caseRef) && text(request.choiceId) && text(request.changeId) }
 function isApply(value: unknown): value is AdmittedApply { const request = object(value); return keys(request, ["caseRef", "choiceId", "changeId", "reviewDigest"]) && isApplyRef({ caseRef: request.caseRef, choiceId: request.choiceId, changeId: request.changeId }) && typeof request.reviewDigest === "string" && /^[a-f0-9]{64}$/.test(request.reviewDigest) }
+function isRecover(value: unknown): value is DashboardRecoverRequest { const request = object(value); return keys(request, ["purpose", "caseRef", "choiceId", "changeId"]) && request.purpose === "recover" && isApplyRef({ caseRef: request.caseRef, choiceId: request.choiceId, changeId: request.changeId }) }
 function isPrepare(value: unknown): value is DashboardPrepareRequest { const request = object(value); return keys(request, ["caseRef", "choiceId", "draftRef"]) && isCaseRef(request.caseRef) && text(request.choiceId) && text(request.draftRef) }
 function isReview(value: unknown): value is DashboardReviewRequest { const request = object(value); return keys(request, ["selectionRef", "sectionRefs"], ["previousReviewRef"]) && text(request.selectionRef) && strings(request.sectionRefs) && (request.previousReviewRef === undefined || text(request.previousReviewRef)) }
 function isAgenda(value: unknown): value is DashboardAgendaRequest {

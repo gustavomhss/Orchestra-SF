@@ -1,13 +1,13 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
-import type { AdmittedApply } from "../../../../modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts"
+import type { AdmittedApply, PreparedApplyRequest } from "../../../../modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 
 /** Keep the human lease live through the producer's final asynchronous receipt read. */
 export function createSfPreparedApplicationEgress(authority: ReturnType<typeof createSfProductAuthority>) {
-  return async <T>(incoming: AdmittedApply, call: TrustedDomainContext,
-    work: (request: AdmittedApply) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+  return async <Admission extends AdmittedApply | (PreparedApplyRequest & { purpose: "recover" }), T>(incoming: Admission, call: TrustedDomainContext,
+    work: (request: Admission) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
     const request = structuredClone(incoming)
     const source = authority.host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])

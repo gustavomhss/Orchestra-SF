@@ -27,6 +27,7 @@ import { createSfNavigationState, type SfNativeNavigationState } from "../naviga
 import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
 import { useSfContext } from "../context"
 import { clearSfBiRetention, reconcileSfBiRetention } from "../bi/lifecycle-retention"
+import { bindSfDashboardRecoveryOwner, clearSfDashboardRecovery, reconcileSfDashboardRecovery } from "../dashboard/hot-topics/proposals/recovery-intents"
 import type { SfContextDependencies, SfContextHandle, SfSurfaceProps } from "../context/contracts"
 import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
@@ -224,6 +225,7 @@ function MountedSurface(props: Readonly<{
   status: (status: string, generation: number, reason?: string) => void
 }>): JSX.Element {
   const handle = useSfContext()
+  const releaseRecoveryOwner = bindSfDashboardRecoveryOwner(handle)
   const language = useLanguage()
   const [authBusy, setAuthBusy] = createSignal(false)
   const [authFailed, setAuthFailed] = createSignal(false)
@@ -240,6 +242,7 @@ function MountedSurface(props: Readonly<{
         navigate: (url) => window.location.assign(url),
       }).logout()
       clearSfBiRetention(handle)
+      clearSfDashboardRecovery(handle)
       handle.invalidate("logout")
       const generation = handle.generation()
       await logout
@@ -261,9 +264,10 @@ function MountedSurface(props: Readonly<{
   createEffect(() => {
     const state = handle.state()
     reconcileSfBiRetention(handle)
+    reconcileSfDashboardRecovery(handle)
     props.status(state.status, handle.generation(), "reason" in state ? state.reason : undefined)
   })
-  onCleanup(() => { active = false; clearSfBiRetention(handle); props.bind(undefined); props.status("unmounted", -1) })
+  onCleanup(() => { active = false; clearSfBiRetention(handle); releaseRecoveryOwner(); props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   return (
     <>

@@ -665,6 +665,12 @@ export const SfDashboardDashboardHotTopicReview = {
   output: SfDomainDashboardOutput,
 } as const
 
+export const SfDashboardDashboardHotTopicRecover = {
+  operationId: "dashboard.dashboard-hot-topic-recover",
+  input: SfDomainDashboardInputs.recover,
+  output: SfDomainDashboardOutput,
+} as const
+
 export const SfDashboardDashboardHotTopicApply = {
   operationId: "dashboard.dashboard-hot-topic-apply",
   input: SfDomainDashboardInputs.apply,
@@ -735,5 +741,6 @@ export const SfDomain = {
     "dashboard.dashboard-hot-topic-prepare": SfDashboardDashboardHotTopicPrepare,
     "dashboard.dashboard-hot-topic-review": SfDashboardDashboardHotTopicReview,
     "dashboard.dashboard-hot-topic-apply": SfDashboardDashboardHotTopicApply,
+    "dashboard.dashboard-hot-topic-recover": SfDashboardDashboardHotTopicRecover,
   },
 } as const
