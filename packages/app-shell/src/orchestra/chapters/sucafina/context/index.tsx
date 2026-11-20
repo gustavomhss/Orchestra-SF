@@ -5,6 +5,7 @@ import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { createSfOwnerDrafts } from "./drafts"
 import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigation-state/resume"
+import { createSfBudgetPeriodPort, sfBudgetPeriodAvailable } from "../navigation-state/budget-period"
 import { sfExecutiveLinkAllowed, sfExecutiveLinkMatches, sfExecutiveLinkRequest, sfExecutiveRevalidateRef } from "../cross-links"
 import type {
   SfContext, SfContextHandle, SfContextProviderProps, SfContextState,
@@ -283,6 +284,12 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   }
   const navigation = props.dependencies.navigation
   const resumePort = navigation ? createSfTodayResumePort(navigation, currentResumeOwner) : undefined
+  const changeBudgetPeriod = navigation ? createSfBudgetPeriodPort(navigation, () => {
+    const owner = currentResumeOwner()
+    return owner && store.active ? {
+      ...owner, budgetReadReady: sfBudgetPeriodAvailable(store.active.context),
+    } : undefined
+  }) : undefined
   const followExecutiveLink: NonNullable<SfContextHandle["followExecutiveLink"]> = async (from, target) => {
     const state = store.state
     const active = store.active
@@ -349,6 +356,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     reload: () => load(props.selection()),
     invalidate,
     ...(navigation ? { followExecutiveLink } : {}),
+    ...(changeBudgetPeriod ? { changeBudgetPeriod } : {}),
     ...(resumePort ? {
       resumeCase: resumePort.resumeCase,
       claimResumeFocus: (input: Parameters<NonNullable<SfContextHandle["claimResumeFocus"]>>[0]) => {

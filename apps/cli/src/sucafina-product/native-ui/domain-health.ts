@@ -1,3 +1,4 @@
+import { observeSfSummarySettingsHealth } from "./summary-settings.ts"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfContextStamp, SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import type { SfOperationId } from "@orchestra/schema/sucafina/common"
@@ -88,7 +89,8 @@ export async function observeSfDomainHealth(deps: SfNativeHostDependencies, hand
     if (!final || !final.members || final.fence !== second.fence || final.actor !== second.actor || request.signal.aborted) return observed
     return [...observed, { operationId: id, state: "ready" as const, reason: null, operational: true as const }]
   }))
-  return result.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+  const summaries = await observeSfSummarySettingsHealth(deps, handlers, request, stamp)
+  return [...result.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : []), ...summaries]
 }
 
 function isOperation(value: string): value is SfOperationId {

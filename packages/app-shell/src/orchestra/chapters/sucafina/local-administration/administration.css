@@ -24,3 +24,7 @@
 .sf-u28-table-scroll th, .sf-u28-table-scroll td { text-align: start; vertical-align: top; padding: .55rem; border-block-end: 1px solid var(--border, currentColor); }
 .sf-u28-table-scroll :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 @media (max-width: 767px) { .sf-u28-definition { grid-template-columns: minmax(0, 1fr); } .sf-u28-layout { gap: 1rem; } }
+
+.sf-u28-summaries { display: grid; gap: .75rem; margin-block-end: 1.5rem; }
+.sf-u28-summaries fieldset { display: grid; gap: .5rem; }
+.sf-u28-summaries fieldset label { display: flex; gap: .5rem; align-items: center; }

@@ -8,6 +8,7 @@ import { useSfContext } from "../context"
 import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
+import { SfSummarySettings } from "./summary-settings"
 import "./administration.css"
 
 type AdminReply = typeof SfDomain.operations["projection.local-admin"]["output"]["Type"]
@@ -16,11 +17,11 @@ const copyKey = (key: string) => key as SfCopyKey
 const empty: AdminValue = { notifications: [], backups: [] }
 
 /**
- * UI69 is a local-operator READ surface. The frozen catalog publishes only
- * projection.local-admin, not backup/restore/import commands. No button here
- * bypasses those missing admitted operations or proxies the legacy HTML route.
+ * UI69 keeps the original local-operator reader and adds only the source-backed
+ * summaries command below. Backup/restore/import remain unavailable without
+ * their own admitted operations; no component proxies a legacy document page.
  */
-export function SfLocalAdministrationView(_props: SfSurfaceProps<"UI69">): JSX.Element {
+export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
   const [state, setState] = createStore({
@@ -113,6 +114,7 @@ export function SfLocalAdministrationView(_props: SfSurfaceProps<"UI69">): JSX.E
         layout="reading"
         onLayoutMode={() => undefined}
       >
+        <SfSummarySettings surfaceId="UI69" route={props.route} />
         <SfStatePanel
           state={state.page}
           messageKey={copyKey(state.page === "loading" ? "sf.common.loading"
