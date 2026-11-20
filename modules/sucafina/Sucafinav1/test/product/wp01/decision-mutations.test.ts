@@ -1,9 +1,11 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
-import { decisionEditScript } from "../../../product/ui/decision-edit.ts"
+import { decisionEditForm, decisionEditScript } from "../../../product/ui/decision-edit.ts"
 import { decisionApplyScript } from "../../../product/ui/decision-apply.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { createRealReviewFixture } from "./real-review-fixture.ts"
+import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
+import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -27,8 +29,18 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25000)
 
   const caseRef = { id: "consumer-case", incarnation: "consumer-incarnation", version: 1 }
-  const editContext = { caseRef, sourceRefs: [], criteria: [{ id: "criterion", required: true }] }
-  const edit = (objective = "Original objective", version = 1) => `<form data-decision-edit data-context='${JSON.stringify({ ...editContext, caseRef: { ...caseRef, version } })}'><label>Decision objective<input name="objective" required value="${objective}"></label><label>Start<input name="start" type="date" required value="2027-01-01"></label><label>End<input name="end" type="date" required value="2027-12-31"></label><label>Currency<input name="currency" required value="USD"></label><label>Criterion<input name="criterion-0" required value="Cost"></label><input name="unavailable" value="Restricted control" disabled><button>Save decision</button><p role="status"></p></form><script>${decisionEditScript}</script>`
+  const edit = (objective = "Original objective", version = 1) => {
+    const projection: AuthorizedCaseProjection = {
+      context: { installationId: "fixture", projectId: "fixture", principalRef: "fixture", policyVersion: "fixture", accessRevision: "fixture", kind: "ui" },
+      checkedAt: "2026-11-13T01:00:00Z", evidenceRefs: [], events: [],
+      case: { ...caseRef, version, objective, state: "draft", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD",
+        criteria: [{ id: "criterion", description: "Cost", required: true }], participants: [], sourceRefs: [], costCoverageBases: [],
+        assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [], alternatives: [] },
+    }
+    // Use the shipped controls/context. The additional disabled field exercises
+    // preservation of an unavailable control; it supplies no authority or grant.
+    return decisionEditForm(projection).replace("</form>", '<input name="unavailable" value="Restricted control" disabled></form>') + `<script>${decisionEditScript}</script>`
+  }
   // The response snapshot comes from the real prepared-review producer. The server below
   // still injects transport outcomes only; its acknowledgement is not a C12 receipt proof.
   let review: Awaited<ReturnType<typeof createRealReviewFixture>>["review"]
@@ -49,7 +61,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       context = await within(browser.newContext(), "open context")
       page = await within(context.newPage(), "open page")
       page.setDefaultTimeout(5000); page.setDefaultNavigationTimeout(8000)
-      await page.goto(server.url.href)
+      await page.goto(new URL('/sucafina/dashboard', server.url).href)
+      if (await page.locator('[data-decision-edit]').count()) await page.getByText('Edit decision', { exact: true }).click()
       expect(await within(page.evaluate(() => document.characterSet), "document encoding")).toBe("UTF-8")
       await check(page)
     }
@@ -90,7 +103,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await form.getByText("Could not confirm the save.", { exact: false }).waitFor()
       await objective.evaluate((node) => { (node as HTMLInputElement).value = "Changed after loss"; node.dispatchEvent(new Event("input", { bubbles: true })) })
       expect(await objective.inputValue()).toBe("Unconfirmed edit")
-      await form.getByRole("button", { name: "Retry same save", exact: true }).click()
+      await form.getByRole("button", { name: "Retry same request", exact: true }).click()
       if (outcome === "confirmed") await page.locator("[data-saved]").waitFor()
       else {
         await form.getByText("the earlier save is still unconfirmed", { exact: false }).waitFor()
@@ -144,7 +157,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         return new Response(`<!doctype html><html><body>${edit("Formerly authorized values", 2)}</body></html>`, { headers: { "Content-Type": "text/html" } })
       }
     }, async (page) => {
-      currentUrl = page.url()
+      const current = new URL(page.url())
+      current.search = new URLSearchParams({ sf: "workbench-case", caseRef: encodeCaseRef(caseRef) }).toString()
+      currentUrl = current.href
       const [request] = await Promise.all([
         page.waitForRequest((request) => request.method() === "GET" && request.url() === currentUrl && request.resourceType() === "fetch"),
         page.getByRole("button", { name: "Save decision", exact: true }).click(),

@@ -54,7 +54,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     runtime = await createSfHostRuntime({ installationId, directory, sourceRoot: path.resolve(import.meta.dir, "../../../product/ai"), origin,
       mount: "/sucafina", persistence, authenticate: identity.authenticate,
-      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.start", "analysis.read", "analysis.cancel"] }],
+      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
       environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }) })
     workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime?.services?.() })
     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
@@ -375,7 +375,7 @@ test("analysis output returns a denial when access changes during optional revie
   const f = await reviewConsumerFixture()
   // Only the HTTP consumer's declared read/model methods are exercised here.
   // Neither this adapter fixture nor its fake model catalog executes a native run.
-  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, models: async () => { f.state.allowed = false; return [] } }
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, selected: [], models: async () => { f.state.allowed = false; return [] } }
   const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
   expect(response.status).toBe(403)
   expect(await response.json()).toEqual({ status: "denied" })

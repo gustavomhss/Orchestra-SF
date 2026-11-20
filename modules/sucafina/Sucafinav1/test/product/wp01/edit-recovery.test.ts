@@ -53,7 +53,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       waiters.set(page, owned)
       page.setDefaultTimeout(5_000)
       page.setDefaultNavigationTimeout(8_000)
-      await page.goto(server.url.href)
+      await page.goto(new URL('/sucafina/dashboard', server.url).href)
       expect(await within(page.evaluate(() => document.characterSet), "read fixture character set")).toBe("UTF-8")
       await check(page)
     } catch (error) { failure = error; throw error }
@@ -265,7 +265,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     })
   }, 30_000)
 
-  const forecast = `<form data-forecast-analysis data-config='${JSON.stringify({ ...request, skillId: "sf-explicar-forecast", models: [{ id: "model", providerID: "provider" }] })}'><label>Baseline<select name="baseRef"><option>base</option></select></label><label>Comparison<select name="candidateRef"><option>candidate</option></select></label><label>Start<input name="start" value="2027-01-01"></label><label>End<input name="end" value="2027-12-31"></label><label>Currency<input name="currency" value="USD"></label><label>Model<select name="model"><option value="0">Model</option></select></label><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><p role="status"></p></form><script>${forecastAnalysisScript}</script>`
+  const forecast = `<form data-forecast-analysis data-config='${JSON.stringify({ ...request, skillId: "sf-explicar-forecast", models: [{ id: "model", providerID: "provider" }] })}'><label>Baseline<select name="baseRef"><option>base</option></select></label><label>Comparison<select name="candidateRef"><option>candidate</option></select></label><label>Start<input name="start" value="2027-01-01"></label><label>End<input name="end" value="2027-12-31"></label><label>Currency<input name="currency" value="USD"></label><label>Model<select name="model"><option value="0">Model</option></select></label><button>Start analysis</button><button type="button" data-analysis-cancel hidden>Cancel analysis</button><button type="button" data-analysis-retry hidden>Refresh analysis status</button><p role="status"></p></form><script>${forecastAnalysisScript}</script>`
 
   test("forecast start recovers an uncertain admission without changing its model or payload", async () => {
     const starts: { body: string; key: string | null }[] = []
@@ -446,7 +446,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     await browserCase(choice, async (incoming) => {
       if (new URL(incoming.url).searchParams.get("sf") === "decision-compare") return Response.json({ status: "ok", value: choiceComparison })
       calls.push({ body: await incoming.text(), key: incoming.headers.get("idempotency-key") })
-      return Response.json({ status: "needs-input" }, { status: 400 })
+      return Response.json({ status: "needs-input", reason: "invalid-decision-input" }, { status: 400 })
     }, async (page) => {
       await prepareChoice(page)
       await page.getByRole("button", { name: "Record choice", exact: true }).click()
