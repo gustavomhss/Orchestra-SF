@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { Schema } from "effect"
 import { Session } from "@orchestra/schema/session"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { OrchestraEventTransport } from "../../../../../packages/protocol/src/groups/event.ts"
 import { nativeTeamWebFixture } from "./native-web-fixture.ts"
 import { profileA, profileB } from "./installation-fixture.ts"
@@ -96,8 +97,10 @@ test("native-session-fixture-03: the existing no-Team admin fixture gains neithe
   expect(f.sessionActions).toEqual([])
   const context = await f.handle(f.contextRequest("administration"))
   expect(context.status).toBe(200)
-  const value = await context.json()
-  expect(value.context.profile.administration.available).toBe(true)
+  const value = await decode(context, SfTeamContextResult)
+  expect(value.status).toBe("ok")
+  if (value.status !== "ok") throw new Error("Actual zero-Team administrator context required")
+  expect(value.value.profile.administration.available).toBe(true)
   const denied = await f.handle(request(f, "/api/session"))
   expect(denied.status).toBe(401)
   expect(f.sessionCalls.projects).toBe(0)
