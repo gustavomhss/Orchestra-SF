@@ -1,0 +1,238 @@
+{
+  "schema": "reports-source-own-value-qualification-v1",
+  "productSha": "5781be6f78ef783653a6eca2543701c6454f162b",
+  "productTree": "66516033c000fddb7935ee15fc687c07fd5daba3",
+  "parentSha": "1e31da764179efa3b00dff88cfe35cf3a2921120",
+  "runtimeBlob": "a3a2c2e05d7495aed13916f02d37238d523f901d",
+  "newTestBlob": "1f7e0a5e0cf248684ed8479419a71ca5924eaf20",
+  "component": {
+    "runId": 44697917500,
+    "jobId": 136159018625,
+    "cleanupJobId": 136159809697,
+    "attempt": 1,
+    "conclusion": "success",
+    "cleanup": "success",
+    "headSha": "cf127e4b2990848f82419636286579359b7f47a4",
+    "treeSha": "cf4694450fbfc4fe8054d6bf342c38f9c82231c8",
+    "requestBlob": "1777f271d6a43f7b364cd2be2bd4d2be48e47dfd",
+    "createdAt": "2026-11-20T07:50:24Z",
+    "updatedAt": "2026-11-20T07:52:36Z",
+    "runner": "bun",
+    "package": "sucafina",
+    "globalTimeoutMs": 30000,
+    "existingCaseTimeoutMs": 120000,
+    "omni": 1,
+    "omniVerdict": "not applicable (focused: no declaring test ran)",
+    "omniProofClaimed": false,
+    "pass": 46,
+    "fail": 0,
+    "expects": 684,
+    "files": 3,
+    "durationSeconds": 68.8,
+    "selection": [
+      "Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts",
+      "Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts"
+    ],
+    "sourceFileHeaders": [
+      {
+        "at": "2026-11-20T07:51:13.2397992Z",
+        "logLine": 707,
+        "sourceFile": "Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts",
+        "wire": "Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts:"
+      },
+      {
+        "at": "2026-11-20T07:52:14.6283646Z",
+        "logLine": 742,
+        "sourceFile": "Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts",
+        "wire": "Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts:"
+      },
+      {
+        "at": "2026-11-20T07:52:14.6794118Z",
+        "logLine": 748,
+        "sourceFile": "Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts",
+        "wire": "Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts:"
+      }
+    ],
+    "caseCounts": [
+      {
+        "sourceFile": "Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts",
+        "count": 4
+      },
+      {
+        "sourceFile": "Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts",
+        "count": 9
+      },
+      {
+        "sourceFile": "Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts",
+        "count": 33
+      }
+    ],
+    "rejectedResultRecords": 0,
+    "summaryRecords": [
+      {
+        "at": "2026-11-20T07:52:22.0005706Z",
+        "logLine": 760,
+        "wire": " 46 pass"
+      },
+      {
+        "at": "2026-11-20T07:52:22.0005949Z",
+        "logLine": 761,
+        "wire": " 0 fail"
+      },
+      {
+        "at": "2026-11-20T07:52:22.0006208Z",
+        "logLine": 762,
+        "wire": " 684 expect() calls"
+      },
+      {
+        "at": "2026-11-20T07:52:22.0006789Z",
+        "logLine": 763,
+        "wire": "Ran 46 tests across 3 files. [68.80s]"
+      }
+    ]
+  },
+  "compiler": {
+    "runId": 44697919119,
+    "jobId": 136159024050,
+    "cleanupJobId": 136159888790,
+    "attempt": 1,
+    "conclusion": "success",
+    "cleanup": "success",
+    "headSha": "2ce04b8ef2d4339e494c74d8c86bc2df9a593ef3",
+    "treeSha": "e45ff9486d98c2513f28c4a0d66ad668337287f4",
+    "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+    "harnessBlob": "1ca7a371447b315dcbdba5693093e71c04252ea4",
+    "createdAt": "2026-11-20T07:50:25Z",
+    "updatedAt": "2026-11-20T07:52:43Z",
+    "script": "bun run typecheck",
+    "packages": [
+      "sucafina",
+      "cli"
+    ],
+    "productMarker": "5781be6f78ef783653a6eca2543701c6454f162b",
+    "pass": 2,
+    "fail": 0,
+    "skip": 0,
+    "cancel": 0,
+    "durationMs": 62759.954789,
+    "sucafinaMs": 31840.195741,
+    "cliMs": 30875.619413,
+    "records": [
+      {
+        "at": "2026-11-20T07:51:31.0483775Z",
+        "logLine": 687,
+        "wire": "SF_AUDIT_COMPILER_PRODUCT 5781be6f78ef783653a6eca2543701c6454f162b sucafina"
+      },
+      {
+        "at": "2026-11-20T07:52:02.8877612Z",
+        "logLine": 690,
+        "wire": "SF_AUDIT_COMPILER_PRODUCT 5781be6f78ef783653a6eca2543701c6454f162b cli"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7654401Z",
+        "logLine": 692,
+        "wire": "✔ sucafina package compiler (31840.195741ms)"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7655893Z",
+        "logLine": 693,
+        "wire": "✔ cli package compiler (30875.619413ms)"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7725683Z",
+        "logLine": 694,
+        "wire": "ℹ tests 2"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7725956Z",
+        "logLine": 695,
+        "wire": "ℹ suites 0"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7726200Z",
+        "logLine": 696,
+        "wire": "ℹ pass 2"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7726418Z",
+        "logLine": 697,
+        "wire": "ℹ fail 0"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7727098Z",
+        "logLine": 698,
+        "wire": "ℹ cancelled 0"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7727346Z",
+        "logLine": 699,
+        "wire": "ℹ skipped 0"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7727576Z",
+        "logLine": 700,
+        "wire": "ℹ todo 0"
+      },
+      {
+        "at": "2026-11-20T07:52:33.7727842Z",
+        "logLine": 701,
+        "wire": "ℹ duration_ms 62759.954789"
+      }
+    ]
+  },
+  "limits": [
+    "Complete unfiltered files, unchanged original assertions and per-case budgets.",
+    "All46 case records and original ISO timestamps retained, associated with the actual preceding Bun source-file header; ANSI and unrelated output excluded.",
+    "These component/compiler greens do not qualify a new installed profile or the whole four-scenario Reports nominal.",
+    "No native-clone implementation, benchmark, source authority cache or ACL-union change is included."
+  ],
+  "records": [
+    {"at":"2026-11-20T07:51:16.5160761Z","logLine":708,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"shared own source projector is reobserved by scoped Review and the final C05 fence","durationMs":2877.22,"wire":"(pass) shared own source projector is reobserved by scoped Review and the final C05 fence [2877.22ms]"},
+    {"at":"2026-11-20T07:51:18.6671904Z","logLine":709,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"shared config-proxy source projector is reobserved by scoped Review and the final C05 fence","durationMs":2151.05,"wire":"(pass) shared config-proxy source projector is reobserved by scoped Review and the final C05 fence [2151.05ms]"},
+    {"at":"2026-11-20T07:51:20.7589971Z","logLine":710,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"shared config-accessor source projector is reobserved by scoped Review and the final C05 fence","durationMs":2091.84,"wire":"(pass) shared config-accessor source projector is reobserved by scoped Review and the final C05 fence [2091.84ms]"},
+    {"at":"2026-11-20T07:51:22.9692290Z","logLine":711,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"shared config-prototype source projector is reobserved by scoped Review and the final C05 fence","durationMs":2209.12,"wire":"(pass) shared config-prototype source projector is reobserved by scoped Review and the final C05 fence [2209.12ms]"},
+    {"at":"2026-11-20T07:51:25.2507348Z","logLine":712,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"shared driver-prototype source projector is reobserved by scoped Review and the final C05 fence","durationMs":2282.59,"wire":"(pass) shared driver-prototype source projector is reobserved by scoped Review and the final C05 fence [2282.59ms]"},
+    {"at":"2026-11-20T07:51:27.4211920Z","logLine":713,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"an unchanged custom evidence resolver can revoke both reused bodies and a prepared C05 lease","durationMs":2170.4,"wire":"(pass) an unchanged custom evidence resolver can revoke both reused bodies and a prepared C05 lease [2170.40ms]"},
+    {"at":"2026-11-20T07:51:28.4495970Z","logLine":714,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a projector replacement during its real authorization await cannot escape the admitted source check","durationMs":1028.4,"wire":"(pass) a projector replacement during its real authorization await cannot escape the admitted source check [1028.40ms]"},
+    {"at":"2026-11-20T07:51:29.4563711Z","logLine":715,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a persistence owner/method swap during await refuses reuse and preserves the next actual read","durationMs":1006.76,"wire":"(pass) a persistence owner/method swap during await refuses reuse and preserves the next actual read [1006.76ms]"},
+    {"at":"2026-11-20T07:51:30.4547691Z","logLine":716,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a evidence owner/method swap during await refuses reuse and preserves the next actual read","durationMs":998.38,"wire":"(pass) a evidence owner/method swap during await refuses reuse and preserves the next actual read [998.38ms]"},
+    {"at":"2026-11-20T07:51:31.9352710Z","logLine":717,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a agenda owner/method swap during await refuses reuse and preserves the next actual read","durationMs":1480.51,"wire":"(pass) a agenda owner/method swap during await refuses reuse and preserves the next actual read [1480.51ms]"},
+    {"at":"2026-11-20T07:51:32.9128282Z","logLine":718,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a authority-state owner/method swap during await refuses reuse and preserves the next actual read","durationMs":977.55,"wire":"(pass) a authority-state owner/method swap during await refuses reuse and preserves the next actual read [977.55ms]"},
+    {"at":"2026-11-20T07:51:34.3250612Z","logLine":719,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a state-read owner/method swap during await refuses reuse and preserves the next actual read","durationMs":1412.21,"wire":"(pass) a state-read owner/method swap during await refuses reuse and preserves the next actual read [1412.21ms]"},
+    {"at":"2026-11-20T07:51:35.2931557Z","logLine":720,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a atlas-provider owner/method swap during await refuses reuse and preserves the next actual read","durationMs":968.09,"wire":"(pass) a atlas-provider owner/method swap during await refuses reuse and preserves the next actual read [968.09ms]"},
+    {"at":"2026-11-20T07:51:36.1387273Z","logLine":721,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a atlas-resolve owner/method swap during await refuses reuse and preserves the next actual read","durationMs":845.57,"wire":"(pass) a atlas-resolve owner/method swap during await refuses reuse and preserves the next actual read [845.57ms]"},
+    {"at":"2026-11-20T07:51:37.1152027Z","logLine":722,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a host-persistence owner/method swap during await refuses reuse and preserves the next actual read","durationMs":976.34,"wire":"(pass) a host-persistence owner/method swap during await refuses reuse and preserves the next actual read [976.34ms]"},
+    {"at":"2026-11-20T07:51:38.1113240Z","logLine":723,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a host-snapshots owner/method swap during await refuses reuse and preserves the next actual read","durationMs":996.16,"wire":"(pass) a host-snapshots owner/method swap during await refuses reuse and preserves the next actual read [996.16ms]"},
+    {"at":"2026-11-20T07:51:39.0937269Z","logLine":724,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a host-authenticate owner/method swap during await refuses reuse and preserves the next actual read","durationMs":982.15,"wire":"(pass) a host-authenticate owner/method swap during await refuses reuse and preserves the next actual read [982.15ms]"},
+    {"at":"2026-11-20T07:51:40.1124975Z","logLine":725,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a host-environment owner/method swap during await refuses reuse and preserves the next actual read","durationMs":1018.98,"wire":"(pass) a host-environment owner/method swap during await refuses reuse and preserves the next actual read [1018.98ms]"},
+    {"at":"2026-11-20T07:51:41.6368425Z","logLine":726,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a host-request owner/method swap during await refuses reuse and preserves the next actual read","durationMs":1524.32,"wire":"(pass) a host-request owner/method swap during await refuses reuse and preserves the next actual read [1524.32ms]"},
+    {"at":"2026-11-20T07:51:42.6296624Z","logLine":727,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a host-revalidate owner/method swap during await refuses reuse and preserves the next actual read","durationMs":992.82,"wire":"(pass) a host-revalidate owner/method swap during await refuses reuse and preserves the next actual read [992.82ms]"},
+    {"at":"2026-11-20T07:51:44.3471347Z","logLine":728,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"a shared projector revocation during the final C05 authorization await is observed","durationMs":1717.5,"wire":"(pass) a shared projector revocation during the final C05 authorization await is observed [1717.50ms]"},
+    {"at":"2026-11-20T07:51:46.8027241Z","logLine":729,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous projector replacement after the real async fence","durationMs":2455.53,"wire":"(pass) C05 structural egress rejects a synchronous projector replacement after the real async fence [2455.53ms]"},
+    {"at":"2026-11-20T07:51:49.2859321Z","logLine":730,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous evidence replacement after the real async fence","durationMs":2483.18,"wire":"(pass) C05 structural egress rejects a synchronous evidence replacement after the real async fence [2483.18ms]"},
+    {"at":"2026-11-20T07:51:51.7920669Z","logLine":731,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous authority-state replacement after the real async fence","durationMs":2506.12,"wire":"(pass) C05 structural egress rejects a synchronous authority-state replacement after the real async fence [2506.12ms]"},
+    {"at":"2026-11-20T07:51:54.2686877Z","logLine":732,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous state-read replacement after the real async fence","durationMs":2476.6,"wire":"(pass) C05 structural egress rejects a synchronous state-read replacement after the real async fence [2476.60ms]"},
+    {"at":"2026-11-20T07:51:56.7569951Z","logLine":733,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous atlas-provider replacement after the real async fence","durationMs":2488.33,"wire":"(pass) C05 structural egress rejects a synchronous atlas-provider replacement after the real async fence [2488.33ms]"},
+    {"at":"2026-11-20T07:51:59.5626773Z","logLine":734,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous atlas-resolve replacement after the real async fence","durationMs":2805.61,"wire":"(pass) C05 structural egress rejects a synchronous atlas-resolve replacement after the real async fence [2805.61ms]"},
+    {"at":"2026-11-20T07:52:02.1230845Z","logLine":735,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous host-persistence replacement after the real async fence","durationMs":2560.37,"wire":"(pass) C05 structural egress rejects a synchronous host-persistence replacement after the real async fence [2560.37ms]"},
+    {"at":"2026-11-20T07:52:04.5826553Z","logLine":736,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous host-snapshots replacement after the real async fence","durationMs":2459.58,"wire":"(pass) C05 structural egress rejects a synchronous host-snapshots replacement after the real async fence [2459.58ms]"},
+    {"at":"2026-11-20T07:52:07.0915614Z","logLine":737,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous host-authenticate replacement after the real async fence","durationMs":2508.91,"wire":"(pass) C05 structural egress rejects a synchronous host-authenticate replacement after the real async fence [2508.91ms]"},
+    {"at":"2026-11-20T07:52:09.5984811Z","logLine":738,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous host-environment replacement after the real async fence","durationMs":2506.81,"wire":"(pass) C05 structural egress rejects a synchronous host-environment replacement after the real async fence [2506.81ms]"},
+    {"at":"2026-11-20T07:52:12.1307343Z","logLine":739,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous host-request replacement after the real async fence","durationMs":2532.33,"wire":"(pass) C05 structural egress rejects a synchronous host-request replacement after the real async fence [2532.33ms]"},
+    {"at":"2026-11-20T07:52:14.6282882Z","logLine":740,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-revalidation.test.ts","status":"pass","name":"C05 structural egress rejects a synchronous host-revalidate replacement after the real async fence","durationMs":2497.53,"wire":"(pass) C05 structural egress rejects a synchronous host-revalidate replacement after the real async fence [2497.53ms]"},
+    {"at":"2026-11-20T07:52:14.6431668Z","logLine":743,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","status":"pass","name":"source checks reject inherited descriptor value for initial input accessors","durationMs":13.21,"wire":"(pass) source checks reject inherited descriptor value for initial input accessors [13.21ms]"},
+    {"at":"2026-11-20T07:52:14.6534947Z","logLine":744,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","status":"pass","name":"source checks reject inherited descriptor value for initial driver accessors","durationMs":10.29,"wire":"(pass) source checks reject inherited descriptor value for initial driver accessors [10.29ms]"},
+    {"at":"2026-11-20T07:52:14.6642896Z","logLine":745,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","status":"pass","name":"source checks reject inherited descriptor value for admitted input accessors","durationMs":10.81,"wire":"(pass) source checks reject inherited descriptor value for admitted input accessors [10.81ms]"},
+    {"at":"2026-11-20T07:52:14.6793102Z","logLine":746,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/source-check-own-value.test.ts","status":"pass","name":"source checks reject inherited descriptor value for admitted driver accessors","durationMs":15.01,"wire":"(pass) source checks reject inherited descriptor value for admitted driver accessors [15.01ms]"},
+    {"at":"2026-11-20T07:52:16.6841548Z","logLine":749,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"the installed extended-before-Atlas order permits a real Review and final C05 read","durationMs":2002.71,"wire":"(pass) the installed extended-before-Atlas order permits a real Review and final C05 read [2002.71ms]"},
+    {"at":"2026-11-20T07:52:17.6714353Z","logLine":750,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"a closed Review descendant cannot enter opaque fallback or open a replacement scope","durationMs":987.26,"wire":"(pass) a closed Review descendant cannot enter opaque fallback or open a replacement scope [987.26ms]"},
+    {"at":"2026-11-20T07:52:18.4905580Z","logLine":751,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"a Review scope that closes during a legacy authorization await refuses its result","durationMs":819.11,"wire":"(pass) a Review scope that closes during a legacy authorization await refuses its result [819.11ms]"},
+    {"at":"2026-11-20T07:52:19.0400184Z","logLine":752,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"an open Review scope cannot lend its Request to another authenticated call","durationMs":549.45,"wire":"(pass) an open Review scope cannot lend its Request to another authenticated call [549.45ms]"},
+    {"at":"2026-11-20T07:52:19.5357000Z","logLine":753,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"a closed source-check descendant cannot regain ordinary transaction materialization","durationMs":495.68,"wire":"(pass) a closed source-check descendant cannot regain ordinary transaction materialization [495.68ms]"},
+    {"at":"2026-11-20T07:52:20.0447100Z","logLine":754,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"a caught source-check owner mismatch remains sticky at outer egress","durationMs":508.37,"wire":"(pass) a caught source-check owner mismatch remains sticky at outer egress [508.37ms]"},
+    {"at":"2026-11-20T07:52:20.5508486Z","logLine":755,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"a caught source-check request mismatch remains sticky at outer egress","durationMs":506.78,"wire":"(pass) a caught source-check request mismatch remains sticky at outer egress [506.78ms]"},
+    {"at":"2026-11-20T07:52:21.2209492Z","logLine":756,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"source-check own admission preserves real scope creation and C08 write refusal","durationMs":670,"wire":"(pass) source-check own admission preserves real scope creation and C08 write refusal [670.00ms]"},
+    {"at":"2026-11-20T07:52:21.9999149Z","logLine":757,"sourceFile":"Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","repositoryPath":"modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-source-scope.test.ts","status":"pass","name":"source-check opaque admission preserves real scope creation and C08 write refusal","durationMs":779,"wire":"(pass) source-check opaque admission preserves real scope creation and C08 write refusal [779.00ms]"}
+  ]
+}
