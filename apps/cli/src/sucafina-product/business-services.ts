@@ -54,6 +54,7 @@ import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-opera
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
 import { createSfPlannerCaseReadScope, type SfPlannerCaseObservation } from "./planner-case-read-scope.ts"
+import { createSfPlannerCaseReadBatch } from "./planner-case-read-batch.ts"
 import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
 import { createSfProcurementEvidenceReadScope, createSfProcurementRecordReadScope } from "./procurement-evidence-read-scope.ts"
 import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
@@ -461,7 +462,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
-  plannerCaseRead.current = createSfPlannerCaseReadScope({ host, state: input.authority.state, read: memoryCaseScope.read,
+  const plannerCanonicalRead = createSfPlannerCaseReadBatch({ host, state: input.authority.state, read: memoryCaseScope.read,
+    sources: plannerSources, readerIdentity: () => evidence.current, lockedSourceFences })
+  plannerCaseRead.current = createSfPlannerCaseReadScope({ host, state: input.authority.state, read: plannerCanonicalRead,
     sources: plannerSources, readerIdentity: () => evidence.current, lockedSourceFences })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
