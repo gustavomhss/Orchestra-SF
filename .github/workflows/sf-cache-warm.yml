@@ -1,0 +1,129 @@
+name: sf-cache-warm
+
+# Shared dependency caches are readable from the default branch. This is one
+# Linux writer, not product qualification and not a pull-request cache writer.
+on:
+  push:
+    branches: [dev]
+    paths:
+      - bun.lock
+      - package.json
+      - bunfig.toml
+      - .npmrc
+      - packages/*/package.json
+      - packages/*/*/package.json
+      - apps/*/package.json
+      - modules/*/package.json
+      - modules/*/*/package.json
+      - tooling/*/package.json
+      - native/*/*/package.json
+      - native/*/*/*/package.json
+      - packages/core/bunfig.toml
+      - packages/core/script/fix-node-pty.ts
+      - packages/core/vendor/*.tgz
+      - packages/core/vendor/*.tar.gz
+      - modules/sucafina/Sucafinav1/vendor/*.tgz
+      - script/ci-cache-inputs.ts
+      - script/sf-ci/cache-source.mjs
+      - .github/sf-cache-source.json
+      - patches/**
+      - native/omni/**
+      - packages/core/src/ripgrep/release.ts
+      - .github/actions/setup-bun/**
+      - .github/actions/omni-binaries/**
+      - .github/actions/ripgrep/**
+      - .github/workflows/sf-cache-warm.yml
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Reviewed source branch whose cache inputs should be warmed
+        required: true
+        type: choice
+        default: sf-join-four
+        options: [dev, sf-join-four, close-final-candidate]
+      source_sha:
+        description: Exact reviewed 40-character head SHA of the selected source branch
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-cache-warm-default
+  cancel-in-progress: false
+
+jobs:
+  warm:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Read the reviewed default-branch promotion
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select the exact cache source
+        id: source
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          BEFORE_SHA: ${{ github.event.before }}
+          DISPATCH_REF: ${{ inputs.source_ref }}
+          DISPATCH_SHA: ${{ inputs.source_sha }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from "node:fs"
+          import { execFileSync } from "node:child_process"
+          import { selectCacheSource } from "./script/sf-ci/cache-source.mjs"
+          const changedPaths = []
+          if (process.env.GITHUB_EVENT_NAME === "push") {
+            if (!/^[0-9a-f]{40}$/.test(process.env.BEFORE_SHA ?? "") || /^0+$/.test(process.env.BEFORE_SHA))
+              throw new Error("SF_CACHE_PUSH_BASE_REQUIRED")
+            changedPaths.push(...execFileSync("git", ["diff", "--name-only",
+              process.env.BEFORE_SHA, process.env.GITHUB_SHA], { encoding: "utf8" }).trim().split("\n").filter(Boolean))
+          }
+          const source = selectCacheSource({
+            eventName: process.env.GITHUB_EVENT_NAME, defaultBranch: process.env.DEFAULT_BRANCH,
+            refName: process.env.GITHUB_REF_NAME, sha: process.env.GITHUB_SHA,
+            dispatchRef: process.env.DISPATCH_REF, dispatchSha: process.env.DISPATCH_SHA, changedPaths,
+            promotion: changedPaths.includes(".github/sf-cache-source.json")
+              ? JSON.parse(readFileSync(".github/sf-cache-source.json", "utf8")) : undefined,
+          })
+          appendFileSync(process.env.GITHUB_OUTPUT, "source_ref=" + source.sourceRef + "\nsource_sha=" + source.sourceSha + "\n")
+          console.log("Cache source selection: " + source.reason + " " + source.sourceRef + "@" + source.sourceSha)
+          NODE
+      - name: Bind the default-branch writer to the reviewed source
+        env:
+          SOURCE_REF: ${{ steps.source.outputs.source_ref }}
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          case "$SOURCE_REF" in
+            dev|sf-join-four|close-final-candidate) ;;
+            *) echo "::error::Unadmitted cache source ref"; exit 2 ;;
+          esac
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          actual="$(git ls-remote --exit-code "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "refs/heads/$SOURCE_REF" | cut -f1)"
+          test "$actual" = "$SOURCE_SHA"
+          printf 'Cache scope=%s; reviewed source=%s@%s\n' "$GITHUB_REF" "$SOURCE_REF" "$SOURCE_SHA"
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ steps.source.outputs.source_sha }}
+          persist-credentials: false
+      - name: Verify checked-out source
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+        run: test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+      - uses: ./.github/actions/setup-bun
+        with:
+          save: "true"
+      - uses: ./.github/actions/ripgrep
+        with:
+          save: "true"
+      - uses: ./.github/actions/omni-binaries
+        with:
+          save: "true"

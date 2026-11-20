@@ -583,6 +583,21 @@ export function requiredSelection(manifest, id) {
   return [...selected.testFiles]
 }
 
+/** Advisory planner output; the caller supplies the unchanged manifest selection. */
+export function describeShardPlan(files, id, costs = shardCosts) {
+  const count = SHARDED[id]
+  if (!count) fail("plan requires a sharded suite ID")
+  const shards = planShards(files, count, costs).map((part, index) => ({
+    index: index + 1, files: part.files, historicalLoadSeconds: part.loadSeconds,
+    unprofiledFiles: part.unprofiledFiles,
+  }))
+  return {
+    schemaVersion: 1, suiteId: id, algorithm: "LPT",
+    profileStatus: costs.profileStatus, fallbackSeconds: costs.fallbackSeconds,
+    selectedFiles: files.length, selectedFilesSha256: sha256Lines(files), shards,
+  }
+}
+
 function cli() {
   const command = process.argv[2]
   const manifest = readJson("sf/ci/suites.json")
@@ -593,18 +608,7 @@ function cli() {
   }
   if (command === "plan") {
     const id = process.argv[3]
-    const count = SHARDED[id]
-    if (!count) fail("plan requires a sharded suite ID")
-    const files = selectSuiteFiles(manifest, id)
-    const shards = planShards(files, count, shardCosts).map((part, index) => ({
-      index: index + 1, files: part.files, historicalLoadSeconds: part.loadSeconds,
-      unprofiledFiles: part.unprofiledFiles,
-    }))
-    console.log(JSON.stringify({
-      schemaVersion: 1, suiteId: id, algorithm: "LPT",
-      profileStatus: "HISTORICAL_RED_OR_PARTIAL", fallbackSeconds: shardCosts.fallbackSeconds,
-      selectedFiles: files.length, selectedFilesSha256: sha256Lines(files), shards,
-    }, null, 2))
+    console.log(JSON.stringify(describeShardPlan(selectSuiteFiles(manifest, id), id), null, 2))
     return
   }
   const meta = realRunMeta()
