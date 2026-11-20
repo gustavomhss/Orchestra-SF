@@ -1,21 +1,22 @@
 # Handoff — sf-shard-a
 
-## Estado do checkpoint
+## Estado final
 
-- Estado: **SHARD3_FIX_GATE_IN_PROGRESS**. Os shards 1 e 2 têm resultados completos e todas as suas falhas atuais classificadas. A enumeração inicial do shard 3 foi parcial; seu gate após a correção de sentinela está em andamento.
+- Estado: **PARCIAL — todas as falhas observadas estão classificadas**. Os shards 1 e 2 têm execuções completas. O último gate do shard 3 foi cancelado no limite existente de 45 minutos: 66/99 arquivos iniciados, os mesmos 33 arquivos ainda sem execução e um arquivo com casos interrompidos/não iniciados.
 - Branch: `sf-shard-a`.
 - Base fixa: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
-- SHA atual de código: `a86e22c9654663a72bd55586059a4254f548c742`.
+- SHA final de código: `a86e22c9654663a72bd55586059a4254f548c742`. Os commits posteriores alteram somente este handoff.
 - Escopo: CI-SF, shards 1, 2 e 3 de 8, módulo `modules/sucafina`.
 - Acesso somente pelo GitHub; verificação somente por Actions. `sf-ci` não foi executado.
-- Quatro fatias de teste aplicadas; só o run `44665621967` está em andamento nesta sessão. A enumeração de todos os shards encerrou antes do primeiro fix.
-- Este checkpoint não declara shards verdes, execução completa do shard 3, cobertura de release nem GO.
+- Quatro fatias aplicadas e gateadas, cada uma por uma causa. **Não há run desta sessão em andamento.**
+- Nenhum produto, projeção, fixture compartilhada ou workflow foi alterado. Não há PR `shared:` nem precedência de merge introduzida por esta branch.
+- Os shards não estão verdes. A enumeração integral do shard 3 continua pendente; este handoff não declara cobertura completa, equivalência de release nem GO.
 
-| Shard | Último run | Resultado | SHA do fix |
-| --- | --- | --- | --- |
-| 1 | [44657265518](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657265518) | 576 pass / 29 fail; completo | `243c083dfef4caefddf88c64adb46ab7f7b88b2f` |
-| 2 | [44661562191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661562191) | 508 pass / 6 fail; 1 skip / 1 error; completo | `2ee5e96198500ed9d2524b692240b90cce86ed79` |
-| 3 | [44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967) | Em andamento. Base: 255 pass / 21 fail observados, parcial | `a86e22c9654663a72bd55586059a4254f548c742` |
+| Shard | Run id / conclusão | N pass / M fail | Falhas (file:line) | SHA do fix |
+| --- | --- | --- | --- | --- |
+| 1 | [44657265518](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657265518) — FAILURE | 576 pass / 29 fail; completo | [29 casos classificados](#resultado-completo-do-gate-do-shard-1) | `243c083dfef4caefddf88c64adb46ab7f7b88b2f` |
+| 2 | [44661562191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661562191) — FAILURE | 508 pass / 6 fail; 1 skip / 1 error; completo | [6 casos classificados](#resultado-completo-do-segundo-gate-executivo) | `2ee5e96198500ed9d2524b692240b90cce86ed79` |
+| 3 | [44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967) — CANCELLED | 250 pass / 22 fail **observados; parcial** | [22 casos classificados e execução pendente](#resultado-parcial-do-gate-do-shard-3) | `a86e22c9654663a72bd55586059a4254f548c742` |
 
 ## Preparação corrigida
 
@@ -105,7 +106,7 @@ Prefixo: `modules/sucafina/Sucafinav1/test/`. A última falha da tabela é uma a
 | `product/c12-receipt-recovery/recovery-ui.test.ts:197` | unbound/produtor UI | decision-apply.ts:10 não tem data-recover-change, e script não chama decision-recover. Consumer é UI local real, não console legado. |
 | `product/wp12/native-execution-portfolio.test.ts:14; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total 240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
 | `product/wp12/native-execution-portfolio.test.ts:134; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total 240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
-| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em product/interface/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP400 em vez de 200; não reduzir o positivo a rejeição. |
+| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em product/interface/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP 400 em vez de 200; não reduzir o positivo a rejeição. |
 | `product/wp01/workbench-analysis.test.ts:380` | fixture-contract | Revogação injetada via models não ocorre em action output. models só participa de start; preservar 403/denied/fechamento de lease e migrar injeção em fatia própria. |
 | `product/wp10/integration/analysis-stale-calculation.test.ts:303` | fixture-contract | BCS original retorna historical; teste ainda espera unavailable de contrato antigo com lease privado. |
 | `product/wp10/integration/analysis-stale-calculation.test.ts:346` | fixture-contract | Mutação injetada só no private read não ocorre; produtor atual usa o mesmo call original. Não trocar denied por ok. |
@@ -130,7 +131,7 @@ Arquivos não iniciados, prefixo `modules/sucafina/Sucafinav1/test/product/`:
 
 Os arquivos acima não iniciaram na enumeração da base. O gate 44657265518, após o fix concreto de descriptors, executou todos eles; não há arquivo pendente no resultado atual do shard 1. O registro histórico da enumeração parcial foi preservado.
 
-## Falhas observadas — shard 3
+## Falhas da enumeração da base — shard 3
 
 Prefixo: `modules/sucafina/Sucafinav1/test/`. Job 136006716047 cancelled; cleanup 136025186224 success. São 255 marcadores PASS e 21 FAIL; não há resumo final, marcador skip/todo nem Unhandled error. O grande HTML/diff pertence à falha procurement-integration:180, sem falha adicional oculta.
 
@@ -139,16 +140,16 @@ Prefixo: `modules/sucafina/Sucafinav1/test/`. Job 136006716047 cancelled; cleanu
 | `io-browser.test.ts:26` | unbound/UI legado | ERR_CONNECTION_REFUSED em :4110; primeira jornada. |
 | `io-browser.test.ts:114` | unbound/UI legado | ERR_CONNECTION_REFUSED em :4110; segunda jornada. |
 | `visual-layout.test.ts:37` | unbound/UI legado | POST ECONNREFUSED no serviço legado; caso declarado em :15. |
-| `product/wp05/procurement-integration.test.ts:180` | falso positivo de fixture | O sentinel privado `hidden` colide com o atributo HTML legítimo `<fieldset hidden>`. A projeção e a seleção anteriores passaram. Próxima fatia: sentinel inequívoco no seed e em todos os checks, mantendo data privada e revogação. |
+| `product/wp05/procurement-integration.test.ts:180` | falso positivo de fixture | O sentinel privado `hidden` colide com o atributo HTML legítimo `<fieldset hidden>`. A projeção e a seleção anteriores passaram. A fatia `a86e22c` usa sentinela inequívoca no seed e em todos os checks, preservando data privada e revogação. O resultado dessa correção está no gate posterior. |
 | `product/wp13/sensitivity-units-boundary.test.ts:54` | timeout/desempenho | Timeout Bun de 30000 ms; duração observada de 74999 ms, após replay-ready em ~73119 ms. Await caro não isolado; manter orçamento. |
 | `product/wp13/persistence-recovery.test.ts:21` | timeout/desempenho | Timeout Bun de 30000 ms; duração de 31236 ms na segunda variação portfolioRecovery(after). Await exato não isolado. |
-| `product/operations-fixes/c12-concurrency.test.ts:34` | oracle C12 desatualizado | Esperado409, recebido200. A fixture altera só objective/version após receipt; apply.ts:125–162 reconcilia edits não relacionados e mantém fences de choice/change. Migrar a contraprova inteira, sem apenas trocar409 por200. |
+| `product/operations-fixes/c12-concurrency.test.ts:34` | oracle C12 desatualizado | Esperado 409, recebido 200. A fixture altera só objective/version após receipt; apply.ts:125–162 reconcilia edits não relacionados e mantém fences de choice/change. Migrar a contraprova inteira, sem apenas trocar409 por 200. |
 | `product/operations-fixes/c12-concurrency.test.ts:103` | oracle C12 desatualizado | Mesma causa do caso anterior. O teste para antes de provar retry/reload; preservar controles de receipt e autorização. |
 | `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso omitted: deadline de 165000 ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
 | `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso confirmed: deadline de 165000 ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
 | `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso zero: deadline de 165000 ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
 | `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho | Caso null: deadline de 165000 ms em advantage.persist, após comparison.persist custar ~112–125s. Não há falha numérica comprovada. |
-| `product/wp12/native-execution-bi-kpi.test.ts:312` | oracle de URL legado | HTTP200 e links autorizados; teste busca Budget+Overview/Budget%20Overview. apps/cli/src/sucafina-product/extended-source-links.ts:55–78 produz /orchestra/sf-dashboard/budget com year. Migrar URL/origin/ano mantendo proveniência, isolamento e reload. |
+| `product/wp12/native-execution-bi-kpi.test.ts:312` | oracle de URL legado | HTTP 200 e links autorizados; teste busca Budget+Overview/Budget%20Overview. apps/cli/src/sucafina-product/extended-source-links.ts:55–78 produz /orchestra/sf-dashboard/budget com year. Migrar URL/origin/ano mantendo proveniência, isolamento e reload. |
 | `product/wp12/native-execution-bi-public-selection.test.ts:326` | oracle de URL legado | Mesma migração de rota Budget Overview para /orchestra/sf-dashboard/budget. Manter seleção pública, isolamento de caso e consumidores reais. |
 | `product/bi-cost-waterfall/presentation.test.ts:17` | timeout/desempenho | Deadline cooperativo de 105000 ms em BI09.dispatch; não elevar orçamento nem atribuir a cleanup lento. |
 | `product/bi-cost-waterfall/presentation.test.ts:66` | timeout/desempenho | Deadline cooperativo de 105000 ms em BI09.dispatch; não elevar orçamento nem atribuir a cleanup lento. |
@@ -207,11 +208,11 @@ SHA atual de código: `a86e22c9654663a72bd55586059a4254f548c742`. Foram alterado
 | 1 | Registro de descriptors versus admissão por owner | `243c083dfef4caefddf88c64adb46ab7f7b88b2f` | `3edf1737c390f89220337cbcbc0efdf9f689ad51` | [44657265518](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657265518) | FAILURE; 576 pass / 29 fail; todos 113 arquivos |
 | 2 | Recusa C08 anterior ao produtor após revisão da fonte | `d582fe32ca6fcab503a364065d846715642e8837` | `0c352eef4965c9e8c59ca123a95d7ebfba491f8b` | [44657300808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657300808) | FAILURE; 507 pass / 7 fail / 1 skip / 1 error |
 | 2 | Recusa anônima com header ausente e corpo textual exato | `2ee5e96198500ed9d2524b692240b90cce86ed79` | `460ca5cbcbe85af34bc1945af832e52ac8db07cc` | [44661562191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661562191) | FAILURE; 508 pass / 6 fail / 1 skip / 1 error |
-| 3 | Sentinela privada sem colisão com atributo HTML hidden | `a86e22c9654663a72bd55586059a4254f548c742` | `3caf96c9115b30f8a1150532e08b4a1714345a4a` | [44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967) | Em andamento; contagem pendente |
+| 3 | Sentinela privada sem colisão com atributo HTML hidden | `a86e22c9654663a72bd55586059a4254f548c742` | `3caf96c9115b30f8a1150532e08b4a1714345a4a` | [44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967) | CANCELLED; 250 pass / 22 fail observados; 66/99 arquivos iniciados, parcial |
 
 Jobs: shard 3 `136054050430`; shard 1 `136026453241`; primeiro gate do shard 2 `136026570741`; segundo gate do shard 2 `136040769695`. Cada gate usa exatamente a requisição da enumeração de seu shard (113/107/99 arquivos, timeout 30000). Não houve rerun idêntico; o gate do shard 3 começou após seu fix concreto. Máximo de 2 gates simultâneos **desta sessão**.
 
-As mudanças foram relidas e comparadas no GitHub: fatia 1 modifica apenas `product/routine-native-admission/adapter-boundaries.test.ts` (8 adições/3 remoções); fatia 2 apenas `product/wp12/native-execution-executive.test.ts` (3 adições/1 remoção). A fatia 3 modifica apenas o mesmo arquivo executivo (2 adições/1 remoção). A fatia 4 altera somente `product/wp05/procurement-integration.test.ts` (7 adições/6 remoções), com constante de sentinela e seis linhas atualizadas. O adapter passou no gate do shard 1; o caso executivo passou inteiro no segundo gate do shard 2. A validação da sentinela depende do gate do shard 3.
+As mudanças foram relidas e comparadas no GitHub: fatia 1 modifica apenas `product/routine-native-admission/adapter-boundaries.test.ts` (8 adições/3 remoções); fatia 2 apenas `product/wp12/native-execution-executive.test.ts` (3 adições/1 remoção). A fatia 3 modifica apenas o mesmo arquivo executivo (2 adições/1 remoção). A fatia 4 altera somente `product/wp05/procurement-integration.test.ts` (7 adições/6 remoções), com constante de sentinela e seis linhas atualizadas. O adapter passou no gate do shard 1; o caso executivo passou inteiro no segundo gate do shard 2. O caso da sentinela passou inteiro no gate do shard 3, incluindo privacidade e as duas recusas após revogação.
 
 ### Resultado completo do gate do shard 1
 
@@ -239,7 +240,7 @@ Prefixo da primeira coluna: `modules/sucafina/Sucafinav1/test/`.
 | `product/c12-receipt-recovery/recovery-ui.test.ts:197` | unbound/produtor UI | decision-apply.ts:10 não tem data-recover-change, e script não chama decision-recover. Consumer é UI local real, não console legado. |
 | `product/wp12/native-execution-portfolio.test.ts:14; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total 240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
 | `product/wp12/native-execution-portfolio.test.ts:134; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total 240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
-| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em product/interface/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP400 em vez de 200; não reduzir o positivo a rejeição. |
+| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em product/interface/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP 400 em vez de 200; não reduzir o positivo a rejeição. |
 | `product/wp01/workbench-analysis.test.ts:380` | fixture-contract | Revogação injetada via models não ocorre em action output. models só participa de start; preservar 403/denied/fechamento de lease e migrar injeção em fatia própria. |
 | `product/wp10/integration/analysis-stale-calculation.test.ts:303` | fixture-contract | BCS original retorna historical; teste ainda espera unavailable de contrato antigo com lease privado. |
 | `product/wp10/integration/analysis-stale-calculation.test.ts:346` | fixture-contract | Mutação injetada só no private read não ocorre; produtor atual usa o mesmo call original. Não trocar denied por ok. |
@@ -292,32 +293,102 @@ O skip preexistente continua em `local-backups.test.ts:209`, dependente de privi
 
 As três falhas da base que passaram sem fix próprio continuaram PASS: `recorded-fallback.test.ts:11` (145556.93 ms), `thread-period-continuity.test.ts:17` (34746.10 ms) e `document-search.test.ts:5` (25910.80 ms). São falhas não reproduzidas nesses gates, sem atribuir sua melhora à correção executiva. Histórico: base 504/10, primeiro gate 507/7, segundo gate 508/6.
 
+### Resultado parcial do gate do shard 3
+
+[Run 44665621967](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665621967) terminou **CANCELLED**, no limite existente de 45 minutos. Job de testes `136054050430`; cleanup `136070755205` terminou com success. Snapshot `3caf96c9115b30f8a1150532e08b4a1714345a4a`, após o fix `a86e22c9654663a72bd55586059a4254f548c742`.
+
+**250 pass / 22 fail observados; sem resumo final Bun.** Não há marcador skip/todo nem erro não tratado. Foram iniciados 66/99 arquivos, sem arquivo extra. Os 66 headers são idênticos aos da enumeração, na mesma ordem; a lista dos 33 arquivos não iniciados acima permanece integralmente pendente.
+
+O teste de procurement corrigido passou inteiro em **1845.38 ms**. O log chega a assertions:privacy, fechamento da página, desconexão e PASS. Isso abrange o identificador privado em `product/wp05/procurement-integration.test.ts:181`, a data em `:182` e as duas recusas após a revogação em `:184–186`.
+
+A comparação por arquivo+título+quantidade de ocorrências, incluindo um título duplicado de operator-enroll, fecha exatamente:
+
+- 20 falhas da base persistem.
+- Procurement muda de FAIL para PASS.
+- Capacity-numeric e semantic-discriminants mudam de PASS para FAIL; a relação causal com o patch da sentinela não foi demonstrada.
+- Quatro casos de review-answer-confirmation antes aprovados não concluíram neste run.
+- Reconciliação: **255 + 1 − 2 − 4 = 250 pass**; **21 − 1 + 2 = 22 fail**.
+
+Prefixo das falhas atuais: `modules/sucafina/Sucafinav1/test/`.
+
+| File:line | Classificação | Evidência / retomada |
+| --- | --- | --- |
+| `io-browser.test.ts:26` | unbound/UI legado | ERR_CONNECTION_REFUSED na jornada Planner/XLSX do console descomissionado. |
+| `io-browser.test.ts:114` | unbound/UI legado | ERR_CONNECTION_REFUSED na jornada Procurement/documentos do console descomissionado. |
+| `visual-layout.test.ts:37` | unbound/UI legado | POST recusado no serviço legado; caso declarado em :15. |
+| `product/wp05/capacity-numeric.test.ts:76` | interação browser / cleanup | Click SVG excede 10000 ms; locator encontra o grupo correto e aguarda visibilidade/enablement/estabilidade. Cleanup não conclui antes do timeout Bun de 180000 ms. Dado numérico estava presente; causa visual e causa interna do close não isoladas. |
+| `product/wp05/semantic-discriminants.test.ts:85` | timeout/desempenho | Timeout de 90000 ms (declaração :127), 90000.98 ms observados. Helper :21–33 engloba launch/interação/close sem fases; await não isolado. Casos anterior e seguinte passam; não é produtor unbound. |
+| `product/wp13/sensitivity-units-boundary.test.ts:54` | timeout/desempenho | Budget Bun de 30000 ms; duração observada 76670.17 ms após replay-ready aos 74764 ms. Await caro não isolado. |
+| `product/wp13/persistence-recovery.test.ts:21` | timeout/desempenho | Budget Bun de 30000 ms; segunda variação portfolioRecovery(after) termina em timeout após 31838.00 ms. Await específico não isolado. |
+| `product/operations-fixes/c12-concurrency.test.ts:34` | expectativa C12 desatualizada | Esperado 409, recebido 200. Fixture altera só objective/version; apply.ts:125–162 reconcilia a edição sem alterar choice/change. Migrar a contraprova inteira, preservando receipt/retry/reload. |
+| `product/operations-fixes/c12-concurrency.test.ts:103` | expectativa C12 desatualizada | Mesma causa do caso anterior. A falha de status ocorre antes das verificações posteriores; não trocar apenas 409 por 200. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho (omitted) | Deadline cooperativo de 165000 ms em advantage.persist. comparison.persist consumiu entre 118251 e 129410 ms nos quatro casos; não há erro numérico demonstrado. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho (confirmed) | Deadline cooperativo de 165000 ms em advantage.persist. comparison.persist consumiu entre 118251 e 129410 ms nos quatro casos; não há erro numérico demonstrado. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho (zero) | Deadline cooperativo de 165000 ms em advantage.persist. comparison.persist consumiu entre 118251 e 129410 ms nos quatro casos; não há erro numérico demonstrado. |
+| `product/installed-bi-closure/numerical-coverage.test.ts:20` | timeout/desempenho (null) | Deadline cooperativo de 165000 ms em advantage.persist. comparison.persist consumiu entre 118251 e 129410 ms nos quatro casos; não há erro numérico demonstrado. |
+| `product/wp12/native-execution-bi-kpi.test.ts:312` | expectativa de URL desatualizada | HTTP 200 e links autorizados; teste busca Budget Overview. extended-source-links.ts:55–78 produz /orchestra/sf-dashboard/budget com year. Preservar origem, ano, proveniência e reload ao migrar. |
+| `product/wp12/native-execution-bi-public-selection.test.ts:326` | expectativa de URL desatualizada | Mesma rota canônica de Budget; preservar seleção pública, isolamento e consumidores reais. |
+| `product/bi-cost-waterfall/presentation.test.ts:17` | timeout/desempenho | Deadline cooperativo de 105000 ms durante BI09.dispatch; causa interna de custo não isolada. |
+| `product/bi-cost-waterfall/presentation.test.ts:66` | timeout/desempenho | Deadline cooperativo de 105000 ms durante BI09.dispatch; causa interna de custo não isolada. |
+| `product/bi-cost-waterfall/presentation.test.ts:97` | timeout/desempenho | Deadline cooperativo de 105000 ms durante BI09.dispatch; causa interna de custo não isolada. |
+| `product/bi-cost-waterfall/presentation.test.ts:113` | timeout/desempenho | Deadline cooperativo de 105000 ms durante BI09.dispatch; causa interna de custo não isolada. |
+| `product/bi-cost-waterfall/presentation.test.ts:133` | timeout/desempenho | Deadline de 105000 ms em portfolio.persist; comparison.persist levou 43232 ms e portfolio.select 46964 ms. Não demonstra erro financeiro. |
+| `product/bi-cost-waterfall/presentation.test.ts:242` | timeout/desempenho | Deadline cooperativo de 105000 ms durante BI10.dispatch. |
+| `product/wp00/baseline-corpus-coverage.test.ts:60` | unbound/inventário documental | journeys-j01-j08.json não fornece fixtureBindings nem executionStatus nos oito registros. Não inventar NOT_RUN/bindings; eventual mudança exige evidência real e PR shared:. |
+
+**Detalhe dos dois timeouts novos.** Em capacity-numeric, `:73–74` já comprovavam o valor 20000 na tabela e no aria-label; as três navegações anteriores passaram. O click em `:76` falha às 03:12:05.559 UTC, após 10000 ms, e o caso só é encerrado pelo Bun às 03:14:54.822 UTC. `product/wp05/browser.ts:53–61` registra o erro, desliga o watchdog e aguarda dispose/browser.close; não há eventos de fechamento desse label no intervalo de 169263 ms. Isso comprova cleanup não concluído, sem identificar sua causa interna. Os checks em `:77–92` não ficaram comprovados. O renderer é local, em about:blank, e fornece o grupo interativo em `product/analytics/view.ts:327–398`; não é console legado nem dado ausente.
+
+Em semantic-discriminants, o log contém apenas o PASS anterior, o FAIL por timeout e o PASS seguinte, sem stack ou checkpoint. O bundle já estava cacheado; `withRenderer` em `:21–33` inclui lançamento, página, corpo e close. Não há base para atribuir o timeout especificamente a launch, cleanup ou ao produtor. O teste usa projeções fornecidas à UI.
+
+**Último arquivo parcialmente executado:** `product/wp08/review-answer-confirmation.test.ts`.
+
+| Declaração do caso | Enumeração da base | Último gate |
+| --- | --- | --- |
+| `:14` | PASS | PASS, 81077.31 ms |
+| `:99` | PASS | Interrompido, sem resultado |
+| `:127` | PASS | Não iniciado |
+| `:161` | PASS | Não iniciado |
+| `:188` | PASS | Não iniciado |
+| `:228` | Interrompido | Não iniciado |
+
+O último checkpoint foi `:117`, edit-stale real-answer-edit, aos 45735 ms. A próxima operação na fonte é listPresentation em `:118`, mas não há stack ou checkpoint posterior que localize o cancelamento entre as operações seguintes. **Não contar o caso `:99` como FAIL.** O limite do job também não equivale a um 23º teste falhando.
+
+### Notas de investigação para os timeouts
+
+Os cinco timeouts do shard 1 têm fases caras observadas, mas não uma causa única demonstrada. No primeiro temporal (`product/installed-bi-closure/temporal-contract.test.ts:12`), comparison.persist consumiu 41568 ms, BI10.dispatch 61962 ms e BI09.dispatch foi abortado no deadline global de 165000 ms. No segundo (`:69`), comparison.persist consumiu 41909 ms e portfolio.select 46032 ms; portfolio.persist foi abortado antes dos dispatches BI10 do teste. Retomada em `product/bi-cost-waterfall/fixture.ts:126–130,139–141,148–157`.
+
+Em `product/wp13/source-scenario.test.ts:32`, a preparação concluiu em 5910 ms. O label terminal aos 180001 ms é somente o último checkpoint retido por `product/wp11/fixture-trace.ts:8,13,36–38`; não identifica a operação ativa. As 9674 leituras C08 e 117466 revalidações observadas não isolam causa. Instrumentar as fronteiras de `source-scenario.test.ts:35,41,48,67,339–355` sem somar tempos inclusivos como se fossem custo exclusivo.
+
+Nos casos anuais `product/wp10/analysis-composition/alternative-selection.test.ts:573,606`, draft levou 71161 ms e draft.selection-change 49286 ms, respectivamente. A seleção concorrente de 15812 ms está contida no segundo valor. O hook em `:162–167` aguarda essa seleção; `:585,617–618` são as fronteiras de chamada. O caminho Portfolio é compartilhado (`financial-composition-fixture.ts:55`, `alternative-selection.test.ts:174`, `apps/cli/src/sucafina-product/portfolio-services.ts:36–37,80–105`), sem prova de um defeito comum. Marcadores state:returned são emitidos em finally e não comprovam sucesso.
+
+O timeout ocorre no lançamento direto de Chrome sob Bun em `product/wp05/browser.ts:9`, antes do timer interno de 60 s instalado em `:33`. O driver Node existente em `product/wp02/browser-driver-fixture.ts:23,212,373,456` foi exercitado por `product/operations-fixes/document-workbench.test.ts:16`, que passou neste gate. Seu comentário sobre stdio é uma hipótese para investigação, não causa demonstrada da falha. O segundo caso de sensitivity também passou usando o helper atual. Uma eventual migração deve preservar declarações `expectSpawn`, consumidores e lifecycle; o pool WP01 exige sentinelas de startup/finalização que não estão na seleção deste shard. Nenhuma migração aplicada.
+
 ## Feito / pendente
 
-Feito: seleção e requisições conferidas; três enumerações encerradas antes de qualquer fix; falhas observadas classificadas; quatro fatias isoladas aplicadas, com um gate por causa. O adapter e o executivo passaram integralmente nos respectivos gates. Nenhum gate idêntico foi repetido.
+**Feito:** seleção e requisições conferidas; três enumerações encerradas e suas falhas publicadas antes do primeiro fix; quatro fatias isoladas, cada uma com seu gate; readback e escopo das alterações conferidos. O adapter, o executivo e o caso de privacidade passaram integralmente nos respectivos gates. Os resultados atuais são 29 falhas no shard 1, seis no shard 2 e 22 observadas no shard 3, todas classificadas.
 
-Pendente: aguardar o gate do shard 3, run `44665621967`, registrar seu resultado e classificar quaisquer falhas adicionais alcançadas. Até ele terminar, os 33 arquivos não iniciados na enumeração da base continuam sem resultado.
+**Pendente:** corrigir as causas registradas nos ledgers e obter execução completa do shard 3. Os mesmos 33 arquivos listados acima não iniciaram em nenhum dos dois runs desse shard. No último arquivo, `product/wp08/review-answer-confirmation.test.ts:99` foi interrompido e os casos `:127,161,188,228` não iniciaram no último gate. Não há base para enumerar as falhas possíveis desses trechos ainda não executados.
 
-Nenhum teste foi apagado ou pulado e nenhum timeout foi aumentado. Três expectativas foram substituídas por contratos exatos e uma sentinela de fixture foi corrigida; as justificativas seguem abaixo. Produto, projeções, fixtures compartilhadas e workflows permanecem sem alterações.
+Não foram apagados testes nem adicionados skips; nenhum timeout foi aumentado. Três expectativas foram substituídas por contratos exatos e uma sentinela de fixture foi corrigida, com justificativas abaixo. Não houve gate idêntico repetido, gate exploratório após a enumeração, nem mais de dois gates simultâneos desta sessão. Após o último cancelamento, nenhuma execução adicional foi aberta.
 
 ### Justificativas das mudanças de expectativas e de fixture
 
 - Adapter (`product/routine-native-admission/adapter-boundaries.test.ts:113`): a expectativa de array vazio para qualquer perda de binding foi substituída pela lista exata de cinco IDs quando publication existir, e por array vazio somente quando publication faltar. A ausência de watch permanece coberta pela lista fechada. Foi acrescentada a chamada real de `routines.readAdmission`, exigindo o erro exato de reader indisponível e contadores exatamente zero. Não é uma redução para nonempty/truthy.
-- Executive (`product/wp12/native-execution-executive.test.ts:213`): o oracle parcial `unavailable/analysis-source-unavailable` foi substituído por HTTP403 e body exato `denied/case-selection-unavailable`, pois o guard C08 externo precede o produtor. Todas as asserções de digest, preservação histórica, downloads GET reais e recusa anônima permanecem.
+- Executive (`product/wp12/native-execution-executive.test.ts:213`): o oracle parcial `unavailable/analysis-source-unavailable` foi substituído por HTTP 403 e body exato `denied/case-selection-unavailable`, pois o guard C08 externo precede o produtor. Todas as asserções de digest, preservação histórica, downloads GET reais e recusa anônima permanecem.
 
-- Recusa anônima (`product/wp12/native-execution-executive.test.ts:220–221` no terceiro fix): o matcher de string sobre Content-Type null foi substituído por ausência explícita do header e pelo corpo exato `Access denied`, mantendo HTTP403. `product/reviews/application.ts:41,45–46` produz esse corpo textual quando a admissão é negada. Não foi usado fallback para string vazia nem expectativa de zero bytes; o corpo exato comprova a recusa sem receber o documento.
+- Recusa anônima (`product/wp12/native-execution-executive.test.ts:220–221` no terceiro fix): o matcher de string sobre Content-Type null foi substituído por ausência explícita do header e pelo corpo exato `Access denied`, mantendo HTTP 403. `product/reviews/application.ts:41,45–46` produz esse corpo textual quando a admissão é negada. Não foi usado fallback para string vazia nem expectativa de zero bytes; o corpo exato comprova a recusa sem receber o documento.
 
-- Sentinela privada (`product/wp05/procurement-integration.test.ts:23,33,68,93,104,146,181`): `hidden` era tanto o identificador do registro privado de b quanto um atributo HTML legítimo produzido por `product/analytics/source-navigation.ts:37–40`. A constante `privateRequestId` passa a identificar realmente a chave e o número desse registro e as quatro negativas, além do check de prefixo. Permanecem 56 asserções, as cinco ocorrências da data privada e os checks de revogação em `:184–186`. Continua sendo inspecionado o HTML completo, inclusive atributos e elementos ocultos; não foi trocado por texto visível.
+- Sentinela privada (`product/wp05/procurement-integration.test.ts:23,33,68,93,104,146,181`): `hidden` era tanto o identificador do registro privado de b quanto um atributo HTML legítimo produzido por `product/analytics/source-navigation.ts:37–40`. A constante `privateRequestId` passa a identificar realmente a chave e o número desse registro e as quatro negativas, além do check de prefixo. Permanecem 56 asserções, as cinco ocorrências da data privada e os checks de revogação em `:184–186`. Continua sendo inspecionado o HTML completo, inclusive atributos e elementos ocultos; não foi trocado por texto visível. A validade do ID foi conferida no caminho de leitura: `product/integration/source-inventory.ts:35` enumera todas as keys; `source-lifecycle.ts:218–220` e `product/procurement/source-projection.ts:40–41` exigem apenas ID não vazio e único. `runtime/procurement.ts:211–229,954–963` carrega o registro, e `src/requests.ts:5–8` filtra por createdBy. Portanto, o registro privado continua representável e sua exclusão depende da autorização, não dos hífens. Essa revisão estática complementa o PASS integral do caso no run 44665621967.
 
 As mudanças foram aplicadas somente depois de os três runs da base encerrarem e suas listas de falhas serem publicadas.
 
 ## Como retomar
 
-1. Aguardar somente o run `44665621967`, snapshot `3caf96c9115b30f8a1150532e08b4a1714345a4a`, job `136054050430`. Os demais runs desta sessão terminaram. Conferir PASS do caso de privacidade até a revogação, a contagem final, o conjunto de 99 arquivos e as falhas restantes.
-2. Partir da branch `sf-shard-a`, com código em `a86e22c9654663a72bd55586059a4254f548c742`. O commit posterior é somente este handoff. Não rerodar gate sem mudança concreta.
-3. Preservar a distinção entre contagem observada e resumo final. Não declarar PASS para arquivos não executados nem contar o caso interrompido como FAIL.
-4. Manter todas as garantias nos casos de fixture/oracle: efeitos e recibos, CAS, histórico, revogação, digests e autorização. Produtor sem o dado exigido segue `unbound`; não substituir o positivo por check vazio ou simples recusa.
-5. Corrigir somente causas comprovadas, uma por commit, usando a requisição exata do shard correspondente após o fix. Máximo de dois gates simultâneos; sem gates exploratórios ou repetição idêntica.
-6. Manter `runtime/application.ts` intacto. Não recriar console legado, apontar browser para `:4110`, elevar timeouts ou fabricar baseline/coverage/digest/GO. Preservar exports `Schema.Never` e downloads reais somente por GET `?sf=review-download`.
-7. Nenhuma mudança compartilhada foi aplicada; estas quatro fatias não introduzem precedência de merge `shared:`. Eventual correção de produto, projeção ou fixture compartilhada exige PR pequeno separado. O integrador deve mergear `shared:` antes da fatia de testes dependente, sem rebase dos outros branches.
-8. Concluir o handoff com o resultado do gate do shard 3. Sem shell, sem `sf-ci` e sem push nos quatro branches vedados no briefing.
+1. Partir de `sf-shard-a`, com código em `a86e22c9654663a72bd55586059a4254f548c742`. Os commits posteriores são apenas documentação. Todos os runs desta sessão estão encerrados; não aguardar nem repetir gate antigo.
+2. Escolher uma causa comprovada no ledger atual do shard. Manter juntas as falhas com a mesma raiz e fazer um commit por causa. As quatro correções já aplicadas estão identificadas com SHA, snapshot e run; não atribuir as variações de tempo sem fix próprio a essas mudanças.
+3. A prioridade para concluir a enumeração do shard 3 é isolar e corrigir concretamente o custo/encerramento que impede terminar no budget existente. Os novos pontos precisos são `product/wp05/capacity-numeric.test.ts:76` com `product/wp05/browser.ts:53–67`, e `product/wp05/semantic-discriminants.test.ts:85`. Os demais deadlines têm fases registradas no ledger. Não elevar o limite, remover negativos ou rodar novamente só para tentar alcançar os 33 arquivos.
+4. Depois de um fix concreto, criar a requisição no SHA do commit, em branch `ci-run-linux-sfa-<shard>-<fatia>`. Reusar exatamente a seleção daquele shard: 113/107/99 arquivos, `--timeout 30000`, alias `sucafina`, runner `bun` e o ambiente efetivo documentado. As requisições permanecem nos snapshots registrados. Registrar run id, conclusão, resumo Bun ou contagem explicitamente parcial, e todas as falhas observadas. Máximo de dois gates simultâneos.
+5. Se o mesmo ponto falhar duas vezes sem mudança de código, parar e registrar `unbound` com file:line. Não repetir gate idêntico. Produtores que não fornecem o dado positivo exigido continuam `unbound`; não inventar dados nem substituir o positivo por check vazio.
+6. Preservar efeitos/recibos, CAS, histórico, revogação, digests e autorização nas migrações de fixture/expectativa. Não alterar `modules/sucafina/Sucafinav1/runtime/application.ts`, recriar console legado ou apontar browser para `:4110`. Manter `reviews.export.docx/pptx` como `Schema.Never` e bytes reais somente por GET `?sf=review-download`.
+7. Nenhuma mudança compartilhada foi aplicada nesta sessão; não há sessão dependente de um novo PR `shared:` desta branch. Eventual correção de produto, projeção ou fixture compartilhada deve sair em PR pequeno separado com título `shared:`, sem rebase dos outros branches. O integrador deve mergear esse PR antes da fatia de testes dependente e registrar a sessão responsável no próximo handoff.
+8. Continuar somente pelo GitHub e verificar por Actions. Não executar `sf-ci` nem fazer push em `close-final-candidate`, `sf-red-clusters`, `go-live-close` ou `sf-frontend-bundle`. Atualizar este handoff com o resultado real; não fabricar baseline, coverage, digest ou GO.
