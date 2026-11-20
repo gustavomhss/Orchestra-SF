@@ -3,11 +3,12 @@ import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, Response, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { captureCommandResponse, chapterURL, login, modeURL, observation } from "./runtime.ts"
 import type { Account } from "./runtime.ts"
+import { retainedFor, retainResponses } from "../reports-support/retained-response.ts"
 
 // ExcelJS belongs to the existing Sucafina package. Resolve there under Bun's isolated workspace linker.
 const { Workbook } = createRequire(new URL("../../../../../modules/sucafina/package.json", import.meta.url))("exceljs") as typeof import("../../../../../modules/sucafina/node_modules/exceljs")
@@ -16,7 +17,7 @@ type Detail = { detail: ImportDetail; digest: string; receipt?: ImportReceiptSum
 type Reference = Detail & { manifest: ImportManifest }
 type Destination = { label: string; selectionRef: string; surface: string; formats: string[] }
 
-async function valueOf<T>(response: APIResponse | Response): Promise<T> {
+async function valueOf<T>(response: Pick<APIResponse, "status" | "json">): Promise<T> {
   expect(response.status()).toBe(200)
   const body = await response.json() as { status: string; value: T }
   expect(body.status).toBe("ok")
@@ -81,13 +82,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     const candidate = new URL(url)
     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/planner" && candidate.searchParams.get("sf") === mode
   }
-  const waiting = (mode: string, method = "GET") => {
-    const response = page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
-    // Admission can fail before the later preview/detail responses exist. Observe teardown
-    // rejection eagerly; returning the original promise preserves every awaited failure.
-    void response.catch(() => undefined)
-    return response
-  }
+  const endpoint = account.baseURL + "/planner"
   const beforeVersionsResponse = await page.request.get(account.baseURL + "/api/ui/pages/CAP23")
   expect(beforeVersionsResponse.status()).toBe(200)
   const beforeVersions = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await beforeVersionsResponse.json())
@@ -150,45 +145,66 @@ export async function importJourney(page: Page, info: TestInfo) {
   workbook.addWorksheet("OPEX").addRows([["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"], [renewal, "Licenses", "Renewal", "USD", "Forecast", 84000]])
   const bytes = Buffer.from(await workbook.xlsx.writeBuffer())
   const sourceDigest = createHash("sha256").update(bytes).digest("hex")
-  expect((await page.goto(chapterURL(account, "/orchestra/sf-imports").href))?.status()).toBe(200)
-  const root = page.locator("[data-import-workbench]")
+  expect((await page.goto(chapterURL(account, "/orchestra/sf-imports/new").href))?.status()).toBe(200)
+  const root = page.locator('[data-sf-leaf="u23"][data-sf-surface="UI55"]')
   await expect(root).toHaveCount(1)
-  const status = root.locator(":scope > [role='status']")
-  await expect(status).toHaveCount(1)
+  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(root.locator('.sf-state-panel[data-sf-state="ready"]')).toHaveCount(1)
+  await expect(root.getByLabel("source", { exact: true })).toHaveValue("planner")
   const invalid = await page.request.post(modeURL(account, "planner", "import-preview").href, { maxRetries: 0, headers: { Origin: account.origin, "Idempotency-Key": randomUUID() }, data: { admittedFileRef: "invalid-schema-probe", format: "xlsx", options: { unknown: true } } })
   expect(invalid.status()).toBe(400)
   expect(await invalid.json()).toEqual({ status: "invalid" })
-  const destinations = waiting("import-targets")
-  await root.getByRole("button", { name: "Find destinations", exact: true }).click()
-  const targets = await valueOf<Destination[]>(await destinations)
-  expect(targets.filter((target) => target.label === name)).toHaveLength(1)
-  const index = targets.findIndex((target) => target.label === name)
-  expect(targets[index]).toMatchObject({ surface: "planner", formats: expect.arrayContaining(["xlsx"]) })
-  await root.getByLabel("Destination", { exact: true }).selectOption(String(index))
+  const find = root.getByRole("button", { name: "Find destinations", exact: true })
+  await expect(find).toBeEnabled()
+  const [destinations] = await retainResponses(page,
+    [{ ...retainedFor(endpoint, "import-targets", "GET"), query: { sf: "import-targets", surface: "planner" } }],
+    () => find.click())
+  const targets = await valueOf<Destination[]>(destinations)
+  const matched = targets.filter((target) => target.label === name)
+  expect(matched).toHaveLength(1)
+  const target = matched[0]!
+  expect(target).toMatchObject({ surface: "planner", formats: expect.arrayContaining(["xlsx"]) })
+  expect(target.selectionRef).not.toBe("")
+  const destination = root.getByLabel("Destination", { exact: true })
+  await expect(destination).toBeEnabled()
+  await destination.selectOption(target.selectionRef)
+  await expect(destination).toHaveValue(target.selectionRef)
   await root.getByLabel("File", { exact: true }).setInputFiles({ name: name + ".xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: bytes })
   await expect(root.getByLabel("Create a new Planner version", { exact: true })).not.toBeChecked()
   await expect(root.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
-  const admission = waiting("import-admit", "POST"), previewResponse = waiting("import-preview", "POST"), detailResponse = waiting("import-detail")
-  await root.getByRole("button", { name: "Preview changes", exact: true }).click()
-  const admissionTransport = await admission
-  if (admissionTransport.status() !== 200) {
-    const statusBody = await admissionTransport.json().catch(() => null) as { status?: unknown } | null
-    // Preserve the original producer's denial; attach only the public status
-    // category, never enrollment, selectors, source bytes or authority internals.
-    await observation(info, "operations-import-admission-blocked", {
-      stage: "import-admit", httpStatus: admissionTransport.status(),
-      producerStatus: typeof statusBody?.status === "string" &&
-        ["denied", "unavailable", "stale", "needs-input", "invalid", "conflict"].includes(statusBody.status)
-        ? statusBody.status : "unclassified",
-      scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
-      syntheticApprovalUsed: false,
-    })
-  }
-  const admitted = await valueOf<{ ref: string }>(admissionTransport)
-  const previewTransport = await previewResponse
+  const generate = root.getByRole("button", { name: "Generate preview", exact: true })
+  await expect(generate).toBeEnabled()
+  // Multipart admission stays on its original Response; its payload is not a
+  // JSON identity accepted by the retained-response observer.
+  const admittedResponse = page.waitForResponse((response) =>
+    isMode(response.url(), "import-admit") && response.request().method() === "POST").then(async (response) => {
+    if (response.status() !== 200) {
+      const statusBody = await response.json().catch(() => null) as { status?: unknown } | null
+      // Keep the original denial. No enrollment, selectors, bytes or authority internals leave this diagnostic.
+      await observation(info, "operations-import-admission-blocked", {
+        stage: "import-admit", httpStatus: response.status(),
+        producerStatus: typeof statusBody?.status === "string" &&
+          ["denied", "unavailable", "stale", "needs-input", "invalid", "conflict"].includes(statusBody.status)
+          ? statusBody.status : "unclassified",
+        scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+        syntheticApprovalUsed: false,
+      })
+    }
+    return valueOf<{ ref: string }>(response)
+  })
+  // If admission fails, propagate that assertion from the capture action too;
+  // waiting for a preview that was correctly refused must not conceal its cause.
+  const capturedPreview = retainResponses(page, [
+    retainedFor(endpoint, "import-preview", "POST"),
+    retainedFor(endpoint, "import-reference", "GET"),
+  ], async () => { await generate.click(); await admittedResponse })
+  const [admitted, [previewTransport, referenceTransport]] = await Promise.all([admittedResponse, capturedPreview])
   expect(previewTransport.request().postDataJSON()).toEqual({ admittedFileRef: admitted.ref, format: "xlsx", options: {} })
   const preview = await valueOf<ImportManifest>(previewTransport)
-  const detail = await valueOf<Detail>(await detailResponse)
+  const reference = await valueOf<Reference>(referenceTransport)
+  expect(new URL(referenceTransport.url()).searchParams.get("importPreviewRef")).toBe(preview.id)
+  expect(reference.manifest).toEqual(preview)
+  expect(reference.digest).not.toBe("")
   expect(preview).toMatchObject({ sourceDigest, format: "xlsx", state: "preview", domainApplied: false, receipts: [], issues: [], context: { principalRef: account.principal, surface: "planner" } })
   expect(preview.baseIdentity).toEqual([expect.objectContaining({ surface: "planner", type: "planner-version", id: version })])
   expect(preview.commands).toHaveLength(1)
@@ -199,10 +215,24 @@ export async function importJourney(page: Page, info: TestInfo) {
     expect(command.preview.values.filter((value) => value.id === `before:${id}:1:forecast`)).toEqual([expect.objectContaining({ value: prior, currency: "USD" })])
     expect(command.preview.values.filter((value) => value.id === `after:${id}:1:forecast`)).toEqual([expect.objectContaining({ value: next, currency: "USD" })])
   }
-  expect(detail.detail).toMatchObject({ manifestId: preview.id, version: preview.version, sourceDigest })
-  expect(detail.receipt).toBeUndefined()
-  expect(detail.detail.changes.filter((change) => change.path === `/versions/@id=${version}/lines/@id=${renewal}/f/0`)).toEqual([expect.objectContaining({ kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 }, source: { kind: "file", sheet: "OPEX", row: 2, column: 6, address: "F2", field: "Jan" } })])
-  await expect(status).toHaveText("Review the simulation, including ignored and rejected items. Apply requires your explicit action.")
+  expect(reference.detail).toMatchObject({ manifestId: preview.id, version: preview.version, sourceDigest })
+  expect(reference.receipt).toBeUndefined()
+  const changedPath = `/versions/@id=${version}/lines/@id=${renewal}/f/0`
+  expect(reference.detail.changes.filter((change) => change.path === changedPath)).toEqual([expect.objectContaining({ kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 }, source: { kind: "file", sheet: "OPEX", row: 2, column: 6, address: "F2", field: "Jan" } })])
+  await expect(root).toHaveAttribute("data-sf-phase", "reviewing")
+  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(root.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
+  const changes = root.getByRole("region", { name: "Item and field changes", exact: true })
+  await expect(changes).toHaveCount(1)
+  for (const kind of ["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const)
+    await expect(changes.getByText(kind + " (" + reference.detail.changes.filter((change) => change.kind === kind).length + ")", { exact: true })).toBeVisible()
+  await changes.getByText("changed (" + reference.detail.changes.filter((change) => change.kind === "changed").length + ")", { exact: true }).click()
+  const changedField = changes.locator("article.sf-files-change").filter({ has: page.getByRole("heading", { name: changedPath, exact: true }) })
+  await expect(changedField).toHaveCount(1)
+  await expect(changedField.getByText("72000 → 84000", { exact: true })).toBeVisible()
+  await expect(changedField.getByText("OPEX · row 2, column 6 · F2", { exact: true })).toBeVisible()
+  const apply = root.getByRole("button", { name: "Apply reviewed import", exact: true })
+  await expect(apply).toBeEnabled()
   expect(await exported(reader, account, version)).toEqual(before)
   expect(await tokens(reader, account, version, fiscalYear, [renewal, fixed])).toEqual(beforeTokens)
   const applies: string[] = [], committed: ImportManifest[] = []
@@ -213,12 +243,31 @@ export async function importJourney(page: Page, info: TestInfo) {
     committed.push(await valueOf<ImportManifest>(await route.fetch({ maxRetries: 0 })))
     await route.abort("failed")
   }, { times: 1 })
-  const failedDelivery = page.waitForEvent("requestfailed", (request) => isMode(request.url(), "import-apply"))
-  const recoveredResponse = waiting("import-reference")
-  await root.getByRole("button", { name: "Apply reviewed import", exact: true }).click()
-  await failedDelivery
-  const recovered = await valueOf<Reference>(await recoveredResponse)
+  const referenceTarget = {
+    ...retainedFor(endpoint, "import-reference", "GET"),
+    query: { sf: "import-reference", importPreviewRef: preview.id },
+  }
+  const failedDelivery = page.waitForEvent("requestfailed", (request) =>
+    isMode(request.url(), "import-apply") && request.method() === "POST")
+  void failedDelivery.catch(() => undefined)
+  // This GET precedes the POST and must still be the reviewed, unapplied source.
+  // The deliberately aborted Apply is never a retained-response target.
+  const [beforeApply] = await retainResponses(page, [referenceTarget],
+    async () => { await apply.click(); await failedDelivery })
+  expect(await valueOf<Reference>(beforeApply)).toEqual(reference)
   expect(committed).toHaveLength(1)
+  expect(applies).toEqual([JSON.stringify({ manifestId: preview.id, version: preview.version })])
+  await expect(root).toHaveAttribute("data-sf-phase", "unknown")
+  await expect(root).toHaveAttribute("data-sf-read-state", "outcome-unknown")
+  await expect(root.locator('.sf-state-panel[data-sf-state="outcome-unknown"]')).toHaveCount(1)
+  await expect(apply).toHaveCount(0)
+  const reconcile = root.getByRole("button", { name: "Refresh receipt", exact: true })
+  await expect(reconcile).toHaveCount(1)
+  await expect(reconcile).toBeEnabled()
+  // Register only after the original POST failed delivery; a fresh pre-Apply
+  // reference cannot satisfy this read-only recovery.
+  const [recoveredResponse] = await retainResponses(page, [referenceTarget], () => reconcile.click())
+  const recovered = await valueOf<Reference>(recoveredResponse)
   expect(recovered.manifest).toEqual(committed[0])
   expect(recovered.manifest.receipts).toHaveLength(1)
   const receipt = recovered.manifest.receipts[0]!
@@ -226,11 +275,21 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(receipt).toMatchObject({ idempotencyKey: command.idempotencyKey, commandDigest: command.commandDigest, targetIncarnation: command.target.incarnation, principalRef: account.principal, surface: "planner", status: "applied", errors: [] })
   expect(recovered.receipt).toMatchObject({ receiptId: receipt.id, manifestId: preview.id, idempotencyKey: command.idempotencyKey, commandDigest: command.commandDigest, outcome: "applied" })
   expect(recovered.receipt?.changedFields).toBeGreaterThan(0)
-  expect(recovered.detail).toEqual(detail.detail)
-  await expect(status).toHaveText("Confirmed receipt refreshed under your current access.")
-  await expect(root.locator("[data-receipt]")).toContainText("Receipt: " + receipt.id)
-  await expect(root.locator("[data-receipt]")).toContainText("Manifest: " + preview.id)
-  await expect(root.locator("[data-receipt]")).toContainText("Actor: " + account.principal + " · Version: " + receipt.version)
+  expect(recovered.detail).toEqual(reference.detail)
+  expect(recovered.digest).not.toBe(reference.digest)
+  const visibleReceipt = async (surface: Locator) => {
+    await expect(surface).toHaveCount(1)
+    await expect(surface).toHaveAttribute("data-sf-read-state", "ready")
+    await expect(surface).toHaveAttribute("data-sf-phase", "receipt")
+    const recorded = surface.locator('[data-sf-receipt="producer"]')
+    await expect(recorded).toHaveCount(1)
+    await expect(recorded.getByRole("heading", { name: "Confirmed receipt", exact: true })).toBeVisible()
+    await expect(recorded.getByText(receipt.id + " · Outcome: applied · " + recovered.receipt!.changedFields, { exact: true })).toBeVisible()
+    await expect(recorded.getByText("Manifest: " + preview.id, { exact: true })).toBeVisible()
+    await expect(recorded.getByText("Actor: " + account.principal + " · Version: " + receipt.version, { exact: true })).toBeVisible()
+  }
+  await visibleReceipt(root)
+  await expect(apply).toBeDisabled()
   const after = await exported(reader, account, version)
   expect(after.OPEX?.filter((row) => row[0] === renewal && row[8] === "Forecast").map((row) => row[9])).toEqual([84000])
   expect(after.OPEX?.filter((row) => row[0] === fixed)).toEqual(before.OPEX?.filter((row) => row[0] === fixed))
@@ -245,13 +304,49 @@ export async function importJourney(page: Page, info: TestInfo) {
   for (const sheet of Object.keys(before).filter((name) => name !== "OPEX")) expect(after[sheet]).toEqual(before[sheet])
   const afterTokens = await tokens(reader, account, version, fiscalYear, [renewal, fixed])
   expect(afterTokens).toEqual({ [renewal]: beforeTokens[renewal]! + 1, [fixed]: beforeTokens[fixed] })
-  const refreshed = waiting("import-reference")
-  await root.getByRole("button", { name: "Refresh receipt", exact: true }).click()
-  expect(await valueOf<Reference>(await refreshed)).toEqual(recovered)
-  const reloaded = waiting("import-reference")
-  expect((await page.goto(chapterURL(account, "/orchestra/sf-imports").href))?.status()).toBe(200)
-  expect(await valueOf<Reference>(await reloaded)).toEqual(recovered)
-  await expect(root.getByRole("button", { name: "Apply reviewed import", exact: true })).toBeDisabled()
+  const [refreshed] = await retainResponses(page, [referenceTarget],
+    () => root.getByRole("button", { name: "Refresh receipt", exact: true }).click())
+  expect(await valueOf<Reference>(refreshed)).toEqual(recovered)
+  await visibleReceipt(root)
+  const receiptPath = "/orchestra/sf-imports/r_" + Buffer.from(preview.id, "utf8").toString("base64url") + "/receipt"
+  const result = root.getByRole("link", { name: "View result", exact: true })
+  await expect(result).toHaveAttribute("href", receiptPath)
+  await result.click()
+  await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === receiptPath)
+  const receiptPage = page.locator('[data-sf-leaf="u23"][data-sf-surface="UI57"]')
+  await expect(receiptPage).toHaveCount(1)
+  await expect(receiptPage).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(receiptPage.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+  // UI57 intentionally requires an explicit original-source read on entry/reload.
+  // Scope to the source controls: after a receipt loads, its action bar also has Refresh receipt.
+  const refresh = receiptPage.locator(".sf-files-fields").getByRole("button", { name: "Refresh receipt", exact: true })
+  await expect(refresh).toHaveCount(1)
+  await expect(refresh).toBeEnabled()
+  const [entered] = await retainResponses(page, [referenceTarget], () => refresh.click())
+  expect(await valueOf<Reference>(entered)).toEqual(recovered)
+  await visibleReceipt(receiptPage)
+  expect((await page.reload())?.status()).toBe(200)
+  await expect(receiptPage).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(receiptPage.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+  await expect(refresh).toBeEnabled()
+  const [reloaded] = await retainResponses(page, [referenceTarget], () => refresh.click())
+  expect(await valueOf<Reference>(reloaded)).toEqual(recovered)
+  await visibleReceipt(receiptPage)
+  await expect(receiptPage.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+  // The new-import page must not restore a private selection or a reusable Apply.
+  expect((await page.goto(chapterURL(account, "/orchestra/sf-imports/new").href))?.status()).toBe(200)
+  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(destination).toHaveValue("")
+  await expect(root.getByLabel("File", { exact: true })).toHaveValue("")
+  await expect(root.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+  await expect(generate).toBeDisabled()
+  await expect(apply).toHaveCount(0)
+  expect((await page.goto(chapterURL(account, receiptPath).href))?.status()).toBe(200)
+  await expect(receiptPage).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(refresh).toBeEnabled()
+  const [reentered] = await retainResponses(page, [referenceTarget], () => refresh.click())
+  expect(await valueOf<Reference>(reentered)).toEqual(recovered)
+  await visibleReceipt(receiptPage)
   expect(applies).toEqual([JSON.stringify({ manifestId: preview.id, version: preview.version })])
   expect(await exported(reader, account, version)).toEqual(after)
   expect(await tokens(reader, account, version, fiscalYear, [renewal, fixed])).toEqual(afterTokens)
@@ -260,22 +355,31 @@ export async function importJourney(page: Page, info: TestInfo) {
   const viewerContext = await browser.newContext({ baseURL: account.origin })
   const viewerPage = await viewerContext.newPage()
   const viewer = await login(viewerPage, "viewer", "journey")
-  // Sign out in the same operator's reader tab while the workbench retains the previously valid reference.
+  expect(viewer.principal).not.toBe(account.principal)
+  expect([viewer.installationId, viewer.projectId]).toEqual([account.installationId, account.projectId])
+  const crossOwner = await viewerPage.request.get(modeURL(viewer, "planner", "import-reference", { importPreviewRef: preview.id }).href, { maxRetries: 0 })
+  expect(crossOwner.status()).toBe(403)
+  expect(await crossOwner.json()).toEqual({ status: "denied" })
+  // Sign out in the original operator's reader tab while UI57 retains a valid receipt.
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
   await reader.getByRole("button", { name: "Sign out", exact: true }).click()
   expect((await signedOut).status()).toBe(204)
-  const denied = waiting("import-reference")
-  await root.getByRole("button", { name: "Refresh receipt", exact: true }).click()
-  const deniedResponse = await denied
-  expect(deniedResponse.status()).toBe(403)
-  expect(await deniedResponse.json()).toEqual({ status: "denied" })
-  await expect(status).toHaveText("Access changed. The previous preview is no longer available.")
-  for (const selector of ["[data-context]", "[data-impact]", "[data-changes]", "[data-receipt]"]) await expect(root.locator(selector)).toBeEmpty()
-  await expect(root.getByRole("button", { name: "Apply reviewed import", exact: true })).toBeDisabled()
+  const [denied] = await retainResponses(page, [referenceTarget], () => refresh.click())
+  expect(denied.status()).toBe(403)
+  expect(await denied.json()).toEqual({ status: "denied" })
+  await expect(receiptPage).toHaveAttribute("data-sf-read-state", "denied")
+  const deniedState = receiptPage.locator('.sf-state-panel[data-sf-state="denied"]')
+  await expect(deniedState).toHaveCount(1)
+  await expect(deniedState.getByRole("alert")).toHaveText("You do not have access to this content.")
+  await expect(receiptPage.locator(".sf-state-content")).toHaveCount(0)
+  await expect(receiptPage.getByRole("region", { name: "Domain impact", exact: true })).toHaveCount(0)
+  await expect(receiptPage.getByRole("region", { name: "Item and field changes", exact: true })).toHaveCount(0)
+  await expect(receiptPage.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+  await expect(receiptPage.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
   expect(applies).toHaveLength(1)
   const visibleAfterRevocation = await exported(viewerPage, viewer, version)
   expect(visibleAfterRevocation.OPEX).toEqual(after.OPEX)
-  await observation(info, "operations-import-real-receipt", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: "real Apply response delivery lost; automatic GET, Refresh receipt, reload", revocation: "same credential logged out; cached reference denied" })
+  await observation(info, "operations-import-real-receipt", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: "real Apply response delivery lost; explicit reconciliation, Refresh receipt, canonical receipt reload and reentry", crossOwner: "different authenticated viewer denied the original reference; fresh export remains authorized", revocation: "same credential logged out; cached reference denied and private DOM removed" })
   await reader.close()
   await viewerContext.close()
 }
