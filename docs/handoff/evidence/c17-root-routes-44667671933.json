@@ -1,0 +1,3499 @@
+{
+  "schema": "sf-c17-root-route-profile-v1",
+  "purpose": "CI-only measurement of replay-route coverage and existing phase cost; no product behavior or test budget changes",
+  "product": {
+    "sha": "0e606232022c7d881a676a802a2ec018d36ad81c",
+    "tree": "ae1e1e17f13f8ac7522eb44f140d60e877ee51dd"
+  },
+  "diagnostic": {
+    "sha": "14e553e880a2e9e3280df4b71b08cfa0f939bb9d",
+    "tree": "41077030870bdb1aba94ffbfa0067b914f41cb39",
+    "branch": "audit-root-profile",
+    "snapshot": "400a4733fac11ba660fb1bcd67817b7118c79062",
+    "snapshotParent": "14e553e880a2e9e3280df4b71b08cfa0f939bb9d",
+    "snapshotTreeIdentical": true,
+    "requestBlob": "b52417707c4a64e83edf890bfc7007788c5498e9",
+    "ciOnlyPaths": [
+      {
+        "path": ".ci-run.json",
+        "blob": "b52417707c4a64e83edf890bfc7007788c5498e9"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "blob": "0e2e34134ca26ada2811ea786fbeda812fb36a99"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "blob": "f0c15476da662b6d33b722250b38bc0fa3e0c03d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+        "blob": "71869216047543de42774a60998a0027bc348306"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/audit-c17-root-profile.ts",
+        "blob": "733a700e85ec7037a3ab394334054f76b220eaea"
+      }
+    ]
+  },
+  "compiler": {
+    "run": 44667351265,
+    "job": 136059764005,
+    "snapshot": "73ebd4c95333eb6819176fe46c825bdb427afedf",
+    "snapshotParent": "14e553e880a2e9e3280df4b71b08cfa0f939bb9d",
+    "tree": "ae79883c78b5ec88ebe0ded2952a9cfcf92e2200",
+    "requestBlob": "05de814d09eaf240afc4349def6b8c53c33eea75",
+    "harnessBlob": "2e49216d5ff7d28dc34ead8f1f8fbfcdd29c6f92",
+    "command": "bun run typecheck",
+    "marker": "14e553e880a2e9e3280df4b71b08cfa0f939bb9d",
+    "pass": 2,
+    "fail": 0,
+    "skipped": 0,
+    "sucafinaMs": 32000.810686,
+    "cliMs": 30180.661573,
+    "totalMs": 62255.334518
+  },
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+    "unchanged": true,
+    "resultReadWrapperUnchanged": true,
+    "requestTimeoutMs": 30000,
+    "testTimeoutMs": 120000,
+    "cooperativeDeadlineMs": 105000,
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "run": {
+    "id": 44667671933,
+    "job": 136060844730,
+    "cleanupJob": 136062080787,
+    "cleanupConclusion": "success",
+    "workflow": "test-ci",
+    "event": "push",
+    "attempt": 1,
+    "head": "400a4733fac11ba660fb1bcd67817b7118c79062",
+    "conclusion": "failure"
+  },
+  "terminal": {
+    "pass": 0,
+    "fail": 1,
+    "expects": 2,
+    "tests": 1,
+    "files": 1,
+    "testDurationMs": 105007.15,
+    "totalSeconds": 105.39,
+    "error": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+    "reached": [
+      "initialize",
+      "produce-inner",
+      "produce-outer"
+    ],
+    "notReached": [
+      "reopen",
+      "resolve-reopened-ancestry",
+      "reject-persisted-cycle",
+      "recovery-and-revocation"
+    ],
+    "omni": {
+      "applicable": false,
+      "spawn": 0,
+      "delegated": 0
+    }
+  },
+  "phases": [
+    {
+      "phase": "produce-inner",
+      "elapsedMs": 1582,
+      "canonicalResultReads": 14,
+      "canonicalResultReadsCompleted": 14,
+      "aborted": false
+    },
+    {
+      "phase": "produce-outer",
+      "elapsedMs": 103384,
+      "canonicalResultReads": 1275,
+      "canonicalResultReadsCompleted": 1275,
+      "aborted": true
+    }
+  ],
+  "measurements": {
+    "eventCount": 21,
+    "lastElapsedMs": 105009,
+    "lastDiagnosticMs": 9.015,
+    "rootNew": 109,
+    "rootCallbacks": 109,
+    "rootJoinReported": 0,
+    "rootForeignReported": 0,
+    "allSpansInclusive": true,
+    "spansOverlap": true,
+    "exclusiveProductMsMeasured": false,
+    "abortedObservationIsPrefix": true,
+    "finalUnwindMayFollowLastEvent": true
+  },
+  "interpretation": [
+    "The last event is a prefix at the first cooperative abort. Active spans are included explicitly and completed durations exclude any remaining unwind.",
+    "The 109 physical roots were entered. No join or foreign-route count was emitted in this observed prefix.",
+    "Direct record producer spans completed 79 calls, ancestral prepared record producers completed 109 calls, and the factory-local issue call site completed 25 calls.",
+    "The direct mixed producer completed one span and retained another active span at the last event. It includes child replay work; never add it to child times as exclusive CPU cost.",
+    "Source preparation and full witness costs are small relative to replay spans in this observed prefix. They are not proposed optimization targets.",
+    "Read counts 718, 1040, 1247 and 1275 from different aborted runs are not a controlled performance comparison or evidence of complete C17 success.",
+    "The entire C17 contract includes reopened ancestry, persisted-cycle refusal and revocation under the same unchanged deadline. None was reached in this run.",
+    "No global pooling, authorization memo, callback suppression or additional product optimization is established by this diagnostic.",
+    "All diagnostic call sites, helper, request and compiler harness must remain outside the product integration."
+  ],
+  "records": [
+    {
+      "elapsedMs": 5113,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 0.404,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 9,
+          "completed": 9,
+          "active": 0,
+          "totalMs": 1278.32,
+          "maxMs": 150.219
+        },
+        "factory.binding.last": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "totalMs": 1135.191,
+          "maxMs": 147.746
+        },
+        "factory.issue.without-parent": {
+          "started": 9,
+          "completed": 8,
+          "active": 1,
+          "totalMs": 3998.812,
+          "maxMs": 515.06
+        },
+        "factory.result.first": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "totalMs": 451.562,
+          "maxMs": 59.109
+        },
+        "factory.result.last": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "totalMs": 446.036,
+          "maxMs": 57.172
+        },
+        "factory.tail": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "totalMs": 2396.194,
+          "maxMs": 309.442
+        },
+        "service.producer.direct.record.original": {
+          "started": 9,
+          "completed": 8,
+          "active": 1,
+          "totalMs": 3999.196,
+          "maxMs": 515.296
+        },
+        "service.select.direct": {
+          "started": 9,
+          "completed": 9,
+          "active": 0,
+          "totalMs": 27.905,
+          "maxMs": 3.625
+        },
+        "service.total.direct": {
+          "started": 9,
+          "completed": 8,
+          "active": 1,
+          "totalMs": 4256.863,
+          "maxMs": 550.224
+        },
+        "service.witness.completed.direct": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "totalMs": 4.521,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 9,
+          "completed": 9,
+          "active": 0,
+          "totalMs": 68.117,
+          "maxMs": 10.263
+        },
+        "service.witness.verify.direct": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "totalMs": 59.241,
+          "maxMs": 10.095
+        }
+      }
+    },
+    {
+      "elapsedMs": 10260,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 1.088,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 2550.954,
+          "maxMs": 156.032
+        },
+        "factory.binding.last": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 2529.134,
+          "maxMs": 147.746
+        },
+        "factory.issue.without-parent": {
+          "started": 18,
+          "completed": 17,
+          "active": 1,
+          "totalMs": 8417.154,
+          "maxMs": 515.664
+        },
+        "factory.result.first": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 995.468,
+          "maxMs": 59.109
+        },
+        "factory.result.last": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "totalMs": 944.615,
+          "maxMs": 63.05
+        },
+        "factory.tail": {
+          "started": 18,
+          "completed": 17,
+          "active": 1,
+          "totalMs": 5043.781,
+          "maxMs": 309.442
+        },
+        "service.producer.direct.record.original": {
+          "started": 18,
+          "completed": 17,
+          "active": 1,
+          "totalMs": 8417.753,
+          "maxMs": 515.686
+        },
+        "service.select.direct": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 54.807,
+          "maxMs": 3.625
+        },
+        "service.total.direct": {
+          "started": 18,
+          "completed": 17,
+          "active": 1,
+          "totalMs": 8988.649,
+          "maxMs": 550.224
+        },
+        "service.witness.completed.direct": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "totalMs": 9.283,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 137.215,
+          "maxMs": 10.263
+        },
+        "service.witness.verify.direct": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "totalMs": 129.868,
+          "maxMs": 10.095
+        }
+      }
+    },
+    {
+      "elapsedMs": 15394,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 1.474,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 28,
+          "completed": 28,
+          "active": 0,
+          "totalMs": 3929.606,
+          "maxMs": 156.032
+        },
+        "factory.binding.last": {
+          "started": 27,
+          "completed": 27,
+          "active": 0,
+          "totalMs": 3771.45,
+          "maxMs": 147.746
+        },
+        "factory.issue.without-parent": {
+          "started": 28,
+          "completed": 27,
+          "active": 1,
+          "totalMs": 13283.381,
+          "maxMs": 515.664
+        },
+        "factory.result.first": {
+          "started": 27,
+          "completed": 27,
+          "active": 0,
+          "totalMs": 1477.377,
+          "maxMs": 59.109
+        },
+        "factory.result.last": {
+          "started": 27,
+          "completed": 27,
+          "active": 0,
+          "totalMs": 1491.748,
+          "maxMs": 63.05
+        },
+        "factory.tail": {
+          "started": 27,
+          "completed": 27,
+          "active": 0,
+          "totalMs": 7974.649,
+          "maxMs": 309.442
+        },
+        "service.producer.direct.record.original": {
+          "started": 28,
+          "completed": 27,
+          "active": 1,
+          "totalMs": 13284.3,
+          "maxMs": 515.686
+        },
+        "service.select.direct": {
+          "started": 28,
+          "completed": 28,
+          "active": 0,
+          "totalMs": 86.257,
+          "maxMs": 5.032
+        },
+        "service.total.direct": {
+          "started": 28,
+          "completed": 27,
+          "active": 1,
+          "totalMs": 14194.722,
+          "maxMs": 550.224
+        },
+        "service.witness.completed.direct": {
+          "started": 27,
+          "completed": 27,
+          "active": 0,
+          "totalMs": 14.246,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 28,
+          "completed": 28,
+          "active": 0,
+          "totalMs": 210.353,
+          "maxMs": 10.263
+        },
+        "service.witness.verify.direct": {
+          "started": 27,
+          "completed": 27,
+          "active": 0,
+          "totalMs": 201.325,
+          "maxMs": 10.095
+        }
+      }
+    },
+    {
+      "elapsedMs": 20410,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 1.801,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 36,
+          "completed": 36,
+          "active": 0,
+          "totalMs": 5174.812,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 36,
+          "completed": 36,
+          "active": 0,
+          "totalMs": 5140.983,
+          "maxMs": 159.533
+        },
+        "factory.issue.without-parent": {
+          "started": 36,
+          "completed": 35,
+          "active": 1,
+          "totalMs": 17534.594,
+          "maxMs": 559.321
+        },
+        "factory.result.first": {
+          "started": 36,
+          "completed": 36,
+          "active": 0,
+          "totalMs": 2018.584,
+          "maxMs": 65.351
+        },
+        "factory.result.last": {
+          "started": 35,
+          "completed": 35,
+          "active": 0,
+          "totalMs": 1959.147,
+          "maxMs": 63.05
+        },
+        "factory.tail": {
+          "started": 36,
+          "completed": 35,
+          "active": 1,
+          "totalMs": 10508.004,
+          "maxMs": 331.223
+        },
+        "service.producer.direct.record.original": {
+          "started": 36,
+          "completed": 35,
+          "active": 1,
+          "totalMs": 17535.746,
+          "maxMs": 559.36
+        },
+        "service.select.direct": {
+          "started": 36,
+          "completed": 36,
+          "active": 0,
+          "totalMs": 114.169,
+          "maxMs": 5.032
+        },
+        "service.total.direct": {
+          "started": 36,
+          "completed": 35,
+          "active": 1,
+          "totalMs": 18766.032,
+          "maxMs": 601.728
+        },
+        "service.witness.completed.direct": {
+          "started": 35,
+          "completed": 35,
+          "active": 0,
+          "totalMs": 18.274,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 36,
+          "completed": 36,
+          "active": 0,
+          "totalMs": 287.961,
+          "maxMs": 12.33
+        },
+        "service.witness.verify.direct": {
+          "started": 35,
+          "completed": 35,
+          "active": 0,
+          "totalMs": 282.69,
+          "maxMs": 12.16
+        }
+      }
+    },
+    {
+      "elapsedMs": 25419,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 2.111,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 6424.313,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 6402.287,
+          "maxMs": 164.683
+        },
+        "factory.issue.without-parent": {
+          "started": 44,
+          "completed": 43,
+          "active": 1,
+          "totalMs": 21912.12,
+          "maxMs": 559.321
+        },
+        "factory.result.first": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 2501.835,
+          "maxMs": 65.351
+        },
+        "factory.result.last": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 2517.753,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 13464.074,
+          "maxMs": 334.692
+        },
+        "service.producer.direct.record.original": {
+          "started": 44,
+          "completed": 43,
+          "active": 1,
+          "totalMs": 21913.497,
+          "maxMs": 559.36
+        },
+        "service.select.direct": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 144.418,
+          "maxMs": 5.753
+        },
+        "service.total.direct": {
+          "started": 44,
+          "completed": 43,
+          "active": 1,
+          "totalMs": 23480.84,
+          "maxMs": 601.728
+        },
+        "service.witness.completed.direct": {
+          "started": 43,
+          "completed": 43,
+          "active": 0,
+          "totalMs": 22.609,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 44,
+          "completed": 44,
+          "active": 0,
+          "totalMs": 368.008,
+          "maxMs": 12.33
+        },
+        "service.witness.verify.direct": {
+          "started": 43,
+          "completed": 43,
+          "active": 0,
+          "totalMs": 361.477,
+          "maxMs": 12.16
+        }
+      }
+    },
+    {
+      "elapsedMs": 30439,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 2.465,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 7701.499,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 7689.711,
+          "maxMs": 174.706
+        },
+        "factory.issue.without-parent": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 26920.263,
+          "maxMs": 579.259
+        },
+        "factory.result.first": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 2999.055,
+          "maxMs": 66.86
+        },
+        "factory.result.last": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 3007.919,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 16142.347,
+          "maxMs": 353.041
+        },
+        "factory.verify.bcs": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "totalMs": 10.831,
+          "maxMs": 10.831
+        },
+        "service.producer.direct.record.original": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 26921.958,
+          "maxMs": 579.338
+        },
+        "service.select.direct": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 173.122,
+          "maxMs": 5.753
+        },
+        "service.total.direct": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 28861.261,
+          "maxMs": 622.373
+        },
+        "service.witness.completed.direct": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 27.548,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 449.413,
+          "maxMs": 12.677
+        },
+        "service.witness.verify.direct": {
+          "started": 52,
+          "completed": 52,
+          "active": 0,
+          "totalMs": 450.874,
+          "maxMs": 12.392
+        }
+      }
+    },
+    {
+      "elapsedMs": 35440,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 2.772,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 60,
+          "completed": 60,
+          "active": 0,
+          "totalMs": 9012.836,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 60,
+          "completed": 60,
+          "active": 0,
+          "totalMs": 9006.541,
+          "maxMs": 174.706
+        },
+        "factory.issue.with-parent": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "totalMs": 593.356,
+          "maxMs": 593.356
+        },
+        "factory.issue.without-parent": {
+          "started": 59,
+          "completed": 58,
+          "active": 1,
+          "totalMs": 30337.505,
+          "maxMs": 579.259
+        },
+        "factory.result.first": {
+          "started": 60,
+          "completed": 60,
+          "active": 0,
+          "totalMs": 3499.28,
+          "maxMs": 66.86
+        },
+        "factory.result.last": {
+          "started": 60,
+          "completed": 60,
+          "active": 0,
+          "totalMs": 3510.953,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 60,
+          "completed": 60,
+          "active": 0,
+          "totalMs": 18915.238,
+          "maxMs": 366.549
+        },
+        "factory.verify.bcs": {
+          "started": 6,
+          "completed": 5,
+          "active": 1,
+          "totalMs": 1930.561,
+          "maxMs": 1889.85
+        },
+        "factory.verify.localIssue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "totalMs": 593.415,
+          "maxMs": 593.415
+        },
+        "service.producer.direct.record.original": {
+          "started": 59,
+          "completed": 58,
+          "active": 1,
+          "totalMs": 30339.371,
+          "maxMs": 579.338
+        },
+        "service.select.direct": {
+          "started": 59,
+          "completed": 59,
+          "active": 0,
+          "totalMs": 199.831,
+          "maxMs": 5.753
+        },
+        "service.total.direct": {
+          "started": 59,
+          "completed": 58,
+          "active": 1,
+          "totalMs": 32539.76,
+          "maxMs": 622.378
+        },
+        "service.witness.completed.direct": {
+          "started": 58,
+          "completed": 58,
+          "active": 0,
+          "totalMs": 30.79,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 59,
+          "completed": 59,
+          "active": 0,
+          "totalMs": 520.513,
+          "maxMs": 12.677
+        },
+        "service.witness.verify.direct": {
+          "started": 58,
+          "completed": 58,
+          "active": 0,
+          "totalMs": 515.355,
+          "maxMs": 12.392
+        }
+      }
+    },
+    {
+      "elapsedMs": 40467,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 3.103,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 68,
+          "completed": 68,
+          "active": 0,
+          "totalMs": 10341.219,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 68,
+          "completed": 68,
+          "active": 0,
+          "totalMs": 10337.844,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "totalMs": 1811.417,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 65,
+          "completed": 64,
+          "active": 1,
+          "totalMs": 33814.39,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 68,
+          "completed": 68,
+          "active": 0,
+          "totalMs": 4017.123,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 68,
+          "completed": 68,
+          "active": 0,
+          "totalMs": 4025.135,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 68,
+          "completed": 67,
+          "active": 1,
+          "totalMs": 21399.917,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 12,
+          "completed": 12,
+          "active": 0,
+          "totalMs": 5813.531,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "totalMs": 1811.536,
+          "maxMs": 617.49
+        },
+        "service.producer.direct.record.original": {
+          "started": 65,
+          "completed": 64,
+          "active": 1,
+          "totalMs": 33816.407,
+          "maxMs": 584.952
+        },
+        "service.select.direct": {
+          "started": 65,
+          "completed": 65,
+          "active": 0,
+          "totalMs": 224.209,
+          "maxMs": 5.753
+        },
+        "service.total.direct": {
+          "started": 65,
+          "completed": 64,
+          "active": 1,
+          "totalMs": 36279.835,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.direct": {
+          "started": 64,
+          "completed": 64,
+          "active": 0,
+          "totalMs": 33.932,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 65,
+          "completed": 65,
+          "active": 0,
+          "totalMs": 583.923,
+          "maxMs": 12.677
+        },
+        "service.witness.verify.direct": {
+          "started": 64,
+          "completed": 64,
+          "active": 0,
+          "totalMs": 580.219,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 45502,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 3.406,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 76,
+          "completed": 76,
+          "active": 0,
+          "totalMs": 11634.967,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 76,
+          "completed": 76,
+          "active": 0,
+          "totalMs": 11632.473,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "totalMs": 2394.944,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 72,
+          "completed": 71,
+          "active": 1,
+          "totalMs": 37795.481,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 76,
+          "completed": 76,
+          "active": 0,
+          "totalMs": 4520.641,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 76,
+          "completed": 76,
+          "active": 0,
+          "totalMs": 4520.547,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 76,
+          "completed": 76,
+          "active": 0,
+          "totalMs": 24472.061,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 16,
+          "completed": 16,
+          "active": 0,
+          "totalMs": 7719.328,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "totalMs": 2395.084,
+          "maxMs": 617.49
+        },
+        "service.producer.direct.record.original": {
+          "started": 72,
+          "completed": 71,
+          "active": 1,
+          "totalMs": 37797.668,
+          "maxMs": 584.952
+        },
+        "service.select.direct": {
+          "started": 72,
+          "completed": 72,
+          "active": 0,
+          "totalMs": 249.866,
+          "maxMs": 5.753
+        },
+        "service.total.direct": {
+          "started": 72,
+          "completed": 71,
+          "active": 1,
+          "totalMs": 40573.945,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.direct": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 37.795,
+          "maxMs": 0.783
+        },
+        "service.witness.open.direct": {
+          "started": 72,
+          "completed": 72,
+          "active": 0,
+          "totalMs": 659.888,
+          "maxMs": 12.677
+        },
+        "service.witness.verify.direct": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 658.34,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 50537,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 3.735,
+      "counts": {},
+      "metrics": {
+        "factory.binding.first": {
+          "started": 85,
+          "completed": 85,
+          "active": 0,
+          "totalMs": 13056.804,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 84,
+          "completed": 84,
+          "active": 0,
+          "totalMs": 12884.269,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 6,
+          "completed": 5,
+          "active": 1,
+          "totalMs": 2960.096,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42180.485,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 84,
+          "completed": 84,
+          "active": 0,
+          "totalMs": 5003.578,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 84,
+          "completed": 84,
+          "active": 0,
+          "totalMs": 5004.817,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 84,
+          "completed": 84,
+          "active": 0,
+          "totalMs": 27118.213,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 22,
+          "completed": 22,
+          "active": 0,
+          "totalMs": 11381.618,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 6,
+          "completed": 5,
+          "active": 1,
+          "totalMs": 2960.263,
+          "maxMs": 617.49
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 275.372,
+          "maxMs": 5.753
+        },
+        "service.total.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 733.344,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 55546,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 4.259,
+      "counts": {
+        "root.callback": 10,
+        "root.route.new": 11
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 97,
+          "completed": 96,
+          "active": 1,
+          "totalMs": 14186.254,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 96,
+          "completed": 96,
+          "active": 0,
+          "totalMs": 14173.337,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 7,
+          "completed": 7,
+          "active": 0,
+          "totalMs": 4117.869,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 90,
+          "completed": 89,
+          "active": 1,
+          "totalMs": 45323.838,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 96,
+          "completed": 96,
+          "active": 0,
+          "totalMs": 5497.984,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 96,
+          "completed": 96,
+          "active": 0,
+          "totalMs": 5499.761,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 96,
+          "completed": 96,
+          "active": 0,
+          "totalMs": 29622.152,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 30,
+          "completed": 29,
+          "active": 1,
+          "totalMs": 12606.909,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 7,
+          "completed": 7,
+          "active": 0,
+          "totalMs": 4118.09,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 10,
+          "completed": 10,
+          "active": 0,
+          "totalMs": 3176.913,
+          "maxMs": 330.135
+        },
+        "root.prepare": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 157.743,
+          "maxMs": 15.58
+        },
+        "root.work.owned": {
+          "started": 10,
+          "completed": 10,
+          "active": 0,
+          "totalMs": 3143.654,
+          "maxMs": 326.99
+        },
+        "service.prepare.ancestral": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 158.381,
+          "maxMs": 16.003
+        },
+        "service.prepare.coverage": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 36.202,
+          "maxMs": 3.473
+        },
+        "service.prepare.sources": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 103.331,
+          "maxMs": 10.32
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 10,
+          "completed": 10,
+          "active": 0,
+          "totalMs": 3183.961,
+          "maxMs": 330.651
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 39.852,
+          "maxMs": 3.766
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 11,
+          "completed": 10,
+          "active": 1,
+          "totalMs": 3742.53,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 10,
+          "completed": 10,
+          "active": 0,
+          "totalMs": 4.598,
+          "maxMs": 0.481
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 108.813,
+          "maxMs": 12.507
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 10,
+          "completed": 10,
+          "active": 0,
+          "totalMs": 97.849,
+          "maxMs": 11.985
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 60550,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 4.92,
+      "counts": {
+        "root.callback": 20,
+        "root.route.new": 20
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 109,
+          "completed": 108,
+          "active": 1,
+          "totalMs": 15472.862,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 108,
+          "completed": 108,
+          "active": 0,
+          "totalMs": 15459.232,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 9,
+          "completed": 9,
+          "active": 0,
+          "totalMs": 5258.993,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 100,
+          "completed": 98,
+          "active": 2,
+          "totalMs": 48154.671,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 108,
+          "completed": 108,
+          "active": 0,
+          "totalMs": 5994.353,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 108,
+          "completed": 108,
+          "active": 0,
+          "totalMs": 5997.233,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 108,
+          "completed": 107,
+          "active": 1,
+          "totalMs": 31935.741,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 38,
+          "completed": 37,
+          "active": 1,
+          "totalMs": 14996.135,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 9,
+          "completed": 9,
+          "active": 0,
+          "totalMs": 5259.256,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 20,
+          "completed": 19,
+          "active": 1,
+          "totalMs": 6036.515,
+          "maxMs": 330.135
+        },
+        "root.prepare": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 275.114,
+          "maxMs": 15.58
+        },
+        "root.work.owned": {
+          "started": 20,
+          "completed": 19,
+          "active": 1,
+          "totalMs": 5974.671,
+          "maxMs": 326.99
+        },
+        "service.prepare.ancestral": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 275.954,
+          "maxMs": 16.003
+        },
+        "service.prepare.coverage": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 65.899,
+          "maxMs": 3.473
+        },
+        "service.prepare.sources": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 176.603,
+          "maxMs": 10.32
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 20,
+          "completed": 19,
+          "active": 1,
+          "totalMs": 6048.142,
+          "maxMs": 330.651
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 72.962,
+          "maxMs": 3.841
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 20,
+          "completed": 19,
+          "active": 1,
+          "totalMs": 7120.27,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 19,
+          "completed": 19,
+          "active": 0,
+          "totalMs": 8.735,
+          "maxMs": 0.501
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 206.884,
+          "maxMs": 12.507
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 19,
+          "completed": 19,
+          "active": 0,
+          "totalMs": 199.224,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 65615,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 5.561,
+      "counts": {
+        "root.callback": 30,
+        "root.route.new": 30
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 121,
+          "completed": 120,
+          "active": 1,
+          "totalMs": 16750.877,
+          "maxMs": 171.009
+        },
+        "factory.binding.last": {
+          "started": 120,
+          "completed": 120,
+          "active": 0,
+          "totalMs": 16753.269,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 6408.767,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 110,
+          "completed": 108,
+          "active": 2,
+          "totalMs": 51308.114,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 120,
+          "completed": 120,
+          "active": 0,
+          "totalMs": 6499.247,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 119,
+          "completed": 119,
+          "active": 0,
+          "totalMs": 6450.514,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 120,
+          "completed": 119,
+          "active": 1,
+          "totalMs": 34439.738,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 46,
+          "completed": 45,
+          "active": 1,
+          "totalMs": 17421.375,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 11,
+          "completed": 11,
+          "active": 0,
+          "totalMs": 6409.09,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 30,
+          "completed": 29,
+          "active": 1,
+          "totalMs": 9221.037,
+          "maxMs": 330.135
+        },
+        "root.prepare": {
+          "started": 30,
+          "completed": 30,
+          "active": 0,
+          "totalMs": 408.377,
+          "maxMs": 15.58
+        },
+        "root.work.owned": {
+          "started": 30,
+          "completed": 29,
+          "active": 1,
+          "totalMs": 9128.32,
+          "maxMs": 326.99
+        },
+        "service.prepare.ancestral": {
+          "started": 30,
+          "completed": 30,
+          "active": 0,
+          "totalMs": 409.39,
+          "maxMs": 16.003
+        },
+        "service.prepare.coverage": {
+          "started": 30,
+          "completed": 30,
+          "active": 0,
+          "totalMs": 98.821,
+          "maxMs": 3.473
+        },
+        "service.prepare.sources": {
+          "started": 30,
+          "completed": 30,
+          "active": 0,
+          "totalMs": 260.82,
+          "maxMs": 10.363
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 30,
+          "completed": 29,
+          "active": 1,
+          "totalMs": 9237.682,
+          "maxMs": 330.651
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 30,
+          "completed": 30,
+          "active": 0,
+          "totalMs": 111.955,
+          "maxMs": 5.232
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 30,
+          "completed": 29,
+          "active": 1,
+          "totalMs": 10880.003,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 29,
+          "completed": 29,
+          "active": 0,
+          "totalMs": 13.439,
+          "maxMs": 0.501
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 30,
+          "completed": 30,
+          "active": 0,
+          "totalMs": 316.636,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 29,
+          "completed": 29,
+          "active": 0,
+          "totalMs": 297.841,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 70726,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 6.026,
+      "counts": {
+        "root.callback": 40,
+        "root.route.new": 40
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 133,
+          "completed": 133,
+          "active": 0,
+          "totalMs": 33334.929,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 132,
+          "completed": 132,
+          "active": 0,
+          "totalMs": 18021.086,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 13,
+          "completed": 13,
+          "active": 0,
+          "totalMs": 7566.344,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 120,
+          "completed": 118,
+          "active": 2,
+          "totalMs": 54443.037,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 133,
+          "completed": 132,
+          "active": 1,
+          "totalMs": 6997.106,
+          "maxMs": 68.695
+        },
+        "factory.result.last": {
+          "started": 131,
+          "completed": 131,
+          "active": 0,
+          "totalMs": 6947.581,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 132,
+          "completed": 131,
+          "active": 1,
+          "totalMs": 36949.923,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 54,
+          "completed": 53,
+          "active": 1,
+          "totalMs": 19801.755,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 13,
+          "completed": 13,
+          "active": 0,
+          "totalMs": 7566.709,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 40,
+          "completed": 39,
+          "active": 1,
+          "totalMs": 12388.386,
+          "maxMs": 330.253
+        },
+        "root.prepare": {
+          "started": 40,
+          "completed": 40,
+          "active": 0,
+          "totalMs": 544.041,
+          "maxMs": 15.58
+        },
+        "root.work.owned": {
+          "started": 40,
+          "completed": 39,
+          "active": 1,
+          "totalMs": 12263.417,
+          "maxMs": 326.99
+        },
+        "service.prepare.ancestral": {
+          "started": 40,
+          "completed": 40,
+          "active": 0,
+          "totalMs": 545.182,
+          "maxMs": 16.003
+        },
+        "service.prepare.coverage": {
+          "started": 40,
+          "completed": 40,
+          "active": 0,
+          "totalMs": 132.989,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 40,
+          "completed": 40,
+          "active": 0,
+          "totalMs": 344.968,
+          "maxMs": 10.363
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 40,
+          "completed": 39,
+          "active": 1,
+          "totalMs": 12412.272,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 40,
+          "completed": 40,
+          "active": 0,
+          "totalMs": 149.595,
+          "maxMs": 5.232
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 40,
+          "completed": 39,
+          "active": 1,
+          "totalMs": 14619.363,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 39,
+          "completed": 39,
+          "active": 0,
+          "totalMs": 19.36,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 40,
+          "completed": 40,
+          "active": 0,
+          "totalMs": 418.948,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 39,
+          "completed": 39,
+          "active": 0,
+          "totalMs": 395.252,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 75784,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 6.44,
+      "counts": {
+        "root.callback": 50,
+        "root.route.new": 50
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 145,
+          "completed": 145,
+          "active": 0,
+          "totalMs": 34610.566,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 144,
+          "completed": 144,
+          "active": 0,
+          "totalMs": 19293.229,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 15,
+          "completed": 15,
+          "active": 0,
+          "totalMs": 8690.674,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 130,
+          "completed": 128,
+          "active": 2,
+          "totalMs": 57588.783,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 145,
+          "completed": 145,
+          "active": 0,
+          "totalMs": 13368.333,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 143,
+          "completed": 143,
+          "active": 0,
+          "totalMs": 7434.681,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 145,
+          "completed": 143,
+          "active": 2,
+          "totalMs": 39425.527,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 60,
+          "completed": 60,
+          "active": 0,
+          "totalMs": 22160.91,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 15,
+          "completed": 15,
+          "active": 0,
+          "totalMs": 8691.071,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 50,
+          "completed": 49,
+          "active": 1,
+          "totalMs": 15566.622,
+          "maxMs": 330.859
+        },
+        "root.prepare": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "totalMs": 677.375,
+          "maxMs": 15.58
+        },
+        "root.work.owned": {
+          "started": 50,
+          "completed": 49,
+          "active": 1,
+          "totalMs": 15409.346,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "totalMs": 678.596,
+          "maxMs": 16.003
+        },
+        "service.prepare.coverage": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "totalMs": 165.783,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "totalMs": 429.716,
+          "maxMs": 10.363
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 50,
+          "completed": 49,
+          "active": 1,
+          "totalMs": 15596.718,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "totalMs": 185.536,
+          "maxMs": 5.232
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 50,
+          "completed": 49,
+          "active": 1,
+          "totalMs": 18355.47,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 49,
+          "completed": 49,
+          "active": 0,
+          "totalMs": 23.889,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "totalMs": 524.781,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 49,
+          "completed": 49,
+          "active": 0,
+          "totalMs": 491.512,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 80801,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 6.895,
+      "counts": {
+        "root.callback": 61,
+        "root.route.new": 61
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 157,
+          "completed": 157,
+          "active": 0,
+          "totalMs": 35841.583,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 157,
+          "completed": 156,
+          "active": 1,
+          "totalMs": 20512.724,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 16,
+          "completed": 16,
+          "active": 0,
+          "totalMs": 9257.034,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 141,
+          "completed": 140,
+          "active": 1,
+          "totalMs": 61362.08,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 157,
+          "completed": 157,
+          "active": 0,
+          "totalMs": 13843.464,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 156,
+          "completed": 156,
+          "active": 0,
+          "totalMs": 7941.064,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 157,
+          "completed": 156,
+          "active": 1,
+          "totalMs": 41915.949,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 66,
+          "completed": 65,
+          "active": 1,
+          "totalMs": 23383.987,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 16,
+          "completed": 16,
+          "active": 0,
+          "totalMs": 9257.448,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 19383.006,
+          "maxMs": 331.921
+        },
+        "root.prepare": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 828.328,
+          "maxMs": 17.502
+        },
+        "root.work.owned": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 19182.875,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 829.641,
+          "maxMs": 17.51
+        },
+        "service.prepare.coverage": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 202.026,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 525.751,
+          "maxMs": 12.567
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 19420.81,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 227.678,
+          "maxMs": 5.692
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 61,
+          "completed": 60,
+          "active": 1,
+          "totalMs": 22475.619,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 29.487,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 638.111,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 61,
+          "completed": 61,
+          "active": 0,
+          "totalMs": 613.945,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 85830,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 7.311,
+      "counts": {
+        "root.callback": 71,
+        "root.route.new": 71
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 169,
+          "completed": 169,
+          "active": 0,
+          "totalMs": 37157.248,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 169,
+          "completed": 168,
+          "active": 1,
+          "totalMs": 21786.323,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 10410.086,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 151,
+          "completed": 149,
+          "active": 2,
+          "totalMs": 64215.412,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 169,
+          "completed": 169,
+          "active": 0,
+          "totalMs": 14337.885,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 167,
+          "completed": 167,
+          "active": 0,
+          "totalMs": 8396.813,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 169,
+          "completed": 167,
+          "active": 2,
+          "totalMs": 44232.987,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 74,
+          "completed": 73,
+          "active": 1,
+          "totalMs": 25816.076,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 18,
+          "completed": 18,
+          "active": 0,
+          "totalMs": 10410.576,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 71,
+          "completed": 70,
+          "active": 1,
+          "totalMs": 22270.917,
+          "maxMs": 331.921
+        },
+        "root.prepare": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 959.243,
+          "maxMs": 17.502
+        },
+        "root.work.owned": {
+          "started": 71,
+          "completed": 70,
+          "active": 1,
+          "totalMs": 22036.534,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 960.665,
+          "maxMs": 17.51
+        },
+        "service.prepare.coverage": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 234.396,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 608.237,
+          "maxMs": 12.567
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 71,
+          "completed": 70,
+          "active": 1,
+          "totalMs": 22315.049,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 265.434,
+          "maxMs": 5.692
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 71,
+          "completed": 70,
+          "active": 1,
+          "totalMs": 26246.004,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 70,
+          "completed": 70,
+          "active": 0,
+          "totalMs": 33.796,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 71,
+          "completed": 71,
+          "active": 0,
+          "totalMs": 737.967,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 70,
+          "completed": 70,
+          "active": 0,
+          "totalMs": 708.895,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 90880,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 7.766,
+      "counts": {
+        "root.callback": 81,
+        "root.route.new": 81
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 181,
+          "completed": 181,
+          "active": 0,
+          "totalMs": 38450.364,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 181,
+          "completed": 180,
+          "active": 1,
+          "totalMs": 23064.187,
+          "maxMs": 174.797
+        },
+        "factory.issue.with-parent": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 11543.71,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 161,
+          "completed": 159,
+          "active": 2,
+          "totalMs": 67347.434,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 181,
+          "completed": 181,
+          "active": 0,
+          "totalMs": 14834.239,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 179,
+          "completed": 179,
+          "active": 0,
+          "totalMs": 8879.776,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 181,
+          "completed": 179,
+          "active": 2,
+          "totalMs": 46699.129,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 82,
+          "completed": 81,
+          "active": 1,
+          "totalMs": 28176.392,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 20,
+          "completed": 20,
+          "active": 0,
+          "totalMs": 11544.246,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 81,
+          "completed": 80,
+          "active": 1,
+          "totalMs": 25435.011,
+          "maxMs": 331.921
+        },
+        "root.prepare": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 1087.298,
+          "maxMs": 17.502
+        },
+        "root.work.owned": {
+          "started": 81,
+          "completed": 80,
+          "active": 1,
+          "totalMs": 25168.736,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 1088.796,
+          "maxMs": 17.51
+        },
+        "service.prepare.coverage": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 266.696,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 688.616,
+          "maxMs": 12.567
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 81,
+          "completed": 80,
+          "active": 1,
+          "totalMs": 25483.835,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 303.542,
+          "maxMs": 5.692
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 81,
+          "completed": 80,
+          "active": 1,
+          "totalMs": 29959.593,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 38.27,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 837.928,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 815.216,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 95962,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 8.181,
+      "counts": {
+        "root.callback": 91,
+        "root.route.new": 91
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 193,
+          "completed": 193,
+          "active": 0,
+          "totalMs": 39729.486,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 193,
+          "completed": 193,
+          "active": 0,
+          "totalMs": 39647.997,
+          "maxMs": 15300.318
+        },
+        "factory.issue.with-parent": {
+          "started": 22,
+          "completed": 22,
+          "active": 0,
+          "totalMs": 12707.082,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 171,
+          "completed": 169,
+          "active": 2,
+          "totalMs": 70453.32,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 193,
+          "completed": 193,
+          "active": 0,
+          "totalMs": 15325.573,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 192,
+          "completed": 191,
+          "active": 1,
+          "totalMs": 9368.989,
+          "maxMs": 70.226
+        },
+        "factory.tail": {
+          "started": 193,
+          "completed": 191,
+          "active": 2,
+          "totalMs": 49182.275,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 90,
+          "completed": 89,
+          "active": 1,
+          "totalMs": 30570.518,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 22,
+          "completed": 22,
+          "active": 0,
+          "totalMs": 12707.689,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 91,
+          "completed": 90,
+          "active": 1,
+          "totalMs": 28572.495,
+          "maxMs": 331.921
+        },
+        "root.prepare": {
+          "started": 91,
+          "completed": 91,
+          "active": 0,
+          "totalMs": 1219.897,
+          "maxMs": 17.502
+        },
+        "root.work.owned": {
+          "started": 91,
+          "completed": 90,
+          "active": 1,
+          "totalMs": 28274.802,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 91,
+          "completed": 91,
+          "active": 0,
+          "totalMs": 1221.467,
+          "maxMs": 17.51
+        },
+        "service.prepare.coverage": {
+          "started": 91,
+          "completed": 91,
+          "active": 0,
+          "totalMs": 300.97,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 91,
+          "completed": 91,
+          "active": 0,
+          "totalMs": 771.411,
+          "maxMs": 12.567
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 91,
+          "completed": 90,
+          "active": 1,
+          "totalMs": 28626.24,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 91,
+          "completed": 91,
+          "active": 0,
+          "totalMs": 342.559,
+          "maxMs": 6.002
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 91,
+          "completed": 90,
+          "active": 1,
+          "totalMs": 33667.001,
+          "maxMs": 388.255
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 90,
+          "completed": 90,
+          "active": 0,
+          "totalMs": 42.798,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 91,
+          "completed": 91,
+          "active": 0,
+          "totalMs": 944.624,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 90,
+          "completed": 90,
+          "active": 0,
+          "totalMs": 920.31,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 100982,
+      "aborted": false,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 8.649,
+      "counts": {
+        "root.callback": 102,
+        "root.route.new": 102
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 205,
+          "completed": 205,
+          "active": 0,
+          "totalMs": 40966.97,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 205,
+          "completed": 205,
+          "active": 0,
+          "totalMs": 40886.12,
+          "maxMs": 15300.318
+        },
+        "factory.issue.with-parent": {
+          "started": 23,
+          "completed": 23,
+          "active": 0,
+          "totalMs": 13288.887,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 182,
+          "completed": 180,
+          "active": 2,
+          "totalMs": 73940.774,
+          "maxMs": 584.928
+        },
+        "factory.result.first": {
+          "started": 205,
+          "completed": 205,
+          "active": 0,
+          "totalMs": 15801.524,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 205,
+          "completed": 205,
+          "active": 0,
+          "totalMs": 15747.446,
+          "maxMs": 5866.537
+        },
+        "factory.tail": {
+          "started": 205,
+          "completed": 204,
+          "active": 1,
+          "totalMs": 51707.222,
+          "maxMs": 385.021
+        },
+        "factory.verify.bcs": {
+          "started": 94,
+          "completed": 93,
+          "active": 1,
+          "totalMs": 31773.035,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 23,
+          "completed": 23,
+          "active": 0,
+          "totalMs": 13289.512,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 102,
+          "completed": 101,
+          "active": 1,
+          "totalMs": 32096.204,
+          "maxMs": 331.921
+        },
+        "root.prepare": {
+          "started": 102,
+          "completed": 102,
+          "active": 0,
+          "totalMs": 1363.365,
+          "maxMs": 17.502
+        },
+        "root.work.owned": {
+          "started": 102,
+          "completed": 101,
+          "active": 1,
+          "totalMs": 31762.51,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 102,
+          "completed": 102,
+          "active": 0,
+          "totalMs": 1365.042,
+          "maxMs": 17.51
+        },
+        "service.prepare.coverage": {
+          "started": 102,
+          "completed": 102,
+          "active": 0,
+          "totalMs": 336.985,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 102,
+          "completed": 102,
+          "active": 0,
+          "totalMs": 861.292,
+          "maxMs": 12.567
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 102,
+          "completed": 101,
+          "active": 1,
+          "totalMs": 32155.503,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 102,
+          "completed": 102,
+          "active": 0,
+          "totalMs": 385.766,
+          "maxMs": 6.002
+        },
+        "service.select.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 279.241,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 102,
+          "completed": 101,
+          "active": 1,
+          "totalMs": 37812.043,
+          "maxMs": 389.011
+        },
+        "service.total.direct": {
+          "started": 80,
+          "completed": 79,
+          "active": 1,
+          "totalMs": 45292.678,
+          "maxMs": 629.722
+        },
+        "service.witness.completed.ancestral": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "totalMs": 47.87,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42.277,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 102,
+          "completed": 102,
+          "active": 0,
+          "totalMs": 1060.167,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 743.666,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "totalMs": 1038.495,
+          "maxMs": 16.1
+        },
+        "service.witness.verify.direct": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 742.108,
+          "maxMs": 12.599
+        }
+      }
+    },
+    {
+      "elapsedMs": 105009,
+      "aborted": true,
+      "cumulative": true,
+      "asyncInclusive": true,
+      "exclusiveProductMsMeasured": false,
+      "diagnosticMs": 9.015,
+      "counts": {
+        "root.callback": 109,
+        "root.route.new": 109
+      },
+      "metrics": {
+        "factory.binding.first": {
+          "started": 215,
+          "completed": 214,
+          "active": 1,
+          "totalMs": 41963.782,
+          "maxMs": 15312.618
+        },
+        "factory.binding.last": {
+          "started": 214,
+          "completed": 214,
+          "active": 0,
+          "totalMs": 41880.219,
+          "maxMs": 15300.318
+        },
+        "factory.issue.with-parent": {
+          "started": 25,
+          "completed": 25,
+          "active": 0,
+          "totalMs": 14440.65,
+          "maxMs": 617.453
+        },
+        "factory.issue.without-parent": {
+          "started": 190,
+          "completed": 189,
+          "active": 1,
+          "totalMs": 127072.615,
+          "maxMs": 50609.791
+        },
+        "factory.result.first": {
+          "started": 214,
+          "completed": 214,
+          "active": 0,
+          "totalMs": 16188.192,
+          "maxMs": 5866.3
+        },
+        "factory.result.last": {
+          "started": 214,
+          "completed": 214,
+          "active": 0,
+          "totalMs": 16129.42,
+          "maxMs": 5866.537
+        },
+        "factory.tail": {
+          "started": 214,
+          "completed": 214,
+          "active": 0,
+          "totalMs": 83099.698,
+          "maxMs": 29428.948
+        },
+        "factory.verify.bcs": {
+          "started": 100,
+          "completed": 100,
+          "active": 0,
+          "totalMs": 34182.191,
+          "maxMs": 1929.388
+        },
+        "factory.verify.localIssue": {
+          "started": 25,
+          "completed": 25,
+          "active": 0,
+          "totalMs": 14441.323,
+          "maxMs": 617.49
+        },
+        "root.physical": {
+          "started": 109,
+          "completed": 109,
+          "active": 0,
+          "totalMs": 34642.97,
+          "maxMs": 331.921
+        },
+        "root.prepare": {
+          "started": 110,
+          "completed": 109,
+          "active": 1,
+          "totalMs": 1452.504,
+          "maxMs": 17.502
+        },
+        "root.work.owned": {
+          "started": 109,
+          "completed": 109,
+          "active": 0,
+          "totalMs": 34284.71,
+          "maxMs": 327.814
+        },
+        "service.prepare.ancestral": {
+          "started": 110,
+          "completed": 109,
+          "active": 1,
+          "totalMs": 1454.237,
+          "maxMs": 17.51
+        },
+        "service.prepare.coverage": {
+          "started": 110,
+          "completed": 110,
+          "active": 0,
+          "totalMs": 361.508,
+          "maxMs": 5.115
+        },
+        "service.prepare.sources": {
+          "started": 110,
+          "completed": 110,
+          "active": 0,
+          "totalMs": 925.178,
+          "maxMs": 12.567
+        },
+        "service.producer.ancestral.record.prepared": {
+          "started": 109,
+          "completed": 109,
+          "active": 0,
+          "totalMs": 34706.27,
+          "maxMs": 332.573
+        },
+        "service.producer.direct.mixed.original": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "totalMs": 50609.886,
+          "maxMs": 50609.886
+        },
+        "service.producer.direct.record.original": {
+          "started": 79,
+          "completed": 79,
+          "active": 0,
+          "totalMs": 42182.966,
+          "maxMs": 584.952
+        },
+        "service.select.ancestral": {
+          "started": 110,
+          "completed": 110,
+          "active": 0,
+          "totalMs": 414.953,
+          "maxMs": 6.002
+        },
+        "service.select.direct": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 283.001,
+          "maxMs": 5.753
+        },
+        "service.total.ancestral": {
+          "started": 110,
+          "completed": 109,
+          "active": 1,
+          "totalMs": 40817.735,
+          "maxMs": 389.011
+        },
+        "service.total.direct": {
+          "started": 81,
+          "completed": 80,
+          "active": 1,
+          "totalMs": 95931.421,
+          "maxMs": 50638.743
+        },
+        "service.witness.completed.ancestral": {
+          "started": 109,
+          "completed": 109,
+          "active": 0,
+          "totalMs": 51.801,
+          "maxMs": 1.826
+        },
+        "service.witness.completed.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 42.953,
+          "maxMs": 0.942
+        },
+        "service.witness.open.ancestral": {
+          "started": 109,
+          "completed": 109,
+          "active": 0,
+          "totalMs": 1137.816,
+          "maxMs": 12.694
+        },
+        "service.witness.open.direct": {
+          "started": 81,
+          "completed": 81,
+          "active": 0,
+          "totalMs": 756.405,
+          "maxMs": 12.887
+        },
+        "service.witness.verify.ancestral": {
+          "started": 109,
+          "completed": 109,
+          "active": 0,
+          "totalMs": 1124.792,
+          "maxMs": 16.812
+        },
+        "service.witness.verify.direct": {
+          "started": 80,
+          "completed": 80,
+          "active": 0,
+          "totalMs": 751.918,
+          "maxMs": 12.599
+        }
+      }
+    }
+  ]
+}
