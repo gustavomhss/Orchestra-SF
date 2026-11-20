@@ -56,6 +56,7 @@ import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
 import { createSfPlannerCaseReadScope, type SfPlannerCaseObservation } from "./planner-case-read-scope.ts"
 import { createSfPlannerCaseReadBatch } from "./planner-case-read-batch.ts"
 import { createSfMixedCaseReadBatch } from "./mixed-case-read-batch.ts"
+import { createSfDashboardCaseReadBatch } from "./dashboard-case-read-batch.ts"
 import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
 import { createSfProcurementEvidenceReadScope, createSfProcurementRecordReadScope } from "./procurement-evidence-read-scope.ts"
 import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
@@ -479,7 +480,11 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
-  const mixedCanonicalRead = createSfMixedCaseReadBatch({ host, state: input.authority.state, read: memoryCaseScope.read,
+  const dashboardCanonicalRead = createSfDashboardCaseReadBatch({ host, state: input.authority.state, read: memoryCaseScope.read,
+    sources: plannerSources, readerIdentity: () => evidence.current, lockedSourceFences,
+    dashboard: { port: dashboard, sources: dashboardSources, records: dashboardRecords, scopedSources: input.persistence,
+      readerIdentity: () => [dashboardDecisions, dashboardDecisions.resolveEvidence, dashboardDecisions.proveContinuity] } })
+  const mixedCanonicalRead = createSfMixedCaseReadBatch({ host, state: input.authority.state, read: dashboardCanonicalRead,
     sources: plannerSources, readerIdentity: () => evidence.current, lockedSourceFences,
     procurement: { contextFor, selection: selectedPeriod, isCurrentRecord: individual.isCurrent,
       readerIdentity: () => [individual, individual.resolve, individual.issue, individual.isCurrent, individual.issueForActor, individual.resolveForPreparation,
