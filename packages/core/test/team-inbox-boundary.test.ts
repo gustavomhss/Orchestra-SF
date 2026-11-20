@@ -11,7 +11,7 @@ import { Location } from "../src/location"
 import { ProjectV2 } from "../src/project"
 import { SessionOwner } from "../src/session/owner"
 import { teamSessionFixture } from "./fixture/team-session"
-import { location } from "./fixture/location"
+import { tempLocationLayer } from "./fixture/location"
 import { testEffect } from "./lib/effect"
 
 test("team-inbox-01: corporate boot never adopts old installation rows or probes credentials, and Inbox remains unavailable", async () => {
@@ -55,7 +55,7 @@ test("team-inbox-01: corporate boot never adopts old installation rows or probes
 }, 30000)
 
 const technical = testEffect(AppNodeBuilder.build(LayerNode.group([Inbox.node, Database.node]), [
-  [Location.node, Layer.succeed(Location.Service, location())],
+  [Location.node, tempLocationLayer],
 ]))
 technical.effect("team-inbox-02: an already constructed technical Inbox refuses a subsequently marked corporate database", () =>
   Effect.gen(function* () {
