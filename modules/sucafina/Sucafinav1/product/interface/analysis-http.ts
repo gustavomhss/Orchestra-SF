@@ -44,7 +44,8 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (action === "output" && "kind" in result.value) {
       const output = result.value
       const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)
-      if (!html || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
+      if (!html) return reply({ status: "unavailable" }, 503)
+      if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       return reply({ status: "ok", value: { html, ...(output.state === "ready" ? { outputRef: output.id } : {}) } }, 200)
     }
     return reply({ status: "ok", value: result.value }, 200)
@@ -60,7 +61,9 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function caseInput(value: unknown) {
-  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) || typeof value.id !== "string" || typeof value.incarnation !== "string" || typeof value.version !== "number" || !Number.isSafeInteger(value.version)) return undefined
+  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) ||
+    typeof value.id !== "string" || !value.id.trim() || typeof value.incarnation !== "string" || !value.incarnation.trim() ||
+    typeof value.version !== "number" || !Number.isSafeInteger(value.version) || value.version < 1) return undefined
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 
