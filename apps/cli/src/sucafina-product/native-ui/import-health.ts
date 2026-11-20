@@ -38,6 +38,8 @@ export async function observeSfImportHealth(input: {
   if (descriptors.length !== 1 || descriptors[0]?.handlerExport !== "previewImport" ||
     descriptors[0].mode !== "simulate" || !descriptors[0].requiredAuthority.includes("documents:read")) return []
   const descriptor = descriptors[0]
+  const descriptorFacts = digestSfValue({ id: descriptor.id, mode: descriptor.mode, handlerExport: descriptor.handlerExport,
+    requiredAuthority: [...descriptor.requiredAuthority] })
   // This proves the same installed shared router, never a grant for Import.
   const binding = bindingFor("dashboard.dashboard-review", producer)
   if (!binding) return []
@@ -48,6 +50,9 @@ export async function observeSfImportHealth(input: {
     value.service.discover, value.service.prepareTarget, value.service.dispatch, value.service.imports.admit,
     value.service.imports.preview, value.service.imports.detail, value.service.imports.readPreviewReference,
     value.service.imports.apply, value.service.descriptors, value.service.descriptors.find((entry) => entry.id === "sf_import_preview"),
+    value.service.descriptors.find((entry) => entry.id === "sf_import_preview")?.handler,
+    value.service.descriptors.find((entry) => entry.id === "sf_import_preview")?.inputSchema,
+    value.service.descriptors.find((entry) => entry.id === "sf_import_preview")?.outputSchema,
     value.persistence, value.persistence.transaction, value.persistence.transactionAll,
     value.persistence.readScopedSource, value.persistence.resolveScopedSource,
     value.assets, value.assets.persistence, value.assets.services, value.assets.services.scan,
@@ -73,7 +78,9 @@ export async function observeSfImportHealth(input: {
         authority.state.transaction, authority.human, authority.human.admit, authority.human.authorize,
         authority.humanActions, authority.readContextAdmission][index]) &&
       service.descriptors.filter((entry) => entry.id === "sf_import_preview").length === 1 &&
-      service.descriptors.find((entry) => entry.id === "sf_import_preview") === descriptor
+      service.descriptors.find((entry) => entry.id === "sf_import_preview") === descriptor &&
+      digestSfValue({ id: descriptor.id, mode: descriptor.mode, handlerExport: descriptor.handlerExport,
+        requiredAuthority: [...descriptor.requiredAuthority] }) === descriptorFacts
   }
   const digest = digestSfValue({ purpose: "import-source-health", operation: "sf_import_preview" })
   const admitted = await authority.ui.admit(request, "sf_import_preview", digest)

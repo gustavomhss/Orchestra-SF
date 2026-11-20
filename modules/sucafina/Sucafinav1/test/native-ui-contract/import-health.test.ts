@@ -125,7 +125,7 @@ test("missing mount, stale stamp, foreign origin and cancelled request never ena
 })
 
 test("revocation and replacement during original admission discard all prior Import evidence", async () => {
-  for (const change of ["revoke", "replace-handler", "replace-discover"] as const) {
+  for (const change of ["revoke", "replace-handler", "replace-discover", "replace-descriptor"] as const) {
     const f = await importFixture()
     const entered = Promise.withResolvers<void>()
     const release = Promise.withResolvers<void>()
@@ -136,10 +136,16 @@ test("revocation and replacement during original admission discard all prior Imp
       await entered.promise
       if (change === "revoke") f.f.active.value = false
       if (change === "replace-handler") f.owner.handler = f.createHandler()
-      if (change === "replace-discover") {
+      if (change === "replace-discover" || change === "replace-descriptor") {
         const other = createSfImportServices({ runtime: f.runtime, authority: f.authority })
         if (!other) throw new Error("Original replacement source required")
-        f.owner.service.discover = other.discover
+        if (change === "replace-discover") f.owner.service.discover = other.discover
+        if (change === "replace-descriptor") {
+          const descriptor = f.owner.service.descriptors[0]
+          const replacement = other.descriptors[0]
+          if (!descriptor || !replacement) throw new Error("Original descriptor required")
+          descriptor.handler = replacement.handler
+        }
       }
       release.resolve()
       expect(await pending).toEqual([])

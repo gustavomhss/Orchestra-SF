@@ -5,6 +5,10 @@ import type { Application } from "../../runtime/application.ts"
 import type { AssetServices } from "../../runtime/assets.ts"
 import { scanLocalFile } from "../../runtime/local-scanner.ts"
 import { contributions } from "../../index.ts"
+import { ProcurementModule } from "../../runtime/procurement.ts"
+import { initialProcurementSettings } from "../../src/initial-settings.ts"
+import { roleMap } from "../../runtime/admin.ts"
+import { object } from "../../runtime/contract.ts"
 import { observeSfAssetHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { financialCompositionFixture } from "../product/wp10/integration/financial-composition-fixture.ts"
 
@@ -28,13 +32,29 @@ async function assetFixture() {
     return owner.mounted ? owner.handler(request) : Promise.resolve(undefined)
   }
   const original = new Request(origin + mount + "/api/ui/context?installationId=installation&projectId=project&hostId=host")
+  const uploadCap = await f.persistence.transaction("procurement", async (snapshot) => {
+    const principal = await application.authenticate(original, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
+    const environment = await application.environment(original)
+    if (!principal) throw new Error("Original procurement actor required")
+    const actor = { id: principal.id, canWrite: principal.canWrite,
+      roles: principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role) }
+    const reset = ProcurementModule.domain.execute(snapshot, actor, { page: "Settings", action: "reset", version: 0, values: {} }, environment)
+    if (!reset.ok) throw new Error("Original settings reset failed")
+    const saved = ProcurementModule.domain.execute(snapshot, actor, { page: "Settings", action: "save",
+      version: snapshot.versions.settings!.version, values: {
+        levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),
+        uploadCap: 16 * 1024 * 1024,
+      } }, environment)
+    if (!saved.ok) throw new Error("Original attachment limit failed")
+    return { commit: true, value: object(object(snapshot.data.store).settings).uploadCap }
+  })
   if (!f.store.transactionAll || !f.store.readSnapshotRoot) throw new Error("Real SQLite read scope required")
   const inRoot = <T>(work: () => Promise<T>) => f.store.readSnapshotRoot!(work)
   const admission = await inRoot(() => f.authority.readContextAdmission(original))
   if (admission.status !== "ok") throw new Error("Original authority required")
   const input: Parameters<typeof observeSfAssetHealth>[0] = { source: () => owner.mounted
     ? { application: owner.application, producer: owner.handler, authority: f.authority } : undefined }
-  return { f, owner, fetch, input, original, admission, calls, services, scanner, schedule, inRoot,
+  return { f, owner, fetch, input, original, admission, calls, services, scanner, schedule, inRoot, uploadCap,
     observe: () => inRoot(() => observeSfAssetHealth(input, original, admission.stamp)),
     readState: () => f.store.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) })),
     dispose: f.dispose }
@@ -46,6 +66,7 @@ test("attachment observation uses the mounted original application and real read
     const before = await f.readState()
     const observed = await f.observe()
     expect(observed.map((entry) => entry.operationId)).toEqual(ids)
+    expect(f.uploadCap).toBe(16 * 1024 * 1024)
     expect(observed.every((entry) => entry.state === "ready" && entry.operational && entry.reason === null)).toBe(true)
     expect(await f.readState()).toEqual(before)
     expect(f.calls).toEqual({ scan: 0, dispatch: 0 })

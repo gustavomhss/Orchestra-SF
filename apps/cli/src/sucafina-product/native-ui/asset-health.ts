@@ -28,12 +28,16 @@ export async function observeSfAssetHealth(input: { source: () => Source | undef
   const producer = source.producer
   const assets = application.assets
   if (!assets || assets.persistence !== application.persistence ||
-    authority.host.persistence !== application.persistence) return []
+    authority.host.persistence !== application.persistence || authority.host.authenticate !== application.authenticate ||
+    authority.host.environment !== application.environment) return []
   const configuration = assets.services.scannerConfiguration
   const scanner = configuration ? { host: configuration.host, port: configuration.port } : undefined
   const key = assets.services.signingKey
   if (!(key instanceof Uint8Array) || key.byteLength < 32) return []
   const keyDigest = digestSfValue([...key])
+  const product = application.product
+  const productView = application.productView
+  const domains = digestSfValue([application.domains.dashboard.map((entry) => entry.pages), application.domains.procurement.map((entry) => entry.pages)])
   const dependencies = [application.persistence, application.persistence.transaction, application.authenticate,
     application.environment, application.domains, application.domains.dashboard, application.domains.procurement,
     assets, assets.persistence, assets.services, assets.services.scan, authority, authority.host,
@@ -53,6 +57,8 @@ export async function observeSfAssetHealth(input: { source: () => Source | undef
       ...next.application.domains.procurement.flatMap((entry) => [entry, entry.domain, entry.domain.execute])] : []
     return !request.signal.aborted && digestSfValue(stamp) === digestSfValue(expectedStamp) && input.source === sourceFor && !!next && next.application === application &&
       next.producer === producer && next.authority === authority && live === assets &&
+      next.application.product === product && next.application.productView === productView &&
+      digestSfValue([next.application.domains.dashboard.map((entry) => entry.pages), next.application.domains.procurement.map((entry) => entry.pages)]) === domains &&
       live.services.signingKey === key && digestSfValue([...key]) === keyDigest &&
       live.services.scannerConfiguration === configuration &&
       configuration?.host === scanner?.host && configuration?.port === scanner?.port &&
