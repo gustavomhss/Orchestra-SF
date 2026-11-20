@@ -1,4 +1,4 @@
-import { computeBudgetTotals } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
+import { attritionYtd, computeBudgetTotals, costPerUser, itUsersForMonth } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
 import type { BudgetData } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
 import { rows } from "../../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 
@@ -86,12 +86,11 @@ function sanitizedFinance(source: Record<string, unknown>): BudgetData | undefin
   }
 }
 
-function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | "CAP04" | "CAP05", year: number) {
+function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | "CAP04" | "CAP05", year: number, month?: number) {
   const data: Record<string, unknown> = {}
-  if (cap === "CAP01" || cap === "CAP03") {
-    const budget = sanitizedFinance(source)
-    if (budget) data.totals = computeBudgetTotals(budget, year)
-  }
+  const budget = cap === "CAP01" || cap === "CAP03" ? sanitizedFinance(source) : undefined
+  const totals = budget ? computeBudgetTotals(budget, year) : undefined
+  if (totals) data.totals = totals
   if (cap === "CAP01") {
     if (has(source, "executive")) data.executive = pick(requiredRecord(source.executive), executiveFields)
     for (const field of ["executiveByYear", "executiveMonths", "opsDefaultMonth"] as const) {
@@ -110,6 +109,8 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
     for (const field of ["itUsersMonthly", "costPerUserBenchmarks"] as const)
       data[field] = has(source, field) ? projectRows(source[field], ["id", "year", "month", "users", "value"]) : []
     if (has(source, "signals")) data.signals = projectRows(source.signals, signalFields)
+    if (month !== undefined && Number.isInteger(month) && month >= 1 && month <= 12)
+      data.people = executivePeople(source, year, month, totals)
   }
   if (cap === "CAP03") {
     // The same producer reads absent singleton maps as object(undefined) = {}.
@@ -140,6 +141,38 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
       ) }
   }
   return data
+}
+
+
+/** Same server-owned measures as the original Executive renderer.
+ * The selected year's budget and the original user-entry fallback stay explicit;
+ * missing collections or nonpositive denominators never become a recorded zero.
+ */
+function executivePeople(source: Record<string, unknown>, year: number, month: number, totals: ReturnType<typeof computeBudgetTotals> | undefined) {
+  const entries = rows(source.itUsersMonthly).filter((row) =>
+    typeof row.year === "number" && typeof row.month === "number" &&
+    typeof row.users === "number" && Number.isFinite(row.users)).map((row) => ({
+      year: Number(row.year), month: Number(row.month), users: Number(row.users),
+    }))
+  const users = entries.length ? itUsersForMonth(entries, month, year) : null
+  const byYear = has(source, "executiveByYear") ? requiredRecord(source.executiveByYear) : {}
+  const executive = {
+    ...(has(source, "executive") ? requiredRecord(source.executive) : {}),
+    ...(has(byYear, String(year)) ? requiredRecord(byYear[String(year)]) : {}),
+  }
+  const departures = executive.departures
+  const active = executive.active
+  const ratio = typeof departures === "number" && Number.isFinite(departures) &&
+    typeof active === "number" && Number.isFinite(active) && active + departures / 2 > 0
+      ? attritionYtd(departures, active) : null
+  const opex = totals && users !== null && users > 0 ? costPerUser(totals.opexBudget, users) : null
+  const combined = totals && users !== null && users > 0 ? costPerUser(totals.totalBudget, users) : null
+  return {
+    year, month, users,
+    opexCostPerUser: opex !== null && Number.isFinite(opex) ? opex : null,
+    totalCostPerUser: combined !== null && Number.isFinite(combined) ? combined : null,
+    attritionYtd: ratio !== null && Number.isFinite(ratio) ? ratio : null,
+  }
 }
 
 function publicPortfolio(source: Record<string, unknown>, cap: SfDomainCapability) {
@@ -180,9 +213,9 @@ function publicPortfolio(source: Record<string, unknown>, cap: SfDomainCapabilit
 }
 
 /** No private snapshot, auth map, cost details, supplier banking or document bytes. */
-export function projectSfDomainData(cap: SfDomainCapability, source: Record<string, unknown>, year: number) {
+export function projectSfDomainData(cap: SfDomainCapability, source: Record<string, unknown>, year: number, month?: number) {
   if (cap === "CAP01" || cap === "CAP03" || cap === "CAP04" || cap === "CAP05")
-    return publicBudget(source, cap, year)
+    return publicBudget(source, cap, year, month)
   return publicPortfolio(source, cap)
 }
 
