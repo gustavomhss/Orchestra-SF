@@ -1,0 +1,5483 @@
+{
+  "schema": "sf-c17-synchronous-boundary-evidence/v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "1542afe3a79550d6f3002eff8dcdbc442c981a79",
+    "tree": "06d5a4e4afb84aa4e2f4fd0e6e8e19f2447e1841"
+  },
+  "preparation": {
+    "sha": "76623a1f53f8353b928e98cbc49f0c0bce028ca7",
+    "tree": "4c2eb5f3305518c4acdc1a397bb6b56104568417",
+    "branch": "audit-sync-profile",
+    "paths": [
+      {
+        "path": ".ci-run.json",
+        "sha": "b52417707c4a64e83edf890bfc7007788c5498e9",
+        "additions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "sha": "92b57c59d5d970dc85b7738efe2e886edf2ae139",
+        "additions": 13,
+        "deletions": 2
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "sha": "9da9667c2e257d9f541e5f6023d9bf697d7aa2dd",
+        "additions": 42,
+        "deletions": 17
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "sha": "63ccdbcd6a98a4d97367a2a17d63bea82fdd78ae",
+        "additions": 9,
+        "deletions": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/audit-c17-synchronous-profile.ts",
+        "sha": "ca77a331f9862dd5494f360e4f4f2865c7d62d1f",
+        "additions": 114,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "sha": "2689692ed754d159a2ee6185e2fbb5e28b7b61ce",
+        "additions": 69,
+        "deletions": 37
+      }
+    ]
+  },
+  "request": {
+    "blob": "b52417707c4a64e83edf890bfc7007788c5498e9",
+    "content": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    }
+  },
+  "unchanged": {
+    "c17": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+    "rootFixture": "f7a08a7ccfbd10dd80aa88ce86a46cbbf4127b34",
+    "mixedOriginal15": "7284d86b907b602809f5e1eeb3aa1694f79b5455",
+    "testBudgetMs": 120000,
+    "cooperativeDeadlineMs": 105000
+  },
+  "limits": [
+    "All spans and synchronous metrics are inclusive and can overlap; root.live contains currentSnapshots, sameOwner contains canonical work and canonical.digest contains canonical.bytes.",
+    "snapshot.clone measures LocalStore cloneSnapshot/copyValue, not structuredClone(state) in state-provider.ts:256; the unmeasured residual remains unknown.",
+    "sqlite.select.snapshot covers four snapshot query sites, not authentication or blob SELECTs. sqlite.begin measures synchronous exec only, not queue or lock-retry awaits.",
+    "SELECT and materialization-plan observations are recorded after return; finally-wrapped observations also count exits by exception. Metric count does not imply success.",
+    "diagnosticMs measures bookkeeping and prior emissions, not complete externally measured probe overhead; syncClockReads is recorded separately.",
+    "Numeric records have no authority data, references, stack traces or payloads; no per-call emission, sampling timer or cap is present.",
+    "Abort counts are prefixes, not successful-path totals or a controlled comparison with older profiles."
+  ],
+  "compiler": {
+    "run": 44679346770,
+    "job": 136098741808,
+    "snapshot": "a7ce86acee1c3fddfc6981af10b75480f55ca443",
+    "parent": "76623a1f53f8353b928e98cbc49f0c0bce028ca7",
+    "tree": "4f2b516ad56287d87e7fbd8a7cef93170c718126",
+    "requestBlob": "71070dbb3012ee865306353784ffa33fdff4caf6",
+    "harnessBlob": "fb0a94c55f0ad87a421d2f7bd6ec1748a383a5ac",
+    "pass": 2,
+    "fail": 0,
+    "skip": 0,
+    "cancel": 0,
+    "totalMs": 86064.803487,
+    "sucafinaMs": 46022.80566,
+    "cliMs": 39977.281094,
+    "markers": [
+      "SF_AUDIT_COMPILER_PRODUCT 76623a1f53f8353b928e98cbc49f0c0bce028ca7 sucafina",
+      "SF_AUDIT_COMPILER_PRODUCT 76623a1f53f8353b928e98cbc49f0c0bce028ca7 cli"
+    ],
+    "cleanup": {
+      "job": 136099542027,
+      "conclusion": "success"
+    }
+  },
+  "diagnostic": {
+    "run": 44679705156,
+    "job": 136099896762,
+    "snapshot": "71e6d4567616a7e38e59fb53ecd3d3a4974994f0",
+    "parent": "76623a1f53f8353b928e98cbc49f0c0bce028ca7",
+    "tree": "4c2eb5f3305518c4acdc1a397bb6b56104568417",
+    "changedPaths": 0,
+    "workflow": "test-ci",
+    "event": "push",
+    "attempt": 1,
+    "branch": "ci-run-linux-sync-profile"
+  },
+  "terminal": {
+    "conclusion": "failure",
+    "pass": 0,
+    "fail": 1,
+    "assertions": 2,
+    "tests": 1,
+    "files": 1,
+    "durationSeconds": 105.48,
+    "testDurationMs": 105005.61,
+    "cleanup": {
+      "job": 136101063368,
+      "conclusion": "success"
+    },
+    "omni": {
+      "status": "not-applicable",
+      "reason": "The focused run had no declaring test, made no Omni spawn and delegated none; it proves nothing about Omni."
+    }
+  },
+  "failure": {
+    "signature": "error: calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+    "frames": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts:39:7"
+    ],
+    "phase": "produce-outer: its publish.issue completed, then the subsequent explicit issue was interrupted",
+    "unreached": [
+      "reopening and resolving persisted ancestry",
+      "persisted-cycle refusal",
+      "revoked-authority checks"
+    ],
+    "test": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority"
+  },
+  "measured": {
+    "recordCount": 24,
+    "parseErrors": 0,
+    "finalDiagnosticMs": 641.087,
+    "finalSyncClockReads": 29190800,
+    "lastRoots": {
+      "0": {
+        "new": 0,
+        "join": 0,
+        "foreign": 0,
+        "unsupported": 0,
+        "callback": 0,
+        "accepted": 0
+      },
+      "1": {
+        "new": 0,
+        "join": 123,
+        "foreign": 0,
+        "unsupported": 0,
+        "callback": 0,
+        "accepted": 0
+      },
+      "2": {
+        "new": 2,
+        "join": 0,
+        "foreign": 0,
+        "unsupported": 0,
+        "callback": 2,
+        "accepted": 1
+      }
+    },
+    "lastSynchronous": {
+      "root.live": {
+        "count": 500,
+        "totalMs": 67.586,
+        "maxMs": 2.344
+      },
+      "service.sameOwner": {
+        "count": 909,
+        "totalMs": 216.41,
+        "maxMs": 2.734
+      },
+      "driver.currentSnapshots": {
+        "count": 173026,
+        "totalMs": 13409.836,
+        "maxMs": 5.921
+      },
+      "driver.currentSnapshot": {
+        "count": 176102,
+        "totalMs": 1125.019,
+        "maxMs": 2.549
+      },
+      "canonical.bytes": {
+        "count": 2928863,
+        "totalMs": 32649.625,
+        "maxMs": 8.702
+      },
+      "canonical.digest": {
+        "count": 2906581,
+        "totalMs": 36539.668,
+        "maxMs": 8.957
+      },
+      "sqlite.connect": {
+        "count": 76432,
+        "totalMs": 10505.144,
+        "maxMs": 1.701
+      },
+      "sqlite.close": {
+        "count": 76432,
+        "totalMs": 3750.823,
+        "maxMs": 2.246
+      },
+      "sqlite.begin": {
+        "count": 76432,
+        "totalMs": 197.806,
+        "maxMs": 0.102
+      },
+      "sqlite.select.snapshot": {
+        "count": 229293,
+        "totalMs": 3025.435,
+        "maxMs": 6.213
+      },
+      "sqlite.select.skipped": {
+        "count": 29848,
+        "totalMs": 1.871,
+        "maxMs": 0.018
+      },
+      "snapshot.clone": {
+        "count": 1645,
+        "totalMs": 436.211,
+        "maxMs": 3.288
+      },
+      "snapshot.decode": {
+        "count": 26,
+        "totalMs": 5.864,
+        "maxMs": 0.887
+      },
+      "snapshot.encode": {
+        "count": 15,
+        "totalMs": 2.648,
+        "maxMs": 0.458
+      },
+      "snapshot.plan": {
+        "count": 11,
+        "totalMs": 3.156,
+        "maxMs": 0.977
+      },
+      "snapshot.materialize": {
+        "count": 621585,
+        "totalMs": 22549.286,
+        "maxMs": 5.879
+      }
+    },
+    "fullMixedProducer": {
+      "emissions": [
+        18,
+        19
+      ],
+      "inclusiveMs": 43561.955,
+      "acceptedRootCount": 1,
+      "recordJoins": 102,
+      "rootLiveMs": 55.328,
+      "sameOwnerMs": 177.827,
+      "combinedMeasuredGuardUpperBoundPercent": 0.535,
+      "canonicalDigestMs": 19045.196,
+      "canonicalBytesMs": 17104.847,
+      "currentSnapshotsMs": 10804.922,
+      "snapshotMaterializeMs": 11866.199,
+      "connections": 1,
+      "snapshotQueries": 3
+    }
+  },
+  "interpretation": [
+    "There are 24 records because this execution completed the first outer publish.issue and reached a second mixed prepare/produce pair. No emission cap was applied.",
+    "The full first mixed producer entered and accepted one physical root with 102 record joins. Its 43.562 seconds are a complete producer span, not the entire test.",
+    "Measured root.live and sameOwner durations do not explain the large complete-producer cost; their combined duration is an upper bound below 0.6% of that span.",
+    "canonical.digest includes canonical.bytes; currentSnapshots includes snapshot materialization. These inclusive groups must not be added together as exclusive CPU time.",
+    "The full owned producer opened one SQLite connection and made three snapshot SELECTs; the large SQL costs elsewhere belong to earlier unrooted phases in this run.",
+    "The final outer read count of 1374/1374 and the second mixed-producer span are aborted prefixes. Their difference from earlier runs is not evidence of an optimization, since product code is unchanged.",
+    "29,190,800 probe clock reads are disclosed. Measured bookkeeping is not a complete external measurement of observer overhead.",
+    "No result cache, authority reuse, replay deduplication or permission for a new product delta follows from these measurements.",
+    "Uninstrumented state-provider clones, other queries and the remaining wall-time residual remain unknown."
+  ],
+  "compositionPhases": [
+    {
+      "timestamp": "2026-11-20T05:15:54.5758774Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-20T05:15:54.6142863Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "returned",
+      "phaseMs": 39,
+      "elapsedMs": 39,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-20T05:15:54.6143683Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "started",
+      "elapsedMs": 39
+    },
+    {
+      "timestamp": "2026-11-20T05:15:56.3168444Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "returned",
+      "phaseMs": 1702,
+      "elapsedMs": 1741,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-20T05:15:56.3207539Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "started",
+      "elapsedMs": 1745
+    },
+    {
+      "timestamp": "2026-11-20T05:17:39.5780291Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "returned",
+      "phaseMs": 103256,
+      "elapsedMs": 105002,
+      "aborted": true
+    }
+  ],
+  "canonicalReads": [
+    {
+      "timestamp": "2026-11-20T05:15:56.3167159Z",
+      "phase": "produce-inner",
+      "elapsedMs": 1702,
+      "canonicalResultReads": 14,
+      "canonicalResultReadsCompleted": 14,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-20T05:17:39.5779339Z",
+      "phase": "produce-outer",
+      "elapsedMs": 103256,
+      "canonicalResultReads": 1374,
+      "canonicalResultReadsCompleted": 1374,
+      "aborted": true
+    }
+  ],
+  "phaseMeasurements": [
+    {
+      "label": "publish.replay",
+      "occurrence": 1,
+      "startEmission": 1,
+      "endEmission": 2,
+      "startElapsedMs": 244.219,
+      "endElapsedMs": 308.202,
+      "inclusiveMs": 64.037,
+      "diagnosticDeltaMs": 0.505,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 65,
+          "totalMs": 0.022
+        },
+        "driver.currentSnapshot": {
+          "count": 130,
+          "totalMs": 1.107
+        },
+        "canonical.bytes": {
+          "count": 900,
+          "totalMs": 8.481
+        },
+        "canonical.digest": {
+          "count": 900,
+          "totalMs": 10.464
+        },
+        "sqlite.connect": {
+          "count": 96,
+          "totalMs": 15.212
+        },
+        "sqlite.close": {
+          "count": 96,
+          "totalMs": 5.767
+        },
+        "sqlite.begin": {
+          "count": 96,
+          "totalMs": 0.342
+        },
+        "sqlite.select.snapshot": {
+          "count": 288,
+          "totalMs": 6.265
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 226,
+          "totalMs": 3.395
+        }
+      }
+    },
+    {
+      "label": "publish.persist",
+      "occurrence": 1,
+      "startEmission": 3,
+      "endEmission": 4,
+      "startElapsedMs": 308.785,
+      "endElapsedMs": 491.559,
+      "inclusiveMs": 182.772,
+      "diagnosticDeltaMs": 1.319,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 208,
+          "totalMs": 0.066
+        },
+        "driver.currentSnapshot": {
+          "count": 464,
+          "totalMs": 3.342
+        },
+        "canonical.bytes": {
+          "count": 3696,
+          "totalMs": 31.4
+        },
+        "canonical.digest": {
+          "count": 3665,
+          "totalMs": 37.402
+        },
+        "sqlite.connect": {
+          "count": 290,
+          "totalMs": 40.78
+        },
+        "sqlite.close": {
+          "count": 290,
+          "totalMs": 16.927
+        },
+        "sqlite.begin": {
+          "count": 290,
+          "totalMs": 0.832
+        },
+        "sqlite.select.snapshot": {
+          "count": 870,
+          "totalMs": 8.108
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.decode": {
+          "count": 2,
+          "totalMs": 0.716
+        },
+        "snapshot.encode": {
+          "count": 1,
+          "totalMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 1,
+          "totalMs": 0.277
+        },
+        "snapshot.materialize": {
+          "count": 753,
+          "totalMs": 16.641
+        }
+      }
+    },
+    {
+      "label": "publish.register",
+      "occurrence": 1,
+      "startEmission": 5,
+      "endEmission": 6,
+      "startElapsedMs": 491.656,
+      "endElapsedMs": 696.345,
+      "inclusiveMs": 204.686,
+      "diagnosticDeltaMs": 1.38,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 231,
+          "totalMs": 0.318
+        },
+        "driver.currentSnapshot": {
+          "count": 540,
+          "totalMs": 4.148
+        },
+        "canonical.bytes": {
+          "count": 4715,
+          "totalMs": 47.519
+        },
+        "canonical.digest": {
+          "count": 4671,
+          "totalMs": 54.456
+        },
+        "sqlite.connect": {
+          "count": 278,
+          "totalMs": 40.767
+        },
+        "sqlite.close": {
+          "count": 278,
+          "totalMs": 14.892
+        },
+        "sqlite.begin": {
+          "count": 278,
+          "totalMs": 0.983
+        },
+        "sqlite.select.snapshot": {
+          "count": 834,
+          "totalMs": 10.875
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 15,
+          "totalMs": 0.535
+        },
+        "snapshot.decode": {
+          "count": 4,
+          "totalMs": 0.641
+        },
+        "snapshot.encode": {
+          "count": 3,
+          "totalMs": 0.289
+        },
+        "snapshot.plan": {
+          "count": 1,
+          "totalMs": 0.194
+        },
+        "snapshot.materialize": {
+          "count": 831,
+          "totalMs": 21.727
+        }
+      }
+    },
+    {
+      "label": "publish.issue",
+      "occurrence": 1,
+      "startEmission": 7,
+      "endEmission": 8,
+      "startElapsedMs": 696.423,
+      "endElapsedMs": 1282.418,
+      "inclusiveMs": 585.992,
+      "diagnosticDeltaMs": 3.743,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 696,
+          "totalMs": 7.476
+        },
+        "driver.currentSnapshot": {
+          "count": 1504,
+          "totalMs": 10.818
+        },
+        "canonical.bytes": {
+          "count": 12362,
+          "totalMs": 130.509
+        },
+        "canonical.digest": {
+          "count": 12266,
+          "totalMs": 147.723
+        },
+        "sqlite.connect": {
+          "count": 844,
+          "totalMs": 121.083
+        },
+        "sqlite.close": {
+          "count": 844,
+          "totalMs": 42.615
+        },
+        "sqlite.begin": {
+          "count": 844,
+          "totalMs": 2.298
+        },
+        "sqlite.select.snapshot": {
+          "count": 2532,
+          "totalMs": 27.721
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 20,
+          "totalMs": 6.894
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 2452,
+          "totalMs": 64.122
+        }
+      }
+    },
+    {
+      "label": "publish.replay",
+      "occurrence": 2,
+      "startEmission": 9,
+      "endEmission": 10,
+      "startElapsedMs": 6506.599,
+      "endElapsedMs": 9936.449,
+      "inclusiveMs": 3429.85,
+      "diagnosticDeltaMs": 20.331,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 4426,
+          "totalMs": 23.955
+        },
+        "driver.currentSnapshot": {
+          "count": 9540,
+          "totalMs": 64.407
+        },
+        "canonical.bytes": {
+          "count": 81154,
+          "totalMs": 832.605
+        },
+        "canonical.digest": {
+          "count": 80578,
+          "totalMs": 939.295
+        },
+        "sqlite.connect": {
+          "count": 5381,
+          "totalMs": 731.118
+        },
+        "sqlite.close": {
+          "count": 5381,
+          "totalMs": 254.351
+        },
+        "sqlite.begin": {
+          "count": 5381,
+          "totalMs": 13.974
+        },
+        "sqlite.select.snapshot": {
+          "count": 16143,
+          "totalMs": 165.986
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 120,
+          "totalMs": 21.493
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 15545,
+          "totalMs": 426.97
+        }
+      }
+    },
+    {
+      "label": "publish.persist",
+      "occurrence": 2,
+      "startEmission": 11,
+      "endEmission": 12,
+      "startElapsedMs": 9937.141,
+      "endElapsedMs": 26187.682,
+      "inclusiveMs": 16250.525,
+      "diagnosticDeltaMs": 92.545,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 19841,
+          "totalMs": 134.366
+        },
+        "driver.currentSnapshot": {
+          "count": 42810,
+          "totalMs": 299.804
+        },
+        "canonical.bytes": {
+          "count": 365114,
+          "totalMs": 3825.562
+        },
+        "canonical.digest": {
+          "count": 362491,
+          "totalMs": 4308.104
+        },
+        "sqlite.connect": {
+          "count": 24087,
+          "totalMs": 3300.331
+        },
+        "sqlite.close": {
+          "count": 24087,
+          "totalMs": 1178.8
+        },
+        "sqlite.begin": {
+          "count": 24087,
+          "totalMs": 61.728
+        },
+        "sqlite.select.snapshot": {
+          "count": 72261,
+          "totalMs": 918.849
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 540,
+          "totalMs": 123.015
+        },
+        "snapshot.decode": {
+          "count": 2,
+          "totalMs": 1.464
+        },
+        "snapshot.encode": {
+          "count": 1,
+          "totalMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 1,
+          "totalMs": 0.836
+        },
+        "snapshot.materialize": {
+          "count": 69704,
+          "totalMs": 2410.384
+        }
+      }
+    },
+    {
+      "label": "publish.register",
+      "occurrence": 2,
+      "startEmission": 13,
+      "endEmission": 14,
+      "startElapsedMs": 26187.804,
+      "endElapsedMs": 52859.095,
+      "inclusiveMs": 26671.245,
+      "diagnosticDeltaMs": 141.831,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 30609,
+          "totalMs": 249.892
+        },
+        "driver.currentSnapshot": {
+          "count": 66192,
+          "totalMs": 456.584
+        },
+        "canonical.bytes": {
+          "count": 566621,
+          "totalMs": 6030.412
+        },
+        "canonical.digest": {
+          "count": 562545,
+          "totalMs": 6803.134
+        },
+        "sqlite.connect": {
+          "count": 37238,
+          "totalMs": 5123.409
+        },
+        "sqlite.close": {
+          "count": 37238,
+          "totalMs": 1839.682
+        },
+        "sqlite.begin": {
+          "count": 37238,
+          "totalMs": 95.925
+        },
+        "sqlite.select.snapshot": {
+          "count": 111714,
+          "totalMs": 1613.687
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 735,
+          "totalMs": 233.268
+        },
+        "snapshot.decode": {
+          "count": 4,
+          "totalMs": 1.202
+        },
+        "snapshot.encode": {
+          "count": 3,
+          "totalMs": 0.489
+        },
+        "snapshot.plan": {
+          "count": 1,
+          "totalMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 107547,
+          "totalMs": 4739.136
+        }
+      }
+    },
+    {
+      "label": "mixed.prepare",
+      "occurrence": 1,
+      "startEmission": 16,
+      "endEmission": 17,
+      "startElapsedMs": 52868.413,
+      "endElapsedMs": 52884.247,
+      "inclusiveMs": 15.835,
+      "diagnosticDeltaMs": 0.127,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 10,
+          "totalMs": 2.378
+        },
+        "driver.currentSnapshots": {
+          "count": 14,
+          "totalMs": 0.003
+        },
+        "driver.currentSnapshot": {
+          "count": 32,
+          "totalMs": 0.211
+        },
+        "canonical.bytes": {
+          "count": 269,
+          "totalMs": 4.007
+        },
+        "canonical.digest": {
+          "count": 269,
+          "totalMs": 4.647
+        },
+        "sqlite.connect": {
+          "count": 18,
+          "totalMs": 2.652
+        },
+        "sqlite.close": {
+          "count": 18,
+          "totalMs": 0.894
+        },
+        "sqlite.begin": {
+          "count": 18,
+          "totalMs": 0.08
+        },
+        "sqlite.select.snapshot": {
+          "count": 54,
+          "totalMs": 0.631
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 50,
+          "totalMs": 2.243
+        }
+      }
+    },
+    {
+      "label": "mixed.produce",
+      "occurrence": 1,
+      "startEmission": 18,
+      "endEmission": 19,
+      "startElapsedMs": 52895.265,
+      "endElapsedMs": 96457.232,
+      "inclusiveMs": 43561.955,
+      "diagnosticDeltaMs": 285.638,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328
+        },
+        "service.sameOwner": {
+          "count": 732,
+          "totalMs": 177.827
+        },
+        "driver.currentSnapshots": {
+          "count": 91699,
+          "totalMs": 10804.922
+        },
+        "driver.currentSnapshot": {
+          "count": 33544,
+          "totalMs": 151.493
+        },
+        "canonical.bytes": {
+          "count": 1473806,
+          "totalMs": 17104.847
+        },
+        "canonical.digest": {
+          "count": 1462190,
+          "totalMs": 19045.196
+        },
+        "sqlite.connect": {
+          "count": 1,
+          "totalMs": 0.186
+        },
+        "sqlite.close": {
+          "count": 1,
+          "totalMs": 0.159
+        },
+        "sqlite.begin": {
+          "count": 1,
+          "totalMs": 0.003
+        },
+        "sqlite.select.snapshot": {
+          "count": 3,
+          "totalMs": 0.057
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597
+        },
+        "snapshot.clone": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 333485,
+          "totalMs": 11866.199
+        }
+      }
+    },
+    {
+      "label": "publish.issue",
+      "occurrence": 2,
+      "startEmission": 15,
+      "endEmission": 20,
+      "startElapsedMs": 52859.22,
+      "endElapsedMs": 96471.291,
+      "inclusiveMs": 43612.069,
+      "diagnosticDeltaMs": 286.091,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328
+        },
+        "service.sameOwner": {
+          "count": 742,
+          "totalMs": 180.205
+        },
+        "driver.currentSnapshots": {
+          "count": 91743,
+          "totalMs": 10810.825
+        },
+        "driver.currentSnapshot": {
+          "count": 33628,
+          "totalMs": 152.059
+        },
+        "canonical.bytes": {
+          "count": 1474452,
+          "totalMs": 17119.554
+        },
+        "canonical.digest": {
+          "count": 1462836,
+          "totalMs": 19062.074
+        },
+        "sqlite.connect": {
+          "count": 37,
+          "totalMs": 5.884
+        },
+        "sqlite.close": {
+          "count": 37,
+          "totalMs": 2.088
+        },
+        "sqlite.begin": {
+          "count": 37,
+          "totalMs": 0.138
+        },
+        "sqlite.select.snapshot": {
+          "count": 111,
+          "totalMs": 3.622
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597
+        },
+        "snapshot.clone": {
+          "count": 20,
+          "totalMs": 5.538
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 333645,
+          "totalMs": 11871.486
+        }
+      }
+    },
+    {
+      "label": "mixed.prepare",
+      "occurrence": 2,
+      "startEmission": 21,
+      "endEmission": 22,
+      "startElapsedMs": 96478.356,
+      "endElapsedMs": 96495.299,
+      "inclusiveMs": 16.941,
+      "diagnosticDeltaMs": 0.133,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "service.sameOwner": {
+          "count": 10,
+          "totalMs": 2.497
+        },
+        "driver.currentSnapshots": {
+          "count": 14,
+          "totalMs": 0.002
+        },
+        "driver.currentSnapshot": {
+          "count": 32,
+          "totalMs": 0.224
+        },
+        "canonical.bytes": {
+          "count": 269,
+          "totalMs": 4.025
+        },
+        "canonical.digest": {
+          "count": 269,
+          "totalMs": 4.643
+        },
+        "sqlite.connect": {
+          "count": 18,
+          "totalMs": 2.702
+        },
+        "sqlite.close": {
+          "count": 18,
+          "totalMs": 0.96
+        },
+        "sqlite.begin": {
+          "count": 18,
+          "totalMs": 0.053
+        },
+        "sqlite.select.snapshot": {
+          "count": 54,
+          "totalMs": 0.742
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.clone": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 50,
+          "totalMs": 4.19
+        }
+      }
+    },
+    {
+      "label": "mixed.produce",
+      "occurrence": 2,
+      "startEmission": 23,
+      "endEmission": 24,
+      "startElapsedMs": 96506.503,
+      "endElapsedMs": 105102.818,
+      "inclusiveMs": 8596.221,
+      "diagnosticDeltaMs": 58.31,
+      "rootDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 21,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 87,
+          "totalMs": 12.258
+        },
+        "service.sameOwner": {
+          "count": 157,
+          "totalMs": 33.708
+        },
+        "driver.currentSnapshots": {
+          "count": 18488,
+          "totalMs": 2133.652
+        },
+        "driver.currentSnapshot": {
+          "count": 6792,
+          "totalMs": 30.733
+        },
+        "canonical.bytes": {
+          "count": 297490,
+          "totalMs": 3369.864
+        },
+        "canonical.digest": {
+          "count": 295144,
+          "totalMs": 3760.168
+        },
+        "sqlite.connect": {
+          "count": 1,
+          "totalMs": 0.214
+        },
+        "sqlite.close": {
+          "count": 1,
+          "totalMs": 0.144
+        },
+        "sqlite.begin": {
+          "count": 1,
+          "totalMs": 0.004
+        },
+        "sqlite.select.snapshot": {
+          "count": 3,
+          "totalMs": 0.054
+        },
+        "sqlite.select.skipped": {
+          "count": 4998,
+          "totalMs": 0.274
+        },
+        "snapshot.clone": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.decode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.encode": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.plan": {
+          "count": 0,
+          "totalMs": 0
+        },
+        "snapshot.materialize": {
+          "count": 67251,
+          "totalMs": 2342.003
+        }
+      }
+    }
+  ],
+  "numericRecords": [
+    {
+      "timestamp": "2026-11-20T05:15:54.7187083Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 244.219,
+      "emissions": 1,
+      "diagnosticMs": 0.609,
+      "syncClockReads": 15332,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.persist": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 88,
+          "totalMs": 0.088,
+          "maxMs": 0.014
+        },
+        "driver.currentSnapshot": {
+          "count": 188,
+          "totalMs": 2.412,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 1223,
+          "totalMs": 13.669,
+          "maxMs": 0.104
+        },
+        "canonical.digest": {
+          "count": 1218,
+          "totalMs": 16.746,
+          "maxMs": 0.113
+        },
+        "sqlite.connect": {
+          "count": 130,
+          "totalMs": 22.702,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 130,
+          "totalMs": 9.997,
+          "maxMs": 0.511
+        },
+        "sqlite.begin": {
+          "count": 130,
+          "totalMs": 0.609,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 387,
+          "totalMs": 5.063,
+          "maxMs": 0.089
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 5,
+          "totalMs": 0.546,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 12,
+          "totalMs": 1.082,
+          "maxMs": 0.301
+        },
+        "snapshot.encode": {
+          "count": 6,
+          "totalMs": 0.77,
+          "maxMs": 0.256
+        },
+        "snapshot.plan": {
+          "count": 6,
+          "totalMs": 0.624,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 310,
+          "totalMs": 4.71,
+          "maxMs": 0.072
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:54.7828690Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 308.202,
+      "emissions": 2,
+      "diagnosticMs": 1.114,
+      "syncClockReads": 26520,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 153,
+          "totalMs": 0.11,
+          "maxMs": 0.014
+        },
+        "driver.currentSnapshot": {
+          "count": 318,
+          "totalMs": 3.519,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 2123,
+          "totalMs": 22.15,
+          "maxMs": 0.104
+        },
+        "canonical.digest": {
+          "count": 2118,
+          "totalMs": 27.21,
+          "maxMs": 0.113
+        },
+        "sqlite.connect": {
+          "count": 226,
+          "totalMs": 37.914,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 226,
+          "totalMs": 15.764,
+          "maxMs": 0.511
+        },
+        "sqlite.begin": {
+          "count": 226,
+          "totalMs": 0.951,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 675,
+          "totalMs": 11.328,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 5,
+          "totalMs": 0.546,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 12,
+          "totalMs": 1.082,
+          "maxMs": 0.301
+        },
+        "snapshot.encode": {
+          "count": 6,
+          "totalMs": 0.77,
+          "maxMs": 0.256
+        },
+        "snapshot.plan": {
+          "count": 6,
+          "totalMs": 0.624,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 536,
+          "totalMs": 8.105,
+          "maxMs": 0.072
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:54.7843433Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 308.785,
+      "emissions": 3,
+      "diagnosticMs": 1.18,
+      "syncClockReads": 26568,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 153,
+          "totalMs": 0.11,
+          "maxMs": 0.014
+        },
+        "driver.currentSnapshot": {
+          "count": 318,
+          "totalMs": 3.519,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 2129,
+          "totalMs": 22.489,
+          "maxMs": 0.108
+        },
+        "canonical.digest": {
+          "count": 2124,
+          "totalMs": 27.582,
+          "maxMs": 0.118
+        },
+        "sqlite.connect": {
+          "count": 226,
+          "totalMs": 37.914,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 226,
+          "totalMs": 15.764,
+          "maxMs": 0.511
+        },
+        "sqlite.begin": {
+          "count": 226,
+          "totalMs": 0.951,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 675,
+          "totalMs": 11.328,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 5,
+          "totalMs": 0.546,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 12,
+          "totalMs": 1.082,
+          "maxMs": 0.301
+        },
+        "snapshot.encode": {
+          "count": 6,
+          "totalMs": 0.77,
+          "maxMs": 0.256
+        },
+        "snapshot.plan": {
+          "count": 6,
+          "totalMs": 0.624,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 536,
+          "totalMs": 8.105,
+          "maxMs": 0.072
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:54.9663213Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 491.559,
+      "emissions": 4,
+      "diagnosticMs": 2.499,
+      "syncClockReads": 68688,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 361,
+          "totalMs": 0.176,
+          "maxMs": 0.014
+        },
+        "driver.currentSnapshot": {
+          "count": 782,
+          "totalMs": 6.861,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 5825,
+          "totalMs": 53.889,
+          "maxMs": 1.806
+        },
+        "canonical.digest": {
+          "count": 5789,
+          "totalMs": 64.984,
+          "maxMs": 2.044
+        },
+        "sqlite.connect": {
+          "count": 516,
+          "totalMs": 78.694,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 516,
+          "totalMs": 32.691,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 516,
+          "totalMs": 1.783,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 1545,
+          "totalMs": 19.436,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 5,
+          "totalMs": 0.546,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 14,
+          "totalMs": 1.798,
+          "maxMs": 0.362
+        },
+        "snapshot.encode": {
+          "count": 7,
+          "totalMs": 1.106,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 7,
+          "totalMs": 0.901,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 1289,
+          "totalMs": 24.746,
+          "maxMs": 2.498
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:54.9677779Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 491.656,
+      "emissions": 5,
+      "diagnosticMs": 2.591,
+      "syncClockReads": 68688,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 361,
+          "totalMs": 0.176,
+          "maxMs": 0.014
+        },
+        "driver.currentSnapshot": {
+          "count": 782,
+          "totalMs": 6.861,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 5825,
+          "totalMs": 53.889,
+          "maxMs": 1.806
+        },
+        "canonical.digest": {
+          "count": 5789,
+          "totalMs": 64.984,
+          "maxMs": 2.044
+        },
+        "sqlite.connect": {
+          "count": 516,
+          "totalMs": 78.694,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 516,
+          "totalMs": 32.691,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 516,
+          "totalMs": 1.783,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 1545,
+          "totalMs": 19.436,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 5,
+          "totalMs": 0.546,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 14,
+          "totalMs": 1.798,
+          "maxMs": 0.362
+        },
+        "snapshot.encode": {
+          "count": 7,
+          "totalMs": 1.106,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 7,
+          "totalMs": 0.901,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 1289,
+          "totalMs": 24.746,
+          "maxMs": 2.498
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:55.1709517Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 696.345,
+      "emissions": 6,
+      "diagnosticMs": 3.971,
+      "syncClockReads": 119404,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 592,
+          "totalMs": 0.494,
+          "maxMs": 0.273
+        },
+        "driver.currentSnapshot": {
+          "count": 1322,
+          "totalMs": 11.009,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 10540,
+          "totalMs": 101.408,
+          "maxMs": 2.529
+        },
+        "canonical.digest": {
+          "count": 10460,
+          "totalMs": 119.44,
+          "maxMs": 2.709
+        },
+        "sqlite.connect": {
+          "count": 794,
+          "totalMs": 119.461,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 794,
+          "totalMs": 47.583,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 794,
+          "totalMs": 2.766,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 2379,
+          "totalMs": 30.311,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 20,
+          "totalMs": 1.081,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 18,
+          "totalMs": 2.439,
+          "maxMs": 0.362
+        },
+        "snapshot.encode": {
+          "count": 10,
+          "totalMs": 1.395,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 8,
+          "totalMs": 1.095,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 2120,
+          "totalMs": 46.473,
+          "maxMs": 2.498
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:55.1724213Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 696.423,
+      "emissions": 7,
+      "diagnosticMs": 4.046,
+      "syncClockReads": 119404,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 592,
+          "totalMs": 0.494,
+          "maxMs": 0.273
+        },
+        "driver.currentSnapshot": {
+          "count": 1322,
+          "totalMs": 11.009,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 10540,
+          "totalMs": 101.408,
+          "maxMs": 2.529
+        },
+        "canonical.digest": {
+          "count": 10460,
+          "totalMs": 119.44,
+          "maxMs": 2.709
+        },
+        "sqlite.connect": {
+          "count": 794,
+          "totalMs": 119.461,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 794,
+          "totalMs": 47.583,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 794,
+          "totalMs": 2.766,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 2379,
+          "totalMs": 30.311,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 20,
+          "totalMs": 1.081,
+          "maxMs": 0.264
+        },
+        "snapshot.decode": {
+          "count": 18,
+          "totalMs": 2.439,
+          "maxMs": 0.362
+        },
+        "snapshot.encode": {
+          "count": 10,
+          "totalMs": 1.395,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 8,
+          "totalMs": 1.095,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 2120,
+          "totalMs": 46.473,
+          "maxMs": 2.498
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:15:55.7567646Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 1282.418,
+      "emissions": 8,
+      "diagnosticMs": 7.789,
+      "syncClockReads": 256860,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 1288,
+          "totalMs": 7.97,
+          "maxMs": 2.743
+        },
+        "driver.currentSnapshot": {
+          "count": 2826,
+          "totalMs": 21.827,
+          "maxMs": 0.316
+        },
+        "canonical.bytes": {
+          "count": 22902,
+          "totalMs": 231.917,
+          "maxMs": 2.725
+        },
+        "canonical.digest": {
+          "count": 22726,
+          "totalMs": 267.163,
+          "maxMs": 2.732
+        },
+        "sqlite.connect": {
+          "count": 1638,
+          "totalMs": 240.544,
+          "maxMs": 0.541
+        },
+        "sqlite.close": {
+          "count": 1638,
+          "totalMs": 90.198,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 1638,
+          "totalMs": 5.064,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 4911,
+          "totalMs": 58.032,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 40,
+          "totalMs": 7.975,
+          "maxMs": 2.69
+        },
+        "snapshot.decode": {
+          "count": 18,
+          "totalMs": 2.439,
+          "maxMs": 0.362
+        },
+        "snapshot.encode": {
+          "count": 10,
+          "totalMs": 1.395,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 8,
+          "totalMs": 1.095,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 4572,
+          "totalMs": 110.595,
+          "maxMs": 2.498
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:00.9811176Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 6506.599,
+      "emissions": 9,
+      "diagnosticMs": 41.334,
+      "syncClockReads": 1587900,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 64.037,
+          "lastMs": 64.037
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 7888,
+          "totalMs": 54.305,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 17074,
+          "totalMs": 120.974,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 143538,
+          "totalMs": 1461.489,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 142493,
+          "totalMs": 1655.279,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 9658,
+          "totalMs": 1339.596,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 9658,
+          "totalMs": 474.118,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 9658,
+          "totalMs": 25.925,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 28971,
+          "totalMs": 321.918,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 220,
+          "totalMs": 50.235,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 20,
+          "totalMs": 3.198,
+          "maxMs": 0.391
+        },
+        "snapshot.encode": {
+          "count": 11,
+          "totalMs": 1.701,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 9,
+          "totalMs": 1.343,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 27777,
+          "totalMs": 753.081,
+          "maxMs": 2.651
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:04.4108548Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 9936.449,
+      "emissions": 10,
+      "diagnosticMs": 61.665,
+      "syncClockReads": 2482496,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 12314,
+          "totalMs": 78.26,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 26614,
+          "totalMs": 185.381,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 224692,
+          "totalMs": 2294.094,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 223071,
+          "totalMs": 2594.574,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 15039,
+          "totalMs": 2070.714,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 15039,
+          "totalMs": 728.469,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 15039,
+          "totalMs": 39.899,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 45114,
+          "totalMs": 487.904,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 340,
+          "totalMs": 71.728,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 20,
+          "totalMs": 3.198,
+          "maxMs": 0.391
+        },
+        "snapshot.encode": {
+          "count": 11,
+          "totalMs": 1.701,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 9,
+          "totalMs": 1.343,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 43322,
+          "totalMs": 1180.051,
+          "maxMs": 2.651
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:04.4118702Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 9937.141,
+      "emissions": 11,
+      "diagnosticMs": 61.767,
+      "syncClockReads": 2482544,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 182.772,
+          "lastMs": 182.772
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 12314,
+          "totalMs": 78.26,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 26614,
+          "totalMs": 185.381,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 224698,
+          "totalMs": 2294.585,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 223077,
+          "totalMs": 2595.106,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 15039,
+          "totalMs": 2070.714,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 15039,
+          "totalMs": 728.469,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 15039,
+          "totalMs": 39.899,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 45114,
+          "totalMs": 487.904,
+          "maxMs": 3.25
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 340,
+          "totalMs": 71.728,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 20,
+          "totalMs": 3.198,
+          "maxMs": 0.391
+        },
+        "snapshot.encode": {
+          "count": 11,
+          "totalMs": 1.701,
+          "maxMs": 0.336
+        },
+        "snapshot.plan": {
+          "count": 9,
+          "totalMs": 1.343,
+          "maxMs": 0.354
+        },
+        "snapshot.materialize": {
+          "count": 43322,
+          "totalMs": 1180.051,
+          "maxMs": 2.651
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:20.6622488Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 26187.682,
+      "emissions": 12,
+      "diagnosticMs": 154.312,
+      "syncClockReads": 6502648,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 32155,
+          "totalMs": 212.626,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 69424,
+          "totalMs": 485.185,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 589812,
+          "totalMs": 6120.147,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 585568,
+          "totalMs": 6903.21,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 39126,
+          "totalMs": 5371.045,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 39126,
+          "totalMs": 1907.269,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 39126,
+          "totalMs": 101.627,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 117375,
+          "totalMs": 1406.753,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 880,
+          "totalMs": 194.743,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 22,
+          "totalMs": 4.662,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 12,
+          "totalMs": 2.159,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 10,
+          "totalMs": 2.179,
+          "maxMs": 0.837
+        },
+        "snapshot.materialize": {
+          "count": 113026,
+          "totalMs": 3590.435,
+          "maxMs": 2.651
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:20.6632504Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 26187.804,
+      "emissions": 13,
+      "diagnosticMs": 154.426,
+      "syncClockReads": 6502648,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 204.686,
+          "lastMs": 204.686
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 32155,
+          "totalMs": 212.626,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 69424,
+          "totalMs": 485.185,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 589812,
+          "totalMs": 6120.147,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 585568,
+          "totalMs": 6903.21,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 39126,
+          "totalMs": 5371.045,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 39126,
+          "totalMs": 1907.269,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 39126,
+          "totalMs": 101.627,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 117375,
+          "totalMs": 1406.753,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 880,
+          "totalMs": 194.743,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 22,
+          "totalMs": 4.662,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 12,
+          "totalMs": 2.159,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 10,
+          "totalMs": 2.179,
+          "maxMs": 0.837
+        },
+        "snapshot.materialize": {
+          "count": 113026,
+          "totalMs": 3590.435,
+          "maxMs": 2.651
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:47.3338804Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 52859.095,
+      "emissions": 14,
+      "diagnosticMs": 296.257,
+      "syncClockReads": 12733388,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 62764,
+          "totalMs": 462.518,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 135616,
+          "totalMs": 941.769,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 1156433,
+          "totalMs": 12150.559,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 1148113,
+          "totalMs": 13706.344,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 76364,
+          "totalMs": 10494.454,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76364,
+          "totalMs": 3746.951,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76364,
+          "totalMs": 197.552,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229089,
+          "totalMs": 3020.44,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 1615,
+          "totalMs": 428.011,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 220573,
+          "totalMs": 8329.571,
+          "maxMs": 5.586
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:47.3348637Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 52859.22,
+      "emissions": 15,
+      "diagnosticMs": 296.374,
+      "syncClockReads": 12733388,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 62764,
+          "totalMs": 462.518,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 135616,
+          "totalMs": 941.769,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 1156433,
+          "totalMs": 12150.559,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 1148113,
+          "totalMs": 13706.344,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 76364,
+          "totalMs": 10494.454,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76364,
+          "totalMs": 3746.951,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76364,
+          "totalMs": 197.552,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229089,
+          "totalMs": 3020.44,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 1615,
+          "totalMs": 428.011,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 220573,
+          "totalMs": 8329.571,
+          "maxMs": 5.586
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:47.3427376Z",
+      "label": "mixed.prepare",
+      "state": "start",
+      "elapsedMs": 52868.413,
+      "emissions": 16,
+      "diagnosticMs": 296.466,
+      "syncClockReads": 12734616,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "driver.currentSnapshots": {
+          "count": 62770,
+          "totalMs": 462.519,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 135640,
+          "totalMs": 941.932,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 1156528,
+          "totalMs": 12151.524,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 1148208,
+          "totalMs": 13707.514,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 76373,
+          "totalMs": 10495.853,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76373,
+          "totalMs": 3747.415,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76373,
+          "totalMs": 197.576,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229116,
+          "totalMs": 3022.918,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 1615,
+          "totalMs": 428.011,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 220606,
+          "totalMs": 8330.963,
+          "maxMs": 5.586
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:47.3586016Z",
+      "label": "mixed.prepare",
+      "state": "finish",
+      "elapsedMs": 52884.247,
+      "emissions": 17,
+      "diagnosticMs": 296.593,
+      "syncClockReads": 12737624,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 15.835,
+          "lastMs": 15.835
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 10,
+          "totalMs": 2.378,
+          "maxMs": 0.328
+        },
+        "driver.currentSnapshots": {
+          "count": 62784,
+          "totalMs": 462.522,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 135672,
+          "totalMs": 942.143,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 1156797,
+          "totalMs": 12155.531,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 1148477,
+          "totalMs": 13712.161,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 76391,
+          "totalMs": 10498.505,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76391,
+          "totalMs": 3748.309,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76391,
+          "totalMs": 197.656,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229170,
+          "totalMs": 3023.549,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 1615,
+          "totalMs": 428.011,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 220656,
+          "totalMs": 8333.206,
+          "maxMs": 5.586
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:16:47.3696747Z",
+      "label": "mixed.produce",
+      "state": "start",
+      "elapsedMs": 52895.265,
+      "emissions": 18,
+      "diagnosticMs": 296.665,
+      "syncClockReads": 12738944,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 15.835,
+          "lastMs": 15.835
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "service.sameOwner": {
+          "count": 10,
+          "totalMs": 2.378,
+          "maxMs": 0.328
+        },
+        "driver.currentSnapshots": {
+          "count": 62795,
+          "totalMs": 465.53,
+          "maxMs": 3.327
+        },
+        "driver.currentSnapshot": {
+          "count": 135682,
+          "totalMs": 942.209,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 1156921,
+          "totalMs": 12160.128,
+          "maxMs": 7.041
+        },
+        "canonical.digest": {
+          "count": 1148601,
+          "totalMs": 13717.359,
+          "maxMs": 7.06
+        },
+        "sqlite.connect": {
+          "count": 76394,
+          "totalMs": 10498.991,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76394,
+          "totalMs": 3748.49,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76394,
+          "totalMs": 197.664,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229179,
+          "totalMs": 3023.653,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 0,
+          "totalMs": 0,
+          "maxMs": 0
+        },
+        "snapshot.clone": {
+          "count": 1625,
+          "totalMs": 430.88,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 220689,
+          "totalMs": 8333.801,
+          "maxMs": 5.586
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:17:30.9320152Z",
+      "label": "mixed.produce",
+      "state": "finish",
+      "elapsedMs": 96457.232,
+      "emissions": 19,
+      "diagnosticMs": 582.303,
+      "syncClockReads": 26421844,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 585.992,
+          "lastMs": 585.992
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 15.835,
+          "lastMs": 15.835
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 43561.955,
+          "lastMs": 43561.955
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328,
+          "maxMs": 2.344
+        },
+        "service.sameOwner": {
+          "count": 742,
+          "totalMs": 180.205,
+          "maxMs": 2.734
+        },
+        "driver.currentSnapshots": {
+          "count": 154494,
+          "totalMs": 11270.452,
+          "maxMs": 5.921
+        },
+        "driver.currentSnapshot": {
+          "count": 169226,
+          "totalMs": 1093.702,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 2630727,
+          "totalMs": 29264.975,
+          "maxMs": 8.702
+        },
+        "canonical.digest": {
+          "count": 2610791,
+          "totalMs": 32762.555,
+          "maxMs": 8.957
+        },
+        "sqlite.connect": {
+          "count": 76395,
+          "totalMs": 10499.177,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76395,
+          "totalMs": 3748.649,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76395,
+          "totalMs": 197.667,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229182,
+          "totalMs": 3023.71,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597,
+          "maxMs": 0.018
+        },
+        "snapshot.clone": {
+          "count": 1625,
+          "totalMs": 430.88,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 554174,
+          "totalMs": 20200,
+          "maxMs": 5.879
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:17:30.9460207Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 96471.291,
+      "emissions": 20,
+      "diagnosticMs": 582.465,
+      "syncClockReads": 26423592,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 44198.061,
+          "lastMs": 43612.069
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 15.835,
+          "lastMs": 15.835
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 43561.955,
+          "lastMs": 43561.955
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328,
+          "maxMs": 2.344
+        },
+        "service.sameOwner": {
+          "count": 742,
+          "totalMs": 180.205,
+          "maxMs": 2.734
+        },
+        "driver.currentSnapshots": {
+          "count": 154507,
+          "totalMs": 11273.343,
+          "maxMs": 5.921
+        },
+        "driver.currentSnapshot": {
+          "count": 169244,
+          "totalMs": 1093.828,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 2630885,
+          "totalMs": 29270.113,
+          "maxMs": 8.702
+        },
+        "canonical.digest": {
+          "count": 2610949,
+          "totalMs": 32768.418,
+          "maxMs": 8.957
+        },
+        "sqlite.connect": {
+          "count": 76401,
+          "totalMs": 10500.338,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76401,
+          "totalMs": 3749.039,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76401,
+          "totalMs": 197.69,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229200,
+          "totalMs": 3024.062,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597,
+          "maxMs": 0.018
+        },
+        "snapshot.clone": {
+          "count": 1635,
+          "totalMs": 433.549,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 554218,
+          "totalMs": 20201.057,
+          "maxMs": 5.879
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:17:30.9529538Z",
+      "label": "mixed.prepare",
+      "state": "start",
+      "elapsedMs": 96478.356,
+      "emissions": 21,
+      "diagnosticMs": 582.569,
+      "syncClockReads": 26424820,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 44198.061,
+          "lastMs": 43612.069
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 15.835,
+          "lastMs": 15.835
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 43561.955,
+          "lastMs": 43561.955
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328,
+          "maxMs": 2.344
+        },
+        "service.sameOwner": {
+          "count": 742,
+          "totalMs": 180.205,
+          "maxMs": 2.734
+        },
+        "driver.currentSnapshots": {
+          "count": 154513,
+          "totalMs": 11273.344,
+          "maxMs": 5.921
+        },
+        "driver.currentSnapshot": {
+          "count": 169268,
+          "totalMs": 1093.993,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 2630980,
+          "totalMs": 29270.984,
+          "maxMs": 8.702
+        },
+        "canonical.digest": {
+          "count": 2611044,
+          "totalMs": 32769.468,
+          "maxMs": 8.957
+        },
+        "sqlite.connect": {
+          "count": 76410,
+          "totalMs": 10501.714,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76410,
+          "totalMs": 3749.537,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76410,
+          "totalMs": 197.739,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229227,
+          "totalMs": 3024.505,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597,
+          "maxMs": 0.018
+        },
+        "snapshot.clone": {
+          "count": 1635,
+          "totalMs": 433.549,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 554251,
+          "totalMs": 20202.422,
+          "maxMs": 5.879
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:17:30.9698625Z",
+      "label": "mixed.prepare",
+      "state": "finish",
+      "elapsedMs": 96495.299,
+      "emissions": 22,
+      "diagnosticMs": 582.702,
+      "syncClockReads": 26427828,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 44198.061,
+          "lastMs": 43612.069
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32.776,
+          "lastMs": 16.941
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 43561.955,
+          "lastMs": 43561.955
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328,
+          "maxMs": 2.344
+        },
+        "service.sameOwner": {
+          "count": 752,
+          "totalMs": 182.702,
+          "maxMs": 2.734
+        },
+        "driver.currentSnapshots": {
+          "count": 154527,
+          "totalMs": 11273.346,
+          "maxMs": 5.921
+        },
+        "driver.currentSnapshot": {
+          "count": 169300,
+          "totalMs": 1094.217,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 2631249,
+          "totalMs": 29275.009,
+          "maxMs": 8.702
+        },
+        "canonical.digest": {
+          "count": 2611313,
+          "totalMs": 32774.111,
+          "maxMs": 8.957
+        },
+        "sqlite.connect": {
+          "count": 76428,
+          "totalMs": 10504.416,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76428,
+          "totalMs": 3750.497,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76428,
+          "totalMs": 197.792,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229281,
+          "totalMs": 3025.247,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597,
+          "maxMs": 0.018
+        },
+        "snapshot.clone": {
+          "count": 1635,
+          "totalMs": 433.549,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 554301,
+          "totalMs": 20206.612,
+          "maxMs": 5.879
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:17:30.9810757Z",
+      "label": "mixed.produce",
+      "state": "start",
+      "elapsedMs": 96506.503,
+      "emissions": 23,
+      "diagnosticMs": 582.777,
+      "syncClockReads": 26429148,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 44198.061,
+          "lastMs": 43612.069
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32.776,
+          "lastMs": 16.941
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 43561.955,
+          "lastMs": 43561.955
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 102,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 413,
+          "totalMs": 55.328,
+          "maxMs": 2.344
+        },
+        "service.sameOwner": {
+          "count": 752,
+          "totalMs": 182.702,
+          "maxMs": 2.734
+        },
+        "driver.currentSnapshots": {
+          "count": 154538,
+          "totalMs": 11276.184,
+          "maxMs": 5.921
+        },
+        "driver.currentSnapshot": {
+          "count": 169310,
+          "totalMs": 1094.286,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 2631373,
+          "totalMs": 29279.761,
+          "maxMs": 8.702
+        },
+        "canonical.digest": {
+          "count": 2611437,
+          "totalMs": 32779.5,
+          "maxMs": 8.957
+        },
+        "sqlite.connect": {
+          "count": 76431,
+          "totalMs": 10504.93,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76431,
+          "totalMs": 3750.679,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76431,
+          "totalMs": 197.802,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229290,
+          "totalMs": 3025.381,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 24850,
+          "totalMs": 1.597,
+          "maxMs": 0.018
+        },
+        "snapshot.clone": {
+          "count": 1645,
+          "totalMs": 436.211,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 554334,
+          "totalMs": 20207.283,
+          "maxMs": 5.879
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-20T05:17:39.5772380Z",
+      "label": "mixed.produce",
+      "state": "finish",
+      "elapsedMs": 105102.818,
+      "emissions": 24,
+      "diagnosticMs": 641.087,
+      "syncClockReads": 29190800,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 3493.886,
+          "lastMs": 3429.85
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 16433.297,
+          "lastMs": 16250.525
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 26875.93,
+          "lastMs": 26671.245
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 44198.061,
+          "lastMs": 43612.069
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32.776,
+          "lastMs": 16.941
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 52158.176,
+          "lastMs": 8596.221
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 123,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 2,
+          "accepted": 1
+        }
+      },
+      "synchronous": {
+        "root.live": {
+          "count": 500,
+          "totalMs": 67.586,
+          "maxMs": 2.344
+        },
+        "service.sameOwner": {
+          "count": 909,
+          "totalMs": 216.41,
+          "maxMs": 2.734
+        },
+        "driver.currentSnapshots": {
+          "count": 173026,
+          "totalMs": 13409.836,
+          "maxMs": 5.921
+        },
+        "driver.currentSnapshot": {
+          "count": 176102,
+          "totalMs": 1125.019,
+          "maxMs": 2.549
+        },
+        "canonical.bytes": {
+          "count": 2928863,
+          "totalMs": 32649.625,
+          "maxMs": 8.702
+        },
+        "canonical.digest": {
+          "count": 2906581,
+          "totalMs": 36539.668,
+          "maxMs": 8.957
+        },
+        "sqlite.connect": {
+          "count": 76432,
+          "totalMs": 10505.144,
+          "maxMs": 1.701
+        },
+        "sqlite.close": {
+          "count": 76432,
+          "totalMs": 3750.823,
+          "maxMs": 2.246
+        },
+        "sqlite.begin": {
+          "count": 76432,
+          "totalMs": 197.806,
+          "maxMs": 0.102
+        },
+        "sqlite.select.snapshot": {
+          "count": 229293,
+          "totalMs": 3025.435,
+          "maxMs": 6.213
+        },
+        "sqlite.select.skipped": {
+          "count": 29848,
+          "totalMs": 1.871,
+          "maxMs": 0.018
+        },
+        "snapshot.clone": {
+          "count": 1645,
+          "totalMs": 436.211,
+          "maxMs": 3.288
+        },
+        "snapshot.decode": {
+          "count": 26,
+          "totalMs": 5.864,
+          "maxMs": 0.887
+        },
+        "snapshot.encode": {
+          "count": 15,
+          "totalMs": 2.648,
+          "maxMs": 0.458
+        },
+        "snapshot.plan": {
+          "count": 11,
+          "totalMs": 3.156,
+          "maxMs": 0.977
+        },
+        "snapshot.materialize": {
+          "count": 621585,
+          "totalMs": 22549.286,
+          "maxMs": 5.879
+        }
+      }
+    }
+  ],
+  "relatedEvidence": {
+    "priorBoundaryRun": 44676526556,
+    "commit": "0d057c49b3cee561e3041c24c8c339db524a6d63",
+    "path": "docs/handoff/evidence/c17-mixed-boundaries-44676526556.json",
+    "blob": "4effe792e375d1fd5e383e65347a98dd003afc6a"
+  }
+}
