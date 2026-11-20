@@ -23,15 +23,18 @@ retains historical evidence and rationale; do not interpret it as current live s
 
 ## Failure budget — fast red, complete green
 
-The full Sucafina Bun suite and the SF browser unit directory use
-`--bail=5`, while the three installed Playwright journeys use
-`--max-failures=2`. **This stops only after a real failure.** A successful
-qualification still runs every selected test; a failed/incomplete selection
-never produces a passing receipt or `sf/verify`. This prevents ten
-consecutive 165-second failures from consuming a CI runner merely to repeat
-an already decisive red verdict. For diagnosis, run the named failing test
-with the Linux-only surgical runner. No timeout, permission or expectation
-has been relaxed.
+The Sucafina Bun suite (`CI-SF`) runs eight complete shards with **no
+`--bail`**: every shard consumes its entire manifest-selected file partition.
+The SF browser unit directory retains `--bail=5`, while the three installed
+Playwright journeys use `--max-failures=2`. Those failure limits stop only
+after a real browser failure. A successful qualification still runs every
+selected test; a failed/incomplete selection never produces a passing
+receipt or `sf/verify`. For diagnosis, run the named failing test with the
+Linux-only surgical runner. No timeout, permission or expectation has been
+relaxed.
+
+Measured job costs, shard planning and cache scope are documented in
+[`PERFORMANCE.md`](./PERFORMANCE.md).
 
 The Linux-only request selector regression runs in the independent preflight
 before product typechecks, and repository guards run even if product typechecks fail, so the quality
