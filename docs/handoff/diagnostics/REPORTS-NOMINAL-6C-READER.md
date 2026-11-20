@@ -63,13 +63,18 @@ environment and is never printed. Network failures are reduced to fixed
 messages. Each metadata/download request is bounded to 30 seconds; this is
 only the reader's transport limit and does not change any product-test budget.
 
-Only `playwright-runtime.json` is selected initially. Only its four installation
+Only `playwright-runtime.json` is selected initially. Its four scenario
+statuses, durations and source locations are always emitted as `SCENARIO`,
+before any HTML fallback. Detailed HTML metadata is retained separately; no
+invented cross-format equality assertion discards a difference. Only its four installation
 manifests and existing numeric timing/transport attachments are then read.
-If those result trees contain API steps for all four scenarios, the HTML
-report is not extracted. Otherwise the qualified embedded-ZIP fallback reads
+If those result trees contain API steps with source locations for all four
+scenarios, the HTML report is not extracted. Otherwise the qualified embedded-ZIP fallback reads
 only retained `index.html` and its result JSON. No trace, screenshot, Office
 document, preserved review body, C05 request/response payload or DOM snapshot
-is extracted. The parser retains its entry, byte and depth bounds.
+is extracted. The parser retains its entry, byte and depth bounds. The HTML fallback uses
+the actually observed step/title/location shape; it does not require the
+category/apiName fields absent from the qualified retained HTML reports.
 
 Output is limited to pinned provenance, scenario status/duration, sanitized
 step titles/error codes/API modes/file:line and step hierarchy, existing
@@ -78,6 +83,21 @@ boolean timing values. It does not print raw URLs, signed locations, headers,
 cookies, tokens, payloads, CLI log bodies or attachment bodies. Four actual
 installation manifests must match the original snapshot. No result is treated
 as a fresh product run.
+
+The displayed tree is the union of the qualified slow selection (duration at
+least 1000 ms or an error), the last 45 steps, all wait steps and all ancestors.
+Every retained error is selected even when its code is outside the sanitizer
+whitelist; only a failure boolean, never its raw message, is then printed.
+Original flat indices and parent indices preserve ancestry. `flatCount`,
+`selected` and `omitted` explicitly disclose the filtered step count. This
+selection changes only reader output, not product execution or elapsed budgets.
+
+Cold review found two concrete defects before executing this reader: the old
+qualified HTML log (job `136007724941`) has no category/apiName fields, and its
+RPT-01 contains 7781 valid steps. The unnecessary new 5000-step limit has been
+removed. The qualified archive-size and depth limits remain unchanged. The
+old scenario counts were 7781, 240, 213 and 4236; they are schema evidence,
+not counts or results attributed to the current nominal.
 
 ## Isolated workflow and pending gate
 

@@ -49,19 +49,34 @@ function archive(buffer, accepts) {
   }
   return entries
 }
-function flatten(value, depth = 0, output = []) {
+function flatten(value, depth = 0, output = [], parent = null) {
   assert.ok(depth < 80, "HTML step tree bounded")
   for (const step of value.steps ?? []) {
-    assert.ok(output.length < 5000, "Retained step inventory bounded")
     const raw = String(step.title ?? "")
-    output.push({ depth, title: safe(raw), category: step.category, apiName: step.apiName,
+    const index = output.length
+    output.push({ index, parent, depth, title: safe(raw), category: step.category, apiName: step.apiName,
       mode: /[?&]sf=([a-z-]+)/.exec(raw)?.[1], duration: step.duration, startTime: step.startTime,
-      error: codes(step.error), location: step.location ? {
+      failed: Boolean(step.error), error: codes(step.error), location: step.location ? {
         file: path.basename(step.location.file ?? ""), line: step.location.line, column: step.location.column,
       } : undefined })
-    flatten(step, depth + 1, output)
+    flatten(step, depth + 1, output, index)
   }
   return output
+}
+
+function selectedTree(flat) {
+  const selected = new Set()
+  for (const step of flat) {
+    const wait = /^Wait\b/i.test(step.title) || /(?:^|\.)waitFor/.test(step.apiName ?? "")
+    if (!(step.duration >= 1000 || step.failed || step.error.length || wait || step.index >= flat.length - 45)) continue
+    let index = step.index
+    while (index !== null && !selected.has(index)) {
+      selected.add(index)
+      index = flat[index].parent
+    }
+  }
+  const tree = flat.filter((step) => selected.has(step.index))
+  return { flatCount: flat.length, selected: tree.length, omitted: flat.length - tree.length, tree }
 }
 
 async function retainedArtifact() {
@@ -157,6 +172,8 @@ test("read the exact retained Reports nominal without executing product tests", 
   }
   for (const scenario of scenarios) {
     select(scenario, scenario.result)
+    emit("SCENARIO", { title: safe(scenario.title), location: scenario.location, status: scenario.result.status,
+      duration: scenario.result.duration, retry: scenario.result.retry ?? 0, errors: (scenario.result.errors ?? []).map(codes) })
     for (const attachment of scenario.result.attachments ?? []) {
       if (attachment.contentType !== "application/json") continue
       const transport = typeof attachment.name === "string" && attachment.name.startsWith("reports-") && attachment.name.endsWith("-transport")
@@ -173,9 +190,12 @@ test("read the exact retained Reports nominal without executing product tests", 
     }
   }
   assert.equal(installations, 4, "Four original installation manifests were verified")
-  const complete = () => detailed.size === 4 && [...detailed.values()].every((value) => value.tree.some((step) => step.category === "pw:api" || typeof step.apiName === "string"))
+  const located = (step) => typeof step.location?.file === "string" && step.location.file.length > 0 && Number.isInteger(step.location.line)
+  const primaryComplete = () => detailed.size === 4 && [...detailed.values()].every((value) =>
+    value.tree.some((step) => (step.category === "pw:api" || typeof step.apiName === "string") && located(step)))
   let htmlReports = 0
-  if (!complete()) {
+  if (!primaryComplete()) {
+    detailed.clear()
     const htmls = archive(bytes, (name) => path.basename(name) === "index.html")
     for (const entry of htmls) {
       const html = entry.bytes.toString("utf8")
@@ -199,8 +219,11 @@ test("read the exact retained Reports nominal without executing product tests", 
     }
     assert.equal(htmlReports, 1, "One retained HTML fallback report was inspected")
   }
-  assert.ok(complete(), "Four detailed scenario step trees were inspected")
-  for (const result of detailed.values()) emit("RESULT", result)
+  const complete = htmlReports
+    ? detailed.size === 4 && [...detailed.values()].every((value) => value.tree.length > 0 && value.tree.some(located))
+    : primaryComplete()
+  assert.ok(complete, "Four detailed scenario step trees with source locations were inspected")
+  for (const result of detailed.values()) emit("RESULT", { ...result, ...selectedTree(result.tree) })
   emit("SUMMARY", { originalRun, originalArtifact, snapshot, artifactDigest, inspected: detailed.size, installations,
     source: htmlReports ? "retained-html" : "runtime-json", tracesRead: 0, productTestsRun: 0 })
 })
