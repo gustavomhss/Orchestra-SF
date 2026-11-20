@@ -5,8 +5,8 @@
 - Estado: **IMPLEMENTED / PENDING_ACTIONS**. Código pronto para composição pela raiz; não é handoff complete nem prova de aceite.
 - Branch: `sf-continuation-ops`.
 - Base: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
-- Código final deste WP: `50a88887a9f8d6de5e6b4f0cb1ed99df408d9c16`.
-- Commits de código, na ordem: `c600d46533ba1eb3dee7e37c1afc69ce7431697c` (total numérico), `b757cd82a6e972e6b4c21c4562e91993e2716097` (builders e anexos), `50a88887a9f8d6de5e6b4f0cb1ed99df408d9c16` (helpers e ingresso).
+- Código final deste WP: `826ac96a747ba64af13e7860a850f3bae235656c`.
+- Commits de código, na ordem: `c600d46533ba1eb3dee7e37c1afc69ce7431697c` (total numérico), `b757cd82a6e972e6b4c21c4562e91993e2716097` (builders e anexos), `50a88887a9f8d6de5e6b4f0cb1ed99df408d9c16` (helpers e ingresso), `826ac96a747ba64af13e7860a850f3bae235656c` (pré-requisitos Requests mínimos, autorizados após revisão da integração).
 - Origem revisada: `finish-operations-20261119@ee565f567e11c27be68240841f6ebfbd49c9def1`, último código numérico `460706e14903bc821aa04ab903b2526ceb69e701`.
 - Somente GitHub API; nenhum shell, teste local, gate, PR ou merge foi executado por este WP.
 
@@ -26,6 +26,8 @@
 
 7. **Ingresso no host real da Sessão 1.** Runtime lê o manifest privado wp04, valida origem loopback4174, mount /sucafina, três atores distintos, IDs emitidos, discovery e contexto original. Usa selectSfProfile da Sessão 1 e todas as navegações dos seis helpers passam por chapterURL absoluto com o triplet server/project/installation real. Query year/version permanece. Nenhuma configuração, grant, cookie, session, storage ou credencial é sintetizada.
 
+8. **Pré-requisitos Requests confirmados pela integração.** Em `requests/page.tsx`, PR e PO são materializados uma vez com structuredClone(unwrap), usados consistentemente no digest e nos cinco envios. Todos os fences/CAS existentes continuam e a igualdade do review após hash é exigida explicitamente. `requests/model.ts` altera somente prFromRecord/poFromRecord para omitir undefined; `requests/forms.tsx` altera somente os dois inputs estAmount/estAnnual para number/null. O bloco de conflito/foco, labels, projeção adicional de suppliers e anchor C02 da branch divergente não foram portados.
+
 ## Evidência anterior e limites
 
 - [Operations8 run44625548030](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44625548030), snapshot `e30d34135eb42381621039dd0afbc797bb30b3eb`: **1 passed / 4 failed**. OP-PROC-01 passou; PR/approval200 avançaram; sourcing parou antes do POST; Supplier create200 passou e upload não saiu; Imports perdeu o corpo POSTVersions200.
@@ -40,10 +42,10 @@ A raiz deve compor o candidato congelado antes de disparar o gate:
 
 1. **Files #393**: `packages/client/src/sucafina/bindings.ts` blob `dcf4229af5745da305906a2c1f7ce42427fd62bd`, na PR head `d8938c31cd818648cfc78828eb32bcb68c04165e`. Não duplicar o registro dos codecs.
 2. **Sessão 1**: host `wp04/host.ts` de `82c3047754cb5ca9b04a5ccdb22c9d0c510295c4` (WebUi real4174 e IDs no manifest); helper `native/select-profile.ts` de `1a8b2b1cc249d38f35a126c45d414f9dbdc93127`. O helper de perfil não existe na base isolada deste WP.
-3. **Sessão 1, código ativo**: preservar Requests/page com snapshot/números, os reparos de Settings, C02 source ref/digest, request selector e demais deltas da branch sf-ui-c02. Sourcing/index e Suppliers/index têm mudanças aditivas dos dois WPs; **reconciliar os diffs, não substituir esses arquivos pelo blob inteiro de nenhum lado**.
+3. **Sessão 1, código ativo**: preservar os reparos de Settings, C02 source ref/digest, request selector e demais deltas da branch sf-ui-c02. Este WP fornece os pré-requisitos mínimos de Requests/page, model e forms em 826ac96. Requests/page, Sourcing/index e Suppliers/index têm mudanças aditivas dos dois WPs; **reconciliar os diffs, não substituir esses arquivos pelo blob inteiro de nenhum lado**.
 4. **Configuração compartilhada**: a raiz seleciona Operations sozinho com e2e/playwright.production.config.ts, host wp04, bundle real, ClamD real e `SF_OPERATIONS_CLAMD_PORT`. Não passar PLAYWRIGHT_BASE_URL pelo request nem ampliar a allowlist. As URLs absolutas vêm do manifest. Não reutilizar matrículas entre WP04 e Operations em um mesmo gate.
 5. **Artefatos autenticados**: configuração de integração deve impedir trace/video com enrollment/credenciais. Este WP não lê password de Daemon nem altera a configuração compartilhada.
-6. `operations-support/installation.ts`, C12, suites.json, runtime/application.ts e paths reservados de Requests/WP04 não foram editados por este WP. Preservar as correções de C12 já presentes em f7dd58.
+6. `operations-support/installation.ts`, C12, suites.json, runtime/application.ts e WP04 não foram editados por este WP. Requests recebeu somente os três deltas explicitamente autorizados pela raiz. Preservar as correções de C12 já presentes em f7dd58.
 
 ## Mapa de blobs
 
@@ -57,6 +59,10 @@ A raiz deve compor o candidato congelado antes de disparar o gate:
 | `packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx` | `20c8c5d00058387c2590b57e8c58870dd69f0417` |
 | `packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/model.ts` | `6536b7cf8bcb72b09a87a922f0168d38a9098017` |
 | `packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/bound-assets.tsx` | `fcd382816615d1aeaf67585805903863fadb7e58` |
+
+| `packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/forms.tsx` | `0b42aa47b979443e796930459dace9485df9f960` |
+| `packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/model.ts` | `5907aee669ae44367cc61aa028ca135610e20dd3` |
+| `packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx` | `e4ebad6bf0bb1a8ece7eeabe29b723d97d16b70f` |
 
 ### Helpers
 
@@ -79,13 +85,13 @@ Este WP não agenda nem dispara o gate. Se houver falha, guardar a primeira asse
 ## O que permanece aberto / unbound
 
 - Qualificação Actions da composição: pendente, portanto estado ainda não complete.
-- Conflitos aditivos de Sourcing/Suppliers com sf-ui-c02: responsabilidade da integração.
+- Conflitos aditivos de Requests/page, Sourcing e Suppliers com sf-ui-c02: responsabilidade da integração.
 - Histórico ainda não requalificado: `operations.spec.ts:18`, `:23`, `:28`, `:33` (quatro cenários Operations8); esses pontos descrevem a evidência anterior, não uma execução deste SHA.
 - O comportamento posterior a upload/import deve ser aceito pelo gate completo, sem substituir artefatos, APIs ou permissões.
 
 ## Como retomar
 
-1. Compor os blobs e dependências acima, resolvendo os dois paths sobrepostos com a Sessão 1.
+1. Compor os blobs e dependências acima, resolvendo os paths sobrepostos com a Sessão 1.
 2. Congelar o SHA do snapshot e executar o único gate Operations completo autorizado pela raiz.
 3. Registrar run id, jobs, primeira falha file:line ou 5/5, artefatos e SHA real. Atualizar este handoff para complete somente após sucesso correspondente.
 4. A raiz continua com ordem de merges, guards, sf-ci único final, baseline real e pacote. Este WP não emite GO, deploy ou SF_ORCHESTRA_WEB_PACKAGE_VERIFIED.
