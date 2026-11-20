@@ -9,6 +9,7 @@ import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
+import { observeNativeResponses } from "./fixture/native-response-capture.ts"
 import { decodeSnapshot } from "../runtime/local-store.ts"
 
 // Independent original page identities mapped to the frozen native paths.
@@ -70,6 +71,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
   let fixture: Awaited<ReturnType<typeof localBrowser>> | undefined
   let stage = "open owned, isolated native browser fixture"
   let failure: unknown
+  let disposeResponseCapture: (() => void) | undefined
   const failures: string[] = []
   const step = <T>(name: string, operation: () => T | Promise<T>) => {
     stage = name
@@ -82,6 +84,8 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
     page.setDefaultTimeout(10_000)
     page.setDefaultNavigationTimeout(10_000)
     page.on("pageerror", (error) => { failures.push(error.message) })
+    const responses = await observeNativeResponses(page, origin)
+    disposeResponseCapture = responses.dispose
     await step("prepare screenshot directory", () => mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true }))
     // Preserve the original durable setup command in this private installation.
     const plan = await step("create planner version through durable command", () => page.request.post(origin + "/sucafina/planner", {
@@ -115,6 +119,10 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       const url = new URL(response.url())
       return response.request().method() === "GET" && url.origin === origin && url.pathname === "/sucafina/api/ui/context"
     }
+    const initialCopy = responses.begin([
+      { label: "original context", method: "GET", pathname: "/sucafina/api/ui/context" },
+      { label: "CAP01 initial page", method: "GET", pathname: "/sucafina/api/ui/pages/CAP01" },
+    ])
     const [contextResponse, executiveResponse, documentResponse] = await step("open native Executive and original context", () => Promise.all([
       page.waitForResponse(nativeContext, { timeout: 10_000 }),
       page.waitForResponse((response) => nativePage(response, "CAP01"), { timeout: 10_000 }),
@@ -122,7 +130,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
     ]))
     expect(documentResponse?.status()).toBe(200)
     expect(contextResponse.status()).toBe(200)
-    const context = Schema.decodeUnknownSync(SfContextResult)(await step("decode original context", () => contextResponse.json()))
+    const context = Schema.decodeUnknownSync(SfContextResult)(await step("decode original context", () => initialCopy.json(contextResponse)))
     expect(context.status).toBe("ok")
     if (context.status !== "ok") throw new Error("Visual journey has no original admitted context")
     expect(context.value.authMode).toBe("local-operator")
@@ -154,12 +162,12 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
         ["server", origin],
       ])
     }
-    const verifySource = async (response: Response, cap: string) => {
+    const verifySource = async (response: Response, cap: string, read: () => Promise<unknown>) => {
       expect(response.status()).toBe(200)
       const operation = Schema.decodeUnknownSync(SfOperationId)("domain.page." + cap)
       const codec = SfNativeOperationBindings[operation]
       if (!codec) throw new Error("Missing original native page codec: " + cap)
-      const decoded = codec.decodeOutput(await step(cap + ": decode original page response", () => response.json()))
+      const decoded = codec.decodeOutput(await step(cap + ": decode original page response", read))
       expect(decoded.status).toBe("ok")
       if (decoded.status !== "ok") throw new Error("Original source violated its codec: " + cap)
       expect(decoded.value).toMatchObject({ status: "ok", context: context.value.stamp, value: { capabilityId: cap } })
@@ -171,8 +179,9 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       await expect(host).toHaveAttribute("data-sf-view-state", "ready")
       await expect(page.locator('[data-sf-state="loading"]')).toHaveCount(0)
     }
-    await verifySource(executiveResponse, "CAP01")
+    await verifySource(executiveResponse, "CAP01", () => initialCopy.json(executiveResponse))
     await step("Executive initial state", ready)
+    initialCopy.finish()
     await step("Executive initial screenshot", () => page.screenshot({ path: path.join(import.meta.dir, "artifacts", "visual-dashboard-desktop.png"), fullPage: true, timeout: 10_000 }))
     const financial = page.locator(".sf-u02-financial-metrics [data-sf-metric]")
     expect(await financial.count()).toBe(3)
@@ -199,13 +208,17 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
         const entry = chapter.chapter + " at " + width + "px"
         console.info("SF native visual layout phase: " + entry)
         const initial = chapter.pages[0]!
+        const entryCopy = responses.begin([
+          { label: entry, method: "GET", pathname: "/sucafina/api/ui/pages/" + initial.cap },
+        ])
         const [source, documentResponse] = await step(entry + ": navigate", () => Promise.all([
           page.waitForResponse((response) => nativePage(response, initial.cap), { timeout: 10_000 }),
           page.goto(origin + initial.path),
         ]))
         expect(documentResponse?.status()).toBe(200)
-        await verifySource(source, initial.cap)
+        await verifySource(source, initial.cap, () => entryCopy.json(source))
         await step(entry + ": ready", ready)
+        entryCopy.finish()
         const navigation = page.locator('[data-sf-source-navigation="' + chapter.chapter + '"]')
         const hrefs = await step(entry + ": read admitted navigation", () => navigation.locator("a").evaluateAll((links) =>
           links.map((link) => ({ cap: link.getAttribute("data-sf-capability"), href: link.getAttribute("href")!, label: link.textContent?.trim() }))))
@@ -229,11 +242,14 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
         // each width, and every transition mounts a different source page.
         for (const target of [...chapter.pages.slice(1), initial]) {
           const route = target.cap + " " + target.page + " at " + width + "px"
+          const routeCopy = responses.begin([
+            { label: route, method: "GET", pathname: "/sucafina/api/ui/pages/" + target.cap },
+          ])
           const [response] = await step(route + ": follow real F01 link", () => Promise.all([
             page.waitForResponse((response) => nativePage(response, target.cap), { timeout: 10_000 }),
             navigation.locator('a[data-sf-capability="' + target.cap + '"]').click(),
           ]))
-          await verifySource(response, target.cap)
+          await verifySource(response, target.cap, () => routeCopy.json(response))
           await step(route + ": current URL", () => page.waitForURL((url) => url.pathname === target.path))
           verifyOwnerHref(page.url(), target.path)
           // CAP25 intentionally contains the native queue Dashboard and the
@@ -241,6 +257,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
           await step(route + ": visible page identity", () =>
             expect(page.locator("h1")).toHaveText(target.cap === "CAP25" ? ["Dashboard", "Requests"] : [target.page]))
           await step(route + ": ready", ready)
+          routeCopy.finish()
           expect(await step(route + ": document width", () => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1))).toBe(true)
           const charts = await step(route + ": chart bounds", () => page.locator("figure svg, .sf-chart-visual svg, svg[role=img]").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height)))
           expect(charts.every((height) => height <= 241)).toBe(true)
@@ -259,16 +276,20 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
     }
     expect(visited).toHaveLength(140)
     await step("revoke the real browser session", () => page.context().clearCookies())
+    const revokedCopy = responses.begin([
+      { label: "revoked context", method: "GET", pathname: "/sucafina/api/ui/context" },
+    ])
     const [revoked] = await step("reread authority after revocation", () => Promise.all([
       page.waitForResponse(nativeContext, { timeout: 10_000 }),
       page.getByRole("button", { name: "Refresh access", exact: true }).click(),
     ]))
     expect(revoked.status()).toBe(401)
-    expect(Schema.decodeUnknownSync(SfContextResult)(await step("decode revoked context", () => revoked.json())))
+    expect(Schema.decodeUnknownSync(SfContextResult)(await step("decode revoked context", () => revokedCopy.json(revoked))))
       .toEqual({ status: "unauthenticated" })
     await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-provider-state", "unauthenticated")
     await expect(page.locator("[data-sf-source-navigation]")).toHaveCount(0)
     await expect(page.locator('[data-sf-frame="page"]')).toHaveCount(0)
+    revokedCopy.finish()
     expect(failures).toEqual([])
     expect(fixture.errors).toEqual([])
   } catch (error) {
@@ -276,6 +297,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
     console.error("SF visual layout failed at: " + stage)
     throw error
   } finally {
+    disposeResponseCapture?.()
     try { await fixture?.dispose() }
     catch (error) { throw new AggregateError(failure ? [failure, error] : [error], "Visual layout assertion/setup and cleanup failures") }
   }
