@@ -134,8 +134,9 @@ test("a captured fiber context is useless after its writer has finished", async 
   let captured: Context.Context<never> | undefined
   await Effect.runPromise(f.generation.withWriter(1, Effect.withFiber((fiber) => Effect.sync(() => { captured = fiber.context }))))
   if (!captured) throw new Error("Writer context was not captured")
-  expect(AuthorityGeneration.writerFor(captured, f.storage, 1)).toBeUndefined()
-  expect(() => f.guarded("INSERT INTO protected_item VALUES ('late', 1)", captured,
+  const completedContext = captured
+  expect(AuthorityGeneration.writerFor(completedContext, f.storage, 1)).toBeUndefined()
+  expect(() => f.guarded("INSERT INTO protected_item VALUES ('late', 1)", completedContext,
     () => f.business.all("INSERT INTO protected_item VALUES ('late', 1)"))).toThrow("sf-authority-writer-required")
 })
 
