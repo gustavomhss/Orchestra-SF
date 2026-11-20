@@ -4,6 +4,7 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { withSfAnalysisHistory } from "../../../product/interface/analysis-history-bootstrap.ts"
+import { handleSfAnalysis } from "../../../product/interface/analysis-http.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
 
@@ -129,5 +130,30 @@ test("rendering failures still release the private history lease", async () => {
   const f = await fixture()
   await expect(withSfAnalysisHistory({ ...f.input, render: async () => { throw new Error("render failed") } })).rejects.toThrow("render failed")
   expect(await f.ui.revalidate(f.contexts[0]!)).toBe(false)
+  f.ui.finish(f.parent)
+})
+
+test("history list rejects invalid case identities and versions before admission or port access", async () => {
+  const f = await fixture()
+  const origin = new URL(f.request.url).origin
+  const invalid = [
+    { ...f.caseRef, id: "" }, { ...f.caseRef, id: "   " },
+    { ...f.caseRef, incarnation: "" }, { ...f.caseRef, incarnation: "\t" },
+    { ...f.caseRef, version: 0 }, { ...f.caseRef, version: -1 },
+    { ...f.caseRef, version: 1.5 }, { ...f.caseRef, version: Number.MAX_SAFE_INTEGER + 1 },
+    { ...f.caseRef, version: "2" }, { ...f.caseRef, extra: "not-admitted" },
+    { id: f.caseRef.id, incarnation: f.caseRef.incarnation }, [],
+  ]
+  for (const caseRef of invalid) {
+    const request = new Request(origin + "/sucafina/dashboard?sf=workbench-analysis", { method: "POST",
+      headers: { origin, "content-type": "application/json", "idempotency-key": randomUUID() },
+      body: JSON.stringify({ action: "list", caseRef }),
+    })
+    const response = await handleSfAnalysis(request, origin, { ...f.input.runtime, human: f.human, models: async () => [] })
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ status: "invalid" })
+  }
+  expect(f.state.lists).toBe(0)
+  expect(f.contexts).toHaveLength(0)
   f.ui.finish(f.parent)
 })

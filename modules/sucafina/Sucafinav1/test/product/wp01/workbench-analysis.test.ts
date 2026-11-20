@@ -8,6 +8,9 @@ import { Context, Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../../../../../../apps/cli/src/host.ts"
 import { createSfHostRuntime } from "../../../../../../apps/cli/src/sucafina-product/host-context.ts"
+import { createSfAnalysisHttp } from "../../../../../../apps/cli/src/sucafina-product/analysis-http.ts"
+import { sfUiCommandIdentity } from "../../../../../../apps/cli/src/sucafina-product/command-identity.ts"
+import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
@@ -43,7 +46,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const localAuth = await identity?.handle(request)
     if (localAuth) return localAuth
     if (new URL(request.url).pathname.startsWith("/api/")) return web?.handler(request, Context.makeUnsafe<unknown>(new Map())) ?? new Response(null, { status: 503 })
-    return await workbench?.(request, "dashboard") ?? new Response(null, { status: 404 })
+    return await runtime?.services?.()?.productHttp?.(request, "dashboard") ?? await workbench?.(request, "dashboard") ?? new Response(null, { status: 404 })
   } })
   const origin = server.url.origin
   identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
@@ -54,7 +57,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     runtime = await createSfHostRuntime({ installationId, directory, sourceRoot: path.resolve(import.meta.dir, "../../../product/ai"), origin,
       mount: "/sucafina", persistence, authenticate: identity.authenticate,
-      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.start", "analysis.read", "analysis.cancel"] }],
+      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
       environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }) })
     workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime?.services?.() })
     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
@@ -74,6 +77,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
 
     const services = runtime.services?.()
     if (!services) throw new Error("host services unavailable after host startup")
+    const realAnalyses = services.analyses; const realInputs = services.analysisInputs
+    if (!realAnalyses || !realInputs) throw new Error("real analysis producer ports unavailable")
     expect(services.selected).toHaveLength(5)
     for (const selected of services.selected) {
       expect(selected.skills.length).toBeGreaterThan(0)
@@ -139,7 +144,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     // It must bootstrap its actual empty history, with no fabricated default value.
     expect(historyHtml).toContain('data-initial-history="{&quot;status&quot;:&quot;ok&quot;,&quot;value&quot;:[]}"')
     expect(historyHtml).toContain("No analyses yet.")
-    expect((await fetch(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { headers: { cookie: cookie ?? "" } })).status).toBe(405)
+    expect((await fetch(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { headers: { cookie: cookie ?? "", origin } })).status).toBe(405)
     const intentRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
     const intentSkill = intentRuntime?.skills.find((skill) => skill.id === "sf-enquadrar-decisao")
     if (!intentRuntime || !intentSkill) throw new Error("intent skill must be registered")
@@ -148,6 +153,25 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       manifestDigest: intentRuntime.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: intentSkill.allowedOperations,
       objective: currentCase.objective }
     const intentPrepare = { action: "prepare", input: { request: intentRequest, selection: {} } }
+    // A separately restricted authority uses this same real host identity,
+    // authenticator and SQLite store; a case grant never implies prepare access.
+    const withoutPrepare = createSfProductAuthority({ identity: runtime.identity, installationId, origin, policyVersion: "sf-product-v1",
+      persistence, authenticate: identity.authenticate, environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }),
+      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"],
+        humanActions: ["analysis.start", "analysis.read", "analysis.cancel"] }],
+      createId: randomUUID, now: Date.now,
+      commandIdentity: (request, operation) => sfUiCommandIdentity(request, operation, { origin, mount: "/sucafina", readOperations: new Map(), createId: randomUUID }),
+      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
+      providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
+    })
+    const deniedRequest = new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, { method: "POST",
+      headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(intentPrepare) })
+    expect((await withoutPrepare.readContextAdmission(deniedRequest)).status).toBe("ok")
+    expect((await withoutPrepare.human.admit(deniedRequest, "analysis.prepare", intentPrepare.input)).status).toBe("denied")
+    const deniedHttp = createSfAnalysisHttp({ origin, mount: "/sucafina", runtime: () => ({
+      human: withoutPrepare.human, selected: services.selected, models: services.models, inputs: realInputs, start: realAnalyses.start,
+    }) })
+    expect((await deniedHttp(deniedRequest, "dashboard"))?.status).toBe(403)
     const framed = await post(intentPrepare)
     expect(framed.status).toBe(200)
     expect(await framed.json()).toEqual({ status: "ok", value: { intentText: currentCase.objective, case: intentRequest.caseRef,
@@ -190,9 +214,14 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     // Exercise the optional boundary with real authority and an intentionally invalid producer payload.
     // This checks schema/selection rejection; it is not a native analysis or producer witness.
     let prepareCalls = 0
-    const boundary = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services,
-      analysisInputs: { prepare: async () => { prepareCalls++; return { status: "ok" as const, value: {} } } },
+    const analyses = services.analyses
+    if (!analyses) throw new Error("real analysis ports unavailable")
+    const invalidInputs = { prepare: async () => { prepareCalls++; return { status: "ok" as const, value: {} } } }
+    const prepareBoundary = createSfAnalysisHttp({ origin, mount: "/sucafina", runtime: () => ({
+      human: services.human, selected: services.selected, models: services.models, inputs: invalidInputs, start: analyses.start,
     }) })
+    const historyBoundary = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, analysisInputs: invalidInputs }) })
+    const boundary = async (request: Request, surface: string) => await prepareBoundary(request, surface) ?? await historyBoundary(request, surface)
     const boundaryPost = (body: unknown) => boundary(new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, {
       method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(body),
     }), "dashboard")
@@ -379,12 +408,22 @@ test("Reviewer consumer rejects a supplied comparison, evidence or nonreviewer p
   expect(f.state.authorReads).toBe(0)
 })
 
-test("analysis output returns a denial when access changes during optional review discovery", async () => {
+test("analysis output returns a denial when access changes during the awaited output read", async () => {
   const f = await reviewConsumerFixture()
-  // Only the HTTP consumer's declared read/model methods are exercised here.
-  // Neither this adapter fixture nor its fake model catalog executes a native run.
-  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, models: async () => { f.state.allowed = false; return [] } }
+  const analyses = f.services.analyses
+  if (!analyses) throw new Error("consumer fixture output port unavailable")
+  const mutation = { applied: false }
+  // Invoke the fixture's original authorized port, then revoke at the actual
+  // awaited boundary. This component fixture does not execute a native run.
+  const runtime: Parameters<typeof handleSfAnalysis>[2] = { ...f.services, models: async () => [], analyses: { ...analyses,
+    output: async (context, runRef) => {
+      const result = await analyses.output(context, runRef)
+      f.state.allowed = false; mutation.applied = true
+      return result
+    },
+  } }
   const response = await handleSfAnalysis(f.request({ action: "output", runRef: f.input.selection.authorAnalysis.runRef }), f.origin, runtime)
+  expect(mutation.applied).toBe(true)
   expect(response.status).toBe(403)
   expect(await response.json()).toEqual({ status: "denied" })
   expect(f.state.readFinishes).toBe(f.state.readAdmissions)
