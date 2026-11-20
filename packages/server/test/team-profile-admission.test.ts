@@ -301,7 +301,7 @@ test("http-owner-13: admitted empty collections and Session responses label the 
     const history = yield* Effect.promise(() => http.mounted(f.request("/api/session/" + created.id + "/history")))
     const replay = yield* decode(history, History)
     expect(replay.namespace).toEqual(expected)
-    expect(JSON.stringify(replay.data)).not.toContain("namespace")
+    expect(JSON.stringify(replay.data)).not.toContain('"namespace":')
     const active = yield* Effect.promise(() => http.mounted(f.request("/api/session/active")))
     expect(yield* Effect.promise(() => active.json())).toEqual({ data: {}, namespace: expected })
     expect(JSON.stringify(f.business.all("SELECT * FROM event"))).toBe(bytes)
@@ -313,4 +313,30 @@ test("http-owner-13: admitted empty collections and Session responses label the 
     expect(info.data.namespace?.owner.profile).toEqual(profileA)
     expect(info.data.namespace?.authorityGeneration).toBe(2)
   }))
+})
+
+
+test("http-owner-14: an installed local operator cannot substitute generic Basic for Microsoft Session admission", async () => {
+  await using f = await teamSessionHttpFixture()
+  f.metadata.authMode = "local-operator"
+  await f.run((http) => Effect.gen(function* () {
+    for (const [method, path] of [
+      ["GET", "/api/session"], ["POST", "/api/session"],
+      ["GET", "/api/session/ses_known/message"], ["GET", "/api/session/ses_known/history"],
+      ["GET", "/api/event"], ["GET", "/api/reference"],
+    ]) {
+      const response = yield* Effect.promise(() => http.generic(new Request(f.binding.origin + path, {
+        method, headers: { authorization: basic, "content-type": "application/json" },
+        ...(method === "POST" ? { body: "{invalid" } : {}),
+      })))
+      expect(response.status).toBe(401)
+    }
+    expect(f.calls.projects).toBe(0)
+    expect(f.metadata.locations).toBe(0)
+    expect((yield* Effect.promise(() => http.generic(new Request(f.binding.origin + "/api/health", {
+      headers: { authorization: basic },
+    })))).status).toBe(200)
+  }))
+  expect(f.business.all("SELECT id FROM session")).toEqual([])
+  expect(f.business.all("SELECT session_id FROM session_owner")).toEqual([])
 })

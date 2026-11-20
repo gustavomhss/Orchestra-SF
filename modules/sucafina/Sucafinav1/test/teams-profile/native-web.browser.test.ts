@@ -115,7 +115,13 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       const reply = page.waitForResponse((response) => response.url() === url && response.request().isNavigationRequest())
       const blocked = page.waitForEvent("requestfailed", { predicate: (request) =>
         request.isNavigationRequest() && request.redirectedFrom()?.url() === url })
-      const [movement, response, failed] = await Promise.allSettled([navigate(), reply, blocked])
+      // requestfailed precedes Chromium committing its offline error document.
+      // Wait for that main-frame commit so a late error navigation cannot replace
+      // the next independently routed OAuth hop or its successfully loaded UI.
+      const committed = page.waitForEvent("framenavigated", { predicate: (frame) => frame === page.mainFrame() })
+      const [movement, response, failed, frame] = await Promise.allSettled([navigate(), reply, blocked, committed])
+      if (frame.status !== "fulfilled") throw new Error("The blocked redirect did not finish its main-frame navigation")
+      await page.waitForLoadState("domcontentloaded")
       if (response.status !== "fulfilled" || failed.status !== "fulfilled")
         throw new Error("The isolated browser did not observe the expected redirect")
       if (movement.status === "rejected" && !String(movement.reason).includes("net::ERR_INTERNET_DISCONNECTED"))

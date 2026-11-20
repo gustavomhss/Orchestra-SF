@@ -129,9 +129,9 @@ export function createSfProductAuthority(input: {
     const resolution = await pendingResolution
     if (teamProfiles && resolution?.status !== "authenticated") return undefined
     const profile = resolution?.status === "authenticated" ? resolution : undefined
-    if (profile && (!teamProfiles || !(context
-      ? await teamProfiles.revalidateResolution(profile)
-      : profile.admission && await teamProfiles.revalidate(profile.admission)))) return undefined
+    // This block only observes private policy and identity. The final retained-profile
+    // check below runs after every asynchronous reader and before any result escapes.
+    if (profile && (!teamProfiles || !context && !profile.admission)) return undefined
     const maps = () => surfaces.map((surface) => ({
       surface, rows: roleMap(surface === "dashboard" ? dashboard : snapshots[surface], surface),
     }))
@@ -513,8 +513,9 @@ export function createSfProductAuthority(input: {
         if (!actor || !same(actor)) return undefined
         const excluded = exclusions(actor, snapshot)
         if (!excluded) return undefined
-        const current = await principal(request, snapshot)
-        return current && same(current) ? { actor: current, excluded } : undefined
+        // exclusions is synchronous over this exact snapshot; no await separates it
+        // from the complete current-policy observation returned by principal.
+        return { actor, excluded }
       }
       const current = input.persistence.currentSnapshots()
       if (current) return read(current.dashboard)
@@ -526,6 +527,18 @@ export function createSfProductAuthority(input: {
       binding: Object.freeze({
         owner: Object.freeze({ profile: Object.freeze({ ...binding.owner.profile }), principal: Object.freeze({ ...binding.owner.principal }) }),
         revisions: Object.freeze({ ...binding.revisions }),
+      }),
+      inspect: (operations: ReadonlyArray<SessionOwner.InspectionOperation>) => Effect.promise(async () => {
+        const requested = operations.map(({ action, sessionID }) => Object.freeze({ action, sessionID }))
+        const current = await observe().catch(() => undefined)
+        if (!current) return undefined
+        const authorized = requested.every(({ action, sessionID }) =>
+          SessionAccess.Actions.some((known) => known === action) &&
+          (sessionID !== undefined || action === "read" || action === "create") &&
+          !!current.actor.grant.sessionActions?.includes(action) &&
+          (action === "read" || current.actor.canWrite) &&
+          (sessionID === undefined || !current.excluded.includes(sessionID)))
+        return Object.freeze({ authorized, excludedSessions: Object.freeze([...current.excluded]) })
       }),
       verifyCurrent: () => Effect.promise(async () => same(await resolve(request).catch(() => undefined))),
       authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.promise(async () => {

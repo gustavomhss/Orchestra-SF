@@ -28,16 +28,19 @@ type Http = Readonly<{
 }>
 
 /** Actual OIDC, current policy, owner SQL and production handlers over one AppNodeBuilder graph. */
-export async function teamSessionHttpFixture(input: Omit<NonNullable<Parameters<typeof teamSessionFixture>[0]>, "extraNodes"> = {}) {
+export async function teamSessionHttpFixture(
+  input: Omit<NonNullable<Parameters<typeof teamSessionFixture>[0]>, "extraNodes"> = {},
+  transport: { genericPassword?: string | null } = {},
+) {
   const f = await teamSessionFixture({ ...input, extraNodes: [applicationServices] })
-  const metadata: { mode: "ready" | "missing" | "failed"; locations: number } = { mode: "ready", locations: 0 }
+  const metadata: { mode: "ready" | "missing" | "failed"; authMode: "microsoft" | "local-operator"; locations: number } = { mode: "ready", authMode: "microsoft", locations: 0 }
   const observations: { grants: number; calls: Array<{ path: string; milliseconds: number; grants: number; graph: number }> } = { grants: 0, calls: [] }
   f.productHooks.beforeGrants = async () => { observations.grants++ }
   const source: SfTrustedInstallationSource = {
     current: async () => {
       if (metadata.mode === "failed") throw new Error("Deliberately unavailable installed metadata")
       if (metadata.mode === "missing") return undefined
-      return { publicOrigin: f.binding.origin, mount: f.config.mount, authMode: "microsoft",
+      return { publicOrigin: f.binding.origin, mount: f.config.mount, authMode: metadata.authMode,
         tenantId: profileA.tenantId, identity: () => f.technical }
     },
     forAdmittedLocation: async () => { metadata.locations++; throw new Error("No metadata discovery by Location") },
@@ -61,7 +64,7 @@ export async function teamSessionHttpFixture(input: Omit<NonNullable<Parameters<
       })
       const generic = yield* Effect.acquireRelease(
         Effect.sync(() => HttpRouter.toWebHandler(createApiRoutesWithServices({
-          password: "installed-test-secret", sucafinaInstallations: source,
+          password: transport.genericPassword === null ? undefined : transport.genericPassword ?? "installed-test-secret", sucafinaInstallations: source,
         }).pipe(Layer.provide(Layer.succeedContext(context)), Layer.provide(HttpServer.layerServices)), { disableLogger: true })),
         (value) => Effect.promise(() => value.dispose()),
       )
