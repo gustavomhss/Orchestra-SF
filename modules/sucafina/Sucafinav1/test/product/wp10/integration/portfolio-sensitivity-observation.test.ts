@@ -182,17 +182,15 @@ test("The real sensitivity route scopes units, previews and exact search, and re
     const events: { kind: string; parentDepth: number }[] = []
     const writes: number[] = []
     let depth = 0
-    fixture.business.withPlannerObservation = (request, call, work) => {
+    fixture.business.withPlannerObservation = async (request, call, work) => {
       const record = request && typeof request === "object" ? request : {}
       const kind = "binding" in record && "request" in record ? "exact"
+        : "sensitivityRequest" in record ? "revalidate"
         : "scenario" in record && "baselineRef" in record ? "preview"
-        : "parameterRef" in record ? "units"
-        : "sensitivityRequest" in record ? "revalidate" : "resolve"
+        : "parameterRef" in record ? "units" : "resolve"
       events.push({ kind, parentDepth: depth })
-      return observe(request, call, async () => {
-        depth++
-        try { return await work() } finally { depth-- }
-      })
+      depth++
+      try { return await observe(request, call, work) } finally { depth-- }
     }
     fixture.authority.state.transaction = (request, command, work) => {
       if (command.namespace === "cases") writes.push(depth)
