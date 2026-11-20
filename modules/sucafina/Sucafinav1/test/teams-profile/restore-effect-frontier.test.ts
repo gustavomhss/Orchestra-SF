@@ -33,9 +33,16 @@ async function fixture() {
     projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID, purpose: "business-restore" })
   const snapshot = () => f.store.transaction("dashboard", async (current) => ({ commit: false, value: structuredClone(current) }))
   const actor = () => f.store.transaction("dashboard", async (current) => {
-    const actual = await f.identity.authenticate(f.businessRequest(), { surface: "dashboard", roleMap: roleMap(current, "dashboard") })
-    if (!actual?.canWrite || !actual.roles.includes("admin")) throw new Error("Current signed surface admin required")
-    return { commit: false, value: actual }
+    const principal = await f.identity.authenticate(f.businessRequest(), { surface: "dashboard", roleMap: roleMap(current, "dashboard") })
+    const roles = principal?.roles.filter((row) => row.surface === "dashboard").map((row) => row.role) ?? []
+    if (!principal?.canWrite || !roles.includes("admin")) throw new Error("Current signed surface admin required")
+    const access = object(object(current.data.access)[principal.id])
+    // Match the production application projection of the currently resolved signed principal.
+    return { commit: false, value: {
+      id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles,
+      assigned: Array.isArray(access.assigned) ? access.assigned.filter((entry): entry is string => typeof entry === "string") : [],
+      domains: Array.isArray(access.domains) ? access.domains.filter((entry): entry is string => typeof entry === "string") : [],
+    } }
   })
   return { ...f, backups, at, restoration, snapshot, actor }
 }
@@ -55,6 +62,7 @@ async function draft(f: Awaited<ReturnType<typeof fixture>>, key: string, author
   const request = f.businessRequest(profile, f.cookie, { method: "POST", headers: { "Idempotency-Key": key } })
   const admission = await authority.ui.admit(request, "sf_case_draft", digestSfValue(payload))
   if (admission.status !== "ok") throw new Error("Current private C08 admission required")
+  expect(await authority.ui.validate(admission.value, "sf_case_draft", digestSfValue(payload))).toBe(true)
   try { return await port(f, authority).draft(payload, admission.value) }
   finally { authority.ui.finish(admission.value) }
 }
@@ -68,7 +76,7 @@ test("restore-frontier-01: genuine C08 commit survives checkpoint restore, autho
   const checkpoint = await f.backups.capture(f.store, "dashboard", f.at)
   const key = randomUUID()
   const original = await draft(f, key)
-  expect(original.status).toBe("ok")
+  expect(original).toMatchObject({ status: "ok" })
   await f.store.transaction("dashboard", async (snapshot) => {
     snapshot.data.restoreProbe = "after-checkpoint"
     snapshot.data.access = { ...object(snapshot.data.access), [other]: { assigned: [], domains: [] } }
