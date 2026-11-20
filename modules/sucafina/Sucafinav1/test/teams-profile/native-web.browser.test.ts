@@ -7,6 +7,16 @@ import { nativeTeamWebFixture } from "./native-web-fixture.ts"
 import { profileA, profileB, teamRow } from "./installation-fixture.ts"
 import { authority, group, oid } from "../microsoft-login/oidc-fixture.ts"
 
+test("native Web composition retains the live host identity through anonymous F02 admission", async () => {
+  const f = await nativeTeamWebFixture()
+  try {
+    const response = await f.handle(new Request(f.contextRequest().url))
+    expect(response.status).toBe(401)
+    expect(await response.json()).toEqual({ status: "unauthenticated" })
+    expect(response.headers.get("cache-control")).toBe("no-store")
+  } finally { await f.close() }
+})
+
 // Focused G02 production Web composition, outside the fixed 40-source G04 pool.
 // The OAuth provider is synthetic; challenge/PKCE/JWKS/session/SQLite/HTTP/UI are real.
 test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and administers without a Team", async () => {

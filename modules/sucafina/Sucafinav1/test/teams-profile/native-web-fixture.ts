@@ -80,8 +80,9 @@ export async function nativeTeamWebFixture(input: Parameters<typeof teamProductF
       ...await actions.operational(request, stamp),
     ],
   })
+  const services = Object.freeze({ nativeUiProducts: live })
   const context = createSfContextHandler({ origin: f.binding.origin, mount: f.binding.mount,
-    runtime: () => ({ nativeUiProducts: live }) })
+    runtime: () => services })
   const deps = { origin: f.binding.origin, mount: f.binding.mount, application,
     runtime: () => undefined, readContext: context.readContext }
   const handlers = createSfPlannerProjectionHandlers(deps)
