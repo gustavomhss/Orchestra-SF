@@ -13,7 +13,7 @@
 
 Nominal `44647936470` / snapshot `5a839065256777bc063dd1cb5cfa911aa896acfc` used the same product as fe2dfe77 (only .ci-run.json differs). Reader `44651646714` / job `136007724941` shows the final RPT-03 prior-review GET pending 107402 ms until ECONNRESET during timeout/teardown, not a completed response of that duration. RPT-04 answer-read 39514 ms was the expected 400 answer-unconfirmed before preparation.
 
-Composition diagnostic `44655820423` / snapshot `36df01594dc23c1fee38a4c923725cb813267c9d` completed the prior GET in 4284 ms and C05 in 5247 ms with 359/383 dashboard memo hits, encoded payload2090656 and plan3507954 units. Its 971 ms rejected planning belongs to the synthetic5700000-byte case, not those real revision reads. It has no installed session, local jobs, browser UI source edit or C05 thread/reply lifecycle.
+Composition diagnostic `44655820423` / snapshot `36df01594dc23c1fee38a4c923725cb813267c9d` completed the prior GET in 4284 ms and C05 in 5247 ms with 359/383 dashboard memo hits, encoded payload2089656 and plan3507954 units. Its 971 ms rejected planning belongs to the synthetic5700000-byte case, not those real revision reads. It has no installed session, local jobs, browser UI source edit or C05 thread/reply lifecycle.
 
 Each installed scenario has its own private installation. RPT-03 exports nothing; RPT-04 exports DOCX18871 bytes. RPT-01's PPTX does not carry into them.
 
