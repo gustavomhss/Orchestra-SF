@@ -1,0 +1,3848 @@
+{
+  "schemaVersion": "teams-profile-test-catalog/1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "analysisCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+  "analysisTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+  "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+  "authority": "teams-profile-test-plan.json governs gates, execution and counts; this file retains complete normalized per-path decisions and source pointers.",
+  "title": "SF shell/client-facing UI, browser state, Playwright journeys, native Linux qualification and explicit Desktop exclusions.",
+  "counts": {
+    "tests": 86,
+    "existing": 75,
+    "proposed": 11
+  },
+  "tests": [
+    {
+      "path": "apps/desktop/src/main/app-dock-profile-registry.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Fora do alvo SF Linux. repo-abc/alpha/beta são fixtures de opaque ID; conservar CAS, distinct persistent storage keys e reload; não prova isolamento por conta/Team."
+      ],
+      "preserve": [
+        "Registry tombstone/atomicidade não devem ser relaxados na limpeza do shared shell."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "7a8f0cccb01d74fca759d0991c54f71a63185fcd",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 85
+        }
+      ],
+      "sourceRunner": "DESKTOP_BUN",
+      "qualification": {
+        "required": false,
+        "primaryGate": "OUTSIDE_SF",
+        "runner": "DESKTOP_BUN",
+        "reason": "Electron/Desktop is not shipped SF Bun+Web Linux; preserve existing generic contract, port SF obligations to native Teams Web tests. No Electron run is planned by this migration.",
+        "replacementTests": [
+          "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+        ],
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": [
+        "A40"
+      ]
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-rpc.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Script top-level Bun.build+Electron, required R01–R13/M01; não é suíte bun:test nem .node-smoke. Fora da aceitação SF Web."
+      ],
+      "preserve": [
+        "Leitura focal: R10 storage profile isolation e R12 bound originating window; preserve RPC sender/generation."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "TARGETED_BODY",
+      "blob": "ab66b27bdf22c7a36094c9ae019c55bdd7ec25bf",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 86
+        }
+      ],
+      "sourceRunner": "ELECTRON_RPC_SCRIPT",
+      "qualification": {
+        "required": false,
+        "primaryGate": "OUTSIDE_SF",
+        "runner": "ELECTRON_RPC_SCRIPT",
+        "reason": "Electron/Desktop is not shipped SF Bun+Web Linux; preserve existing generic contract, port SF obligations to native Teams Web tests. No Electron run is planned by this migration.",
+        "replacementTests": [
+          "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+        ],
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-security.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Script top-level Bun.build+spawn Electron, package test:app-dock:e2e. Não é teste browser happy-dom/Playwright SF nem node-smoke."
+      ],
+      "preserve": [
+        "Leitura focal: U19 shared profile2windows delete, U23 real restart cookies, U24 tombstone, U25 corrupt registry denies rebind, U26 restart separation e U31 stale generation. Não auditados todos os casos."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "TARGETED_BODY",
+      "blob": "8806add844fd137790e31056db4267a8848cec0b",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 87
+        }
+      ],
+      "sourceRunner": "ELECTRON_SECURITY_SCRIPT",
+      "qualification": {
+        "required": false,
+        "primaryGate": "OUTSIDE_SF",
+        "runner": "ELECTRON_SECURITY_SCRIPT",
+        "reason": "Electron/Desktop is not shipped SF Bun+Web Linux; preserve existing generic contract, port SF obligations to native Teams Web tests. No Electron run is planned by this migration.",
+        "replacementTests": [
+          "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+        ],
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": [
+        "A40"
+      ]
+    },
+    {
+      "path": "apps/desktop/src/main/window-registry.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Fora do artefato SF; identity de janela/restauro técnico permanece."
+      ],
+      "preserve": [
+        "IDs válidos/dedupe, last-window restore, forget explicit close, quit reset, focus."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "23cdd01f642842eab0582f508f3ccd3a72751986",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 88
+        }
+      ],
+      "sourceRunner": "DESKTOP_BUN",
+      "qualification": {
+        "required": false,
+        "primaryGate": "OUTSIDE_SF",
+        "runner": "DESKTOP_BUN",
+        "reason": "Electron/Desktop is not shipped SF Bun+Web Linux; preserve existing generic contract, port SF obligations to native Teams Web tests. No Electron run is planned by this migration.",
+        "replacementTests": [
+          "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+        ],
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "apps/desktop/src/main/window-state.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Fora do artefato SF; nada depende de repo-profile."
+      ],
+      "preserve": [
+        "Restore minimized antes de show/focus; unminimized sem alterar tamanho."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "af2b5a13c26c9e61854f237d79286b09b39930b4",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 89
+        }
+      ],
+      "sourceRunner": "DESKTOP_BUN",
+      "qualification": {
+        "required": false,
+        "primaryGate": "OUTSIDE_SF",
+        "runner": "DESKTOP_BUN",
+        "reason": "Electron/Desktop is not shipped SF Bun+Web Linux; preserve existing generic contract, port SF obligations to native Teams Web tests. No Electron run is planned by this migration.",
+        "replacementTests": [
+          "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+        ],
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-bootstrap.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Retirar seeds repo project+layout home.directory e expected orchestra.window.browser.dat:tabs {draft,server,directory}; selecionar Team validada, scope pessoal+janela, novo Chat sem file/Git."
+      ],
+      "preserve": [
+        "Manter capítulo→draft sem criar sessão antes de submit; fixture HTTP não é prova instalada."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "56131bc7c914e0900573fccf8bff3f259dd488a4",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 55
+        }
+      ],
+      "sourceRunner": "E2E_ORCHESTRA",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "subGate": "teams-profile-orchestra-regression",
+        "workflow": ".github/workflows/sf-ci.yml",
+        "runner": "playwright",
+        "config": "e2e/orchestra/playwright.config.ts",
+        "genericRequestAllowed": false,
+        "proofClass": "GENERIC_SHARED_UI_REGRESSION",
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-dock.spec.ts",
+      "action": "REMOVE_SF_CASE",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "bridge fake e assert /^repo-/ não demonstram feature SF entregue; remover esses cenários da aceitação SF e substituir pelo SF Web sem bridge/repo affordance. Cenários host continuam regressões genéricas separadas."
+      ],
+      "preserve": [
+        "Manter fora SF overlay/late tabs/generation/errors e unavailable sem nenhuma chamada."
+      ],
+      "replacements": [
+        "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "84a64c3c7448c5f7f232b729c762081bb6611cd4",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 59
+        }
+      ],
+      "sourceRunner": "E2E_ORCHESTRA",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "subGate": "teams-profile-orchestra-regression",
+        "workflow": ".github/workflows/sf-ci.yml",
+        "runner": "playwright",
+        "config": "e2e/orchestra/playwright.config.ts",
+        "genericRequestAllowed": false,
+        "proofClass": "GENERIC_SHARED_UI_REGRESSION",
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation-direction.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "projectName/renameProject/Choose project passam a Team com ID imutável; assert elemento DOM igual após rename precisa continuar e incluir nomes Team duplicados."
+      ],
+      "preserve": [
+        "Manter portal direction/alignment, tab order, light/dark e Arabic; overrides @development-only não contam produção."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "5b9ff5d92af18b5270f8d4d4ab4af64475223472",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 58
+        }
+      ],
+      "sourceRunner": "E2E_ORCHESTRA",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "subGate": "teams-profile-orchestra-regression",
+        "workflow": ".github/workflows/sf-ci.yml",
+        "runner": "playwright",
+        "config": "e2e/orchestra/playwright.config.ts",
+        "genericRequestAllowed": false,
+        "proofClass": "GENERIC_SHARED_UI_REGRESSION",
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "setupCompactNavigation repo seeds, Choose project/Compact project/ProjectAvatar/breadcrumb e '1 agent · main' precisam Team metadata. Caso V2 branch é REMOVE_SF_CASE→no-vcs+catálogo Team admitido; narrow767 hoje verifica Home apenas, adicionar picker+keyboard+dirty revoke."
+      ],
+      "preserve": [
+        "Manter geometria/foco/tooltip/menu/reload/RTL, storage preferência e branch prod sem WIP. Mock HTTP não é installed."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "f5d10744277900635c6f7fc2f5389f8a09b7f094",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 57
+        }
+      ],
+      "sourceRunner": "E2E_ORCHESTRA",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "subGate": "teams-profile-orchestra-regression",
+        "workflow": ".github/workflows/sf-ci.yml",
+        "runner": "playwright",
+        "config": "e2e/orchestra/playwright.config.ts",
+        "genericRequestAllowed": false,
+        "proofClass": "GENERIC_SHARED_UI_REGRESSION",
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/project-git-init.spec.ts",
+      "action": "REMOVE_SF_CASE",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Os três casos pasta vazia+Git confirm/skip e pasta não vazia não são onboarding SF. Substituir por 0/1/N Teams + erro/parcial + zero calls /api/project/git ou directory picker."
+      ],
+      "preserve": [
+        "Não declarar ausência de Git apenas por mock não chamar endpoint."
+      ],
+      "replacements": [
+        "packages/app-shell/e2e/sucafina/team-profile.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "d652838a700ad9627803ea9026e13bbf74245305",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 56
+        }
+      ],
+      "sourceRunner": "E2E_ORCHESTRA",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "subGate": "teams-profile-orchestra-regression",
+        "workflow": ".github/workflows/sf-ci.yml",
+        "runner": "playwright",
+        "config": "e2e/orchestra/playwright.config.ts",
+        "genericRequestAllowed": false,
+        "proofClass": "GENERIC_SHARED_UI_REGRESSION",
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "Os cinco testes usam withInstallation→startPlannerInstallation→/auth/local; comentários e receipts atuais dizem operador real. Corpos preservam contratos que as rotas nativas parciais não substituem."
+      ],
+      "assertions": [
+        "Trocar somente a fonte de autoridade/seleção para Microsoft/Team controlada e atualizar metadados de prova; manter todos os cinco testes e dependências reais.",
+        "Exigir contexto Team atual nas criações, discovery, escolha/preparação/Apply e reabertura; old selector/lease de outro Team é negativo.",
+        "Não aceitar HTML200, superfície visível, confirmação isolada ou fallback local como substituto da produção financeira/proveniência/recovery."
+      ],
+      "preserve": [
+        "Escolha humana após fonte mudar; proposta Procurement e aprovação real antes de Apply com recibo único.",
+        "Create/edit/reopen do mesmo caso durável.",
+        "Discovery exato de um caso recém-criado sem alternativas, versões/ref exatas, save evaluation desabilitado e payload caseRefs exato.",
+        "Perda de resposta de criação recupera o mesmo caso sem resubmeter.",
+        "retries0, timeouts explícitos, ausência de produtor permanece falha; não seedar alternativas/choices/aprovações para passar."
+      ],
+      "replacements": [],
+      "group": "UI-FIXTURE-CLOSURE",
+      "bodyReview": "FULL_BODY",
+      "blob": "0d95609508b8931ca930d95323578efcb67800c0",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "ui-fixtures",
+          "document": "teams-profile-ui-fixture-review.json",
+          "section": "existingFiles",
+          "index": 1
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION",
+      "acceptanceIds": [
+        "A35"
+      ],
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-UI-DECISIONS",
+        "runner": "playwright",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "e2e/sucafina/decisions.spec.ts",
+        "config": "e2e/playwright.production.config.ts",
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN"
+      },
+      "reviewedRanges": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "action": "REMOVE_SF_CASE",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "D01 exige _electron e app empacotado; não é gate de entrega Bun+SFWeb Linux. Substituto precisa cookie jar real, duas contas/janelas e artefato web atestado; não mock window.api."
+      ],
+      "preserve": [
+        "Conservar como teste separado de produto Desktop se esse produto mudar; não relaxar packaged/no-fake-auth guards."
+      ],
+      "replacements": [
+        "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "TARGETED_BODY",
+      "blob": "75b5ba96b64b5650b4566eb0d149d89a2a8296e1",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 61
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_ELECTRON_INSTALLED",
+      "qualification": {
+        "required": false,
+        "primaryGate": "OUTSIDE_SF",
+        "runner": "PLAYWRIGHT_ELECTRON_INSTALLED",
+        "reason": "Electron/Desktop is not shipped SF Bun+Web Linux; preserve existing generic contract, port SF obligations to native Teams Web tests. No Electron run is planned by this migration.",
+        "replacementTests": [
+          "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+        ],
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "The existing CAP14 installed journey consumes both selected-installation.ts and journeys.ts through fixture.ts. Its environment URLs, exact query match and original command target must carry the admitted Team owner."
+      ],
+      "assertions": [
+        "Migrate the five registered URLs and installedScenarioURL's exact same-origin/search validation (14–44) to the canonical versioned Team selection. Preserve strict URL binding and reject missing/legacy/mixed/foreign owner; do not complete the selector from global/default context.",
+        "Consume the migrated manifest/context stamps, original CAP14 admission and Team-scoped nativeDashboardCommandTarget/read URLs. Keep technical installation/server/host identity separate from Team and business contract IDs.",
+        "Keep nativeSelectedCase's six existing U15 title-to-case registrations and the five private case URLs, with current producer reauthorization before every case; expected URLs must come from the approved selected bundle.",
+        "Run this existing file with the production native config and its own CAP14 manifest/bundle after producer/reader round-trip correction. The new Teams Linux spec adds owner-switch/account coverage and does not replace these regressions."
+      ],
+      "preserve": [
+        "All six original registrations: authorized list/filter-empty, version-bound edit/readback, denied second actor, actual second Microsoft editor advancing same record/version before real 409, single forwarded lost-response POST with authorized GET reconciliation, 320/768/1024/1280/1440 plus 200/400% reflow and keyboard.",
+        "Business Vendor Contracts source, immutable record IDs/CAS versions, exact command body/key, forbidden auxiliary writes, no unauthorized values/controls, no automatic command replay.",
+        "Only original already authenticated browser contexts; native fixture markers never imply Electron execution."
+      ],
+      "replacements": [],
+      "group": "NATIVE-CLOSURE",
+      "bodyReview": "TARGETED_CONSTRUCTORS_ASSERTIONS_AND_REGISTRATION",
+      "blob": "01e56d1ac9cb3930f2c0486e15328e136a0a3e04",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "pool-native",
+          "document": "teams-profile-pool-review.json",
+          "section": "nativeSupportParents.rows",
+          "index": 0
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION_NATIVE_INSTALLED_CDP",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G08-NATIVE-TEAMS",
+        "runner": "PLAYWRIGHT_PRODUCTION_NATIVE_INSTALLED_CDP",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN",
+        "command": {
+          "cwd": "packages/app-shell",
+          "argv": [
+            "bunx",
+            "playwright",
+            "test",
+            "--config",
+            "e2e/playwright.production.config.ts",
+            "e2e/sucafina/native/journeys/u15.spec.ts",
+            "--workers=1",
+            "--retries=0",
+            "--repeat-each=1"
+          ],
+          "envRef": "nativeSupportParents.gate.env",
+          "additionalEnv": {
+            "SF_NATIVE_U15_LIST_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LIST_URL",
+            "SF_NATIVE_U15_EDIT_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_EDIT_URL",
+            "SF_NATIVE_U15_DENIED_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_DENIED_URL",
+            "SF_NATIVE_U15_STALE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_STALE_URL",
+            "SF_NATIVE_U15_LOST_RESPONSE_URL": "u15RegisteredEnvironment(bundle).SF_NATIVE_U15_LOST_RESPONSE_URL"
+          },
+          "preconditions": [
+            "CAP14 admitted chapterHref",
+            "Complete U15 list/editable/denied/stale/lost bundle",
+            "Second original Microsoft editor on the stale case's same original CAS version",
+            "Producer-owned isolated data and cleanup"
+          ],
+          "outcome": "NOT_RUN; command design only"
+        },
+        "proofClass": "LIVE_SFWEB_LINUX"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "Existing CAP04 installed suite directly calls journeys.ts and consumes selected-installation.ts through nativeInstalledFixture. It asserts old project owner DTOs and a permissive source-link fallback, and its full registered live cases are incompatible with the current entry-only producer."
+      ],
+      "assertions": [
+        "Update observed owner/context assertions at 63–94 and originalPage envelope comparison at 273–279 from installationId/projectId/hostId + sf-native-ui/1 to the canonical versioned admitted Team owner, preserving Microsoft auth, principal, policy/access revisions and original operation readiness.",
+        "Remove the source-link project's null-coalescing success fallback at 761–762. Require the explicit complete Team selector on the actual URL, alongside year=2026, then prove current original producer admission under that owner.",
+        "Replace wrongProject and searchParams.project in the late-response case (1035 onward) with the admitted wrong-Team boundary; retain wrong-server and wrong-installation negatives in the shared manifest. Keep original held GET/no private name, editor or rows after owner change. Update obsolete scope wording in that case title while preserving its 206-AC02 scenario identity.",
+        "Extend the canonical private selected-installation producer/reader, per-test case mapping and nativeHarness return to cover entry/empty/source/readonly/denied/revoked/stale/late with a real current principal, per-case grant intent and original source semantics. Do not alias all tests to entry or skip missing setup.",
+        "Provide the approved real-producer revokeViaOriginalProducer and advanceViaSecondAuthenticatedWriter callbacks to the fixture for revoked/stale; reobserve original authority/CAS independently. Their returned committed/version values alone do not grant access or prove the final UI.",
+        "Run this existing file separately with a CAP04/2026 admitted chapter manifest and complete bundle under the production native config. Preserve all 22 original registrations and business assertions."
+      ],
+      "preserve": [
+        "All 206-AC01/AC02/AC03 cases: original A01 source/filtered-empty, draft review before dispatch, actual create/edit/delete CAS and removed-record not-found, monthly rows/values, twelve-row annual distribution, year amounts/hints, deviations, list/detail/back filter and original source metadata.",
+        "Genuine zero-row empty vs filtered-empty/not-found, original authorized source link, real readonly/denied/revoked Microsoft contexts, real concurrent writer/source-version fence, invalid input no dispatch, held POST no duplicate submit, lost response uncertainty and no auto-retry, late former-owner response scrub.",
+        "320/768/1024/1280/1440 width controls and focus plus 200/400% reflow; exact original field/value comparison including missing versus zero and source CAS.",
+        "CAP04 import control remains conditioned on original producer import permission; opexOwners/opexEntries business identity is not a Team selector."
+      ],
+      "replacements": [],
+      "group": "NATIVE-CLOSURE",
+      "bodyReview": "TARGETED_CONSTRUCTORS_ASSERTIONS_AND_REGISTRATION",
+      "blob": "35e2f0c87794a13038f41b0e955ebf4cfafc475d",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "pool-native",
+          "document": "teams-profile-pool-review.json",
+          "section": "nativeSupportParents.rows",
+          "index": 1
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION_NATIVE_INSTALLED_CDP",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G08-NATIVE-TEAMS",
+        "runner": "PLAYWRIGHT_PRODUCTION_NATIVE_INSTALLED_CDP",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN",
+        "command": {
+          "cwd": "packages/app-shell",
+          "argv": [
+            "bunx",
+            "playwright",
+            "test",
+            "--config",
+            "e2e/playwright.production.config.ts",
+            "e2e/sucafina/native/journeys/u39.spec.ts",
+            "--workers=1",
+            "--retries=0",
+            "--repeat-each=1"
+          ],
+          "envRef": "nativeSupportParents.gate.env",
+          "separateInvocationRequired": true,
+          "preconditions": [
+            "CAP04/2026 admitted chapterHref",
+            "U39 complete private per-case bundle and original principal/intent",
+            "Approved real revocation and second-writer callbacks",
+            "Producer-owned isolated data, authorization restoration and cleanup"
+          ],
+          "outcome": "NOT_RUN; command design only"
+        },
+        "proofClass": "LIVE_SFWEB_LINUX"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "Existing CAP05 installed suite directly calls journeys.ts and consumes selected-installation.ts through nativeInstalledFixture. It asserts old project owner DTOs and a permissive source-link fallback, and its full registered live cases are incompatible with the current entry-only producer."
+      ],
+      "assertions": [
+        "Update observed owner/context assertions at 63–94 and originalPage envelope comparison at 273–279 from installationId/projectId/hostId + sf-native-ui/1 to the canonical versioned admitted Team owner, preserving Microsoft auth, principal, policy/access revisions and original operation readiness.",
+        "Remove the source-link project's null-coalescing success fallback at 761–762. Require the explicit complete Team selector on the actual URL, alongside year=2026, then prove current original producer admission under that owner.",
+        "Replace wrongProject and searchParams.project in the late-response case (1028 onward) with the admitted wrong-Team boundary; retain wrong-server and wrong-installation negatives in the shared manifest. Keep original held GET/no private name, editor or rows after owner change. Update obsolete scope wording in that case title while preserving its 206-AC02 scenario identity.",
+        "Extend the canonical private selected-installation producer/reader, per-test case mapping and nativeHarness return to cover entry/empty/source/readonly/denied/revoked/stale/late with a real current principal, per-case grant intent and original source semantics. Do not alias all tests to entry or skip missing setup.",
+        "Provide the approved real-producer revokeViaOriginalProducer and advanceViaSecondAuthenticatedWriter callbacks to the fixture for revoked/stale; reobserve original authority/CAS independently. Their returned committed/version values alone do not grant access or prove the final UI.",
+        "Run this existing file separately with a CAP05/2026 admitted chapter manifest and complete bundle under the production native config. Preserve all 22 original registrations and business assertions."
+      ],
+      "preserve": [
+        "All 206-AC01/AC02/AC03 cases: original A01 source/filtered-empty, draft review before dispatch, actual create/edit/delete CAS and removed-record not-found, monthly rows/values, twelve-row annual distribution, year amounts/hints, deviations, list/detail/back filter and original source metadata.",
+        "Genuine zero-row empty vs filtered-empty/not-found, original authorized source link, real readonly/denied/revoked Microsoft contexts, real concurrent writer/source-version fence, invalid input no dispatch, held POST no duplicate submit, lost response uncertainty and no auto-retry, late former-owner response scrub.",
+        "320/768/1024/1280/1440 width controls and focus plus 200/400% reflow; exact original field/value comparison including missing versus zero and source CAS.",
+        "CAP05 has no Import Excel control; CAPEX Projects, project status and monthly ownerId/projId/projectId business foreign keys remain domain records, not renamed to Teams."
+      ],
+      "replacements": [],
+      "group": "NATIVE-CLOSURE",
+      "bodyReview": "TARGETED_CONSTRUCTORS_ASSERTIONS_AND_REGISTRATION",
+      "blob": "919472dfdb47edbf885eac829b30b8ed9254b9c4",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "pool-native",
+          "document": "teams-profile-pool-review.json",
+          "section": "nativeSupportParents.rows",
+          "index": 2
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION_NATIVE_INSTALLED_CDP",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G08-NATIVE-TEAMS",
+        "runner": "PLAYWRIGHT_PRODUCTION_NATIVE_INSTALLED_CDP",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN",
+        "command": {
+          "cwd": "packages/app-shell",
+          "argv": [
+            "bunx",
+            "playwright",
+            "test",
+            "--config",
+            "e2e/playwright.production.config.ts",
+            "e2e/sucafina/native/journeys/u40.spec.ts",
+            "--workers=1",
+            "--retries=0",
+            "--repeat-each=1"
+          ],
+          "envRef": "nativeSupportParents.gate.env",
+          "separateInvocationRequired": true,
+          "preconditions": [
+            "CAP05/2026 admitted chapterHref",
+            "U40 complete private per-case bundle and original principal/intent",
+            "Approved real revocation and second-writer callbacks",
+            "Producer-owned isolated data, authorization restoration and cleanup"
+          ],
+          "outcome": "NOT_RUN; command design only"
+        },
+        "proofClass": "LIVE_SFWEB_LINUX"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "artefato Linux do candidato SHA/tree, sem .git/configrepo; traps não lidos como policy/agent/tool",
+        "attach F04 a contextos Microsoft pré-autenticados; duas contas mesma Team + uma conta duas pages/Teams",
+        "real membership/grant change, logout/relogin/restart/cookie mount: nenhum dado privado/late SSE/tab/blob revivido",
+        "voluntary switch cancela só janela iniciadora; forced revoke invalida authEpoch todo",
+        "originais operations/decisions/reports mantêm CAS/unknown/retry; sem Electron bridge nem repo picker",
+        "Preserve the positive business obligation moved from factory: on the same attested SF prod archive, a real Microsoft actor admitted to Team creates the first C08 case through the actual human command, reads the durable current choice and completes the valid version/receipt path; forged/stale approval/current-choice/source fences remain denied. No raw SQL, manufactured cookie or local-operator identity substitutes for this positive."
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 12
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_NATIVE_INSTALLED",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G08-NATIVE-TEAMS",
+        "runner": "playwright installed real Linux",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": [
+        "A01",
+        "A16",
+        "A17",
+        "A18",
+        "A20",
+        "A33",
+        "A35",
+        "A36",
+        "A37",
+        "A40",
+        "A41",
+        "A42",
+        "A44",
+        "A45"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/teams-profile-recovery-linux.spec.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [
+        "A46 requires an operational checkpoint/effect/restore proof; deterministic recovery fixtures and a simple restart do not satisfy it."
+      ],
+      "assertions": [
+        "On a disposable admitted Linux/Azure installation using the candidate SF prod archive: capture a real checkpoint and backup key; cut over to Team profiles; commit an actual controlled external effect and authoritative receipt after checkpoint; restore the old checkpoint through the admitted production recovery surface; restart and retry the original operation.",
+        "Assert same receipt/digest, exactly one effect, monotonic consumed slots/dedup/cancellations/tombstones/issued IDs across every participating store; no secret or authority restoration.",
+        "Lose the post-checkpoint receipt or external reply: suspension/receipt-required, zero automatic re-execution; reconcile only with original authoritative proof.",
+        "Revoke before restore or during final await: deny; separately allow the admitted corporate recovery administrator without an eligible Team, without granting business/private-data access.",
+        "Repeat restore/restart/retry twice; isolated incomplete/corrupt backup or ambiguous ownership cannot replace live/auth stores.",
+        "Observe exact source C/tree/prod inner tar/installed closure and real admitted corporate actors on a disposable Linux/Azure installation; never promote fixture or synthetic manifest to LIVE.",
+        "Create/read legacy state through an admitted real producer or reviewed supported prior-release migration setup; record original IDs/provenance before checkpoint. No direct SQL seeding or manufactured auth.",
+        "Observe quiescence/drain→checkpoint→migration with explicit mapping and preserved IDs→business effect and external durable receipt→restore checkpoint→restart actual service→retry same operation.",
+        "With receipt retained outside restored snapshot, retry observes original receipt/result and effect counter/source observation proves exactly one external effect.",
+        "With receipt missing or unavailable through an admitted controlled failure mechanism, retry suspends and produces zero new external effect. No manual rawSQL/receipt forgery.",
+        "Revoke Team membership/authorization before restore/retry; restored caches/session/job cannot revive access; deny before business/effect.",
+        "Admitted admin without Team can perform the recovery action through its real administrative authorization boundary; subsequent business operation remains denied, no project/Team invented.",
+        "Fresh authorized corporate actor can reopen preserved IDs after recovery and new scope admission; cross-Team/tenant actor cannot.",
+        "Persist sanitized case/operation receipt hashes, phase identities, before/after version/stamps, resource-role IDs/hashes and actual effect outcome; no raw cookies/secrets/DB in CI artifact.",
+        "Every scenario mandatory, zero skips/retries/fixture fallbacks; missing environment or an unimplemented fault/recovery surface reports BLOCKED, not PASS."
+      ],
+      "preserve": [
+        "No raw SQL injection, synthetic credential, fake transport receipt or simulated restore is accepted as LIVE proof.",
+        "Candidate-bound archive, private manifest and approved disposable host registry; production recovery API, not a test-only backdoor."
+      ],
+      "replacements": [],
+      "group": "RECOVERY-LINUX",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "root-acceptance-crosscheck",
+          "document": "teams-profile-acceptance-map.json",
+          "section": "A46"
+        },
+        {
+          "area": "qualification",
+          "document": "teams-profile-qualification-review.json",
+          "section": "newTests",
+          "index": 4
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_RECOVERY_INSTALLED",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G10-MIGRATION-RESTORE",
+        "runner": "playwright installed real Linux",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": [
+        "A30",
+        "A36",
+        "A45",
+        "A46"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "Cinco casos delegam a helpers cujo host/grants/login são locais; o authMode atual não pode qualificar admissão Microsoft/Team. A seleção também expõe defeitos prévios de manifesto e contexto de ator."
+      ],
+      "assertions": [
+        "Manter os cinco IDs/casos e seus oráculos; executar sob a fixture Microsoft/Teams controlada descrita neste plano, com identidade validada pelo adapter real.",
+        "Registrar proofClass CONTROLLED_MICROSOFT_INSTALLED_PRODUCT, candidato e tuple corporativo seguro; desligar trace/video/screenshot autenticados como nas outras jornadas.",
+        "Acrescentar aos mesmos casos as negativas de ausência/revogação/troca de Team nos pontos de egress/admission, sem substituir fonte removida, falta de FX ou logout."
+      ],
+      "preserve": [
+        "OP-PROC-01: J04 literal, quotes A/B/C, 30240 USD para EUR28000@1.08 e prêmio2160/7.14%, C02 ref/version/digest/drilldown.",
+        "OP-PROC-02: sourcing submetido conserva FX1.08/30240; futuro PO reflete FX2/56000, sem novo sourcing.",
+        "OP-PROC-03: JPY sem FX retorna422 e fieldErrors reais, sem nova versão/história/estado aprovado.",
+        "OP-IMPORT-01: um Apply, resposta perdida, GET/reload/refresh recuperam recibo exato e valores/versões sem duplicação; logout suprime contexto/receipt.",
+        "OP-DOC-01: bytes reais, schema/confirm explícitos; remover fonte nega asset403, evidence409/stale e limpa caches."
+      ],
+      "replacements": [],
+      "group": "UI-FIXTURE-CLOSURE",
+      "bodyReview": "FULL_BODY",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "ui-fixtures",
+          "document": "teams-profile-ui-fixture-review.json",
+          "section": "existingFiles",
+          "index": 0
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION",
+      "acceptanceIds": [
+        "A35"
+      ],
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-UI-OPERATIONS",
+        "runner": "playwright",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "e2e/sucafina/operations.spec.ts",
+        "config": "e2e/playwright.production.config.ts",
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN"
+      },
+      "reviewedRanges": [
+        [
+          1,
+          38
+        ]
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "Os quatro casos usam ReportsInstallation local; RPT04 mede logout de sessão e novo login do mesmo actor. A migração deve conservar C05/Office sem confundir Teams com reenrollment."
+      ],
+      "assertions": [
+        "Executar sob fixture corporativa controlada e atualizar proof metadata, mantendo os quatro IDs e trace/video/screenshot off.",
+        "RPT04 mantém logout e credencial retida; acrescentar revogação de membership/config/grant como estímulo distinto, com controle positivo de ator ainda admitido e negativo cross-Team.",
+        "Exigir actor/Team/config/epoch corrente nos reads/downloads/reconcile; adaptar URLs com builder canônico sem alterar captura/recibos."
+      ],
+      "preserve": [
+        "RPT01:25 projetos, notas longas, DOCX/PPTX reais com digests diferentes, captura antiga idêntica após mudança da fonte e navegação ao dado atual.",
+        "RPT02:C05 resposta exata, reuso sem escrita, edição torna seletor antigo stale, história intacta, perda de resposta reconcilia sem nova edição.",
+        "RPT03:remover1 da seleção=24/25 sem editar fonte e somente revisão nova explícita.",
+        "RPT04:logout204/no-store; dados/drafts/pending sumem; old credential permanece negado após novo login legítimo; bytes do artifact positivo conservam SHA."
+      ],
+      "replacements": [],
+      "group": "UI-FIXTURE-CLOSURE",
+      "bodyReview": "FULL_BODY",
+      "blob": "69b587773c372fc30185f3e39d3263292474c894",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "ui-fixtures",
+          "document": "teams-profile-ui-fixture-review.json",
+          "section": "existingFiles",
+          "index": 2
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION",
+      "acceptanceIds": [
+        "A35"
+      ],
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-UI-REPORTS",
+        "runner": "playwright",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "e2e/sucafina/reports.spec.ts",
+        "config": "e2e/playwright.production.config.ts",
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN"
+      },
+      "reviewedRanges": [
+        [
+          1,
+          133
+        ]
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/team-profile.spec.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "boot0/1/N+errors e newChat sem Git/directory; duplicate labels/rename IDs",
+        "wide1152/900/767 e localeRTL; picker/keyboard/palette/restore/back-forward",
+        "duas pages mesma conta seleção distinta; controlled context stale replies/dirty/revoke; assert visible state ready before actions"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 11
+        }
+      ],
+      "sourceRunner": "PLAYWRIGHT_PRODUCTION",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "playwright",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "e2e/sucafina/team-profile.spec.ts",
+        "runtime": "playwright",
+        "execution": "NOT_RUN",
+        "requestId": "TP-005",
+        "changeScopedRequestId": "TP-005",
+        "finalRequestId": "TP-005"
+      },
+      "acceptanceIds": [
+        "A01",
+        "A02",
+        "A18",
+        "A43"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar-history.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller."
+      ],
+      "preserve": [
+        "limite, índices back/forward e ausência de duplicata por navegação"
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "25035d7ccf77638ac2305e3e6382e4d1b39e8992",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 24
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/components/titlebar-history.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar-tab-order.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Substituir profile {server,directory} e rootDirectory/pathKey por seleção Teams admitida + dono pessoal. Assertions tabMatchesProfile(...,undefined)===true e profile só server===true não podem admitir tabs privadas no SF."
+      ],
+      "preserve": [
+        "Manter reorder visível sem mover hidden, sucessor visível ao fechar, fechamento da última tab→Home e histórico."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "a3e23eaba4d4606239ea170940fda88ce40b93cf",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 0
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/components/titlebar-tab-order.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Atualizar bootstrap/query fixtures e asserts location-only para contexto admitido. Caso 'a superseded run’s successful read stays ready...' permanece somente na MESMA autoridade; adicionar A→B+B fail esperando nenhum config/provider/agent de A."
+      ],
+      "preserve": [
+        "Manter 3 estados independentes de reads, older failure não sobrescreve, sem global provider fallback e árvore de permission/question."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "83e3238a34a69ed66b227dc066a07f92c1934a6d",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 17
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/global-sync/bootstrap.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/child-store.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Manager.children[directory], mock query [directory,kind] e persist fake precisam tuple owner/revisão; dois owners no mesmo directory não compartilham child/store."
+      ],
+      "preserve": [
+        "Manter ready-empty catálogo NÃO herda global, pin/evict, passive bootstrap e lazy MCP."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "1831d8629f12a7c0dddc8123fb8c24e3e92d5a8d",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 18
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/global-sync/child-store.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/home-session-index.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Trocar 'one global V2 request' {limit,order}, cache só server e retenção por directory por índice principal+Team+revisão; cursor não pode ser reaproveitado no outro scope."
+      ],
+      "preserve": [
+        "Manter paginação completa/abort, roots visíveis, event baseline, replay, reconnect e remoção mesmo sem índice montado."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "236607c416a9c017b52e2d0c9d8dcfd07f018758",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 19
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/global-sync/home-session-index.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/layout-route.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller."
+      ],
+      "preserve": [
+        "chapter/subview parse e malformed server→Home; parser não é grant"
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "ac65d57e017a8b1b291656874b8df9bee7a65c8b",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 21
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/layout-route.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/layout-tabs.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller."
+      ],
+      "preserve": [
+        "preview/durable file tabs e placeholder; seleção à esquerda"
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "646ed086cef9f0d233effb5fc3edfcaad88731da",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 22
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/layout-tabs.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/layout.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller."
+      ],
+      "preserve": [
+        "ensureSessionKey touch→seed, leitura lazy, bounded prune que conserva active"
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "895c0e85e217db91e723835051879328287ef755",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 20
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/layout.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/prompt-state.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller."
+      ],
+      "preserve": [
+        "inicialização coerente texto/cursor/model e clone; defaults"
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "24afe5424e71ac5d71537600a68787bf34625f7c",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 23
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/prompt-state.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-event-native.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Fixture de stream V2 e assert adapted[2] location devem carregar envelope de owner validado quando contrato público mudar; testar preservação ao adapter e recusa no ingress de owner errado."
+      ],
+      "preserve": [
+        "Manter texto/reasoning/usage/status/custo, sequência e recusa de nome não V2."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "883d8319a460d4063e47f328cb7752e6b22ab7b9",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 16
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/server-event-native.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-provider-refresh.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Keys [ServerScope.local,/repo,providers] e predicate posição2 precisam owner+config/accessRevision; caso dois principals mesma Team/directory deve cancelar só o owner correto."
+      ],
+      "preserve": [
+        "Manter cancelQueries antes de fetchQuery, nenhum resultado preauth tardio, outro server/global sem efeito e propagação do erro."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "ff5a78c92ef729fa796e8af19fc2c28df7b80e62",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 14
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/server-provider-refresh.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sdk.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Queue e textDelta fixtures carregam só location.directory; coalescer deve exigir owner/principal/epoch além de mensagem/ordinal. Reconnect antigo nunca escreve no novo contexto."
+      ],
+      "preserve": [
+        "Manter ready promise compartilhada, recovery, dispose, bfcache apenas persisted, malformed decode skip e warning uma vez por tipo."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "7b693748e851c934455f9cde4a5c10bbcdd5ca09",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 15
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/server-sdk.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sync.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Atualizar keys [ServerScope,directory,*], activeSessions só server, list root {directory,limit,order}, delete {server,directory,sessionIDs} para dono/revisão admitidos e zero seleção por directory."
+      ],
+      "preserve": [
+        "Manter contagem, cache, reconexão, resultado atrasado, falha, cancelamento e eviction."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "1811eb82e7757340e3ea3557a906ecad2a48d5f4",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 8
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/server-sync.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/tabs.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "migrateTabs adiciona fallbackServer ao legado; no SF trocar por resultado quarantined/sem admissão até mapa verificado. Tab keys/recents/info/closed incluem dono privado; draft fixtures owner-bound."
+      ],
+      "preserve": [
+        "Preservar cleanup de memória, limite25 closed, não registrar draft fechado, reopen sem duplicata, delete e background sem navegar."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "abd62a4dae1360699bd4cab9098c380936bd7797",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 2
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/tabs.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/context/team-profile-queries.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "duas contas mesma Team/directory não compartilham catálogo privilegiado/config/grants",
+        "duas Teams same directory chaves diferentes, sync/SDK children capturam tuple imutável",
+        "late A success + B failure nunca repõe A; provider refresh cancela epoch; old SSE/bfcache/reconnect não revive",
+        "server-home index e cursor por owner antes paginação; envelope sem owner não vai para global"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 3
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/team-profile-queries.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": [
+        "A12",
+        "A14",
+        "A15",
+        "A16",
+        "A25",
+        "A37"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/context/team-profile-selection.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "0/1/N equipes completas admitidas; única opção só autoseleciona após validação",
+        "Graph unavailable/403/partial/empty/revoked distintos; zero cwd/global/lastProject/firstProject fallback",
+        "restore same ID rename; nomes duplicados; novo objectID não herda; wrong tenant/install/principal rejeitado",
+        "admin recovery admitido sem Team não dá acesso de negócio"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 0
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/context/team-profile-selection.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": [
+        "A02",
+        "A03",
+        "A08",
+        "A45"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/navigation.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Asserção do array global inclui dock/workspaces/env/cicd; especificar manifesto alcançável SF separado e não divulgar affordances de repo. Breadcrumb dir-new-session não pode servir profile SF."
+      ],
+      "preserve": [
+        "Manter destinos únicos, labels, Home fallback e WIP só desenvolvimento."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "c58dffa60780c8ac4dea4b8d84dd81e6d34c6b85",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 27
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/orchestra/navigation.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/layout/helpers.test.ts",
+      "action": "REMOVE_SF_CASE",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Retirar do caminho SF parseOpenProjectDeepLink/new-session?directory, homeProject selection/toggle/close, ordem/repo picker e projectForDirectory como fonte do profile. Não usar project global ou root/sandbox como Team."
+      ],
+      "preserve": [
+        "Manter normalização técnica de paths/roots, ordenação de sessões por timestamp, exclusão archived/child, permissions filter, drain-once e erro."
+      ],
+      "replacements": [
+        "packages/app-shell/src/context/team-profile-selection.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/team-profile-routes.test.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "27d86e797b8481b358f52935db6760793abe119b",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 9
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/pages/layout/helpers.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-ready.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller."
+      ],
+      "preserve": [
+        "ready true; erro→false reportado sem rejeição silenciosa"
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "4b44def00bf9190e0a5e26987edaa92ea7259a2b",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 25
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/pages/new-session/new-session-ready.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-workspace-controller.test.ts",
+      "action": "REMOVE_SF_CASE",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Seleção preferred workspace, derive worktree, stale→main e branch fallback dev deixam de escolher profile SF; Location técnica pode ser testada separadamente sem grant."
+      ],
+      "preserve": [
+        "Preservar seleção técnica apenas onde alcançabilidade independente de profile for provada."
+      ],
+      "replacements": [
+        "packages/app-shell/src/pages/new-session/team-profile-new-session.test.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "3c57063d495e38d9d47a0f84326d5761c88d23ca",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 13
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/pages/new-session/new-session-workspace-controller.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/team-profile-new-session.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "new Chat/titlebar shortcut/palette exige Team admitida; não chama file.list/project.current/initGit/trust",
+        "mesma Location técnica para A/B não altera owner; SessionID foreign nunca adotado",
+        "nenhuma Team selecionada gera estado explícito, não draft com available[0]"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 1
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/pages/new-session/team-profile-new-session.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": [
+        "A01",
+        "A13",
+        "A18"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/pages/session/apps-panel-controller.test.ts",
+      "action": "REMOVE_SF_CASE",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Casos stable repository hash, repository restore e sem repo→manifest.default/work não podem qualificar SF. profileA/B hoje são hash(server,directory); não converter hash em Team."
+      ],
+      "preserve": [
+        "KEEP_REGRESSION de no-bridge zero calls e algoritmos late-open/navigation/generation/occlusion/recovery no host. Leitura focal, não auditoria integral dos casos Linux."
+      ],
+      "replacements": [
+        "packages/app-shell/test-browser/sucafina-native/team-profile-shell.test.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "TARGETED_BODY",
+      "blob": "96edd1cc2af9f43e9c7f645972b44e03b50e38b0",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 60
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/pages/session/apps-panel-controller.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/persist.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Testes serverWorkspace(local)===workspace e serverGlobal(local)===global não podem ser a política de dados privados SF; acrescentar novos targets e negar leitura/migração automática das aliases de directory/global sem mapa. Draft-only ID deixa de ser namespace suficiente."
+      ],
+      "preserve": [
+        "Preservar quota/fallback técnico de storage, JSON inválido, remoção e alias Windows apenas consumidores técnicos documentados. Falha de storage não muda identidade."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "317bddfb63a4223a0e521d0e37939624d6215613",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 7
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/utils/persist.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/server-scope.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Manter ServerScope como identidade técnica de conexão (sidecar/local, canonical web explicitamente admitido, loopback remoto distinto); não tratar este teste como isolamento de principal/Team."
+      ],
+      "preserve": [
+        "Adicionar escopo privado em novos testes, sem renomear ServerScope para Team."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "67d43b7abbb6e8ae95d5e4c62baef2591b5d6c18",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 4
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/utils/server-scope.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-003"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/session-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Resolução de link legado não pode adotar activeServer quando ambíguo; exigir associação autorizada explícita. Atualizar href/restore de sessões SF para novo seletor versionado, sem preencher tuple com active profile."
+      ],
+      "preserve": [
+        "Preservar malformed base64, traversal de raiz/ciclo e URL encoding; links técnicos antigos só importador explícito."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "dcc00300da9cd15e3a1e100f4b94c230c588f6a6",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 3
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/utils/session-route.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/team-profile-storage.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "namespace instalação+tenant+Team+principal+categoria; janela para seleção/tabs; encoding sem colisões",
+        "mesma Team duas contas; mesma conta duas Teams; duas janelas seleção independente",
+        "legacy layout/tabs/prompt/model/notification ficam quarantined até mapa inequívoco",
+        "backfill idempotente, writer epoch antigo recusa após cut/restart; quota/corrupt JSON sem mudar owner",
+        "A40: reject legacy storageKey reassignment without demonstrated installation/tenant/principal/Team ownership; profile rename/id reuse cannot adopt another partition. Authorized rebind requires current corporate reauthentication and a new admitted partition; old private material stays isolated/quarantined."
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 2
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-SRC",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "src/utils/team-profile-storage.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-004"
+      },
+      "acceptanceIds": [
+        "A03",
+        "A04",
+        "A16",
+        "A17",
+        "A28",
+        "A29",
+        "A31",
+        "A38",
+        "A40"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/actions-navigation.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Binding GitHub/directory é contexto técnico de Actions e não Teams profile; conservar somente via boundary de produto explícita, nunca como admissão SF."
+      ],
+      "preserve": [
+        "URL escopada, foreign binding recusado, stale binding e remoção seguem o model atual."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "cd72175665cc48f89d1c9d0ebf2cb4570be6e0f9",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 28
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/actions-navigation.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/deep-link-ingress.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Sequenciamento queued+initial+live+remount permanece; ampliar apenas os inputs de link SF no teste novo."
+      ],
+      "preserve": [
+        "Não confundir listener desktop importado sob happy-dom com execução do artefato SF Web."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "33059698ea626e52c44e3ddc11e389c9c662e281",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 6
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/deep-link-ingress.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/draft-session-key.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Substituir identidade server+directory+draft por private owner+Team+draft; mesmo diretório em duas Teams não colide e nova Location técnica não transfere o owner."
+      ],
+      "preserve": [
+        "Preservar isolamento entre drafts."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "c553145ce91d7f18da4d1965565bdba5367164f6",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 12
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/draft-session-key.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/notification-origin.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Casos turn-complete e error compartilham directory/session entre servidores. Capturar/revalidar também principal+Team+authEpoch antes de clique; evento atrasado de A não é exibido em B."
+      ],
+      "preserve": [
+        "Manter callback indo ao servidor de origem mesmo após mudança da seleção visual."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "d8d4f67a4fb6a01c4fe7a977f35c00d066258341",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 5
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/notification-origin.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/orchestra-compact-navigation.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "O caso 'remembers ... another window' usa platform desktop/windowID; acrescentar web real window identity. Persist.window web='browser' não atende à promessa de tabs privadas por janela."
+      ],
+      "preserve": [
+        "Manter early toggle vence hidratação e narrow não sobrescreve preferência expandida."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "e13c3b05488bfd4be9dc6d9768e97771cb0ef514",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 26
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/orchestra-compact-navigation.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/orchestra/titlebar-tab-order.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Fixtures A1/A2/B1 precisam owner Team/principal; nenhuma B pode entrar no successor temporário visível."
+      ],
+      "preserve": [
+        "Manter override de B1 escolhido pelo fechamento nativo para A2, ordem e closed history."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "57f6b5f948ab440c48ba11933993892a8b8a95fb",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 1
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/orchestra/titlebar-tab-order.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/prompt-persistence.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Alterar chaves de draft/prompt/blob para dono privado e epoch; migração dataURL só sob associação autorizada; read de A pendente não hidrata B."
+      ],
+      "preserve": [
+        "Manter hidratação assíncrona e barreira que impede migração atrasada de sobrescrever draft mais novo."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "7c3d28226f434014837bb5cab7757526552a7414",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 11
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/prompt-persistence.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/prompt-scope.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "selectPromptTab hoje resolve por server/sessionID ou draftID; fixtures precisam tuple privada. Testar o mesmo sessionID em duas Teams e duas contas."
+      ],
+      "preserve": [
+        "Preservar escolha da rota atual em vez da tab ativa."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "fad19dcff77d80f3b67ed59748b9c27f34b3c84f",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 10
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/prompt-scope.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-001",
+        "changeScopedRequestId": "TP-001",
+        "finalRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Substituir fixtures e URLs v1; transformar caso positivo 'location mode'/forAdmittedLocation em legado recusado no SF (REMOVE_SF_CASE), com substituto discovery Teams sem directory. Relembrar seleção exige validação atual."
+      ],
+      "preserve": [
+        "Manter IDs nunca fallback, unknown/mixed/duplicate/partial rejeitados, explícito A não pega B, guard voluntary→purge→commit, late A abortado, focus/scroll owner+revision."
+      ],
+      "replacements": [
+        "packages/app-shell/src/context/team-profile-selection.test.ts"
+      ],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "6214f06108cf45abcf987454fb9707d2fdb1588c",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 30
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/context.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": [
+        "A32",
+        "A43"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/decisions-pages-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "trocar query duplicada server=s&server=t&project=p&installation=i; adicionar novo tuple completo aceito e tuple antigo rejeitado."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "fa6e13f3bb0c2b73c8d0b67da8aac9584c9d5985",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 37
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/decisions-pages-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/draft-quarantine.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Alterar stamp/selection/identity/binding projectId para tuple versionada. Ampliar foreign identity loop com tenantId/teamObjectId/authEpoch; outra conta da mesma Team não recupera valor."
+      ],
+      "preserve": [
+        "Manter exact first-attempt409/422, desconhecido continua pending, todos proofs antes de active, explícita negação purga mesmo depois de unavailable, logout/principal novo, CAS e revalidação."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "beb1314c7217720f1e819ddb9ae268f041dc549a",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 35
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/draft-quarantine.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": [
+        "A19",
+        "A41"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/extended-routes.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Dispatch família People e duplicação de year não dependem do owner antigo; manter. Adicionar tabela transversal no novo team-profile-routes.test.ts."
+      ],
+      "preserve": [
+        "Preservar exact operation dispatch e rejeição sem grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "fff3b0ccf6248ce6206434ffe7979ff8e63a00cb",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 48
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/extended-routes.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/files-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "trocar triplet duplicado; imports/document refs, source e returnTo continuam fechados."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "59b8917de5dd5a85d3b45a850ebfd2a6386284eb",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 38
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/files-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "Direct pure-route parent of journeys.ts asserts the old project owner fixture and ownerless exact entry/source/command URLs."
+      ],
+      "assertions": [
+        "Replace target.projectId at 14 with the canonical complete synthetic admitted-owner metadata; keep it explicitly non-authoritative.",
+        "Update exact CAP14/CAP04/CAP05 entry URL assertions at 23/32/34 and command query at 27 to include the versioned Team selector.",
+        "Update the accepted resolved source href at 39–40 to the same owner and add missing/legacy/mixed/wrong-Team/tenant selector rejection; no null-coalescing fallback to target or current owner."
+      ],
+      "preserve": [
+        "All three original cases, CAP14/04/05 path mappings and Vendor Contracts source page, year=2026 and invalid-year rejection, foreign shell/cross-chapter/hash refusal.",
+        "Pure metadata test only: no authenticated fixture, native UI, Microsoft login, or installed host proof."
+      ],
+      "replacements": [],
+      "group": "NATIVE-CLOSURE",
+      "bodyReview": "FULL_BODY",
+      "blob": "238d8329bc5677cdc98b9fa238426783bf4add65",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "pool-native",
+          "document": "teams-profile-pool-review.json",
+          "section": "nativeSupportParents.namedHelperUnitParent"
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "runner": "bun",
+        "genericRequestAllowed": true,
+        "execution": "NOT_RUN",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runtime": "browser-happy-dom",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/fixture/journeys.test.ts",
+        "changeScopedRequestId": "TP-002"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Recognizer regex já aceita native/teams-profile-linux.spec.ts; adicionar exemplo exato da nova spec, mantendo --list/fixture/*/wp04/grep false."
+      ],
+      "preserve": [
+        "Arquivo verifica seleção literal, não inicia host nem prova login."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 54
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/fixture/selection.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "trocar seleção de login {serverKey,projectId,installationId}, URL matching completa; admin/config sem Team usa admissão administrativa própria."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "f026c54dfdf8d5434aaea91edba82ed570eab204",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 39
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/home-pages-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Atualizar selected.projectId/installation e context stamp; troca de Team não pode capturar outro ServerConnection nem authority derivada da Location."
+      ],
+      "preserve": [
+        "Manter wrong connection nega antes de fetch, identidade do transport, GET projection.case exato e unknown route negado."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "9821bf2abae2355129e3952ae136b4d68291340f",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 34
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/host-binding231.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/memory-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "trocar triplet duplicado mantendo outcome ref opaco e bloqueio case/returnTo."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "9c34f7434f1e7e4deb512a13e9d4799a78b7d330",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 40
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/memory-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/operations-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "estender whitelist para novo seletor completo e rejeitar misto/parcial; preservar period/status bounds."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "d90b988a1701e9c3f9da1e76cb04d4d9982b1799",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 41
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/operations-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts",
+      "action": "KEEP_REGRESSION",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Não muda owner fixture: manter chapterPages native→mesmo SfOwnerRuntime231 e sourcing/compare."
+      ],
+      "preserve": [
+        "Guarda composição single-owner; não prova tenant autenticado."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "e0da88f9b5c9eacf33ccf44b5e245dce17888ece",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 33
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/owner-mount-integration.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Atualizar fixture context/selection/stamp/binding para nova versão. Mutar cada identidade/revisão separadamente durante await."
+      ],
+      "preserve": [
+        "Manter mesmo wrapper congelado + transport original na geração, novo no reload, undefined em expiry/revoke/logout/unmount, late context não substitui sucessor."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 32
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/owner-ready.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/people-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "substituir project=p&project=q e server parcial pelos novos negativos; manter ano/mês/status CAP08."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "f00cb8515d3a70e106ec734d84ea00ad9b40be2c",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 42
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/people-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/planner-pages-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "validar novo tuple em todos paths; manter ano 2026, duplicata/year bounds e filter privado negado."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "6528528c2208ac50218b7f97147efd2ca3634183",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 43
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/planner-pages-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/portfolio-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "novo tuple válido e parcial rejeitado; preservar filter watch e CAP-only+exact operations."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "6135a6f426a54040ab5190f34c73d79051dc9435",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 44
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/portfolio-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "trocar triplet duplicado; preservar previous/current distintos, report prepare+download e não Office legado."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "aa21c0ef1ee0ad8ddaa53fc8b685c0102e2f6230",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 45
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/reviews-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-001"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/routines-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "novo tuple completo/partial; preservar case vazio/duplicado negado."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "3c7edd08e0ed08d1bfc0224216dd27542450e4e5",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 46
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/routines-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-002"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Trocar identidade de fixture por tuple Team/pessoal; acrescentar forced revoke enquanto confirmação de discard pendente, sem aguardar/cancelar revogação."
+      ],
+      "preserve": [
+        "Manter cancel preserva draft, discard explícito, submitted/unknown não descarta como draft, revoke mata facade, quarentena e bridge singleton."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "5cfab26e9f171097994b3ec72c53c587b87268a5",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 31
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/shell-guard237.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-002"
+      },
+      "acceptanceIds": [
+        "A19",
+        "A41"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/team-profile-routes.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "table todos family parsers/builders/native-entry/resume/login/F04 href producers com seleção versionada completa",
+        "partial/duplicate/mixed/unknown keys/old project URL rejeitados ou importador explícito sem grant",
+        "explicit A não completa com B; back/forward/reload/deep-link native válido revalida",
+        "private search nunca URL; admitted admin recovery sem Team é distinto de profile fallback"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 5
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/team-profile-routes.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-002"
+      },
+      "acceptanceIds": [
+        "A18",
+        "A32",
+        "A43"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/team-profile-shell.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "single shared owner entre native chapters; Team picker/sidebar/titlebar/new-chat/palette/keyboard equivalentes",
+        "voluntary A→B com dirty cancel/confirm e recheck após consent",
+        "revoke/logout/principal replacement durante modal cancela authority em todas janelas do authEpoch; resposta velha não vence",
+        "no bridge não monta/calcule repo owner nem faz IPC; nenhum fallback manual/default"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 4
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/team-profile-shell.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-002"
+      },
+      "acceptanceIds": [
+        "A15",
+        "A16",
+        "A18",
+        "A41"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [
+        "CI-APP-BROWSER explicitly excludes this F04 installed-host test; it must not silently disappear from Teams qualification."
+      ],
+      "assertions": [
+        "Keep all three existing cases: real uncredentialed context rejects 401/403 with no redirect; duplicate Team selectors and legacy/mixed tuples reject; stale/disposed binding rejects before fetch.",
+        "Replace projectId tuple with versioned admitted Team context; authMode must never be inferred from HTTPS.",
+        "Q01-TRANSPORT-GUEST: Use the canonical versioned admitted Team selector in the real /api/ui/context URL; remain a fresh unauthenticated Bun fetch. Preserve: 401 or 403; no Location redirect; no supplied cookie, authorization header or imported Microsoft identity.",
+        "Q01-TRANSPORT-INVALID-OWNER: Replace duplicate projectId with duplicate canonical Team selector and add explicit legacy/project-only, mixed and partial selector rejection variants. Preserve: Never 200; accepted status set [400,401,403,404,409]; no actor or cookie.",
+        "Q01-TRANSPORT-STALE-FENCE: Build the descriptor with the new complete owner/revision, taking authentication mode from the explicit approved contract rather than inferring Microsoft identity from HTTPS. Preserve: generation 1 vs currentGeneration 2; exact {kind:'transport-error',reason:'contract-mismatch'}; networkCalls=0; invalidNetwork still throws if called."
+      ],
+      "preserve": [
+        "No cookie/auth-header fabrication for guest request; candidate-bound private manifest; networkCalls=0 for stale preflight."
+      ],
+      "replacements": [],
+      "group": "F04",
+      "bodyReview": "FULL_BODY",
+      "blob": "92306fdd4c17620c929b184e9c5a11662b914d4b",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "root-shell-crosscheck",
+          "document": "teams-profile-blast-radius.md",
+          "section": "6.3",
+          "lines": [
+            11,
+            29,
+            44
+          ]
+        },
+        {
+          "area": "pool-native",
+          "document": "teams-profile-pool-review.json",
+          "section": "f04LiveTransport"
+        }
+      ],
+      "sourceRunner": "F04_BUN_INSTALLED",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G08-NATIVE-TEAMS",
+        "runner": "bun browser condition + happy-dom; real guest fetch",
+        "genericRequestAllowed": false,
+        "execution": "NOT_RUN"
+      },
+      "acceptanceIds": [
+        "A36",
+        "A42"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/work-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "trocar triplet duplicado; source só relations/new, detalhes exigem read original."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "913650b3e8667127234a406b7f34e712d3cf7740",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 47
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G03-SF-INTEGRATED",
+        "integratedSuite": "CI-APP-BROWSER",
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/sucafina-native/work-route.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "changeScopedRequestId": "TP-002"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/team-profile-private-state.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "tabs/recent/closed/info/title/history/prompts/comments/fileviews/subagent models/notifications com A/B mesma Team duas contas",
+        "Web window identifier de verdade no target; não desktop mock para promessa web",
+        "draft doc+blob refs e objectURLs owner-bound; excluir/GC A não elimina B; logout revoga URL/re-hydration",
+        "notificação de A após B não mostra dado; clique revalida origin+owner ou estado neutro"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 6
+        }
+      ],
+      "sourceRunner": "APP_BUN_HAPPYDOM",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test-browser/team-profile-private-state.test.ts",
+        "runtime": "browser-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-002",
+        "changeScopedRequestId": "TP-002",
+        "finalRequestId": "TP-002"
+      },
+      "acceptanceIds": [
+        "A16",
+        "A17",
+        "A40"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/bi-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "query server=b&project=p&installation=i hoje aceita e foreign.projectId esperado: atualizar para tuple Team. Nunca completar project parcial com seleção local."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "e47a0e0b9722d59e3de883992c96ed49f9da4670",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 49
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/bi-route.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/dashboard-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Todas entradas/detail atualmente aceitam query server=s&project=p&installation=i; atualizar aceitação, duplicados e versão antiga."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant. Preservar proposals workbench e year/month/status."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "3b566e8d56adb9c3a0010b6e709d2f61c0e43129",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 50
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/dashboard-route.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/installed-manifest-contract.test.ts",
+      "action": "NEW",
+      "existsAtPin": false,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "factory/reader compartilham validação pure de boundary; roundtrip positivo do mesmo manifest DTO",
+        "wrong tenant/Team/install/server/principal independentes; versão v1/missing/excess rejeitadas",
+        "detectar contradição atual equal vs unequal publicOrigin sem simular login/real session"
+      ],
+      "preserve": [],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "PROPOSED",
+      "blob": null,
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "newTests",
+          "index": 7
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/installed-manifest-contract.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": [
+        "A36"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/native-chapter-entry.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Alterar seleção/stamp/binding projectId e exact href ?server&project&installation para contrato Team versionado; arrays de mutação devem incluir tenant/team/principal/authEpoch/config/accessRevision."
+      ],
+      "preserve": [
+        "Manter todos capítulos canônicos, live denial, inválido preserva editor atual, branch sem directory não fabrica owner, snapshot coerente e transition F01."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "8ac82ca5b97052b7dbcc59f796009ace079b5815",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 29
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/native-chapter-entry.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/navigation-consent-recheck.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Trocar oldSelection/project e target query; após consent verificar Team/principal/grants atual, não só owner string."
+      ],
+      "preserve": [
+        "Manter sequência consent→source recheck→promote→invalidate→commit, revoked target não retira old owner, outgoing change/abort não promove."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "c2630424358f6a14081ba16539bcb14f09019599",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 36
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/navigation-consent-recheck.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": [
+        "A19",
+        "A41"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/owner-exit.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "selection.projectId e mutação in-place→outro owner passam a Team/principal/revisões; ampliar matriz de campos."
+      ],
+      "preserve": [
+        "Manter consent/discard/purge ordem, cancel, pending refusal, troca owner/generation/handle/status e abort nunca descartam successor."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "77c7fc32d00e612983f40c19e287aab1f4d7d232",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 53
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/owner-exit.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/planner-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "selection, foreign.projectId e URL com encoded server usam triplet antigo; atualizar para tuple versionado e não fallback parcial."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant. Preservar overview removed version/wrong year/filter guard."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "628521b990e697c034fd2e4ff413ee4ac3a23df4",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 51
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/planner-route.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/procurement-route.test.ts",
+      "action": "CHANGE_CONTRACT",
+      "existsAtPin": true,
+      "kind": "TEST",
+      "rationale": [],
+      "assertions": [
+        "Trocar query positivo/duplicado e foreign owner assertions em todos paths, sem mudar sourceRecord PR/Supplier."
+      ],
+      "preserve": [
+        "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant. Preservar not-submitted vs not-pending separados."
+      ],
+      "replacements": [],
+      "group": "shell",
+      "bodyReview": "FULL_BODY",
+      "blob": "d7119a2ec863836ab6272e70ac84f566c5760b0c",
+      "evidenceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "execution": "NOT_RUN",
+      "sourceRows": [
+        {
+          "area": "shell",
+          "document": "teams-profile-radius-shell.json",
+          "section": "existingTests",
+          "index": 52
+        }
+      ],
+      "sourceRunner": "APP_BUN_SOLID",
+      "qualification": {
+        "required": true,
+        "primaryGate": "G02-TARGETED-REQUESTS",
+        "integratedSuite": null,
+        "runner": "bun",
+        "package": "app",
+        "directory": "packages/app-shell",
+        "selector": "test/sucafina-native/procurement-route.test.ts",
+        "runtime": "solid-happy-dom",
+        "execution": "NOT_RUN",
+        "requestId": "TP-004",
+        "changeScopedRequestId": "TP-004",
+        "finalRequestId": "TP-004"
+      },
+      "acceptanceIds": []
+    }
+  ]
+}

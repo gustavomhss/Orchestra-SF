@@ -1,5 +1,7 @@
 # Orchestra-SF — migração de profile por repositório para Teams
 
+> **Ampliação de blast radius — 19/11/2026:** a investigação posterior foi fechada no código `687759276c2c9121c2cfd20a5994b277ceb7ee4d` (tree `c3ac6f64b79e75fc5a178c90692f36435e99d236`). [teams-profile-blast-radius.md](./teams-profile-blast-radius.md), [teams-profile-test-plan.json](./teams-profile-test-plan.json) e [teams-profile-acceptance-map.json](./teams-profile-acceptance-map.json) governam agora a seleção de testes, helpers, runners, obrigações adicionais e qualificação final. As bases e revisões abaixo permanecem como histórico da arquitetura; não são o head do produto nem evidência de execução. Implementação e testes continuam **NOT_STARTED / NOT_RUN**.
+
 ## 0. Estado, escopo e força da evidência
 
 **Data do estudo:** 19/11/2026, America/Sao_Paulo.  
@@ -308,7 +310,7 @@ São pacotes propostos, não sessões já iniciadas. Cada pacote terá branch pr
 
 | Pacote | Dono técnico e arquivos principais | Entrega | Dependência e saída |
 |---|---|---|---|
-| WP0 — inventário fechado | Integrador: manifesto, grafo de imports/callers, plano de testes, ledger de campos/stores | Inventário integral por símbolo/alcançabilidade, entrypoint e builder/parser de URL no SHA de execução; cada ocorrência com dono, destino e teste; baseline observado | Primeiro. Nenhuma contagem de scan ou CI inventada. |
+| WP0 — reconciliação do inventário | Integrador: manifesto expandido, grafo de imports/callers, plano de testes, ledger de campos/stores | Reconciliar delta contra o pin `687759…`; completar censo de dados reais e ledger de ocorrências do artefato final. Os caminhos, fixtures, testes e runners já decididos nos anexos não voltam a ser descoberta pendente. | Primeiro. Nenhuma contagem de scan ou CI inventada. |
 | WP1 — contrato e autoridade Teams | Schema/contexto, cliente Entra/leitor Graph, local-identity, policy, product-authority, discovery/host | TeamProfileRef e revisão efetiva; leitor real; admissão corporativa em transportes do host; seleção/autoridade server-side; entrada nativa de administração/recuperação sem Team, pelo grupo corporativo; contrato público e URLs versionados | Após WP0. Positivos e negativos de tenant/membership/grants; clients regenerados. |
 | WP2 — shell e estado pessoal | app-shell: layout/sidebar/titlebar/home/new-session/tabs/persist/sdk/queries/events/contexto SF | Toda navegação e restauração usam contexto Teams; mesmas guardas em todos breakpoints; sem pasta/Git no fluxo | Após contrato WP1. UI/cache/races/drafts/duas janelas qualificados. |
 | WP3 — runtime e consumidores | Core/server e bindings: config/session/MCP/Arsenal/ToolSafety/Relay/Lean/schedules; adapters RAG/Atlas/Inbox alcançáveis | Ownership durável; admissão antes de SessionLocation/LocationServiceMap; serviços isolados por autoridade; consumidores livres de autoridade por repo; contexto técnico separado | Após WP1. Pode correr em paralelo com WP2 com ownership de arquivos explícito. |
@@ -358,7 +360,7 @@ Os testes atuais de Microsoft web mínimo são intencionais. A nova capacidade G
 | Migração | Dry-run, conflitos, dados vazios/corruptos, integridade, crash/replay, concorrência e recuperação com revogação ou com efeitos posteriores ao checkpoint; preservar as provas de não repetição. |
 | Pacote final | Imports/build e bundle entregue sem caminhos ativos de repo-profile; inicialização limpa sem .git/config de projeto. |
 
-O inventário JSON lista caminhos existentes de teste como ponto de partida. A lista precisa ser resolvida contra o SHA de execução; não é um comando pronto que foi rodado.
+A seleção inicial do inventário é histórica. O manifesto normativo de testes agora é [teams-profile-test-plan.json](./teams-profile-test-plan.json): decide por arquivo o que alterar/preservar, separa helpers, fixa runners e entrega requests exatos de recorte e de qualificação final. [teams-profile-acceptance-map.json](./teams-profile-acceptance-map.json) liga A01–A46 às assertions/gates. Novos paths são propostas, não arquivos já existentes ou testes executados. Antes de executar, reconciliar somente o delta do pin e confirmar os paths no candidato.
 
 ### 9.3 O que o CI atual prova e o que falta
 
@@ -370,7 +372,7 @@ O workflow de recorte no pin exige branches `ci-run-linux-*`; rejeita outros sis
 
 ```json
 {
-  "package": "modules/sucafina",
+  "package": "sucafina",
   "runner": "bun",
   "args": ["Sucafinav1/test/microsoft-entra-client.test.ts"]
 }

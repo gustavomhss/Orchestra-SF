@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "title": "Orchestra-SF repo-profile to Teams migration: targeted audit inventory",
-  "status": "TARGETED_AUDIT_SEED",
+  "status": "EXPANDED_BLAST_RADIUS_AND_TEST_PLAN",
   "analysisDateLocal": "2026-11-19",
   "timezone": "America/Sao_Paulo",
   "repository": "gustavomhss/Orchestra-SF",
@@ -24,7 +24,7 @@
     "sourceReading": "Targeted reads of producers, direct consumers and important indirect consumers; paths and blobs verified against the indicated evidence commit (analysis pin when no evidenceCommit is present). First review added host-auth boundary; cold review added admin/bootstrap, restore/effect-proof, canonical evidence and integration-delta sources.",
     "semanticTestCoverage": "Not certified. Primary bodies read in the audits and supplementary tree-discovered candidates are distinguished. No tests run.",
     "codeSearchLimitation": "GitHub code search targets default dev, not analysis pin. No-result is not evidence of absence.",
-    "unresolvedImplementationEntryGate": "WP0: reconcile current integration SHA and create exhaustive symbol/caller/store/reachability inventory"
+    "unresolvedImplementationEntryGate": "WP0 reconciles candidate delta and real-data/artifact census. Known source/test/fixture/runner decisions are in expanded investigation; do not delegate their rediscovery."
   },
   "records": [
     {
@@ -2366,20 +2366,12 @@
     }
   ],
   "requiredRemainingInventory": [
-    "Complete content scan and import/caller reachability in final SF Linux artifact",
-    "All generated schema/protocol/client endpoints and emitted events impacted by business context",
-    "All schedule/Relay hook and recovery producers plus notification adapters",
-    "RAG bridges, Atlas territorial catalog and SF business memory source grants",
-    "All i18n dictionaries, command entries, deep links, examples, fixtures and shipped agent prompts/skills",
-    "Actual stored legacy profiles and owner mapping; data census and privacy classification",
-    "Runtime membership, tenant consent and corporate supreme-admin integration",
-    "Current concurrent integration deltas affecting shell/host/identity/CI",
-    "Complete route URL builder/parser/back-forward/restore contract by native chapter family",
-    "Corporate-admin bootstrap/recovery admission independent of Team selection; identify already-authorized actor classes with no eligible Team before cutover",
-    "Restore-versus-preserve classification per store, including post-checkpoint receipts, consumed schedule slots, cancellations, dedup keys and issued identifiers; suspend uncertain effect producers",
-    "Durable BusinessEvidenceRef/BI/confirmation families, canonical digests and historical project identifiers versus current authorized projection and transient proofs",
-    "Handwritten native client consumers including packages/client/src/sucafina/transport.ts; generating clients alone does not update handwritten owner/stamp guards",
-    "At execution SHA, distinguish static ownership/wiring regression PASS from actual mandatory static job execution; preserve complete shard coverage and source-PR guard contract after CI optimization delta 72830e53"
+    "Reconcile the actual implementation candidate delta against 687759276c2c9121c2cfd20a5994b277ceb7ee4d; update paths/contracts only for that delta.",
+    "Produce the final occurrence/caller/reachability ledger from the implemented source and actual SF prod archive; execute negative residue controls. Scope searches are not proof of artifact absence.",
+    "Census actual stored legacy profiles/data/credentials, prove owner mapping and privacy, and rehearse migration with writer fence, partial interruption, cutover and monotonic effect recovery.",
+    "Observe real Microsoft tenant eligibility/consent/revocation and corporate recovery-admin admission without selected Team; inventory authorized actors who lack eligible Team before cutover.",
+    "Implement the exact missing runners/receipt contracts/operational adapters named in the new test plan; existing workflow/config blockers remain blocking until fixed and actually run.",
+    "Run final exact selections and all integrated/installed/recovery gates on the same product candidate/tree/archive; no result was obtained in this study."
   ],
   "residueSearchSeeds": [
     "profileProject",
@@ -2959,6 +2951,112 @@
       "scope": "CI selection/shard coverage, mandatory static execution ownership and unchanged source-PR guard contract",
       "qualificationStatus": "NOT_RUN",
       "limitations": "Relevant contracts read, not a full audit of CI optimizations or performance assertions"
+    }
+  },
+  "initialRequiredRemainingInventory": [
+    "Complete content scan and import/caller reachability in final SF Linux artifact",
+    "All generated schema/protocol/client endpoints and emitted events impacted by business context",
+    "All schedule/Relay hook and recovery producers plus notification adapters",
+    "RAG bridges, Atlas territorial catalog and SF business memory source grants",
+    "All i18n dictionaries, command entries, deep links, examples, fixtures and shipped agent prompts/skills",
+    "Actual stored legacy profiles and owner mapping; data census and privacy classification",
+    "Runtime membership, tenant consent and corporate supreme-admin integration",
+    "Current concurrent integration deltas affecting shell/host/identity/CI",
+    "Complete route URL builder/parser/back-forward/restore contract by native chapter family",
+    "Corporate-admin bootstrap/recovery admission independent of Team selection; identify already-authorized actor classes with no eligible Team before cutover",
+    "Restore-versus-preserve classification per store, including post-checkpoint receipts, consumed schedule slots, cancellations, dedup keys and issued identifiers; suspend uncertain effect producers",
+    "Durable BusinessEvidenceRef/BI/confirmation families, canonical digests and historical project identifiers versus current authorized projection and transient proofs",
+    "Handwritten native client consumers including packages/client/src/sucafina/transport.ts; generating clients alone does not update handwritten owner/stamp guards",
+    "At execution SHA, distinguish static ownership/wiring regression PASS from actual mandatory static job execution; preserve complete shard coverage and source-PR guard contract after CI optimization delta 72830e53"
+  ],
+  "expandedInvestigation": {
+    "analysisCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+    "analysisTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+    "branchObserved": "sf-join-four",
+    "fixedPin": true,
+    "sourceCodeRebasedInDocumentationBranch": false,
+    "implementation": "NOT_STARTED",
+    "tests": "NOT_RUN",
+    "normativeDocuments": [
+      "docs/architecture/teams-profile-blast-radius.md",
+      "docs/architecture/teams-profile-test-plan.json",
+      "docs/architecture/teams-profile-acceptance-map.json",
+      "docs/architecture/teams-profile-fixture-review.json",
+      "docs/architecture/teams-profile-pool-review.json",
+      "docs/architecture/teams-profile-qualification-review.json",
+      "docs/architecture/teams-profile-ui-fixture-review.json"
+    ],
+    "initialTestCandidatesSuperseded": true,
+    "sourceDomainMatrices": [
+      "docs/architecture/teams-profile-radius-core.json",
+      "docs/architecture/teams-profile-radius-identity.json",
+      "docs/architecture/teams-profile-radius-shell.json"
+    ],
+    "semanticCandidateClosure": {
+      "originalCount": 213,
+      "reviewed": 213,
+      "unclassified": 0,
+      "meaning": "Constructor/fixture and relevant assertion slices, not whole-monorepo semantic review."
+    },
+    "coverageCounts": "Authoritative deduplicated counts are in teams-profile-test-plan.json.",
+    "sourceCoverageByFront": {
+      "core": {
+        "fullBlobsFetched": 1038,
+        "sourceBodiesFetched": 238,
+        "coreTestsLexicallyScanned": 641,
+        "coreExecutableRows": 219
+      },
+      "identity": {
+        "sourceFilesScanned": 727,
+        "testAndSupportFilesScanned": 1172,
+        "initialSemanticExecutables": 58
+      },
+      "shell": {
+        "initialExecutableRows": 90,
+        "fullBodies": 83,
+        "targetedBodies": 7
+      },
+      "root": {
+        "selectedCiCliPackagingPaths": 117,
+        "shippedPromptSkillPlaybookFilesScanned": 57
+      }
+    },
+    "proofLimit": "Source reading, textual scans, semantic slices, structural parent closure, and runtime execution are different; no actual run or absence-of-residue certification.",
+    "normalizedCounts": {
+      "tests": 638,
+      "existingTests": 590,
+      "proposedTests": 48,
+      "byAction": {
+        "KEEP_REGRESSION": 140,
+        "CHANGE_CONTRACT": 323,
+        "NEW": 48,
+        "CHANGE_FIXTURE": 121,
+        "REMOVE_SF_CASE": 6
+      },
+      "requiredClassifiedTests": 631,
+      "outsideSfFinalLane": 7,
+      "supportPaths": 154,
+      "supportFiles": 152,
+      "generatedDirectories": 2,
+      "existingSupportPaths": 150,
+      "proposedSupportPaths": 4,
+      "additionalStructuralRegressionParents": 224,
+      "closedOriginalFixtureCandidates": 213,
+      "originalBrowserPoolFiles": 40,
+      "requestRecipes": 44,
+      "finalTargetedRequests": 30,
+      "finalTargetedFiles": 299,
+      "acceptanceCriteria": 46,
+      "finalGates": 10,
+      "uiOriginalCases": 14,
+      "nativeExistingRegistrations": 50,
+      "operationalAz02Phases": 6,
+      "operationalAz02Cases": 32
+    },
+    "documentaryValidation": {
+      "checks": 19,
+      "status": "CONSISTENT",
+      "productTests": "NOT_RUN"
     }
   }
 }

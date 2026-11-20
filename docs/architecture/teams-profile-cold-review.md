@@ -1,5 +1,7 @@
 # Orchestra-SF — cold review adversarial do plano Teams-profile
 
+> **Nota de continuidade:** esta é a cold review histórica do plano pinado abaixo. A investigação posterior de blast radius está em [teams-profile-blast-radius.md](./teams-profile-blast-radius.md), com catálogo exato de testes, fecho das fixtures, produtores operacionais e bloqueios adicionais de qualificação no código `687759276c2c9121c2cfd20a5994b277ceb7ee4d`. Seus resultados não devem ser inferidos do parecer histórico; nenhum teste foi executado nesta ampliação.
+
 **Data:** 19/11/2026, America/Sao_Paulo.  
 **Documento revisado:** `4d984e0bd3a3bd5445fcd504b96be4f7888da5da`.  
 **Base principal de código:** `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.  
