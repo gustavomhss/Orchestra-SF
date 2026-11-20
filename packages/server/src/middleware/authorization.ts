@@ -1,4 +1,5 @@
 import { ServerAuth } from "../auth"
+import { parseSfInstallationSelector, readSfInstallations, type SfTrustedInstallationSource } from "../sucafina-installations"
 import { UnauthorizedError } from "@orchestra/protocol/errors"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
 export { Authorization } from "@orchestra/protocol/middleware/authorization"
@@ -39,7 +40,7 @@ function credentialFromRequest(request: HttpServerRequest.HttpServerRequest) {
   return Effect.succeed(emptyCredential())
 }
 
-export const authorizationLayer = Layer.effect(
+export const authorizationLayerWith = (installed?: SfTrustedInstallationSource) => Layer.effect(
   Authorization,
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
@@ -53,6 +54,8 @@ export const authorizationLayer = Layer.effect(
         if (hasPtyConnectTicketURL(url)) return yield* effect
         // Media elements cannot send headers either; the content handler verifies the HMAC ticket.
         if (hasCapabilityContentTicketURL(url)) return yield* effect
+        // Only the configured current Microsoft metadata endpoint is public; the descriptor grants no admission.
+        if (installed && (yield* Effect.promise((signal) => publicBootstrap(request, installed, signal)))) return yield* effect
         const credential = yield* credentialFromRequest(request)
         if (ServerAuth.authorized(credential, config)) return yield* effect
         if (process.env.SF_AUTH_DIAG === "1" && /^\/sucafina\/(?:dashboard|planner|procurement)$/.test(url.pathname)) {
@@ -69,3 +72,28 @@ export const authorizationLayer = Layer.effect(
     )
   }),
 )
+
+export const authorizationLayer = authorizationLayerWith()
+
+async function publicBootstrap(request: HttpServerRequest.HttpServerRequest, installed: SfTrustedInstallationSource, signal: AbortSignal) {
+  if (request.method !== "GET" && request.method !== "HEAD") return false
+  const url = new URL(request.url, "http://localhost")
+  if (url.pathname !== "/api/sucafina/installations" || url.username || url.password || url.hash ||
+    request.headers["sec-fetch-site"] === "cross-site" || request.headers["transfer-encoding"] !== undefined ||
+    request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") return false
+  try {
+    const selector = parseSfInstallationSelector(request.url)
+    if (selector.select !== "current") return false
+    const result = await readSfInstallations(installed, selector, signal)
+    const descriptor = result.installations.length === 1 ? result.installations[0] : undefined
+    if (signal.aborted || !descriptor || descriptor.authMode !== "microsoft" ||
+      descriptor.contractRevision !== "sf-team-profile/1") return false
+    const source = request.source instanceof Request ? new URL(request.source.url) : undefined
+    const host = request.headers.host ?? source?.host
+    const origin = new URL(descriptor.publicOrigin)
+    // Host comes from the actual transport. Forwarded hints never widen this exception.
+    return host?.toLowerCase() === origin.host.toLowerCase() &&
+      (!source || source.origin === descriptor.publicOrigin) &&
+      (request.headers.origin === undefined || request.headers.origin === descriptor.publicOrigin)
+  } catch { return false }
+}
