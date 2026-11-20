@@ -40,10 +40,16 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   let ownerKey: SfOwnerKey | undefined
   let epoch = 0
   let disposed = false
+  let readyAccess: Readonly<{
+    active: Active
+    generation: number
+    value: NonNullable<ReturnType<SfContextHandle["ready"]>>
+  }> | undefined
   const sameSelection = (a: SfOwnerSelection, b: SfOwnerSelection) =>
     a.serverKey === b.serverKey && a.projectId === b.projectId && a.installationId === b.installationId
 
   const fence = (selection: SfOwnerSelection) => {
+    readyAccess = undefined
     inFlight?.abort()
     // A reload or owner transition cancels pending F01 route admission.
     props.dependencies.navigation?.invalidate()
@@ -324,10 +330,21 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     discardDrafts: () => (store.state.status === "ready" || current?.drafts.state() === "quarantined") &&
       current?.drafts.discardAll() === true,
     ready: () => {
-      if (store.state.status !== "ready" || !store.active || !current) return undefined
-      // The transport is an opaque instance registered in a private WeakMap.
-      // Preserve its identity instead of returning a Solid store proxy.
-      return { context: store.active.context, transport: current.transport, drafts: current.drafts.registry }
+      if (disposed || store.state.status !== "ready" || !store.active || !current) {
+        readyAccess = undefined
+        return undefined
+      }
+      // Consumers retain this access object across an await. Its identity is
+      // stable only within this admitted generation and changes on every load.
+      // The original transport must never become a Solid store proxy.
+      if (!readyAccess || readyAccess.active !== current || readyAccess.generation !== store.generation) {
+        readyAccess = {
+          active: current,
+          generation: store.generation,
+          value: Object.freeze({ context: store.active.context, transport: current.transport, drafts: current.drafts.registry }),
+        }
+      }
+      return readyAccess.value
     },
     reload: () => load(props.selection()),
     invalidate,
