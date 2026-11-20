@@ -89,7 +89,7 @@ export async function enterWorkbench(page: Page, origin: string) {
   await expect(page.getByRole("button", { name: "New case", exact: true })).toBeEnabled()
 }
 
-export async function fillDecision(page: Page, objective: string) {
+export async function fillDecision(page: Page, objective: string, criteria: readonly string[] = draft.criteria) {
   await page.getByRole("button", { name: "New case", exact: true }).click()
   const form = page.locator("section.sf-n24-create form")
   await expect(form).toHaveCount(1)
@@ -98,13 +98,13 @@ export async function fillDecision(page: Page, objective: string) {
   await form.getByLabel("Start", { exact: true }).fill(draft.horizon.start)
   await form.getByLabel("End", { exact: true }).fill(draft.horizon.end)
   await form.getByLabel("Currency", { exact: true }).fill(draft.currency)
-  await form.getByLabel("Criteria, one per line", { exact: true }).fill(draft.criteria.join("\n"))
+  await form.getByLabel("Criteria, one per line", { exact: true }).fill(criteria.join("\n"))
   const review = form.getByRole("button", { name: "Review creation", exact: true })
   await expect(review).toBeEnabled()
   await review.click()
   const proposed = form.getByRole("group", { name: "Review creation", exact: true })
   await expect(proposed).toContainText(objective)
-  for (const criterion of draft.criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
+  for (const criterion of criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
   await expect(form.getByRole("button", { name: "Confirm this decision creation", exact: true })).toBeEnabled()
   return form
 }

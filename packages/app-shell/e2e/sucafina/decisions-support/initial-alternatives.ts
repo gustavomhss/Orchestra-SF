@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, readCase, reopenCase } from "./journey"
+import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import { createPlannerSources, sourceNames } from "./planner-sources"
 import { loseAlternativeResponse } from "./alternative-response"
 
@@ -11,12 +12,12 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
   const sources = await test.step("create two actual Planner versions through human controls", () => createPlannerSources(page, installation.origin, installation.actorId, observations))
   await enterWorkbench(page, installation.origin)
   const objective = `${draft.objective} — initial alternatives`
-  const form = await fillDecision(page, objective)
-  await form.getByLabel("Criteria, one per line", { exact: true }).fill(knownIncreaseCriterion)
-  const created = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
+  const form = await fillDecision(page, objective, [knownIncreaseCriterion])
+  const created = await clickCommand(page, form.getByRole("button", { name: "Confirm this decision creation", exact: true }), "workbench-command", observations)
   expect(typeof created.outputRef).toBe("string")
   const reference = created.outputRef as string
   const identity = caseIdentity(reference)
+  await form.getByRole("link", { name: "Open decision", exact: true }).click()
   await currentCase(page, reference, objective, 1, "draft")
 
   await test.step("discover and inspect authorized sources before attaching them to the saved case", async () => {
@@ -196,12 +197,19 @@ async function selectSource(select: Locator, name: string, id: string) {
 }
 
 async function currentCase(page: Page, reference: string, objective: string, version: number, state: "draft" | "comparing") {
-  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
-  const decision = page.getByRole("region", { name: "Decision", exact: true })
-  await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
-  await expect(decision.locator("header > p")).toHaveText(`${state} · Version ${version} · ${draft.horizon.start} – ${draft.horizon.end} · USD`)
-  const context = asRecord(JSON.parse((await page.locator("form[data-decision-edit]").getAttribute("data-context"))!))
-  expect(context.caseRef).toEqual({ ...caseIdentity(reference), version })
+  await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions/" + encodeSfRouteRef(reference))
+  const decision = page.locator('[data-sf-surface="UI34"]')
+  await expect(decision).toBeVisible()
+  await expect(decision).toHaveAttribute("data-sf-case-ref", reference)
+  await expect(decision).toHaveAttribute("data-sf-case-version", String(version))
+  await expect(decision.getByRole("region", { name: "Question", exact: true }).getByText(objective, { exact: true })).toBeVisible()
+  await expect(decision.locator(".sf-n24-metadata > span")).toHaveText([
+    `Current version: ${version}`, `State: ${state}`,
+    `Period: ${draft.horizon.start} – ${draft.horizon.end}`, "USD",
+  ])
+  const context = await readCase(page, reference)
+  expect(context).toMatchObject({ ...caseIdentity(reference), version, objective, state,
+    horizon: draft.horizon, currency: "USD" })
 }
 
 function alternativeArticles(page: Page) {

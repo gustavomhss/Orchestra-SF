@@ -11,7 +11,8 @@ const stages = [
 ] as const
 
 export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
-  const entry = await page.goto("/orchestra/sf-procurement/requests/new")
+  const entry = await test.step("Decisions Requests native navigation", () =>
+    page.goto("/orchestra/sf-procurement/requests/new"))
   // Regression: a fresh installation must serve a functional Requests form,
   // not the previously observed 503 swallowed as a missing form.
   expect(entry?.status()).toBe(200)
@@ -31,7 +32,8 @@ export async function createRequisition(page: Page, origin: string, observations
   await form.getByLabel("Cost center", { exact: true }).fill("Decisions verification")
   await form.getByLabel("Needed by", { exact: true }).fill("2027-01-01")
   await form.getByLabel("Justification", { exact: true }).fill("Compare explicit alternatives before any financial approval or application")
-  await domainCommand(page, origin, { page: "Requests", action: "create" }, form.getByRole("button", { name: "Create request", exact: true }), "Confirm action", observations)
+  await test.step("Decisions requisition review and single command", () =>
+    domainCommand(page, origin, { page: "Requests", action: "create" }, form.getByRole("button", { name: "Create request", exact: true }), "Confirm action", observations))
   const row = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
   await expect(row).toHaveCount(1)
   const id = (await row.getAttribute("data-sf-row")) ?? ""
@@ -135,17 +137,21 @@ async function domainCommand(page: Page, origin: string, command: Command, openR
     if (matched) seen.posted = true
     return matched
   })
-  await expect(openReview).toBeEnabled()
-  await openReview.click()
   const review = page.locator('[data-component="sf-change-review"]')
-  await expect(review).toHaveCount(1)
-  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
-  expect(seen.posted, "The command is sent only after the review is confirmed").toBe(false)
-  if (prepare) await prepare()
-  const confirm = review.getByRole("button", { name: confirmName, exact: true })
-  await expect(confirm).toBeEnabled()
-  await confirm.click()
-  const response = await pending
+  await test.step("Decisions Procurement human review", async () => {
+    await expect(openReview).toBeEnabled()
+    await openReview.click()
+    await expect(review).toHaveCount(1)
+    await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+    expect(seen.posted, "The command is sent only after the review is confirmed").toBe(false)
+    if (prepare) await prepare()
+  })
+  await test.step("Decisions Procurement single confirmation", async () => {
+    const confirm = review.getByRole("button", { name: confirmName, exact: true })
+    await expect(confirm).toBeEnabled()
+    await confirm.click()
+  })
+  const response = await test.step("Decisions Procurement original response", () => pending)
   expect(response.request().postDataJSON()).toMatchObject({ ...(command.page ? { page: command.page } : {}), action: command.action, ...(command.id ? { id: command.id, version: command.version } : {}) })
   expect(response.status()).toBe(200)
   expect(response.headers()["content-type"]).toContain("application/json")
