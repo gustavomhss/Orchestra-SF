@@ -165,6 +165,7 @@ test("Planner physical batching preserves both operation passes over three actua
     const root = fixture.persistence.readSnapshotRoot
     if (!root) throw new Error("Real LocalStore read root unavailable")
     const before = await fixture.authority.state.read(fixture.request(), "cases", (state) => state)
+    expect(before.status).toBe("ok")
     const snapshots = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
     let canonical: AuthorizedCaseProjection
     let canonicalCost: typeof measured.counts
@@ -256,8 +257,7 @@ for (const boundary of ["source", "case-operation"] as const) {
         // must have completed before this independent committed mutation.
         expect(measured.counts.sources).toBe(36)
         expect(measured.counts.sourcesInRoot).toBe(36)
-        completed++
-        await fixture.store.transaction(boundary === "source" ? "planner" : "dashboard", async (snapshot) => {
+        const committed = await fixture.store.transaction(boundary === "source" ? "planner" : "dashboard", async (snapshot) => {
           if (boundary === "source") {
             const versions = snapshot.data.versions as { lines: { f: number[] }[] }[]
             versions[2]!.lines[0]!.f[0]! += 1
@@ -265,8 +265,10 @@ for (const boundary of ["source", "case-operation"] as const) {
             const decision = (snapshot.data.__sfProductV1 as SfProductState).cases[fixture.caseRef.id]!
             decision.alternatives[2]!.scenario.operations[0]!.targetRef = "changed-after-operation-check"
           }
-          return { commit: true, value: undefined }
+          return { commit: true, value: true }
         })
+        expect(committed).toBe(true)
+        completed++
         return value
       }
       deadline.own(() => { fixture.persistence.readSnapshotRoot = root })
