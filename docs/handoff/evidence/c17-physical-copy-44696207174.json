@@ -1,0 +1,852 @@
+{
+  "schemaVersion": 1,
+  "status": "Diagnostic completed; the original C17 cooperative deadline failed. No retry or product optimization follows from this evidence.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "profileProduct": {
+    "sha": "00e2eed6799ffc3e3c5d989201b8756bdd025d18",
+    "parent": "feeda92842bc4f26aec83901b5162543e9ca4bdd",
+    "tree": "9f0077e5cf501d53c5749118ca29393d3cde48a6",
+    "blobs": {
+      "localStore": "2a4170ba672284b7dafbbebdff292ddbac0076e7",
+      "numericObserver": "320feeef6d6382afb29d1e2570811fb2ffe98331",
+      "importer": "68d7fad7650a01395271b97505e7ca439843d37c",
+      "request": "6be168028b448935fce5ca0ccb6ee321fdbc3a5d",
+      "manifest": "90bc8676312d7c34d6a3053f198712ba50f00ee6"
+    },
+    "staticPreservation": {
+      "inverseLocalStoreBlob": "077b5e2be53546451dfba0b75957b10cca481bce",
+      "observerEdits": 8,
+      "awaitTokens": 22,
+      "asyncTokens": 19,
+      "sqlSites": 23,
+      "sqlLiteralSequenceUnchanged": true
+    },
+    "originalC17": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+      "deadlineHelper": "3eb140557b597156baf52578d8981d332e52aef3",
+      "cooperativeDeadlineMs": 105000,
+      "bunTestBudgetMs": 120000
+    }
+  },
+  "diagnostic": {
+    "runId": 44696207174,
+    "head": "8e9fa579a74a5ee454bb23d8242bfde0e66d92e1",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-20T07:36:26Z",
+    "startedAt": "2026-11-20T07:36:26Z",
+    "updatedAt": "2026-11-20T07:39:07Z",
+    "jobId": 136153441713,
+    "cleanupJobId": 136154455622,
+    "cleanup": "success",
+    "snapshot": "8e9fa579a74a5ee454bb23d8242bfde0e66d92e1",
+    "snapshotParent": "00e2eed6799ffc3e3c5d989201b8756bdd025d18",
+    "tree": "9f0077e5cf501d53c5749118ca29393d3cde48a6",
+    "compareChangedPaths": 0,
+    "request": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/product/wp10/integration/authority-copy-cost.diagnostic.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "result": {
+      "pass": 0,
+      "fail": 1,
+      "expectCalls": 2,
+      "files": 1,
+      "totalDurationMs": 105430,
+      "reportedTotal": "105.43s",
+      "cases": [
+        {
+          "timestamp": "2026-11-20T07:38:57.9706298Z",
+          "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+          "status": "fail",
+          "durationMs": 105008.06
+        }
+      ],
+      "signature": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline"
+    },
+    "omni": {
+      "classification": "not applicable (focused: no declaring test ran)",
+      "spawns": 0,
+      "delegations": 0,
+      "nativeWitness": false
+    },
+    "originalMarkerCount": 8,
+    "profileMarkerCount": 1,
+    "markers": [
+      {
+        "timestamp": "2026-11-20T07:37:12.9671170Z",
+        "marker": "SF_COMPOSITION_PHASE",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "started",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:37:13.0148484Z",
+        "marker": "SF_COMPOSITION_PHASE",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "returned",
+          "phaseMs": 49,
+          "elapsedMs": 51,
+          "aborted": false
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:37:13.0150184Z",
+        "marker": "SF_COMPOSITION_PHASE",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "started",
+          "elapsedMs": 51
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:37:14.8696897Z",
+        "marker": "SF_CALCULATION_ANCESTRY",
+        "value": {
+          "phase": "produce-inner",
+          "elapsedMs": 1855,
+          "canonicalResultReads": 14,
+          "canonicalResultReadsCompleted": 14,
+          "aborted": false
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:37:14.8698490Z",
+        "marker": "SF_COMPOSITION_PHASE",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "returned",
+          "phaseMs": 1855,
+          "elapsedMs": 1906,
+          "aborted": false
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:37:14.8745590Z",
+        "marker": "SF_COMPOSITION_PHASE",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "started",
+          "elapsedMs": 1911
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:38:57.9657242Z",
+        "marker": "SF_CALCULATION_ANCESTRY",
+        "value": {
+          "phase": "produce-outer",
+          "elapsedMs": 103091,
+          "canonicalResultReads": 1398,
+          "canonicalResultReadsCompleted": 1398,
+          "aborted": true
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:38:57.9659024Z",
+        "marker": "SF_COMPOSITION_PHASE",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "returned",
+          "phaseMs": 103091,
+          "elapsedMs": 105002,
+          "aborted": true
+        }
+      },
+      {
+        "timestamp": "2026-11-20T07:38:57.9709994Z",
+        "marker": "SF_AUTHORITY_COPY_PROFILE",
+        "value": {
+          "schemaVersion": 1,
+          "roots": [
+            [
+              1,
+              0,
+              2
+            ],
+            [
+              2,
+              1,
+              61810
+            ],
+            [
+              2,
+              2,
+              11882
+            ],
+            [
+              2,
+              3,
+              1
+            ],
+            [
+              3,
+              0,
+              2736
+            ]
+          ],
+          "copies": [
+            [
+              1,
+              1,
+              0,
+              1,
+              1,
+              16765,
+              16765,
+              2409.893
+            ],
+            [
+              1,
+              1,
+              0,
+              2,
+              1,
+              16765,
+              16765,
+              160.83
+            ],
+            [
+              1,
+              1,
+              0,
+              3,
+              1,
+              16765,
+              16765,
+              27.905
+            ],
+            [
+              1,
+              2,
+              1,
+              1,
+              2,
+              1610,
+              1610,
+              488.674
+            ],
+            [
+              1,
+              2,
+              1,
+              2,
+              1,
+              69476,
+              69476,
+              724.601
+            ],
+            [
+              1,
+              2,
+              1,
+              2,
+              2,
+              5,
+              5,
+              0.786
+            ],
+            [
+              1,
+              2,
+              1,
+              3,
+              1,
+              69481,
+              69481,
+              125.737
+            ],
+            [
+              1,
+              3,
+              0,
+              1,
+              2,
+              2,
+              2,
+              0.684
+            ],
+            [
+              1,
+              3,
+              0,
+              2,
+              2,
+              14,
+              14,
+              0.55
+            ],
+            [
+              1,
+              3,
+              0,
+              3,
+              2,
+              14,
+              14,
+              0.132
+            ],
+            [
+              2,
+              1,
+              0,
+              1,
+              1,
+              10366,
+              10366,
+              1506.454
+            ],
+            [
+              2,
+              1,
+              0,
+              2,
+              1,
+              20311,
+              20311,
+              234.744
+            ]
+          ],
+          "authority": [
+            [
+              1,
+              1,
+              0,
+              117208
+            ],
+            [
+              2,
+              2,
+              1,
+              68193
+            ],
+            [
+              2,
+              3,
+              0,
+              12
+            ]
+          ],
+          "clock": [
+            221574,
+            221574,
+            0
+          ]
+        }
+      }
+    ]
+  },
+  "protocol": {
+    "schemaVersion": 1,
+    "caller": {
+      "1": "copyCurrentSnapshot",
+      "2": "inherited transaction copy expression"
+    },
+    "physicalRootKind": {
+      "0": "unclassified",
+      "1": "readonly",
+      "2": "mutable single-surface",
+      "3": "mutable all-surface"
+    },
+    "surfaceOrTarget": {
+      "0": "none or unexpected",
+      "1": "dashboard",
+      "2": "planner",
+      "3": "procurement"
+    },
+    "branch": {
+      "1": "materialize",
+      "2": "clone",
+      "3": "loadSnapshot (inherited only)"
+    },
+    "authorityEvent": {
+      "1": "projection returned",
+      "2": "refused by existing own-readOnly-true guard"
+    },
+    "rowFields": {
+      "roots": [
+        "kind",
+        "target",
+        "registrations"
+      ],
+      "copies": [
+        "caller",
+        "kind",
+        "target",
+        "surface",
+        "branch",
+        "closedSpans",
+        "timedSpans",
+        "inclusiveMs"
+      ],
+      "authority": [
+        "event",
+        "kind",
+        "target",
+        "count"
+      ],
+      "clock": [
+        "startAttempts",
+        "endAttempts",
+        "instrumentationFailures"
+      ]
+    }
+  },
+  "numericValidation": {
+    "emissions": 1,
+    "completeOriginalMarkers": 8,
+    "rootRows": 5,
+    "copyRows": 12,
+    "authorityRows": 3,
+    "allNumbersFiniteNonnegative": true,
+    "closedSpans": 221574,
+    "timedSpans": 221574,
+    "clock": [
+      221574,
+      221574,
+      0
+    ]
+  },
+  "derivedAggregates": {
+    "totals": {
+      "spans": 221574,
+      "timedSpans": 221574,
+      "inclusiveMs": 5680.99
+    },
+    "byPhysicalRoot": [
+      {
+        "rootKind": 1,
+        "target": 0,
+        "closedSpans": 80972,
+        "inclusiveMs": 4339.826,
+        "dashboardSpans": 27131,
+        "dashboardInclusiveMs": 3916.347
+      },
+      {
+        "rootKind": 2,
+        "target": 1,
+        "closedSpans": 140572,
+        "inclusiveMs": 1339.798,
+        "dashboardSpans": 1610,
+        "dashboardInclusiveMs": 488.674
+      },
+      {
+        "rootKind": 3,
+        "target": 0,
+        "closedSpans": 30,
+        "inclusiveMs": 1.366,
+        "dashboardSpans": 2,
+        "dashboardInclusiveMs": 0.684
+      }
+    ]
+  },
+  "componentQualification": {
+    "product": "feeda92842bc4f26aec83901b5162543e9ca4bdd",
+    "gate34": {
+      "run": 44694336416,
+      "job": 136147372062,
+      "cleanup": "success",
+      "attempt": 1,
+      "snapshot": "ae3da08f4b92da6587a600632b8ea20e6f3750e2",
+      "tree": "1692223aed12a9ecef49f11ff9fc4609735eb728",
+      "request": "dd5e8416b52bb92b1f38d24230da30f4cdab8f51",
+      "pass": 34,
+      "fail": 0,
+      "expects": 234,
+      "files": 2,
+      "durationMs": 1001,
+      "cases": [
+        {
+          "timestamp": "2026-11-20T07:22:11.3920447Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "readonly authority copies match the codec, preserve absence and never expose the private root",
+          "status": "pass",
+          "durationMs": 39
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.3969636Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "only the actual store or unchanged source-factory composition can project",
+          "status": "pass",
+          "durationMs": 5
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4012998Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "changing currentSnapshots cannot retain a projected store or source observation",
+          "status": "pass",
+          "durationMs": 4.33
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4052275Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "changing currentSnapshot cannot retain a projected store or source observation",
+          "status": "pass",
+          "durationMs": 3.92
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4097890Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "changing transaction cannot retain a projected store or source observation",
+          "status": "pass",
+          "durationMs": 4.55
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4134169Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "changing transactionAll cannot retain a projected store or source observation",
+          "status": "pass",
+          "durationMs": 3.64
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4173325Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "changing readSnapshotRoot cannot retain a projected store or source observation",
+          "status": "pass",
+          "durationMs": 3.86
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4213738Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "an opaque source input is not registered and inspecting it adds no getter invocation",
+          "status": "pass",
+          "durationMs": 4.05
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4280012Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited roleMap preserves the full receiver and later inheritance invalidates a read",
+          "status": "pass",
+          "durationMs": 6.56
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4348602Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited access preserves the full receiver and later inheritance invalidates a read",
+          "status": "pass",
+          "durationMs": 6.89
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4399634Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "poison keeps snapshot observation callbacks but still rejects root publication",
+          "status": "pass",
+          "durationMs": 5.07
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4448963Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "abort and escaped descendants cannot become an unsupported fallback",
+          "status": "pass",
+          "durationMs": 4.94
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4496405Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "dispose drains an admitted readonly root without changing its observation lifetime",
+          "status": "pass",
+          "durationMs": 4.76
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4537871Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited descriptor.value cannot disguise an admitted driver accessor",
+          "status": "pass",
+          "durationMs": 4.14
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4582595Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited descriptor.value cannot disguise an admitted source input accessor",
+          "status": "pass",
+          "durationMs": 4.47
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4622103Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited descriptor.value cannot disguise an admitted source method accessor",
+          "status": "pass",
+          "durationMs": 3.96
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4665681Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited readOnly value cannot project an exposed single transaction target",
+          "status": "pass",
+          "durationMs": 4.32
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4703999Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited readOnly getter cannot project an exposed single transaction target",
+          "status": "pass",
+          "durationMs": 3.8
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4748883Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited readOnly value cannot project an exposed all transaction target",
+          "status": "pass",
+          "durationMs": 4.51
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.4789006Z",
+          "file": "Sucafinav1/test/local-authority-data.test.ts",
+          "name": "inherited readOnly getter cannot project an exposed all transaction target",
+          "status": "pass",
+          "durationMs": 3.98
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.8275123Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "real authority keeps all three authentications and identical admission revisions on projected and full reads",
+          "status": "pass",
+          "durationMs": 54.57
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.8477994Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "ACL changes between fresh roots revoke existing authority without changing other-principal semantics",
+          "status": "pass",
+          "durationMs": 20.31
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.8610555Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "an awaited consumer owner change denies admission without a legacy retry",
+          "status": "pass",
+          "durationMs": 13.23
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.8735910Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "an awaited source owner change denies admission without a legacy retry",
+          "status": "pass",
+          "durationMs": 12.55
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.8845449Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "an awaited driver owner change denies admission without a legacy retry",
+          "status": "pass",
+          "durationMs": 10.91
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.8976263Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "an awaited composite owner change denies admission without a legacy retry",
+          "status": "pass",
+          "durationMs": 13.09
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.9096489Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "opaque input getters and wrappers retain their actual full-copy path",
+          "status": "pass",
+          "durationMs": 12
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.9222257Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "revocation and abort during real authentication remain refusals after all three callbacks start",
+          "status": "pass",
+          "durationMs": 12.6
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.9337111Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "an already poisoned root still authenticates before its original publication fence rejects",
+          "status": "pass",
+          "durationMs": 11.46
+        },
+        {
+          "timestamp": "2026-11-20T07:22:11.9456462Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "prototype drift during authentication is refused without executing a getter on a reduced receiver",
+          "status": "pass",
+          "durationMs": 11.93
+        },
+        {
+          "timestamp": "2026-11-20T07:22:12.0649495Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "a changed provider cannot recover the same in-flight observation by restoring its method",
+          "status": "pass",
+          "durationMs": 119.25
+        },
+        {
+          "timestamp": "2026-11-20T07:22:12.1033403Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "the final identity callback cannot replace the authority input owner before egress",
+          "status": "pass",
+          "durationMs": 38.32
+        },
+        {
+          "timestamp": "2026-11-20T07:22:12.2497730Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "an inherited role map uses the real full data receiver on the original fallback",
+          "status": "pass",
+          "durationMs": 146.41
+        },
+        {
+          "timestamp": "2026-11-20T07:22:12.2620328Z",
+          "file": "Sucafinav1/test/product/wp10/integration/authority-read-projection.test.ts",
+          "name": "inherited descriptor.value cannot disguise the consumer input accessor during authentication",
+          "status": "pass",
+          "durationMs": 12.35
+        }
+      ],
+      "omni": {
+        "classification": "not applicable (focused: no declaring test ran)",
+        "spawns": 0,
+        "delegations": 0,
+        "nativeWitness": false
+      },
+      "runMetadata": {
+        "runId": 44694336416,
+        "head": "ae3da08f4b92da6587a600632b8ea20e6f3750e2",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-20T07:21:14Z",
+        "startedAt": "2026-11-20T07:21:14Z",
+        "updatedAt": "2026-11-20T07:22:26Z"
+      }
+    },
+    "compiler2": {
+      "run": 44694338478,
+      "job": 136147378330,
+      "cleanup": "success",
+      "attempt": 1,
+      "snapshot": "c678f8b1b63b2e5d0f49b6ebda94a8e6f7f9deb2",
+      "tree": "05c8af5bf678d806cdc061b7c4afa8dbbe1b0585",
+      "request": "e359ff4033d50207f9770b1838b3667a6453321e",
+      "harness": "283fdaf9fb147e478da58861d61e006ae96a0a54",
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "cancel": 0,
+      "durationMs": 71946.664586,
+      "sucafinaMs": 37328.88982,
+      "cliMs": 34569.591494,
+      "exactMarkers": 2,
+      "runMetadata": {
+        "runId": 44694338478,
+        "head": "c678f8b1b63b2e5d0f49b6ebda94a8e6f7f9deb2",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-20T07:21:15Z",
+        "startedAt": "2026-11-20T07:21:15Z",
+        "updatedAt": "2026-11-20T07:23:28Z"
+      },
+      "markerTimestamps": {
+        "sucafina": "2026-11-20T07:22:05.4635990Z",
+        "cli": "2026-11-20T07:22:42.7919542Z"
+      }
+    }
+  },
+  "profileCompiler": {
+    "product": "00e2eed6799ffc3e3c5d989201b8756bdd025d18",
+    "snapshot": "0cd4e8f2a8d16ded5f05af6e884c81c97f7d5d6f",
+    "tree": "2e5b64bb1098cb6ebbdbae553047b5647b2156f3",
+    "requestBlob": "e359ff4033d50207f9770b1838b3667a6453321e",
+    "harnessBlob": "151034f0bf92810448cb807079eaad4266d97494",
+    "runId": 44695607022,
+    "jobId": 136151500570,
+    "cleanupJobId": 136152366435,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-20T07:31:36Z",
+    "startedAt": "2026-11-20T07:31:36Z",
+    "updatedAt": "2026-11-20T07:33:55Z",
+    "pass": 2,
+    "fail": 0,
+    "skip": 0,
+    "cancelled": 0,
+    "totalMs": 57266.086394,
+    "compilers": [
+      {
+        "name": "sucafina",
+        "durationMs": 31057.898614,
+        "markerTime": "2026-11-20T07:32:45.8073181Z"
+      },
+      {
+        "name": "cli",
+        "durationMs": 26158.614583,
+        "markerTime": "2026-11-20T07:33:16.8637364Z"
+      }
+    ],
+    "cleanup": "success"
+  },
+  "skippedPreparationSnapshots": [
+    {
+      "sha": "18a455708df76f9cd9aef04887151cfbe43f7b91",
+      "branch": "ci-run-linux-own-readonly34",
+      "runs": 0,
+      "reason": "mistaken [skip ci] in CI snapshot message; no execution"
+    },
+    {
+      "sha": "1f2a994228eebf226233bf0282248564d81eb9b5",
+      "branch": "ci-run-linux-own-readonly-comp2",
+      "runs": 0,
+      "reason": "mistaken [skip ci] in CI snapshot message; no execution"
+    }
+  ],
+  "priorStatus": {
+    "originalFunctionalRun": 44686066277,
+    "pass": 83,
+    "fail": 6,
+    "expectCalls": 546,
+    "cases": 89,
+    "files": 7,
+    "durationSeconds": 533.41,
+    "originalC17DurationMs": 105009.77,
+    "originalMixedSiblingsDurationMs": 161499.05,
+    "mixedBudgetMs": 120000,
+    "oldProfile": {
+      "sha": "d6dce1a6935cd894514d34290487d7b19619dbe4",
+      "runs": 0,
+      "status": "not executed; superseded after own-marker correctness repair"
+    },
+    "authorityFixtureRepair": {
+      "product": "aa793a60d029fce3d927bce019102603b8cb7700",
+      "gate": 44690275245,
+      "compiler": 44690275700,
+      "evidenceCommit": "902a08f1762902178f8450485e2468169132ec06",
+      "evidencePath": "docs/handoff/evidence/c17-authority-rounds-44690275245.json"
+    }
+  },
+  "interpretationLimits": [
+    "These are aggregate selected-copy observations across initialization, the completed/aborted original test prefix and cleanup before the single afterAll flush. They are not per-phase or per-Request attribution.",
+    "The original cooperative deadline failed during produce-outer. Reopen, persisted-cycle and later recovery/revocation phases were not reached in this run.",
+    "Inclusive elapsed milliseconds are not CPU time. Timing overhead is present and is not subtracted. Selected spans can include original throws and must not be treated as successful clone counts.",
+    "The two timed boundaries exclude initial root decoding/materialization, ACL first access to its private lazy graph, fresh ACL metadata copies, other cloning/materialization, state-provider structuredClone, canonical serialization, SQL/lock waits and authentication.",
+    "Physical roots are classified at their three actual constructors. A nested callback surface is not the physical root target.",
+    "Authority events count only calls reaching the registered LocalStore reader. Earlier opaque input/source/driver refusals are not counted; returned projections are not authorization grants or proof of later successful fences.",
+    "No selected-copy row was emitted for physical single Planner or Procurement roots; that does not claim those roots perform no other copying.",
+    "Do not compare this 105-second aborted prefix with different lineages or test selections as a performance gain or completed-work improvement.",
+    "The Reports source-lifecycle union is not present in this profile. Its scoped-source checks require separate compatible composition and qualification.",
+    "The older83/6 result remains unchanged. This run does not close C17 or mixed siblings, is not an installed nominal or native witness, and does not authorize a retry, new optimization, sf-ci or integration.",
+    "Skipped preparation heads had zero runs; they are distinct from the unique real gate34 and compiler2 executions. Their old refs were not rewritten or deleted.",
+    "Only fixed test/phase labels, source paths, SHAs/run IDs, timestamps, numeric counters and sanitized signatures are retained here. No raw logs, headers, credentials, payloads, source/result refs or stacks are persisted."
+  ]
+}
