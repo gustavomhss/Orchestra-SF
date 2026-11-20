@@ -876,7 +876,223 @@ async function outsideFile(filename, root, label) {
 async function optionalJson(filename, root, label) {
   return filename === undefined ? undefined : parseCanonicalJson(await outsideFile(filename, root, label), label)
 }
+
+/**
+ * Navigation over an already collected report. This never runs the audit,
+ * changes a disposition, or evaluates qualification. The trusted workflow
+ * independently verifies the artifact API metadata and downloaded ZIP first.
+ */
+export function summarizeReport(bytes, provenance, selection, env = process.env) {
+  exactKeys(provenance, ["schema", "reportSha256", "reportBytes", "sourceSHA", "sourceTreeSHA",
+    "workflowSHA", "runId", "runAttempt", "archiveSha256", "evidenceArtifact"])
+  const downloaded = provenance.evidenceArtifact
+  exactKeys(downloaded, ["id", "name", "digest", "workflowRunId", "headSha", "expired"])
+  if (provenance.schema !== "teams-profile-residue-review-download-v1" ||
+      !sha256(provenance.reportSha256) || provenance.reportSha256 !== hash(bytes) ||
+      provenance.reportBytes !== bytes.length || !sha(provenance.sourceSHA) || !sha(provenance.sourceTreeSHA) ||
+      !sha(provenance.workflowSHA) || !decimal(provenance.runId) || !decimal(provenance.runAttempt) ||
+      !sha256(provenance.archiveSha256) || !decimal(downloaded.id) ||
+      downloaded.id !== env.SF_RESIDUE_REPORT_ARTIFACT_ID ||
+      downloaded.name !== "teams-profile-evidence-G09" ||
+      !/^sha256:[a-f0-9]{64}$/.test(downloaded.digest) || downloaded.digest !== env.SF_RESIDUE_REPORT_ARTIFACT_DIGEST ||
+      downloaded.workflowRunId !== provenance.runId || downloaded.headSha !== provenance.sourceSHA ||
+      downloaded.expired !== false) fail("review report download binding is invalid")
+  // The exact bytes are independently bound above. No canonical rewrite of this
+  // potentially large original report is needed just to navigate its metadata.
+  const report = JSON.parse(utf8.decode(bytes))
+  exactKeys(report, ["schema", "status", "binding", "execution", "readOnly", "counts", "blockers",
+    "source", "artifact", "inventory", "occurrences", "reachability", "review", "controls", "proofs", "limitations"])
+  const binding = report.binding, artifact = report.artifact, execution = report.execution
+  exactKeys(binding, ["sourceSHA", "sourceTreeSHA", "catalogSha256", "inventorySha256",
+    "occurrencesSha256", "graphSha256", "gapsSha256"])
+  exactKeys(execution, ["workflowSHA", "runId", "runAttempt"])
+  if (report.schema !== "teams-profile-residue-report-v1" ||
+      !["PASS", "DIAGNOSTIC_UNQUALIFIED"].includes(report.status) || report.readOnly !== true ||
+      binding.sourceSHA !== provenance.sourceSHA || binding.sourceTreeSHA !== provenance.sourceTreeSHA ||
+      report.source?.sha !== provenance.sourceSHA || report.source?.tree !== provenance.sourceTreeSHA ||
+      execution.workflowSHA !== provenance.workflowSHA || execution.runId !== provenance.runId ||
+      execution.runAttempt !== provenance.runAttempt || artifact?.status !== "BOUND" ||
+      artifact.archiveSha256 !== provenance.archiveSha256 ||
+      artifact.source?.sha !== provenance.sourceSHA || artifact.source?.tree !== provenance.sourceTreeSHA ||
+      artifact.workflowSHA !== provenance.workflowSHA || artifact.runId !== provenance.runId ||
+      artifact.runAttempt !== provenance.runAttempt ||
+      !decimal(artifact.artifact?.id) || !/^sha256:[a-f0-9]{64}$/.test(artifact.artifact?.digest) ||
+      artifact.artifact.workflowRunId !== provenance.runId || artifact.artifact.headSha !== provenance.sourceSHA ||
+      artifact.artifact.expired !== false ||
+      ["catalogSha256", "inventorySha256", "occurrencesSha256", "graphSha256", "gapsSha256"].some((key) => !sha256(binding[key])) ||
+      !Array.isArray(report.inventory) || !Array.isArray(report.occurrences) ||
+      !Array.isArray(report.reachability?.findings) || !Array.isArray(report.blockers) ||
+      report.blockers.some((item) => typeof item !== "string")) fail("original report identity or structure is invalid")
+  exactKeys(selection, ["section", "offset", "limit"], ["domain", "path"])
+  if (!["overview", "paths", "occurrences", "reachability"].includes(selection.section) ||
+      !Number.isSafeInteger(selection.offset) || selection.offset < 0 ||
+      !Number.isSafeInteger(selection.limit) || selection.limit < 1 || selection.limit > 200 ||
+      selection.domain !== undefined && !["source", "archive"].includes(selection.domain) ||
+      selection.path !== undefined && typeof selection.path !== "string")
+    fail("invalid bounded review selection")
+  if (selection.path !== undefined) safePath(selection.path)
+  const fileKey = (domain, relative) => domain + "\0" + relative
+  const files = new Map()
+  for (const file of report.inventory) {
+    if (!["source", "archive"].includes(file.domain) || !sha256(file.sha256) ||
+        !Number.isSafeInteger(file.byteLength) || file.byteLength < 0 ||
+        !["utf8", "utf16le", "utf16be", "binary"].includes(file.encoding))
+      fail("invalid report file metadata")
+    safePath(file.path)
+    const key = fileKey(file.domain, file.path)
+    if (files.has(key)) fail("duplicate report inventory file")
+    files.set(key, { domain: file.domain, path: file.path, fileSha256: file.sha256,
+      byteLength: file.byteLength, encoding: file.encoding, occurrences: 0, unclassifiedOccurrences: 0,
+      reachabilityFindings: 0, unclassifiedReachability: 0, reachableEntrypoints: [] })
+  }
+  const entrypoints = (domain, relative) => {
+    const graph = report.reachability[domain]
+    if (!graph || graph.domain !== domain || !graph.reachable || !Array.isArray(graph.issues) ||
+        !Array.isArray(graph.unresolved) || !Array.isArray(graph.edges) || !Array.isArray(graph.calls))
+      fail("original reachability metadata is incomplete")
+    const entries = graph.reachable[relative] ?? []
+    if (!Array.isArray(entries) || entries.some((entry) => typeof entry.entrypoint !== "string" ||
+        !entry.entrypoint || !Array.isArray(entry.importPath))) fail("invalid reachable entrypoint metadata")
+    return [...new Set(entries.map((entry) => entry.entrypoint))].sort()
+  }
+  const ids = new Set(), occurrences = [], findings = []
+  let activeLegacy = 0, orphan = 0
+  const disposition = (value) => {
+    if (value === null) return null
+    if (!value || !classifications.includes(value.classification) || !sha(value.reviewSource))
+      fail("invalid recorded disposition metadata")
+    if (value.classification === "active-legacy") activeLegacy++
+    if (value.classification === "orphan") orphan++
+    return { classification: value.classification, reviewSource: value.reviewSource }
+  }
+  for (const item of report.occurrences) {
+    const file = files.get(fileKey(item.domain, item.path))
+    const identity = { domain: item.domain, path: item.path, fileSha256: item.fileSha256,
+      byteOffset: item.byteOffset, byteLength: item.byteLength, seed: item.seed, encoding: item.encoding }
+    if (!file || item.fileSha256 !== file.fileSha256 || !sha256(item.id) || ids.has(item.id) ||
+        item.id !== digest(identity) || !Number.isSafeInteger(item.byteOffset) || item.byteOffset < 0 ||
+        !Number.isSafeInteger(item.byteLength) || item.byteLength < 1 ||
+        item.byteOffset + item.byteLength > file.byteLength || !seeds.includes(item.seed) ||
+        !["utf8", "utf16le", "utf16be"].includes(item.encoding) ||
+        !Array.isArray(item.callsites) || item.callsites.some((id) => !sha256(id)))
+      fail("invalid exact occurrence metadata")
+    ids.add(item.id)
+    const recordedDisposition = disposition(item.disposition)
+    file.occurrences++; if (recordedDisposition === null) file.unclassifiedOccurrences++
+    const roots = entrypoints(item.domain, item.path)
+    if (!Array.isArray(item.reachableEntrypoints) ||
+        digest([...item.reachableEntrypoints].sort()) !== digest(roots)) fail("occurrence reachability differs from its graph")
+    occurrences.push({ id: item.id, ...identity, recordedDisposition, reachableEntrypoints: roots,
+      reachabilityReason: roots.length ? "reachable-by-recorded-file-edges" : "no-recorded-entrypoint-path",
+      callsiteIds: [...item.callsites] })
+  }
+  for (const item of report.reachability.findings) {
+    if (!sha256(item.id) || ids.has(item.id) || !["source", "archive"].includes(item.domain) ||
+        typeof item.kind !== "string" || !/^[a-z][a-z0-9-]{0,127}$/.test(item.kind))
+      fail("invalid exact reachability finding metadata")
+    ids.add(item.id); safePath(item.path)
+    const file = files.get(fileKey(item.domain, item.path))
+    if (item.fileSha256 !== undefined && (!sha256(item.fileSha256) || file && item.fileSha256 !== file.fileSha256))
+      fail("reachability finding differs from its file")
+    const recordedDisposition = disposition(item.disposition)
+    if (file) {
+      file.reachabilityFindings++; if (recordedDisposition === null) file.unclassifiedReachability++
+    }
+    const edge = item.edge
+    if (edge && (!sha256(edge.id) || edge.from !== item.path || edge.domain !== item.domain ||
+        edge.fileSha256 !== item.fileSha256 || !["unresolved", "resolved", "external-dependency", "external-content"].includes(edge.status) ||
+        edge.start !== null && (!Number.isSafeInteger(edge.start) || edge.start < 0) ||
+        edge.end !== null && (!Number.isSafeInteger(edge.end) || edge.end < edge.start)))
+      fail("invalid reachability edge metadata")
+    findings.push({ id: item.id, domain: item.domain, path: item.path,
+      fileSha256: item.fileSha256 ?? file?.fileSha256 ?? null, reason: item.kind,
+      ...(item.oid === undefined ? {} : { gitOid: item.oid }),
+      recordedDisposition, reachableEntrypoints: entrypoints(item.domain, item.path),
+      ...(edge ? { edge: { id: edge.id, kind: edge.kind, start: edge.start, end: edge.end,
+        offsetUnit: "UTF-16-code-unit-or-null", status: edge.status,
+        specifierSha256: typeof edge.specifier === "string" ? hash(Buffer.from(edge.specifier)) : null } } : {}) })
+  }
+  const unknownOccurrences = occurrences.filter((item) => item.recordedDisposition === null).length
+  const unknownReachability = findings.filter((item) => item.recordedDisposition === null).length
+  const counts = { occurrences: occurrences.length, classified: occurrences.length - unknownOccurrences,
+    unknownOccurrences, unknownReachability, unclassified: unknownOccurrences + unknownReachability, activeLegacy, orphan }
+  exactKeys(report.counts, Object.keys(counts))
+  if (Object.entries(counts).some(([key, value]) => report.counts[key] !== value))
+    fail("original report counts do not match its exact rows")
+  const included = (item) => (selection.domain === undefined || item.domain === selection.domain) &&
+    (selection.path === undefined || item.path === selection.path)
+  const selectedOccurrences = occurrences.filter(included), selectedFindings = findings.filter(included)
+  const paths = [...files.values()].filter(included).map((item) => ({ ...item,
+    reachableEntrypoints: entrypoints(item.domain, item.path) }))
+    .sort((a, b) => a.domain.localeCompare(b.domain) || a.path.localeCompare(b.path))
+  const grouped = (items, field) => [...items.reduce((groups, item) => groups.set(item[field],
+    (groups.get(item[field]) ?? 0) + 1), new Map())].sort(([a], [b]) => a.localeCompare(b))
+    .map(([value, count]) => ({ groupBy: field, value, count, navigationOnly: true }))
+  const rows = selection.section === "overview"
+    ? [...grouped(selectedOccurrences, "seed"), ...grouped(selectedFindings, "reason")]
+    : selection.section === "paths" ? paths : selection.section === "occurrences" ? selectedOccurrences : selectedFindings
+  if (selection.offset > rows.length) fail("review page offset is beyond the selected inventory")
+  return {
+    schema: "teams-profile-residue-review-index-v1", status: "READ_ONLY_REVIEW_INDEX",
+    qualification: "NOT_EVALUATED", readOnly: true, dispositionsChanged: 0,
+    original: { reportSha256: provenance.reportSha256, reportBytes: bytes.length, recordedStatus: report.status,
+      binding: { ...binding }, execution: { ...execution }, archiveSha256: artifact.archiveSha256,
+      productionArtifact: { id: artifact.artifact.id, digest: artifact.artifact.digest },
+      evidenceArtifact: { ...downloaded } },
+    recordedCounts: counts, recordedBlockers: [...report.blockers],
+    selectedCounts: { files: paths.length, occurrences: selectedOccurrences.length, reachabilityFindings: selectedFindings.length },
+    page: { ...selection, totalRows: rows.length, returnedRows: Math.min(selection.limit, rows.length - selection.offset),
+      nextOffset: selection.offset + selection.limit < rows.length ? selection.offset + selection.limit : null },
+    rows: rows.slice(selection.offset, selection.offset + selection.limit),
+    limitations: [
+      "Grouping and pagination are navigation only; no group, prefix, category or row is approved by this index.",
+      "This operation neither reruns G09 nor verifies PASS. Recorded dispositions and status belong only to the original bound report.",
+      "Only identifiers, paths, hashes, offsets and structured reachability reasons are emitted; source excerpts and callee expressions are omitted.",
+      "Import paths remain conservative evidence; semantic reachability and each exact disposition still require independent review.",
+    ],
+  }
+}
+
+export function parseReviewArguments(argv) {
+  const values = { mode: "review-report" }
+  for (let index = 0; index < argv.length; index++) {
+    const key = argv[index]
+    if (!["--source", "--report", "--provenance", "--output", "--section", "--offset", "--limit", "--domain", "--path"].includes(key) ||
+        values[key.slice(2)] !== undefined || !argv[index + 1] || argv[index + 1].startsWith("--"))
+      fail("unknown duplicate or incomplete review argument")
+    values[key.slice(2)] = argv[++index]
+  }
+  if (["source", "report", "provenance", "output", "section", "offset", "limit"].some((key) => !values[key]) ||
+      !/^(0|[1-9][0-9]*)$/.test(values.offset) || !/^[1-9][0-9]*$/.test(values.limit))
+    fail("explicit review report provenance output and page required")
+  values.offset = Number(values.offset); values.limit = Number(values.limit)
+  if (!["overview", "paths", "occurrences", "reachability"].includes(values.section) ||
+      !Number.isSafeInteger(values.offset) || !Number.isSafeInteger(values.limit) || values.limit > 200 ||
+      values.domain !== undefined && !["source", "archive"].includes(values.domain))
+    fail("invalid bounded review arguments")
+  if (values.path !== undefined) safePath(values.path)
+  return values
+}
+export async function runReviewSummary(options, env = process.env) {
+  if (env.GITHUB_ACTIONS !== "true" || env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+      env.GITHUB_REPOSITORY_ID !== "1455724710" || env.RUNNER_OS !== "Linux" || env.RUNNER_ARCH !== "X64" ||
+      !sha(env.GITHUB_SHA) || !sha(env.SF_PRODUCT_SOURCE_SHA) ||
+      !decimal(env.GITHUB_RUN_ID) || !decimal(env.GITHUB_RUN_ATTEMPT))
+    fail("hosted read-only report review identity required")
+  const root = await realpath(options.source)
+  const bytes = await outsideFile(options.report, root, "original residue report")
+  const provenance = parseCanonicalJson(await outsideFile(options.provenance, root, "report download provenance"), "report download provenance")
+  const report = summarizeReport(bytes, provenance, {
+    section: options.section, offset: options.offset, limit: options.limit,
+    ...(options.domain === undefined ? {} : { domain: options.domain }),
+    ...(options.path === undefined ? {} : { path: options.path }),
+  }, env)
+  return { ...report, readerExecution: { sourceSHA: env.SF_PRODUCT_SOURCE_SHA, workflowSHA: env.GITHUB_SHA,
+    runId: env.GITHUB_RUN_ID, runAttempt: env.GITHUB_RUN_ATTEMPT } }
+}
+
 export function parseArguments(argv) {
+  if (argv[0] === "review-report") return parseReviewArguments(argv.slice(1))
   const values = {}
   for (let index = 0; index < argv.length; index++) {
     const key = argv[index]
@@ -949,16 +1165,22 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   let options
   try {
     options = parseArguments(process.argv.slice(2))
-    const report = await runAudit(options)
+    const report = options.mode === "review-report" ? await runReviewSummary(options) : await runAudit(options)
     await writeReport(options.output, options.source, report, process.env)
-    console.log("TEAM_PROFILE_RESIDUE " + JSON.stringify({ status: report.status, binding: report.binding,
-      counts: report.counts, blockers: report.blockers, output: options.output }))
-    process.exitCode = report.status === "PASS" ? 0 : 2
+    if (options.mode === "review-report") {
+      console.log("TEAM_PROFILE_RESIDUE_REVIEW_INDEX " + JSON.stringify(report))
+      process.exitCode = 0 // Successful metadata navigation is not audit qualification.
+    } else {
+      console.log("TEAM_PROFILE_RESIDUE " + JSON.stringify({ status: report.status, binding: report.binding,
+        counts: report.counts, blockers: report.blockers, output: options.output }))
+      process.exitCode = report.status === "PASS" ? 0 : 2
+    }
   } catch (error) {
     const reason = error instanceof Error ? error.message : "unknown audit error"
     if (options) {
-      try { await writeReport(options.output, options.source, { schema: "teams-profile-residue-report-v1",
-        status: "FAIL_CLOSED", readOnly: true, reason }, process.env) }
+      try { await writeReport(options.output, options.source, { schema: options.mode === "review-report"
+          ? "teams-profile-residue-review-index-v1" : "teams-profile-residue-report-v1",
+        status: "FAIL_CLOSED", readOnly: true, ...(options.mode === "review-report" ? { qualification: "NOT_EVALUATED" } : {}), reason }, process.env) }
       catch (reportError) { console.error("TEAM_PROFILE_RESIDUE_REPORT_FAILED", reportError instanceof Error ? reportError.message : "output failed") }
     }
     console.error("TEAM_PROFILE_RESIDUE_FAIL_CLOSED", reason)
