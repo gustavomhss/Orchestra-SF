@@ -157,7 +157,10 @@ test("core-team-config-05: logout while the source is awaited prevents cache pub
     const locations = yield* LocationServiceMap.makeScoped(owners, configured)
     const lease = yield* f.capture()
     const pending = yield* SessionOwner.withLease(lease, locations.contextEffect(f.location)).pipe(Effect.forkChild)
-    yield* Effect.promise(() => held.entered)
+    yield* Effect.raceFirst(
+      Effect.promise(() => held.entered),
+      Fiber.await(pending).pipe(Effect.flatMap(() => Effect.die("Configuration acquisition ended before the source barrier"))),
+    )
     yield* Effect.promise(() => f.logout(f.cookie))
     held.release()
     expect(Exit.isFailure(yield* Fiber.await(pending))).toBe(true)

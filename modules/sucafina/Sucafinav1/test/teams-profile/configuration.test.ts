@@ -84,27 +84,30 @@ test("team-configuration-03: an INSERT failure rolls back profile revision and b
   } finally { db.close(); await f.close() }
 })
 
-test("team-configuration-04: current shared policy stays outside an older business read snapshot", async () => {
+test("team-configuration-04: current shared policy bypasses a retained SQLite business read view", async () => {
   const f = await teamProductFixture()
+  const old = new Database(path.join(f.directory, "installation.sqlite"), { strict: true, readonly: true })
   try {
     expect((await configure(f)).status).toBe("ok")
-    if (!f.store.readSnapshotRoot) throw new Error("Actual business read snapshot required")
+    const reopened = await f.reopen()
     const business = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
-    await f.store.readSnapshotRoot(async () => {
-      await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
-      const previous = await f.profiles.readConfiguration(profileA)
-      expect(previous?.configRevision).toBe(2)
-      // A separate connection and resolver observe current authentication/policy, never this business snapshot.
-      const reopened = await f.reopen()
-      const result = await reopened.resolver.configureConfiguration(f.request(undefined, f.cookie), {
-        profile: profileA, expectedRevision: 2, document: document("provider/current"),
-      })
-      expect(result).toEqual({ status: "ok", configRevision: 3, changed: true })
-      expect((await f.profiles.readConfiguration(profileA))?.document).toEqual(document("provider/current"))
-      expect((await f.profiles.read()).configRevision).toBe(3)
+    old.exec("BEGIN")
+    const retained = old.query<{ payload: string }, []>("SELECT payload FROM snapshots WHERE surface = 'dashboard'").get()
+    expect(retained).toBeDefined()
+    expect((await f.profiles.readConfiguration(profileA))?.configRevision).toBe(2)
+    // The production business root takes BEGIN IMMEDIATE and excludes a concurrent
+    // writer. This deferred WAL read deliberately retains an old physical view.
+    const result = await reopened.resolver.configureConfiguration(f.request(undefined, f.cookie), {
+      profile: profileA, expectedRevision: 2, document: document("provider/current"),
     })
+    expect(result).toEqual({ status: "ok", configRevision: 3, changed: true })
+    expect(old.query("SELECT config_revision FROM sf_team_profile_policy").get()).toEqual({ config_revision: 2 })
+    expect((await f.profiles.readConfiguration(profileA))?.document).toEqual(document("provider/current"))
+    expect((await f.profiles.read()).configRevision).toBe(3)
+    expect(old.query("SELECT payload FROM snapshots WHERE surface = 'dashboard'").get()).toEqual(retained)
+    old.exec("ROLLBACK")
     expect(await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(business)
-  } finally { await f.close() }
+  } finally { if (old.inTransaction) old.exec("ROLLBACK"); old.close(); await f.close() }
 })
 
 test("team-configuration-05: malformed or unaudited stored content never becomes a runtime source", async () => {

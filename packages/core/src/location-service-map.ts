@@ -31,7 +31,7 @@ export function makeScoped<A, E, R>(
   return Effect.gen(function* () {
     const locations = yield* LayerMap.make(
       (key: CacheKey) => {
-        const layer = lookup(Location.Ref.make({ directory: key.directory, workspaceID: key.workspaceID }))
+        const layer = lookup(Location.Ref.make({ directory: key.directory, ...(key.workspaceID === undefined ? {} : { workspaceID: key.workspaceID }) }))
         // RcMap owns the acquisition fiber; restore only the captured request's private lease.
         return key.binding ? Layer.effectContext(key.binding.bind(Layer.build(layer))) : layer
       },
@@ -39,7 +39,7 @@ export function makeScoped<A, E, R>(
     )
     const keyFor = (ref: Location.Ref) => {
       // Copy technical placement before the first await. It never supplies owner authority.
-      const copied = { directory: ref.directory, workspaceID: ref.workspaceID }
+      const copied = { directory: ref.directory, ...(ref.workspaceID === undefined ? {} : { workspaceID: ref.workspaceID }) }
       return Effect.gen(function* () {
         const sealed = yield* Schema.decodeUnknownEffect(Location.Ref)(copied).pipe(Effect.orDie)
         const binding = yield* owners.location.pipe(Effect.orDie)
