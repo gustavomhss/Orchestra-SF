@@ -83,7 +83,9 @@ test("Executive component renders four canonical measures with compatible, missi
       // valid DTO scenarios. No display value is replaced in the fixture.
       const data = projectSfDomainData("CAP01", selected, 2026, scenario === "legacy" ? undefined : scenario === "stale" ? 3 : month)
       const body = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP01"].output)({
-        status: "ok", value: { capabilityId: "CAP01", selection: { year: 2026, month },
+        status: "ok", context: { installationId: "fixture-install", projectId: "fixture-project", hostId: "fixture-host",
+          principalRef: "fixture-actor", policyVersion: "fixture-policy", accessRevision: "fixture-access" },
+        value: { capabilityId: "CAP01", selection: { year: 2026, month },
           data, versions: { "itUsersMonthly:march": 0, "itUsersMonthly:april": 0, "itUsersMonthly:may": 0 }, allowedActionIds: [] },
       })
       return Response.json(body)
