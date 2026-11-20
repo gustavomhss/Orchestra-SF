@@ -239,7 +239,10 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const errors: string[] = []
     page.on("pageerror", (error) => { errors.push(error.message) })
     const code = await timed("operator-enrollment", () => identity.enroll())
-    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/auth/local?code=${code}`, { waitUntil: "domcontentloaded", timeout: 5000 }))
+    const enrollment = await timed("operator-enrollment-http", () => context.request.get(`${origin}/sucafina/auth/local?code=${code}`, { maxRedirects: 0, timeout: 5000 }))
+    expect(enrollment.status()).toBe(303)
+    expect(enrollment.headers().location).toBe("/")
+    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded", timeout: 5000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
     checkpoint("selection-load")
