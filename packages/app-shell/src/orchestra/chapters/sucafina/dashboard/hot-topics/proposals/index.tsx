@@ -262,7 +262,8 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     const abort = new AbortController()
     setStore("review", null)
     void createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-review"]({
-      caseRef: currentChange.caseRef, choiceId: currentChange.choiceId, changeId: currentChange.changeId,
+      caseRef: { id: currentChange.caseRef.id, incarnation: currentChange.caseRef.incarnation, version: currentChange.caseRef.version },
+      choiceId: currentChange.choiceId, changeId: currentChange.changeId,
     }, { signal: abort.signal }).then((response) => {
       if (abort.signal.aborted || context.generation() !== generation ||
         context.ready()?.transport !== ready.transport) return
@@ -290,7 +291,8 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     setStore("preparationBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-prepare"]({
-        caseRef: pending.caseRef, choiceId: pending.choiceId, draftRef: pending.draftRef,
+        caseRef: { id: pending.caseRef.id, incarnation: pending.caseRef.incarnation, version: pending.caseRef.version },
+        choiceId: pending.choiceId, draftRef: pending.draftRef,
       }, { signal: abort.signal, idempotencyKey: crypto.randomUUID() })
       if (abort.signal.aborted || context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind === "response" && (response.status === 403 || response.body.status === "denied")) { purge(); return }
