@@ -1,4 +1,6 @@
 import type { SessionSchema } from "@orchestra/core/session/schema"
+import { types } from "node:util"
+import { currentSfReadonlyAuthorityData } from "./source-lifecycle.ts"
 import type { Application } from "../../runtime/application.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
@@ -86,6 +88,25 @@ export function createSfProductAuthority(input: {
     Object.freeze(copy.location)
     return Object.freeze(copy)
   }
+  const authorityData = <S extends Surface>(selected: readonly S[]) => {
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return undefined
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    if (!descriptor || !("value" in descriptor) || !descriptor.value || typeof descriptor.value !== "object") return undefined
+    const owner = descriptor.value
+    const observation = currentSfReadonlyAuthorityData(owner, selected)
+    if (!observation) return undefined
+    const integrity = { failed: false }
+    return { snapshots: observation.snapshots, current: () => {
+      if (!observation.current() || integrity.failed || types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) {
+        integrity.failed = true
+        return false
+      }
+      const current = Object.getOwnPropertyDescriptor(input, "persistence")
+      const valid = !!current && "value" in current && current.value === owner
+      if (!valid) integrity.failed = true
+      return valid
+    } }
+  }
   const otherSurfaces = () => {
     if (!input.persistence.currentSnapshot) return input.persistence.currentSnapshots?.()
     // Dashboard already belongs to this canonical transaction. Capture the
@@ -94,15 +115,20 @@ export function createSfProductAuthority(input: {
     const procurement = input.persistence.currentSnapshot("procurement")
     return planner && procurement ? { planner, procurement } : undefined
   }
-  const principal = async (request: Request, dashboard: Snapshot, snapshots = otherSurfaces()) => {
+  const principal = async (request: Request, dashboard: Pick<Snapshot, "data">,
+    supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean) => {
+    const projection = supplied ? undefined : authorityData(["planner", "procurement"])
+    const snapshots = supplied ?? projection?.snapshots ?? otherSurfaces()
+    const currentRead = suppliedCurrent ?? projection?.current
     if (!snapshots) return undefined
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
       (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
     const identityDigest = digestSfValue(current)
-    const observe = async (surface: Surface, snapshot: Snapshot) => {
+    const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
+      if (currentRead && !currentRead()) return undefined
       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!actor) return undefined
+      if (!actor || (currentRead && !currentRead())) return undefined
       const access = object(object(snapshot.data.access)[actor.id])
       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
         (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
@@ -111,6 +137,7 @@ export function createSfProductAuthority(input: {
         domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
     }
     const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
+    if (currentRead && !currentRead()) return undefined
     const present = observed.filter((entry) => entry !== undefined)
     const first = present[0]?.actor
     if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
@@ -123,10 +150,12 @@ export function createSfProductAuthority(input: {
     const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
     const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
       principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
-    if (digestSfValue(identity()) !== identityDigest) return undefined
+    if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
   const resolve = async (request: Request) => {
+    const projection = authorityData(surfaces)
+    if (projection) return principal(request, projection.snapshots.dashboard, projection.snapshots, projection.current)
     if (!input.persistence.currentSnapshots) return undefined
     const snapshots = input.persistence.currentSnapshots()
     if (snapshots) return principal(request, snapshots.dashboard, snapshots)

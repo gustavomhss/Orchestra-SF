@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
+import { types } from "node:util"
 import { constants } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
@@ -8,6 +9,20 @@ import { createAuthenticationSecrets, initializeAuthentication } from "./auth-ma
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
+
+export type ReadonlyAuthorityData<S extends Surface> = Readonly<{
+  snapshots: Record<S, Pick<Snapshot, "data">>
+  current: () => boolean
+}>
+
+type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => ReadonlyAuthorityData<S> | undefined
+// Only openLocalStore can register its own closed reader. This is neither an
+// adapter capability nor an authorization cache; unknown owners stay legacy.
+const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
+
+export function currentLocalReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  return readonlyAuthorityReaders.get(owner)?.(surfaces)
+}
 
 export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits> } = {}): Promise<LocalStore> {
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
@@ -222,7 +237,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     }),
   })
 
-  return {
+  const store: LocalStore = {
     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
       operation(true, async (db) => {
         const copies: Partial<Record<Surface, () => Snapshot>> = {}
@@ -454,6 +469,60 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       return lifecycle.disposing
     },
   }
+  const methods = ["currentSnapshots", "currentSnapshot", "transaction", "transactionAll", "readSnapshotRoot"] as const
+  const original = methods.map((name) => Object.getOwnPropertyDescriptor(store, name)?.value)
+  const sameStore = () => !types.isProxy(store) && Object.getPrototypeOf(store) === Object.prototype &&
+    methods.every((name, index) => {
+      const descriptor = Object.getOwnPropertyDescriptor(store, name)
+      return descriptor && "value" in descriptor && descriptor.value === original[index]
+    })
+  readonlyAuthorityReaders.set(store, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
+    const scope = context.getStore()
+    if (!scope) return undefined
+    // Match currentSnapshots exactly: an ended/aborted known scope is an error,
+    // not an unsupported optimization. Poison and dispose retain their original
+    // transaction/root egress checks and do not suppress authentication callbacks.
+    requireScope(scope)
+    if (!scope.root.readOnly || !sameStore()) return undefined
+    const fields = ["roleMap", "access"] as const
+    const observed = surfaces.map((surface) => {
+      const snapshot = scope.root.snapshots[surface]
+      if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+      const data = snapshot.data
+      if (Object.getPrototypeOf(data) !== Object.prototype) return undefined
+      const descriptors = fields.map((field) => Object.getOwnPropertyDescriptor(data, field))
+      // A getter inherited by an absent field would observe the full data
+      // receiver. Keep that path on full copies, without invoking the getter here.
+      if (descriptors.some((descriptor, index) => descriptor ? !("value" in descriptor) :
+        Object.getOwnPropertyDescriptor(Object.prototype, fields[index]!) !== undefined)) return undefined
+      return { surface, data, descriptors }
+    })
+    if (observed.some((entry) => !entry)) return undefined
+    const admitted = observed.filter((entry) => entry !== undefined)
+    // The private graph cannot be mutated by callbacks. Retain only absence
+    // names for inherited-property drift; no data/descriptor value survives in
+    // this closure independently of the scope that clears its graphs on close.
+    const absent = fields.filter((_field, index) => admitted.some((entry) => !entry.descriptors[index]))
+    const integrity = { failed: false }
+    const current = () => {
+      requireScope(scope)
+      if (integrity.failed) return false
+      const valid = context.getStore() === scope && sameStore() &&
+        absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
+      if (!valid) integrity.failed = true
+      return valid
+    }
+    const snapshots = Object.fromEntries(admitted.map((entry) => [entry.surface, {
+      // The normalized private root never escapes. Every invocation copies the
+      // complete ACL subtrees afresh, preserving absent fields and nested values.
+      data: Object.fromEntries(fields.flatMap((field, index) => {
+        const descriptor = entry.descriptors[index]
+        return descriptor ? [[field, copyValue(descriptor.value, new Set())]] : []
+      })),
+    }])) as Record<S, Pick<Snapshot, "data">>
+    return { snapshots, current }
+  })
+  return store
 }
 
 function waitForAdmission(previous: Promise<void>, timeout: number, signal?: AbortSignal) {

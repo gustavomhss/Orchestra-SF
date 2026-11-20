@@ -6,7 +6,7 @@ import type { Actor, Command, Environment, Result, Snapshot } from "./contract.t
 import { changed, conflict, object, rows, text } from "./contract.ts"
 import { fields, form } from "./ui.ts"
 
-export function roleMap(snapshot: Snapshot, surface: Surface): RoleRow[] {
+export function roleMap(snapshot: Pick<Snapshot, "data">, surface: Surface): RoleRow[] {
   if (snapshot.data.roleMap !== undefined && !Array.isArray(snapshot.data.roleMap))
     throw new Error("Invalid persisted role map")
   const stored = rows(snapshot.data.roleMap)

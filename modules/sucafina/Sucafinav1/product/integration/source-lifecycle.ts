@@ -1,4 +1,7 @@
 import { randomUUID } from "node:crypto"
+import { types } from "node:util"
+import { currentLocalReadonlyAuthorityData } from "../../runtime/local-store.ts"
+import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
@@ -40,6 +43,27 @@ const canonicalSourceChecks = new WeakMap<object, CanonicalScopedSourceCheck>()
 export function canonicalScopedSourceCheck(port: SfScopedSourcePort): CanonicalScopedSourceCheck | undefined {
   const check = canonicalSourceChecks.get(port)
   return check && Object.getOwnPropertyDescriptor(port, "checkScopedSource")?.value === check ? check : undefined
+}
+
+const authorityMethods = ["currentSnapshots", "currentSnapshot", "transaction", "transactionAll", "readSnapshotRoot"] as const
+const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean }>()
+
+/** Recognize only factory-owned forwarders, including their canonical spread composition. */
+export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return undefined
+  const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
+  const registered = descriptor && "value" in descriptor && typeof descriptor.value === "function" ?
+    sourceAuthorityReaders.get(descriptor.value) : undefined
+  if (!registered) return currentLocalReadonlyAuthorityData(owner, surfaces)
+  if (!registered.current(owner)) return undefined
+  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces)
+  if (!observation) return undefined
+  const integrity = { failed: false }
+  return { snapshots: observation.snapshots, current: () => {
+    const valid = observation.current() && !integrity.failed && registered.current(owner)
+    if (!valid) integrity.failed = true
+    return valid
+  } }
 }
 
 export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
@@ -174,6 +198,26 @@ export function createSfSourcePersistence(input: {
       }, options) } : {}),
   }
   if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
+  // Registration accepts no external callback. Only these freshly constructed
+  // forwarders can identify this factory, and their base remains independently
+  // recognized by LocalStore. Inspecting a custom input must not call a getter.
+  if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
+    const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
+    const key = Object.getOwnPropertyDescriptor(persistence, "currentSnapshots")?.value
+    if (descriptor && "value" in descriptor && descriptor.value && typeof descriptor.value === "object" && typeof key === "function") {
+      const base = descriptor.value
+      const original = authorityMethods.map((name) => Object.getOwnPropertyDescriptor(persistence, name)?.value)
+      sourceAuthorityReaders.set(key, { base, current: (owner) => {
+        if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype ||
+          types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return false
+        const current = Object.getOwnPropertyDescriptor(input, "persistence")
+        return !!current && "value" in current && current.value === base && authorityMethods.every((name, index) => {
+          const method = Object.getOwnPropertyDescriptor(owner, name)
+          return !!method && "value" in method && method.value === original[index]
+        })
+      } })
+    }
+  }
   return persistence
 }
 
