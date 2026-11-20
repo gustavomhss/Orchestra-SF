@@ -1,0 +1,124 @@
+name: sf-final-evidence
+
+on:
+  push:
+    branches: [sf-final-evidence]
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  SF_SOURCE_SHA: "3910a644c7fdab1a438c2b5b39d69afc19361709"
+  SF_SOURCE_TREE: "5c0019a8aa7c0cf80c29f346b15bd5d4ebc8745c"
+  SF_SOURCE_RUN: "44676428710"
+  SF_ARTIFACT_ID: "14602533052"
+  SF_ARTIFACT_DIGEST: "1a53713f2e0e7d2d6ac7346c2a99d54baf0f23adc076a6c1a21b44a318a44fb4"
+  SF_ARTIFACT_SIZE: "8597"
+
+jobs:
+  inspect:
+    name: sf/read-final-guard-artifact
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.event.repository.id == 1455724710 && github.ref == 'refs/heads/sf-final-evidence' && github.event.created == true && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Download only the pinned existing guard artifact
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+        with:
+          retries: 0
+          script: |
+            const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
+            const owner = 'gustavomhss', repo = 'Orchestra-SF';
+            const failUnless = (condition, message) => { if (!condition) throw new Error(message); };
+            const source = process.env.SF_SOURCE_SHA, runId = Number(process.env.SF_SOURCE_RUN);
+            const artifactId = Number(process.env.SF_ARTIFACT_ID), expectedSize = Number(process.env.SF_ARTIFACT_SIZE);
+            failUnless(context.eventName === 'push' && context.payload.created === true &&
+              context.payload.before === '0'.repeat(40) && context.payload.forced !== true &&
+              context.payload.deleted !== true && context.payload.after === context.sha &&
+              process.env.GITHUB_RUN_ATTEMPT === '1', 'Only first branch creation is admitted');
+            const { data: run } = await github.rest.actions.getWorkflowRun({ owner, repo, run_id: runId });
+            failUnless(run.id === runId && run.workflow_id === 420530405 && run.head_sha === source &&
+              run.head_branch === 'sf-join-four' && run.event === 'workflow_dispatch' && run.run_attempt === 1,
+              'Source run identity mismatch');
+            const { data: artifact } = await github.rest.actions.getArtifact({ owner, repo, artifact_id: artifactId });
+            const expectedName = 'sf-guard-bases-' + source + '-1';
+            failUnless(artifact.id === artifactId && artifact.name === expectedName && artifact.expired === false &&
+              artifact.size_in_bytes === expectedSize && expectedSize > 0 && expectedSize < 2000000 &&
+              artifact.digest === 'sha256:' + process.env.SF_ARTIFACT_DIGEST &&
+              artifact.workflow_run?.id === runId && artifact.workflow_run?.head_sha === source,
+              'Artifact identity, digest or bounds mismatch');
+            const downloaded = await github.rest.actions.downloadArtifact({ owner, repo, artifact_id: artifactId, archive_format: 'zip' });
+            const bytes = Buffer.from(downloaded.data);
+            failUnless(bytes.length === expectedSize &&
+              crypto.createHash('sha256').update(bytes).digest('hex') === process.env.SF_ARTIFACT_DIGEST,
+              'Downloaded archive size or digest mismatch');
+            const directory = path.join(process.env.RUNNER_TEMP, 'sf-final-evidence');
+            fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
+            fs.writeFileSync(path.join(directory, 'guards.zip'), bytes, { mode: 0o600 });
+            core.info('Pinned guard artifact downloaded and SHA-256 verified; no product command was executed.');
+      - name: Verify original checksums and print only factual guard summaries
+        shell: python
+        run: |
+          import hashlib, json, os, re, zipfile
+          from pathlib import Path
+          
+          root = Path(os.environ["RUNNER_TEMP"]) / "sf-final-evidence"
+          archive = root / "guards.zip"
+          raw = archive.read_bytes()
+          expected_digest = os.environ["SF_ARTIFACT_DIGEST"]
+          assert hashlib.sha256(raw).hexdigest() == expected_digest, "Artifact archive digest mismatch"
+          names = {"guard-dev.log", "guard-pr-base.log", "spawn.log", "receipt.json", "sha256sums.txt"}
+          with zipfile.ZipFile(archive) as bundle:
+              infos = bundle.infolist()
+              assert len(infos) == len(names) and {x.filename for x in infos} == names, "Unexpected archive entries"
+              assert all(not x.is_dir() and x.file_size <= 2_000_000 and not (x.flag_bits & 1) for x in infos), "Invalid bounded archive entry"
+              assert sum(x.file_size for x in infos) <= 6_000_000, "Unbounded archive"
+              blobs = {x.filename: bundle.read(x) for x in infos}
+          
+          checked = set()
+          for line in blobs["sha256sums.txt"].decode("utf-8").splitlines():
+              digest, path = line.split(None, 1)
+              name = Path(path.lstrip("*")).name
+              assert name in names - {"sha256sums.txt"} and name not in checked, "Unexpected checksum entry"
+              assert re.fullmatch("[a-f0-9]{64}", digest), "Invalid checksum"
+              assert hashlib.sha256(blobs[name]).hexdigest() == digest, "Inner evidence checksum mismatch"
+              checked.add(name)
+          assert checked == names - {"sha256sums.txt"}, "Incomplete evidence checksums"
+          
+          receipt = json.loads(blobs["receipt.json"])
+          expected = os.environ["SF_SOURCE_SHA"]
+          assert receipt["schema"] == "sf-ci-guard-bases-v1", "Wrong receipt"
+          assert receipt["candidate"] == expected and receipt["tree"] == os.environ["SF_SOURCE_TREE"], "Source identity mismatch"
+          assert str(receipt["run"]) == os.environ["SF_SOURCE_RUN"] and str(receipt["attempt"]) == "1", "Run identity mismatch"
+          assert receipt["runner_os"] == "Linux" and receipt["runner_arch"] == "X64", "Runner mismatch"
+          commands = receipt["commands"]
+          assert isinstance(commands, list) and len(commands) == 3, "Unexpected command receipt"
+          expected_commands = ["bun run check:spawn-imports", "bun run check:guards --base origin/dev", "bun run check:guards --base <PR base SHA>"]
+          assert [item["command"] for item in commands] == expected_commands, "Command identity mismatch"
+          assert all(type(item["status"]) is int and 0 <= item["status"] <= 255 for item in commands), "Invalid exit status"
+          
+          summaries = {}
+          for name in ["guard-dev.log", "guard-pr-base.log"]:
+              log = re.sub(r"\x1b\[[0-9;]*m", "", blobs[name].decode("utf-8"))
+              matches = re.findall(r"guards: (\d+) rules, (\d+) changed paths, (\d+) gate and (\d+) warn findings, (\d+) errors\.", log)
+              assert len(matches) == 1, "Missing or ambiguous factual guard summary"
+              values = [int(value) for value in matches[0]]
+              gates = re.findall(r"^GATE ([^\r\n]+?) \[([^\]\r\n]+)\]", log, re.MULTILINE)
+              assert len(gates) == values[2], "Gate count does not match emitted findings"
+              summaries[name] = dict(zip(["rules", "changedPaths", "gate", "warn", "errors"], values))
+              summaries[name]["findings"] = [{"path": path, "rule": rule} for path, rule in gates]
+          output = {"schema": "sf-final-guard-artifact-inspection-v1", "sourceSHA": expected,
+                    "sourceRun": int(os.environ["SF_SOURCE_RUN"]), "sourceAttempt": 1,
+                    "artifactId": int(os.environ["SF_ARTIFACT_ID"]), "artifactZipSha256": expected_digest,
+                    "receipt": receipt, "guardSummaries": summaries, "innerChecksumsVerified": 4}
+          (root / "guard-inspection.json").write_text(json.dumps(output, indent=2) + "\n")
+          print("SF_FINAL_GUARD_ARTIFACT_VERIFIED " + json.dumps(output, separators=(",", ":")))
+      - name: Publish factual inspection receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-final-guard-inspection-3910a644c7fdab1a438c2b5b39d69afc19361709-1
+          path: ${{ runner.temp }}/sf-final-evidence/guard-inspection.json
+          if-no-files-found: error
+          retention-days: 14
