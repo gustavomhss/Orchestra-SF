@@ -217,7 +217,8 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       const refused = await context.services.productHttp!(unauthorized, "dashboard")
       if (!refused) throw new Error("The real review download route disappeared")
       expect(refused.status).toBe(403)
-      expect(refused.headers.get("content-type")).not.toContain("officedocument")
+      expect(refused.headers.get("content-type")).toBeNull()
+      expect(await refused.text()).toBe("Access denied")
       console.log("SF_WP12_NATIVE_REVIEW_REOPEN:" + JSON.stringify({ scope: "real-preserved-review-and-download-after-source-change",
         githubSha: process.env.GITHUB_SHA ?? null, reviewRef: initial.review.id, reviewDigest: initial.review.digest,
         reports: initial.reports, consumerRef: "createReviewHttp:review-read/review-download", inputReopened: true,
