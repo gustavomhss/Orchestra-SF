@@ -1,6 +1,6 @@
 export * as PrivateProvider from "./private"
 
-import { AuthenticationReason, LLMClient, LLMError, LLMRequest } from "@orchestra/llm"
+import { AuthenticationReason, GenerationOptions, LLMClient, LLMError, LLMRequest } from "@orchestra/llm"
 import { OpenAICompatibleChat } from "@orchestra/llm/protocols/openai-compatible-chat"
 import { Auth } from "@orchestra/llm/route"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
@@ -97,7 +97,9 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
             input.request.generation.maxTokens < 1 || input.request.generation.maxTokens > definition.limit.output))
           return yield* unavailable()
         const canonical = LLMRequest.update(input.request, {
-          generation: { ...input.request.generation, maxTokens: input.request.generation?.maxTokens ?? definition.limit.output },
+          generation: GenerationOptions.make({
+            ...input.request.generation, maxTokens: input.request.generation?.maxTokens ?? definition.limit.output,
+          }),
         })
         const body = yield* route.body.from(canonical).pipe(Effect.flatMap(Schema.decodeUnknownEffect(bodyCodec)))
         const encoded = encodeBody(body)

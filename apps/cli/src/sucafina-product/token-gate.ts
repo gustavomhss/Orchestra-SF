@@ -188,7 +188,7 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
     layer: Layer.effect(LLMClient.Service, Effect.gen(function* () {
       const store = yield* SessionStore.Service
       const base = yield* HttpClient.HttpClient
-      const context = yield* Layer.build(LayerNodePlatform.llmClient.implementation)
+      const context = yield* Layer.build(LayerNodePlatform.llmClientLayer)
       const original = Context.get(context, LLMClient.Service)
       mount.current = true
       yield* Effect.addFinalizer(() => Effect.sync(() => {

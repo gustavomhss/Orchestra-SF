@@ -15,6 +15,8 @@ export const requestExecutor = makeGlobalNode({
   layer: RequestExecutor.layer,
   deps: [httpClient],
 })
-export const llmClient = makeGlobalNode({ service: LLMClient.Service, layer: PrivateProvider.llmLayer, deps: [requestExecutor, SessionOwner.node] })
+// Keep replacements bound to the same precisely typed corporate transport layer.
+export const llmClientLayer = PrivateProvider.llmLayer
+export const llmClient = makeGlobalNode({ service: LLMClient.Service, layer: llmClientLayer, deps: [requestExecutor, SessionOwner.node] })
 
 export * as LayerNodePlatform from "./app-node-platform"
