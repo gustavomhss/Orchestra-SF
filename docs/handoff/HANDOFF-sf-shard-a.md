@@ -2,7 +2,7 @@
 
 ## Estado do checkpoint
 
-- Estado: IN_PROGRESS — enumeração inicial; nenhuma correção de teste foi aplicada.
+- Estado: IN_PROGRESS — shard 2 enumerado; shard 1 cancelado pelo limite do job; shard 3 em execução. Nenhuma correção de teste foi aplicada.
 - Branch: `sf-shard-a`.
 - Base fixa de código: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
 - Escopo: CI-SF, shards 1, 2 e 3 de 8, módulo `modules/sucafina`.
@@ -33,9 +33,9 @@ Esses hashes identificam somente a seleção derivada, não uma cobertura execut
 
 | Shard | Run | Snapshot | Resultado observado neste checkpoint |
 | --- | --- | --- | --- |
-| 1 | [44646013868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646013868) | `a4bbf6b042526a0ee3f544243cfa67158236f871` | Run tests em andamento; contagem pendente |
-| 2 | [44646018333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646018333) | `dcb0c68d7e866b4df2153eadd26fda2eab45b266` | Run tests em andamento; contagem pendente |
-| 3 | Não iniciado | — | Aguarda vaga no limite de dois gates |
+| 1 | [44646013868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646013868) | `a4bbf6b042526a0ee3f544243cfa67158236f871` | CANCELLED; 558 PASS observados, 21 marcadores FAIL + 1 falha de asserção sem footer. Sem resumo final |
+| 2 | [44646018333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646018333) | `dcb0c68d7e866b4df2153eadd26fda2eab45b266` | FAILURE; 504 pass / 10 fail / 1 skip / 1 error; 515 testes, 107 arquivos |
+| 3 | [44651344557](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651344557) | `bce2f0ed56f7073254b4316853eca2ed0c0f5fcb` | Run tests em andamento; contagem pendente |
 
 Os snapshots são commits filhos diretos da base, alterando apenas `.ci-run.json`; as branches temporárias são apagadas pelo próprio workflow. Cada requisição permanece legível no SHA do snapshot.
 
@@ -46,19 +46,45 @@ Os snapshots são commits filhos diretos da base, alterando apenas `.ci-run.json
 
 Nenhum teste Bun foi executado nesses dois runs; não equivalem a 0 pass / 0 fail. A requisição foi corrigida antes das novas enumerações, sem alteração dos testes da base.
 
+## Falhas enumeradas — shard 2
+
+Prefixo dos caminhos abaixo: `modules/sucafina/Sucafinav1/test/`.
+
+| File:line | Classificação / evidência |
+| --- | --- |
+| `product/mixed-source-contracts/recorded-fallback.test.ts:11` | Deadline cooperativo 165000ms; proof emitido depois das asserções; encerramento excede orçamento. Desempenho/cleanup sem await caro isolado. |
+| `product/wp08/thread-period-continuity.test.ts:17` | Hot Topic day excede 30000ms; await causador não identificado. Timeout, sem aumento autorizado. |
+| `product/wp05/sensitivity-integration.test.ts:9; product/wp05/browser.ts:9` | Chrome launch excede 180000ms; também produz erro não tratado. Lifecycle do Chrome sob Bun; avaliação de fixture compartilhada pendente. |
+| `product/operations-fixes/document-search.test.ts:5` | SQLITE_IOERR em runtime/local-store.ts:55 durante autenticação via product/wp06/runtime-fixture.ts:30. Causa final não demonstrada; não atribuir a disco cheio/cleanup sem prova. |
+| `product/wp12/native-execution-collaboration-recall.test.ts:143` | Timeout120000ms; prova de pending input emitida, reabertura não comprovada. Desempenho/await sem causa isolada. |
+| `product/wp12/native-execution-executive.test.ts:213` | Oracle desatualizado: recebido denied/case-selection-unavailable. Guard C08 precede produtor. Fix concreto proposto, ainda não aplicado. |
+| `product/wp10/integration/bi-call-scope.test.ts:402` | unbound: projeção BI09 real sem Planner record drilldown. scenario-bi.ts:47–51 só fornece drilldown para uma única referência; não fabricar alvo. |
+| `product/wp10/memory-integrity/revocation-tail.test.ts:87` | unbound: produtor não entrega prova histórica completa no positivo, antes da revogação; analysis-source-unavailable. |
+| `product/wp10/memory-integrity/revocation-tail.test.ts:104` | unbound: verifier positivo unavailable antes da revogação; mesma família da prova histórica incompleta. |
+| `product/wp10/memory-integrity/revocation-tail.test.ts:124` | unbound: output-proof positivo unavailable antes da revogação; mesma família. |
+
+Skip preexistente: `local-backups.test.ts:209`, condição de usuário root. Erro não tratado: mesma causa do Chrome em `product/wp05/browser.ts:9`; não é uma 11ª falha de teste independente. Nenhum skip foi adicionado.
+
+## Limite observado — shard 1
+
+O job `135988658580` foi cancelado ao atingir os 45 minutos existentes. Não houve resumo final do Bun: as contagens são marcadores observados, não resultado completo. Há 557 linhas iniciadas com PASS e um PASS intercalado no diff, totalizando 558. Há 21 marcadores FAIL e uma falha explícita adicional em `product/routine-native-admission/adapter-boundaries.test.ts:113`, cujo footer não foi emitido no diff.
+
+Entraram 102/113 arquivos; `product/wp10/analysis-composition/alternative-selection.test.ts:375` estava em execução na interrupção. Seus testes em :441, :510, :573, :606 e :626 não iniciaram. A enumeração e a classificação de cada falha observada serão completadas neste handoff; arquivos sem header não serão declarados como aprovados.
+
 ## Feito / pendente
 
-Feito: instruções de repositório lidas; branch isolada criada; seleção dos três shards conferida; requisição compatível com o runner existente; enumeração de 1 e 2 iniciada.
+Feito: branch isolada; seleção dos três shards conferida; requisição compatível; shard 2 concluído e classificado; shard 1 cancelado sem repetição; shard 3 iniciado somente após shard 2 terminar. Nunca houve mais de dois gates simultâneos.
 
-Pendente: concluir enumeração 1/2; iniciar 3 quando houver vaga; publicar cada falha com file:line e a contagem real; só depois corrigir por causa e validar a fatia no mesmo shard.
+Pendente: concluir shard 3; publicar ledger completo do shard 1 e seus arquivos não iniciados; somente depois aplicar correções por causa e validar cada fatia no mesmo shard.
 
-Asserções removidas: nenhuma. Testes pulados/removidos: nenhum. Produto, projeções, fixtures e workflows: nenhuma alteração.
+Asserções removidas: nenhuma até este checkpoint. Testes pulados/removidos: nenhum. Produto, projeções, fixtures e workflows: nenhuma alteração.
 
 ## Como retomar
 
-1. Consultar os runs acima e os logs dos jobs `135988658580` (shard 1) e `135988673159` (shard 2); não repetir gates idênticos.
-2. Iniciar shard 3 na base, com a mesma requisição válida e seus 99 arquivos, em `ci-run-linux-sfa-3-enum`, somente após um dos dois workflows terminar.
-3. Completar a lista de falhas de todos os três antes de qualquer correção.
-4. Corrigir apenas causas comprovadas. Manter `runtime/application.ts` intacto. Não recriar console descomissionado, não alterar guards/timeouts nem falsificar baseline/coverage/digest/GO.
-5. Mudanças compartilhadas fora do escopo devem ir a PR pequeno separado com `shared:` no título; integrador faz esse merge primeiro.
-6. Registrar produtor sem dado requerido como `unbound`, com file:line. Atualizar este handoff com SHA e evidências finais.
+1. Consultar run 44651344557 e job 136006716047 (shard 3), sem repetir gate idêntico. Shards 1/2 estão encerrados.
+2. Ler logs dos jobs 135988658580 (shard 1) e 135988673159 (shard 2). Preservar a distinção entre enumeração parcial e resumo final.
+3. Completar os três ledgers antes de qualquer correção.
+4. Fix concreto identificado: `product/wp12/native-execution-executive.test.ts:213`. A recusa acontece em `apps/cli/src/sucafina-product/business-services.ts:289–291`, antes do produtor (`analysis-host-services.ts:271`); `analysis-http.ts:102` mapeia denied para 403. Substituir o oracle interno por HTTP403 e body exato, mantendo digests e downloads reais.
+5. Corrigir apenas causas comprovadas. Manter `runtime/application.ts` intacto. Não recriar console descomissionado, não elevar timeouts nem falsificar baseline/coverage/digest/GO.
+6. Mudanças compartilhadas devem ir a PR pequeno separado com `shared:` no título; integrador faz esse merge primeiro. Nenhuma mudança compartilhada aplicada até agora.
+7. Registrar produtor sem dado requerido como `unbound`, com file:line. Atualizar este handoff com SHA, evidências e ordem de integração finais.
