@@ -1,4 +1,4 @@
-import { Brand, Context, Layer } from "effect"
+import { Brand, Context, Layer, Option } from "effect"
 
 type AnyNode = Node<unknown, unknown, any>
 type RuntimeLayer = Layer.Layer<never, unknown, unknown>
@@ -269,7 +269,11 @@ function sameImplementation(left: AnyNode, right: AnyNode, known = new WeakMap<A
 export function compile<A, E, const Items extends Replacements = readonly []>(
   root: Node<A, E, any>,
   replacements?: ValidReplacements<Items>,
-  options?: { readonly transformLayer: (layer: RuntimeLayer, node: AnyNode) => RuntimeLayer },
+  options?: {
+    readonly transformLayer?: (layer: RuntimeLayer, node: AnyNode) => RuntimeLayer
+    /** Reuse already published services before traversing their dependencies; never build a second global graph. */
+    readonly existingContext?: Context.Context<never>
+  },
 ): Layer.Layer<A, E> {
   const replacementMap = replacementMapFrom(replacements)
   const cache = new Map<AnyNode, RuntimeLayer>()
@@ -277,6 +281,8 @@ export function compile<A, E, const Items extends Replacements = readonly []>(
     walk<RuntimeLayer>(
       node,
       (node, context) => {
+        if (node.service && options?.existingContext && Option.isSome(Context.getOption(options.existingContext, node.service)))
+          return Layer.succeedContext(options.existingContext)
         if (node.kind === "unbound") throw new Error(`Unbound layer node: ${node.name}`)
         const dependencies = node.dependencies.flatMap(flatten).map(context.visit)
         const implementation = node.implementation! as RuntimeLayer
