@@ -11,7 +11,7 @@ export function caseQuestionForm(projection: AuthorizedCaseProjection) {
 export function caseQuestionThreads(projection: AuthorizedCaseProjection) {
   if (!projection.case.questions.length) return ""
   const caseRef = { id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }
-  return `<section><h3>Question conversations</h3>${projection.case.questions.map((question) => `<article data-case-thread data-thread="${esc(question.id)}" data-case="${esc(JSON.stringify(caseRef))}" data-case-objective="${esc(projection.case.objective)}"${question.answerRef ? ` data-answer="${esc(question.answerRef)}"` : ""}><h4>${esc(question.text)}</h4><p>State: ${esc(question.state)}</p><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status" aria-live="polite"></p></article>`).join("")}</section>`
+  return `<section><h3>Question conversations</h3>${projection.case.questions.map((question) => `<article data-case-thread data-thread="${esc(question.id)}" data-scope="${esc(JSON.stringify(projection.context))}" data-case="${esc(JSON.stringify(caseRef))}" data-case-objective="${esc(projection.case.objective)}"${question.answerRef ? ` data-answer="${esc(question.answerRef)}"` : ""}><h4>${esc(question.text)}</h4><p>State: ${esc(question.state)}</p><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status" aria-live="polite"></p></article>`).join("")}</section>`
 }
 
 export const caseQuestionScript = `
@@ -20,34 +20,52 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
   const button = entry.querySelector('[data-open-thread]')
   const output = entry.querySelector('[data-thread-messages]')
   const status = entry.querySelector('[role=status]')
-  let caseRef
-  try { caseRef = JSON.parse(entry.dataset.case) } catch { return }
+  let caseRef, scope
+  try { caseRef = JSON.parse(entry.dataset.case); scope = JSON.parse(entry.dataset.scope) } catch { return }
+  const scopeKeys = ['installationId', 'projectId', 'principalRef', 'policyVersion', 'accessRevision']
+  if (!scope || scopeKeys.some((key) => typeof scope[key] !== 'string' || !scope[key])) return
   if (!button || !output || !status || !caseRef) return
   const threadId = entry.dataset.thread
+  const prefix = 'sf:recipient-reply:v1:'
+  const storageKey = prefix + encodeURIComponent(JSON.stringify([scope, caseRef.id, caseRef.incarnation, threadId]))
+  const clearPending = () => { try { sessionStorage.removeItem(storageKey) } catch {} }
+  const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+  const canonical = (value) => value === undefined ? ['absent'] : value === null ? ['null'] :
+    typeof value === 'string' || typeof value === 'boolean' ? [typeof value, value] :
+    typeof value === 'number' && Number.isFinite(value) ? ['number', Object.is(value, -0) ? '-0' : value] :
+    Array.isArray(value) ? ['array', value.map(canonical)] :
+    value && typeof value === 'object' && [Object.prototype, null].includes(Object.getPrototypeOf(value))
+      ? ['object', Object.keys(value).sort().map((key) => [key, canonical(value[key])])] : (() => { throw new Error('invalid-canonical-value') })()
+  const digest = async (value) => [...new Uint8Array(await crypto.subtle.digest('SHA-256',
+    new TextEncoder().encode(JSON.stringify(canonical(value)))))].map((byte) => byte.toString(16).padStart(2, '0')).join('')
   const guard = document.createElement('form'); guard.hidden = true; entry.append(guard)
   const controllers = new Set()
   let revoked = false, busy = false, epoch = 0, text, reply, eligible = [], selectionStale = false
   let replyKey = crypto.randomUUID(), replyRequest, replyUncertain = false, replyConflict = false
   let confirmation, prepared, confirmed = false, confirmUncertain = false, attachment, attachUncertain = false, attachConflict = false
-  let reviewReply, reviewCase, attachReviewed, reviewedCase
+  let reviewReply, reviewCase, attachReviewed, reviewedCase, lastThread
   const live = (generation) => !revoked && entry.isConnected && generation === epoch
   const controls = () => {
     if (revoked) return
-    button.disabled = busy || !!replyRequest || !!confirmation || attachConflict
+    button.disabled = busy || !!replyRequest && !!lastThread || !!confirmation || attachConflict
     if (text) text.disabled = busy || !!replyRequest || !!confirmation || attachConflict
-    if (reply) reply.disabled = busy || !!confirmation || replyConflict || attachConflict
+    if (reply) {
+      reply.disabled = busy || !!confirmation || replyConflict || attachConflict
+      reply.textContent = replyRequest && !replyConflict ? 'Retry same reply' : 'Send reply'
+    }
     eligible.forEach(({ element, allowed }) => { element.disabled = busy || !allowed || selectionStale || !!replyRequest || attachConflict })
     if (reviewReply) reviewReply.disabled = busy
     if (reviewCase) reviewCase.disabled = busy
     if (attachReviewed) attachReviewed.disabled = busy
   }
   const revoke = () => {
+    clearPending()
     if (revoked) return
     revoked = true; epoch++
     controllers.forEach((controller) => controller.abort()); controllers.clear()
     replyRequest = undefined; confirmation = undefined; attachment = undefined; prepared = undefined; reviewedCase = undefined; caseRef = undefined
     text = undefined; reply = undefined; eligible = []
-    for (const name of ['case', 'thread', 'answer', 'caseObjective']) delete entry.dataset[name]
+    for (const name of ['case', 'thread', 'answer', 'caseObjective', 'scope', 'caseSummary', 'principal', 'accessRevision', 'installation', 'project', 'policy']) delete entry.dataset[name]
     delete guard.dataset.dirty
     entry.replaceChildren(status)
     status.textContent = 'Conversation access changed. Reopen the decision with your current access.'
@@ -75,6 +93,48 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
       }
       return result.value
     } finally { clearTimeout(timer); controllers.delete(controller) }
+  }
+  const persist = () => {
+    if (!replyRequest) return
+    sessionStorage.setItem(storageKey, JSON.stringify({ version: 1, scope, threadId, caseId: caseRef.id,
+      caseIncarnation: caseRef.incarnation, request: replyRequest }))
+  }
+  try {
+    const raw = sessionStorage.getItem(storageKey)
+    if (raw) {
+      if (raw.length > 200_000) throw new Error('pending-too-large')
+      const saved = JSON.parse(raw), candidate = saved.request, payload = candidate && JSON.parse(candidate.body)
+      if (saved.version !== 1 || !equal(saved.scope, scope) || saved.threadId !== threadId ||
+          saved.caseId !== caseRef.id || saved.caseIncarnation !== caseRef.incarnation ||
+          typeof candidate?.key !== 'string' || !candidate.key || typeof candidate.draft !== 'string' ||
+          payload?.id !== threadId || payload.body !== candidate.draft.trim() || payload.mutation?.idempotencyKey !== candidate.key ||
+          !Number.isSafeInteger(payload.mutation?.expectedStorageVersion) || payload.mutation.expectedStorageVersion < 0 ||
+          typeof candidate.recipient !== 'boolean' || !Array.isArray(candidate.before) ||
+          candidate.before.some((message) => typeof message?.id !== 'string' || typeof message.incarnation !== 'string' || !Number.isSafeInteger(message.version)))
+        throw new Error('pending-scope-changed')
+      replyRequest = candidate; replyKey = candidate.key; replyUncertain = true
+    }
+  } catch { clearPending(); replyRequest = undefined }
+  const currentScope = async () => {
+    const html = await request('', undefined, undefined, 'GET')
+    const document = new DOMParser().parseFromString(html, 'text/html')
+    const current = [...document.querySelectorAll('[data-case-thread]')].find((node) => node.dataset.thread === threadId)
+    let observed
+    try { observed = JSON.parse(current?.dataset.scope) } catch {}
+    if (!current || !equal(observed, scope)) { revoke(); throw new Error('scope-changed') }
+  }
+  const recipientAck = async (result, pending) => {
+    const receipt = result?.mutationReceipt, payload = JSON.parse(pending.body)
+    if (!receipt || receipt.kind !== 'recipient-thread-action-v1' || receipt.action !== 'reply' ||
+        receipt.threadId !== threadId || receipt.principalRef !== scope.principalRef || receipt.idempotencyKey !== pending.key ||
+        receipt.intentDigest !== await digest(payload) ||
+        receipt.commandDigest !== await digest({ id: threadId, action: { kind: 'reply', body: payload.body } }) ||
+        typeof receipt.sourceIncarnation !== 'string' || !receipt.sourceIncarnation ||
+        !receipt.reply || pending.before.some((message) => message.id === receipt.reply.id)) return false
+    const matches = result.messages.filter((message) => message.id === receipt.reply.id &&
+      message.incarnation === receipt.reply.incarnation && message.version === receipt.reply.version)
+    return matches.length === 1 && validMessage(matches[0]) && matches[0].authorRef === scope.principalRef &&
+      matches[0].body === payload.body && matches[0].sourceContext?.sourceIncarnation === receipt.sourceIncarnation
   }
   const validVersion = (value) => Number.isSafeInteger(value) && value >= 0
   const validMessage = (message) => typeof message?.id === 'string' && !!message.id &&
@@ -200,6 +260,7 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
     finally { busy = false; controls() }
   }
   const render = (result, draft = '') => {
+    lastThread = result
     output.replaceChildren(); eligible = []; text = undefined; reply = undefined
     const candidates = result.messages.flatMap((message, index) => index > 0 && result.recipientRef && message.authorRef === result.recipientRef && typeof message.id === 'string' ? [index] : [])
     const latest = candidates.at(-1)
@@ -214,9 +275,9 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
       eligible.push({ element: confirm, allowed })
       confirm.addEventListener('click', () => confirmAnswer(message, complete, allowed))
     })
-    if (result.state === 'open') {
+    if (result.state === 'open' || replyRequest) {
       const form = document.createElement('form'); const label = document.createElement('label'); label.textContent = 'Reply'
-      text = document.createElement('textarea'); text.required = true; text.value = draft; label.append(text)
+      text = document.createElement('textarea'); text.required = true; text.value = replyRequest ? replyRequest.draft : draft; label.append(text)
       reply = document.createElement('button'); reply.type = 'submit'; reply.textContent = 'Send reply'; form.append(label, reply); output.append(form)
       if (draft) form.dataset.dirty = 'true'
       const currentText = text
@@ -230,26 +291,32 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
         event.preventDefault()
         if (busy || revoked || replyConflict || confirmation || !replyRequest && !currentText.value.trim()) return
         busy = true; controls(); status.textContent = 'Sending reply…'
-        const wasUncertain = replyUncertain
+        const wasUncertain = replyUncertain, generation = epoch
         try {
+          if (replyRequest) await currentScope()
           if (!replyRequest) {
             const draft = currentText.value
             const version = await request('collaboration-storage-version', { namespace: 'threads' })
             if (!validVersion(version)) throw new Error('invalid-version')
-            replyRequest = { key: replyKey, draft, body: JSON.stringify({ id: threadId, body: draft.trim(), mutation: { expectedStorageVersion: version, idempotencyKey: replyKey } }) }
+            replyRequest = { key: replyKey, draft, recipient: !!(lastThread?.current && lastThread?.observed), before: (lastThread?.messages ?? []).filter(validMessage).map(({ id, incarnation, version }) => ({ id, incarnation, version })), body: JSON.stringify({ id: threadId, body: draft.trim(), mutation: { expectedStorageVersion: version, idempotencyKey: replyKey } }) }
           }
+          persist()
           replyUncertain = true
           const result = await request('collaboration-thread-reply', replyRequest.body, replyRequest.key)
           const message = result?.messages?.at(-1)
-          if (!validThread(result) || result.id !== threadId || !validMessage(message) ||
-              message.body !== JSON.parse(replyRequest.body).body) throw new Error('invalid-reply-acknowledgement')
+          if (!validThread(result) || result.id !== threadId ||
+              (replyRequest.recipient ? !await recipientAck(result, replyRequest) :
+                !validMessage(message) || message.body !== JSON.parse(replyRequest.body).body))
+            throw new Error('invalid-reply-acknowledgement')
+          if (!live(generation)) return
+          clearPending()
           replyRequest = undefined; replyUncertain = false; replyKey = crypto.randomUUID(); selectionStale = false
           delete form.dataset.dirty; delete guard.dataset.dirty
           render(result); status.textContent = ''
         } catch (error) {
           if (revoked) return
           if (replyRequest && !wasUncertain && error.status === 409 && error.result?.reason === 'product-state-changed') {
-            replyConflict = true; replyUncertain = false
+            clearPending(); replyConflict = true; replyUncertain = false
             status.textContent = 'The reply was not sent because the conversation changed. Review the current conversation; your text is preserved.'
             if (!reviewReply) {
               reviewReply = document.createElement('button'); reviewReply.type = 'button'; reviewReply.textContent = 'Review changed conversation'
@@ -262,14 +329,14 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
     controls()
   }
   const refresh = async (review = false) => {
-    if (busy || revoked || !review && (replyRequest || confirmation)) return
+    if (busy || revoked || !review && (confirmation || replyRequest && lastThread)) return
     const draft = text?.value ?? ''
     if (!review && draft.trim() && !window.confirm('Refresh the conversation and discard this unsent reply if it loads?')) return
     busy = true; controls(); status.textContent = 'Opening conversation…'
     try {
       const result = await request('collaboration-thread-read', { id: threadId })
       if (!validThread(result)) throw new Error('invalid-thread')
-      if (review) { replyRequest = undefined; replyConflict = false; replyUncertain = false; replyKey = crypto.randomUUID(); reviewReply?.remove(); reviewReply = undefined }
+      if (review) { clearPending(); replyRequest = undefined; replyConflict = false; replyUncertain = false; replyKey = crypto.randomUUID(); reviewReply?.remove(); reviewReply = undefined }
       selectionStale = false; render(result, review ? draft : '')
       status.textContent = review ? 'Conversation updated. Review your preserved reply before sending it.'
         : eligible.length && !eligible.some((value) => value.allowed) ? 'Answer confirmation needs an authorized current message. Reopen the conversation; you can still send a reply.'
@@ -279,7 +346,16 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
   }
   button.addEventListener('click', () => refresh())
   window.addEventListener('sf-access-revoked', revoke)
-  window.addEventListener('pagehide', revoke)
+  window.addEventListener('pagehide', () => {
+    if (revoked) return
+    revoked = true; epoch++; controllers.forEach((controller) => controller.abort()); controllers.clear()
+    output.replaceChildren(); entry.hidden = true
+    for (const name of ['case', 'thread', 'answer', 'caseObjective', 'scope']) delete entry.dataset[name]
+    entry.querySelector('h4')?.remove()
+    text = undefined; reply = undefined; lastThread = undefined; scope = undefined; caseRef = undefined
+    replyRequest = undefined; confirmation = undefined; attachment = undefined; prepared = undefined
+  })
+  window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload() })
   const observer = new MutationObserver(() => { if (!entry.isConnected) { observer.disconnect(); revoke() } })
   observer.observe(document.body, { childList: true, subtree: true })
 })
