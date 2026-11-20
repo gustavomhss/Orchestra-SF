@@ -104,13 +104,13 @@ export async function observeNativeResponses(page: Page, origin: string) {
     const requireUnique = (selection: Selection, capture: Captured) => {
       if (active !== scope) throw new Error("Native response scope is no longer active")
       if (scope.failure) throw scope.failure
-      const identical = selection.captures.filter((entry) =>
-        entry.start.document === capture.start.document && entry.start.method === capture.start.method &&
-        entry.start.url === capture.start.url)
-      if (identical.length !== 1) throw new Error(selection.operation.label + ": multiple fetches match the selected response")
       if (!capture.request || capture.start.document !== document ||
         capture.request.frame() !== page.mainFrame())
         throw new Error(selection.operation.label + ": selected response is not bound to the current frame/document")
+      const identical = scope.selections.flatMap((entry) => entry.captures)
+        .filter((entry) => entry.request === capture.request)
+      if (identical.length !== 1 || identical[0] !== capture)
+        throw new Error(selection.operation.label + ": original Request does not identify exactly one fetch copy")
     }
     const read = async (response: Response, body: "json" | "bytes") => {
       const selected = scope.selections.filter((entry) => matches(entry.operation, response.request().method(), response.request().url()))
