@@ -161,3 +161,18 @@ Não existe run desta sessão. `NOT_RUN` abaixo é estado do plano, não uma con
 6. Disparar exatamente uma vez o workflow 420530405 em sf-join-four; registrar SHA, run id, cada job e artifacts. Preservar PENDING_REAL_COMPLETE_RUN e os erros esperados de baseline/static; não inventar hash nem editar suites.
 7. Resolver antes o conflito do teste de fábrica com a proibição de usar :4110, preservando as provas reais e o 404 do console descomissionado. Depois congelar o SHA integrado. Revalidar `sfa-factory-package` e movê-la por fast-forward com lease somente para esse SHA; o push aciona o workflow já existente. Registrar run id, artifact e digest real do pacote publicado, sem GO/deploy.
 8. Atualizar este handoff com a ordem real de merges e resultados. Toda informação ainda NOT_RUN permanece aberta até existir evidência vinculada ao SHA.
+
+
+## Retomada ativa — integração em andamento
+
+Estado atualizado: **in_progress**. O registro bloqueado acima é o checkpoint anterior, não uma conclusão final. O usuário solicitou completar os reparos e a integração. Nenhum resultado é convertido em verde sem Actions.
+
+- `sf-continuation-reports`: código `537b8defbe86606ce3ddb1e9d65e282a6526c9ea`, head documental `e62c46fcb0cd3592a7eb85fb30a875937b026b61`. Usa a instalação CLI real, listener 4174, publicOrigin do preview, seleção original por `connectInstalledShell` e verificação de trace/video/screenshot desligados antes de credenciais. Gate pendente da composição de UI e config.
+- `sf-continuation-ops`: código parcial `b757cd82a6e972e6b4c21c4562e91993e2716097`; numeric total, snapshots simples de review, omission de opcionais e seção original de attachments. Helpers em implementação. Depende de Files #393 e do host atual da Sessão 1. Nenhum gate disparado.
+- `sf-continuation-package`: código `11a23d3cfe3c0edfaf1e92a05d21da43f0656d76`, head com handoff `ef7de8e9d34c1af0c83a0a071f4f12d945865253`. Configuração, listener, HTTP, Origin, receipt e checker de factory consistentemente em localhost:4120. O workflow preserva candidato minimizado apenas depois de testes/sanitização bem-sucedidos e posterior recusa do receipt, sem transformar candidato em evidência de aprovação.
+- `sf-continuation`: `9457dce211ffa4c36ac8a3c50324ee588ca24754` configura upstream Reports 4174 sem iniciar WP04. O recorte C02 `4440fe1a9e8fe1435158ee994a4e49a1f4b863dc` foi **retirado** por `4ab67d55fd2f6f91b1f72eb1f2f6be7dea7eaa06`, pois a Sessão 1 retomou a mesma causa com produtor próprio em `7e76451c75e9805dbedac0e6e19d2b9204571957`. Não integrar as duas implementações concorrentes.
+- Sessão 1 consultada em `1a8b2b1cc249d38f35a126c45d414f9dbdc93127`: arquivos de suppliers/sourcing e Reports se sobrepõem aos recortes acima; composição deve preservar ambos os deltas funcionais, mas substituir o ingresso Reports que ainda usa porta proibida pela implementação em 4174. Não sobrescrever branch de outra sessão durante trabalho ativo.
+- PR #257 é draft/open, head `sfa-factory-package`, base `close-final-candidate`. Um push na branch do pacote dispararia também `sf-ci` por synchronize. Resolver o vínculo antes do push final; retarget reversível para `sf-join-four` está em revisão. Nenhum retarget ou push de pacote realizado.
+- O navegador consultado está sem sessão GitHub; nenhum dispatch de `sf-ci` realizado. Operações Git e leituras Actions continuam pelo conector. O dispatch final deve ocorrer uma única vez, somente após os merges.
+
+Nenhuma execução local, nenhum shell, nenhum `sf-ci`, nenhum merge e nenhum digest de pacote foram produzidos nesta retomada até este checkpoint. Os estados e resultados finais serão acrescentados após as qualificações.
