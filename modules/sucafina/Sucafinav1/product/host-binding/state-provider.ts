@@ -1,3 +1,4 @@
+import { types } from "node:util"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
@@ -141,6 +142,36 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
   return structuredClone({ cases: chosenCases, decisionResults: chosenResults }) as unknown as SfProductState
 }
 
+
+/** Only this factory-owned callback may omit unrelated namespaces from a clone.
+ * All result envelopes remain one graph; filtering still occurs after cloning. */
+const scenarioReads = new WeakMap<object, {
+  project: (decisionResults: SfProductState["decisionResults"], authority: SfStateAuthority) => NonNullable<SfProductState["decisionResults"]>[string][] | undefined
+}>()
+
+export function selectSfScenarioCandidates(request: { caseRef: { id: string; incarnation: string; version: number } }, requestDigest: string, resultDigest: string, context: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "decisionResults">, authority: SfStateAuthority) =>
+    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? Object.values(state.decisionResults ?? {}).filter((item) => item.kind === "scenario" && item.caseRef.id === request.caseRef.id && item.caseRef.incarnation === request.caseRef.incarnation && item.caseRef.version <= request.caseRef.version && item.requestDigest === requestDigest && item.resultDigest === resultDigest) : undefined
+  // Do not snapshot the caller's mutable request or invoke proxy traps during
+  // registration. The original predicate observes both after C08 admission.
+  if (types.isProxy(context)) return read
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  if (Object.isFrozen(context) && binding && "value" in binding && binding.value && typeof binding.value === "object" && !types.isProxy(binding.value) && Object.isFrozen(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) scenarioReads.set(read, { project: (decisionResults, authority) => read({ decisionResults }, authority) })
+  return read
+}
+
+function scenarioResultMap(state: SfProductState) {
+  if (types.isProxy(state)) return undefined
+  const field = Object.getOwnPropertyDescriptor(state, "decisionResults")
+  if (!field?.enumerable || !("value" in field) || !field.value || typeof field.value !== "object" || Array.isArray(field.value) || types.isProxy(field.value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(field.value))) return undefined
+  return field.value as NonNullable<SfProductState["decisionResults"]>
+}
+
 /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
 export function createSfProductState(input: {
   persistence: Persistence
@@ -174,6 +205,8 @@ export function createSfProductState(input: {
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
+        const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
         const value = readiness
@@ -182,6 +215,7 @@ export function createSfProductState(input: {
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
+          : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
           : await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, mode)

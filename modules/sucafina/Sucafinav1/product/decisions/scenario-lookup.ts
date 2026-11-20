@@ -4,6 +4,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { createSfDecisionResultStore } from "./result-store.ts"
 import { encodeCaseRef } from "./case-port.ts"
+import { selectSfScenarioCandidates } from "../host-binding/state-provider.ts"
 
 /** Resolve a current alternative to an actually persisted and currently authorized C08 result. */
 export function createDecisionScenarioLookup(input: { cases: DecisionCasePort; state: SfProductStatePort; results: ReturnType<typeof createSfDecisionResultStore>; host: Pick<DomainPortHost, "requestFor" | "revalidate"> }) {
@@ -18,7 +19,7 @@ export function createDecisionScenarioLookup(input: { cases: DecisionCasePort; s
       if (alternatives.length !== 1) return { status: "unavailable", reason: "alternative-unavailable" }
       const requestDigest = digestSfValue(alternatives[0]!.scenario)
       const resultDigest = digestSfValue(alternatives[0]!.result)
-      const records = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? Object.values(state.decisionResults ?? {}).filter((item) => item.kind === "scenario" && item.caseRef.id === request.caseRef.id && item.caseRef.incarnation === request.caseRef.incarnation && item.caseRef.version <= request.caseRef.version && item.requestDigest === requestDigest && item.resultDigest === resultDigest) : undefined)
+      const records = await input.state.read(source, "cases", selectSfScenarioCandidates(request, requestDigest, resultDigest, context))
       if (records.status !== "ok" || !records.value?.length) return { status: "unavailable", reason: "scenario-result-unavailable" }
       const newest = Math.max(...records.value.map((item) => item.caseRef.version))
       const matches = records.value.filter((item) => item.caseRef.version === newest)
