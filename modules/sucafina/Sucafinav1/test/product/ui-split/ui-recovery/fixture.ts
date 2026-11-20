@@ -1,9 +1,10 @@
 import { expect } from "bun:test"
-import type { Locator, Page, Response } from "@playwright/test"
+import type { BrowserContext, Locator, Page, Response } from "@playwright/test"
 import { object, rows } from "../../../../runtime/contract.ts"
 import { createConsumerReadFixture, initialCaseRef } from "../../dashboard-installed-closure/ownhost-fixture.ts"
 import { storeExistingChoice } from "../../wp02/workbench-recovery-fixture.ts"
 import { enrollNativeBrowser } from "../../native-ui-browser/session.ts"
+import { observeNativeFetch, type NativeFetchCapture } from "../../native-ui-browser/observed-fetch.ts"
 
 export { createConsumerReadFixture, initialCaseRef }
 export type RecoveryFixture = Awaited<ReturnType<typeof createConsumerReadFixture>>
@@ -18,12 +19,21 @@ export const modeUrl = (mode: string) => (url: URL) => url.pathname === "/sucafi
 export const modeResponse = (mode: string) => (response: Response) =>
   response.request().method() === "POST" && modeUrl(mode)(new URL(response.url()))
 
-// Consume the CDP body as soon as its response arrives, before native navigation
-// can invalidate the old document's network resource.
-export const receive = (page: Page, mode: string) => page.waitForResponse(modeResponse(mode)).then(async (response) => ({
-  status: response.status(), body: await response.json() as unknown,
-  key: response.request().headers()["idempotency-key"], request: response.request().postDataJSON() as Record<string, unknown>,
-}))
+const captures = new WeakMap<BrowserContext, NativeFetchCapture>()
+const captureFor = (page: Page) => {
+  const capture = captures.get(page.context())
+  if (!capture) throw new Error("Native recovery response observer was not installed")
+  return capture
+}
+// Copy the genuine response before its native consumer can abort or navigate.
+// Keep the original browser UUID and closed JSON input in the same observation.
+export const receive = async (page: Page, mode: string) => {
+  const response = await captureFor(page)(page, (entry) => entry.method === "POST" && modeUrl(mode)(new URL(entry.url)))
+  return { status: response.status, body: response.body, key: response.idempotencyKey,
+    request: response.requestBody as Record<string, unknown> }
+}
+export const receiveContext = (page: Page) => captureFor(page)(page,
+  (entry) => entry.method === "GET" && new URL(entry.url).pathname === "/sucafina/api/ui/context")
 
 export async function correlations(page: Page) {
   return page.evaluate((prefix) => Object.entries(sessionStorage).filter(([key]) => key.startsWith(prefix))
@@ -47,6 +57,16 @@ export async function assertPrivateCorrelation(page: Page, expected: Record<stri
 export async function openWorkbench(page: Page, fixture: RecoveryFixture) {
   page.setDefaultTimeout(10_000)
   page.setDefaultNavigationTimeout(15_000)
+  if (!captures.has(page.context())) {
+    const capture = await observeNativeFetch(page.context(), { origin: fixture.origin, timeoutMs: 10_000,
+      endpoints: [
+        ...["dashboard-workbench", "dashboard-hot-topic-draft", "dashboard-hot-topic-prepare", "dashboard-hot-topic-recover"]
+          .map((sf) => ({ method: "POST" as const, path: "/sucafina/dashboard", sf })),
+        { method: "GET", path: "/sucafina/api/ui/context" },
+      ],
+    })
+    captures.set(page.context(), capture)
+  }
   await enrollNativeBrowser(page.context(), fixture.origin, () => fixture.identity.enroll())
   expect((await page.goto(fixture.origin + "/orchestra/sf-dashboard/hot-topics"))?.status()).toBe(200)
   await page.getByRole("link", { name: "Private follow-up proposals", exact: true }).click()

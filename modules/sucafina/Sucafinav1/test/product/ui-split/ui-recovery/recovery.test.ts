@@ -9,7 +9,7 @@ import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
 import {
   applicationPanel, assertPrivateCorrelation, correlations, createConsumerReadFixture, editNewDraft, initialCaseRef,
   loadPrivateOptions, modeUrl, observedApplication, openPreparation, openWorkbench, pendingSaveMessage, prepareApply, privatePanel,
-  receive, recoveredMessage, recoveryPrefix, reloadApply, unknownMessage,
+  receive, receiveContext, recoveredMessage, recoveryPrefix, reloadApply, unknownMessage,
 } from "./fixture.ts"
 
 test("UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload", async () => {
@@ -18,7 +18,8 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
   const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => { await fixture.close(); throw error })
   const failures: unknown[] = []
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const context = await driver.browser.newContext()
+    const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "One effect with an incomplete ACK")
 
@@ -121,7 +122,8 @@ test("UI recovery reauthorizes the restored attempt and purges it on real denial
   const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await fixture.close(); throw error })
   const failures: unknown[] = []
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const context = await driver.browser.newContext()
+    const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "Private revoked recovery")
     const attempts: { body: string | null; key: string | undefined; status: number }[] = []
@@ -213,7 +215,8 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
   const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => { await fixture.close(); throw error })
   const failures: unknown[] = []
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const context = await driver.browser.newContext()
+    const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "One effect before ambiguous receipt")
     const applications: { body: string | null; key: string | undefined; status: number; result: unknown }[] = []
@@ -294,7 +297,8 @@ test("UI recovery distinguishes a lost first save without draftRef and never gue
   const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => { await fixture.close(); throw error })
   const failures: unknown[] = []
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const context = await driver.browser.newContext()
+    const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, fixture)
     const attempts: { body: string | null; key: string | undefined; status: number; result: unknown }[] = []
@@ -382,7 +386,8 @@ test("F01 purges a still-valid original correlation on owner reload outside Dash
   const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => { await fixture.close(); throw error })
   const failures: unknown[] = []
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const context = await driver.browser.newContext()
+    const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, fixture), saves: unknown[] = [], outcomes: string[] = []
     await page.route(modeUrl("dashboard-hot-topic-draft"), async (route) => {
@@ -411,8 +416,7 @@ test("F01 purges a still-valid original correlation on owner reload outside Dash
     fixture.selectProject("other-recovery-project")
     const other = new URL("/orchestra/sf-decisions", fixture.origin)
     other.search = new URLSearchParams(fixture.selection()).toString()
-    const contextRead = page.waitForResponse((response) => new URL(response.url()).pathname.endsWith("/api/ui/context"))
-      .then(async (response) => ({ status: response.status(), body: await response.json() as unknown }))
+    const contextRead = receiveContext(page)
     page.once("dialog", (dialog) => void dialog.accept())
     expect((await page.goto(other.href))?.status()).toBe(200)
     const otherContext = await contextRead
@@ -458,7 +462,8 @@ test("native preparation reauthorizes the chosen case and purges private UI on r
   const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await fixture.close(); throw error })
   const failures: unknown[] = []
   try {
-    const page = await driver.browser.newPage(), errors: string[] = [], applications: string[] = []
+    const context = await driver.browser.newContext()
+    const page = await context.newPage(), errors: string[] = [], applications: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     page.on("request", (request) => {
       if (modeUrl("dashboard-hot-topic-apply")(new URL(request.url()))) applications.push(request.url())
