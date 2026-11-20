@@ -86,15 +86,31 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
     await expect(question).toHaveValue(input.body)
     await expect(question).not.toBeEditable()
 
-    // Exercise the installed host's real access probe and collaboration refresh.
+    // Exercise native context admission before the authorized collaboration refresh.
     // The event supplies no data or permission and cannot submit the intent.
     const focusURL = page.url()
-    const probe = page.waitForResponse((response) => response.request().method() === "GET" && response.url() === focusURL)
+    const probe = page.waitForResponse((response) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.origin === app.origin &&
+        url.pathname === app.mount + "/api/ui/context"
+    })
     const refreshed = page.waitForResponse(responseFor(app.dashboardURL, readMode, "POST"))
     const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
     await page.evaluate(() => { window.dispatchEvent(new Event("focus")) })
     const [probed, reread, unanswered] = await Promise.all([probe, refreshed, answerRead])
     expect(probed.status()).toBe(200)
+    expect(probed.headers()["cache-control"]).toContain("no-store")
+    const context = object(await probed.json())
+    expect(context.status).toBe("ok")
+    const authorizedContext = object(context.value), stamp = object(authorizedContext.stamp)
+    expect(authorizedContext.contractRevision).toBe("sf-native-ui/1")
+    expect(stamp.principalRef).toBe(app.actorId)
+    text(stamp.policyVersion)
+    text(stamp.accessRevision)
+    expect(Object.fromEntries(new URL(probed.url()).searchParams)).toEqual({
+      installationId: text(stamp.installationId), projectId: text(stamp.projectId), hostId: text(stamp.hostId),
+    })
+    await expect(page).toHaveURL(focusURL)
     expect(reread.status()).toBe(200)
     expect(reread.request().postDataJSON()).toEqual({ id: questionId })
     expect(object(object(await reread.json()).value).messages).toEqual(saved.messages)
@@ -133,7 +149,7 @@ export async function recoverCreatedQuestionAfterReadLoss(input: {
         originalStorageVersion: input.expectedStorageVersion, resultingStorageVersion: input.expectedStorageVersion + 1,
         createRequests: writes.length, threadWrites: 1, automaticRetry: false,
         failure: "first real authorized thread read after received create200 discarded",
-        reconciliation: "explicit authorized read adopts known thread; real focus probe/read retains draft and intent before exact explicit receipt replay",
+        reconciliation: "explicit authorized read adopts known thread; native context and collaboration focus reads retain draft and intent before exact explicit receipt replay",
       }, null, 2), contentType: "application/json",
     })
     return { payload: created.payload, value: result.value }

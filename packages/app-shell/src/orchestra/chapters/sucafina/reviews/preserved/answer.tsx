@@ -3,6 +3,7 @@ import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
+import { createSfContextClient } from "@orchestra/client/sucafina/context"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { useSfContext } from "../../context"
@@ -86,21 +87,26 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
   }
   onCleanup(() => { disposed = true; operation?.abort(); intent = undefined })
 
-  const assertAuthority = (result: { kind: string; status?: number }) => {
-    if (result.kind !== "response" || (result.status !== 401 && result.status !== 403)) return
+  const assertAuthority = (result: { kind: string; status?: number; body?: { status: string } }) => {
+    if (result.kind !== "response") return
+    const reason = result.status === 401 || result.body?.status === "unauthenticated" ? "session-expired"
+      : result.status === 403 || result.body?.status === "denied" ? "revoked" : undefined
+    if (!reason) return
     operation?.abort()
     markIntent(undefined)
     setUi({
       question: "", reply: "", edits: {}, recipients: [], recipientRef: "", sourceRef: "", sectionId: "",
       thread: undefined, prepared: undefined, confirmed: undefined, historyText: "", status: "",
     })
-    owner.invalidate(result.status === 401 ? "session-expired" : "revoked")
+    owner.invalidate(reason)
     throw new Error("Review discussion access changed")
   }
 
-  const readConfirmed = async (client: ReturnType<typeof createSfCollaborationClient>, questionId: string, signal: AbortSignal) => {
+  const readConfirmed = async (
+    client: ReturnType<typeof createSfCollaborationClient>, questionId: string, signal: AbortSignal, current = () => true,
+  ) => {
     const result = await client["collaboration.answer-read"]({ questionId }, { signal })
-    if (signal.aborted || disposed) return
+    if (signal.aborted || disposed || !current()) return
     assertAuthority(result)
     if (result.kind !== "response") throw new Error("Confirmed answer read unavailable")
     if (result.body.status !== "ok") {
@@ -168,24 +174,54 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
   })
 
   const refreshBound = async () => {
-    const active = owner.ready()
+    const active = owner.ready(), state = owner.state()
     const id = reviewLocationBinding().reviewThread ?? ui.thread?.id ?? intent?.threadId
-    if (!active || !id) return
-    const client = createSfCollaborationClient(active.transport)
+    if (!active || state.status !== "ready" || !id) return
+    const generation = owner.generation(), reviewId = props.review.id, retained = intent
     const abort = new AbortController()
+    operation?.abort()
     operation = abort
-    const read = await client["collaboration.thread-read"]({ id }, { signal: abort.signal })
-    if (abort.signal.aborted || disposed) return
-    assertAuthority(read)
-    if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
-    const thread = asThread(read.body.value)
-    if (!thread || thread.id !== id) throw new Error("Review discussion unavailable")
-    setUi("thread", thread)
-    await readConfirmed(client, id, abort.signal)
+    const current = () => {
+      const latest = owner.state()
+      return !abort.signal.aborted && !disposed && operation === abort && !ui.busy && !ui.suspended &&
+        owner.generation() === generation && latest.status === "ready" && latest.ownerKey === state.ownerKey &&
+        owner.ready()?.transport === active.transport && props.review.id === reviewId && intent === retained &&
+        (reviewLocationBinding().reviewThread ?? ui.thread?.id ?? intent?.threadId) === id
+    }
+    try {
+      const context = await createSfContextClient(active.transport)["ctx.context"]({
+        installationId: state.binding.installationId, projectId: state.binding.projectId, hostId: state.binding.hostId,
+      }, { signal: abort.signal })
+      if (!current()) return
+      assertAuthority(context)
+      if (context.kind !== "response" || context.status !== 200 || context.body.status !== "ok")
+        throw new Error("Review discussion unavailable")
+      const stamp = context.body.value.stamp
+      const fields = ["installationId", "projectId", "hostId", "principalRef", "policyVersion", "accessRevision"] as const
+      if (fields.some((field) => stamp[field] !== active.context.stamp[field])) {
+        owner.invalidate("owner-changed")
+        throw new Error("Review discussion access changed")
+      }
+      const client = createSfCollaborationClient(active.transport)
+      const read = await client["collaboration.thread-read"]({ id }, { signal: abort.signal })
+      if (!current()) return
+      assertAuthority(read)
+      if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
+      const thread = asThread(read.body.value)
+      if (!thread || thread.id !== id) throw new Error("Review discussion unavailable")
+      setUi("thread", thread)
+      await readConfirmed(client, id, abort.signal, current)
+    } catch (error) {
+      if (current()) fail(error)
+    } finally {
+      if (operation === abort) operation = undefined
+    }
   }
 
   const onFocus = () => {
-    if (ui.busy || ui.suspended || ui.hasIntent) return
+    // A reconciled intent keeps its exact payload and key while current access is re-read.
+    // Focus never submits it or makes an unreconciled action eligible for retry.
+    if (ui.busy || ui.suspended || (ui.hasIntent && !ui.reconciled)) return
     void refreshBound().catch((error) => fail(error))
   }
   if (typeof window !== "undefined") window.addEventListener("focus", onFocus)
