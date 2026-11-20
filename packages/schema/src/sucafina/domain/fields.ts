@@ -3,7 +3,7 @@ import { NonNegativeInt, optional } from "../../schema"
 
 /** Public DTOs: the legacy renderer's allowed fieldsets, not the persisted snapshot. */
 export type SfDomainJson = null | boolean | number | string | readonly SfDomainJson[] | { readonly [key: string]: SfDomainJson }
-export const SfDomainJsonValue: Schema.Schema<SfDomainJson> = Schema.suspend(() =>
+export const SfDomainJsonValue: Schema.Codec<SfDomainJson, SfDomainJson> = Schema.suspend(() =>
   Schema.Union([Schema.Null, Schema.Boolean, Schema.Finite, Schema.String,
     Schema.Array(SfDomainJsonValue), Schema.Record(Schema.String, SfDomainJsonValue)]),
 )

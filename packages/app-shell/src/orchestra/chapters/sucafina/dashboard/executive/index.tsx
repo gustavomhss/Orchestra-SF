@@ -133,7 +133,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                   <option value={item}>{item}</option>}</For>
               </select></label>
             <label>{t(key("sf.u02.month"))}
-              <select value={month() ?? ""} onChange={(event) => reader.setMonth(Number(event.currentTarget.value))}>
+              <select aria-label={t(key("sf.u02.month"))} value={month() ?? ""} onChange={(event) => reader.setMonth(Number(event.currentTarget.value))}>
                 <option value="" disabled>{missing()}</option>
                 <For each={MONTHS}>{(item) => <option value={item}>{item}</option>}</For>
               </select></label>
