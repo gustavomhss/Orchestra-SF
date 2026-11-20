@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { plannerMonthlyScript } from "../../../product/ui/planner-monthly.ts"
-import { caseQuestionScript } from "../../../product/ui/work-collaboration.ts"
+import { caseQuestionScript, caseQuestionThreads } from "../../../product/ui/work-collaboration.ts"
 import { forecastAnalysisScript } from "../../../product/ui/forecast-analysis.ts"
 import { decisionChoiceForm, decisionChoiceScript } from "../../../product/ui/decision-choice.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
@@ -706,15 +706,23 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     })
   }, 30_000)
 
-  const conversation = `<article data-case-thread data-thread="question" data-case='${JSON.stringify(caseRef)}' data-question-state="open" data-principal="operator"><h4>Restricted question</h4><button type="button" data-open-thread>Open conversation</button><div data-thread-messages></div><p role="status"></p></article><script>${caseQuestionScript}</script>`
+  // Use the current renderer's scope label. This component fixture supplies a
+  // synthetic authorized projection; it does not prove installed admission.
+  function conversation(answerRef?: string) {
+    const projection: AuthorizedCaseProjection = { ...choiceProjection,
+      context: { ...choiceProjection.context, principalRef: "operator" },
+      case: { ...choiceProjection.case, participants: ["operator"],
+        questions: [{ id: "question", text: "Restricted question", state: "open", ...(answerRef ? { answerRef } : {}) }] } }
+    return `${caseQuestionThreads(projection)}<script>${caseQuestionScript}</script>`
+  }
 
   test("conversation refresh asks before discarding an unsent reply and preserves it when reading fails", async () => {
     const state = { mode: "ready", reads: 0 }
-    await browserCase(conversation, () => {
+    await browserCase(conversation(), () => {
       state.reads++
       if (state.mode === "transient") return Response.json({ status: "unavailable" }, { status: 503 })
       if (state.mode === "denied") return Response.json({ status: "denied" }, { status: 403 })
-      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", body: "Private question body" }] } })
+      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Private question body" }] } })
     }, async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       const reply = page.getByLabel("Reply", { exact: true })
@@ -741,15 +749,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("reply retry preserves the exact thread mutation after an uncertain write", async () => {
     const replies: { body: string; key: string | null }[] = []
-    await browserCase(conversation, async (request) => {
+    await browserCase(conversation(), async (request) => {
       const mode = new URL(request.url).searchParams.get("sf")
       if (mode === "collaboration-storage-version") return Response.json({ status: "ok", value: 4 })
       if (mode === "collaboration-thread-reply") {
         replies.push({ body: await request.text(), key: request.headers.get("idempotency-key") })
         if (replies.length === 1) return new Response("response interrupted after admission")
-        return Response.json({ status: "ok", value: { id: "question", state: "open", messages: [{ id: "question", body: "Question" }, { id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] } })
+        return Response.json({ status: "ok", value: { id: "question", state: "open", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Question" }, { id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] } })
       }
-      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", body: "Question" }, ...(replies.length ? [{ id: "reply", body: "Confirmed answer" }] : [])] } })
+      return Response.json({ status: "ok", value: { state: "open", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Question" }, ...(replies.length ? [{ id: "reply", incarnation: "reply-incarnation", version: 1, authorRef: "operator", body: "Confirmed answer" }] : [])] } })
     }, async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       await page.getByLabel("Reply", { exact: true }).fill("Confirmed answer")
@@ -853,8 +861,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("answer confirmation preflight failure restores the reply and conversation controls", async () => {
     // The transport component receives an already authorized selector; its producer is outside this fixture.
-    await browserCase(conversation.replace('data-thread="question"', 'data-thread="question" data-answer="published-answer-selector"'), (request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read"
-      ? Response.json({ status: "ok", value: { state: "open", recipientRef: "recipient", messages: [{ id: "question", body: "Question" }, { id: "answer", authorRef: "recipient", body: "Answer" }] } })
+    await browserCase(conversation("published-answer-selector"), (request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read"
+      ? Response.json({ status: "ok", value: { state: "open", recipientRef: "recipient", messages: [{ id: "question", incarnation: "question-message", version: 1, authorRef: "operator", body: "Question" }, { id: "answer", incarnation: "answer-incarnation", version: 1, authorRef: "recipient", body: "Answer" }] } })
       : Response.json({ status: "unavailable" }, { status: 503 }), async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       await page.getByLabel("Reply", { exact: true }).fill("Unsent draft")
