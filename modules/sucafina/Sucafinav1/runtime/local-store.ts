@@ -1,4 +1,5 @@
 import { Database } from "bun:sqlite"
+import { profileAuthorityCopyStart, profileAuthorityCopyEnd, profileAuthorityRoot, profileAuthorityProjection } from "./audit-authority-copy-profile.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { types } from "node:util"
 import { constants } from "node:fs"
@@ -147,10 +148,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
   const copyCurrentSnapshot = (scope: ReadScope, surface: Surface): Snapshot => {
     const materialize = scope.root.copies?.[surface]
-    if (materialize) return materialize()
-    const snapshot = scope.root.snapshots[surface]
-    if (!snapshot) throw new Error("Local transaction snapshots unavailable")
-    return cloneSnapshot(snapshot)
+    const started = profileAuthorityCopyStart()
+    try {
+      if (materialize) return materialize()
+      const snapshot = scope.root.snapshots[surface]
+      if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+      return cloneSnapshot(snapshot)
+    } finally { profileAuthorityCopyEnd(started, scope.root, 1, surface, materialize ? 1 : 2) }
   }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
@@ -261,6 +265,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           get procurement() { return observed.procurement() },
         }
         const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
+        profileAuthorityRoot(scope.root, 1)
         try {
           const value = await context.run(scope, work)
           requireScope(scope)
@@ -304,8 +309,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const materialize = parent.root.copies?.[surface]
         const staged = materialize ? undefined : parent.root.snapshots[surface]
         const row = materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = materialize ? materialize() : staged ? cloneSnapshot(staged) :
-          loadSnapshot(surface, row?.payload)
+        const started = profileAuthorityCopyStart()
+        let snapshot: Snapshot
+        try {
+          snapshot = materialize ? materialize() : staged ? cloneSnapshot(staged) :
+            loadSnapshot(surface, row?.payload)
+        } finally { profileAuthorityCopyEnd(started, parent.root, 2, surface, materialize ? 1 : staged ? 2 : 3) }
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
@@ -370,6 +379,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           snapshot.sfBlobGenerations = Object.fromEntries(generations)
         }
         const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        profileAuthorityRoot(scope.root, 2, surface)
         const requireOpen = () => {
           requireScope(scope)
           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
@@ -442,6 +452,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
         const generations = Object.fromEntries(surfaces.map((surface) => [surface, structuredClone(snapshots[surface].sfBlobGenerations ?? {})]))
         const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        profileAuthorityRoot(scope.root, 3)
         const result = await (async () => {
           try { return await context.run(scope, () => work(snapshots)) }
           finally { scope.open = false }
@@ -483,7 +494,11 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     // not an unsupported optimization. Poison and dispose retain their original
     // transaction/root egress checks and do not suppress authentication callbacks.
     requireScope(scope)
-    if (!scope.root.readOnly || !sameStore()) return undefined
+    if (!scope.root.readOnly) {
+      profileAuthorityProjection(scope.root, 2)
+      return undefined
+    }
+    if (!sameStore()) return undefined
     const fields = ["roleMap", "access"] as const
     const observed = surfaces.map((surface) => {
       const snapshot = scope.root.snapshots[surface]
@@ -520,6 +535,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         return descriptor ? [[field, copyValue(descriptor.value, new Set())]] : []
       })),
     }])) as Record<S, Pick<Snapshot, "data">>
+    profileAuthorityProjection(scope.root, 1)
     return { snapshots, current }
   })
   return store
