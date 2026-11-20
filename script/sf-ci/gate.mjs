@@ -5,6 +5,8 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { parseShardCosts, planShards } from "./shard-plan.mjs"
 import { candidateSource } from "./workflow-source.mjs"
+import { NATIVE_SPECS, NATIVE_CASE_LEDGER, nativeFail, recordTeamsProfileNative,
+  requireNativePrivateRoot, readNativePrivateFile } from "./native-evidence.mjs"
 
 export const REQUIRED = [
   "CI-SF", "CI-CLI", "CI-APP-SRC", "CI-APP-BROWSER", "CI-ATLAS-BUSINESS",
@@ -608,8 +610,67 @@ export function requiredSelection(manifest, id) {
   return [...selected.testFiles]
 }
 
-function cli() {
+async function recordNativeCli() {
+  const keys = ["candidate", "tree", "role", "raw-report", "expected-inventory", "host-receipt", "artifact-receipt", "output"]
+  const args = process.argv.slice(3), flags = new Map()
+  if (args.length !== keys.length * 2) nativeFail()
+  for (let index = 0; index < args.length; index += 2) {
+    const key = args[index]?.slice(2)
+    if (!args[index]?.startsWith("--") || !keys.includes(key) || flags.has(key) || !args[index + 1]) nativeFail()
+    flags.set(key, args[index + 1])
+  }
+  const run = realRunMeta(), treeSha = realTreeSha()
+  if (flags.get("candidate") !== run.sha || flags.get("tree") !== treeSha ||
+      process.env.SF_CHECKOUT_SHA !== run.sha || process.env.SF_NATIVE_CANDIDATE_SHA !== run.sha ||
+      process.env.CI !== "true" || process.env.GITHUB_ACTIONS !== "true" ||
+      process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64" || process.platform !== "linux" ||
+      process.env.ORCHESTRA_CHANNEL !== "prod" || process.env.SF_NATIVE_TEST_EXIT_CODE !== "0") nativeFail()
+  const meta = { ...run, treeSha, role: flags.get("role"), invocationId: process.env.SF_NATIVE_INVOCATION_ID }
+  const output = flags.get("output")
+  const root = requireNativePrivateRoot(path.dirname(output), meta, process.env.RUNNER_TEMP)
+  const rawReport = readNativePrivateFile(root, flags.get("raw-report"))
+  const inventoryBytes = readNativePrivateFile(root, flags.get("expected-inventory"))
+  const hostBytes = readNativePrivateFile(root, flags.get("host-receipt"))
+  const artifactBytes = readNativePrivateFile(root, flags.get("artifact-receipt"))
+  const { verifyGitSource, readSource } = await import("./team-profile-residue.mjs")
+  const commit = readNativePrivateFile(root, path.join(root, "source.commit"))
+  const inventory = readNativePrivateFile(root, path.join(root, "source.inventory"), 64 * 1024 * 1024)
+  const verified = verifyGitSource(commit, inventory, run.sha)
+  if (verified.tree !== treeSha) nativeFail()
+  const source = await readSource(process.cwd(), verified)
+  const records = new Map(source.records.map((record) => [record.path, record]))
+  const specPath = "packages/app-shell/" + NATIVE_SPECS[meta.role]
+  const specRecord = records.get(specPath), ledgerRecord = records.get(NATIVE_CASE_LEDGER)
+  if (specRecord?.kind !== "regular" || ledgerRecord?.kind !== "regular") nativeFail()
+  const sourceBytes = readFileSync(ensureContained(process.cwd(), specPath, "file"))
+  const ledgerBytes = readFileSync(ensureContained(process.cwd(), NATIVE_CASE_LEDGER, "file"))
+  if (digest(sourceBytes) !== specRecord.sha256 || digest(ledgerBytes) !== ledgerRecord.sha256) nativeFail()
+  const receipt = recordTeamsProfileNative({ rawReport, inventoryBytes, hostBytes, artifactBytes,
+    sourceBytes, ledgerBytes, sourceProvenance: { commitSha256: verified.commitSha256,
+      inventorySha256: verified.inventorySha256 }, meta, exitCode: Number(process.env.SF_NATIVE_TEST_EXIT_CODE) })
+  // Recheck the complete selected checkout and all private inputs after validation.
+  await readSource(process.cwd(), verified)
+  for (const [name, bytes] of [["raw-report", rawReport], ["expected-inventory", inventoryBytes],
+    ["host-receipt", hostBytes], ["artifact-receipt", artifactBytes]]) {
+    if (!readNativePrivateFile(root, flags.get(name)).equals(bytes)) nativeFail()
+  }
+  if (path.dirname(output) !== root || path.resolve(output) !== output || existsSync(output) || existsSync(output + ".sha256")) nativeFail()
+  const bytes = Buffer.from(JSON.stringify(receipt, null, 2) + "\n")
+  writeFileSync(output, bytes, { flag: "wx", mode: 0o600 })
+  writeFileSync(output + ".sha256", digest(bytes) + "\n", { flag: "wx", mode: 0o600 })
+  console.log("SF_TEAMS_NATIVE_REPORT_RECORDED " + JSON.stringify({
+    role: meta.role, sourceSHA: meta.sha, sourceTreeSHA: treeSha, runId: meta.runId, runAttempt: meta.attempt,
+    invocationId: meta.invocationId, cases: receipt.counts.executed, receiptSha256: digest(bytes),
+    status: receipt.status, liveQualification: receipt.liveQualification,
+  }))
+}
+
+async function cli() {
   const command = process.argv[2]
+  if (command === "record-teams-profile-native") {
+    await recordNativeCli()
+    return
+  }
   const manifest = readJson("sf/ci/suites.json")
   const suites = validateManifest(manifest)
   if (command === "manifest") {
@@ -758,4 +819,4 @@ function cli() {
   }
   fail("unknown CLI command")
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) cli()
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) await cli()

@@ -1,0 +1,359 @@
+{
+  "schema": "teams-profile-native-case-ledger.v1",
+  "scope": "Original case inventory; source review and real admitted installed execution remain separate obligations.",
+  "roles": {
+    "teams": {
+      "specFile": "e2e/sucafina/native/teams-profile-linux.spec.ts",
+      "status": "NOT_IMPLEMENTED",
+      "requiredAcceptanceIds": [
+        "A01",
+        "A16",
+        "A17",
+        "A18",
+        "A20",
+        "A33",
+        "A35",
+        "A36",
+        "A37",
+        "A40",
+        "A41",
+        "A42",
+        "A44",
+        "A45"
+      ],
+      "cases": []
+    },
+    "u15": {
+      "specFile": "e2e/sucafina/native/journeys/u15.spec.ts",
+      "status": "PRESERVED_SOURCE_OBLIGATIONS",
+      "requiredAcceptanceIds": [],
+      "cases": [
+        {
+          "id": "u15-01",
+          "title": "CAP14 real authorized list reads Dashboard contracts and keeps filters on filtered-empty",
+          "fixtureCase": "list",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u15-02",
+          "title": "CAP14 real edit uses source version and only dashboard save; confirms after authorized reread",
+          "fixtureCase": "edit",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u15-03",
+          "title": "CAP14 real denied second actor displays no unauthorized contract values or write control",
+          "fixtureCase": "denied",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u15-04",
+          "title": "CAP14 real version conflict cannot be shown saved",
+          "fixtureCase": "stale",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u15-05",
+          "title": "CAP14 real lost response does not automatically replay the command",
+          "fixtureCase": "lost",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u15-06",
+          "title": "CAP14 real owner-scoped 320px reflow and keyboard reachability",
+          "fixtureCase": "list",
+          "acceptanceIds": []
+        }
+      ]
+    },
+    "u39": {
+      "specFile": "e2e/sucafina/native/journeys/u39.spec.ts",
+      "status": "PRESERVED_SOURCE_OBLIGATIONS",
+      "requiredAcceptanceIds": [],
+      "cases": [
+        {
+          "id": "u39-01",
+          "title": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-02",
+          "title": "new record is a draft until explicit, version-bound change review",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-03",
+          "title": "320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-04",
+          "title": "206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-05",
+          "title": "206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-06",
+          "title": "206-AC01 annual distribution fields use producer's twelve rows and original versions",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-07",
+          "title": "206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-08",
+          "title": "206-AC01 deviation severity and text use one original versioned record",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-09",
+          "title": "206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-10",
+          "title": "206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found",
+          "fixtureCase": "empty",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-11",
+          "title": "206-AC02 not-found deep link is distinct from empty and never resurrects a removed record",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-12",
+          "title": "206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control",
+          "fixtureCase": "source",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-13",
+          "title": "206-AC02 real read-only principal sees source but no enabled mutation or private false affordance",
+          "fixtureCase": "readonly",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-14",
+          "title": "206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty",
+          "fixtureCase": "denied",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-15",
+          "title": "206-AC02 real producer revocation while editing erases private draft after a new host read",
+          "fixtureCase": "revoked",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-16",
+          "title": "206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite",
+          "fixtureCase": "stale",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-17",
+          "title": "206-AC02 validation error does not dispatch and preserves missing, zero and original editor text",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-18",
+          "title": "206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-19",
+          "title": "206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-20",
+          "title": "206-AC02 late original GET after different installation/project never leaks prior draft or owner",
+          "fixtureCase": "late",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-21",
+          "title": "206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u39-22",
+          "title": "206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        }
+      ]
+    },
+    "u40": {
+      "specFile": "e2e/sucafina/native/journeys/u40.spec.ts",
+      "status": "PRESERVED_SOURCE_OBLIGATIONS",
+      "requiredAcceptanceIds": [],
+      "cases": [
+        {
+          "id": "u40-01",
+          "title": "reads the source through A01 with owner-scoped state, filter-empty and source metadata",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-02",
+          "title": "new record is a draft until explicit, version-bound change review",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-03",
+          "title": "320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-04",
+          "title": "206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-05",
+          "title": "206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-06",
+          "title": "206-AC01 annual distribution fields use producer's twelve rows and original versions",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-07",
+          "title": "206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-08",
+          "title": "206-AC01 deviation severity and text use one original versioned record",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-09",
+          "title": "206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-10",
+          "title": "206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found",
+          "fixtureCase": "empty",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-11",
+          "title": "206-AC02 not-found deep link is distinct from empty and never resurrects a removed record",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-12",
+          "title": "206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control",
+          "fixtureCase": "source",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-13",
+          "title": "206-AC02 real read-only principal sees source but no enabled mutation or private false affordance",
+          "fixtureCase": "readonly",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-14",
+          "title": "206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty",
+          "fixtureCase": "denied",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-15",
+          "title": "206-AC02 real producer revocation while editing erases private draft after a new host read",
+          "fixtureCase": "revoked",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-16",
+          "title": "206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite",
+          "fixtureCase": "stale",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-17",
+          "title": "206-AC02 validation error does not dispatch and preserves missing, zero and original editor text",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-18",
+          "title": "206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-19",
+          "title": "206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-20",
+          "title": "206-AC02 late original GET after different installation/project never leaks prior draft or owner",
+          "fixtureCase": "late",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-21",
+          "title": "206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        },
+        {
+          "id": "u40-22",
+          "title": "206-AC01 CAP04/CAP05 owner, project status, annual/monthly and deviation values mirror the source without totals",
+          "fixtureCase": "entry",
+          "acceptanceIds": []
+        }
+      ]
+    },
+    "recovery": {
+      "specFile": "e2e/sucafina/native/teams-profile-recovery-linux.spec.ts",
+      "status": "NOT_IMPLEMENTED",
+      "requiredAcceptanceIds": [
+        "A30",
+        "A36",
+        "A45",
+        "A46"
+      ],
+      "cases": []
+    }
+  }
+}
