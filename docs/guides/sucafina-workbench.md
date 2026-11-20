@@ -112,7 +112,21 @@ Em **Dashboard** e **Planner**, abra **Import with preview**. Selecione **Find d
 
 Selecione **Preview import** e confira as alterações, origens e erros de linha. A prévia não aplica mudanças. Só selecione **Apply reviewed import** depois de revisar o destino e as alterações. O resultado informa se a importação foi aplicada, não precisou alterar campos ou foi recusada. Corrija erros ou atualize a prévia se a fonte mudar. Se a tela não puder confirmar a aplicação, confira o estado atual antes de repetir a ação.
 
-Quando a integração de arquivos estiver disponível em **Talent Review**, **Import** abre o fluxo de importação. Escolha o destino do Dashboard para **All Members**, carregue a planilha e revise a prévia antes de aplicar. **Export** baixa a planilha original de membros; a exportação exige autorização de administrador e é recusada se o acesso mudar durante a geração.
+Em **Talent Review**, selecione **Import** para abrir a importação de membros. Em **Source**, escolha **Dashboard**, selecione **Find destinations** e escolha **Members**. Carregue a planilha com a aba **All Members** e selecione **Generate preview**. Confira as alterações e as células de origem antes de selecionar **Apply reviewed import**. A prévia não altera a lista de membros. Depois da aplicação, volte a Talent Review para consultar os registros.
+
+**Export All Members** baixa a planilha original de membros. Os controles de importação e exportação ficam disponíveis conforme seu acesso e a disponibilidade do serviço. A exportação exige autorização de administrador e é interrompida se a instalação ou o acesso mudar durante a geração.
+
+## Usar anexos e CSV de fornecedores
+
+Em **Procurement → Suppliers**, abra um fornecedor para consultar seus anexos. Quando você puder alterar anexos e o serviço estiver disponível, selecione o arquivo e confirme o envio na seção de anexos. O limite configurado em Settings e a verificação do arquivo continuam valendo. Se o fornecedor mudar durante o envio, atualize o registro antes de tentar novamente.
+
+O botão de download ao lado do arquivo obtém uma nova autorização para abrir os bytes originais. Você pode consultar e baixar anexos autorizados mesmo quando não tem permissão para enviar novos arquivos. **Export suppliers CSV** baixa a lista de fornecedores disponível para seu acesso.
+
+## Restaurar a configuração de Procurement
+
+Em **Procurement → Settings**, administradores podem abrir **Reset settings** e revisar os valores padrão antes de confirmar. Salve ou descarte alterações locais antes de iniciar a restauração. A confirmação usa a versão da configuração que você revisou; se outra pessoa alterar a configuração antes da gravação, atualize a página e revise novamente.
+
+A restauração preserva pedidos, fornecedores, identificadores emitidos e os registros de aprovação e câmbio já submetidos. Depois de restaurar, confira o limite de anexos e os responsáveis pela aprovação antes de voltar a usar esses fluxos.
 
 ## Editar o título de um pedido
 
