@@ -120,6 +120,12 @@ export const Selector = Schema.Union([
   }),
   Schema.Struct({
     contractRevision: ContractRevision,
+    kind: Schema.Literal("selection"),
+    installationId: InstallationId,
+    tenantId: TenantId,
+  }),
+  Schema.Struct({
+    contractRevision: ContractRevision,
     kind: Schema.Literal("administration"),
     installationId: InstallationId,
     tenantId: TenantId,
