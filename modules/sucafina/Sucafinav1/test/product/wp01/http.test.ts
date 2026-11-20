@@ -194,7 +194,13 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
       expect(errors).toEqual([])
     } finally { await driver.close(); driver.report() }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
-    expect((await read())?.status).toBe(403)
-    expect((await readProcurement())?.status).toBe(403)
+    // These native projections distinguish a revoked session (401) from an
+    // authenticated principal denied a resource (403). Require the closed
+    // unauthenticated envelope and absence of every private projection.
+    const loggedOutCase = await read(), loggedOutProcurement = await readProcurement()
+    expect(loggedOutCase?.status).toBe(401)
+    expect(await loggedOutCase!.json()).toEqual({ status: "unauthenticated" })
+    expect(loggedOutProcurement?.status).toBe(401)
+    expect(await loggedOutProcurement!.json()).toEqual({ status: "unauthenticated" })
   } finally { business.dispose(); await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)
