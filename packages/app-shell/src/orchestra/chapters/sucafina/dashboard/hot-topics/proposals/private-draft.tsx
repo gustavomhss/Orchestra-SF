@@ -25,7 +25,7 @@ type Review = { previous: Fields; current: DraftValue; source: Fields }
 type Attempt = { operation: SfPendingOperation; original: DraftValue }
 
 /** Actual UI54 private proposal editor. F01 owns all retained edits and pending intentions. */
-export function SfPrivateHotTopicEditor(_props: SfSurfaceProps<"UI54">): JSX.Element {
+export function SfPrivateHotTopicEditor(props: SfSurfaceProps<"UI54">): JSX.Element {
   const owner = useSfContext()
   const { t } = useSfPresentation()
   const [editor, setEditor] = createSignal<SfPublicDraftController<DraftValue>>()
