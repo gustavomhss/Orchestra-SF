@@ -22,7 +22,10 @@ import { encodeSfRouteRef } from "../../../../../../packages/app-shell/src/orche
 import { matchSfNativeRoutePath } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts"
 import { createC12Fixture, prepareC12Change } from "./fixture.ts"
 
-type Fixture = Awaited<ReturnType<typeof createC12Fixture>>
+type Fixture = Pick<Awaited<ReturnType<typeof createC12Fixture>>,
+  "directory" | "caseId" | "authority" | "business" | "persistence" | "application" |
+  "applicationOptions" | "installationIdentity" | "proposalCoverageWrites" | "procurementEvidenceWrites" | "dispose">
+type Prepared = { request: { caseRef: Parameters<typeof encodeCaseRef>[0]; changeId: string } }
 
 /** The same C12 authority, C08, original Request, application and business
  * instances feed the installed native readers. Every ready operation comes
@@ -115,13 +118,21 @@ console.log("SF_C12_NATIVE_BUNDLE_BUILT")
 /** Browser migration only: the same SQLite fixture and interleaving hooks
  * survive; UI39, F01, A05 clients and all response bytes are production code.
  */
-export async function createC12NativeConsumer() {
+export function createC12NativeConsumer() {
+  return mountC12NativeConsumer(createC12Fixture, prepareC12Change)
+}
+
+/** Keep each consumer's original factory and preparation; only the native shell is shared. */
+export async function mountC12NativeConsumer<F extends Fixture, P extends Prepared>(
+  createFixture: (scenario: string, origin: string, retained?: { directory: string; caseId: string }) => Promise<F>,
+  prepareChange: (fixture: F) => Promise<P>,
+) {
   const started = performance.now()
   const phase = (name: string) => console.info("SF_C12_NATIVE_PHASE",
     JSON.stringify({ phase: name, elapsedMs: Math.round(performance.now() - started) }))
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-c12-native-"))
   await chmod(directory, 0o700)
-  let fixture: Fixture | undefined
+  let fixture: F | undefined
   let installed: ReturnType<typeof nativeC12> | undefined
   let closeEmbedded: (() => Promise<void>) | undefined
   const traffic: { mode: string | null; body: string; key: string | null; status: number; result: Record<string, unknown> }[] = []
@@ -162,9 +173,9 @@ export async function createC12NativeConsumer() {
     if (!assets.includes("native.js") || assets.some((name) => !/^[A-Za-z0-9_-]+\.(?:js|css)$/.test(name)))
       throw new Error("C12 native browser bundle files are invalid")
     phase("fixture")
-    fixture = await createC12Fixture("I-OPS-02-H05", origin)
-    const prepared = await prepareC12Change(fixture)
-    const mount = (value: Fixture) => nativeC12(value, origin, () => fixture === value)
+    fixture = await createFixture("I-OPS-02-H05", origin)
+    const prepared = await prepareChange(fixture)
+    const mount = (value: F) => nativeC12(value, origin, () => fixture === value)
     installed = mount(fixture)
     const discovery: SfTrustedInstallationSource = {
       current: async (signal) => {
@@ -244,7 +255,7 @@ export async function createC12NativeConsumer() {
         installed = undefined
         await fixture.dispose(false)
         fixture = undefined
-        const next = await createC12Fixture("I-OPS-02-reopen", origin, retained)
+        const next = await createFixture("I-OPS-02-reopen", origin, retained)
         fixture = next
         installed = mount(next)
         phase("reopened")
