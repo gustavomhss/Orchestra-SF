@@ -64,10 +64,17 @@ export function copyPrivateDraft(value: DraftValue): DraftValue {
 export function sourceDraft(source: Source, caseRef: CaseRef): DraftValue | undefined {
   const draft = object(source.draft)
   if (!draft) return
-  const decoded = decodeDraft({
-    caseRef, target: draft.target, targetEvidence: draft.targetEvidence, fields: draft.fields,
-    sourceRefs: [draft.targetEvidence], expectedVersion: 0,
-  })
+  // The workbench may already belong to Solid's store. Snapshot its JSON DTO
+  // before the strict codec: store symbols are framework metadata, while every
+  // JSON key (including unexpected keys) must still be checked by the schema.
+  let input: unknown
+  try {
+    input = JSON.parse(JSON.stringify({
+      caseRef, target: draft.target, targetEvidence: draft.targetEvidence, fields: draft.fields,
+      sourceRefs: [draft.targetEvidence], expectedVersion: 0,
+    }))
+  } catch { return }
+  const decoded = decodeDraft(input)
   if (Option.isNone(decoded) || !validTarget(decoded.value)) return
   return { request: decoded.value, id: null, incarnation: null }
 }
