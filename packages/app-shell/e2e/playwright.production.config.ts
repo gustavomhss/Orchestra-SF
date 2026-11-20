@@ -14,6 +14,16 @@ const sfReports = process.argv.slice(2).some((argument) => {
   const filename = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
   return filename.endsWith("e2e/sucafina/reports.spec.ts") || filename.endsWith("e2e/sucafina/reports.spec.ts$")
 })
+// These exact journeys share startPlannerInstallation and its owned listener.
+const sfPlannerInstallation = process.argv.slice(2).some((argument) => {
+  const filename = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+  return [
+    "e2e/sucafina/decisions.spec.ts",
+    "e2e/sucafina/decisions-native-authoring.spec.ts",
+    "e2e/sucafina/wp03/native-ingress.spec.ts",
+    "e2e/sucafina/wp03/planner-mounted.spec.ts",
+  ].some((selected) => filename.endsWith(selected) || filename.endsWith(selected + "$"))
+})
 const sfNative = nativeSpecSelected(process.argv.slice(2))
 const sfInstalled = process.argv.slice(2).some((argument) =>
   argument.replaceAll("[\\\\/]", "/").replaceAll("\\", "/").includes("e2e/sucafina/"))
@@ -44,7 +54,7 @@ export default defineConfig({
     reuseExistingServer: false,
     ...(sfInstalled ? { env: {
       VITE_ORCHESTRA_SERVER_HOST: "", VITE_ORCHESTRA_SERVER_PORT: "",
-      ORCHESTRA_SF_E2E_UPSTREAM: wp04 || sfReports ? "http://127.0.0.1:4174" : "http://localhost:4110",
+      ORCHESTRA_SF_E2E_UPSTREAM: wp04 || sfReports || sfPlannerInstallation ? "http://127.0.0.1:4174" : "http://localhost:4110",
     } } : {}),
   }, ...(wp04 ? [{
     command: "bun e2e/sucafina/wp04/host.ts",
