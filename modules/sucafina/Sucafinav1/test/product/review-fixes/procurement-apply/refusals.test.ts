@@ -22,12 +22,15 @@ test("OPS-REV-02 canonical po_draft refuses ignored PR preparation, review and H
     expect(ignoredRequest.pr).toEqual(before.request.pr)
     expect(ignored.versions["requests:PR-1"]?.version).toBe(before.version.version + 1)
     expect(rows(ignoredRequest.history)).toHaveLength(rows(before.request.history).length + 1)
+    expect(procurementPreparationIssue(input.snapshot, input.command)).toBe("requisition-stage-not-editable")
     expect(prepareProcurementMutation(input)).toBeUndefined()
     fixture.authority.ui.finish(input.context)
     const chosen = await seedChoice(fixture)
     const rejected = await fixture.http("decision-prepare-changes", chosen)
-    expect(rejected.response.status).toBe(400)
-    expect(rejected.body).toEqual({ status: "needs-input", reason: "requisition-stage-not-editable" })
+    // The current lifecycle denies save-estimate at PO stage before preparing
+    // a command. The lower-level stage refusal remains independently required.
+    expect(rejected.response.status).toBe(403)
+    expect(rejected.body).toEqual({ status: "denied", reason: "requisition-action-unavailable" })
     expect((await fixture.storedCase()).value.preparedChanges).toEqual([])
     expect(await fixture.material()).toEqual(before)
     const legacy = await seedLegacyChange(fixture, 150)
