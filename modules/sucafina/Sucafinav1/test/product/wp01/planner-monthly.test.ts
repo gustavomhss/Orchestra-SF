@@ -67,15 +67,23 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       const forecast = grid.locator(".sf-s02-measure").filter({ has: tab.getByText("Forecast", { exact: true }) }).first()
       await browserExpect(forecast).toBeVisible()
       await forecast.click()
+      await browserExpect(forecast).toHaveAttribute("data-active", "true")
       const monthlyResponse = (action: string) => (response: BrowserResponse) =>
         response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-planner" &&
         object(response.request().postDataJSON()).action === action
-      const [preview] = await Promise.all([
+      const [preview, paste] = await Promise.all([
         tab.waitForResponse(monthlyResponse("preview")),
-        grid.dispatchEvent("paste", { clipboardData: await tab.evaluateHandle(() => {
-          const data = new DataTransfer(); data.setData("text/plain", "42\t99"); return data
-        }) }),
+        // Keep the ClipboardEvent and its DataTransfer in the grid's own frame;
+        // no live clipboard object crosses the browser-driver protocol.
+        grid.evaluate((element, text) => {
+          const clipboardData = new DataTransfer()
+          clipboardData.setData("text/plain", text)
+          const event = new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData })
+          element.dispatchEvent(event)
+          return { clipboard: event instanceof ClipboardEvent, text: clipboardData.getData("text/plain"), consumed: event.defaultPrevented }
+        }, "42\t99"),
       ])
+      expect(paste).toEqual({ clipboard: true, text: "42\t99", consumed: true })
       expect(preview.status()).toBe(200)
       const previewRequest = object(preview.request().postDataJSON())
       expect(previewRequest).toMatchObject({ action: "preview", input: { page: "OPEX", versionId: "v1", drafts: [

@@ -2,6 +2,7 @@ import { afterEach, expect, test } from "bun:test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
 import { randomBytes, randomUUID } from "node:crypto"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -123,7 +124,15 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
       identity: () => binding, isAuthenticated: async (request) => Boolean(await identity.person(request)), ...guards,
       grants: [{ principalRef, namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox"],
         operations: ["sf_dashboard_read", "sf_bi_view", "sf_work_list", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare", "sf_portfolio_evaluate", "sf_sensitivity_evaluate"], humanActions: [] }],
-      createId: randomUUID, now: Date.now, commandIdentity: async () => undefined, authenticate: identity.authenticate, environment,
+      createId: randomUUID, now: Date.now,
+      // The installed host creates a fresh read identity, and derives command
+      // identity only from an explicit, valid caller idempotency key.
+      commandIdentity: async (request, operation) => {
+        if (request.method === "GET" || request.method === "HEAD") return randomUUID()
+        const key = request.headers.get("Idempotency-Key")
+        return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
+      },
+      authenticate: identity.authenticate, environment,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
       providerGeneration: async () => 1, authorizeDocument: async () => undefined })
     const business = createSfBusinessServices({ authority, persistence, ...guards })

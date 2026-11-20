@@ -87,6 +87,8 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
     const discovered = await discovery(directory)
     expect(discovered?.status).toBe(200)
     expect(await discovered!.json()).toEqual({ installations: [native.descriptor()] })
+    expect(native.descriptor()).toEqual({ installationId: binding.installationId, projectId: binding.projectId,
+      hostId: binding.hostId, publicOrigin: origin, mount: "/sucafina", contractRevision: "sf-native-ui/1", authMode: "local-operator" })
     expect(await (await discovery(path.join(directory, "other")))!.json()).toEqual({ installations: [] })
     expect((await discovery(directory, { "sec-fetch-site": "cross-site" }))?.status).toBe(403)
     const anonymousContext = await native.handle(new Request(`${origin}/sucafina/api/ui/context?${new URLSearchParams({
