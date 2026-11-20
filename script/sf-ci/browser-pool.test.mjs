@@ -225,6 +225,7 @@ const mutations = [
   ["Omni disabled", (a) => { a.env.ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER = "0" }],
   ["different Omni nonce", (a) => { a.env.ORCHESTRA_OMNI_CONTROL_NONCE = "d".repeat(32) }],
   ["entry blob drift", (a) => { a.inventory.entry.blob = "d".repeat(40) }],
+  ["source blob drift", (a) => { a.inventory.sources[1].blob = "d".repeat(40) }],
   ["empty runtime journal", (a) => { a.journal = [] }],
   ["journal order drift", (a) => { a.journal[1].seq = 99 }],
   ["missing source registration", (a) => { a.journal = a.journal.filter((item) => item.type !== "source-registered" || item.source !== POOL_STARTUP) }],

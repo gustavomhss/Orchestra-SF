@@ -272,6 +272,8 @@ function lifecycleProof(value) {
 
 /** Reconcile runtime declarations/executions with real JUnit, not a source count relabelled as execution. */
 export function verifyPoolEvidence({ admission, inventory, journal, summary, report, log, exitCode, chromeVersion, env, repoRoot, output }) {
+  const { sha256, ...inventoryBody } = inventory
+  if (sha256 !== hash(json(inventoryBody))) fail("inventory digest does not match its entry/source/support blobs")
   same(admission.metadata, metadata(env), "candidate/run/Omni identity changed")
   same(admission.inventory, inventory, "candidate inventory changed")
   if (exitCode !== 0) fail("Bun exited unsuccessfully")
