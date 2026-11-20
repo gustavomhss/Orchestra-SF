@@ -1,7 +1,7 @@
 import { SfProcurement, SfProcurementSettings } from "@orchestra/schema/sucafina/procurement"
 import type { SfIntentRef, SfOperationRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
-import type { SfCopyKey, SfDisplayValue, SfMessage } from "../../shared/frame"
-import type { SfChangeReviewProps, SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
+import type { SfCopyKey, SfDisplayValue, SfMessage } from "../../shared/frame/types"
+import type { SfChangeReviewProps, SfReviewField, SfReviewSnapshot } from "../../shared/change-review/types"
 
 export type Settings = typeof SfProcurementSettings.Type
 export type SettingsProjection = Extract<
