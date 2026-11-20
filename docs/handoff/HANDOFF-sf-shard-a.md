@@ -69,13 +69,60 @@ Skip preexistente: `local-backups.test.ts:209`, condição de usuário root. Err
 
 O job `135988658580` foi cancelado ao atingir os 45 minutos existentes. Não houve resumo final do Bun: as contagens são marcadores observados, não resultado completo. Há 557 linhas iniciadas com PASS e um PASS intercalado no diff, totalizando 558. Há 21 marcadores FAIL e uma falha explícita adicional em `product/routine-native-admission/adapter-boundaries.test.ts:113`, cujo footer não foi emitido no diff.
 
-Entraram 102/113 arquivos; `product/wp10/analysis-composition/alternative-selection.test.ts:375` estava em execução na interrupção. Seus testes em :441, :510, :573, :606 e :626 não iniciaram. A enumeração e a classificação de cada falha observada serão completadas neste handoff; arquivos sem header não serão declarados como aprovados.
+Entraram 102/113 arquivos; `product/wp10/analysis-composition/alternative-selection.test.ts:375` estava em execução na interrupção. Seus testes em :441, :510, :573, :606 e :626 não iniciaram. As 22 falhas observadas estão classificadas abaixo; arquivos sem header não são declarados como aprovados.
+
+### Falhas observadas — shard 1
+
+Prefixo: `modules/sucafina/Sucafinav1/test/`. A última falha da tabela é uma asserção explícita sem footer FAIL; o run cancelado não fornece contagem final.
+
+| File:line | Classe | Evidência / próximo passo |
+| --- | --- | --- |
+| `runtime-http.test.ts:169` | unbound/UI legado | Botão Add risk não localizado; teste mantém contrato do console descomissionado. Não recriar console. |
+| `business-browser.test.ts:22; business-browser.test.ts:49` | unbound/UI legado | Navegação :4110 recusada. Cenário de formulário legado; não redirecionar o browser para esse serviço. |
+| `business-browser.test.ts:210` | unbound/UI legado | Navegação :4110 recusada no cenário de duas abas. |
+| `parity-polling-browser.test.ts:10` | unbound/UI legado | Navegação :4110 recusada; cenário de polling do console legado. |
+| `product/wp02/host-workbench.test.ts:147` | unbound/UI legado | Enrollment seguido de redirect sem superfície HTML; cenário exige controles do console descomissionado. |
+| `product/wp02/host-workbench.test.ts:280` | unbound/UI legado | Mesmo fluxo de enrollment/HTML ausente, caso de conflito de draft. |
+| `product/wp02/host-workbench.test.ts:468` | unbound/UI legado | Mesmo fluxo de enrollment/HTML ausente, caso de revogação de escrita. |
+| `product/wp10/integration/public-state.test.ts:49` | unbound/UI legado | Renderização de audit legado esperada200 recebe404; não restaurar o console. |
+| `product/wp10/integration/bi-fallback-lifecycle.test.ts:49` | unbound/UI legado | Enrollment/redirect para antiga superfície BI falha; contrato legado indisponível. |
+| `product/installed-bi-closure/temporal-contract.test.ts:12` | timeout/desempenho | Deadline cooperativo165000ms excedido; não elevar orçamento. |
+| `product/installed-bi-closure/temporal-contract.test.ts:69` | timeout/desempenho | Segundo caso excede165000ms; helper composition-test-deadline.ts:5. Stackdecleanup:61 não é o início desse segundo caso. |
+| `product/wp13/source-scenario.test.ts:32` | timeout/desempenho | Cenário Portfolio excede180000ms; causa cara ainda não isolada. |
+| `product/c12-receipt-recovery/recovery-ui.test.ts:72` | unbound/produtor UI | Produtor decision-apply.ts:38 reabilita Apply reviewed change sem Retry same application; não fornece a recuperação exigida. |
+| `product/c12-receipt-recovery/recovery-ui.test.ts:197` | unbound/produtor UI | decision-apply.ts:10 não tem data-recover-change, e script não chama decision-recover. Consumer é UI local real, não console legado. |
+| `product/wp12/native-execution-portfolio.test.ts:14; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
+| `product/wp12/native-execution-portfolio.test.ts:134; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
+| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em apps/cli/src/sucafina-product/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP400 em vez de200; não reduzir o positivo a rejeição. |
+| `product/wp01/workbench-analysis.test.ts:380` | fixture-contract | Revogação injetada via models não ocorre em action output. models só participa de start; preservar403/denied/fechamento de lease e migrar injeção em fatia própria. |
+| `product/wp10/integration/analysis-stale-calculation.test.ts:303` | fixture-contract | BCS original retorna historical; teste ainda espera unavailable de contrato antigo com lease privado. |
+| `product/wp10/integration/analysis-stale-calculation.test.ts:346` | fixture-contract | Mutação injetada só no private read não ocorre; produtor atual usa o mesmo call original. Não trocar denied porok. |
+| `product/wp10/integration/analysis-stale-calculation.test.ts:410` | fixture-contract | Fault de private admission nunca dispara. Migrar adversários ao Request/authorize/context atuais mantendo fences e negativos, sem remover assertions. |
+| `product/routine-native-admission/adapter-boundaries.test.ts:113` | oracle desatualizado | Descriptor registrado depende da publication; owner é revalidado por invocação. Fix concreto pendente antes da primeira fatia. |
+
+A fixture de cálculo histórico ainda injeta falhas em uma admissão privada que deixou de existir. `apps/cli/src/sucafina-product/business-services.ts:356–392` usa escopo histórico lexical sobre o mesmo call/Request; `analysis-stale-commit.ts:53–55,83–86` mantém identidade, autorização antes/depois e digest do snapshot. Migrar o conjunto dos adversários para esses pontos atuais em uma fatia dedicada; não trocar denied por ok nem aceitar `every([])` como prova.
+
+Arquivos não iniciados, prefixo `modules/sucafina/Sucafinav1/test/product/`:
+
+- `diagnostics/memory/persistence-observer.test.ts`
+- `integrated-proofs/am04/receipt-key-collision.test.ts`
+- `integrated-proofs/am05/authorized-original-replay.test.ts`
+- `integrated-proofs/am05/c08-rollback.test.ts`
+- `review-fixes/procurement-apply/refusals.test.ts`
+- `wp06/documents/docx.test.ts`
+- `wp06/documents/request-selection.test.ts`
+- `wp06/documents/ws3-rejection.test.ts`
+- `wp06/imports/admission-boundaries.test.ts`
+- `wp06/imports/detail.test.ts`
+- `wp06/imports/export-download-privacy.test.ts`
+
+Os arquivos acima são pendência de execução, não falhas observadas nem PASS. Nenhum gate idêntico será repetido apenas para obter uma contagem.
 
 ## Feito / pendente
 
 Feito: branch isolada; seleção dos três shards conferida; requisição compatível; shard 2 concluído e classificado; shard 1 cancelado sem repetição; shard 3 iniciado somente após shard 2 terminar. Nunca houve mais de dois gates simultâneos.
 
-Pendente: concluir shard 3; publicar ledger completo do shard 1 e seus arquivos não iniciados; somente depois aplicar correções por causa e validar cada fatia no mesmo shard.
+Pendente: concluir shard 3; depois aplicar duas fatias comprovadas (adapter descriptors no shard 1 e guard C08 no shard 2), com um gate completo por causa. Demais causas permanecem classificadas, com suas asserções intactas.
 
 Asserções removidas: nenhuma até este checkpoint. Testes pulados/removidos: nenhum. Produto, projeções, fixtures e workflows: nenhuma alteração.
 
