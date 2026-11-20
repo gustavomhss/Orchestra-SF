@@ -239,9 +239,18 @@ export const layerWith = (options?: LayerOptions) =>
       const listeners = new Array<Subscriber>()
       const database = yield* Database.Service
       const db = database.db
-      const owners = yield* SessionOwner.Service
-      const currentCheck = owners.active.pipe(Effect.flatMap((scope) => scope ? owners.verify(scope) : Effect.void), Effect.orDie)
+      const owners = Option.getOrUndefined(yield* Effect.serviceOption(SessionOwner.Service))
+      if (!owners) yield* SessionOwner.ensureTechnical(db)
+      const currentCheck = owners
+        ? owners.active.pipe(Effect.flatMap((scope) => scope ? owners.verify(scope) : Effect.void), Effect.orDie)
+        : SessionOwner.ensureTechnical(db)
       const writer = <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.gen(function* () {
+        if (!owners) {
+          yield* SessionOwner.ensureTechnical(db)
+          const value = yield* effect
+          yield* SessionOwner.ensureTechnical(db)
+          return value
+        }
         const scope = yield* owners.active.pipe(Effect.orDie)
         return yield* (scope ? owners.withWriter(scope, effect).pipe(
           Effect.catchTag("SessionOwner.Denied", Effect.die),
@@ -263,7 +272,8 @@ export const layerWith = (options?: LayerOptions) =>
         if (!data || typeof data !== "object" || !("sessionID" in data)) return
         const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(data.sessionID).valueOrUndefined
         if (!sessionID) return
-        const scope = yield* owners.open().pipe(Effect.orDie)
+        if (!owners) return yield* SessionOwner.access(db, sessionID, operation, Effect.void)
+        const scope = yield* SessionOwner.scopeForDatabase(owners, db).pipe(Effect.orDie)
         const action = operation === "replay" ? operation : yield* owners.eventOperation(scope, sessionID, operation)
         yield* owners.assert(scope, sessionID, action).pipe(Effect.orDie)
       })
@@ -272,7 +282,8 @@ export const layerWith = (options?: LayerOptions) =>
           if (!data || typeof data !== "object" || !("sessionID" in data)) return yield* effect
           const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(data.sessionID).valueOrUndefined
           if (!sessionID) return yield* effect
-          const scope = yield* owners.open().pipe(Effect.orDie)
+          if (!owners) return yield* SessionOwner.access(db, sessionID, operation, effect)
+          const scope = yield* SessionOwner.scopeForDatabase(owners, db).pipe(Effect.orDie)
           const action = operation === "replay" ? operation : yield* owners.eventOperation(scope, sessionID, operation)
           const current = yield* batch
           if (current) current.checks.push(owners.assert(scope, sessionID, action).pipe(Effect.orDie))
@@ -280,7 +291,8 @@ export const layerWith = (options?: LayerOptions) =>
         })
       const sessionAccess = <A, E, R>(aggregateID: string, operation: SessionOwner.Operation, effect: Effect.Effect<A, E, R>) => {
         const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(aggregateID).valueOrUndefined
-        return sessionID ? SessionOwner.guard(owners, sessionID, operation, () => effect) : effect
+        return sessionID ? (owners ? SessionOwner.guard(owners, sessionID, operation, () => effect)
+          : SessionOwner.access(db, sessionID, operation, effect)) : effect
       }
       const order = EventOrder.make(yield* Scope.Scope)
       const owner = {}
@@ -814,7 +826,7 @@ export const layerWith = (options?: LayerOptions) =>
               }),
             ),
           ),
-        )).pipe(Effect.provideService(SessionOwner.Service, owners))
+        ))
 
       const subscribeDurable = (aggregateID: string) =>
         Effect.gen(function* () {

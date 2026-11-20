@@ -22,7 +22,7 @@ export class Denied extends Schema.TaggedErrorClass<Denied>()("SessionOwner.Deni
 
 export interface Admission {
   readonly binding: TeamProfile.Binding
-  readonly authorize: (action: Operation, sessionID?: SessionSchema.ID) => Effect.Effect<boolean>
+  readonly authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.Effect<boolean>
   /** Current resource exceptions within this owner; evaluated before SQL pagination. */
   readonly excludedSessions: () => Effect.Effect<ReadonlyArray<SessionSchema.ID>>
   /** Revalidates the captured server decision, including its original auth epoch and effective rights. */
@@ -39,7 +39,7 @@ export interface RecoveryMapping {
 /** Only the issuing service recognizes this object. A decoded copy has no authority. */
 export interface Lease { readonly _tag: "SessionOwner.Lease" }
 export interface Scope { readonly _tag: "SessionOwner.Scope" }
-export type Operation = SessionAccess.Action
+export type Operation = SessionAccess.Action | "replay"
 type Failure = Denied | AuthorityGeneration.GenerationError
 
 type LeaseData = Readonly<{
@@ -115,9 +115,8 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
   ).pipe(Effect.orDie, Effect.map((row) => row !== undefined))
   const marked = Effect.gen(function* () {
     if (!(yield* hasTable("sf_authority_generation"))) return false
-    // An unknown/nonempty marker is never interpreted as a technical store.
-    const row = yield* db.get(sql`SELECT 1 FROM sf_authority_generation LIMIT 1`).pipe(Effect.orDie)
-    return row !== undefined
+    // Even an empty or malformed marker denotes unavailable corporate storage.
+    return true
   })
   const verifyProof = (proof: () => Effect.Effect<boolean>) => proof().pipe(
     Effect.catchCause(() => Effect.succeed(false)),
@@ -150,7 +149,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
     const operation = yield* CurrentOperation
     if (operation && scopes.get(operation.scope)?.database === database &&
         scopes.get(operation.scope)?.lease === retained.lease && retained.lease.kind === "request" &&
-        (!retained.lease.authorize || !(yield* retained.lease.authorize(operation.action, operation.sessionID))))
+        (operation.action === "replay" || !retained.lease.authorize || !(yield* retained.lease.authorize(operation.action, operation.sessionID))))
       return yield* new Denied({ reason: "forbidden-operation" })
     const observed = listed.get(scope)
     if (observed && JSON.stringify(yield* exclusions(retained.lease)) !== JSON.stringify(observed))
@@ -189,7 +188,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         return yield* new Denied({ reason: "invalid-recovery" })
       return
     }
-    if (!retained.authorize || !(yield* retained.authorize(operation, sessionID)))
+    if (operation === "replay" || !retained.authorize || !(yield* retained.authorize(operation, sessionID)))
       return yield* new Denied({ reason: "forbidden-operation" })
     yield* verify(scope)
   })
@@ -352,11 +351,18 @@ export const guard = <A, E, R>(
 /** A missing service is not proof that a storage is technical. */
 export const ensureTechnical = (db: Database.Interface["db"]) => Effect.gen(function* () {
   const marker = yield* db.get(sql`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sf_authority_generation'`).pipe(Effect.orDie)
-  if (marker && (yield* db.get(sql`SELECT 1 FROM sf_authority_generation LIMIT 1`).pipe(Effect.orDie)))
+  if (marker)
     return yield* Effect.die(new Denied({ reason: "missing-admission" }))
   const table = yield* db.get(sql`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'session_owner'`).pipe(Effect.orDie)
   if (table && (yield* db.get(sql`SELECT 1 FROM session_owner LIMIT 1`).pipe(Effect.orDie)))
     return yield* Effect.die(new Denied({ reason: "missing-admission" }))
+})
+
+/** A service from another graph cannot authorize a naked SQL reader. */
+export const scopeForDatabase = (service: Interface, db: Database.Interface["db"]) => Effect.gen(function* () {
+  const scope = yield* service.open()
+  if (scopes.get(scope)?.database.db !== db) return yield* new Denied({ reason: "missing-admission" })
+  return scope
 })
 
 /** Bare technical consumers still refuse a marked store or a durable corporate owner. */
@@ -367,7 +373,10 @@ export const access = <A, E, R>(
   effect: Effect.Effect<A, E, R>,
 ) => Effect.gen(function* () {
   const service = Option.getOrUndefined(yield* Effect.serviceOption(Service))
-  if (service) return yield* guard(service, sessionID, operation, () => effect)
+  if (service) {
+    yield* scopeForDatabase(service, db).pipe(Effect.orDie)
+    return yield* guard(service, sessionID, operation, () => effect)
+  }
   const check = Effect.gen(function* () {
     const marker = yield* db.get(sql`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sf_authority_generation'`).pipe(Effect.orDie)
     if (marker && (yield* db.get(sql`SELECT 1 FROM sf_authority_generation LIMIT 1`).pipe(Effect.orDie)))
