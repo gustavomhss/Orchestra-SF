@@ -13,6 +13,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { observeSfAssetHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { createSfActionSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -49,6 +50,7 @@ export async function createOperationsInstallation(input: {
   const scans: Readonly<{ digest: string; size: number; accepted: boolean }>[] = []
   const assets = { persistence: input.persistence, services: {
     signingKey: input.signingKey,
+    scannerConfiguration: input.scanner,
     scan: async (bytes: Uint8Array) => {
       const digest = createHash("sha256").update(bytes).digest("hex")
       const size = bytes.byteLength
@@ -140,6 +142,10 @@ export async function createOperationsInstallation(input: {
       observeSfPlannerPages(application, request, stamp),
       observeSfDashboardPages(application, request, stamp),
       observeSfDomainHealth(dependencies, handlers, request, stamp),
+      observeSfAssetHealth({ source: () => {
+        const authority = runtime.services?.()
+        return authority && runtime.identity() ? { application, producer: business, authority } : undefined
+      } }, request, stamp),
       observeSfHome(runtime.services?.(), request, stamp),
       observeSfCases(dependencies, handlers, request, stamp),
       actions.operational(request, stamp),
