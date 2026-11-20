@@ -1,74 +1,61 @@
 # Handoff — sf-continuation-package
 
-SHA: 08003dd0e777315ce6a848f31144e63f37c0e76a (código e regressões; este documento é versionado depois)
-Base: f7dd58e32bc834f1485df20b91adbf759b4c4ad0
-Estado: partial — correções e regressões publicadas; Actions e qualificação da fábrica ainda pendentes.
+## SHA e estado
 
-## Feito
+- Estado: **complete — correções qualificadas por Actions; integração e pacote final pendentes**.
+- Base: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
+- Fonte qualificada da fábrica: `98e56b260a2b36030f6edd9711d77b1cebc907be`, PR [#395](https://github.com/gustavomhss/Orchestra-SF/pull/395).
+- Fonte do gate unitário: `143cbb9227c2a33251ec55a95a2b6432effbbb43`; snapshot `e8927363e763c8defe57599abf826589143b356b`.
+- Esta atualização posterior modifica somente o handoff e usa `[skip ci]`, para não repetir gates idênticos sem mudança de código. Os SHAs acima identificam a execução real.
 
-- Factory usa a origem de loopback explícita `http://localhost:4120` na configuração privada, no argumento do executável extraído, em todas as requisições e cabeçalhos Origin e no recibo. O checker independente exige a mesma origem. A configuração não depende mais do default 4110.
-- Preservados os asserts originais de status, sessão/identidade, console autenticado 404, comando real, caso persistido, anti-forgery, bytes do Web, extração fora do checkout, arquivo comprimido e controles de adulteração. Nenhum timeout, hash ou baseline do produto foi alterado.
-- O step UI de sf-ci emite `minimized=true` somente depois de o comando de testes retornar zero e `gate.mjs sanitize-playwright` concluir. O receipt original continua sendo exigido e continua falhando quando o baseline está pendente.
-- Em falha desse mesmo step, e somente com a marca de minimização presente, o workflow retém apenas `sf-ci-evidence/<suite>/report.json` no artifact `sf-baseline-candidate-<suite>-<sha>-<attempt>`. O prefixo é distinto de `sf-evidence-*`, que o verificador consome como receipts qualificados.
-- O upload normal de report + receipt em success permanece intacto. O novo artifact não contém o report bruto anterior à minimização, não publica receipt de sucesso e não muda a conclusão do job.
-- `script/sf-ci/gate.test.mjs` agora extrai do workflow real a sequência desde a verificação do status original e a executa com bash, git e o CLI real de `gate.mjs`, em diretórios temporários. As quatro fixtures cobrem falha do teste original, JSON inválido, baseline pendente e baseline válido exclusivamente de teste. Conferem saída não zero, presença/ausência do output, remoção do conteúdo privado, conservação do inventário e presença/ausência do receipt conforme o caso.
-- O teste também exige que o upload do candidato dependa da falha do mesmo step e da minimização, tenha prefixo distinto e publique um único `report.json`, sem logs brutos ou receipt. Não há mocks do sanitizador/receipt, execução de Chromium, serviço de upload ou dependência nova.
-- As fixtures reutilizam o manifesto sintético já existente no teste. Os commits Git temporários produzem suas próprias identidades; nenhum receipt ou baseline de fixture é evidência do produto. O manifesto real `sf/ci/suites.json` não foi alterado.
-- Lido AGENTS.md da raiz; os ancestrais específicos dos paths editados, inclusive `script/` e `script/sf-ci/`, não possuem AGENTS.md.
-- Commits deste WP com `[skip ci]`; somente GitHub APIs, sem shell, testes locais, PR, merge ou dispatch por este WP.
+## O que foi corrigido
 
-## Arquivos e commits
+1. Factory configura, inicia e verifica a distribuição real extraída em `http://localhost:4120`. Origem, requests, Origin, receipt e checker independente são coerentes. Permanecem as provas do executável compilado, extração fora do checkout, sessão/identidade, console autenticado desativado 404, comando e caso reais, bytes Web, archive e adulteração.
+2. O step UI em `sf-ci.yml` só emite `minimized=true` após testes originais com exit zero e sanitização real bem-sucedida. Se o receipt falhar depois, publica exclusivamente `report.json` minimizado no artifact distinto `sf-baseline-candidate-<suite>-<sha>-<attempt>`. Não publica um receipt aprovado nem muda a conclusão do job.
+3. `gate.test.mjs` executa o trecho real do workflow com bash/git/gate.mjs em fixtures isoladas: falha do teste original, JSON inválido, baseline pendente e baseline válido exclusivamente de teste. Os cinco novos testes incluem o contrato do upload. Não há baseline sintético do produto.
+4. O workflow factory admite a qualificação prévia somente para PR interno com head `sf-continuation-package` e base `sf-join-four`. Checkout/evento/identidade/testes/receipt/upload originais permanecem. A entrada existente por push em `sfa-factory-package` será usada apenas após o congelamento final.
 
-- `apps/cli/test/factory-distribution-linux.test.ts` — origem/configuração explícita 4120 e uso consistente no teste real.
-- `apps/cli/script/factory-receipt-check.ts` — exige origem 4120 no receipt.
-- `.github/workflows/sf-ci.yml` — retém candidato UI já minimizado sem converter falha em sucesso.
-- `script/sf-ci/gate.test.mjs` — contrato de retenção e quatro cenários reais de pós-processamento com fixtures isoladas.
-- Este handoff.
+## Gates concluídos
 
-Código inicial: `11a23d3cfe3c0edfaf1e92a05d21da43f0656d76`.
-Regressões: `08003dd0e777315ce6a848f31144e63f37c0e76a`.
-O segundo commit altera apenas `gate.test.mjs` (+133/-1; a linha substituída amplia o import de fs). Readback pela API confirmou identidade integral com o conteúdo preparado; blob `bbe2513a3ff8c9c099dbebfc98215c54030ccb87`.
+| Gate | Run / job | SHA real | Resultado |
+| --- | --- | --- | --- |
+| Retenção/minimização | [44652105730](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652105730), test 136009258700, cleanup 136010485063 | e8927363e763c8defe57599abf826589143b356b | **success**, 57 pass / 0 fail; 1 arquivo; 926 ms; artifacts 0 |
+| Factory integral | [44652219809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652219809), job 136009638049 | 98e56b260a2b36030f6edd9711d77b1cebc907be | **success**, attempt 1 |
+| Web distribution | Mesmo job factory | Mesmo source | 9 pass / 0 fail / 73 expect |
+| Compilação e extração factory | Mesmo job factory | Mesmo source | 3 pass / 0 fail / 1482 expect |
+| Lifecycle Web/native | Mesmo job factory | Mesmo source | 1 pass / 0 fail / 19793 expect; 34 spawns Omni reais, 0 delegados |
 
-## Verificação e limites
+Identidade real da fábrica: `sourceSHA=checkoutSHA=expectedSourceSHA=98e56b260a2b36030f6edd9711d77b1cebc907be`; `workflowSHA=cdbdf5164df473dcc07b1c34b21850acb8f8d856` é o merge ref sintético; runID `44652219809`, attempt `1`. O head possui check real `linux-factory (compiled + extracted)` concluído success.
 
-- Nenhuma execução de Actions iniciada por este WP. Revisão de diff/readback não é prova de execução.
-- Gate estreito existente proposto ao integrador: `{"package":"script","runner":"bun","args":["../../script/sf-ci/gate.test.mjs"]}`. Resolve o pacote Script em `packages/script` e agora inclui os novos cenários, além dos contratos anteriores de seleção, minimização e recusa de baseline/receipts inválidos.
-- O snapshot que dispara Actions deve ter mensagem sem `[skip ci]`; esse marcador foi usado nos commits de preparação para não disparar CI incidental.
-- O gate estreito não prova o processo compilado, um parser completo de YAML nem o serviço real de upload do artifact GitHub. A prova completa da porta/origem permanece no workflow `sf-factory-package`.
-- O futuro sf-ci completo deve confirmar que Reports/Decisions com testes verdes e baseline pendente produzem candidato minimizado e continuam vermelhos. Se os testes falharem antes da minimização, o artifact de candidato não deve existir.
-- O workflow factory vigente não possui dispatch. Um ci-run comum não fornece a identidade `SF_FACTORY_*` exigida e a whitelist do runner não permite injetá-la. Não contornar esse contrato.
-- O integrador avalia acrescentar somente PRs de `sf-continuation-package` para `sf-join-four` ao gate factory, preservando os triggers atuais. Este WP não alterou `.github/workflows/sf-factory-package.yml` e não moveu `sfa-factory-package` antes do freeze.
-- Sem alteração em seleção de testes, gates, application.ts ou codec de reviews. Sem GO, deploy ou `SF_ORCHESTRA_WEB_PACKAGE_VERIFIED`.
+Os marcadores `SF_FACTORY_PACKAGE_QUALIFIED` e `SF_FACTORY_RECEIPT_VERIFIED` foram observados nos logs. Origem 4120; extração fora do checkout true; status 200; gate sem autenticação 303; dashboard autenticado 404; current-choice autenticado 200/ok. A auditoria independente verificou 1413 arquivos, 1310 Web e zero sourcemaps Web.
 
-## Guards antes do sf-ci — opção existente
+## Artifact e hash da qualificação prévia
 
-O wrapper `modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/guards.test.ts` busca origin/dev e executa o comando canônico, imprimindo seu diagnóstico. Para obter histórico completo pelo runner existente, usar o pacote Script, cujo workflow faz unshallow, e manter o controle Omni pelo preload explícito:
+- [Artifact 14591363180](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652219809/artifacts/14591363180).
+- Nome: `sf-factory-package-44652219809-1-98e56b260a2b36030f6edd9711d77b1cebc907be`.
+- Conteúdo: archive factory, distribution.json, factory-closure.json e factory-package-receipt.json.
+- Archive: `orchestra-sf-factory-linux-x64-baseline.tar.gz`.
+- **archiveSha256: `2f25f518095ddf3ade0e4aca36f9c6ba63796655613d9eefa44fcb1fb329af44`** — idêntico nos dois marcadores reais.
+- manifestSha256: `2d954ed6db265eef1a100290dd27b22b7e76d60015c070c1e00472f800caaefc`.
+- ZIP do artifact GitHub, distinto do pacote: `788e491f8daa17925fbf4e4e063191b43a4ada88fe3fae38030dd07f59d716df`.
+- Tamanho do artifact: 91528003 bytes; expiração registrada 2026-11-27T01:18:45Z.
 
-```json
-{"package":"script","runner":"bun","args":["--timeout","120000","--preload","../../script/test-omni-control.ts","../../modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/guards.test.ts"],"env":{"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER":"1"}}
-```
+Este artifact qualifica o reparo no PR. **Não é o pacote da Parte C nem qualifica o futuro SHA integrado.**
 
-O resultado esperado por esta sessão é zero errors e dois GATE protected-paths herdados, a confirmar em logs reais. Os GATE produzem exit 1 e a asserção inalterada do wrapper falha em `guards.test.ts:23`; registrar esse resultado, sem `--warn`, label ou enfraquecimento. O checkout raso normal não basta: o fallback de merge-base pode comparar contra o tip de dev. Registrar SHA congelado e SHA do snapshot com request separadamente.
+## Baseline e restrições
 
-## Baseline e pacote
+`sf/ci/suites.json` permanece intocado. `PENDING_REAL_COMPLETE_RUN` continua recusado. O upload real do candidato UI só poderá ser comprovado na única sf-ci final, se os testes terminarem bem e o relatório for minimizado. Se os testes falharem antes, não há candidato válido a publicar.
 
-- `PENDING_REAL_COMPLETE_RUN` permanece intacto. O artifact novo é insumo para revisão independente futura, não baseline aceito.
-- O SHA-256 final será o `archiveSha256` dos bytes reais de `orchestra-sf-factory-linux-x64-baseline.tar.gz`, confirmado em `SF_FACTORY_PACKAGE_QUALIFIED`, `SF_FACTORY_RECEIPT_VERIFIED` e no recibo. O digest ZIP do artifact GitHub não o substitui.
-- Run id: NOT_RUN. Artifact: NOT_PRODUCED. Package sha256: NOT_PRODUCED.
+Não houve execução local, shell local, GO, deploy ou `SF_ORCHESTRA_WEB_PACKAGE_VERIFIED`. Não houve escrita em application.ts ou nas branches proibidas.
+
+## Pacote final e proteção da corrida única
+
+O draft #257 não podia ser retargetado diretamente para sf-join-four: GitHub recusou com 422 porque seu head atual já é ancestral da integração. Foi preservado aberto/draft e retargetado para `sf-package-hold@52d2c24f4f8cb776889b97894131df6ada43ce98`, uma ref com exatamente o SHA de sua base anterior. Seu diff histórico foi preservado e nenhuma branch protegida foi movida. Isso evita sf-ci incidental pelo synchronize no futuro push final. O head de sfa-factory-package não foi movido neste checkpoint.
 
 ## Como retomar
 
-1. Integrador revisa o diff e executa o gate estreito com snapshot `ci-run-linux-*` somente quando houver slot; máximo dois gates simultâneos.
-2. Registrar run, jobs, SHA do snapshot e resultado real neste handoff. Em falha, corrigir a causa; não repetir gate idêntico sem mudança.
-3. Qualificar o pacote pelo workflow factory legítimo, respeitando a integração e os triggers definidos pelo integrador; não antecipar o push em sfa antes do freeze.
-4. Integrar os deltas qualificados no candidato, preservando alterações concorrentes do workflow. Rodar os guards e executar o único sf-ci final com todos os merges já feitos.
-5. Antes do push final em sfa, resolver o PR draft #257 atualmente baseado em close-final-candidate para evitar uma sf-ci incidental por synchronize; preservar draft e verificar o estado real após qualquer retarget.
-6. Congelar e executar a fábrica pelo mecanismo autorizado. Confirmar que origem 4120, SHA do source/checkout, run/attempt e archiveSha256 são coerentes no receipt real.
-7. Não declarar complete antes de registrar a qualificação correspondente. Não fabricar hashes, check, receipt ou aceite.
-
-
-## Gate integral antes da integração
-
-A qualificação do reparo será executada pelo workflow original `sf-factory-package` no head real deste PR para `sf-join-four`. O novo braço é restrito a `head_ref == sf-continuation-package` no próprio repositório; PRs para `close-final-candidate` e o push final em `sfa-factory-package` preservam seus gatilhos originais. Checkout, identidade do evento, testes, receipt e artefato são os mesmos. A branch do pacote final não foi movida.
-
-Gate unitário da retenção: snapshot `e8927363e763c8defe57599abf826589143b356b`, parent `143cbb9227c2a33251ec55a95a2b6432effbbb43`, branch `ci-run-linux-sfc-evidence`; resultado ainda pendente. O novo workflow de factory não dispara `sf-ci`, pois o PR tem base `sf-join-four`.
+1. Integrar este PR uma vez, na posição coordenada dos restos qualificados, após os itens anteriores elegíveis. Usar o SHA esperado e preservar mudanças concorrentes.
+2. Após todos os merges, executar os guards canônicos com histórico completo. Wrapper existente: `modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/guards.test.ts`. Request: pacote script, runner bun, args `--timeout 120000 --preload ../../script/test-omni-control.ts ../../modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/guards.test.ts`, env Omni 1. Registrar o resultado real; não enfraquecer a asserção de exit zero. Os dois GATE herdados esperados produzem falha do wrapper em guards.test.ts:23.
+3. Disparar sf-ci 420530405 exatamente uma vez em sf-join-four, depois dos merges. Registrar todos os jobs, artifacts e causas reais.
+4. Congelar o SHA, verificar ancestralidade/lease e mover sfa-factory-package por fast-forward para ele. Verificar que #257 continua draft na base hold.
+5. Registrar run/artifact e archiveSha256 novos, vinculados ao SHA final/run/attempt reais. Não reutilizar o hash da qualificação prévia.
