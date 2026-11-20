@@ -128,34 +128,58 @@ function pageSnapshot(markdown) {
   return fence?.[1]
 }
 function snapshotMarkers(snapshot) {
+  // Text nodes may carry a status/paragraph's copy in the Playwright snapshot.
+  // Only these fixed kinds and exact source-owned labels can leave this function.
+  const kinds = ["generic", "paragraph", "status", "heading", "alert", "toolbar", "textbox",
+    "combobox", "button", "region", "text", "navigation", "main", "link", "list", "listitem"]
   const rows = snapshot.split(/\r?\n/).flatMap((line) => {
-    const entry = /^\s*-\s+(generic|paragraph|status|heading|alert|toolbar|textbox|combobox|button|region)(.*)$/.exec(line)
-    if (!entry) return []
+    const entry = /^\s*-\s+([a-z][a-z-]*)(?=\s|:|$)(.*)$/.exec(line)
+    if (!entry || !kinds.includes(entry[1])) return []
     const tail = entry[2].trim()
     const named = /^"([^"]*)"(?:\s+\[[^\]]*\])?(?::|$)/.exec(tail)?.[1]
     const content = tail.startsWith(":") ? tail.slice(1).trim().replace(/^"(.*)"$/, "$1") : undefined
     return [{ role: entry[1], label: named ?? content }]
   })
-  // Source-owned labels from owner-runtime231, sf-context, sf-u25, sf-u33,
-  // reports/index and the shell error page. Nothing from user/source content is emitted.
+  const stateRoles = ["status", "paragraph", "generic", "alert", "text"]
+  // Labels are from owner-runtime231, SfStatePanel, sf-context, sf-u25/u32/u33,
+  // reports/preserved views and the shell error page at the pinned product snapshot.
+  // Sign out is conditional on provider ready; it does not prove route admission.
   const rules = [
-    ["route-not-admitted", ["status", "paragraph", "generic"], ["Sucafina route not admitted"]],
-    ["installation-selection-required", ["status", "paragraph", "generic"], ["Sucafina installation selection required"]],
-    ["installation-discovery-resolving", ["status", "paragraph", "generic"], ["Resolving installed Sucafina"]],
-    ["installation-unavailable-or-unauthorized", ["status", "paragraph", "generic"], ["Sucafina installation unavailable or unauthorized"]],
+    ["route-not-admitted", stateRoles, ["Sucafina route not admitted"]],
+    ["installation-selection-required", stateRoles, ["Sucafina installation selection required"]],
+    ["installation-discovery-resolving", stateRoles, ["Resolving installed Sucafina"]],
+    ["installation-unavailable-or-unauthorized", stateRoles, ["Sucafina installation unavailable or unauthorized"]],
     ["context-toolbar", ["toolbar"], ["Context and access", "Contexto e acesso"]],
-    ["context-unavailable-label", ["status", "paragraph", "generic", "alert"], ["Currently unavailable", "Indisponível no momento"]],
-    ["context-denied-label", ["status", "paragraph", "generic", "alert"], ["You do not have access to this content.", "Você não tem acesso a este conteúdo."]],
-    ["context-sign-in-label", ["status", "paragraph", "generic", "alert"], ["Sign in again to continue.", "Entre novamente para continuar."]],
-    ["context-mismatch-label", ["status", "paragraph", "generic", "alert"], ["This context no longer matches the installed host.", "Este contexto não corresponde mais ao host instalado."]],
-    ["loading-label", ["status", "paragraph", "generic"], ["Loading…", "Carregando…"]],
-    ["context-selection-label", ["status", "paragraph", "generic"], ["Select server, project and installation to continue.", "Selecione servidor, projeto e instalação para continuar."]],
+    ["context-heading", ["heading"], ["Context and access", "Contexto e acesso"]],
+    ["context-refresh-access-control", ["button"], ["Refresh access", "Atualizar acesso"]],
+    ["context-sign-out-control", ["button"], ["Sign out", "Sair"]],
+    ["context-sign-out-failed-label", stateRoles, ["Sign-out could not be confirmed. Try again.", "Não foi possível confirmar a saída. Tente novamente."]],
+    ["context-unavailable-label", stateRoles, ["Currently unavailable", "Indisponível no momento"]],
+    ["context-denied-label", stateRoles, ["You do not have access to this content.", "Você não tem acesso a este conteúdo."]],
+    ["context-sign-in-label", stateRoles, ["Sign in again to continue.", "Entre novamente para continuar."]],
+    ["context-mismatch-label", stateRoles, ["This context no longer matches the installed host.", "Este contexto não corresponde mais ao host instalado."]],
+    ["loading-label", stateRoles, ["Loading…", "Carregando…"]],
+    ["context-selection-label", stateRoles, ["Select server, project and installation to continue.", "Selecione servidor, projeto e instalação para continuar."]],
+    ["state-retry-control", ["button"], ["Try again", "Tentar novamente"]],
     ["report-heading", ["heading"], ["Report", "Relatório"]],
-    ["report-format-control", ["combobox"], ["Format"]],
-    ["report-title-control", ["textbox"], ["Title"]],
+    ["report-format-control", ["combobox"], ["Format", "Office format", "Formato Office"]],
+    ["report-title-control", ["textbox"], ["Title", "Report title", "Título do relatório"]],
     ["report-generate-control", ["button"], ["Generate Report", "Generate report", "Gerar relatório"]],
+    ["report-reference-required-label", stateRoles, ["A preserved review reference is required. The producer has not published a native report list.", "É necessária uma referência de revisão preservada. O produtor não publicou uma lista nativa de relatórios."]],
+    ["report-source-unavailable-label", stateRoles, ["The original preserved source is not available. No report was generated.", "A origem preservada está indisponível. Nenhum relatório foi gerado."]],
+    ["report-outcome-unknown-label", stateRoles, ["The producer outcome cannot be confirmed. Do not retry without reconciliation.", "O resultado do produtor não pôde ser confirmado. Não repita sem reconciliação."]],
     ["agenda-heading", ["heading"], ["Meeting agenda", "Pauta da reunião"]],
+    ["agenda-source-unavailable-label", stateRoles, ["The agenda source is unavailable. Your current selection has not been erased.", "A fonte da pauta está indisponível. Sua seleção atual não foi apagada."]],
+    ["agenda-read-only-label", stateRoles, ["This selection can be read but not preserved.", "Esta seleção pode ser lida, mas não preservada."]],
+    ["agenda-no-sections-label", stateRoles, ["No sections were returned by this authorized source.", "Esta fonte autorizada não retornou seções."]],
+    ["agenda-filter-empty-label", stateRoles, ["No section matches this filter.", "Nenhuma seção corresponde ao filtro."]],
+    ["agenda-outcome-unknown-label", stateRoles, ["Preservation was sent but its outcome is not confirmed. Do not submit it again.", "A preservação foi enviada, mas o resultado não está confirmado. Não reenvie."]],
+    ["preserved-review-heading", ["heading"], ["Preserved review", "Revisão preservada"]],
+    ["compare-reviews-heading", ["heading"], ["Compare reviews", "Comparar revisões"]],
+    ["preserved-review-list-unavailable-label", stateRoles, ["The producer has not published a native authorized review-list operation.", "O produtor não publicou uma operação nativa autorizada de listagem de revisões."]],
+    ["preserved-review-source-unavailable-label", stateRoles, ["The original review is unavailable. No substitute snapshot was loaded.", "A revisão original está indisponível. Nenhum snapshot substituto foi carregado."]],
     ["preserved-meeting-region", ["region"], ["Preserved review meeting"]],
+    ["preserved-authorized-sources-navigation", ["navigation"], ["Origens autorizadas da revisão"]],
     ["shell-render-error-heading", ["heading"], ["Something went wrong", "Algo deu errado"]],
     ["shell-render-error-details", ["textbox"], ["Error Details", "Detalhes do erro"]],
   ]
@@ -165,7 +189,8 @@ function snapshotMarkers(snapshot) {
       [/\bRangeError\b/, "range-error"], [/\bSyntaxError\b/, "syntax-error"],
       [/Maximum call stack size exceeded/, "stack-overflow"]]
       .filter(([pattern]) => pattern.test(snapshot)).map(([, code]) => code) : []
-  return { markers, renderErrors }
+  const nodeCounts = Object.fromEntries(kinds.map((kind) => [kind, rows.filter((row) => row.role === kind).length]))
+  return { markers, renderErrors, nodeCounts }
 }
 async function inspectErrorContext(root, files) {
   const expected = "packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium/error-context.md"
