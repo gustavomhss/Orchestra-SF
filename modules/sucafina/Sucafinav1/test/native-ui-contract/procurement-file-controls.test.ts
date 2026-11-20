@@ -123,10 +123,15 @@ test("native Settings exposes canonical defaults and first-write CAS without inv
   // revision. Exercise both first writes through the original domain contract.
   for (const action of ["reset", "save"] as const) {
     const withSupplier = fixture()
-    expect(domain.execute(withSupplier.state, admin, {
+    const createSupplier = {
       page: "Suppliers", action: "create", version: 0,
       values: { supplier: { legalName: "Supplier before first Settings write" } },
-    }, environment).ok).toBe(true)
+    }
+    const beforeSupplier = structuredClone(withSupplier.state)
+    expect(domain.execute(withSupplier.state, admin, createSupplier, environment)).toMatchObject({ ok: false, status: 403 })
+    expect(withSupplier.state).toEqual(beforeSupplier)
+    // Original procurementSupplierRoleAllows requires buyer for create.
+    expect(domain.execute(withSupplier.state, { ...admin, roles: ["buyer"] }, createSupplier, environment).ok).toBe(true)
     const supplierRows = structuredClone(rows(object(withSupplier.state.data.store).suppliers))
     expect(supplierRows).toHaveLength(1)
     expect(supplierRows[0]).toMatchObject({ id: "supplier-1", legalName: "Supplier before first Settings write" })
