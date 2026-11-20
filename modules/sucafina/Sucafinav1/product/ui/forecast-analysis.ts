@@ -455,6 +455,7 @@ export const forecastAnalysisScript = `
       } finally { cancelling = false; present() }
     })
     present()
+    form.dataset.sfForecastReady = 'true'
   }
 })()
 `
