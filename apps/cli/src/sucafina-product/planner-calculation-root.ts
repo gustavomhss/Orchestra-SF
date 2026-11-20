@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { c17MixedRootCount, c17MixedRootKind } from "../../../../modules/sucafina/Sucafinav1/runtime/audit-c17-mixed-profile.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -13,6 +14,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
   const prepare = async (call: TrustedDomainContext, initialize: () => Promise<boolean | "unsupported">,
     unchanged: () => boolean, ownerCurrent: () => boolean = unchanged): Promise<Prepared | undefined> => {
     try {
+      const auditKind = c17MixedRootKind(initialize)
       let used = false
       const once = (run: Prepared["run"]): Prepared => ({ run: async <Value>(work: () => Promise<PortResult<Value>>) => {
         if (used) return unavailable()
@@ -22,6 +24,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const parent = roots.getStore()
       if (parent) {
         if (!parent.current(call) || !unchanged()) return undefined
+        c17MixedRootCount(auditKind, "join")
         return once(async (work) => {
           // The root is already prepared. This descendant executes its complete
           // producer and cannot survive or publish beyond the owner's callback.
@@ -63,6 +66,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         // A pre-existing C08 owner (including Memory preflight/commit) keeps its
         // original route. Do not prepare sources, open a root or borrow ownership.
         if (!inherited || typeof inherited !== "object") return undefined
+        c17MixedRootCount(auditKind, "foreign")
         // Snapshot metadata does not report a swallowed nested write. An actual
         // readonly driver operation checks poison at its exit. These extra
         // observations test health now; they do not accept the foreign root.
@@ -87,6 +91,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       if (initialized !== true && initialized !== "unsupported") return undefined
       if (!current() || snapshots.call(persistence) !== undefined) return undefined
       if (initialized === "unsupported") {
+        c17MixedRootCount(auditKind, "unsupported")
         // Eligibility was inspected without opening a root or warming sources.
         // Preserve the full producer only while these exact observations live.
         return once(async (work) => {
@@ -97,6 +102,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
             current() && snapshots.call(persistence) === undefined ? result : unavailable()
         })
       }
+      c17MixedRootCount(auditKind, "new")
       // The caller opens its original full C08/source witness only after this
       // preparation returns. No prepared observation is accepted as evidence.
       return once(async <Value>(work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
@@ -105,6 +111,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         let staged: PortResult<Value> | undefined
         const accepted = await root.call(persistence, async () => {
           invocations++
+          c17MixedRootCount(auditKind, "callback")
           if (invocations !== 1 || !current() || !live()) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && live() }
@@ -124,6 +131,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         }, { signal: request.signal })
         if (accepted !== true || !completed || invocations !== 1 || !staged || !current() ||
           snapshots.call(persistence) !== undefined) return unavailable()
+        c17MixedRootCount(auditKind, "accepted")
         return staged
       })
     } catch {
