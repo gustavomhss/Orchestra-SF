@@ -1,8 +1,10 @@
 # Handoff — sf-continuation
 
 SHA: f7dd58e32bc834f1485df20b91adbf759b4c4ad0 (produto/base e último SHA de sf-join-four observado; este documento é versionado separadamente em sf-continuation)
-Data: 2026-11-20T00:37:15.081Z
-Estado: partial
+Data: 2026-11-20T00:48:58.805Z
+Estado: blocked
+
+Bloqueio de integração observado em 2026-11-20T00:46:23.815Z: os dois gates da nova UI falharam, as três branches de shards ainda não apresentam correção qualificada e não há PR shared:/UI/shard aberto contra sf-join-four. Só os PRs #392, #393 e #394 estavam abertos nessa base. A condição de checks do #393 também permanece ausente. A Parte A foi auditada; Partes B/C não podem ser declaradas concluídas. Este encerramento parcial não refaz os WPs das sessões 1–4.
 
 ## Feito
 
@@ -12,7 +14,7 @@ Estado: partial
 - Inspecionados os logs originais, jobs, SHAs e artifact do run [44631696084](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44631696084). Não se atribuiu a falha ao link de entrada.
 - Consultados PR #393, check-runs/statuses do head e do merge-ref, run citado e identidade dos blobs testados; consultados #392, #394 e #237. Nenhum PR foi alterado ou mergeado.
 - Revisões paralelas de leitura: Reports, Operations e ingress; revisão independente adicional da decisão de merge do #393.
-- Nenhum gate novo, rerun, sf-ci ou pacote foi disparado por esta sessão até este checkpoint.
+- Nenhum gate novo, rerun, sf-ci ou pacote foi disparado por esta sessão. Os gates de outras sessões foram apenas acompanhados e seus resultados lidos.
 
 ### Run Reports 44631696084: falha correta e escopo
 
@@ -49,17 +51,42 @@ Estado: partial
 | Ordem exigida | Estado no checkpoint |
 | --- | --- |
 | 1. PRs shared: das sessões 1–4 | Ainda sem PR qualificado observado. |
-| 2. sf-ui-c02 | Branch apareceu durante a auditoria; head 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4 observado às 00:36:42Z. C02 e link Reports revisados estaticamente; gates 44646379209 (Reports) e 44646627443 em andamento; sem PR/handoff complete. |
-| 3. sf-shard-a | Head 8771599524f3344f868e0a2030034d62c9d2b644 observado às 00:36:42Z; gates iniciais 44646013868 / 44646018333 ainda em andamento. |
-| 3. sf-shard-b | Head 3c600f1a6830275e074854f01bbf611274ccf245 observado às 00:36:42Z; gates iniciais 44645900692 / 44645913808 ainda em andamento. |
-| 3. sf-shard-c | Head 45621d94f5dfcfb330f36a6c3e0a140914125c5b acrescenta somente handoff partial. Gates iniciais 44645952434 / 44645956665 ainda em andamento. |
+| 2. sf-ui-c02 | Head documental 3a9ffc8c6d97d5742795e8bde3b3b8466861748a; código 82c3047754cb5ca9b04a5ccdb22c9d0c510295c4. Handoff partial; Reports 44646379209 FAILURE (4 falhas), Procurement 44646627443 FAILURE (8 falhas). Sem PR. Não qualificada. |
+| 3. sf-shard-a | Head 8771599524f3344f868e0a2030034d62c9d2b644, somente handoff IN_PROGRESS; código da base. Runs 44646013868 / 44646018333 in_progress na consulta final. Sem PR/fix qualificado. |
+| 3. sf-shard-b | Head 3c600f1a6830275e074854f01bbf611274ccf245, somente handoff PARTIAL; código da base. Runs 44645900692 / 44645913808 in_progress na consulta final. Sem PR/fix qualificado. |
+| 3. sf-shard-c | Head 45621d94f5dfcfb330f36a6c3e0a140914125c5b, somente handoff partial; código da base. Shard7/44645952434 in_progress; shard8/44645956665 FAILURE, 618 pass / 2 fail. Sem PR/fix qualificado. |
 | 4. Restos qualificados | Operations não qualificada; recortes qualificados de ingress já absorvidos; #393 aguardando condição de checks. |
 
 As consultas iniciais retornaram ausência das branches das sessões; isso foi superado pela publicação concorrente observada às 00:27:22Z. Não interpretar a fotografia inicial como bloqueio permanente. Continuar acompanhando sem refazer o trabalho dos responsáveis.
 
+### Resultados terminais novos, sem repetir os gates
+
+**UI Reports:** [44646379209](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646379209), snapshot `47a498e47becb6a9b6ab551099a114fdd66df4fd`, pai `ffa13012bc0ac2bba113860946930355c0a9a37f`. Job `135989909108`: FAILURE, **4 failed / 0 passed**, todos em `packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:21:30`, `expect(reportsEntry).toBeVisible()`. Typecheck E2E e upload success; cleanup `135993326432` success. Apesar do nome `ci-run-linux-ui-c02-3-app`, o request seleciona Reports, não wp04. [Artifact14589541312](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646379209/artifacts/14589541312), 239546 bytes, digest GitHub `sha256:e09464962bc2774b6456a85cd18e3cdef5800e335444abf925744733a9b1b2a3`. A causa de inicialização/seleção não foi isolada pelo log; mover o link não bastou para o aceite.
+
+**UI Procurement:** [44646627443](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646627443), snapshot `55d805d907e6dde33c6e3970eea148519bb4db01`, pai/código `82c3047754cb5ca9b04a5ccdb22c9d0c510295c4`. Job `135990747207`: FAILURE, **8 failed**, todos em `packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:37:24`, esperando `a[data-source-ref]`. Enrollment303, navegação200 e heading Requests anteriores foram superados; digest/ref/version em :38–40 ainda não foram alcançados. Typecheck E2E e upload success; cleanup `135994350082` success. [Artifact14589477538](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44646627443/artifacts/14589477538), 34359248 bytes, digest GitHub `sha256:97792713d55ea76dd709040c9926f6e9687ee57a229984b8ae6cc54179436df5`. O aviso de timeout de Bun não identifica endpoint nem estabelece a causa do anchor ausente.
+
+O handoff da UI no head `3a9ffc...` ainda registrava Procurement em andamento; o resultado terminal acima o atualiza para este checkpoint integrador. A revisão estática não encontrou enfraquecimento das asserções nem identidade fabricada, mas não substitui os dois gates vermelhos.
+
+**Shard8:** [44645956665](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645956665), snapshot `13f88387091b7db295a73aca0d20fb3859a56ae7`, job `135988458050`: FAILURE, **618 pass / 2 fail**, 620 testes em 115 arquivos, 30766 assertions; cleanup `135996621685` success. Primeira falha: `modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts:13:26`, divergência do hash de state-provider.ts em `expect(producerHashes).toEqual(diagnosticExpected.producers)`. Segunda falha: `modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts:83:77`, clique “Abrir origem B · planner-version v1 · v1”, fase difference:component:0:origin-1:mouse; timeout de10s e timeout global180s. Nenhum hash, timeout ou asserção foi alterado por esta sessão. A enumeração é evidência do código base, não recibo de sf-ci ou correção pronta.
+
+| Shard | Run inicial auditado | Estado na consulta de 2026-11-20T00:46:23.815Z |
+| --- | --- | --- |
+| 1 | 44646013868 | in_progress; sem resultado terminal atribuído |
+| 2 | 44646018333 | in_progress; sem resultado terminal atribuído |
+| 3 | — | Nenhum resultado auditado nesta sessão |
+| 4 | 44645900692 | in_progress; sem resultado terminal atribuído |
+| 5 | 44645913808 | in_progress; sem resultado terminal atribuído |
+| 6 | — | Nenhum resultado auditado nesta sessão |
+| 7 | 44645952434 | in_progress; sem resultado terminal atribuído |
+| 8 | 44645956665 | failure; 618 pass / 2 fail |
+
+Os oito IDs de shard acima não são jobs do sf-ci final. As tentativas de admissão dos requests são mantidas pelos handoffs responsáveis; não foram contadas como execução do produto.
+
 ## Pendente
 
-- Entregas das sessões 1–4: aguardar PRs, handoffs e gates qualificados; não tratar branch criada ou IN_PROGRESS como prova de conclusão.
+- Entregas das sessões 1–4: a UI está partial com dois gates vermelhos; shards ainda não têm fix qualificado. Aguardar correções e PRs com handoffs/gates correspondentes; não tratar branch criada ou IN_PROGRESS como prova de conclusão.
+- UI atual: `packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts:37` no snapshot55d805d... e `packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:21` no snapshot47a498... permanecem unbound. A integração não pode declarar seus aceites verdes.
+- Shard8 no snapshot13f883...: `diagnostic-cost.test.ts:13:26` e `planner-origins.test.ts:83:77` permanecem falhas observadas; correção pertence à sessão do shard.
 - #393: condição de merge ainda não satisfeita; consultar novamente checks/statuses no head antes de qualquer decisão.
 - Operations no pin `ee565f...`: upload `packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/bound-assets.tsx:173` / `packages/app-shell/e2e/sucafina/operations-support/documents.ts:103`, handoff partial. Último fix numérico não verificado.
 - Reports no snapshot `5c0f36...`: `reports-support/review-flow.ts:253:27` (CAP04), `:177:29` (500 versus 200), `:341:153` (confirmação da releitura). Não atribuir à falta do link.
@@ -126,7 +153,7 @@ Não existe run desta sessão. `NOT_RUN` abaixo é estado do plano, não uma con
 
 ## Como retomar
 
-1. Revalidar `sf-join-four`, PRs e heads das sessões 1–4. Esta branch contém somente documentação; usar o head real da integração como candidato de produto, sem sobrescrever trabalho concorrente.
+1. Revalidar `sf-join-four`, PRs, heads e resultados terminais das sessões 1–4, incluindo os cinco runs ainda em andamento no checkpoint. O primeiro bloqueio de integração é a UI: exigir correção causal de Reports/C02 e gate correspondente success, sem refazer o trabalho desses responsáveis. Esta branch contém somente documentação; usar o head real da integração como candidato de produto, sem sobrescrever trabalho concorrente.
 2. Revisar e integrar um por vez na ordem shared: → sf-ui-c02 → sf-shard-a → sf-shard-b → sf-shard-c → restos qualificados, exigindo handoff e gate correspondente SUCCESS. Reutilizar prova válida já existente; não repetir gate idêntico sem mudança causal.
 3. #393 só pode ser mergeado com a condição de checks exigida pelo usuário satisfeita; revalidar o head e passar o SHA esperado ao merge. Não fabricar check, não repetir teste apenas para criar sinal.
 4. Se qualquer fix exigir gate, publicar primeiro o commit de snapshot com `.ci-run.json` e só depois a ref `ci-run-linux-*`. Máximo dois gates simultâneos. Mesma falha sem mudança duas vezes: registrar unbound e parar aquela causa.
