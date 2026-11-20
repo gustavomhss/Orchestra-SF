@@ -274,7 +274,10 @@ const make = Effect.gen(function* () {
     Effect.forEach([...entries.values()], (entry) => Effect.gen(function* () {
       // Closing the actual process scope owns kill/readers/watchers. Await the real exit afterwards.
       // A missing external result is not converted into a successful effect receipt here.
-      yield* entry.handle.exitCode.pipe(Effect.orDie)
+      // Signal termination is reported as an exitCode failure by the real Omni adapter.
+      // Await that terminal observation, then require its independent running-state probe to be false.
+      yield* entry.handle.exitCode.pipe(Effect.exit)
+      if (yield* entry.handle.isRunning) throw new Error("HOST_MAINTENANCE_PROCESS_STILL_RUNNING")
       if (!entry.finished) {
         entry.finished = true
         entry.status = "cancelled"
