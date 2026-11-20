@@ -50,7 +50,7 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
   const dependencies = { cases: fixture.business.cases, planner: fixture.business.planner,
     procurement: fixture.business.procurement, context: fixture.business.context,
     host: fixture.business.host, caseRecall: fixture.business.caseRecall }
-  return { ...fixture, call, caseRef, initial, selection, request, dependencies }
+  return { ...fixture, call, caseRef, initial, seeded, selection, request, dependencies }
 }
 
 test("Planner memory input preserves two independent complete observations on every invocation", async () => {
@@ -74,7 +74,12 @@ test("Planner memory input preserves two independent complete observations on ev
         expect(observed).toEqual({ status: "ok", matches: [], limitations: [], accessRevision: fixture.call.binding.accessRevision })
     }
     expect(await fixture.authority.state.read(fixture.authority.host.requestFor(fixture.call)!, "cases",
-      (state) => state.cases[fixture.caseRef.id])).toEqual({ status: "ok", value: fixture.initial })
+      (state) => state.cases[fixture.caseRef.id])).toEqual({
+      status: "ok", value: fixture.initial,
+      storageVersion: fixture.seeded.storageVersion,
+      aggregateRevision: fixture.seeded.aggregateRevision,
+      incarnation: fixture.seeded.incarnation,
+    })
   } finally { await deadline.close() }
 }, 120_000)
 
