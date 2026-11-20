@@ -443,18 +443,19 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
   const canonicalPlanner = procurementComposite.planner
+  const withPlannerObservation = async <Value>(request: unknown, call: TrustedDomainContext,
+    work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const observation = plannerCaseRead.current
+    if (!observation || call.kind !== "ui") return work()
+    const selected = await selectedCase(call)
+    // Unselected/unsupported callers retain their canonical admission path.
+    if (selected.status !== "ok") return work()
+    // Read-only consumers may join only this exact lexical case owner. Each
+    // separate invocation starts fresh; publication remains outside this scope.
+    return observation.observe({ caseRef: selected.value, request }, call, work)
+  }
   const planner: typeof canonicalPlanner = { ...canonicalPlanner,
-    compareScenarios: async (request, call) => {
-      const observation = plannerCaseRead.current
-      if (!observation || call.kind !== "ui") return canonicalPlanner.compareScenarios(request, call)
-      const selected = await selectedCase(call)
-      // Unselected/unsupported callers retain their canonical admission path.
-      if (selected.status !== "ok") return canonicalPlanner.compareScenarios(request, call)
-      const incoming = { caseRef: selected.value, request }
-      // Each comparison or persistence replay owns a separate read-only
-      // observation. C09 publication is outside this scope and cannot borrow it.
-      return observation.observe(incoming, call, () => canonicalPlanner.compareScenarios(request, call))
-    },
+    compareScenarios: (request, call) => withPlannerObservation(request, call, () => canonicalPlanner.compareScenarios(request, call)),
   }
   const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
@@ -745,7 +746,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations: { ...calculations, persist }, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
-    withMemoryObservation, withScenarioObservation,
+    withMemoryObservation, withScenarioObservation, withPlannerObservation,
     bindReviewCollaboration: reviewCollaboration.bind,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")

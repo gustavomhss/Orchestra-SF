@@ -36,7 +36,7 @@ export function createSfPortfolioAuthority(input: {
     return results.length === refs.length && results.every((result, index) => result.state === "fresh" && !!result.authorizedProjection &&
       !!result.currentRef && digestSfValue(result.ref) === digestSfValue(refs[index]) && digestSfValue(result.currentRef) === digestSfValue(result.ref)) && await host.revalidate(call)
   }
-  const readMetric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
+  const readMetricCanonical: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
     if (!scenarios || request.metricRef !== "planner:known-subtotal-difference" || !request.baselineRef)
       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
     const captured = structuredClone(request)
@@ -70,6 +70,8 @@ export function createSfPortfolioAuthority(input: {
       period: candidate.value.result.horizon, evidenceRefs, state: result.value.comparisonStatus === "complete" ? "confirmed" : "conditioned",
       engineVersion: candidate.value.projection.engineVersion } }
   }
+  const readMetric: typeof readMetricCanonical = (request, call) =>
+    business.withPlannerObservation(request, call, () => readMetricCanonical(request, call))
   const rules = createCriterionRuleRegistry({ ...common,
     authorizeRule: (request, call) => intent.authorize(call, "decisions.criteria", request),
     verifyEvidence: (rule, call) => fresh([...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], call),
@@ -81,15 +83,15 @@ export function createSfPortfolioAuthority(input: {
     },
   })
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
-    compareScenarios({ host, sources: business.plannerSources,
-      // A selected criterion is outside the planner-only comparison cache. Its
-      // scope probe always declines and performs redundant full C08 reads;
-      // preserve the canonical scenario producer and all comparison checks.
+    business.withPlannerObservation(request, call, () => compareScenarios({ host, sources: business.plannerSources,
+      // A selected criterion retains the canonical scenario producer. The
+      // surrounding Planner case observation fences only complete case reads;
+      // every scenario, metric and criterion phase still runs independently.
       scenarios: request.criteria.length ? scenarios : (comparisons.scenarios ?? scenarios),
       criteria: { evaluate: async (criterion, binding) => {
       const selected = await business.resolveCase(binding)
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
-    } } }, request, call) : business.planner.compareScenarios }
+    } } }, request, call)) : business.planner.compareScenarios }
   const compareCanonical = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
   const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios })
   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
