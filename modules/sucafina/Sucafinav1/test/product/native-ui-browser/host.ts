@@ -103,14 +103,10 @@ export function createNativeBrowserHost(input: NativeBrowserHostInput) {
     if (url.origin !== input.origin || request.method !== "GET" ||
         request.headers.get("sec-fetch-site") === "cross-site")
       return Response.json({ status: "denied" }, { status: 403, headers })
-    const admitted = await input.authority.readContextAdmission(request)
-    const current = descriptor()
-    if (admitted.status !== "ok" || !current)
-      return Response.json({ status: admitted.status }, { status: admitted.status === "unauthenticated" ? 401 :
-        admitted.status === "denied" ? 403 : 503, headers })
-    if (admitted.stamp.installationId !== current.installationId ||
-        admitted.stamp.projectId !== current.projectId || admitted.stamp.hostId !== current.hostId)
-      return Response.json({ status: "unavailable" }, { status: 503, headers })
+    // Like the Orchestra discovery handler, this selected server transport
+    // resolves only its loaded runtime or exact admitted Location. The product
+    // session is checked later by the original context/projection handlers;
+    // its /sucafina cookie is intentionally not sent to this /api endpoint.
     try {
       const selector = parseSfInstallationSelector(request.url)
       const installations = await readSfInstallations({
