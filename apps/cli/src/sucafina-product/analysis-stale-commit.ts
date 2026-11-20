@@ -49,7 +49,7 @@ export function createSfStaleAnalysisAccess(input: {
       const snapshotIdentity = digestSfValue(snapshots)
       const originalBinding = call.binding, originalLease = call.lease, originalHeaders = headers()
       const originalIdentity = digestSfValue([call.kind, call.binding])
-      const originalCurrent = () => input.request === request && !request.signal.aborted &&
+      const originalCurrent = () => !request.signal.aborted &&
         call.binding === originalBinding && call.lease === originalLease && input.authority.host.requestFor(call) === request &&
         headers() === originalHeaders && digestSfValue([call.kind, call.binding]) === originalIdentity
 
