@@ -9,6 +9,20 @@ import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
 
+/** CI-only timing observer. Never integrate this diagnostic source blob. */
+const localCost = { enabled: false, stages: new Map<string, { calls: number; milliseconds: number; maximumUnits: number }>() }
+const recordLocalCost = (stage: string, started?: number, units = 0) => {
+  if (!localCost.enabled) return
+  const prior = localCost.stages.get(stage) ?? { calls: 0, milliseconds: 0, maximumUnits: 0 }
+  localCost.stages.set(stage, { calls: prior.calls + 1,
+    milliseconds: prior.milliseconds + (started === undefined ? 0 : performance.now() - started),
+    maximumUnits: Math.max(prior.maximumUnits, units) })
+}
+export const sfLocalStoreCostDiagnostic = {
+  begin: () => { localCost.stages.clear(); localCost.enabled = true },
+  finish: () => { localCost.enabled = false; return Object.fromEntries(localCost.stages) },
+}
+
 export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits> } = {}): Promise<LocalStore> {
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
   const timeout = options.lockTimeoutMs ?? 5000
@@ -90,6 +104,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const observeSnapshot = (surface: Surface, payload?: string): { materialize: () => Snapshot; copy?: () => Snapshot } => {
     const prior = materializations.get(surface)
     if (payload !== undefined && prior?.payload === payload) {
+      recordLocalCost("memo-hit-" + surface, undefined, payload.length)
       const materialize = () => materializeSnapshot(prior)
       return { materialize, copy: materialize }
     }
@@ -98,8 +113,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const empty = (): Snapshot => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
       return { materialize: empty, copy: empty }
     }
+    recordLocalCost("memo-miss-" + surface, undefined, payload.length)
     const snapshot = decodeSnapshot(payload)
+    const planStarted = performance.now()
     const plan = planSnapshotMaterialization(snapshot, payload)
+    recordLocalCost("plan-inclusive", planStarted, payload.length)
+    recordLocalCost(plan ? "plan-accepted" : "plan-rejected", undefined, plan?.units ?? payload.length)
     if (plan) {
       const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }
       for (const [name, entry] of materializations) {
@@ -132,10 +151,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
   const copyCurrentSnapshot = (scope: ReadScope, surface: Surface): Snapshot => {
     const materialize = scope.root.copies?.[surface]
-    if (materialize) return materialize()
+    const started = performance.now()
+    if (materialize) {
+      const result = materialize()
+      recordLocalCost("current-snapshot-via-plan", started)
+      return result
+    }
     const snapshot = scope.root.snapshots[surface]
     if (!snapshot) throw new Error("Local transaction snapshots unavailable")
-    return cloneSnapshot(snapshot)
+    const result = cloneSnapshot(snapshot)
+    recordLocalCost("current-snapshot-via-clone", started)
+    return result
   }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
@@ -172,11 +198,15 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       // Serialize writers within this instance instead of making maintenance
       // contend with its own business transaction in WAL. Credential reads
       // remain independent because authentication awaits them inside that transaction.
+      const queueStarted = performance.now()
       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
+      recordLocalCost(previous ? "queue-wait-inclusive" : "queue-empty", queueStarted)
       signal?.throwIfAborted()
       const db = connect()
       try {
+        const lockStarted = performance.now()
         if (write) await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+        recordLocalCost(write ? "write-lock-inclusive" : "read-without-lock", lockStarted)
         signal?.throwIfAborted()
         return await work(db)
       } finally {
@@ -554,15 +584,21 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 export function decodeSnapshot(payload: string): Snapshot {
+  const started = performance.now()
   const envelope: unknown = JSON.parse(payload)
   if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
     throw new Error("Unsupported local snapshot encoding")
-  return validateSnapshot(decode(envelope[2]))
+  const result = validateSnapshot(decode(envelope[2]))
+  recordLocalCost("decode-snapshot", started, payload.length)
+  return result
 }
 
 /** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
 function cloneSnapshot(snapshot: Snapshot): Snapshot {
-  return validateSnapshot(copyValue(snapshot))
+  const started = performance.now()
+  const result = validateSnapshot(copyValue(snapshot))
+  recordLocalCost("clone-snapshot", started)
+  return result
 }
 
 function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
@@ -602,7 +638,10 @@ function validateSnapshot(value: unknown): Snapshot {
 }
 
 export function encodeSnapshot(snapshot: Snapshot): string {
-  return JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)])
+  const started = performance.now()
+  const result = JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)])
+  recordLocalCost("encode-snapshot", started, result.length)
+  return result
 }
 
 // The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
@@ -617,14 +656,20 @@ const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
 type SnapshotMaterialization = Readonly<{ payload: string; json: string; missing: string; units: number }>
 
 function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
-  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
+  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) {
+    recordLocalCost("plan-payload-budget", undefined, payload.length)
+    return
+  }
   const parts: string[] = []
   const missing: string[] = []
   const path: string[] = []
   const budget = { units: payload.length + 2, nodes: 0 }
   const append = (text: string) => {
     budget.units += text.length
-    if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
+    if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) {
+      recordLocalCost("plan-unit-budget", undefined, budget.units)
+      return false
+    }
     parts.push(text)
     return true
   }
@@ -632,12 +677,21 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
   // data, with no getters, custom prototypes, functions, aliases or cycles.
   // Emit JSON directly so a data property called toJSON is never invoked.
   const visit = (value: unknown): boolean => {
-    if (++budget.nodes > 200000 || path.length > 128) return false
+    if (++budget.nodes > 200000 || path.length > 128) {
+      recordLocalCost("plan-node-or-depth-budget", undefined, budget.nodes)
+      return false
+    }
     if (value === undefined) {
-      if (missing.length >= 4096) return false
+      if (missing.length >= 4096) {
+        recordLocalCost("plan-missing-budget", undefined, missing.length)
+        return false
+      }
       const location = JSON.stringify(path)
       budget.units += location.length + (missing.length ? 1 : 0)
-      if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
+      if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) {
+        recordLocalCost("plan-unit-budget", undefined, budget.units)
+        return false
+      }
       missing.push(location)
       return append("null")
     }
@@ -667,6 +721,7 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string): Snaps
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
+  const started = performance.now()
   const snapshot = JSON.parse(plan.json) as Snapshot
   // Null placeholders preserve property order and array density. Only these
   // known own paths need repair; -0 is preserved by its native JSON literal.
@@ -678,5 +733,6 @@ function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
       Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })
     }
   }
+  recordLocalCost("materialize-plan", started, plan.units)
   return snapshot
 }

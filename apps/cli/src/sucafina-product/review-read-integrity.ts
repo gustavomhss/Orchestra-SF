@@ -16,6 +16,19 @@ type ReadProof = { fence: string; result: ReviewResult }
 type ReadScope = { request: Request; open: boolean; calls: WeakMap<TrustedDomainContext, Map<string, ReadProof>>;
   delegated: WeakMap<TrustedDomainContext, Set<string>> }
 
+/** CI-only observer. This source blob must never be integrated into the product. */
+const readCost = { enabled: false, stages: new Map<string, { calls: number; milliseconds: number }>() }
+const recordReadCost = (stage: string, started: number) => {
+  if (!readCost.enabled) return
+  const elapsed = performance.now() - started
+  const previous = readCost.stages.get(stage) ?? { calls: 0, milliseconds: 0 }
+  readCost.stages.set(stage, { calls: previous.calls + 1, milliseconds: previous.milliseconds + elapsed })
+}
+export const sfReviewReadCostDiagnostic = {
+  begin: () => { readCost.stages.clear(); readCost.enabled = true },
+  finish: () => { readCost.enabled = false; return Object.fromEntries(readCost.stages) },
+}
+
 /** Every consumer reopens the body's own C08 receipt, in addition to producer ACL checks. */
 export function protectSfReviewReads(input: {
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget">
@@ -27,6 +40,12 @@ export function protectSfReviewReads(input: {
 }) {
   const { authority, reviews } = input
   const host = authority.host
+  const timedSnapshots = () => {
+    const started = performance.now()
+    const value = host.persistence.currentSnapshots?.()
+    recordReadCost(value ? "current-snapshots-copy" : "current-snapshots-empty", started)
+    return value
+  }
   const read = reviews.read.bind(reviews)
   const execution = new AsyncLocalStorage<ReadScope>()
   const defaultReaders = input.localSnapshotReaders === true
@@ -55,14 +74,17 @@ export function protectSfReviewReads(input: {
     const current = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
     try {
       if (!await current()) return denied()
+      const stateStarted = performance.now()
       const checked = await authority.state.read(scope.request, "reviews", async (state, actor): Promise<PortResult<SnapshotProof>> => {
         if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
           actor.policyVersion !== call.binding.policyVersion) return denied()
-        const snapshots = host.persistence.currentSnapshots?.()
+        const snapshots = timedSnapshots()
         const review = state.reviews[id]
         if (!review || review.id !== id) return denied()
         if (!snapshots) return unavailable()
+        const reviewStarted = performance.now()
         const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
+        recordReadCost("review-and-receipt-digests", reviewStarted)
         if (!receipt) return denied()
         // Reauthenticate the actual domain principals as well as the C08 reader.
         // Full snapshots include unversioned case/body/receipt changes and source metadata.
@@ -71,10 +93,23 @@ export function protectSfReviewReads(input: {
         const at = (await host.environment(scope.request)).at
         if (!await current()) return denied()
         if (!Number.isFinite(Date.parse(at))) return unavailable()
-        if (digestSfValue(host.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return changed()
-        return { status: "ok", value: { digest, receipt, access: digestSfValue({ actor, principals, binding }),
-          fence: digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt }) } }
+        const liveSnapshots = timedSnapshots()
+        const liveStarted = performance.now()
+        const liveDigest = digestSfValue(liveSnapshots)
+        recordReadCost("live-full-snapshot-digest", liveStarted)
+        const capturedStarted = performance.now()
+        const capturedDigest = digestSfValue(snapshots)
+        recordReadCost("captured-full-snapshot-digest", capturedStarted)
+        if (liveDigest !== capturedDigest) return changed()
+        const accessStarted = performance.now()
+        const access = digestSfValue({ actor, principals, binding })
+        recordReadCost("access-digest", accessStarted)
+        const fenceStarted = performance.now()
+        const fence = digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt })
+        recordReadCost("full-snapshot-fence-digest", fenceStarted)
+        return { status: "ok", value: { digest, receipt, access, fence } }
       })
+      recordReadCost("scope-state-read-inclusive", stateStarted)
       // C08 reauthorizes after its callback. Successful proofs have no later await;
       // failed reads revalidate again before preserving an uncertain result.
       if (!sameCall(scope, call, binding)) return denied()
@@ -94,13 +129,16 @@ export function protectSfReviewReads(input: {
     const currentAccess = async () => pinned() && await host.revalidate(call) && pinned()
     try {
       if (!request || !await currentAccess()) return denied()
+      const firstStarted = performance.now()
       const first = await read(id, call)
+      recordReadCost("canonical-producer-read", firstStarted)
       trace("LEGACY_FIRST_DONE")
       if (!await currentAccess()) return denied()
       if (first.status !== "ok") return first
       const digest = digestSfValue(first.value)
       const proof = async (): Promise<PortResult<string>> => {
         if (!await currentAccess()) return denied()
+        const stateStarted = performance.now()
         const checked = await authority.state.read(request, "reviews", (state, actor): PortResult<string> => {
           if (!pinned() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
             !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return denied()
@@ -108,6 +146,7 @@ export function protectSfReviewReads(input: {
           const receipt = receiptDigest(state, id, digest)
           return receipt ? { status: "ok", value: receipt } : denied()
         })
+        recordReadCost("legacy-state-read-inclusive", stateStarted)
         if (!pinned()) return denied()
         if ("reason" in checked) return checked.status === "denied" || await currentAccess() ? checked : denied()
         return checked.status === "ok" ? checked.value : unavailable()
@@ -115,7 +154,9 @@ export function protectSfReviewReads(input: {
       const before = await proof()
       trace("LEGACY_BEFORE_PROOF_DONE")
       if (before.status !== "ok") return before
+      const currentStarted = performance.now()
       const current = await read(id, call)
+      recordReadCost("canonical-producer-read", currentStarted)
       trace("LEGACY_SECOND_DONE")
       if (!await currentAccess()) return denied()
       if (current.status !== "ok") return current
@@ -149,10 +190,15 @@ export function protectSfReviewReads(input: {
       // it from the final read-only C08 group when its complete proof has changed.
       // Without that producer proof, this invocation cannot authorize reuse of
       // the body. Actual producer/snapshot failures retain their own results.
-      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
+      if (timedSnapshots()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
       let first = before.value
       for (let attempt = 0; attempt < 2; attempt++) {
-        const result = structuredClone(await read(id, call))
+        const producerStarted = performance.now()
+        const produced = await read(id, call)
+        recordReadCost("canonical-producer-read", producerStarted)
+        const cloneStarted = performance.now()
+        const result = structuredClone(produced)
+        recordReadCost("producer-result-clone", cloneStarted)
         if (result.status !== "ok") return await currentAccess() ? result : denied()
         const after = await snapshot(id, call, scope, binding)
         if (after.status !== "ok") return after
