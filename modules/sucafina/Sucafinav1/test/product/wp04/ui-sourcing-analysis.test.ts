@@ -4,7 +4,7 @@ import { ModelV2 } from "@orchestra/core/model"
 import { Schema } from "effect"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
-import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
+import { createSfAnalysisHttp } from "../../../../../../apps/cli/src/sucafina-product/analysis-http.ts"
 import { sourcingAnalysisForm } from "../../../product/procurement/sourcing-analysis.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -92,10 +92,22 @@ test("sourcing entry remains unavailable without a catalog, sourcing source or m
   expect(html).not.toContain("data-sourcing-analysis")
 })
 
-test("sourcing input is mounted in the workbench and refuses absent runtime or an unrelated origin and path", async () => {
-  const handler = createSfWorkbenchHttp({ origin: "http://localhost", mount: "/sucafina", runtime: () => undefined })
-  const request = new Request("http://localhost/sucafina/procurement?sf=workbench-sourcing-input", { method: "POST" })
-  expect((await handler(request, "procurement"))?.status).toBe(503)
-  expect((await handler(new Request("https://unrelated.invalid/sucafina/procurement?sf=workbench-sourcing-input"), "procurement"))?.status).toBe(403)
-  expect((await handler(new Request("http://localhost/wrong/procurement?sf=workbench-sourcing-input"), "procurement"))?.status).toBe(403)
+test("native sourcing preparation refuses an absent runtime and an unrelated origin or path", async () => {
+  const { runtime, bundle } = await fixture()
+  const selected = runtime.selected[0]!
+  const handler = createSfAnalysisHttp({ origin: "http://localhost", mount: "/sucafina", runtime: () => undefined })
+  const body = JSON.stringify({ action: "prepare", input: {
+    request: { caseRef: { id: "decision", incarnation: "decision-incarnation", version: 3 },
+      objective: "Compare authorized sourcing", profileId: selected.profile.id, profileVersion: selected.profile.version,
+      skillId: selected.skills[0]!.id, skillVersion: selected.skills[0]!.version, manifestDigest: bundle.manifestDigest,
+      outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: selected.operationIds },
+    selection: { requestRef: request.refId },
+  } })
+  const prepare = (url: string) => new Request(url, { method: "POST",
+    headers: { origin: "http://localhost", "content-type": "application/json", "idempotency-key": "sourcing-prepare" }, body })
+  const unavailable = await handler(prepare("http://localhost/sucafina/procurement?sf=workbench-analysis"), "procurement")
+  expect(unavailable?.status).toBe(503)
+  expect(await unavailable?.json()).toEqual({ status: "unavailable", reason: "analysis-runtime-unavailable" })
+  expect((await handler(prepare("https://unrelated.invalid/sucafina/procurement?sf=workbench-analysis"), "procurement"))?.status).toBe(403)
+  expect((await handler(prepare("http://localhost/wrong/procurement?sf=workbench-analysis"), "procurement"))?.status).toBe(403)
 })
