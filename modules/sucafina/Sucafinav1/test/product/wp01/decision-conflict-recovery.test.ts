@@ -1,11 +1,10 @@
 import { afterAll, beforeAll, expect } from "bun:test"
-import type { Browser, BrowserContext, Page } from "@playwright/test"
+import type { Browser, Page } from "@playwright/test"
 import { randomBytes, randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
-import { createModule } from "../../../index.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -42,126 +41,138 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
    * These source-free cases do not assert source provenance or native execution.
    */
   async function fixture() {
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp01-decision-conflict-"))
-    await chmod(directory, 0o700)
-    const driver = await openLocalStore(directory)
-    const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin, installationId = randomUUID()
-    const now = () => "2026-11-13T08:00:00Z"
-    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(now), createId: randomUUID })
-    const first = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1001, name: "First decision reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
-    const second = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1002, name: "Second decision reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
-    const principals = [`macos:${installationId}:1001`, `macos:${installationId}:1002`]
-    const authenticate: typeof first.authenticate = async (request, context) => await first.authenticate(request, context) ?? await second.authenticate(request, context)
-    const environment = async (request: Request) => ({ at: now(), id: randomUUID, directory: [...await first.directory(request), ...await second.directory(request)] })
-    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
-    const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
-    const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
-      installationId, origin, policyVersion: "policy", persistence, authenticate, environment, createId: randomUUID, now: Date.now,
-      commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
-      grants: principals.map((principalRef) => ({ principalRef, namespaces: ["cases", "receipts", "preferences"] as const, operations: ["sf_case_read"], humanActions: ["decisions.edit", "decisions.portfolio.read"] as const })),
-      proposalCoverageWrites, dashboardHostWrites, inspectSession: async () => undefined, verifySelection: async () => false,
-      verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
-    const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
-    const intent = createDecisionIntentFences({ human: authority.human, ui: authority.ui, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences })
-    const evidence = createDecisionEvidenceChecks({ host: authority.host, evidence: business.context, recomputeMetric: async () => ({ status: "unavailable", reason: "metric-not-mounted" }) })
-    const management = createDecisionCaseManagement({ state: authority.state, host: authority.host, operationIdentity: business.operationIdentity,
-      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context),
-      authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs,
-      verifyEdit: (_snapshot, before, after, context) => {
-        const payload = intent.payload(context, "decisions.edit")
-        // The fixture admits only source-free edits. Real captured intent and all
-        // source-surface fences must still match under the actual C08 write lock.
-        return payload !== undefined && intent.verify(context, "decisions.edit", payload) && before.sourceRefs.length === 0 && after.sourceRefs.length === 0 &&
-          [...before.assumptions, ...after.assumptions].every((item) => item.evidenceRefs.length === 0)
-      } })
-    const unmounted = (port: string): never => { throw new Error(`Decision conflict fixture does not mount ${port}`) }
-    // portfolioHistory is an actual initial consumer of the case page. A missing
-    // read grant would return 403 and correctly revoke every protected form before
-    // the first edit. Its empty listing must come from the real C08 case store.
-    const portfolioBindings = createPortfolioResultBindings({ state: authority.state, host: authority.host, results: business.results,
-      get selection() { return unmounted("portfolio.selection") },
-      resolveCandidate: () => unmounted("portfolio.resolveCandidate"),
-      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context),
-      verifyBinding: () => unmounted("portfolio.verifyBinding"), verifySnapshot: () => unmounted("portfolio.verifySnapshot"),
-      operationIdentity: business.operationIdentity, proposalCoverageWrites, now })
-    const editOptions = {
-      origin, mount: "/sucafina/dashboard", human: authority.human, management, withCase: business.withCase,
-      get admitList() { return unmounted("admitList") },
-      get admitComparison() { return unmounted("admitComparison") },
-      get admitSelection() { return unmounted("admitSelection") },
-      portfolio: {
-        list: (caseRef, context) => portfolioBindings.list({ caseRef }, context),
-        get sensitivityUnits() { return unmounted("portfolio.sensitivityUnits") },
-        get catalog() { return unmounted("portfolio.catalog") },
-        get preview() { return unmounted("portfolio.preview") },
-        get evaluate() { return unmounted("portfolio.evaluate") },
-        get read() { return unmounted("portfolio.read") },
-        get sensitivity() { return unmounted("portfolio.sensitivity") },
-        get readSensitivity() { return unmounted("portfolio.readSensitivity") },
-        get promote() { return unmounted("portfolio.promote") },
-        get prepare() { return unmounted("portfolio.prepare") },
-      },
-      get hotTopicDraft() { return unmounted("hotTopicDraft") },
-      get changeStore() { return unmounted("changeStore") },
-      get assumptionDivergence() { return unmounted("assumptionDivergence") },
-      get applicationStatus() { return unmounted("applicationStatus") },
-      get promoteAnalysis() { return unmounted("promoteAnalysis") },
-      get currentChoicePreview() { return unmounted("currentChoicePreview") },
-      get promoteCurrentChoice() { return unmounted("promoteCurrentChoice") },
-      bindAdmittedApply: () => unmounted("bindAdmittedApply"),
-      get history() { return unmounted("history") },
-      get choiceCatalog() { return unmounted("choiceCatalog") },
-      get coverageCatalog() { return unmounted("coverageCatalog") },
-      get reviewChange() { return unmounted("reviewChange") },
-      get selection() { return unmounted("selection") },
-      get baseline() { return unmounted("baseline") },
-      get compare() { return unmounted("compare") },
-      get mutations() { return unmounted("mutations") },
-      get accept() { return unmounted("accept") },
-      get apply() { return unmounted("apply") },
-      get criteria() { return unmounted("criteria") },
-    } satisfies Parameters<typeof createDecisionHttp>[0]
-    const edit = createDecisionHttp(editOptions)
-    const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors: business.descriptors, authority: authority.authority,
-      validateInput: (_descriptor, value) => operation === "sf_case_read" && decodeSfOperationInput("sf_case_read", value).ok,
-      validateOutput: (_descriptor, result) => result.status !== "ok" || operation === "sf_case_read" && decodeSfOperationOutput("sf_case_read", result.result).ok })
-    const services = { ...authority, dispatch } as SfHostServices
-    const workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-    const module = createModule("/sucafina", { persistence, authenticate, environment, product: async (request, surface) => await edit(request) ?? await workbench(request, surface), maxJsonBytes: 100000 })
-    const writes: { principal: string | undefined; status: number; body: Edit; key: string | null }[] = []
-    routing.handle = async (request) => {
-      if (new URL(request.url).pathname === "/sucafina/auth/logout") return (await first.person(request) ? first : second).handle(request)
-      const isEdit = request.method === "POST" && new URL(request.url).searchParams.get("sf") === "decision-edit"
-      const principal = isEdit ? await first.person(request) ?? await second.person(request) : undefined
-      const body: Edit | undefined = isEdit ? await request.clone().json() : undefined
-      const response = await module(request)
-      if (body && response) writes.push({ principal: principal?.id, status: response.status, body, key: request.headers.get("idempotency-key") })
-      return response
-    }
-    const contexts: BrowserContext[] = []
-    const enroll = async (identity: typeof first) => {
-      const login = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
-      expect(login?.status).toBe(303)
-      const cookie = login!.headers.get("set-cookie")!.split(";")[0]!
-      const separator = cookie.indexOf("=")
-      const context = await browser.newContext()
-      contexts.push(context)
-      await context.addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), domain: new URL(origin).hostname, path: "/sucafina", httpOnly: true, sameSite: "Lax" }])
-      const page = await context.newPage()
-      page.setDefaultTimeout(10_000)
-      page.on("dialog", (dialog) => dialog.accept())
-      return { context, page, cookie }
-    }
-    const errors: string[] = []
-    const close = async () => {
-      const closed = await Promise.allSettled(contexts.map((context) => context.close()))
-      business.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true })
-      const failed = closed.filter((result): result is PromiseRejectedResult => result.status === "rejected")
-      if (failed.length) throw new AggregateError(failed.map((result) => result.reason), "Decision conflict contexts did not close")
-    }
+    const disposers: Array<() => void | Promise<void>> = []
+    let closing: Promise<void> | undefined
+    const close = () => closing ??= (async () => {
+      const failures: unknown[] = []
+      // Register ownership immediately, then release every acquired resource even
+      // when a later acquisition or an earlier disposer fails.
+      for (const dispose of [...disposers].reverse()) {
+        try { await dispose() } catch (error) { failures.push(error) }
+      }
+      if (failures.length) throw new AggregateError(failures, "Decision conflict fixture did not close")
+    })()
+    let ready = false
+    let setupError: unknown
     try {
+      const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp01-decision-conflict-"))
+      disposers.push(() => rm(directory, { recursive: true, force: true }))
+      await chmod(directory, 0o700)
+      const driver = await openLocalStore(directory)
+      disposers.push(() => driver.dispose())
+      const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
+      const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
+      disposers.push(() => server.stop(true))
+      const origin = server.url.origin, installationId = randomUUID()
+      const now = () => "2026-11-13T08:00:00Z"
+      const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(now), createId: randomUUID })
+      const first = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1001, name: "First decision reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
+      const second = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1002, name: "Second decision reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
+      const principals = [`macos:${installationId}:1001`, `macos:${installationId}:1002`]
+      const authenticate: typeof first.authenticate = async (request, context) => await first.authenticate(request, context) ?? await second.authenticate(request, context)
+      const environment = async (request: Request) => ({ at: now(), id: randomUUID, directory: [...await first.directory(request), ...await second.directory(request)] })
+      for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+      const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
+      const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
+        installationId, origin, policyVersion: "policy", persistence, authenticate, environment, createId: randomUUID, now: Date.now,
+        commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
+        grants: principals.map((principalRef) => ({ principalRef, namespaces: ["cases", "receipts", "preferences"] as const, operations: ["sf_case_read"], humanActions: ["decisions.edit", "decisions.portfolio.read"] as const })),
+        proposalCoverageWrites, dashboardHostWrites, inspectSession: async () => undefined, verifySelection: async () => false,
+        verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+      const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
+      disposers.push(() => business.dispose())
+      const intent = createDecisionIntentFences({ human: authority.human, ui: authority.ui, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences })
+      const evidence = createDecisionEvidenceChecks({ host: authority.host, evidence: business.context, recomputeMetric: async () => ({ status: "unavailable", reason: "metric-not-mounted" }) })
+      const management = createDecisionCaseManagement({ state: authority.state, host: authority.host, operationIdentity: business.operationIdentity,
+        authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context),
+        authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs,
+        verifyEdit: (_snapshot, before, after, context) => {
+          const payload = intent.payload(context, "decisions.edit")
+          // The fixture admits only source-free edits. Real captured intent and all
+          // source-surface fences must still match under the actual C08 write lock.
+          return payload !== undefined && intent.verify(context, "decisions.edit", payload) && before.sourceRefs.length === 0 && after.sourceRefs.length === 0 &&
+            [...before.assumptions, ...after.assumptions].every((item) => item.evidenceRefs.length === 0)
+        } })
+      const unmounted = (port: string): never => { throw new Error(`Decision conflict fixture does not mount ${port}`) }
+      // portfolioHistory is an actual initial consumer of the case page. A missing
+      // read grant would return 403 and correctly revoke every protected form before
+      // the first edit. Its empty listing must come from the real C08 case store.
+      const portfolioBindings = createPortfolioResultBindings({ state: authority.state, host: authority.host, results: business.results,
+        get selection() { return unmounted("portfolio.selection") },
+        resolveCandidate: () => unmounted("portfolio.resolveCandidate"),
+        authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context),
+        verifyBinding: () => unmounted("portfolio.verifyBinding"), verifySnapshot: () => unmounted("portfolio.verifySnapshot"),
+        operationIdentity: business.operationIdentity, proposalCoverageWrites, now })
+      const editOptions = {
+        origin, mount: "/sucafina/dashboard", human: authority.human, management, withCase: business.withCase,
+        get admitList() { return unmounted("admitList") },
+        get admitComparison() { return unmounted("admitComparison") },
+        get admitSelection() { return unmounted("admitSelection") },
+        portfolio: {
+          list: (caseRef, context) => portfolioBindings.list({ caseRef }, context),
+          get sensitivityUnits() { return unmounted("portfolio.sensitivityUnits") },
+          get catalog() { return unmounted("portfolio.catalog") },
+          get preview() { return unmounted("portfolio.preview") },
+          get evaluate() { return unmounted("portfolio.evaluate") },
+          get read() { return unmounted("portfolio.read") },
+          get sensitivity() { return unmounted("portfolio.sensitivity") },
+          get readSensitivity() { return unmounted("portfolio.readSensitivity") },
+          get promote() { return unmounted("portfolio.promote") },
+          get prepare() { return unmounted("portfolio.prepare") },
+        },
+        get hotTopicDraft() { return unmounted("hotTopicDraft") },
+        get changeStore() { return unmounted("changeStore") },
+        get assumptionDivergence() { return unmounted("assumptionDivergence") },
+        get applicationStatus() { return unmounted("applicationStatus") },
+        get promoteAnalysis() { return unmounted("promoteAnalysis") },
+        get currentChoicePreview() { return unmounted("currentChoicePreview") },
+        get promoteCurrentChoice() { return unmounted("promoteCurrentChoice") },
+        bindAdmittedApply: () => unmounted("bindAdmittedApply"),
+        get history() { return unmounted("history") },
+        get choiceCatalog() { return unmounted("choiceCatalog") },
+        get coverageCatalog() { return unmounted("coverageCatalog") },
+        get reviewChange() { return unmounted("reviewChange") },
+        get selection() { return unmounted("selection") },
+        get baseline() { return unmounted("baseline") },
+        get compare() { return unmounted("compare") },
+        get mutations() { return unmounted("mutations") },
+        get accept() { return unmounted("accept") },
+        get apply() { return unmounted("apply") },
+        get criteria() { return unmounted("criteria") },
+      } satisfies Parameters<typeof createDecisionHttp>[0]
+      const edit = createDecisionHttp(editOptions)
+      const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors: business.descriptors, authority: authority.authority,
+        validateInput: (_descriptor, value) => operation === "sf_case_read" && decodeSfOperationInput("sf_case_read", value).ok,
+        validateOutput: (_descriptor, result) => result.status !== "ok" || operation === "sf_case_read" && decodeSfOperationOutput("sf_case_read", result.result).ok })
+      const services = { ...authority, dispatch } as SfHostServices
+      const workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
+      const writes: { principal: string | undefined; status: number; body: Edit; key: string | null }[] = []
+      routing.handle = async (request) => {
+        if (new URL(request.url).pathname === "/sucafina/auth/logout") return (await first.person(request) ? first : second).handle(request)
+        const isEdit = request.method === "POST" && new URL(request.url).searchParams.get("sf") === "decision-edit"
+        const principal = isEdit ? await first.person(request) ?? await second.person(request) : undefined
+        const body: Edit | undefined = isEdit ? await request.clone().json() : undefined
+        // The installed application retires legacy HTML routes. This is an actual
+        // component-handler mount, not acceptance of installed application routing.
+        // Workbench reads and decision writes retain their own private admission.
+        const response = await edit(request) ?? await workbench(request, "dashboard") ?? new Response(null, { status: 404 })
+        if (body && response) writes.push({ principal: principal?.id, status: response.status, body, key: request.headers.get("idempotency-key") })
+        return response
+      }
+      const enroll = async (identity: typeof first) => {
+        const login = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
+        expect(login?.status).toBe(303)
+        const cookie = login!.headers.get("set-cookie")!.split(";")[0]!
+        const separator = cookie.indexOf("=")
+        const context = await browser.newContext()
+        disposers.push(() => context.close())
+        await context.addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), domain: new URL(origin).hostname, path: "/sucafina", httpOnly: true, sameSite: "Lax" }])
+        const page = await context.newPage()
+        page.setDefaultTimeout(10_000)
+        page.on("dialog", (dialog) => dialog.accept())
+        return { context, page, cookie }
+      }
+      const errors: string[] = []
       const actors = [await enroll(first), await enroll(second)] as const
       actors.forEach((actor) => actor.page.on("pageerror", (error) => errors.push(error.message)))
       const request = () => new Request(`${origin}/sucafina/dashboard`, { headers: { cookie: actors[0].cookie } })
@@ -175,8 +186,16 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const url = `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-case", caseRef: encodeCaseRef(decision) })}`
       for (const actor of actors) {
         const history = actor.page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-portfolio-results")
-        expect((await actor.page.goto(url))?.status()).toBe(200)
-        expect((await history).status()).toBe(200)
+        // Both promises belong to setup, so navigation failure cannot leave an
+        // unhandled response waiter racing the next test or its browser teardown.
+        await Promise.all([
+          (async () => {
+            expect((await actor.page.goto(url))?.status()).toBe(200)
+          })(),
+          (async () => {
+            expect((await history).status()).toBe(200)
+          })(),
+        ])
         await actor.page.locator("[data-portfolio-history]").getByText("No saved evaluations for this decision version.", { exact: true }).waitFor()
         await actor.page.getByText("Edit decision", { exact: true }).click()
         expect(await form(actor.page).getByLabel("Decision objective", { exact: true }).inputValue()).toBe(decision.objective)
@@ -187,8 +206,16 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         return { ...value.value, storageVersion: value.storageVersion }
       }
       const post = async (body: Edit) => actors[0].context.request.post(`${origin}/sucafina/dashboard?sf=decision-edit`, { headers: { origin, "content-type": "application/json", "idempotency-key": randomUUID() }, data: body })
+      ready = true
       return { actors, principals, errors, writes, read, post, origin, close, initial: decision }
-    } catch (error) { await close(); throw error }
+    } catch (error) { setupError = error; throw error }
+    finally {
+      if (!ready) {
+        try { await close() } catch (cleanupError) {
+          throw new AggregateError([setupError, cleanupError], "Decision conflict setup and cleanup failed", { cause: setupError })
+        }
+      }
+    }
   }
 
   const form = (page: Page) => page.locator("[data-decision-edit]")
