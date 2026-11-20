@@ -30,6 +30,9 @@ Pendências de qualificação continuam explícitas:
 - As frentes de composição/runtime, incluindo [#414](https://github.com/gustavomhss/Orchestra-SF/pull/414),
   [#420](https://github.com/gustavomhss/Orchestra-SF/pull/420) e [#403](https://github.com/gustavomhss/Orchestra-SF/pull/403),
   estão em trabalho independente. O rescue não substitui suas provas.
+- A comparação global com `origin/dev` ainda encontra `protected-paths` em `godfile-waivers.json` e
+  `script/spawn-allowlist.json`, herdados da integração. A validação focada mede regressões sem conceder
+  aprovação a esses paths; a integração final precisa da revisão correspondente e de guards estritos verdes.
 - Depois do fechamento dos WPs, o próximo lote deve congelar um SHA integrado, gerar novamente
   o plano e os oito requests e medir o custo real. Rerun de um snapshot antigo conserva seu código e sua lista antiga.
 - O próximo `sf-ci` completo só ocorre quando esses WPs estiverem fechados. Provas focadas

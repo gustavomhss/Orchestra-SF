@@ -96,6 +96,20 @@ The default-candidate fingerprint also exposed a Bun Transpiler limitation with 
 only the import-analysis string was corrected, while the fingerprint retains the original bytes.
 No Bun product tests or real JUnit timing proof ran in that first attempt.
 
+
+The second scoped [probe 44667265276](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44667265276),
+snapshot `a2d58a3ecf23a645689fb37e204af5bc177ed229`, also remained **RED**.
+All 287 targeted regressions passed: 137 Node, 13 Python, 102 Bun cache/runner and 35 real static-ownership cases.
+The real JUnit collector and unchanged acceptance identity agreed on all five selected files; request generation
+covered 888 files in eight disjoint parts without dispatching them. Frozen installs passed on both SF and the
+default candidate, and the complete input fingerprint was unchanged after installation (64 inputs, 36 module paths).
+The cold installs took 24.69s for SF and 20.26s for the default candidate; these are single install observations.
+Core typecheck passed. Sucafina typecheck exposed the inherited `summary-settings.test.ts` fixture passing an
+unbranded string as an `AbsolutePath`. The probe also wrote diagnostic logs inside the checkout, which the
+scratch-file guard correctly rejected. Those logs belong in the runner temporary directory.
+Two additional protected-path findings against `origin/dev` were already present in the SF source; they require
+separate integration review and are not cleared by this CI optimization or by a successful focused guard.
+
 ## Where the time went
 
 The observations were captured at 2026-11-20 01:52:56 UTC (2026-11-19 in São Paulo).
