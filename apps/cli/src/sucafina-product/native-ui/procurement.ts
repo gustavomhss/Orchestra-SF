@@ -4,6 +4,7 @@ import { requestDraftActions } from "../../../../../modules/sucafina/Sucafinav1/
 import { object, rows, text } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot, View } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { procurementMonetaryFacts, procurementMoneySentence, procurementOrderPresentation, procurementRequestSummary } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+import { purchaseOrderFieldSources } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/guided-request.ts"
 import { procurementRowSourceIdentity } from "../../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
 import { procurementKeys } from "../../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { approvalQueue, procurementDashboard } from "../../../../../modules/sucafina/Sucafinav1/src/procurement-screen.ts"
@@ -52,7 +53,7 @@ const orderKeys = [
 ] as const
 const quoteKeys = [
   "id", "supplierId", "supplier", "currency", "total", "description", "notes",
-  "attachments", "scores", "cscores", "techPass",
+  "attachments", "scores", "cscores", "techPass", "qty", "unitPrice",
 ] as const
 const supplierKeys = [
   "id", "number", "status", "createdBy", "legalName", "tradingName", "type", "country",
@@ -268,6 +269,7 @@ function pageData(
       requests: requests.map((row) => ({
         ...selectRequest(row, true, actor, data.formSettings),
         ...publishedRequestBasis(row, snapshot, data.formSettings, typeof row.number === "string" ? view.versions["requests:" + row.number]?.version ?? 0 : 0, queue),
+        poFieldSources: purchaseOrderFieldSources(row, { ...object(data.formSettings), ...object(data.settings) }, suppliers),
       })),
       suppliers: suppliers.map((row) => selectSupplier(row, false)),
       directory, formSettings, bankVerificationAvailable: data.bankVerificationAvailable === true,

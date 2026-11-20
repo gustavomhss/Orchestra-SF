@@ -174,6 +174,17 @@ export const SfProcurementRequest = Schema.Struct({
   poEstimate: Schema.optional(Schema.NullOr(Schema.String)),
   orderDifference: Schema.optional(Schema.NullOr(Schema.String)),
   requestSummary: Schema.optional(Schema.NullOr(Schema.String)),
+  poFieldSources: optional(Schema.Struct({
+    sourceQuoteId: Schema.NullOr(Schema.String),
+    selectedQuoteId: Schema.NullOr(Schema.String),
+    fields: Schema.Array(Schema.Struct({
+      field: Schema.String, label: Schema.String,
+      current: Schema.NullOr(Schema.Union([Schema.String, Schema.Finite])),
+      candidate: Schema.NullOr(Schema.Union([Schema.String, Schema.Finite])),
+      origin: Schema.String,
+      relation: Schema.Literals(["unavailable", "same", "different"]),
+    })),
+  })),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const BankField = Schema.String
 const SupplierContact = Schema.Struct({

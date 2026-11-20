@@ -758,6 +758,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       <Show when={!!facts&&!limited&&!facts.rankLine}><p role="status">{t("sf.u12.rankUnavailable")}</p></Show>
       <Show when={fx}><dl>{Object.entries(fx??{}).map(([currency,rate])=>
         <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):asString(rate)}</dd></div>)}</dl></Show>
+      <dl data-sf-sourcing-selection>
+        <div><dt>{t("sf.u12.selectId")}</dt><dd>{recorded.find((quote)=>quote.id===row.sourcing?.selectedId)?.supplier??t("sf.u12.noSelection")}</dd></div>
+        <div><dt>{t("sf.u12.selectionJustification")}</dt><dd>{row.sourcing?.selectionJustification??t("sf.u12.missing")}</dd></div>
+      </dl>
       <p>{t("sf.u12.selectedSaved")}</p>
       <p>{t("sf.u12.noManualApproval")}</p>
       <label>{t("sf.u12.selectId")}
