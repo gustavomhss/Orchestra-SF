@@ -120,6 +120,13 @@ jobs:
         working-directory: ${{ steps.request.outputs.directory }}
         run: bunx playwright install --with-deps chromium
 
+      # SF Bun suites also launch a real Node-owned Playwright browser. Provision
+      # its pinned headless shell before test deadlines begin, including full shards.
+      - name: Install SF Bun Chromium headless shell
+        if: steps.request.outputs.runner == 'bun' && steps.request.outputs.directory == 'modules/sucafina'
+        working-directory: ${{ steps.request.outputs.directory }}
+        run: node node_modules/@playwright/test/cli.js install --with-deps --only-shell chromium
+
       - name: Linux sandbox dependencies
         if: runner.os == 'Linux'
         run: |
