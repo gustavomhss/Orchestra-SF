@@ -3,41 +3,42 @@ import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import type { Locator, Page, Response, Route } from "@playwright/test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { object, rows } from "../../../runtime/contract.ts"
+import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { createConsumerReadFixture, initialCaseRef } from "./ownhost-fixture.ts"
 
-const currentLoaded = "Versão atual carregada. Compare as diferenças e confirme a base antes de salvar seus valores."
-const savedMessage = "Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação."
-const confirmationLabel = "Revisei a versão atual do rascunho e quero manter meus valores."
+const currentLoaded = "Current version loaded. Compare the differences and confirm the base before saving your values."
+const savedMessage = "Draft saved. It can be included in a case choice before preparation."
+const confirmationLabel = "I reviewed the current proposal and want to keep my values."
 const modeResponse = (mode: string) => (response: Response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === mode
 const modeUrl = (mode: string) => (url: URL) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
 
 async function openWorkbench(page: Page, origin: string) {
-  await page.goto(`${origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
-  await page.locator("[data-dashboard-workbench-panel] > summary").click()
-  const panel = page.locator("[data-dashboard-workbench]")
+  await page.goto(`${origin}/orchestra/sf-dashboard/hot-topics`)
+  await page.getByRole("link", { name: "Private follow-up proposals", exact: true }).click()
+  const panel = page.getByRole("region", { name: "Private follow-up proposals", exact: true })
   const [response] = await Promise.all([
     page.waitForResponse(modeResponse("dashboard-workbench")),
-    panel.getByRole("button", { name: "Carregar opções", exact: true }).click(),
+    panel.getByRole("button", { name: "Load options", exact: true }).click(),
   ])
   expect(response.status()).toBe(200)
   expect(object(await response.json()).status).toBe("ok")
-  await panel.getByText("Opções carregadas.", { exact: false }).waitFor()
+  await panel.getByText("Options loaded.", { exact: false }).waitFor()
   expect(await panel.textContent()).not.toContain("Unrelated confidential case")
   return panel
 }
 
 async function chooseNew(panel: Locator) {
-  await panel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
-  await panel.getByLabel(/^Rascunho/).selectOption("new")
-  await panel.getByLabel(/^Hot Topic de origem/).selectOption({ label: "Original action" })
+  await panel.getByRole("combobox", { name: "Case", exact: true }).selectOption({ label: "Review the action" })
+  await panel.getByRole("combobox", { name: "Proposal", exact: true }).selectOption("new")
+  await panel.getByRole("combobox", { name: "Source Hot Topic", exact: true }).selectOption({ label: "Original action" })
 }
 
 async function saveDraft(page: Page, panel: Locator) {
   const [written, discovered] = await Promise.all([
     page.waitForResponse(modeResponse("dashboard-hot-topic-draft")),
     page.waitForResponse(modeResponse("dashboard-workbench")),
-    panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click(),
+    panel.getByRole("button", { name: "Save private draft", exact: true }).click(),
   ])
   expect(written.status()).toBe(200)
   expect(object(await written.json()).status).toBe("ok")
@@ -56,34 +57,35 @@ test("Dashboard reads the current source and active private proposal while prese
   const driver = await launchBrowserDriver("host-draft-conflict").catch(async (error) => { await f.close(); throw error })
   const failures: unknown[] = []
   try {
+    const { expect: browserExpect } = await import("@playwright/test")
     const context = await driver.browser.newContext()
     context.setDefaultTimeout(10000)
     context.setDefaultNavigationTimeout(15000)
     const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
-    await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
+    await enrollNativeBrowser(context, f.origin, () => f.identity.enroll())
     const panel = await openWorkbench(page, f.origin)
     await chooseNew(panel)
-    await panel.getByLabel("Ação", { exact: true }).fill("Initially saved proposal")
-    await panel.getByLabel("Notas", { exact: true }).fill("Initially saved private context")
+    await panel.getByLabel("Action", { exact: true }).fill("Initially saved proposal")
+    await panel.getByLabel("Notes", { exact: true }).fill("Initially saved private context")
     await saveDraft(page, panel)
     const listed = await f.read((trusted) => f.decisions.drafts.list({ caseRef: initialCaseRef }, trusted))
     if (listed.status !== "ok" || listed.value.length !== 1) throw new Error("Saved private draft unavailable")
     const initial = await f.read((trusted) => f.decisions.drafts.readCurrent({ caseRef: initialCaseRef, draftRef: listed.value[0]!.draftRef }, trusted))
     if (initial.status !== "ok") throw new Error("Saved private draft identity unavailable")
     const original = structuredClone(initial.value)
-    await panel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
-    await panel.getByLabel(/^Rascunho/).selectOption({ label: "Initially saved proposal" })
-    await panel.getByLabel("Ação", { exact: true }).fill("My retained action")
-    await panel.getByLabel("Notas", { exact: true }).fill("My retained explanation")
+    await panel.getByRole("combobox", { name: "Case", exact: true }).selectOption({ label: "Review the action" })
+    await panel.getByRole("combobox", { name: "Proposal", exact: true }).selectOption({ label: "Initially saved proposal" })
+    await panel.getByLabel("Action", { exact: true }).fill("My retained action")
+    await panel.getByLabel("Notes", { exact: true }).fill("My retained explanation")
 
     const other = await context.newPage()
     other.on("pageerror", (error) => errors.push(error.message))
     const otherPanel = await openWorkbench(other, f.origin)
-    await otherPanel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
-    await otherPanel.getByLabel(/^Rascunho/).selectOption({ label: "Initially saved proposal" })
-    await otherPanel.getByLabel("Ação", { exact: true }).fill("Active proposal from another page")
-    await otherPanel.getByLabel("Notas", { exact: true }).fill("Current private proposal context")
+    await otherPanel.getByRole("combobox", { name: "Case", exact: true }).selectOption({ label: "Review the action" })
+    await otherPanel.getByRole("combobox", { name: "Proposal", exact: true }).selectOption({ label: "Initially saved proposal" })
+    await otherPanel.getByLabel("Action", { exact: true }).fill("Active proposal from another page")
+    await otherPanel.getByLabel("Notes", { exact: true }).fill("Current private proposal context")
     const secondWrite = await saveDraft(other, otherPanel)
     expect(secondWrite.expectedVersion).toBe(1)
 
@@ -91,11 +93,11 @@ test("Dashboard reads the current source and active private proposal while prese
     // still submits its original proposal identity/version. No mutation is replayed.
     const [stale] = await Promise.all([
       page.waitForResponse(modeResponse("dashboard-hot-topic-draft")),
-      panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click(),
+      panel.getByRole("button", { name: "Save private draft", exact: true }).click(),
     ])
     expect(stale.status()).toBe(409)
     expect(stale.request().postDataJSON()).toMatchObject({ draftRef: original.draftRef, expectedVersion: 1, targetEvidence: original.targetEvidence })
-    await panel.getByText("O rascunho mudou.", { exact: false }).waitFor()
+    await panel.getByText("The draft changed.", { exact: false }).waitFor()
 
     const activeKey = `sf:proposal-coverage:hot-topic:active:${digestSfValue(original.id)}`
     const active = await f.authority.state.read(f.request(), "preferences", (state) => state.preferences[activeKey])
@@ -111,7 +113,7 @@ test("Dashboard reads the current source and active private proposal while prese
     const [discovered, checked] = await Promise.all([
       page.waitForResponse(modeResponse("dashboard-workbench")),
       page.waitForResponse(modeResponse("dashboard-draft-read")),
-      panel.getByRole("button", { name: "Carregar versão atual e manter minhas alterações", exact: true }).click(),
+      panel.getByRole("button", { name: "Load current version and keep my edits", exact: true }).click(),
     ])
     expect(discovered.status()).toBe(200)
     expect(checked.status()).toBe(200)
@@ -125,16 +127,16 @@ test("Dashboard reads the current source and active private proposal while prese
       fields: { action: "Active proposal from another page", notes: "Current private proposal context" } })
     expect(object(object(current.source).draft).fields).toMatchObject({ action: "Current materially changed source", notes: "Current source context" })
     await panel.getByText(currentLoaded, { exact: true }).waitFor()
-    const tables = panel.locator("[data-dashboard-draft-diff] table")
+    const tables = panel.getByRole("region", { name: "Current proposal comparison", exact: true }).getByRole("table")
     expect(await tables.count()).toBe(2)
-    expect(await tables.nth(0).locator("th").allTextContents()).toEqual(["Campo", "Versão anterior", "Versão atual", "Meus valores"])
-    expect(await tables.nth(0).getByRole("row").filter({ has: page.getByRole("cell", { name: "Ação", exact: true }) }).locator("td").allTextContents())
-      .toEqual(["Ação", "Initially saved proposal", "Active proposal from another page", "My retained action"])
-    expect(await tables.nth(1).locator("th").allTextContents()).toEqual(["Campo", "Origem atual autorizada"])
+    expect(await tables.nth(0).locator("th").allTextContents()).toEqual(["Field", "Previous version", "Current version", "My values"])
+    expect(await tables.nth(0).getByRole("row").filter({ has: page.getByRole("cell", { name: "Action", exact: true }) }).locator("td").allTextContents())
+      .toEqual(["Action", "Initially saved proposal", "Active proposal from another page", "My retained action"])
+    expect(await tables.nth(1).locator("th").allTextContents()).toEqual(["Field", "Current authorized source"])
     expect(await tables.nth(1).textContent()).toContain("Current materially changed source")
-    expect(await panel.getByLabel("Notas", { exact: true }).inputValue()).toBe("My retained explanation")
+    expect(await panel.getByLabel("Notes", { exact: true }).inputValue()).toBe("My retained explanation")
     expect(await panel.getByLabel(confirmationLabel, { exact: true }).isChecked()).toBe(false)
-    expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(false)
+    await browserExpect(panel.getByRole("button", { name: "Save private draft", exact: true })).toBeDisabled()
     const beforeReview = await f.authority.state.read(f.request(), "preferences", (state) => state.preferences[activeKey])
     expect(beforeReview.status === "ok" && beforeReview.value).toEqual(active.status === "ok" && active.value)
 
@@ -171,17 +173,18 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
   const driver = await launchBrowserDriver("host-write-authority").catch(async (error) => { await f.close(); throw error })
   const failures: unknown[] = []
   try {
+    const { expect: browserExpect } = await import("@playwright/test")
     const context = await driver.browser.newContext()
     context.setDefaultTimeout(10000)
     context.setDefaultNavigationTimeout(15000)
     const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
-    await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
+    await enrollNativeBrowser(context, f.origin, () => f.identity.enroll())
     const panel = await openWorkbench(page, f.origin)
     await chooseNew(panel)
-    await panel.getByLabel("Ação", { exact: true }).fill("Private retained operator action")
-    await panel.getByLabel("Notas", { exact: true }).fill("Private retained operator context")
-    expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(true)
+    await panel.getByLabel("Action", { exact: true }).fill("Private retained operator action")
+    await panel.getByLabel("Notes", { exact: true }).fill("Private retained operator context")
+    expect(await panel.getByRole("button", { name: "Save private draft", exact: true }).isEnabled()).toBe(true)
 
     const readUrl = modeUrl("dashboard-draft-read")
     const interrupted = Promise.withResolvers<{ status: number; body: unknown }>()
@@ -195,25 +198,25 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
       } catch (error) { interrupted.reject(error); await route.abort().catch(() => {}) }
     }
     await page.route(readUrl, abortRead)
-    const [observed] = await Promise.all([interrupted.promise, panel.getByRole("button", { name: "Carregar opções", exact: true }).click()])
+    const [observed] = await Promise.all([interrupted.promise, panel.getByRole("button", { name: "Load options", exact: true }).click()])
     expect(observed.status).toBe(200)
     expect(object(observed.body).status).toBe("ok")
-    await panel.locator("[data-dashboard-load]:enabled").waitFor()
+    await browserExpect(panel.getByRole("button", { name: "Load options", exact: true })).toBeEnabled()
     await page.unroute(readUrl, abortRead)
-    expect(await panel.getByLabel("Ação", { exact: true }).inputValue()).toBe("Private retained operator action")
-    expect(await panel.getByLabel("Notas", { exact: true }).inputValue()).toBe("Private retained operator context")
-    expect(await panel.locator("[data-dashboard-draft]").getAttribute("data-dirty")).toBe("true")
-    expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(false)
-    expect(await page.locator("main[data-access-unavailable]").count()).toBe(0)
+    expect(await panel.getByLabel("Action", { exact: true }).inputValue()).toBe("Private retained operator action")
+    expect(await panel.getByLabel("Notes", { exact: true }).inputValue()).toBe("Private retained operator context")
+    expect(await panel.getByRole("region", { name: "Private proposal fields", exact: true }).getAttribute("data-dirty")).toBe("true")
+    expect(await panel.getByRole("button", { name: "Save private draft", exact: true }).isEnabled()).toBe(false)
+    expect(await page.locator('[data-sf-f01="denied"]').count()).toBe(0)
 
     const [retried] = await Promise.all([
       page.waitForResponse(modeResponse("dashboard-draft-read")),
-      panel.getByRole("button", { name: "Carregar opções", exact: true }).click(),
+      panel.getByRole("button", { name: "Load options", exact: true }).click(),
     ])
     expect(retried.status()).toBe(200)
-    await panel.getByText("Opções atualizadas. As alterações do formulário foram mantidas", { exact: false }).waitFor()
-    expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(true)
-    expect(await panel.getByLabel("Ação", { exact: true }).inputValue()).toBe("Private retained operator action")
+    await panel.getByText("Options refreshed. Your form changes were retained.", { exact: false }).waitFor()
+    expect(await panel.getByRole("button", { name: "Save private draft", exact: true }).isEnabled()).toBe(true)
+    expect(await panel.getByLabel("Action", { exact: true }).inputValue()).toBe("Private retained operator action")
 
     const workbenchUrl = modeUrl("dashboard-workbench")
     const priorWrite = Promise.withResolvers<unknown>()
@@ -232,21 +235,27 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
     const [prior, restricted] = await Promise.all([
       priorWrite.promise,
       page.waitForResponse(modeResponse("dashboard-draft-read")),
-      panel.getByRole("button", { name: "Carregar opções", exact: true }).click(),
+      panel.getByRole("button", { name: "Load options", exact: true }).click(),
     ])
     await page.unroute(workbenchUrl, withdrawWrite)
     expect(object(object(object(prior).value).decisions).permissions).toMatchObject({ draft: true })
     expect(restricted.status()).toBe(200)
     const restrictedValue = object(object(await restricted.json()).value)
     expect(restrictedValue.permissions).toMatchObject({ draft: false, prepare: false, apply: false, capture: false, preserve: false })
-    await panel.getByText("Opções atualizadas. As alterações do formulário foram mantidas", { exact: false }).waitFor()
-    expect(await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).isEnabled()).toBe(false)
-    expect(await panel.getByLabel("Ação", { exact: true }).isEnabled()).toBe(false)
-    expect(await panel.getByLabel("Ação", { exact: true }).inputValue()).toBe("Private retained operator action")
-    expect(await panel.getByLabel("Notas", { exact: true }).inputValue()).toBe("Private retained operator context")
-    await panel.getByRole("combobox", { name: "Registro para preservar", exact: true }).selectOption({ label: "Original action" })
-    expect(await panel.getByRole("button", { name: "Preservar retrato", exact: true }).isEnabled()).toBe(false)
-    expect(await page.locator("main[data-access-unavailable]").count()).toBe(0)
+    const originalScope = object(object(restricted.request().postDataJSON()).targetEvidence)
+    const currentScope = object(restrictedValue.currentSource)
+    expect(restrictedValue.originalSource).toEqual({ refId: originalScope.refId, refDigest: originalScope.refDigest })
+    expect(object(currentScope.target)).toMatchObject({ surface: "dashboard", recordType: "hotTopics", recordId: object(originalScope.target).recordId })
+    expect(object(currentScope.target).incarnation).not.toBe(object(originalScope.target).incarnation)
+    await panel.getByText(currentLoaded, { exact: true }).waitFor()
+    expect(await panel.getByLabel(confirmationLabel, { exact: true }).isChecked()).toBe(false)
+    expect(await panel.getByRole("button", { name: "Save private draft", exact: true }).isEnabled()).toBe(false)
+    expect(await panel.getByLabel("Action", { exact: true }).isEnabled()).toBe(false)
+    expect(await panel.getByLabel("Action", { exact: true }).inputValue()).toBe("Private retained operator action")
+    expect(await panel.getByLabel("Notes", { exact: true }).inputValue()).toBe("Private retained operator context")
+    await panel.getByRole("combobox", { name: "Record to preserve", exact: true }).selectOption({ label: "Original action" })
+    expect(await panel.getByRole("button", { name: "Preserve snapshot", exact: true }).isEnabled()).toBe(false)
+    expect(await page.locator('[data-sf-f01="denied"]').count()).toBe(0)
     const preferences = await f.authority.state.read(f.request(), "preferences", (state) => Object.keys(state.preferences).filter((key) => key.startsWith("sf:proposal-coverage:hot-topic:")))
     expect(preferences.status === "ok" && preferences.value).toEqual([])
 
@@ -274,21 +283,26 @@ test("Dashboard keeps dirty values through interrupted reads and fences write wi
       beforeReadLoss.promise,
       page.waitForResponse(modeResponse("dashboard-draft-read")),
       actualDenial.promise,
-      panel.getByRole("button", { name: "Carregar opções", exact: true }).click(),
+      panel.getByRole("button", { name: "Load options", exact: true }).click(),
     ])
     await page.unroute(workbenchUrl, withdrawRead)
     await page.unroute(readUrl, observeDenial)
     expect(revoked.status()).toBe(403)
-    // Purge aborts the browser's pending body read. Observe the genuine server
-    // body before forwarding it, then require the consumer's actual purge.
+    // Observe the genuine server body before forwarding it, then require the
+    // actual F01 purge and a denied history navigation.
     expect(denial.status).toBe(403)
     expect(object(denial.body).status).toBe("denied")
-    await page.locator("main[data-access-unavailable]").waitFor()
-    expect(await page.locator("[data-dashboard-workbench]").count()).toBe(0)
+    await page.locator('[data-sf-f01="denied"]').waitFor()
+    expect(await page.getByRole("region", { name: "Private follow-up proposals", exact: true }).count()).toBe(0)
     expect(await page.locator("body").textContent()).not.toContain("Private retained operator")
     const browserState = await page.evaluate(() => history.state)
-    expect(object(object(browserState).sfDashboardWorkbench).draft).toBeUndefined()
-    expect(object(object(browserState).sfDashboardWorkbench).draftAttempt).toBeUndefined()
+    expect(JSON.stringify(browserState)).not.toContain("Private retained operator")
+    expect(JSON.stringify(browserState)).not.toContain("targetEvidence")
+    expect(JSON.stringify(browserState)).not.toContain("idempotencyKey")
+    await page.goBack()
+    await page.locator('[data-sf-f01="denied"]').waitFor()
+    expect(await page.getByRole("region", { name: "Private follow-up proposals", exact: true }).count()).toBe(0)
+    expect(await page.locator("body").textContent()).not.toContain("Private retained operator")
     expect(errors).toEqual([])
   } catch (error) {
     failures.push(error)
