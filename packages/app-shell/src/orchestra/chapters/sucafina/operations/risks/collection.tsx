@@ -159,7 +159,12 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
   createEffect(() => {
     const r = nowReady()
     const generation = owner.generation()
-    const query = { ...store.filters }
+    const query = {
+      ...(store.filters.q === undefined ? {} : { q: store.filters.q }),
+      ...(store.filters.status === undefined ? {} : { status: store.filters.status }),
+      ...(store.filters.filter === undefined ? {} : { filter: store.filters.filter }),
+      ...(store.filters.owner === undefined ? {} : { owner: store.filters.owner }),
+    }
     void store.reload
     if (!r || !r.state.context.destinations.some(
       (entry) => entry.capabilityId === spec.id && entry.canRead)) {
