@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import path from "node:path"
 import { createStoredScenarioBiProjection } from "../../../product/analytics/stored-scenario.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
@@ -7,6 +8,7 @@ import { createWp05SensitivityFixture, wp05Horizon } from "./engine-fixture.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 
 test("BI consumes the persisted Planner sensitivity and rejects a changed criterion", async () => {
+  expectSpawn(import.meta.path)
   const fixture = await createWp05SensitivityFixture()
   try {
     const projection: DomainProjection = {
@@ -58,6 +60,7 @@ test("BI consumes the persisted Planner sensitivity and rejects a changed criter
 
 
 test("persisted zero and unknown training keep every component and sensitivity point equal in marks, table and navigation", async () => {
+  expectSpawn(import.meta.path)
   const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
   if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
   const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`

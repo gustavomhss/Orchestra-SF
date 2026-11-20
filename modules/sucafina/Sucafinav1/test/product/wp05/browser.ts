@@ -1,16 +1,23 @@
-import { chromium, type Page } from "@playwright/test"
+import type { Page } from "@playwright/test"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 
-/** Keep browser waits inside the test lifetime so the shared listener is always released. */
+/** Keep browser waits and the owned Node/Chrome transport inside the test lifetime. */
 export async function inspectWp05Browser(label: string, inspect: (page: Page, phase: (name: string) => void) => Promise<void>) {
   const startedAt = Date.now()
   console.info("WP05 browser phase", { label, phase: "fixture-setup", elapsedMs: 0 })
   // This harness mounts a pure renderer on about:blank. Its canonical Planner
   // ports run in the caller; no installation, session or legacy console is used.
-  const fixture = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] }).then(async (browser) => {
+  // Node owns Chrome's DevTools descriptors through the existing bounded
+  // driver. Repeated renderer probes must not recycle those pipes through Bun.
+  const fixture = await launchBrowserDriver("wp05-renderer").then(async (driver) => {
     try {
-      const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
-      return { browser, page, dispose: () => browser.close() }
-    } catch (error) { await browser.close(); throw error }
+      const page = await driver.browser.newPage({ viewport: { width: 1440, height: 1000 } })
+      return { browser: driver.browser, page, dispose: driver.close, report: driver.report }
+    } catch (error) {
+      try { await driver.close() }
+      catch (cleanupError) { throw new AggregateError([error, cleanupError], `WP05 browser ${label} setup and cleanup failed`) }
+      throw error
+    }
   }).catch((error: unknown) => {
     console.error("WP05 browser fixture setup failed", { label, phase: "fixture-setup", elapsedMs: Date.now() - startedAt }, error)
     throw error
@@ -65,4 +72,5 @@ export async function inspectWp05Browser(label: string, inspect: (page: Page, ph
     }
   }
   if (outcome.failed) throw outcome.error
+  fixture.report()
 }
