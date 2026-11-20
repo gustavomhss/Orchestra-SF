@@ -4,12 +4,13 @@ import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { object, rows } from "../../../../runtime/contract.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { AdmittedApply } from "../../../../product/decisions/receipt-review-binding.ts"
+import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import { createSfDashboardApplicationIntents } from "../../../../../../../apps/cli/src/sucafina-product/dashboard-application-intent.ts"
 import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
 import {
   applicationPanel, assertPrivateCorrelation, correlations, createConsumerReadFixture, editNewDraft, initialCaseRef,
   loadPrivateOptions, modeUrl, observedApplication, openPreparation, openWorkbench, pendingSaveMessage, prepareApply, privatePanel,
-  receive, receiveContext, recoveredMessage, recoveryPrefix, reloadApply, unknownMessage,
+  receive, receiveCases, receiveContext, recoveredMessage, recoveryPrefix, reloadApply, unknownMessage,
 } from "./fixture.ts"
 
 test("UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload", async () => {
@@ -410,18 +411,30 @@ test("F01 purges a still-valid original correlation on owner reload outside Dash
     expect(Number(before[0]!.value.expiresAt)).toBeGreaterThan(await page.evaluate(() => Date.now()))
     const originalDrafts = await fixture.read((context) => fixture.decisions.drafts.list({ caseRef: initialCaseRef }, context))
     expect(originalDrafts.status === "ok" && originalDrafts.value.length).toBe(1)
+    // The private first save is in preferences. This case has no evidence from
+    // the old project for the new owner to reuse or silently authorize.
+    const beforeOwnerChange = await observedApplication(fixture)
+    expect(beforeOwnerChange.decision).toMatchObject({ ...initialCaseRef, participants: [fixture.principalRef],
+      sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], choices: [],
+      preparedChanges: [], receipts: [], ledger: [] })
 
     // Change only the fixture host's actual current project. Discovery/context
     // then authenticate this distinct owner through the original F01 producers.
     fixture.selectProject("other-recovery-project")
     const other = new URL("/orchestra/sf-decisions", fixture.origin)
     other.search = new URLSearchParams(fixture.selection()).toString()
-    const contextRead = receiveContext(page)
     page.once("dialog", (dialog) => void dialog.accept())
-    expect((await page.goto(other.href))?.status()).toBe(200)
-    const otherContext = await contextRead
+    const [otherContext, otherCases, destination] = await Promise.all([
+      receiveContext(page), receiveCases(page), page.goto(other.href),
+    ])
+    expect(destination?.status()).toBe(200)
     expect(otherContext.status).toBe(200)
     expect(object(object(object(otherContext.body).value).stamp).projectId).toBe("other-recovery-project")
+    expect(otherCases.status).toBe(200)
+    expect(object(otherCases.body).context).toMatchObject({ projectId: "other-recovery-project", principalRef: fixture.principalRef })
+    expect(object(object(otherCases.body).value).cases).toEqual([
+      { caseRef: encodeCaseRef(initialCaseRef), title: "Review the action", version: initialCaseRef.version },
+    ])
     await page.locator('[data-sf-host="owner-runtime231"][data-sf-provider-state="ready"]').waitFor()
     await page.getByText("Review the action", { exact: true }).waitFor()
     await page.waitForFunction((prefix) => !Object.keys(sessionStorage).some((key) => key.startsWith(prefix)), recoveryPrefix)

@@ -34,6 +34,8 @@ export const receive = async (page: Page, mode: string) => {
 }
 export const receiveContext = (page: Page) => captureFor(page)(page,
   (entry) => entry.method === "GET" && new URL(entry.url).pathname === "/sucafina/api/ui/context")
+export const receiveCases = (page: Page) => captureFor(page)(page,
+  (entry) => entry.method === "GET" && new URL(entry.url).pathname === "/sucafina/api/ui/projections/cases")
 
 export async function correlations(page: Page) {
   return page.evaluate((prefix) => Object.entries(sessionStorage).filter(([key]) => key.startsWith(prefix))
@@ -63,6 +65,7 @@ export async function openWorkbench(page: Page, fixture: RecoveryFixture) {
         ...["dashboard-workbench", "dashboard-hot-topic-draft", "dashboard-hot-topic-prepare", "dashboard-hot-topic-recover"]
           .map((sf) => ({ method: "POST" as const, path: "/sucafina/dashboard", sf })),
         { method: "GET", path: "/sucafina/api/ui/context" },
+        { method: "GET", path: "/sucafina/api/ui/projections/cases" },
       ],
     })
     captures.set(page.context(), capture)
