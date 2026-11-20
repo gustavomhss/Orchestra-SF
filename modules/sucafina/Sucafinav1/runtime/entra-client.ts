@@ -114,7 +114,10 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     if (!Number.isSafeInteger(tokens.expiresAt) || tokens.expiresAt <= now().getTime()) return Object.freeze({ state: "unavailable", reason: "token_expired" })
     if (!tokens.grantedScopes.some((scope) => ["Team.ReadBasic.All", "https://graph.microsoft.com/Team.ReadBasic.All", "https%3A%2F%2Fgraph.microsoft.com%2FTeam.ReadBasic.All"].includes(scope))) return Object.freeze({ state: "unavailable", reason: "consent_required" })
     if (!tokens.accessToken || /[\x00-\x20\x7f]/.test(tokens.accessToken)) return Object.freeze({ state: "unavailable", reason: "unauthenticated" })
-    const deadline = AbortSignal.timeout(requestTimeout)
+    // One operation owns the timer across all pages and completed request listeners.
+    const controller = new AbortController()
+    const deadline = controller.signal
+    const timeout = setTimeout(() => controller.abort(), requestTimeout)
     const budget = { bytes: 0 }
     const found: { teamObjectId: string; name: string; archived: boolean }[] = []
     const visited = new Set<string>()
@@ -162,6 +165,8 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     } catch (error) {
       if (error instanceof EntraProviderFailure) return Object.freeze({ state: "unavailable", reason: error.reason, ...(error.retryAfterMs === undefined ? {} : { retryAfterMs: error.retryAfterMs }) })
       return Object.freeze({ state: "unavailable", reason: "invalid_response" })
+    } finally {
+      clearTimeout(timeout)
     }
   }
 

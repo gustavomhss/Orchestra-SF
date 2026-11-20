@@ -19,7 +19,11 @@ export async function prepareMicrosoftInstallation(
   if (context.origin !== config.listenerOrigin) throw new Error("Microsoft listener origin mismatch")
   await requireLocalIsolation(directory, environment)
   await bindMicrosoftInstallation(directory, config)
-  const client = createEntraClient({ tenantId: config.tenantId, clientId: config.clientId, profile: "web-confidential", clientSecret: privateConfiguration.clientSecret, ...overrides })
+  const client = createEntraClient({
+    tenantId: config.tenantId, clientId: config.clientId, profile: "web-confidential", clientSecret: privateConfiguration.clientSecret,
+    ...(config.teams === "direct" ? { teams: config.teams } : {}),
+    fetch: overrides.fetch, now: overrides.now,
+  })
   const transport: MicrosoftTransport = Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: config.listenerOrigin, ingressOrigin: config.ingressOrigin, publicOrigin: config.origin })
   return {
     loaded: { config, directory, keys }, client, grants: config.grants, workspaceDirectory: config.workspaceDirectory, transport,
