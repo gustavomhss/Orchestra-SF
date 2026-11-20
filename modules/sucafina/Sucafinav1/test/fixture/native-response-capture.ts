@@ -39,6 +39,13 @@ type Permit = {
   rejected?: string
 }
 type Lane = { pending?: Permit; queued: Permit[] }
+type HardNavigation = {
+  document: string
+  phase: "draining" | "navigating"
+  drained: () => void
+  arrived: () => void
+  reject: (error: Error) => void
+}
 
 /**
  * Observe copies of real fetch responses before navigation can discard CDP's
@@ -53,6 +60,8 @@ export async function observeNativeResponses(page: Page, origin: string) {
   let document = ""
   let nextTicket = 0
   let disposed = false
+  let navigation: HardNavigation | undefined
+  let navigationFailure: Error | undefined
   const tickets = new Map<number, Captured>()
   const starts = new Map<string, Permit>()
   // The frame is fixed above. Document is deliberately NOT part of this key:
@@ -72,9 +81,25 @@ export async function observeNativeResponses(page: Page, origin: string) {
       Object.entries(operation.query ?? {}).every(([key, value]) =>
         url.searchParams.getAll(key).length === 1 && url.searchParams.get(key) === value)
   }
+  const checkNavigationDrain = () => {
+    if (!navigation || navigation.phase !== "draining") return
+    const permitted = [...starts.values()].filter((permit) => permit.phase === "permitted")
+    const rejected = permitted.find((permit) => permit.rejected !== undefined)
+    if (rejected) {
+      navigation.reject(new Error("Native hard navigation cannot abandon a rejected fetch without its original Request"))
+      return
+    }
+    const expired = permitted.find((permit) => permit.capture && Date.now() >= permit.capture.scope.deadline)
+    if (expired?.capture) {
+      navigation.reject(deadlineError(expired.capture))
+      return
+    }
+    if (permitted.length === 0) navigation.drained()
+  }
   const forget = (permit: Permit) => {
     clearTimeout(permit.timer)
     starts.delete(callKey(permit.start))
+    checkNavigationDrain()
   }
   const pump = (key: string, lane: Lane) => {
     if (lane.pending?.rejected !== undefined) {
@@ -94,13 +119,18 @@ export async function observeNativeResponses(page: Page, origin: string) {
       return
     }
     while (!lane.pending && lane.queued.length) {
-      const permit = lane.queued.shift()!
-      if (!starts.has(callKey(permit.start))) continue
+      const permit = lane.queued[0]!
+      if (!starts.has(callKey(permit.start))) { lane.queued.shift(); continue }
       const capture = permit.capture
       const error = disposed ? new Error("Native response observer was disposed before fetch")
-        : permit.start.document !== document ? new Error("Native response document ended before fetch")
-        : capture && Date.now() >= capture.scope.deadline ? deadlineError(capture)
-        : capture?.scope.failure
+        : navigationFailure
+        ?? (permit.start.document !== document ? new Error("Native response document ended before fetch")
+          : capture && Date.now() >= capture.scope.deadline ? deadlineError(capture)
+          : capture?.scope.failure)
+      // An explicit hard navigation first drains granted starts in the living
+      // document. Later starts stay queued, so they cannot lose an issued permit.
+      if (!error && navigation?.document === permit.start.document) return
+      lane.queued.shift()
       if (error) {
         if (capture) {
           capture.withdrawn = true
@@ -137,6 +167,11 @@ export async function observeNativeResponses(page: Page, origin: string) {
     if (source.page !== page || source.frame !== frame) return null
     if (disposed) return null
     if (message.kind === "document") {
+      if (navigation && message.document !== navigation.document) {
+        if (navigation.phase === "draining")
+          navigation.reject(new Error("Native response document changed before hard navigation drained its starts"))
+        else navigation.arrived()
+      }
       document = message.document
       // Queued starts have not received permission and therefore cannot have
       // called fetch. Already-permitted old starts remain reserved until their
@@ -156,6 +191,7 @@ export async function observeNativeResponses(page: Page, origin: string) {
       // A rejected fetch may still have a Request event in transit. Retain the
       // reservation across scopes/documents; never lend it to the next start.
       permit.rejected = message.error
+      checkNavigationDrain()
       if (permit.phase !== "permitted")
         fail(permit.capture?.scope, new Error("Native fetch was dispatched without its start permit"))
       const lane = lanes.get(permit.key)
@@ -174,6 +210,7 @@ export async function observeNativeResponses(page: Page, origin: string) {
       capture.deliver(message)
       return null
     }
+    if (navigationFailure) throw navigationFailure
     if (message.document !== document) throw new Error("Native response start belongs to an inactive document")
     if (starts.has(callKey(message))) throw new Error("Native response start identity was reused")
     const url = new URL(message.url)
@@ -213,6 +250,7 @@ export async function observeNativeResponses(page: Page, origin: string) {
           const error = deadlineError(ownedCapture)
           fail(ownedCapture.scope, error)
           if (permit.phase === "queued") withdraw(permit, error)
+          else checkNavigationDrain()
           // A granted start may already be on the wire. Keep its identity even
           // after its budget expires; only Request/pre-fetch withdrawal releases it.
         }, Math.max(0, ownedCapture.scope.deadline - Date.now()))
@@ -245,8 +283,70 @@ export async function observeNativeResponses(page: Page, origin: string) {
   await page.addInitScript(installCapture, { origin })
   await page.evaluate(installCapture, { origin })
 
+  const navigate = async <T>(operation: () => Promise<T>, timeoutMs?: 5000 | 10000): Promise<T> => {
+    if (disposed) throw new Error("Native response observer is disposed")
+    if (navigationFailure) throw navigationFailure
+    if (navigation) throw new Error("Finish the previous native hard navigation first")
+    if (timeoutMs !== undefined && timeoutMs !== 5000 && timeoutMs !== 10000)
+      throw new Error("Native hard navigation timeout must be 5000ms or 10000ms")
+    const scope = active
+    const budget = scope?.timeoutMs ?? timeoutMs
+    if (budget === undefined)
+      throw new Error("Native hard navigation outside a capture needs its explicit original timeout")
+    if (scope && timeoutMs !== undefined && timeoutMs !== scope.timeoutMs)
+      throw new Error("Native hard navigation must retain the active capture timeout")
+    if (scope?.failure) throw scope.failure
+    const deadline = scope?.deadline ?? Date.now() + budget
+    const expired = () => new Error("Native hard navigation exceeded the original " + budget + "ms deadline")
+    if (Date.now() >= deadline) throw expired()
+    let drained!: () => void
+    let arrived!: () => void
+    let reject!: (error: Error) => void
+    const ready = new Promise<void>((resolve) => { drained = resolve })
+    const changed = new Promise<void>((resolve) => { arrived = resolve })
+    const failure = new Promise<never>((_, fail) => { reject = fail })
+    const barrier: HardNavigation = {
+      document,
+      phase: "draining",
+      drained,
+      arrived,
+      reject: (error) => { fail(scope, error); reject(error) },
+    }
+    // Pause pump synchronously before checking or awaiting any granted start.
+    navigation = barrier
+    const timer = setTimeout(() => barrier.reject(expired()), Math.max(0, deadline - Date.now()))
+    try {
+      checkNavigationDrain()
+      await Promise.race([ready, failure])
+      if (disposed) throw new Error("Native response observer was disposed before hard navigation")
+      if (document !== barrier.document)
+        throw new Error("Native response document changed before hard navigation")
+      if (scope?.failure) throw scope.failure
+      if (Date.now() >= deadline) throw expired()
+      barrier.phase = "navigating"
+      // Delegate unchanged arguments/return through the caller. The same timer
+      // covers draining, navigation and the new document's binding handshake.
+      const result = await Promise.race([operation(), failure])
+      await Promise.race([changed, failure])
+      return result
+    } catch (error) {
+      if (barrier.phase === "navigating" && document === barrier.document) {
+        // A failed navigation may have destroyed the old world without running
+        // its successor's init script. Never grant old queued starts blindly.
+        navigationFailure = new Error("Native hard navigation ended without a new document")
+        fail(scope, navigationFailure)
+      }
+      throw error
+    } finally {
+      clearTimeout(timer)
+      if (navigation === barrier) navigation = undefined
+      for (const [key, lane] of lanes) pump(key, lane)
+    }
+  }
+
   const begin = (operations: readonly Operation[], timeoutMs: 5000 | 10000 = 10000) => {
     if (disposed) throw new Error("Native response observer is disposed")
+    if (navigationFailure) throw navigationFailure
     if (timeoutMs !== 5000 && timeoutMs !== 10000) throw new Error("Native response capture timeout must be 5000ms or 10000ms")
     if (active) throw new Error("Finish the previous native response scope before starting another")
     if (operations.length === 0) throw new Error("Native response capture needs an explicit operation")
@@ -325,9 +425,11 @@ export async function observeNativeResponses(page: Page, origin: string) {
   }
   return {
     begin,
+    navigate,
     dispose: () => {
       if (disposed) return
       disposed = true
+      navigation?.reject(new Error("Native response observer was disposed during hard navigation"))
       if (active) active.closed = true
       active = undefined
       for (const permit of starts.values()) {
@@ -348,7 +450,7 @@ function installCapture({ origin }: { origin: string }) {
   }).__sfNativeResponseCopy
   const document = crypto.randomUUID()
   let nextCall = 0
-  void bridge({ kind: "document", document })
+  const registered = bridge({ kind: "document", document })
   const originalFetch = globalThis.fetch
   const observedFetch = async function (this: unknown, ...args: Parameters<typeof fetch>) {
     const [input, init] = args
@@ -413,4 +515,5 @@ function installCapture({ origin }: { origin: string }) {
     }
   }
   if (!Reflect.set(globalThis, "fetch", observedFetch)) throw new Error("Native response observer installation was rejected")
+  return registered
 }
