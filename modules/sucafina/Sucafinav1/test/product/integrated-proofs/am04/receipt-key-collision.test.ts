@@ -6,8 +6,8 @@ import { createC12Fixture, prepareC12Change, readReviewDigest } from "../../c12-
 import { observeC12 } from "../../c12-receipt-recovery/consumer.ts"
 
 // The public Procurement HTTP action creates the original transaction, domain
-// effect and receipt. Retry/collision exercise THE SAME authorized C08 state port
-// and original composite transaction identity, not a fake receipt or fake store.
+// effect and receipt. A new original HTTP Apply admission scopes retry/collision
+// against the same C08 state port and composite identity, never a borrowed lease.
 test("AM04 original domain receipt is replayed by identical key+digest and different content is rejected before mutation callback", async () => {
   const fixture = await createC12Fixture("am04-durable-key-digest", "https://local.invalid")
   try {
@@ -15,8 +15,9 @@ test("AM04 original domain receipt is replayed by identical key+digest and diffe
     const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
     expect(reviewed.response.status).toBe(200)
     const digest = readReviewDigest(reviewed.body)
-    const applied = await fixture.http("decision-apply", { ...prepared.request, reviewDigest: digest },
-      "alice", "am04-key-digest-original-human-command")
+    const application = { ...prepared.request, reviewDigest: digest }
+    const applicationKey = "am04-key-digest-original-human-command"
+    const applied = await fixture.http("decision-apply", application, "alice", applicationKey)
     expect(applied.response.status).toBe(200)
     const committed = await observeC12(fixture)
     expect(committed.receipts).toHaveLength(1)
@@ -49,15 +50,36 @@ test("AM04 original domain receipt is replayed by identical key+digest and diffe
       duplicateDomainCallbacks++
       throw new Error("DUPLICATE_DOMAIN_MUTATION_EXECUTED")
     }
-    const same = await fixture.authority.state.transaction(fixture.request(), command, forbidden)
-    expect(same).toMatchObject({ status: "ok", value: recorded })
-    expect(duplicateDomainCallbacks).toBe(0)
-    const changed = await fixture.authority.state.transaction(fixture.request(), {
-      ...command, commandDigest: digestSfValue({
-        schema: "am04-collision-probe-v1", originalReceiptId: recorded.id, alteredContent: true,
-      }),
-    }, forbidden)
-    expect(changed).toEqual({ status: "conflict", reason: "idempotency-content-changed" })
+    // A fresh Request outside a human Apply cannot reuse a completed lease.
+    expect(await fixture.authority.state.transaction(fixture.request(), command, forbidden))
+      .toEqual({ status: "denied", reason: "target-access-unavailable" })
+    const retryRequest = fixture.request("alice", "decision-apply", application, applicationKey)
+    const probes: { count: number; same?: unknown; changed?: unknown; copiedRequest?: unknown } = { count: 0 }
+    // This scheduling hook runs after a real receipt read, outside the store lock,
+    // while THIS HTTP Request has its own original human/withCase/Apply admission.
+    fixture.afterReceiptRead(async () => {
+      probes.count++
+      probes.same = await fixture.authority.state.transaction(retryRequest, command, forbidden)
+      probes.changed = await fixture.authority.state.transaction(retryRequest, {
+        ...command, commandDigest: digestSfValue({
+          schema: "am04-collision-probe-v1", originalReceiptId: recorded.id, alteredContent: true,
+        }),
+      }, forbidden)
+      // Identical headers/body/key on another Request do not borrow that admission.
+      probes.copiedRequest = await fixture.authority.state.transaction(
+        fixture.request("alice", "decision-apply", application, applicationKey), command, forbidden)
+    })
+    const replayed = await fixture.application(retryRequest)
+    expect(probes.count).toBe(1)
+    expect(fixture.receiptReads.interleavings).toBe(1)
+    expect(probes.same).toMatchObject({ status: "ok", value: recorded })
+    expect(probes.changed).toEqual({ status: "conflict", reason: "idempotency-content-changed" })
+    expect(probes.copiedRequest).toEqual({ status: "denied", reason: "target-access-unavailable" })
+    expect(replayed?.status).toBe(200)
+    expect(object(await replayed?.json())).toEqual(applied.body)
+    // The exact admitted Request also loses receipt-write authority after HTTP exit.
+    expect(await fixture.authority.state.transaction(retryRequest, command, forbidden))
+      .toEqual({ status: "denied", reason: "target-access-unavailable" })
     expect(duplicateDomainCallbacks).toBe(0)
     expect(await observeC12(fixture)).toEqual(committed)
     expect(fixture.receiptCommits).toHaveLength(1)
