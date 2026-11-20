@@ -29,7 +29,7 @@ export const make: Effect.Effect<Interface, never, Scope.Scope> = Effect.gen(fun
       const token = { settled: false }
       const ready = Deferred.makeUnsafe<void>()
       const fiber = yield* restore(Deferred.await(ready).pipe(Effect.andThen(work))).pipe(
-        Effect.ensuring(Effect.sync(() => { token.settled = true; active.delete(token) })),
+        Effect.ensuring(Effect.sync(() => { token.settled = true; active.delete(token); console.info("HOST_MAINTENANCE_DIAGNOSTIC owned settled remaining=" + active.size) })),
         Effect.forkChild,
       )
       if (!token.settled) active.set(token, fiber)
@@ -44,16 +44,18 @@ export const make: Effect.Effect<Interface, never, Scope.Scope> = Effect.gen(fun
       )
     }))
 
+  const observe = <A, E, R>(stage: string, effect: Effect.Effect<A, E, R>) =>
+    Effect.sync(() => console.info("HOST_MAINTENANCE_DIAGNOSTIC " + stage + " begin")).pipe(
+      Effect.andThen(effect), Effect.onExit((exit) => Effect.sync(() =>
+        console.info("HOST_MAINTENANCE_DIAGNOSTIC " + stage + " end " + exit._tag))))
   const shutdown = Effect.uninterruptible(Effect.suspend(() => {
     closed = true
-    // Producers and their callers must stop together: a producer may be waiting for an owned caller's finalizer.
+    console.info("HOST_MAINTENANCE_DIAGNOSTIC shutdown owned=" + active.size)
     return Effect.all([
-      Effect.forEach([...active.values()], (fiber) => Fiber.interrupt(fiber), { concurrency: "unbounded", discard: true }),
-      Effect.all([...participants.values()], { concurrency: "unbounded", discard: true }),
+      Effect.forEach([...active.values()], (fiber) => observe("owned interrupt", Fiber.interrupt(fiber)), { concurrency: "unbounded", discard: true }),
+      Effect.all([...participants.entries()].map(([name, stop]) => observe("first " + name, stop)), { concurrency: "unbounded", discard: true }),
     ], { concurrency: "unbounded", discard: true }).pipe(
-      // A producer can finish registering a child scope while its admitted caller is being interrupted.
-      // After callers have settled, await the idempotent producer cleanup once more.
-      Effect.andThen(Effect.all([...participants.values()], { concurrency: "unbounded", discard: true })),
+      Effect.andThen(Effect.all([...participants.entries()].map(([name, stop]) => observe("second " + name, stop)), { concurrency: "unbounded", discard: true })),
     )
   }))
   yield* Effect.addFinalizer(() => shutdown)
