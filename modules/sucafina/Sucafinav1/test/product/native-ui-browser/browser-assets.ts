@@ -46,20 +46,29 @@ function browserPackage(specifier: string): Promise<string> {
   return resolved
 }
 
-/** Compile the real browser graph using the app's Solid DOM preset. This is an
- * isolated HTTP fixture, not an alternative product renderer or authority.
- * Nothing here supplies projections, operations, context stamps or session data.
+// Compile the real entries together once. In Actions, a second build of this
+// shared graph failed with EISDIR after the first build had succeeded. Reuse
+// immutable artifacts across tests; never carry their runtime config or session.
+const entrypoints = new Map([
+  [fileURLToPath(new URL("./client.tsx", import.meta.url)), "client.js"],
+  [fileURLToPath(new URL("../wp01/http-entry.tsx", import.meta.url)), "http-entry.js"],
+  [fileURLToPath(new URL("../wp06/native/import-output-entry.tsx", import.meta.url)), "import-output-entry.js"],
+])
+let compiled: ReturnType<typeof compileNativeBrowserAssets> | undefined
+
+/** Cache only immutable build artifacts. Every HTTP handler still receives its
+ * own server-generated config, and each page loads one entry with one Solid graph.
  */
-export async function createNativeBrowserAssets(entry = new URL("./client.tsx", import.meta.url)) {
+async function compileNativeBrowserAssets() {
   const built = await Bun.build({
-    entrypoints: [fileURLToPath(entry)],
+    entrypoints: [...entrypoints.keys()],
     target: "browser",
     format: "esm",
     sourcemap: "none",
     splitting: false,
     conditions: ["browser"],
     define: { "process.env.NODE_ENV": JSON.stringify("production") },
-    naming: { entry: "client.[ext]", chunk: "chunk-[hash].[ext]", asset: "asset-[hash].[ext]" },
+    naming: { entry: "[name].[ext]", chunk: "chunk-[hash].[ext]", asset: "asset-[hash].[ext]" },
     publicPath: prefix,
     loader: { ".svg": "file", ".png": "file", ".jpg": "file", ".woff": "file", ".woff2": "file" },
     plugins: [{
@@ -90,15 +99,28 @@ export async function createNativeBrowserAssets(entry = new URL("./client.tsx", 
   })
   if (!built.success) throw new AggregateError(built.logs, "SF native browser bundle failed")
   const outputs = new Map(built.outputs.map((output) => [prefix + path.basename(output.path), output]))
-  const javascript = built.outputs.find((output) => output.kind === "entry-point" && output.path.endsWith(".js"))
-  if (!javascript) throw new Error("SF_NATIVE_BROWSER_ENTRY_MISSING")
-  const styles = built.outputs.filter((output) => output.path.endsWith(".css"))
+  for (const name of entrypoints.values()) {
+    if (outputs.get(prefix + name)?.kind !== "entry-point")
+      throw new Error("SF_NATIVE_BROWSER_ENTRY_MISSING:" + name)
+  }
+  return { outputs, styles: built.outputs.filter((output) => output.path.endsWith(".css")) }
+}
+
+/** Serve an isolated composition of the original product renderer. Build output
+ * is shared; directory, mode, values, identity and authority are never retained.
+ */
+export async function createNativeBrowserAssets(entry = new URL("./client.tsx", import.meta.url)) {
+  const name = entrypoints.get(fileURLToPath(entry))
+  if (!name) throw new Error("SF_NATIVE_BROWSER_ENTRY_UNREGISTERED")
+  const { outputs, styles } = await (compiled ??= compileNativeBrowserAssets())
+  const javascript = outputs.get(prefix + name)
+  if (!javascript || javascript.kind !== "entry-point") throw new Error("SF_NATIVE_BROWSER_ENTRY_MISSING:" + name)
   const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
   return {
     handle(request: Request, config: Readonly<{ directory?: string; mode?: "owner" | "component"; value?: unknown }>): Response | undefined {
       const url = new URL(request.url)
       if (request.method !== "GET") return undefined
-      const output = outputs.get(url.pathname)
+      const output = url.pathname === prefix + "client.js" ? javascript : outputs.get(url.pathname)
       if (output) return new Response(output, { headers: { ...headers, "Content-Type": output.type } })
       if (!url.pathname.startsWith("/orchestra/")) return undefined
       const payload = JSON.stringify(config).replace(/</g, "\\u003c").replace(/&/g, "\\u0026")
@@ -106,7 +128,7 @@ export async function createNativeBrowserAssets(entry = new URL("./client.tsx", 
       return new Response('<!doctype html><html lang="en" data-sf-fixture-mode="' +
         (config.mode ?? "owner") + '"><head><meta charset="utf-8"><title>Sucafina native fixture</title>' + css +
         '</head><body><main id="sf-native-root"></main><script id="sf-native-fixture" type="application/json">' + payload +
-        '</script><script type="module" src="' + prefix + path.basename(javascript.path) + '"></script></body></html>',
+        '</script><script type="module" src="' + prefix + 'client.js"></script></body></html>',
         { headers: { ...headers, "Content-Type": "text/html; charset=utf-8" } })
     },
   }
