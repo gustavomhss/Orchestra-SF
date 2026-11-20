@@ -282,6 +282,8 @@ jobs:
         with:
           artifact: sf-omni-linux-${{ github.sha }}
       - name: Execute exact manifest-selected Bun files
+        id: tests
+        timeout-minutes: 24
         shell: bash
         env:
           # The canonical Actions Bun runner uses this sentry; CI=true remains enforced.
@@ -344,6 +346,33 @@ jobs:
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Preserve Bun performance observations
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        env:
+          TEST_CONCLUSION: ${{ steps.tests.outcome }}
+        run: |
+          suite_dir="$(node --input-type=module -e '
+            import { readFileSync } from "node:fs"
+            const manifest = JSON.parse(readFileSync("sf/ci/suites.json", "utf8"))
+            const suites = Array.isArray(manifest.suites) ? manifest.suites : []
+            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID)
+            if (!suite) throw new Error("SF_CI_UNKNOWN_SUITE")
+            process.stdout.write(suite.directory)
+          ')"
+          python3 script/sf-ci/timings.py \
+            --report "sf-ci-evidence/$SF_SUITE_ID/report.xml" \
+            --output "sf-ci-evidence/$SF_SUITE_ID/timings.json" \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite "$SF_SUITE_ID" --directory "$suite_dir" \
+            --file-root "$GITHUB_WORKSPACE/$suite_dir" --conclusion "$TEST_CONCLUSION"
+      - name: Publish Bun timings separately from acceptance receipts
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-timings-${{ matrix.id }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/${{ matrix.id }}/timings.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Publish only valid summary and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -384,6 +413,8 @@ jobs:
         with:
           artifact: sf-omni-linux-${{ github.sha }}
       - name: Execute exact manifest-selected Bun files
+        id: tests
+        timeout-minutes: 26
         shell: bash
         env:
           GITHUB_ACTIONS: "false"
@@ -421,6 +452,26 @@ jobs:
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Preserve shard performance observations
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        env:
+          TEST_CONCLUSION: ${{ steps.tests.outcome }}
+        run: |
+          python3 script/sf-ci/timings.py \
+            --report "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX/report.xml" \
+            --output "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX/timings.json" \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite CI-SF --directory modules/sucafina \
+            --file-root "$GITHUB_WORKSPACE/modules/sucafina" --conclusion "$TEST_CONCLUSION" \
+            --shard-index "$SF_SHARD_INDEX" --shard-count "$SF_SHARD_COUNT"
+      - name: Publish shard timings separately from acceptance receipts
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-timings-CI-SF-${{ matrix.shard }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/timings.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Publish only valid summary and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -472,14 +523,16 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
       - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
         with:
           artifact: sf-omni-linux-${{ github.sha }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-        with:
-          node-version: "24.15"
       - name: Install Chromium for Linux only
         working-directory: packages/app-shell
         run: bunx playwright install --with-deps chromium
@@ -488,6 +541,7 @@ jobs:
         shell: bash
         run: bash script/sf-ci/operations-clamd.sh
       - name: Run installed SF UI journey
+        timeout-minutes: 20
         env:
           SF_OPERATIONS_CLAMD_PORT: ${{ matrix.id == 'CI-UI-OPERATIONS' && '3310' || '' }}
         shell: bash
