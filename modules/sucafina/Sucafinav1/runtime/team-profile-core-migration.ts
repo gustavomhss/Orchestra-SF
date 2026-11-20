@@ -198,7 +198,8 @@ export function createTeamProfileCoreMigration(input: {
     async prepare(request: Request, rawIntent: unknown): Promise<CoreMigrationResult> {
       const intent = decodeIntent(rawIntent)
       if (digestSfValue(intent) !== digestSfValue(rawIntent)) return deny("schema")
-      const report = TeamProfileCensus.inspect(business, storageId)
+      const report = await authority.inspect(request, () => TeamProfileCensus.inspect(business, storageId))
+      if (!report) return deny("authority")
       const plan = TeamProfileCensus.plan(report, intent)
       const held = await admit(request, "map", plan)
       await current(held, "map", plan)
@@ -218,7 +219,12 @@ export function createTeamProfileCoreMigration(input: {
       return result("prepared", plan)
     },
     async cut(request: Request, planDigest: string): Promise<CoreMigrationResult> {
-      const prepared = stored(planDigest)
+      let prepared: Prepared | undefined
+      const permitted = await authority.inspect(request, () => {
+        prepared = stored(planDigest)
+        return prepared.report
+      }, "cut")
+      if (!permitted || !prepared) return deny("authority")
       const { report, plan } = prepared
       const held = await admit(request, "cut", plan)
       const existing = getControl().inspect(storageId)

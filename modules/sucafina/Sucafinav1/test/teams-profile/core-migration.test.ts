@@ -22,6 +22,7 @@ import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SessionAccess } from "@orchestra/schema/session-access"
 import { createTeamProfileMigrationAuthority } from "../../runtime/team-profile-migration-authority.ts"
 import { createTeamProfileCoreMigration, CoreMigrationDenied, type MigrationFiles } from "../../runtime/team-profile-core-migration.ts"
+import { createTeamProfileMigrationHttp } from "../../runtime/team-profile-migration-http.ts"
 import { openTeamProfileMigrationFiles } from "../../runtime/team-profile-migration-files.ts"
 import { productGrant, teamProductFixture } from "./product-fixture.ts"
 import { profileA, profileB } from "./installation-fixture.ts"
@@ -232,4 +233,32 @@ test("core migration: an old data checkpoint never resets the current control au
   await expect(restarted.run(SessionV2.Service.use((sessions) => sessions.create({ location: f.location })))).rejects.toThrow()
   const current = openTeamProfileMigrationFiles(f.filename, f.storageId)
   try { expect(current.control.all("SELECT * FROM sf_control_store")).toEqual(controlBefore) } finally { current.close() }
+}, 30000)
+
+test("core migration HTTP: only the original Microsoft admin request reaches the private cut service", async () => {
+  const f = await fixture(), engine = f.engine()
+  const http = createTeamProfileMigrationHttp({ origin: f.binding.origin, mount: f.binding.mount, runtime: () => engine })
+  const request = (body: unknown) => {
+    const original = f.request()
+    original.headers.set("content-type", "application/json")
+    return new Request(original, { body: JSON.stringify(body) })
+  }
+  const census = await http(request({ action: "census" }))
+  expect(census?.status).toBe(200)
+  expect(census?.headers.get("cache-control")).toBe("no-store")
+  expect(await census?.text()).not.toContain("PRIVATE-PARENT-CONTENT")
+  const anonymous = request({ action: "census" }); anonymous.headers.delete("cookie")
+  expect((await http(anonymous))?.status).toBe(403)
+  const wrongOrigin = request({ action: "prepare", intent: f.mapping() }); wrongOrigin.headers.set("origin", "https://other.invalid")
+  expect((await http(wrongOrigin))?.status).toBe(403)
+  const shaped = request({ action: "cut", planDigest: "a".repeat(64), authority: { administration: true } })
+  expect((await http(shaped))?.status).toBe(400)
+  expect(f.files.business.all("SELECT count(*) AS count FROM session_owner")).toEqual([{ count: 0 }])
+  const prepared = await http(request({ action: "prepare", intent: f.mapping() }))
+  expect(prepared?.status).toBe(200)
+  const payload: unknown = await prepared?.json()
+  if (!payload || typeof payload !== "object" || !("value" in payload) || !payload.value ||
+      typeof payload.value !== "object" || !("planDigest" in payload.value) || typeof payload.value.planDigest !== "string")
+    throw new Error("Actual prepared plan digest required")
+  expect((await http(request({ action: "cut", planDigest: payload.value.planDigest })))?.status).toBe(200)
 }, 30000)
