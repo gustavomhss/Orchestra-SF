@@ -547,10 +547,108 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  teams-profile-browser-pool:
+    name: sf/teams-profile-browser-pool
+    needs: [preflight, omni]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      ORCHESTRA_OMNI_CONTROL: declared
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+        with:
+          artifact: sf-omni-linux-${{ github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Verify the ordered pool contract and available Google Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          node --test script/sf-ci/browser-pool.test.mjs
+          command -v google-chrome
+          google-chrome --version > "$RUNNER_TEMP/sf-browser-chrome-version.txt"
+          test -s "$RUNNER_TEMP/sf-browser-chrome-version.txt"
+      - name: Prepare exact candidate and lifecycle evidence
+        id: pool_prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          git diff --cached --exit-code
+          export SF_CHECKOUT_SHA="$(git rev-parse HEAD)"
+          export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
+          export SF_BROWSER_POOL_OUTPUT="$RUNNER_TEMP/sf-browser-pool"
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")"
+          node script/sf-ci/browser-pool.mjs prepare \
+            --manifest sf/ci/suites.json --output "$SF_BROWSER_POOL_OUTPUT"
+          cp "$RUNNER_TEMP/sf-browser-chrome-version.txt" "$SF_BROWSER_POOL_OUTPUT/chrome-version.txt"
+          printf 'SF_CHECKOUT_SHA=%s\nSF_CHECKOUT_TREE_SHA=%s\nSF_BROWSER_POOL_OUTPUT=%s\nORCHESTRA_OMNI_CONTROL_NONCE=%s\n' \
+            "$SF_CHECKOUT_SHA" "$SF_CHECKOUT_TREE_SHA" "$SF_BROWSER_POOL_OUTPUT" "$ORCHESTRA_OMNI_CONTROL_NONCE" >> "$GITHUB_ENV"
+      - name: Execute all forty original sources through their single owned Bun entry
+        id: pool_bun
+        working-directory: modules/sucafina
+        env:
+          # Preserve the canonical Bun test guard/preloads. CI remains true.
+          GITHUB_ACTIONS: "false"
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git -C ../.. rev-parse HEAD)"
+          test "$SF_CHECKOUT_SHA" = "$GITHUB_SHA"
+          set +e
+          bun test --timeout 30000 --reporter=junit \
+            "--reporter-outfile=$SF_BROWSER_POOL_OUTPUT/report.xml" \
+            ./Sucafinav1/test/product/wp01/browser-selection.test.ts \
+            2>&1 | tee "$SF_BROWSER_POOL_OUTPUT/run.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$status" > "$SF_BROWSER_POOL_OUTPUT/exit-code.txt"
+          exit "$status"
+      - name: Reconcile actual cases, hooks, Omni and physical cleanup even after a failed test
+        if: ${{ !cancelled() && steps.pool_prepare.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$SF_CHECKOUT_TREE_SHA" = "$(git rev-parse 'HEAD^{tree}')"
+          # A committed tree cannot identify dirty tracked product inputs. Keep the
+          # evidence but refuse to issue a receipt if a test changed those inputs.
+          git status --porcelain=v1 --untracked-files=no > "$SF_BROWSER_POOL_OUTPUT/tracked-worktree-after.txt"
+          git diff --exit-code > "$SF_BROWSER_POOL_OUTPUT/tracked-diff-after.txt"
+          git diff --cached --exit-code > "$SF_BROWSER_POOL_OUTPUT/staged-diff-after.txt"
+          set +e
+          python3 script/sf2h/final-bundle/verify-bun-report.py "$SF_BROWSER_POOL_OUTPUT/report.xml" \
+            > "$SF_BROWSER_POOL_OUTPUT/summary.json"
+          report_status=$?
+          node script/sf-ci/browser-pool.mjs verify \
+            --manifest sf/ci/suites.json --output "$SF_BROWSER_POOL_OUTPUT"
+          verification_status=$?
+          set -e
+          printf '{"report":%d,"verification":%d}\n' "$report_status" "$verification_status" \
+            > "$SF_BROWSER_POOL_OUTPUT/verification-statuses.json"
+          test "$report_status" -eq 0 && test "$verification_status" -eq 0
+      - name: Preserve ordered pool evidence including failures
+        if: ${{ !cancelled() && steps.pool_prepare.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-profile-evidence-G04
+          path: ${{ env.SF_BROWSER_POOL_OUTPUT }}
+          if-no-files-found: error
+          retention-days: 14
+
   verify:
     name: sf/verify
     if: always()
-    needs: [preflight, static, omni, unit, unit-sf, ui]
+    needs: [preflight, static, omni, unit, unit-sf, ui, teams-profile-browser-pool]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:

@@ -40,6 +40,7 @@ test("missing, unsafe, legacy or incoherent Microsoft configuration fails closed
     { grants: [{ principalRef: oid, namespaces: [], operations: [], humanActions: ["approve.everything"] }] },
     { grants: [{ principalRef: oid, namespaces: [], operations: [] }, { principalRef: oid.toUpperCase(), namespaces: [], operations: [] }] },
     { teams: undefined }, { teams: null }, { teams: false }, { teams: true }, { teams: "all" }, { teams: "Direct" }, { teams: {} },
+    { supremeAdminGroupId: undefined }, { supremeAdminGroupId: null }, { supremeAdminGroupId: "Administrators" }, { supremeAdminGroupId: `group:${group}` }, { supremeAdminGroupId: {} },
     { sessionSeconds: 28801 }, { sessionSeconds: 0 }, { loginSeconds: 601 }, { localOperator: { uid: 0 } }, { clientSecret: syntheticSecret },
   ]) expect(() => validateMicrosoftConfiguration({ ...f.config, ...mutation })).toThrow()
   for (const value of [undefined, null, [], "", {}]) expect(() => validateMicrosoftConfiguration(value)).toThrow()
@@ -173,4 +174,41 @@ test("explicit Teams reading is reversible without changing the installation ide
   expect(await readFile(path.join(f.directory, "microsoft-identity.json"), "utf8")).toBe(pin)
   expect(provider.requests.every((request) => new URL(request.url).origin === "https://login.microsoftonline.com")).toBe(true)
   expect(await Bun.file(path.join(f.directory, "business-microsoft", "installation.sqlite")).exists()).toBe(false)
+})
+
+test("supreme administration policy is explicit, canonical and read fresh independently of Teams", async () => {
+  const f = await fixture()
+  await writeFile(f.file, JSON.stringify({ ...f.config, supremeAdminGroupId: other.toUpperCase() }))
+  const provider = await microsoftFixture()
+  const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  expect(profile.loaded.config.supremeAdminGroupId).toBe(other)
+  expect(await profile.readTeamProfilePolicy()).toEqual({ supremeAdminGroupId: other })
+  expect(profile.client.joinedTeams).toBeUndefined()
+  await writeFile(f.file, JSON.stringify({ ...f.config, supremeAdminGroupId: group, teams: "direct" }))
+  expect(await profile.readTeamProfilePolicy()).toEqual({ supremeAdminGroupId: group, teams: "direct" })
+  expect(profile.loaded.config.supremeAdminGroupId).toBe(other)
+  expect(profile.client.joinedTeams).toBeUndefined()
+  await writeFile(f.file, JSON.stringify(f.config))
+  expect(await profile.readTeamProfilePolicy()).toEqual({})
+})
+
+test("current policy cannot retarget the captured installation or replace its private keys", async () => {
+  const f = await fixture()
+  const provider = await microsoftFixture()
+  const profile = await prepareMicrosoftInstallation({ origin: listenerOrigin }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })
+  const workspaceDirectory = path.join(f.root, "second-workspace")
+  await mkdir(workspaceDirectory, { mode: 0o700 })
+  for (const mutation of [
+    { tenantId: other }, { clientId: other }, { origin: "https://another.example.test" },
+    { mount: "/other" }, { listenerOrigin: "http://127.0.0.1:4999" }, { ingressOrigin: "http://another.example.test" },
+    { workspaceDirectory },
+  ]) {
+    await writeFile(f.file, JSON.stringify({ ...f.config, ...mutation }))
+    await expect(profile.readTeamProfilePolicy()).rejects.toThrow("binding changed")
+  }
+  await writeFile(f.file, JSON.stringify(f.config))
+  const bankKey = await readFile(path.join(f.directory, "bank.key"))
+  bankKey[0] ^= 1
+  await writeFile(path.join(f.directory, "bank.key"), bankKey)
+  await expect(profile.readTeamProfilePolicy()).rejects.toThrow("keys changed")
 })

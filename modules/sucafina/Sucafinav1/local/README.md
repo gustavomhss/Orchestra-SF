@@ -98,6 +98,12 @@ Tokens e escopos retornados ficam na sessão privada cifrada. Uma credencial ant
 
 A leitura não transforma acesso a um canal compartilhado em associação à Team anfitriã. Também não altera os mapas de papéis existentes, inclusive mapas vazios, nem as concessões explícitas da instalação. Falha de consentimento, indisponibilidade do provedor ou paginação incompleta retorna um estado de erro, sem apresentar uma lista vazia como prova de ausência de Teams.
 
+A administração suprema tem uma opção independente, `"supremeAdminGroupId": "<Object ID do grupo corporativo>"`, no mesmo arquivo privado. Informe o GUID completo do grupo no tenant de recurso, sem nome, e-mail ou prefixo `group:`. Sem essa opção, a função administrativa é negada. O backend consulta a associação atual ao grupo com a permissão delegada mínima `User.Read`; papéis de superfície, ownership de Team e operador local não substituem essa prova. A listagem administrativa e a desabilitação/remoção de um profile existente não dependem da enumeração de Teams.
+
+Habilitar um profile exige também ler a Team Microsoft pelo ID imutável e confirmar seu tenant. O grupo supremo do produto não concede permissões administrativas no Entra ou no serviço Teams; se o Microsoft Graph recusar a leitura, a habilitação falha sem registrar o profile. Consulte [checkMemberGroups](https://learn.microsoft.com/en-us/graph/api/directoryobject-checkmembergroups?view=graph-rest-1.0) e [Get team](https://learn.microsoft.com/en-us/graph/api/team-get?view=graph-rest-1.0).
+
+A política compartilhada é mantida em tabelas próprias do SQLite privado da instalação, com revisão crescente, compare-and-swap e auditoria da pessoa verificada. Uma restauração de snapshot de negócio não restaura uma política antiga de profiles. O servidor relê a opção de grupo e de Teams em cada operação administrativa; alterações de origem, mount, tenant, aplicação, workspace ou chaves exigem reconfiguração explícita da instância. A configuração de profiles não copia dados de negócio, credenciais ou preferências pessoais, e não concede grants de negócio.
+
 Esta etapa prepara o leitor vinculado à sessão autenticada. A seleção de perfil por Team, sua admissão, o isolamento dos dados e a comprovação corporativa da migração continuam sujeitos às etapas e aos gates do [plano Teams Profile](../../../../docs/architecture/teams-profile-migration.md). A opção, por si só, não qualifica a instalação para produção.
 
 ## Evidência histórica do console aposentado (não é aceite da Edition)

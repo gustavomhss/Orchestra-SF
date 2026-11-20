@@ -21,7 +21,7 @@ const SUITE_DIRECTORIES = Object.freeze({
   "CI-UI-REPORTS": "packages/app-shell",
 })
 const PROOFS = ["AM01", "AM02", "AM03", "AM04", "AM05", "AM06"]
-const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui"]
+const JOBS = ["preflight", "static", "omni", "unit", "unit-sf", "ui", "teams-profile-browser-pool"]
 // CI-SF is the only suite that outgrows one Linux job. Its parts are a strict
 // partition of the manifest selection, proven complete and disjoint below.
 export const SHARDED = Object.freeze({ "CI-SF": 8 })
@@ -205,7 +205,19 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
     ensureContained(root, name, "file")
     if (!isTestFile(name) || !files.includes(name)) fail("harness-owned file is outside admitted selection: " + name)
   }
-  // All roots share one graph; membership still proves both exclusion directions.
+  // The owned entry is a runner, not a forty-first source proof. Validate it
+  // separately and exclude it before the consumer graph and shard partition.
+  const harnessEntries = selection.harnessEntryFiles || []
+  if (!Array.isArray(harnessEntries) || new Set(harnessEntries).size !== harnessEntries.length) {
+    fail("invalid harness-entry inventory")
+  }
+  for (const name of harnessEntries) {
+    ensureContained(root, name, "file")
+    if (!isTestFile(name) || !files.includes(name)) fail("harness entry is outside admitted selection: " + name)
+    if (harnessOwned.includes(name) || (selection.releaseOnlyFiles || []).includes(name)) fail("harness entry overlaps source/release inventory")
+  }
+  files = files.filter((name) => !harnessEntries.includes(name))
+  // All source roots share one graph; membership still proves both exclusion directions.
   const consumers = browserPoolConsumers(files, root)
   for (const name of harnessOwned) {
     if (!consumers.has(path.resolve(root, name))) {
@@ -315,6 +327,18 @@ export function validateManifest(manifest) {
       JSON.stringify(sfProduct.selection.releaseOnlyFiles) !==
         JSON.stringify(["Sucafinav1/test/parity-pitr.test.ts"])) {
     fail("Linux SF unit and release-only recovery boundary drift")
+  }
+  if (sfProduct.selection.harnessOwnedFiles !== undefined || sfProduct.selection.harnessEntryFiles !== undefined) {
+    if (JSON.stringify(sfProduct.selection.harnessEntryFiles) !==
+        JSON.stringify(["Sucafinav1/test/product/wp01/browser-selection.test.ts"])) {
+      fail("ordered browser pool entry must remain explicitly declared")
+    }
+    const owned = sfProduct.selection.harnessOwnedFiles
+    if (!Array.isArray(owned) || !owned.length || new Set(owned).size !== owned.length ||
+        owned.some((name) => !isTestFile(name)) ||
+        owned.some((name) => sfProduct.selection.harnessEntryFiles.includes(name) || sfProduct.selection.releaseOnlyFiles.includes(name))) {
+      fail("invalid or overlapping ordered browser source inventory")
+    }
   }
   const sfBrowser = suites.find((s) => s.id === "CI-APP-BROWSER")
   if (sfBrowser?.selection?.kind !== "directory" ||
