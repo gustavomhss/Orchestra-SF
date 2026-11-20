@@ -12,6 +12,8 @@ A base foi verificada no GitHub: as frentes recentes de integração apontam par
 
 O estudo teve três frentes de leitura: runtime/configuração; identidade Microsoft/autoridade do produto; interface/persistência/Dock. A consolidação examinou também CI, integridade de sessões e consumidores que executam sem a tela aberta. Foram enumeradas árvores completas de nomes de arquivos nos principais pacotes e lidos os produtores e consumidores centrais. **Não houve busca textual integral em todos os blobs do monorepo, execução de aplicação, validação no tenant, nem prova de ausência de resíduos.** A busca de código do GitHub cobre a branch default e não serve para certificar o pin estudado.
 
+**Rechecagem de integração:** durante a revisão, `sf-join-four` avançou para `a5b15b51b78469a054ba97b0e87fd1e36e31f73a` (merge #399). O compare completo do pin até esse head contém dois commits e altera apenas `private-admission.check.ts` e o helper E2E `operations-support/installation.ts`: inicialização do host real e observações do scanner. Os patches foram lidos; não alteram os produtores centrais de profile/identidade aqui estudados. Os ajustes de fixture devem ser preservados na execução. A branch documental continua baseada no pin declarado; isso não congela nem aprova a branch de integração.
+
 O arquivo [teams-profile-inventory.json](./teams-profile-inventory.json) é o inventário inicial rastreável: distingue evidência lida, destino proposto, testes existentes e verificações ainda obrigatórias. Sua existência não significa cobertura integral ou aprovação da mudança.
 
 ## 1. Objetivo e decisões de produto
@@ -101,6 +103,8 @@ Fluxo proposto:
 
 “Graph indisponível”, “capacidade não consentida”, “resultado parcial”, “nenhuma equipe elegível” e “acesso revogado” são estados distintos. Não converter erros em lista vazia nem cair no repo-profile anterior.
 
+A configuração comum pode ser cacheada por TeamProfileRef + configRevision. Serviços que capturam principal, grants, permissões, credenciais ou material privado não podem ser compartilhados apenas por TeamProfileRef: o binding inclui o principal autenticado e a revisão de autoridade, ou esses elementos são fornecidos por chamada, imutáveis. Location técnica compartilhada não compartilha autoridade. Um cache não retorna resultado privado sem verificar o solicitante atual. Isso vale para dois usuários simultâneos da mesma equipe, não somente para trocar de conta.
+
 O contexto de negócio precisa entrar na identidade dos serviços que capturam configuração. Serviços puramente físicos podem continuar compartilhados quando sua independência for provada. Um único resolvedor de profile, consumido pelas fronteiras já existentes, é preferível a um framework paralelo de identidade.
 
 ### 3.3 Relação com o Core
@@ -110,6 +114,16 @@ A decisão é **desacoplar a identidade de profile do Project/Location**, preser
 Isso exige implementação real: não basta renomear `projectId` para `teamId` ou criar um Git repo de cada equipe. Onde o Core ainda exige project_id, planejar a associação técnica e o novo scope de profile de modo explícito e versionado, antes de alterar as FKs. Ownership novo de sessões deve ser durável, verificável e usado nas consultas do servidor.
 
 Histórico e eventos antigos não serão reescritos para afirmar que sempre pertenceram a uma equipe. Um mapa de migração auditável vincula o que pode ser vinculado; o restante permanece retido sem acesso indevido. O destino definitivo de cada leitor/escritor antigo precisa constar no inventário.
+
+### 3.4 Fronteira de autenticação e transporte
+
+A identidade Microsoft instalada é restrita à origem e ao mount; seu cookie tem Path do mount. A autenticação geral do host usa outra autoridade: Basic de host quando configurado, passthrough quando não há senha nessa camada; capabilities podem resolver operador. Esses fatos **não provam por si um bypass na instalação em produção**, pois é preciso conferir alcance e montagem. Provam que login Microsoft e autorização geral do host não podem ser presumidos equivalentes. [S39][S40][S41][S42]
+
+WP1/WP3 devem mapear todos os entrypoints HTTP, SSE, WebSocket, IPC e chamadas internas que alcançam profiles, sessões, eventos, configuração e ferramentas. Cada caminho protegido SF recebe contexto de principal/equipe admitido pelo servidor, ou permanece privado e acessível apenas por mediação confiável da instalação.
+
+A decisão padrão é manter os serviços internos mediados pela autoridade corporativa existente; qualquer exposição direta requer a mesma admissão explícita. Basic de host, bearer de operador, Session ID conhecido e Team ID enviado pelo cliente não representam a identidade corporativa do usuário nem concedem acesso a seus dados. A autorização precede seleção de serviços, leitura de sessão e emissão de resultados/eventos.
+
+Não ampliar Path de cookie como atalho, expor token Graph no renderer, aceitar principal de header arbitrário ou criar segunda sessão permissiva. Alteração de transporte/cookie deve ter contrato e prova próprios. Endpoints legados sem o novo contexto devem recusar no SF ou deixar de ser alcançáveis por ele. A mediação não pode passar silenciosamente a autoridade de operador ao pedido de um usuário.
 
 ## 4. Microsoft/Teams: leitura, organização e autorização
 
@@ -128,6 +142,7 @@ O contrato de diretório deve declarar completude e origem das relações. Um ar
 - Retentar somente de forma limitada, respeitando respostas do provedor; não manter concessões privilegiadas por stale cache.
 - Cache de labels/organograma pode ser separado da verificação atual de autorização. Preservar a releitura de membership já existente nas operações protegidas.
 - Não reutilizar tokens, caches ou mapeamentos de um tenant para outro, incluindo convidados B2B.
+- “Leitura Graph” significa ausência de mutação de dados Microsoft, não proibir todo HTTP POST: a consulta existente checkMemberGroups usa POST. Permitir somente operações de leitura explicitamente contratadas; negar criação/edição/exclusão de usuários, grupos, Teams e memberships.
 - Validar os scopes realmente solicitados, presentes e consentidos no ambiente. A configuração lembrada de outra branch/sessão não é prova do tenant atual.
 
 As APIs Microsoft têm diferenças importantes: `joinedTeams` lista participação direta e não inclui automaticamente o Team que hospeda um canal compartilhado ao qual o usuário tem acesso. Membership de canal não autoriza o Team inteiro. Consultas transitivas de grupos também não são equivalentes a essa lista. O comportamento de canais compartilhados deve ser explicitamente limitado; não ampliar permissões para “completar” o picker. [M01][M02]
@@ -163,6 +178,8 @@ O novo card mostra equipe e contexto corporativo admitido. Não oferece escolher
 
 Todas as superfícies usam o mesmo contexto em desktop, janela estreita e navegação por teclado. Respeitar foco, leitores de tela, loading e erro. Não aceitar “mobile ficou para depois”.
 
+Inventariar builders e parsers de URL por família de capítulo, além de back/forward e URL persistida por janela. Há parsers que recusam query keys desconhecidas/duplicadas e tuple parcial; acrescentar team/tenant/context sem atualizar ambos os lados transforma a entrada em invalid-link. WP1 define o contrato externo e sua versão, a resposta a links legados/incompletos e o destino de IDs técnicos mantidos; WP2 atualiza builder, parser e teste juntos. Não preencher partes faltantes a partir de outro profile lembrado. [S43][S44]
+
 ### 5.2 Transição A → B
 
 Preservar o guard de saída existente. Draft não enviado pode demandar decisão de preservar/descartar; operação já submetida com resultado desconhecido exige reconciliação, não descarte genérico.
@@ -177,7 +194,9 @@ A sequência deve ser atômica do ponto de vista da experiência:
 
 Uma resposta lenta de A não pode aparecer, atualizar cache ou abrir aba em B. Cancelamento do pedido não prova que o efeito não aconteceu; preservar recibos e caminho de consulta do resultado.
 
-Logout e troca de conta limpam acesso ao estado privado sem reatribuir jobs/dados. Duas janelas podem operar em equipes distintas; RPC e resolver devem usar a janela/principal autenticados, não um activeProfileID global.
+A troca voluntária de equipe respeita o guard de draft e afeta a seleção da janela que a iniciou. Revogação, logout, expiração que invalida autoridade ou substituição de principal/tenant retiram acesso privado assim que observados, independentemente de confirmação do usuário. Invalidar o epoch de autenticação, streams, consultas e handles em todas as janelas vinculadas; aba em background ou reconexão antiga não ressuscita o owner. Cancelar um modal de discard não pode vetar revogação.
+
+Preservar registros duráveis necessários à reconciliação de operações submetidas, acessíveis somente sob autoridade atual; não reenviar nem apagar efeito incerto como draft. Duas janelas podem operar em equipes distintas; RPC e resolver usam a janela/principal autenticados, não um activeProfileID global. Uma troca voluntária local não muda a equipe das outras janelas.
 
 ### 5.3 Dock e credenciais
 
@@ -186,7 +205,8 @@ Classificar se cada binding Dock é alcançável no pacote SF Linux atual; testa
 Para bindings mantidos:
 
 - Usar mapeamento opaco, persistente e sem colisão para a identidade do profile; o limite atual de 32 caracteres não admite inserir GUID de Graph diretamente.
-- Preservar storageKey, revisão/CAS, gravação atômica e lifecycle active→deleting→deleted.
+- Preservar storageKey somente quando titular, tenant, instalação e vínculo contexto de origem→destino forem comprovados e autorizados. Reatribuir uma chave existente transfere acesso ao cookie jar mesmo sem copiar arquivos. Vínculo ausente/ambíguo exige partição nova e reautenticação; o conteúdo legado permanece isolado/retido. Nunca reatribuir storageKey por pasta, nome ou equipe atualmente selecionada.
+- Preservar revisão/CAS, gravação atômica e lifecycle active→deleting→deleted tanto ao conservar quanto ao criar a chave.
 - Isolar cookies/autenticação por principal, tenant, instalação e contexto definido pela política.
 - Não copiar cookie jar, token OAuth, bookmarks/history privados ou drafts do antigo profile para um Team compartilhado.
 - Tratar history/bookmarks globais no manifest: definir propriedade pessoal e impedir exposição entre contas.
@@ -210,6 +230,8 @@ Credenciais MCP continuam pertencendo ao titular e à conexão autorizada. Publi
 | RAG/Atlas | Não deixar aliases de path unir corpora de equipes diferentes. Manter grants e recusa de catálogo estrangeiro. Atlas territorial e memória de negócio exigem classificações diferentes. |
 | Reuniões/memória pessoal | Preservar dono, acesso e consentimento; uma reunião do usuário não vira reunião do Team ao trocar profile. |
 
+O scope da sessão é propriedade durável do agregado, não da janela. Parent/child, fork, move, import e eventos que ligam sessões validam ownership e autorização nas duas pontas. Children herdam o scope autorizado da parent e grants no máximo iguais aos permitidos para delegação. Move altera placement físico, sem transferir Team/titularidade. Transferência entre scopes, se futuramente suportada, exige operação separada e explicitamente autorizada; não ocorre por create/replay ou mapping heurístico. Referências históricas e a associação migrada são validadas antes da projeção, sem alterar os eventos originais.
+
 Schedules retomam a Location gravada; capability owner compara sessão/projeto/diretório, mas esse ponto não representa membership Teams atual. RAG atualmente adota aliases pelo path. Inbox declara dono de instalação e Board filtra repo_project_id. Reuniões e address book têm semântica pessoal própria. Esses casos demonstram por que uma substituição global de project por team produziria perda de isolamento ou transferência indevida. [S19][S20][S21][S22]
 
 ## 7. Migração de persistência e corte
@@ -230,15 +252,19 @@ Inventariar os stores por categoria:
 
 Um repositório pode ter servido mais de uma equipe ou conter estado de mais de uma pessoa. A relação não é necessariamente 1:1. O plano de migração registra origem, categoria, dono original, destino autorizado, regra, versão e checksums relevantes. **Nunca inferir o destino de email, displayName, slug, remoto Git ou primeiro Team retornado.**
 
+Quarentena é retenção com bloqueio de migração, não um novo grant de leitura. Administradores podem resolver metadados/vínculos permitidos; conteúdo privado continua sujeito à autoridade original aplicável. Inventários, journals e logs não carregam texto privado, tokens, cookies ou segredos por padrão. Backup e restore preservam acesso e cifragem; conteúdo sensível não vai para artefatos de CI.
+
 ### 7.2 Procedimento
 
 1. **Diagnóstico/dry-run:** levantar objetos, relações e conflitos; emitir plano sem alterações. Ausência/ambiguidade de vínculo impede ativação daquele conteúdo e impede declarar migração completa.
-2. **Snapshot recuperável:** registrar versão de aplicação/schema, referências e verificação de integridade. Backup de estado não vira cópia de credenciais exposta no artefato de CI.
+2. **Barreira de escrita e snapshot recuperável:** antes do snapshot final/backfill, impedir novas admissões nos stores afetados, reconciliar escritas/efeitos/jobs já admitidos e fixar uma geração de migração. Adotar por padrão uma janela de manutenção limitada a esses stores; não improvisar dual write. Registrar versão de aplicação/schema, referências e integridade. Logout/revogação continuam prevalecendo e nunca são perdidos por restauração.
 3. **Migração aditiva:** criar estrutura nova, backfill determinístico, journal de progresso/idempotência e testes de interrupção. Preservar FKs e históricos antigos.
 4. **Verificação:** comparar contagens por categoria, relações, hashes onde aplicável e leitura funcional; verificar casos cruzados e dados vazios. Contagem igual sozinha não prova ownership correto.
-5. **Corte único:** colocar a nova autoridade como única fonte ativa. Sem dual write permanente e sem “tentar Teams e, se falhar, usar repo”.
+5. **Corte único:** comparar geração/revisões de origem e ativar atomicamente a nova autoridade. A barreira impede escrita atrasada de processo, browser, hook ou scheduler antigos. Rejeitar schema/generation obsoletos inclusive após restart; impedir processo antigo de reabrir o store migrado. Efeitos em voo de resultado desconhecido são reconciliados, nunca presumidos cancelados. Não existe instante admitido em que os dois modelos aceitam escrita. Sem “tentar Teams e, se falhar, usar repo”.
 6. **Retirada:** remover leitores/escritores/pickers/rotas do modelo antigo que ficaram sem função; remover índices/campos somente quando seus leitores ativos e dependências estiverem migrados.
 7. **Encerramento:** provar zero writer legado e zero uso de fallback repo-profile; reexecutar migração como no-op verificável; atualizar guias e inventário final.
+
+Uma alternativa de migração online com captura de deltas exigiria desenho/prova próprios; não é o padrão deste plano. CAS de um objeto novo sozinho não protege a transição entre stores. O fence deve ser imposto no servidor e na abertura do store, não depender da boa vontade de clientes antigos.
 
 A ferramenta de migração deve ser limitada ao escopo declarado e recusar schema/config inesperados. O leitor legado pode existir somente como importador explícito e testado, nunca no caminho normal de requests. Histórico de migrações não é reeditado.
 
@@ -256,10 +282,10 @@ São pacotes propostos, não sessões já iniciadas. Cada pacote terá branch pr
 
 | Pacote | Dono técnico e arquivos principais | Entrega | Dependência e saída |
 |---|---|---|---|
-| WP0 — inventário fechado | Integrador: manifesto, grafo de imports/callers, plano de testes, ledger de campos/stores | Inventário integral por símbolo/alcançabilidade no SHA de execução; cada ocorrência com dono, destino e teste; baseline observado | Primeiro. Nenhuma contagem de scan ou CI inventada. |
-| WP1 — contrato e autoridade Teams | Schema/contexto, cliente Entra/leitor Graph, local-identity, policy, product-authority, discovery/host | TeamProfileRef e revisão efetiva; leitor real; seleção/autoridade server-side; integração do admin corporativo; contrato público coerente | Após WP0. Positivos e negativos de tenant/membership/grants; clients regenerados. |
+| WP0 — inventário fechado | Integrador: manifesto, grafo de imports/callers, plano de testes, ledger de campos/stores | Inventário integral por símbolo/alcançabilidade, entrypoint e builder/parser de URL no SHA de execução; cada ocorrência com dono, destino e teste; baseline observado | Primeiro. Nenhuma contagem de scan ou CI inventada. |
+| WP1 — contrato e autoridade Teams | Schema/contexto, cliente Entra/leitor Graph, local-identity, policy, product-authority, discovery/host | TeamProfileRef e revisão efetiva; leitor real; admissão corporativa em transportes do host; seleção/autoridade server-side; admin corporativo; contrato público e URLs versionados | Após WP0. Positivos e negativos de tenant/membership/grants; clients regenerados. |
 | WP2 — shell e estado pessoal | app-shell: layout/sidebar/titlebar/home/new-session/tabs/persist/sdk/queries/events/contexto SF | Toda navegação e restauração usam contexto Teams; mesmas guardas em todos breakpoints; sem pasta/Git no fluxo | Após contrato WP1. UI/cache/races/drafts/duas janelas qualificados. |
-| WP3 — runtime e consumidores | Core/server e bindings: config/session/MCP/Arsenal/ToolSafety/Relay/Lean/schedules; adapters RAG/Atlas/Inbox alcançáveis | Ownership durável, serviços isolados e consumidores livres de autoridade por repo; contexto técnico separado | Após WP1. Pode correr em paralelo com WP2 com ownership de arquivos explícito. |
+| WP3 — runtime e consumidores | Core/server e bindings: config/session/MCP/Arsenal/ToolSafety/Relay/Lean/schedules; adapters RAG/Atlas/Inbox alcançáveis | Ownership durável; admissão antes de SessionLocation/LocationServiceMap; serviços isolados por autoridade; consumidores livres de autoridade por repo; contexto técnico separado | Após WP1. Pode correr em paralelo com WP2 com ownership de arquivos explícito. |
 | WP4 — dados e integrações privadas | Migrador e suas novas migrations; persistência browser/Dock; vínculos de credenciais | Dry-run, backfill, integridade, interrupção/replay; partições pessoais; corte/recuperação | Planejar após WP0; implementar contra contratos WP1–3. Não duplicar edição dos stores de WP2/3. |
 | WP5 — qualificação e retirada | Integrador e revisão independente: cobertura, bundle SF, guias, inventário final | Substituição equivalente de testes legados, execução Linux, revisão de resíduos e prova das jornadas; limpeza final | Somente depois dos gates dos pacotes e migração qualificada. Um candidato final com SHA/tree exatos. |
 
@@ -372,6 +398,14 @@ Todos os itens abaixo têm estado **PLANNED / NOT_RUN**.
 | A34 | Testes substituídos e suites selecionadas | Equivalência registrada; nenhuma asserção/seleção enfraquecida. |
 | A35 | Jornadas reais Operations, Decisions, Reports | Funcionam no novo contexto sem regressão de proveniência/recuperação/guardas. |
 | A36 | Tenant real e artefato Linux final | Login, memberships, troca, revogação e restart provados no ambiente; evidência separada dos mocks. |
+| A37 | Dois usuários simultâneos no mesmo Team/pasta com grants distintos | Serviços/cache/queries/credenciais não retêm autoridade do outro; ordem de abertura não muda acesso. |
+| A38 | Writer antigo e scheduler concorrem com snapshot/backfill/flip | Deltas reconciliados ou recusados pelo fence; geração obsoleta não escreve, inclusive após restart. |
+| A39 | parentID/fork/move/import/replay entre scopes | Referências cruzadas negadas sem evento parcial; operações válidas preservam scope e grants estreitados. |
+| A40 | Registry tenta reatribuir storageKey sem copiar cookies | Rebind sem titular/tenant/contexto autorizado é negado; partição nova exige reauth; legado permanece isolado. |
+| A41 | Revogação durante modal de draft, janela em background e stream antigo | Retirada de autoridade vence confirmação; todas as janelas do auth epoch invalidam, sem perder reconciliação. |
+| A42 | Basic/operador/cookie fora do mount/Session ID conhecido nos transportes | Não equivalem a principal Teams; todos entrypoints protegidos recusam sem contexto admitido, sem passthrough. |
+| A43 | URL builder/parser, back/forward e restauração de link antigo | Seletores completos/versionados, duplicatas e chaves desconhecidas tratados; nunca compõe tuple com outro profile. |
+| A44 | Operações Graph observadas | Consultas contratadas, inclusive POST de leitura, permitidas; nenhuma mutação de Microsoft por configurar profile. |
 
 ## 11. Scanner de resíduos e prova de encerramento
 
@@ -422,6 +456,23 @@ Ainda não comprovados nesta entrega: consentimento Graph real, autoridade admin
 
 O estudo fundamenta a implementação. **Não certifica que o profile já foi migrado, que o código está verde ou que não existem resíduos.**
 
+### 12.1 Revisão independente do documento
+
+Três revisões técnicas independentes da autoria examinaram a primeira versão do plano (commit `77d16eed187931f1bf2434a449fed9894bc2137e`). Identificaram seis P1 e dois P2 de planejamento; não eram alegações de defeitos novos executados. Os ajustes foram incorporados:
+
+| Finding | Severidade | Ajuste no plano |
+|---|---|---|
+| R01 — identidade do host versus usuário Microsoft | P1 | §3.4, WP1/WP3 e A42: admissão em todos os entrypoints antes de serviços/dados. |
+| R02 — usuários diferentes no mesmo Team | P1 | §3.2 e A37: cache/serviço não compartilha autoridade capturada. |
+| R03 — escritores antigos durante corte | P1 | §7.2 e A38: manutenção limitada, fence, geração e ativação atômica. |
+| R04 — parent/fork/move/import de sessões | P1 | §6 e A39: ownership nas duas pontas e grant estreitado. |
+| R05 — reatribuição silenciosa de storageKey | P1 | §5.3 e A40: vínculo autorizado ou nova partição com reautenticação. |
+| R06 — modal de draft impedir revogação | P1 | §5.2 e A41: retirada compulsória de autoridade em todas as janelas do auth epoch. |
+| R07 — quarentena interpretada como acesso admin ao privado | P2 | §7.1: retenção não concede leitura; logs/backup preservam sigilo e acesso. |
+| R08 — parsers/builders de URL fora do inventário | P2 | §5.1, WP0–2 e A43: contrato versionado e seletores atômicos. |
+
+A revisão é do planejamento e de fontes direcionadas; não certifica migração, CI, execução instalada ou ausência global de resíduos.
+
 ## 13. Fontes de código e documentação
 
 Todos os links S usam o pin do estudo; os números de linha citados são desse pin. A documentação Microsoft foi consultada durante o estudo para validar as diferenças de identidade, memberships e Teams.
@@ -469,3 +520,10 @@ Todos os links S usam o pin do estudo; os números de linha citados são desse p
 [S36]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/relay.ts
 [S37]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/tool/maestro-arsenal.ts
 [S38]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts
+
+[S39]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-identity.ts
+[S40]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/authorization.ts
+[S41]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/capability-authorization.ts
+[S42]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/protocol/src/api.ts
+[S43]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx
+[S44]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/renderer/index.tsx

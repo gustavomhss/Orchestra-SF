@@ -12,16 +12,16 @@
   "implementationStatus": "NOT_STARTED",
   "testsStatus": "NOT_RUN",
   "realTenantVerification": "NOT_RUN",
-  "reviewStatus": "PENDING_INDEPENDENT_DOCUMENT_REVIEW",
+  "reviewStatus": "FINDINGS_INCORPORATED_AWAITING_RECHECK",
   "scopeNote": "Study of repository-derived profile ownership and its dependencies. Not a claim that every project/directory symbol must be deleted. Product-specific dead repo-profile code must be removed; technical location, personal data, installation data and workflow profiles need explicit classification.",
   "coverage": {
-    "sourceGroups": 24,
-    "mappedSourcePaths": 98,
+    "sourceGroups": 26,
+    "mappedSourcePaths": 106,
     "testGroups": 16,
     "existingTestPaths": 80,
-    "acceptanceScenarios": 36,
+    "acceptanceScenarios": 44,
     "fullRepositoryContentScan": "NOT_PERFORMED",
-    "sourceReading": "Targeted reads of producers, direct consumers and important indirect consumers; exact source paths and blobs verified against analysis tree.",
+    "sourceReading": "Targeted reads of producers, direct consumers and important indirect consumers; exact source paths and blobs verified against analysis tree. Additional authentication boundary and observed integration patches read during independent review.",
     "semanticTestCoverage": "Not certified. Primary bodies read in the audits and supplementary tree-discovered candidates are distinguished. No tests run.",
     "codeSearchLimitation": "GitHub code search targets default dev, not analysis pin. No-result is not evidence of absence.",
     "unresolvedImplementationEntryGate": "WP0: reconcile current integration SHA and create exhaustive symbol/caller/store/reachability inventory"
@@ -261,9 +261,11 @@
         "A09",
         "A15",
         "A19",
-        "A35"
+        "A35",
+        "A41",
+        "A43"
       ],
-      "observation": "discovery via explicit triplet or directory; maintain exact owner, ambiguity rejection, generation, accessRevision and draft revocation",
+      "observation": "discovery via explicit triplet or directory; maintain exact owner, ambiguity rejection, generation, accessRevision and draft revocation; per-family URL parsers reject unknown/duplicate/partial selectors and window URL restore must share the versioned contract",
       "evidenceLevel": "TARGETED_SOURCE_READING",
       "paths": [
         {
@@ -283,6 +285,20 @@
           "blobSha": "4ed78485f6704fed4ca57b0c76f047359d6a59bc",
           "presentAtPin": true,
           "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx",
+          "blobSha": "af8d3b1309c573a4b931aa217a28e3844712fdd8",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx"
+        },
+        {
+          "path": "apps/desktop/src/renderer/index.tsx",
+          "blobSha": "8a3442c9736badfcf59e9ad9c1eb7342fae1430b",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/renderer/index.tsx"
         }
       ],
       "implementationStatus": "PLANNED",
@@ -330,7 +346,8 @@
         "A16",
         "A17",
         "A21",
-        "A29"
+        "A29",
+        "A40"
       ],
       "observation": "max32 profile identifier, random persisted storageKey, global bookmarks/history; verify activeProfile resolver per sender/window; qualify delivered Linux binding",
       "evidenceLevel": "TARGETED_SOURCE_READING",
@@ -391,7 +408,8 @@
         "A12",
         "A20",
         "A31",
-        "A33"
+        "A33",
+        "A37"
       ],
       "observation": "Git remote/cache/root derives identity; no Git gives global; services capture config by Location",
       "evidenceLevel": "TARGETED_SOURCE_READING",
@@ -441,7 +459,9 @@
         "A23",
         "A24",
         "A29",
-        "A30"
+        "A30",
+        "A39",
+        "A42"
       ],
       "observation": "NOT NULL project FK cascade; create reuses ID early; filters before pagination; HTTP cwd fallback",
       "evidenceLevel": "TARGETED_SOURCE_READING",
@@ -866,7 +886,9 @@
         "A07",
         "A08",
         "A09",
-        "A36"
+        "A36",
+        "A41",
+        "A44"
       ],
       "observation": "web-confidential User.Read/directory me only; optional graphDirectory contract not implemented in read factory; preserve fresh checks and encrypted tokens",
       "evidenceLevel": "TARGETED_SOURCE_READING",
@@ -1071,6 +1093,83 @@
       ],
       "implementationStatus": "PLANNED",
       "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "AUTH01",
+      "wp": "WP1",
+      "disposition": "ADMIT_CORPORATE_CONTEXT_BEFORE_HOST_SERVICES",
+      "area": "Host authentication versus Microsoft installation authority",
+      "acceptanceIds": [
+        "A04",
+        "A05",
+        "A09",
+        "A13",
+        "A37",
+        "A42"
+      ],
+      "observation": "Microsoft cookie/trust are mount scoped; host Basic/passthrough and operator bearer are a different authority. Classify every reachable transport and apply corporate context before SessionLocation/service selection/data/event emission.",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/server/src/auth.ts",
+          "blobSha": "c8b4c0006f2fa2b60862f03572a322a476645976",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/auth.ts"
+        },
+        {
+          "path": "packages/server/src/middleware/authorization.ts",
+          "blobSha": "4917c54afd9c7343fdc9dac8026a43a642107cab",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/authorization.ts"
+        },
+        {
+          "path": "packages/server/src/middleware/capability-authorization.ts",
+          "blobSha": "ca7a6eaeef94c55cb8c4df36a7b7a89a6256b58d",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/capability-authorization.ts"
+        },
+        {
+          "path": "packages/protocol/src/api.ts",
+          "blobSha": "e6d64297b2a0c9071387442d47790429502e8540",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/protocol/src/api.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "FRESH01",
+      "wp": "WP5",
+      "disposition": "PRESERVE_CONCURRENT_INTEGRATION_FIXTURES",
+      "area": "Observed integration update while document was reviewed",
+      "acceptanceIds": [
+        "A35"
+      ],
+      "observation": "Full compare and both file patches read; initialization of installed fixture host and scanner observation. No central mapped profile or identity producer changed in this observed delta.",
+      "evidenceLevel": "PATCH_READ_AT_OBSERVED_HEAD",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+          "blobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
+          "presentAtPin": true,
+          "evidenceCommit": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a5b15b51b78469a054ba97b0e87fd1e36e31f73a/modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "blobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+          "presentAtPin": true,
+          "evidenceCommit": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a5b15b51b78469a054ba97b0e87fd1e36e31f73a/packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+        }
+      ],
+      "implementationStatus": "NO_CHANGE_PROPOSED",
+      "verificationStatus": "PATCH_REVIEW_ONLY"
     }
   ],
   "existingTestGroups": [
@@ -1835,6 +1934,54 @@
       "scenario": "Tenant real e artefato Linux final",
       "requiredResult": "Login, memberships, troca, revogação e restart provados no ambiente; evidência separada dos mocks.",
       "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A37",
+      "scenario": "Dois usuários simultâneos no mesmo Team/pasta com grants distintos",
+      "requiredResult": "Serviços/cache/queries/credenciais não retêm autoridade do outro; ordem de abertura não muda acesso.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A38",
+      "scenario": "Writer antigo e scheduler concorrem com snapshot/backfill/flip",
+      "requiredResult": "Deltas reconciliados ou recusados pelo fence; geração obsoleta não escreve, inclusive após restart.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A39",
+      "scenario": "parentID/fork/move/import/replay entre scopes",
+      "requiredResult": "Referências cruzadas negadas sem evento parcial; operações válidas preservam scope e grants estreitados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A40",
+      "scenario": "Registry tenta reatribuir storageKey sem copiar cookies",
+      "requiredResult": "Rebind sem titular/tenant/contexto autorizado é negado; partição nova exige reauth; legado permanece isolado.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A41",
+      "scenario": "Revogação durante modal de draft, janela em background e stream antigo",
+      "requiredResult": "Retirada de autoridade vence confirmação; todas as janelas do auth epoch invalidam, sem perder reconciliação.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A42",
+      "scenario": "Basic/operador/cookie fora do mount/Session ID conhecido nos transportes",
+      "requiredResult": "Não equivalem a principal Teams; todos entrypoints protegidos recusam sem contexto admitido, sem passthrough.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A43",
+      "scenario": "URL builder/parser, back/forward e restauração de link antigo",
+      "requiredResult": "Seletores completos/versionados, duplicatas e chaves desconhecidas tratados; nunca compõe tuple com outro profile.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A44",
+      "scenario": "Operações Graph observadas",
+      "requiredResult": "Consultas contratadas, inclusive POST de leitura, permitidas; nenhuma mutação de Microsoft por configurar profile.",
+      "status": "PLANNED_NOT_RUN"
     }
   ],
   "requiredRemainingInventory": [
@@ -1845,7 +1992,8 @@
     "All i18n dictionaries, command entries, deep links, examples, fixtures and shipped agent prompts/skills",
     "Actual stored legacy profiles and owner mapping; data census and privacy classification",
     "Runtime membership, tenant consent and corporate supreme-admin integration",
-    "Current concurrent integration deltas affecting shell/host/identity/CI"
+    "Current concurrent integration deltas affecting shell/host/identity/CI",
+    "Complete route URL builder/parser/back-forward/restore contract by native chapter family"
   ],
   "residueSearchSeeds": [
     "profileProject",
@@ -1882,7 +2030,11 @@
     "credentialPromotionToSharedTeamAllowed": false,
     "policyRollbackMayRestoreRevokedAccess": false,
     "dataOwnershipTransfersFromSelectionAllowed": false,
-    "broadResidualAllowlistAllowed": false
+    "broadResidualAllowlistAllowed": false,
+    "sharedTeamMaySharePrincipalAuthority": false,
+    "legacyStorageKeyMayBeReboundWithoutOwnerProof": false,
+    "draftGuardMayVetoRevocation": false,
+    "cutoverRequiresServerWriterFence": true
   },
   "authoritativeExternalSources": [
     {
@@ -1901,5 +2053,127 @@
       "topic": "Immutable identity and groups overage",
       "url": "https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference"
     }
-  ]
+  ],
+  "freshnessCheck": {
+    "observedBranch": "sf-join-four",
+    "observedHead": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+    "comparisonBase": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+    "status": "ahead",
+    "totalCommits": 2,
+    "evidence": "Full compare and both file patches read; initialization of installed fixture host and scanner observation. No central mapped profile or identity producer changed in this observed delta.",
+    "sourceBranchFrozen": false,
+    "changedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+        "headBlobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
+        "status": "modified",
+        "additions": 37,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "headBlobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+        "status": "modified",
+        "additions": 12,
+        "deletions": 1
+      }
+    ]
+  },
+  "documentReview": {
+    "initialDocumentCommit": "77d16eed187931f1bf2434a449fed9894bc2137e",
+    "reviewers": 3,
+    "scope": "Independent document reviews by agents that did not author the plan; source reads only, not implementation certification",
+    "findings": [
+      {
+        "id": "R01",
+        "severity": "P1",
+        "reviewer": "teams_identity",
+        "subject": "Host versus Microsoft authority",
+        "sections": "3.4; WP1/WP3",
+        "acceptanceIds": [
+          "A42"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R02",
+        "severity": "P1",
+        "reviewer": "profile_runtime",
+        "subject": "Two principals in the same Team",
+        "sections": "3.2",
+        "acceptanceIds": [
+          "A37"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R03",
+        "severity": "P1",
+        "reviewer": "profile_runtime",
+        "subject": "Old writers during cutover",
+        "sections": "7.2",
+        "acceptanceIds": [
+          "A38"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R04",
+        "severity": "P1",
+        "reviewer": "profile_runtime",
+        "subject": "Session parent/fork/move/import scope",
+        "sections": "6",
+        "acceptanceIds": [
+          "A39"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R05",
+        "severity": "P1",
+        "reviewer": "profile_ui",
+        "subject": "Rebinding storageKey transfers cookies",
+        "sections": "5.3",
+        "acceptanceIds": [
+          "A40"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R06",
+        "severity": "P1",
+        "reviewer": "profile_ui",
+        "subject": "Draft guard cannot veto revocation",
+        "sections": "5.2",
+        "acceptanceIds": [
+          "A41"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R07",
+        "severity": "P2",
+        "reviewer": "profile_runtime",
+        "subject": "Quarantine does not grant private-content access",
+        "sections": "7.1",
+        "acceptanceIds": [
+          "A27",
+          "A28",
+          "A30"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      },
+      {
+        "id": "R08",
+        "severity": "P2",
+        "reviewer": "profile_ui",
+        "subject": "URL builders/parsers and window restore",
+        "sections": "5.1; WP0/WP1/WP2",
+        "acceptanceIds": [
+          "A43"
+        ],
+        "resolution": "INCORPORATED_AWAITING_RECHECK"
+      }
+    ]
+  }
 }
