@@ -52,7 +52,7 @@ const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (own
 export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
   if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return undefined
   const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
-  const registered = descriptor && "value" in descriptor && typeof descriptor.value === "function" ?
+  const registered = descriptor && Object.hasOwn(descriptor, "value") && typeof descriptor.value === "function" ?
     sourceAuthorityReaders.get(descriptor.value) : undefined
   if (!registered) return currentLocalReadonlyAuthorityData(owner, surfaces)
   if (!registered.current(owner)) return undefined
@@ -204,16 +204,16 @@ export function createSfSourcePersistence(input: {
   if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
     const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
     const key = Object.getOwnPropertyDescriptor(persistence, "currentSnapshots")?.value
-    if (descriptor && "value" in descriptor && descriptor.value && typeof descriptor.value === "object" && typeof key === "function") {
+    if (descriptor && Object.hasOwn(descriptor, "value") && descriptor.value && typeof descriptor.value === "object" && typeof key === "function") {
       const base = descriptor.value
       const original = authorityMethods.map((name) => Object.getOwnPropertyDescriptor(persistence, name)?.value)
       sourceAuthorityReaders.set(key, { base, current: (owner) => {
         if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype ||
           types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return false
         const current = Object.getOwnPropertyDescriptor(input, "persistence")
-        return !!current && "value" in current && current.value === base && authorityMethods.every((name, index) => {
+        return !!current && Object.hasOwn(current, "value") && current.value === base && authorityMethods.every((name, index) => {
           const method = Object.getOwnPropertyDescriptor(owner, name)
-          return !!method && "value" in method && method.value === original[index]
+          return !!method && Object.hasOwn(method, "value") && method.value === original[index]
         })
       } })
     }

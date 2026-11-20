@@ -220,3 +220,37 @@ test("dispose drains an admitted readonly root without changing its observation 
     await disposing
   })
 })
+
+for (const target of ["driver", "source input", "source method"] as const) test(`inherited descriptor.value cannot disguise an admitted ${target} accessor`, async () => {
+  await fixture(async (store) => {
+    const input = { persistence: store, enumerate: enumerateSfSources, createId: randomUUID }
+    const composite = { ...store, ...createSfSourcePersistence(input) }
+    await store.readSnapshotRoot!(async () => {
+      const owner = target === "driver" ? store : composite
+      const holder = target === "driver" ? store : target === "source input" ? input : composite
+      const name = target === "source input" ? "persistence" : "currentSnapshot"
+      const descriptor = Object.getOwnPropertyDescriptor(holder, name)
+      if (!descriptor || !Object.hasOwn(descriptor, "value")) throw new Error("Fixture data descriptor unavailable")
+      const original = descriptor.value
+      const admitted = currentSfReadonlyAuthorityData(owner, surfaces)
+      if (!admitted) throw new Error("Initial real projection unavailable")
+      const observed = { current: true, supported: true, getters: 0 }
+      // Install the accessor first. Both descriptors have null prototypes so
+      // prototype.value cannot turn the fixture itself into an invalid descriptor.
+      Object.defineProperty(holder, name, Object.assign(Object.create(null), {
+        configurable: true, enumerable: true, get() { observed.getters++; return original },
+      }))
+      try {
+        Object.defineProperty(Object.prototype, "value", Object.assign(Object.create(null), { configurable: true, value: original }))
+        observed.current = admitted.current()
+        observed.supported = currentSfReadonlyAuthorityData(owner, surfaces) !== undefined
+      } finally {
+        Reflect.deleteProperty(Object.prototype, "value")
+        Object.defineProperty(holder, name, descriptor)
+      }
+      expect(observed.current).toBe(false)
+      expect(observed.supported).toBe(false)
+      expect(observed.getters).toBe(0)
+    })
+  })
+})

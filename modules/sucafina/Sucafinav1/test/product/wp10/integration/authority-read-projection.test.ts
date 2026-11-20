@@ -249,3 +249,27 @@ test("an inherited role map uses the real full data receiver on the original fal
     } finally { Reflect.deleteProperty(Object.prototype, "roleMap") }
   })
 })
+
+test("inherited descriptor.value cannot disguise the consumer input accessor during authentication", async () => {
+  await fixture(async (f) => {
+    const descriptor = Object.getOwnPropertyDescriptor(f.input, "persistence")
+    if (!descriptor || !Object.hasOwn(descriptor, "value")) throw new Error("Fixture input descriptor unavailable")
+    const owner = descriptor.value
+    const observed = { getters: 0 }
+    f.control.hook = (surface) => {
+      if (surface !== "dashboard") return
+      Object.defineProperty(f.input, "persistence", Object.assign(Object.create(null), {
+        configurable: true, enumerable: true, get() { observed.getters++; return owner },
+      }))
+      Object.defineProperty(Object.prototype, "value", Object.assign(Object.create(null), { configurable: true, value: owner }))
+    }
+    const result = await f.store.readSnapshotRoot!(() => f.product.ui.admit(f.request, "sf_context_get", "a".repeat(64))).finally(() => {
+      Reflect.deleteProperty(Object.prototype, "value")
+      Object.defineProperty(f.input, "persistence", descriptor)
+    })
+    if (result.status === "ok") f.product.ui.finish(result.value)
+    expect(result.status).toBe("denied")
+    expect(observed.getters).toBe(0)
+    expect(f.calls.map((call) => call.surface)).toEqual(["dashboard"])
+  })
+})

@@ -474,7 +474,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const sameStore = () => !types.isProxy(store) && Object.getPrototypeOf(store) === Object.prototype &&
     methods.every((name, index) => {
       const descriptor = Object.getOwnPropertyDescriptor(store, name)
-      return descriptor && "value" in descriptor && descriptor.value === original[index]
+      return descriptor && Object.hasOwn(descriptor, "value") && descriptor.value === original[index]
     })
   readonlyAuthorityReaders.set(store, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
     const scope = context.getStore()
@@ -493,7 +493,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const descriptors = fields.map((field) => Object.getOwnPropertyDescriptor(data, field))
       // A getter inherited by an absent field would observe the full data
       // receiver. Keep that path on full copies, without invoking the getter here.
-      if (descriptors.some((descriptor, index) => descriptor ? !("value" in descriptor) :
+      if (descriptors.some((descriptor, index) => descriptor ? !(Object.hasOwn(descriptor, "value")) :
         Object.getOwnPropertyDescriptor(Object.prototype, fields[index]!) !== undefined)) return undefined
       return { surface, data, descriptors }
     })

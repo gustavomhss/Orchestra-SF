@@ -91,7 +91,7 @@ export function createSfProductAuthority(input: {
   const authorityData = <S extends Surface>(selected: readonly S[]) => {
     if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return undefined
     const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
-    if (!descriptor || !("value" in descriptor) || !descriptor.value || typeof descriptor.value !== "object") return undefined
+    if (!descriptor || !(Object.hasOwn(descriptor, "value")) || !descriptor.value || typeof descriptor.value !== "object") return undefined
     const owner = descriptor.value
     const observation = currentSfReadonlyAuthorityData(owner, selected)
     if (!observation) return undefined
@@ -102,7 +102,7 @@ export function createSfProductAuthority(input: {
         return false
       }
       const current = Object.getOwnPropertyDescriptor(input, "persistence")
-      const valid = !!current && "value" in current && current.value === owner
+      const valid = !!current && Object.hasOwn(current, "value") && current.value === owner
       if (!valid) integrity.failed = true
       return valid
     } }
