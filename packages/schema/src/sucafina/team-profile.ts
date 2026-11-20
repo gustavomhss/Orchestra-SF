@@ -5,7 +5,7 @@
  * installation, membership, policy and resource grants.
  */
 import { Schema } from "effect"
-import { NonNegativeInt } from "../schema"
+import { NonNegativeInt, PositiveInt } from "../schema"
 
 export * as TeamProfile from "./team-profile"
 
@@ -97,6 +97,23 @@ export const Owner = Schema.Struct({
   parseOptions: { onExcessProperty: "error" },
 })
 export interface Owner extends Schema.Schema.Type<typeof Owner> {}
+
+/**
+ * Response namespace for private Session data. The server derives this label
+ * from its currently admitted scope after revalidation. Decoding or echoing it
+ * never grants access and never restores an owner, auth epoch or writer lease.
+ * authorityGeneration is the current durable authority generation, not the
+ * Session's original creation generation or a browser's selection epoch.
+ */
+export const SessionNamespace = Schema.Struct({
+  version: Schema.Literal(1),
+  owner: Owner,
+  authorityGeneration: PositiveInt,
+}).annotate({
+  identifier: "Sucafina.TeamProfile.SessionNamespace",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface SessionNamespace extends Schema.Schema.Type<typeof SessionNamespace> {}
 
 export const Binding = Schema.Struct({
   owner: Owner,

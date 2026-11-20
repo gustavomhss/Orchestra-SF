@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Session } from "@orchestra/schema/session"
 import { Ref } from "../src/sucafina/team-profile"
-import { SfInstallationSelector } from "../src/sucafina/context"
+import { SfInstallationSelector, SfTeamInstallationDescriptor, SfTeamContextQuery,
+  SfTeamContext, SfTeamContextResult, SfContextStamp } from "../src/sucafina/context"
 
 const profile = {
   installationId: "installation-one",
@@ -397,5 +399,144 @@ describe("Teams profile administration wire contracts", () => {
     const read = Schema.decodeUnknownSync(TeamProfile.AdminListResult, { onExcessProperty: "ignore" })
     expect(() => read({ ...listed, profiles: [{ profile, enabled: true, audit: [] }] })).toThrow()
     expect(() => read({ ...listed, credential: "private" })).toThrow()
+  })
+})
+
+describe("Teams F02 public context", () => {
+  const query = {
+    contractRevision: "sf-team-profile/1", installationId: profile.installationId,
+    tenantId: profile.tenantId, hostId: "host-one", kind: "team", teamObjectId: profile.teamObjectId,
+  }
+  const stamp = {
+    installationId: profile.installationId, projectId: "technical-project", hostId: "host-one",
+    principalRef: principal.principalObjectId, policyVersion: "policy-one", accessRevision: revisions.accessRevision,
+    team: { owner: { profile, principal }, revisions },
+  }
+  const context = {
+    contractRevision: "sf-team-profile/1", authMode: "microsoft", stamp, profile: authenticated,
+    destinations: [], availability: [],
+  }
+
+  test("discovery selects an installation and tenant without a technical Project selector", () => {
+    const input = { select: "installation", contractRevision: "sf-team-profile/1",
+      installationId: profile.installationId, tenantId: profile.tenantId }
+    expect(Schema.is(SfInstallationSelector)(input)).toBe(true)
+    for (const key of ["contractRevision", "installationId", "tenantId"]) {
+      expect(Schema.is(SfInstallationSelector)(Object.fromEntries(
+        Object.entries(input).filter(([field]) => field !== key)))).toBe(false)
+    }
+    const descriptor = { ...profile, projectId: "technical-project", hostId: "host-one",
+      publicOrigin: "https://sf.example.test", mount: "/sucafina", contractRevision: "sf-team-profile/1", authMode: "microsoft" }
+    const { teamObjectId, ...installed } = descriptor
+    expect(Schema.is(SfTeamInstallationDescriptor)(installed)).toBe(true)
+    expect(Schema.is(SfTeamInstallationDescriptor)(descriptor)).toBe(false)
+    expect(Schema.is(SfTeamInstallationDescriptor)({ ...installed, authMode: "local-operator" })).toBe(false)
+  })
+
+  test("selection and administration do not fabricate a Team identity", () => {
+    for (const kind of ["selection", "administration"]) {
+      const input = { contractRevision: "sf-team-profile/1", kind,
+        installationId: profile.installationId, tenantId: profile.tenantId }
+      expect(Schema.is(TeamProfile.Selector)(input)).toBe(true)
+      expect(Schema.is(SfTeamContextQuery)({ ...input, hostId: "host-one" })).toBe(true)
+      expect(Schema.is(SfTeamContextQuery)({ ...input, hostId: "host-one", teamObjectId: profile.teamObjectId })).toBe(false)
+    }
+  })
+
+  test("Team query is closed, complete and does not accept caller authority", () => {
+    expect(Schema.is(SfTeamContextQuery)(query)).toBe(true)
+    const { teamObjectId, ...missing } = query
+    expect(Schema.is(SfTeamContextQuery)(missing)).toBe(false)
+    for (const extra of [{ projectId: "technical-project" }, { directory: "/work" },
+      { principalRef: principal.principalObjectId }, { accessRevision: revisions.accessRevision },
+      { group: "admin" }, { grant: "write" }, { selected: profile }]) {
+      expect(Schema.is(SfTeamContextQuery)({ ...query, ...extra })).toBe(false)
+    }
+    expect(Schema.is(SfTeamContextQuery)({ ...query, contractRevision: "sf-native-ui/1" })).toBe(false)
+  })
+
+  test("current corporate context roundtrips the full Team owner separately from placement", () => {
+    const parsed = Schema.decodeUnknownSync(SfTeamContext)(context)
+    expect(Schema.encodeSync(SfTeamContext)(parsed)).toEqual(context)
+    expect(parsed.stamp.projectId).toBe("technical-project")
+    expect(parsed.stamp.team?.owner.profile.teamObjectId).toBe(profile.teamObjectId)
+    expect(Schema.is(SfTeamContextResult)({ status: "ok", value: context })).toBe(true)
+  })
+
+  test("same technical tuple cannot stand in for another Team or principal", () => {
+    for (const team of [
+      { owner: { profile: otherProfile, principal }, revisions },
+      { owner: { profile, principal: { ...principal, principalObjectId: "d1111111-2222-4333-8444-555555555555" } }, revisions },
+      { owner: { profile: { ...profile, installationId: "installation-two" }, principal }, revisions },
+      { owner: { profile, principal }, revisions: { ...revisions, accessRevision: "new-authority" } },
+      { owner: { profile, principal }, revisions: { ...revisions, configRevision: 1 } },
+    ]) expect(Schema.is(SfTeamContext)({ ...context, stamp: { ...stamp, team } })).toBe(false)
+  })
+
+  test("projection revisions and principal must agree with the producer stamp", () => {
+    for (const projected of [
+      { ...authenticated, accessRevision: "new-authority" },
+      { ...authenticated, installationId: "installation-two" },
+      { ...authenticated, principal: { ...principal, principalObjectId: "d1111111-2222-4333-8444-555555555555" } },
+      { ...authenticated, principal: { ...principal, tenantId: "e1111111-2222-4333-8444-555555555555" } },
+    ]) expect(Schema.is(SfTeamContext)({ ...context, profile: projected })).toBe(false)
+  })
+
+  test("admin with zero Teams or unavailable Teams remains authenticated with no business destinations", () => {
+    const { team, ...technical } = stamp
+    for (const teams of [{ status: "no-teams" }, { status: "unavailable", reason: "provider-unavailable" }]) {
+      const value = { ...context, stamp: technical, profile: { ...authenticated, administration: { status: "available" }, teams } }
+      expect(Schema.is(SfTeamContext)(value)).toBe(true)
+      expect(Schema.is(SfTeamContext)({ ...value, destinations: [{
+        capabilityId: "CAP01", surface: "dashboard", page: "Executive Dashboard", canRead: true, allowedActionIds: [],
+      }] })).toBe(false)
+      expect(Schema.is(SfTeamContext)({ ...value, stamp })).toBe(false)
+    }
+  })
+
+  test("legacy stamps omit the optional Team field without inventing an owner", () => {
+    const { team, ...technical } = stamp
+    const parsed = Schema.decodeUnknownSync(SfContextStamp)(technical)
+    expect(Schema.encodeSync(SfContextStamp)(parsed)).toEqual(technical)
+    expect(Object.hasOwn(Schema.encodeSync(SfContextStamp)(parsed), "team")).toBe(false)
+  })
+
+  test("closed context rejects resolver handles, groups, grants and tokens", () => {
+    for (const extra of [{ admission: {} }, { epoch: 1 }, { groups: [] }, { grants: [] }, { accessToken: "private" }]) {
+      expect(Schema.is(SfTeamContext)({ ...context, ...extra })).toBe(false)
+    }
+    expect(Schema.is(SfTeamContext)({ ...context, contractRevision: "sf-native-ui/1" })).toBe(false)
+  })
+})
+
+describe("private Session response namespaces", () => {
+  const namespace = { version: 1, owner: { profile, principal }, authorityGeneration: 2 }
+
+  test("preserves full owner and current authority generation without adding authority fields", () => {
+    const decoded = Schema.decodeUnknownSync(TeamProfile.SessionNamespace)(namespace)
+    expect(Schema.encodeSync(TeamProfile.SessionNamespace)(decoded)).toEqual(namespace)
+    expect(decoded.owner.profile).not.toHaveProperty("projectId")
+    for (const invalid of [
+      { ...namespace, version: "1" }, { ...namespace, version: 2 },
+      { ...namespace, authorityGeneration: 0 }, { ...namespace, authorityGeneration: -1 },
+      { ...namespace, authorityGeneration: 1.5 }, { ...namespace, authorityGeneration: "2" },
+      { ...namespace, authorityGeneration: Number.MAX_SAFE_INTEGER + 1 },
+      { ...namespace, owner: { profile, principal: { ...principal, tenantId: "99999999-2222-4333-8444-555555555555" } } },
+      { ...namespace, accessRevision: "claimed" }, { ...namespace, authEpoch: "claimed" },
+      { ...namespace, writerPermit: "claimed" }, { ...namespace, grants: ["read"] },
+      { ...namespace, owner: { ...namespace.owner, projectId: "claimed" } },
+    ]) expect(() => Schema.decodeUnknownSync(TeamProfile.SessionNamespace)(invalid)).toThrow()
+  })
+
+  test("Session.Info roundtrips an optional transport label while the technical form stays byte-compatible", () => {
+    const info = { id: "ses_public_namespace", projectID: "global", title: "Private Session",
+      cost: 0, tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+      time: { created: 0, updated: 0 }, location: { directory: "/synthetic-placement" } }
+    const technical = Schema.decodeUnknownSync(Session.Info)(info)
+    expect(Schema.encodeSync(Session.Info)(technical)).toEqual(info)
+    expect(technical).not.toHaveProperty("namespace")
+    const corporate = Schema.decodeUnknownSync(Session.Info)({ ...info, namespace })
+    expect(Schema.encodeSync(Session.Info)(corporate)).toEqual({ ...info, namespace })
+    expect(() => Schema.decodeUnknownSync(Session.Info)({ ...info, namespace: { ...namespace, authorityGeneration: 0 } })).toThrow()
   })
 })
