@@ -2,13 +2,13 @@
 
 ## SHA e estado
 
-- Estado: **partial — reconciliação com #413 concluída no código; revalidação focal da fixture pendente.**
+- Estado: **complete — reparo da fábrica qualificado e reconciliação com #413 aprovada no gate focal.** PR permanece draft apenas para respeitar a ordem de integração dos restos qualificados.
 - SHA de código desta reconciliação: `1bcb75f46e1c34ebfb68415fe3e57b7d9b1f5945`; o commit deste handoff é posterior.
 - Pais da reconciliação: `9b3de4e82df44274e45e9f2f63ca61ecd46b8ae0` (pacote anterior) e `7c42282e8b910cc0e10381980f040dee72cb2b19` (integração congelada, incluindo #413 e #411).
 - Base: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
 - Fonte qualificada da fábrica: `98e56b260a2b36030f6edd9711d77b1cebc907be`, PR [#395](https://github.com/gustavomhss/Orchestra-SF/pull/395).
-- Fonte do gate unitário: `143cbb9227c2a33251ec55a95a2b6432effbbb43`; snapshot `e8927363e763c8defe57599abf826589143b356b`.
-- A reconciliação e este checkpoint usam `[skip ci]`; nenhum gate ou factory foi repetido. As provas anteriores continuam vinculadas aos SHAs originais acima. A nova composição ainda não tem gate focal concluído.
+- Fonte do gate unitário anterior: `143cbb9227c2a33251ec55a95a2b6432effbbb43`; snapshot `e8927363e763c8defe57599abf826589143b356b`.
+- A reconciliação e os checkpoints documentais usam `[skip ci]`. A correção concreta das dependências recebeu um novo gate focal, sem repetir a fábrica idêntica. As provas anteriores continuam vinculadas aos SHAs originais; a nova composição foi aprovada conforme o registro abaixo.
 
 ## O que foi corrigido
 
@@ -24,7 +24,7 @@
 - `gate.test.mjs` conserva o novo controle de grafo cíclico de #413 e todos os cinco testes de retenção de #395. A única adaptação desses cenários copia o módulo `shard-plan.mjs` e o histórico real `shard-costs.json`, incluindo ambos no commit isolado da fixture. Nenhuma asserção, resultado esperado, caso ou baseline real foi alterado.
 - Blobs factory preservados: workflow `494615b3050bdbc153f5f7731d8e2395f9fab8ae`; receipt checker `caa18b28c0a4d732c8a8339f9de153a3c1c5a027`; teste de distribuição `280e68985618c3d19b70425d2ac4b888f0685b90`. O gate factory anterior qualifica esses deltas no SHA original; o pacote final continua pendente.
 - `sf/ci/suites.json` permanece com blob `57937b0e9df670fb7ccf10a18de5f5a83dec734d`; os três `PENDING_REAL_COMPLETE_RUN` permanecem intactos.
-- Gate focal pendente: `script/sf-ci/gate.test.mjs`, uma vez, no novo snapshot coordenado. Nenhuma execução local, dispatch, ready ou merge foi feito por esta reconciliação.
+- Gate focal concluído: [44661967640](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661967640), snapshot `70be17485a24ebbee910a8df37a3b7f39c3b324c`, parent `fc29a807cb40ddf5c10b3723cbd8b3221c32bd3a`, código `1bcb75f46e1c34ebfb68415fe3e57b7d9b1f5945`. **success, 58 pass / 0 fail, 1 arquivo, 579 ms**. Test job136042084313 e cleanup136042710386 success. Os quatro cenários reais e o contrato de upload passaram na composição, incluindo a recusa original de baseline pendente. Nenhum baseline de produto foi aprovado ou inventado.
 
 ## Gates concluídos antes da reconciliação
 
@@ -65,8 +65,8 @@ O draft #257 não podia ser retargetado diretamente para sf-join-four: GitHub re
 
 ## Como retomar
 
-1. Executar uma única qualificação focal de `script/sf-ci/gate.test.mjs` sobre o SHA reconciliado, para provar a correção concreta das dependências da fixture. Registrar run, snapshot e contagens reais; não repetir a fábrica sem nova causa.
-2. Após esse gate e a revisão, integrar o PR #395 na posição coordenada dos restos qualificados, preservando os SHAs esperados. A branch está partial enquanto a revalidação focal estiver pendente.
+1. A qualificação focal já passou no run44661967640; não repetir esse gate sem outra causa/código. Conferir que alterações posteriores são apenas documentais e manter a prova factory anterior vinculada a seus blobs exatos.
+2. Integrar o PR #395 na posição coordenada dos restos qualificados, depois dos shared/UI/shards elegíveis, preservando o head esperado. A condição técnica deste recorte está complete; o draft é uma proteção de ordem, não falta de gate.
 3. Após todos os merges, executar o comando canônico `bun run check:guards --base origin/dev` em Actions sobre checkout do SHA final e histórico completo, sem `--warn` nem aprovação sintética. O antigo `ui-split/ui-work/guards.test.ts` agora prova somente ownership estático; ele não executa esse comando e não serve como prova dos guards finais. Proposta coordenada: workflow isolado em ref própria com checkout explícito do SHA final e artifact dos logs/status reais, preservando exit não zero dos GATE herdados. Nenhum workflow dessa proposta foi criado aqui.
 4. Disparar sf-ci 420530405 exatamente uma vez em sf-join-four, depois dos merges e guards. Registrar todos os jobs, artifacts e causas reais. Os wrappers estáticos dependem da execução efetiva do job `sf/static-and-contracts`, cujo resultado é obrigatório no agregador.
 5. Congelar o SHA, verificar ancestralidade/lease e mover sfa-factory-package por fast-forward para ele. Verificar que #257 continua draft na base hold.
