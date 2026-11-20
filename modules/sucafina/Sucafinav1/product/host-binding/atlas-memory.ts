@@ -45,6 +45,39 @@ export function cloneSfAtlasRecallResult<T>(value: T): T {
   return Object.assign(clone, { records })
 }
 
+/** Keep canonical bytes private while renewing only their consumed observation.
+ * Every renewal reopens the original reader's protected C08/authority boundary;
+ * it issues a new records array and never resurrects the consumed array's tag. */
+export function retainSfAtlasRecallResult<T>(value: T, call: TrustedDomainContext) {
+  const records = recallRecords(value), observed = records && recallObservations.get(records)
+  if (!records || !observed || observed.call !== call || !observed.stable() ||
+    observed.recordsDigest !== digestSfValue(records)) return undefined
+  const retained = structuredClone(value), fingerprint = digestSfValue(value)
+  let current = { value, records, observed }
+  let busy = false
+  return async (): Promise<T | undefined> => {
+    if (busy) return undefined
+    const previous = current
+    const stable = () => previous.observed.call === call && previous.observed.stable() &&
+      recallRecords(previous.value) === previous.records && digestSfValue(previous.value) === fingerprint &&
+      previous.observed.recordsDigest === digestSfValue(previous.records)
+    if (!stable()) return undefined
+    if (recallObservations.get(previous.records) === previous.observed) return cloneSfAtlasRecallResult(previous.value)
+    // Claim before awaiting so two cache readers cannot share a renewal.
+    busy = true
+    try {
+      if (!await previous.observed.complete([{ records: previous.records, observed: previous.observed }], call) || !stable()) return undefined
+      const renewed = structuredClone(retained), next = recallRecords(renewed)
+      if (!next || digestSfValue(renewed) !== fingerprint) return undefined
+      const observation: RecallObservation = { ...previous.observed, stable, recordsDigest: digestSfValue(next) }
+      recallObservations.set(next, observation)
+      current = { value: renewed, records: next, observed: observation }
+      return cloneSfAtlasRecallResult(renewed)
+    } catch { return undefined }
+    finally { busy = false }
+  }
+}
+
 function recallRecords(value: unknown): readonly unknown[] | undefined {
   if (!value || typeof value !== "object" || !("records" in value)) return undefined
   return Array.isArray(value.records) ? value.records : undefined
