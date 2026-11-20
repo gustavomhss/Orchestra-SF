@@ -63,8 +63,9 @@ const reviewReadValidations = new WeakMap<object, { read: unknown; validation: R
  * this function does not find a body, authenticate a receipt or retain authority. */
 export function sfReviewReadValidation(port: object): ReviewReadValidation | undefined {
   const registered = reviewReadValidations.get(port)
-  const descriptor = registered ? Object.getOwnPropertyDescriptor(port, "read") : undefined
-  return descriptor && "value" in descriptor && descriptor.value === registered?.read ? registered.validation : undefined
+  if (!registered) return undefined
+  const descriptor = Object.getOwnPropertyDescriptor(port, "read")
+  return descriptor && "value" in descriptor && descriptor.value === registered.read ? registered.validation : undefined
 }
 
 export function createReviewPort(host: ReviewHost, readDependenciesCurrent?: () => boolean | undefined) {
