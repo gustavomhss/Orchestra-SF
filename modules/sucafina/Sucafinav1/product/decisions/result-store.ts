@@ -6,6 +6,7 @@ import type { SfOperationOutputMap } from "../contracts/outputs.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
+import { selectSfDecisionResult, selectSfDecisionResultBatch } from "../host-binding/state-provider.ts"
 import { historicalCalculationMatches } from "./calculation-history.ts"
 import type { HistoricalCalculationRead } from "./calculation-history.ts"
 
@@ -90,11 +91,7 @@ export function createSfDecisionResultStore(input: {
     const historicalRequest = ledger ? structuredClone(ledger) : undefined
     const source = input.host.requestFor(context)
     if (!source || !request.resultRef.trim() || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-    const current = await input.state.read(source, "cases", (state, authority) => {
-      if (!sameAuthority(authority, context)) return undefined
-      const stored = (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef]
-      return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
-    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const current = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "result-unavailable" }
     const value = structuredClone(current.value)
     if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
@@ -102,7 +99,7 @@ export function createSfDecisionResultStore(input: {
     if (calculation && (value.stored.kind !== "scenario" || !input.verifyCalculationSources && calculationSources(value.stored).some((ref) => ref.kind !== "record"))) return { status: "unavailable", reason: "calculation-source-unsupported" }
     if (!allowedCase(value.current, value.stored.caseRef, context, historical) || !await authorizeCase(value.current!, context).catch(() => false) || !await verifySources(value.stored, calculation && value.stored.kind === "scenario" ? calculationSources(value.stored) : value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (calculation && value.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(value.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
-    const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const again = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context, value.stored.caseRef.id)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
     const latest = structuredClone(again.value)
     if (historicalRequest && (!latest?.stored || !historicalCalculationMatches(latest.current, latest.stored, historicalRequest, context) || digestSfValue(latest.current) !== digestSfValue(value.current))) return { status: "denied", reason: "historical-calculation-changed" }
@@ -115,7 +112,7 @@ export function createSfDecisionResultStore(input: {
     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     // Source replay can await domain reads. Observe the same authorized case and result
     // after that last callback, under C08's read fence, before releasing the value.
-    const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const final = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context, value.stored.caseRef.id)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
     const observed = structuredClone(final.value)
     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
@@ -157,12 +154,7 @@ export function createSfDecisionResultStore(input: {
         failures[index] = { status: "denied", reason: "invalid-authority" }
     }
     if (!source || !remaining()) return failRemaining(denied())
-    const observe = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
-      ? references.map((reference, index) => {
-        if (failures[index]) return undefined
-        const stored = state.decisionResults?.[reference]
-        return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
-      }) : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const observe = () => input.state.read(source, "cases", selectSfDecisionResultBatch(references, context, (index) => !!failures[index])).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
     const first = await observe()
     if (first.status !== "ok") return failRemaining({ status: first.status === "preview" ? "unavailable" : first.status, reason: "result-unavailable" })
     const values = structuredClone(first.value)
