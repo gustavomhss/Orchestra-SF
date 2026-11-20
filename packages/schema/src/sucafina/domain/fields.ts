@@ -202,6 +202,13 @@ export const SfDomainPerformance = Schema.Struct({
 export const SfDomainPageData = {
   CAP01: Schema.Struct({
     totals: optional(SfDomainBudgetTotals),
+    people: optional(Schema.Struct({
+      year: SfDomainYears, month: SfDomainMonths,
+      users: Schema.NullOr(Schema.Finite),
+      opexCostPerUser: Schema.NullOr(Schema.Finite),
+      totalCostPerUser: Schema.NullOr(Schema.Finite),
+      attritionYtd: Schema.NullOr(Schema.Finite),
+    })),
     executive: optional(SfDomainExecutive),
     executiveByYear: optional(Schema.Record(Schema.String, SfDomainExecutive )),
     executiveMonths: optional(Schema.Record(Schema.String, SfDomainExecutiveMonth )),
