@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import path from "node:path"
 import { createStoredScenarioBiProjection } from "../../../product/analytics/stored-scenario.ts"
 import { sameBiProjection } from "../../../product/analytics/projection.ts"
@@ -40,6 +41,7 @@ function consumer(phase: Phase, host: Pick<DomainPortHost, "revalidate">, advant
 }
 
 test("same-case BI preserves the human choice while the confirmed training revision changes its current source result and table", async () => {
+  expectSpawn(import.meta.path)
   const history = await createRenewalChoiceHistory()
   try {
     const beforeReader = consumer(history.before, history.fixture.host, await persistAdvantage(history.before, history.fixture.context))
