@@ -9,7 +9,7 @@ import { createSfDashboardApplicationIntents } from "../../../../../../../apps/c
 import { launchBrowserDriver } from "../../wp02/browser-driver-fixture.ts"
 import {
   applicationPanel, assertPrivateCorrelation, correlations, createConsumerReadFixture, editNewDraft, initialCaseRef,
-  loadPrivateOptions, modeUrl, observedApplication, openPreparation, openWorkbench, pendingSaveMessage, prepareApply, privatePanel,
+  loadPrivateOptions, modeUrl, observedApplication, observeRecoveryRoute, openPreparation, openWorkbench, pendingSaveMessage, prepareApply, privatePanel,
   receive, receiveCases, receiveContext, recoveredMessage, recoveryPrefix, reloadApply, unknownMessage,
 } from "./fixture.ts"
 
@@ -37,7 +37,7 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
     expect(await observedApplication(fixture)).toEqual(before)
 
     const attempts: { body: string | null; key: string | undefined; status: number; receipt: unknown }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-apply"), async (route) => {
+    const completedApply = await observeRecoveryRoute(page, "dashboard-hot-topic-apply", failures, async (route) => {
       const original = route.request().postDataJSON() as AdmittedApply
       const source = new Request(route.request().url(), { method: "POST",
         headers: await route.request().allHeaders(), body: route.request().postData() })
@@ -64,7 +64,7 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
       // Execute the real host once; corrupt only the delivered acknowledgement.
       await route.fulfill({ response, json: { status: "ok", value: { result: { ok: true } } } })
     })
-    await panel.getByRole("button", { name: "Confirm application", exact: true }).click()
+    await Promise.all([completedApply(), panel.getByRole("button", { name: "Confirm application", exact: true }).click()])
     await panel.getByText(unknownMessage, { exact: true }).waitFor()
     expect(attempts).toHaveLength(1)
     expect(attempts[0]!.status).toBe(200)
@@ -89,7 +89,7 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
     expect(await observedApplication(fixture)).toEqual(committed)
 
     const recoveries: { key: string | undefined; body: unknown; receipt: unknown; status: number }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-recover"), async (route) => {
+    const completedRecovery = await observeRecoveryRoute(page, "dashboard-hot-topic-recover", failures, async (route) => {
       const response = await route.fetch(), body: unknown = await response.json()
       recoveries.push({ key: route.request().headers()["idempotency-key"], body: route.request().postDataJSON(),
         receipt: object(body).value, status: response.status() })
@@ -98,7 +98,7 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
     await reloadApply(page)
     expect(attempts).toHaveLength(1)
     expect(recoveries).toEqual([])
-    await panel.getByRole("button", { name: "Read original application receipt", exact: true }).click()
+    await Promise.all([completedRecovery(), panel.getByRole("button", { name: "Read original application receipt", exact: true }).click()])
     await panel.getByText(recoveredMessage, { exact: true }).waitFor()
     expect(recoveries).toEqual([{ key: attempts[0]!.key, body: selector, receipt: attempts[0]!.receipt, status: 200 }])
     expect(attempts).toHaveLength(1)
@@ -128,13 +128,15 @@ test("UI recovery reauthorizes the restored attempt and purges it on real denial
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "Private revoked recovery")
     const attempts: { body: string | null; key: string | undefined; status: number }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-apply"), async (route) => {
+    const completedApply = await observeRecoveryRoute(page, "dashboard-hot-topic-apply", failures, async (route) => {
       const response = await route.fetch()
       attempts.push({ body: route.request().postData(), key: route.request().headers()["idempotency-key"], status: response.status() })
       await route.abort("failed")
     })
-    await panel.getByRole("button", { name: "Confirm application", exact: true }).click()
+    await Promise.all([completedApply(), panel.getByRole("button", { name: "Confirm application", exact: true }).click()])
     await panel.getByText(unknownMessage, { exact: true }).waitFor()
+    expect(attempts).toHaveLength(1)
+    expect(attempts[0]!.status).toBe(200)
     const committed = await observedApplication(fixture)
     expect(committed.decision.receipts).toHaveLength(1)
     await reloadApply(page)
@@ -221,13 +223,13 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "One effect before ambiguous receipt")
     const applications: { body: string | null; key: string | undefined; status: number; result: unknown }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-apply"), async (route) => {
+    const completedApply = await observeRecoveryRoute(page, "dashboard-hot-topic-apply", failures, async (route) => {
       const response = await route.fetch()
       applications.push({ body: route.request().postData(), key: route.request().headers()["idempotency-key"],
         status: response.status(), result: await response.json() })
       await route.abort("failed")
     })
-    await panel.getByRole("button", { name: "Confirm application", exact: true }).click()
+    await Promise.all([completedApply(), panel.getByRole("button", { name: "Confirm application", exact: true }).click()])
     await panel.getByText(unknownMessage, { exact: true }).waitFor()
     expect(applications).toHaveLength(1)
     expect(applications[0]!.status).toBe(200)
@@ -246,7 +248,7 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
     const saved = await assertPrivateCorrelation(page, { kind: "apply", key: applications[0]!.key,
       caseRef: original.caseRef, choiceId: original.choiceId, changeId: original.changeId })
     const recoveries: { key: string | undefined; body: unknown; status: number; result: unknown }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-recover"), async (route) => {
+    const completedRecovery = await observeRecoveryRoute(page, "dashboard-hot-topic-recover", failures, async (route) => {
       const response = await route.fetch(), result: unknown = await response.json()
       recoveries.push({ key: route.request().headers()["idempotency-key"], body: route.request().postDataJSON(),
         status: response.status(), result })
@@ -256,7 +258,7 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
       await reloadApply(page)
       expect(recoveries).toHaveLength(attempt)
       const read = receive(page, "dashboard-hot-topic-recover")
-      await panel.getByRole("button", { name: "Read original application receipt", exact: true }).click()
+      await Promise.all([completedRecovery(), panel.getByRole("button", { name: "Read original application receipt", exact: true }).click()])
       expect((await read).status).toBe(503)
       await panel.getByText(unknownMessage, { exact: true }).waitFor()
       expect(recoveries).toHaveLength(attempt + 1)
@@ -303,14 +305,14 @@ test("UI recovery distinguishes a lost first save without draftRef and never gue
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, fixture)
     const attempts: { body: string | null; key: string | undefined; status: number; result: unknown }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-draft"), async (route) => {
+    const completedSave = await observeRecoveryRoute(page, "dashboard-hot-topic-draft", failures, async (route) => {
       const response = await route.fetch()
       attempts.push({ body: route.request().postData(), key: route.request().headers()["idempotency-key"],
         status: response.status(), result: await response.json() })
       await route.abort("failed")
     })
     await editNewDraft(page, "Two independent drafts with the same title")
-    await panel.getByRole("button", { name: "Save private draft", exact: true }).click()
+    await Promise.all([completedSave(), panel.getByRole("button", { name: "Save private draft", exact: true }).click()])
     await panel.getByRole("region", { name: "Original first-save recovery", exact: true }).waitFor()
     expect(attempts).toHaveLength(1)
     expect(attempts[0]!.status).toBe(200)
@@ -335,7 +337,7 @@ test("UI recovery distinguishes a lost first save without draftRef and never gue
     const secondRef = object(object(await second.json()).value).draftRef
     expect(secondRef).not.toBe(first.value[0]!.draftRef)
     const outcomes: { key: string | undefined; body: unknown; result: unknown; status: number }[] = []
-    await page.route(modeUrl("dashboard-hot-topic-draft-outcome"), async (route) => {
+    const completedOutcome = await observeRecoveryRoute(page, "dashboard-hot-topic-draft-outcome", failures, async (route) => {
       const response = await route.fetch(), result: unknown = await response.json()
       outcomes.push({ key: route.request().headers()["idempotency-key"], body: route.request().postDataJSON(), result, status: response.status() })
       await route.fulfill({ response })
@@ -358,7 +360,7 @@ test("UI recovery distinguishes a lost first save without draftRef and never gue
     expect(available.status === "ok" && available.value.filter((draft) => draft.draftRef === first.value[0]!.draftRef)).toHaveLength(1)
     expect(await fixture.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
 
-    await panel.getByRole("button", { name: "Read original save outcome", exact: true }).click()
+    await Promise.all([completedOutcome(), panel.getByRole("button", { name: "Read original save outcome", exact: true }).click()])
     await panel.getByText("The original saved draft was recovered from its authorized result.", { exact: true }).waitFor()
     expect(outcomes).toEqual([{ key: attempts[0]!.key, body: { caseRef: initialCaseRef },
       status: 200, result: { status: "ok", value: { draftRef: first.value[0]!.draftRef, version: 1 } } }])
@@ -391,7 +393,7 @@ test("F01 purges a still-valid original correlation on owner reload outside Dash
     const page = await context.newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, fixture), saves: unknown[] = [], outcomes: string[] = []
-    await page.route(modeUrl("dashboard-hot-topic-draft"), async (route) => {
+    const completedSave = await observeRecoveryRoute(page, "dashboard-hot-topic-draft", failures, async (route) => {
       const response = await route.fetch()
       expect(response.status()).toBe(200)
       saves.push(await response.json())
@@ -402,7 +404,7 @@ test("F01 purges a still-valid original correlation on owner reload outside Dash
       if (mode === "dashboard-hot-topic-draft-outcome" || mode === "dashboard-hot-topic-recover") outcomes.push(mode)
     })
     await editNewDraft(page, "Owner-bound unsent recovery fields")
-    await panel.getByRole("button", { name: "Save private draft", exact: true }).click()
+    await Promise.all([completedSave(), panel.getByRole("button", { name: "Save private draft", exact: true }).click()])
     await panel.getByRole("region", { name: "Original first-save recovery", exact: true }).waitFor()
     expect(saves).toHaveLength(1)
     const before = await correlations(page)
