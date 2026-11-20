@@ -149,7 +149,7 @@ async function metricFixture(deadline: ReturnType<typeof compositionTestDeadline
   if (rule.status !== "ok") throw new Error(`Actual criterion registration failed: ${rule.reason}`)
   const scenarios = fixture.business.plannerProduct.scenarios
   if (!scenarios) throw new Error("Actual stored scenario resolver unavailable")
-  return { ...fixture, call, caseRef, sources, scenarios, period,
+  return { ...fixture, stateRequest: fixture.request, call, caseRef, sources, scenarios, period,
     request: { caseRef, criterionId: "cost", ruleRef: rule.value.ruleRef, ruleVersion: rule.value.version,
       metricRef: "planner:known-subtotal-difference", baselineRef: produced.value.resultRefs[0]!, scenarioRef: produced.value.resultRefs[1]! } }
 }
@@ -232,10 +232,10 @@ test("Portfolio metric batches result envelopes while preserving separate histor
   const deadline = compositionTestDeadline("portfolio-metric-historical-batch")
   try {
     const fixture = await metricFixture(deadline)
-    const current = await fixture.authority.state.read(fixture.request(), "cases", (state) => state.cases[fixture.caseRef.id])
+    const current = await fixture.authority.state.read(fixture.stateRequest(), "cases", (state) => state.cases[fixture.caseRef.id])
     if (current.status !== "ok" || !current.value) throw new Error("Current metric case unavailable")
     const next = { ...current.value, version: current.value.version + 1 }
-    const advanced = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion,
+    const advanced = await fixture.authority.state.transaction(fixture.stateRequest(), { namespace: "cases", expectedStorageVersion: current.storageVersion,
       targetRef: next.id, targetIncarnation: next.incarnation, idempotencyKey: "metric-newer-case", commandDigest: digestSfValue(next) }, async (state) => {
       state.cases[next.id] = next
       return { commit: true, value: true }
