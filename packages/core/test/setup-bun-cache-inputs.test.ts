@@ -135,7 +135,7 @@ test("bare parent-relative archives inside the repository contribute their bytes
   expect((await dependencyFingerprint(directory.path, runtime)).fingerprint).not.toBe(before.fingerprint)
 })
 
-test("cache paths reject control characters and glob metacharacters in admitted workspace names", async () => {
+test("cache paths reject controls, whitespace and glob metacharacters in admitted workspace names", async () => {
   await using directory = await fixture()
   for (const workspace of ["nested/with\nnewline", "nested/with\rcarriage", "nested/[glob]", "nested/!glob"]) {
     await write(directory.path, "package.json", JSON.stringify({
@@ -144,8 +144,11 @@ test("cache paths reject control characters and glob metacharacters in admitted 
     await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_")
   }
   await write(directory.path, "package.json", sources["package.json"])
-  await write(directory.path, "packages/bad[glob]/package.json", '{"name":"@fixture/unsafe"}')
-  await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_WORKSPACE_PATTERN_UNSUPPORTED")
+  for (const name of ["bad[glob]", " with-space ", "+(group)"]) {
+    await write(directory.path, "packages/" + name + "/package.json", '{"name":"@fixture/unsafe"}')
+    await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_WORKSPACE_PATTERN_UNSUPPORTED")
+    await rm(path.join(directory.path, "packages", name), { recursive: true })
+  }
 })
 
 test("source files and workspace symlinks cannot import an outside tree", async () => {

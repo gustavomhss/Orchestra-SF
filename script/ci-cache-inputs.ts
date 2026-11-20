@@ -60,7 +60,7 @@ export async function dependencyFingerprint(
     const wildcard = spec.endsWith("/*")
     const parent = wildcard ? spec.slice(0, -2) : spec
     safePath(parent)
-    if (/[*?![\]{}]/.test(parent)) throw new Error("CACHE_WORKSPACE_PATTERN_UNSUPPORTED: " + spec)
+    if (!/^[A-Za-z0-9_./-]+$/.test(parent)) throw new Error("CACHE_WORKSPACE_PATTERN_UNSUPPORTED: " + spec)
     const directories = wildcard
       ? (await readdir(path.join(root, parent), { withFileTypes: true }))
         .filter((entry) => !entry.name.startsWith(".") && entry.name !== "node_modules")
@@ -71,7 +71,7 @@ export async function dependencyFingerprint(
       : [parent]
     if (directories.length > 256) throw new Error("CACHE_WORKSPACE_LIMIT")
     for (const workspace of directories) {
-      if (/[*?![\]{}]/.test(workspace)) throw new Error("CACHE_WORKSPACE_PATTERN_UNSUPPORTED: " + workspace)
+      if (!/^[A-Za-z0-9_./-]+$/.test(workspace)) throw new Error("CACHE_WORKSPACE_PATTERN_UNSUPPORTED: " + workspace)
       const file = workspace + "/package.json"
       const value = await manifest(file, wildcard)
       if (value) manifests.set(file, value)
