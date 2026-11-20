@@ -1,4 +1,5 @@
 import { test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { chmod, mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { randomBytes, randomUUID } from "node:crypto"
@@ -22,9 +23,10 @@ import type { ReviewAgendaItem } from "../../../product/reviews/selection.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { captureChromiumCleanup } from "./chromium-cleanup.ts"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 
 test("Chromium preserves the annual agenda, recovers a lost response and removes revoked content", async () => {
+  expectSpawn(import.meta.path)
   const started = Date.now()
   const checkpoint = (phase: string) => console.info(`WP07 browser: ${phase} +${Date.now() - started}ms`)
   const traces = new AsyncLocalStorage<Map<string, { calls: number; milliseconds: number }>>()
@@ -49,7 +51,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
   }
   const diagnostic = (error: unknown) => new Error((error instanceof Error ? error.stack ?? error.message : String(error)).replace(/([?&]code=)[a-f0-9]{64}/g, "$1[redacted]"))
   const failures: unknown[] = []
-  const { chromium, expect } = await timed("playwright-import", () => import("@playwright/test"))
+  const { expect } = await timed("playwright-import", () => import("@playwright/test"))
   const built = await timed("browser-build", () => Bun.build({ entrypoints: [fileURLToPath(new URL("./browser-ui-entry.ts", import.meta.url))], target: "browser", format: "esm", sourcemap: "none" }))
   expect(built.success).toBe(true)
   const bundle = built.outputs.find((output) => output.kind === "entry-point")
@@ -230,8 +232,14 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       return { commit: true, value: undefined }
     })
     const storedReviews = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }), 20000)
-    runtime.closeBrowser = await timed("chrome-ownership", () => captureChromiumCleanup(runtime.browser!))
+    // The published Node driver owns Chromium's extra stdio descriptors.
+    // Bun uses its public Unix-pipe connection; the original 15s startup
+    // deadline and the driver's physical cleanup proof remain mandatory.
+    checkpoint("chrome-launch:start")
+    const driver = await launchBrowserDriver("wp07-review")
+    runtime.browser = driver.browser
+    runtime.closeBrowser = async () => { await driver.close(); driver.report() }
+    checkpoint("chrome-launch:done")
     const context = await timed("browser-context", () => runtime.browser!.newContext({ viewport: { width: 1440, height: 1000 } }))
     const page = await timed("browser-page", () => context.newPage())
     page.setDefaultTimeout(5000)
@@ -239,7 +247,27 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const errors: string[] = []
     page.on("pageerror", (error) => { errors.push(error.message) })
     const code = await timed("operator-enrollment", () => identity.enroll())
-    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/auth/local?code=${code}`, { waitUntil: "domcontentloaded", timeout: 5000 }))
+    const enrollmentUrl = `${origin}/sucafina/auth/local?code=${code}`
+    // Chromium owns the real Set-Cookie exchange. The product redirects to the
+    // native root, which is intentionally absent from this isolated component host.
+    // A separate page contains Chromium's asynchronous error-document navigation;
+    // the authenticated cookie remains in this same BrowserContext.
+    const enrollmentPage = await timed("operator-enrollment-page", () => context.newPage())
+    try {
+      const [enrollment] = await timed("operator-enrollment-http", () => Promise.all([
+        enrollmentPage.waitForResponse((response) => response.url() === enrollmentUrl),
+        enrollmentPage.goto(enrollmentUrl, { waitUntil: "domcontentloaded", timeout: 5000 }).catch((error: unknown) => {
+          if (!(error instanceof Error) || !error.message.includes("net::ERR_HTTP_RESPONSE_CODE_FAILURE")) throw error
+          return null
+        }),
+      ]))
+      expect(enrollment.status()).toBe(303)
+      expect(enrollment.headers().location).toBe("/")
+      const redirected = enrollment.request().redirectedTo()
+      expect(redirected?.url()).toBe(`${origin}/`)
+      expect((await redirected?.response())?.status()).toBe(404)
+    } finally { await timed("operator-enrollment-page-close", () => enrollmentPage.close()) }
+    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded", timeout: 5000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
     checkpoint("selection-load")
@@ -310,17 +338,6 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     expect(successful[0]!.key).not.toBe("")
     expect(successful[0]!.reviewRef).toBe(successful[1]!.reviewRef)
     expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
-    checkpoint("report-thread-revoked")
-    control.threadAllowed = false
-    await view.getByRole("button", { name: "Generate DOCX", exact: true }).click()
-    await expect(view.getByRole("status")).toContainText("Report unavailable")
-    await expect(view.getByRole("table")).toHaveCount(0)
-    await expect(view.getByRole("link", { name: "Download generated report", exact: true })).toHaveCount(0)
-    await expect(view).not.toContainText(commentText)
-    await expect(view).not.toContainText("Retain this agenda note")
-    await expect(view).not.toContainText("120 USD")
-    expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
-    control.threadAllowed = true
     checkpoint("revision-source-unavailable")
     control.available = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
@@ -354,20 +371,55 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const screenshot = fileURLToPath(new URL("../../../../e2e/test-results/lean-visual/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
     await timed("screenshot", () => page.screenshot({ path: screenshot, fullPage: true, timeout: 10000 }))
-    checkpoint("selection-revoke")
-    control.allowed = false
-    await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
-    await expect(view.getByRole("status")).toContainText("Selection unavailable")
-    await expect(view.getByRole("table")).toHaveCount(0)
-    await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
-    await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toHaveCount(0)
-    await expect(view.getByRole("button", { name: "Prepare current data as a new revision", exact: true })).toBeEnabled()
-    expect(await storedReviews()).toHaveLength(2)
-    checkpoint("meeting-open-preserved")
-    control.allowed = true
     const originalRef = successful[0]!.reviewRef!
     const currentRef = (await storedReviews()).find((ref) => ref !== originalRef)
     if (!currentRef) throw new Error("WP07_CURRENT_REVIEW_NOT_PRESERVED")
+    const preservedRefs = [originalRef, currentRef].sort()
+    const denialMessage = "Access is no longer available. Private content and the selection were cleared. Reopen an authorized preparation."
+    const assertPreparationPurged = async () => {
+      await expect(view.getByRole("status")).toHaveText(denialMessage)
+      await expect(view.getByRole("heading", { name: "Prepare review", exact: true })).toBeVisible()
+      await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toHaveCount(0)
+      await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
+      await expect(view.getByRole("table")).toHaveCount(0)
+      await expect(view.getByRole("listitem")).toHaveCount(0)
+      await expect(view.getByRole("button")).toHaveCount(0)
+      await expect(view.getByRole("link")).toHaveCount(0)
+      for (const privateText of [commentText, "Retain this agenda note", "120 USD", "130 USD", originalRef, currentRef])
+        await expect(view).not.toContainText(privateText)
+      expect((await storedReviews()).sort()).toEqual(preservedRefs)
+    }
+    // An access denial permanently fences this view. Exercise recoverable source
+    // unavailability and revision preservation above, before intentionally
+    // revoking its captured thread; no denied selector may be reused afterward.
+    checkpoint("report-thread-revoked")
+    control.threadAllowed = false
+    const [deniedReport] = await Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review-report"),
+      view.getByRole("button", { name: "Generate DOCX", exact: true }).click(),
+    ])
+    expect(deniedReport.status()).toBe(403)
+    expect(await deniedReport.json()).toMatchObject({ status: "denied" })
+    await assertPreparationPurged()
+    control.threadAllowed = true
+    // Reopening is an explicit new preparation after restored authority, not
+    // resurrection of the previous instance's purged order, refs or notes.
+    await page.goto(`${origin}/sucafina/dashboard?previousReviewRef=${encodeURIComponent(currentRef)}`, { waitUntil: "domcontentloaded" })
+    await view.getByRole("button", { name: "Load selection", exact: true }).click()
+    await expect(forecast.getByRole("cell", { name: "130 USD", exact: true })).toBeVisible()
+    await expect(view).toContainText(commentText)
+    await expect(view).toContainText("Retain this agenda note")
+    checkpoint("selection-revoke")
+    control.allowed = false
+    const [deniedSelection] = await Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "review-agenda"),
+      view.getByRole("button", { name: "Refresh selection from current data", exact: true }).click(),
+    ])
+    expect(deniedSelection.status()).toBe(403)
+    expect(await deniedSelection.json()).toMatchObject({ status: "denied" })
+    await assertPreparationPurged()
+    checkpoint("meeting-open-preserved")
+    control.allowed = true
     const currentUrl = `${origin}/sucafina/dashboard?review=${encodeURIComponent(currentRef)}`
     const originalUrl = `${origin}/sucafina/dashboard?review=${encodeURIComponent(originalRef)}`
     await page.goto(currentUrl, { waitUntil: "domcontentloaded" })
