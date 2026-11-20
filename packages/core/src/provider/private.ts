@@ -137,7 +137,9 @@ export function resolve(scope: SessionOwner.Scope, input: Readonly<{
           const execute = (outgoing: HttpClientRequest.HttpClientRequest) => Effect.gen(function* () {
             yield* verify()
             if (outgoing !== retained.privateValue.request || outgoing.method !== "POST" || outgoing.url !== expectedURL ||
-              Object.keys(outgoing.headers).some((name) => !["content-type", "accept", ...Object.keys(expectedHeaders)].includes(name.toLowerCase())))
+              outgoing.body._tag !== "Uint8Array" ||
+              outgoing.headers["content-length"] !== String(outgoing.body.body.byteLength) ||
+              Object.keys(outgoing.headers).some((name) => !["content-type", "content-length", "accept", ...Object.keys(expectedHeaders)].includes(name.toLowerCase())))
               return yield* unavailable()
             const stored = yield* vault.read(binding.connection)
             if (!stored?.encodedValue || stored.metadata.state !== "active" || stored.metadata.revision !== revision)

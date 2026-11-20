@@ -257,6 +257,7 @@ test("private-provider-06: request overlays cannot retarget the private endpoint
     const requests = [
       LLM.request({ model, prompt: "No query", http: { query: { api_key: "NO" } } }),
       LLM.request({ model, prompt: "No header", http: { headers: { authorization: "Bearer NO" } } }),
+      LLM.request({ model, prompt: "No forged body length", http: { headers: { "content-length": "0" } } }),
       LLM.request({ model, prompt: "No extension", http: { body: { apiKey: "NO" } } }),
       LLM.request({ model, prompt: "No unlimited output", generation: { maxTokens: 513 } }),
     ]
