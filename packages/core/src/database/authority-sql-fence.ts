@@ -49,6 +49,16 @@ export function install(driver: Driver, input: Marker, tables: readonly string[]
     throw new AuthorityGeneration.GenerationError("stale-generation")
   driver.execute("INSERT INTO sf_authority_generation (id, generation, control_id, writer_permit) VALUES (1, ?, ?, NULL) ON CONFLICT(id) DO UPDATE SET generation = excluded.generation, writer_permit = NULL",
     [input.generation, input.controlId])
+  // Project is placement only. No current Team writer may cascade-delete
+  // sessions of other owners (or unresolved legacy sessions) in that placement.
+  if (tables.includes("session")) {
+    if (driver.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'project'").length !== 1)
+      throw new AuthorityGeneration.GenerationError("unavailable")
+    driver.execute("DROP TRIGGER IF EXISTS sf_authority_project_delete")
+    driver.execute("CREATE TRIGGER sf_authority_project_delete BEFORE DELETE ON project " +
+      "WHEN EXISTS (SELECT 1 FROM session WHERE project_id = OLD.id) " +
+      "BEGIN SELECT RAISE(ABORT, 'sf-project-placement-retains-session'); END")
+  }
   for (const table of tables) {
     if (driver.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?", [table]).length !== 1)
       throw new AuthorityGeneration.GenerationError("unavailable")
