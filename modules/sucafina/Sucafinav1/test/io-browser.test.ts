@@ -144,7 +144,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
           url.pathname === "/sucafina/api/ui/context"
       }, { timeout: 10000 }),
       page.waitForResponse((response) => nativePage(response, "CAP28"), { timeout: 10000 }),
-      page.goto(origin + "/orchestra/sf-procurement/settings", { waitUntil: "load", timeout: 10000 }),
+      responses.navigate(() => page.goto(origin + "/orchestra/sf-procurement/settings", { waitUntil: "load", timeout: 10000 })),
     ])
     expect(documentResponse?.status()).toBe(200)
     expect(contextResponse.status()).toBe(200)
@@ -173,7 +173,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     const resetCopy = responses.begin([{ label: "persisted reset Settings", method: "GET", pathname: "/sucafina/api/ui/pages/CAP28" }])
     const [resetRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP28"), { timeout: 10000 }),
-      page.reload(),
+      responses.navigate(() => page.reload()),
     ])
     const resetSettings = await settingsIoProjection(resetRead, () => resetCopy.json(resetRead))
     // Defaults come from the original authorized producer, never a fixture baseline.
@@ -196,7 +196,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     const policyCopy = responses.begin([{ label: "persisted policy Settings", method: "GET", pathname: "/sucafina/api/ui/pages/CAP28" }])
     const [policyRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP28"), { timeout: 10000 }),
-      page.reload(),
+      responses.navigate(() => page.reload()),
     ])
     const persistedSettings = await settingsIoProjection(policyRead, () => policyCopy.json(policyRead))
     expect(persistedSettings.data.settings.uploadCap).toBe(1048576)
@@ -205,7 +205,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await expect(policy.getByLabel("Attachment limit (bytes)", { exact: true })).toHaveValue("1048576")
     policyCopy.finish()
 
-    await page.goto(origin + "/orchestra/sf-procurement/suppliers")
+    await responses.navigate(() => page.goto(origin + "/orchestra/sf-procurement/suppliers"), 10000)
     await page.getByRole("button", { name: "New supplier", exact: true }).click()
     const suppliers = page.locator(".sf-u14-layout")
     await suppliers.getByLabel("Legal name", { exact: true }).fill("Private asset fixture vendor")
@@ -216,7 +216,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     const supplierCopy = responses.begin([{ label: "created supplier", method: "GET", pathname: "/sucafina/api/ui/pages/CAP27" }])
     const [supplierRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP27"), { timeout: 10000 }),
-      page.reload(),
+      responses.navigate(() => page.reload()),
     ])
     const supplierPage = await suppliersIoProjection(supplierRead, () => supplierCopy.json(supplierRead))
     const createdSuppliers = supplierPage.data.suppliers.filter((entry) => entry.legalName === "Private asset fixture vendor")
@@ -257,7 +257,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     const attachmentCopy = responses.begin([{ label: "persisted supplier attachment", method: "GET", pathname: "/sucafina/api/ui/pages/CAP27" }])
     const [attachmentRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP27"), { timeout: 10000 }),
-      page.reload(),
+      responses.navigate(() => page.reload()),
     ])
     const attachmentPage = await suppliersIoProjection(attachmentRead, () => attachmentCopy.json(attachmentRead))
     const persistedSupplier = attachmentPage.data.suppliers.find((entry) => entry.id === supplierId)
@@ -285,7 +285,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     const membersCopy = responses.begin([{ label: "initial Members", method: "GET", pathname: "/sucafina/api/ui/pages/CAP08" }])
     const [membersRead] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP08"), { timeout: 10000 }),
-      page.goto(origin + "/orchestra/sf-people/talent"),
+      responses.navigate(() => page.goto(origin + "/orchestra/sf-people/talent")),
     ])
     const initialMembers = await membersIoProjection(membersRead, () => membersCopy.json(membersRead))
     expect(initialMembers.data.members.filter((member) => member.name === "Browser acceptance member fixture")).toHaveLength(0)
@@ -430,11 +430,11 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(applied.value.receipts[0]!.status).toBe("applied")
     await expect(imports).toHaveAttribute("data-sf-phase", "receipt")
     appliedCopy.finish()
-    await page.reload()
+    await responses.navigate(() => page.reload(), 10000)
     const persistedCopy = responses.begin([{ label: "persisted Members", method: "GET", pathname: "/sucafina/api/ui/pages/CAP08" }])
     const [persistedResponse] = await Promise.all([
       page.waitForResponse((response) => nativePage(response, "CAP08"), { timeout: 10000 }),
-      page.goto(origin + "/orchestra/sf-people/talent"),
+      responses.navigate(() => page.goto(origin + "/orchestra/sf-people/talent")),
     ])
     const persisted = await membersIoProjection(persistedResponse, () => persistedCopy.json(persistedResponse))
     const persistedMembers = persisted.data.members.filter((member) => member.name === "Browser acceptance member fixture")
