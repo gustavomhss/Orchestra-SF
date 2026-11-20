@@ -162,7 +162,9 @@ async function forward(client) {
   await opened.promise
   const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
   // The async iterator pauses incoming reads while the WebSocket is backpressured.
-  for await (const chunk of client) {
+  // EOF closes only the input half. Keep the writable half for WebSocket replies
+  // until the clean close handshake and queued write callbacks complete below.
+  for await (const chunk of client.iterator({ destroyOnReturn: false })) {
     if (failure) throw failure
     if (pending.length + chunk.length > limits.maxQueuedBytes) throw new Error("Browser bridge input exceeded its bound")
     pending = Buffer.concat([pending, chunk])
