@@ -130,7 +130,7 @@ test("personal views isolate authenticated principals and reconcile exact retrie
         const bridge = (globalThis as unknown as {
           __sfPersonalViewResponse: (response: CapturedResponse) => Promise<void>
         }).__sfPersonalViewResponse
-        globalThis.fetch = async function (this: unknown, ...args: Parameters<typeof fetch>) {
+        const observedFetch = async function (this: unknown, ...args: Parameters<typeof fetch>) {
           const [input, init] = args
           const url = new URL(input instanceof Request ? input.url : String(input), location.href)
           const method = (init?.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase()
@@ -159,6 +159,7 @@ test("personal views isolate authenticated principals and reconcile exact retrie
           }
           return response
         }
+        if (!Reflect.set(globalThis, "fetch", observedFetch)) throw new Error("Personal-view fetch observer unavailable")
       }, { origin })
       await tab.goto(origin + "/orchestra/sf-work/views")
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
