@@ -1,6 +1,6 @@
 import { For, Show, createMemo, createSignal } from "solid-js"
 import type { JSX } from "solid-js"
-import { useNavigate } from "@solidjs/router"
+import { A, useNavigate } from "@solidjs/router"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -82,6 +82,16 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
   const back = () => { setInlineRef(null);setDeleteRequested(false);navigate(topicPath(props, "list")) }
   const edit = () => selected() ? open(selected()!, "edit") : undefined
   const current = () => source.owner()
+  const privateProposals = () => {
+    const ready = current(), selected = props.route.ownerSelection
+    if (!ready || !selected.installationId || !ready.context.availability.some((resource) =>
+      resource.family === "domain-read" && resource.resource === "hot-topic-proposal" &&
+      resource.operations.some((entry) => entry.operationId === "dashboard.dashboard-workbench" &&
+        entry.state === "ready" && entry.operational))) return undefined
+    return "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef("new") + "?" + new URLSearchParams({
+      server: selected.serverKey, project: selected.projectId, installation: selected.installationId,
+    })
+  }
 
   async function remove() {
     const record = selected(), originalVersion = version()
@@ -120,6 +130,9 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
         <Show when={props.route.kind === "entry"}>
           <section class="sf-u38-section" aria-labelledby="sf-topics-list">
             <h2 id="sf-topics-list">{t(key("sf.u38.topicList"))}</h2>
+            <Show when={privateProposals()}>{(href) =>
+              <A class="mx-btn" href={href()}>{t(key("sf.u38.privateEditor"))}</A>}
+            </Show>
             <label class="sf-u38-filter">{t(key("sf.u38.filter"))}
               <select value={source.filter()} onChange={(event) => source.setFilter(event.currentTarget.value as TopicStatus)}>
                 <For each={statuses}>{(option) =>

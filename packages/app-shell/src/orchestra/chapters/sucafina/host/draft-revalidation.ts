@@ -1,3 +1,4 @@
+import { revalidatePrivateHotTopicDraft } from "./draft-revalidation-private-hot-topic"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfContextStamp, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
@@ -29,6 +30,8 @@ export async function revalidateSfNativeDraft(
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||
       input.originalOwner.projectId !== fresh.stamp.projectId ||
       input.originalOwner.principalRef !== fresh.stamp.principalRef) return { status: "authority-changed" }
+  if (input.read.operationId === "dashboard.dashboard-draft-read")
+    return revalidatePrivateHotTopicDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP04" || input.read.operationId === "domain.page.CAP05")
     return revalidateBudgetDraft(input, fresh, transport, signal)
   if (input.read.operationId === "domain.page.CAP18" || input.read.operationId === "domain.page.CAP19")

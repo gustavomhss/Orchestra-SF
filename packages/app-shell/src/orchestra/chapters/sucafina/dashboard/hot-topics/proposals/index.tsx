@@ -1,3 +1,4 @@
+import { SfPrivateHotTopicEditor } from "./private-draft"
 import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
@@ -124,7 +125,7 @@ function proposalRoute(props: SfSurfaceProps<"UI54">, changeId: string): string 
  * UI54 — C12 workbench → first-party preparation → current producer review →
  * explicit apply → original receipt. Never writes a CAP02 record directly.
  */
-export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Element {
+function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
   const { t, locale } = useSfPresentation()
   const shownDate = (value: string) => {
     const iso = value.slice(0, 10)
@@ -389,4 +390,11 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       </SfStatePanel>
     </div>
   </SfPageFrame>
+}
+
+/** The original UI54 ref codec carries this local creation entry without private fields in the URL. */
+export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Element {
+  return <Show when={props.route.params.proposalRef === "new"} fallback={<SfHotTopicPreparationView {...props} />}>
+    <SfPrivateHotTopicEditor {...props} />
+  </Show>
 }
