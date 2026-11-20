@@ -4,9 +4,9 @@
 
 - Estado: **IN_PROGRESS — entrega completa, verde e mergeada autorizada; este checkpoint não declara os shards aprovados.**
 - Base imutável: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` (`sf-join-four`).
-- Código de `sf-shard-b`: `fbe6b8e0795213574ce3de655cf4f96fa7a02e27`; este commit acrescenta somente o handoff.
-- Candidato integrado: `bb2056abacfb95cff50d7034e0d4af98c29e5c25`, árvore `87bed64b15eb782aaa65f90b8f56007902d54c19`, branch `sfb-complete-composition`.
-- Target incorporado por merge verdadeiro: `9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6`. Nenhum rebase.
+- Código de `sf-shard-b`: `8075d9f0c161477673af7e17c5f9933ddd307d83`; este commit acrescenta somente o handoff.
+- Candidato integrado: `c493bad6e5f68253bfa665160727f26a7f87049f`, árvore `eb054f7abfbcc20ba1b9d3d83b15d66c580a48d4`, branch `sfb-complete-composition`.
+- Target incorporado por merge verdadeiro: `37beac52b76278b1aad1226368e87f02892939c1`. Nenhum rebase.
 - Inventários originais: **118 arquivos (4), 119 (5), 109 (6)**, preservados nos requests `dd45d888617943df40e02815d58b59f88d8a18f7`, `f0bccdc48b42a9d000f3bda6565fa3d88286c845`, `204a74491764dcde4da22ebe558efc318e04a777`. Distribuição LPT posterior não os substitui.
 - PR principal [#410](https://github.com/gustavomhss/Orchestra-SF/pull/410), draft até qualificação integral.
 - GitHub somente; execução por Actions. Sem shell, sf-ci, edição de runtime/application.ts, ampliação de prazo/lease, recriação de console morto ou push nos quatro branches proibidos.
@@ -14,6 +14,15 @@
 ## Continuação — estado corrente
 
 Esta seção prevalece sobre o estado operacional histórico abaixo. Falhas antigas, cancelamentos e contagens incompletas permanecem fatos históricos; gates focados não somam uma qualificação integral.
+
+### Checkpoint adicional — revisão e composição
+
+- B `e2f6b942ec8a3db3fd5bf848773842fe97ee7987`: `wp01/personal-views.test.ts:109` captura cópia do fetch real no navegador antes de devolver a resposta ao consumidor. Mesmos argumentos, uma chamada original; 26expect+5browserExpect e assertRestored inalterados. Sem replay/mock de resposta.
+- B `8b0954ae536ec7395c96b9dd27a81c7b05600cd9`: fixture/17controles de `wp10/integration/planner-observation-batch.test.ts:1`. Shared[#488](https://github.com/gustavomhss/Orchestra-SF/pull/488) `27c4a6b897529b3af34618d565a9cb84f16543e0`: fase pura completa, closure de inputs, todos callbacks canônicos, C08/3snapshots/sourcefences e egress frescos. Revisão independente concluída; Actions pendente. Business union `14512133f127a4c1d4389f91c618a797f79631d9` preserva #481.
+- B `837d2872083d6b2d7399a4733e66aa3244bb072a`: `wp11/fixture-read-observation.ts:94–111` fecha ambiente após última autorização C08. 20guardas incluem final-day/final-actor/post-envelope-day. Não confundir com o gateS10 ativo, que usa o helper anterior.
+- B `655da86459690b28a2e2cef61bca0e192a9f63af`: merge verdadeiro do target37beac, delta12paths lido. Preserva #484/#485/#475/#479 e Atlas receipt `f79cec065c37912a760dcab6b382e4fb18e81616` na master; a composição não sobrepõe mais esse blob pelo preimage antigo.
+- B `8075d9f0c161477673af7e17c5f9933ddd307d83`: cinco arquivos de recuperação nativa; 4narrativas originais+1guard de outro owner/reload, todos60s. Shared[#491](https://github.com/gustavomhss/Orchestra-SF/pull/491) `d47adad059a1e02bc95363d437a94a66789ef715`,21paths, base de dependências `sfb-recovery-deps`51caa363. Backend/API revisados; fila de gate bloqueada durante dois fixes concretos encontrados na revisão: purge em403 da preparação e callback assíncrono do editor após cleanup. Nenhum gate recovery publicado ainda.
+- Auditoria independente aplicou em memória os patches dos13PRs de performance sobre target37beac: os30postimages são byte idênticos à composição. No merge de #488, preservar explicitamente `planner-memory-read-scope.test.ts`f05df4dc, herdado de #436, pois a árvore production-only desse merge intermediário não o contém.
 
 ### Integrado e conferido
 
@@ -56,6 +65,8 @@ Esta seção prevalece sobre o estado operacional histórico abaixo. Falhas anti
 | Native-browser-consumer-boundaries | [44682182809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682182809) | 1 pass / 7 fail | `cecd55308fee7885cec1668ddd34ba42f4d29b76` |
 | Calculation-completed-ancestry-observation | [44682675803](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682675803) | 0 pass / 4 fail / 4 errors — importação falhou; nenhum teste executado | `be7f708a7b4349cd8d8edf13815393f22277cf83` |
 
+| Calculation-ancestry-parser-correction | [44683555039](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683555039) | in_progress | `ac009cd9fcf805ab357dca1c16fa32ed0c8d754b` |
+
 ### Resultado recente por causa e trabalho concreto
 
 Caminhos de teste abaixo são relativos a `modules/sucafina/Sucafinav1/test/product/`.
@@ -64,7 +75,7 @@ Caminhos de teste abaixo são relativos a `modules/sucafina/Sucafinav1/test/prod
 - **Batch misto** — [44680196613](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680196613) **36/1**, 383expects,725.03s. Todos os19Planner+16mixedguards passaram; físicoPlanner162→5 e misto261→6, com todos os callbacks e projeções preservados. Purchase pending passou343855ms; complete excedeu360s em366873ms, `wp12/native-execution-purchase.test.ts:14`. Na variante complete, prepare31587ms, units46777ms, criteria8529ms, choose250997ms, readchosen2746ms. O próximo fix físico da fase readonly abrange também esse consumidor. Shared#471 ainda não mergeado.
 - **Dashboard físico** — [44679287587](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44679287587) **11/1**. Os11controles em `wp10/integration/dashboard-case-read-batch.test.ts:1` passaram:384→6reads físicos, mesmas leituras lógicas de Planner/page/record/scopes, projeção completa e C08/C02 intactos. `wp12/native-execution-dependencies.test.ts:14` ainda excede420s,482073ms observados. Esse arquivo e suas guardas NÃO pertencem aos três inventários originais: são regressão adicional. Shared#472 permanece aguardando a composição final.
 - **AM01/reevaluation/dependencies** — falha remanescente é trabalho repetido nas fases readonly de comparação/métrica/memória, não no cleanup. Desenvolvimento separado do owner físico genérico exige closure materializada também dos inputs; writes continuam fora. Memória só admite otimização quando recallScope.cases está explicitamente vazio e includeHistorical=false; pedidos de precedentes preservam fallback canônico.
-- **Ancestry** — deadline original105s em `wp10/integration/calculation-ancestry-composition.test.ts:110`,470reads outer no run44677071823. Shared[#481](https://github.com/gustavomhss/Orchestra-SF/pull/481) head`f042f0d216e094e44e273c3bd6582fb2b07f2ebb` acrescenta prova completa lexical de folha, cycleguard original, C08 cases/preferences completos e callbacks frescos de fonte/cobertura. B`3b460540f34105e61c1ca32bedb5e3a49b1996ac` contém23novos controles, inclusive troca real de producers atrás da facade. Primeiro gate[44682675803](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682675803) **0/4,4errors de importação**, nenhum dos53testes previstos executou: falta fechar o if em `apps/cli/src/sucafina-product/planner-calculation-ancestry-scope.ts:219`. Correção sintática concreta em preparação; não rerun idêntico.
+- **Ancestry** — deadline original105s em `wp10/integration/calculation-ancestry-composition.test.ts:110`,470reads outer no run44677071823. Shared[#481](https://github.com/gustavomhss/Orchestra-SF/pull/481) head`f042f0d216e094e44e273c3bd6582fb2b07f2ebb` acrescenta prova completa lexical de folha, cycleguard original, C08 cases/preferences completos e callbacks frescos de fonte/cobertura. B`3b460540f34105e61c1ca32bedb5e3a49b1996ac` contém23novos controles, inclusive troca real de producers atrás da facade. Primeiro gate[44682675803](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682675803) **0/4,4errors de importação**, nenhum dos53testes previstos executou: falta fechar o if em `apps/cli/src/sucafina-product/planner-calculation-ancestry-scope.ts:219`. Correção sintática de um único parêntese publicada em#481 `5b9ac06dc64707ca8357e56e9a2ce1b3800b877f`, blob2b8003a. Gate corrigido44683555039 em curso; não rerun idêntico.
 - **S10/raw fixtures** — B`59087f07d0f0903a22d3bb37390a12b45885efba`,8paths. `wp11/fixture-read-observation.ts:25` compartilha só a transação física lexical dos fixtures WP05/WP11; executa todos os produtores e abre nova leitura C08 depois que o root fecha. Inclui envelope C08 inteiro,3snapshots, source fences, actor/day/request/lease/readers e testemunhos externos de Set/Map. `wp11/fixture-read-observation.test.ts:13` acrescenta17guardas; `wp13/sensitivity-read-scope.test.ts:1` mantém4originais e soma2unscoped#405. Todos os100expect-lines do full integration e38do scope preservados; prazos originais. Gate8arquivos[44680602254](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680602254).
 - **Runtime nativo** — [44678987832](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678987832) **7/10**: import2/0, health4/0, BIorigin1/0. Nove falhas de teste mais um erro de controle Omni decorrente do HTTP falhar antes do spawn. Restam Dashboard2 (`dashboard-installed-closure/consumer-read.test.ts:34`), mensal (`wp01/planner-monthly.test.ts:74`), HTTP (`wp01/http.test.ts:89`), views (`wp01/personal-views.test.ts:126`) e BI4 (`wp10/integration/bi-lifecycle.test.ts:233`).
 - **Fronteiras nativas** — [44682182809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682182809) **1/7**,8testes/4arquivos,71.06s,cleanupsuccess. Mensal passou ClipboardEvent, POSTpreview e células originais, avançando até Apply sem POST em `wp01/planner-monthly.test.ts:108`. HTTP passou descriptor e jornada completa até logout, falhando `wp01/http.test.ts:197` por esperar403 do endpoint nativo que distingue sessão ausente401; B`febcf57ecb9980333437c2e130c8b8573745764a` exige401 exato e ambos envelopes completos `{status:"unauthenticated"}`, preserva403CSRF. Views ainda perde recursoCDP em `wp01/personal-views.test.ts:128`, chamada:152: leitura imediata não bastou, revisão captura o fetch real no browser antes da navegação. BI4 continua sem catálogo em `wp10/integration/bi-lifecycle.test.ts:242`; identidade corrigida, mas faltava inicialização C08.
@@ -77,25 +88,26 @@ Caminhos de teste abaixo são relativos a `modules/sucafina/Sucafinav1/test/prod
 
 ### Gates ativos e fila
 
-- **Sensitivity-current-composition**: [44680602254](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680602254), source `dd0f2e58232f0266ac7793908754d8a4164ed805`, request `c26cd88e0987a25c0b1a3d32fb9c414f5e5c49a0`;8arquivos, em curso. Aguardar também cleanup.
-- **Ancestry**: gate anterior terminou com erro sintático de importação. Publicar fix concreto e atualizar composição antes do próximo gate53.
-- **Native6**: agrupar mensal/HTTP/personal/BI e Dashboard2 após concluir captura real de body. Fixes concretos #480/#487/bootstrap/logout; nenhuma execução de simples diagnóstico.
-- **Fase física completa**: comparação/métrica/memória explicitamente vazia, controles próprios, original AM01/reeval/purchase/dependencies; PR separado em preparação. Follow-upS10 fecha actor/day após última autorização, sem ampliação de budget. Não confundir com resultados do gateS10 ainda em curso.
+- **Sensitivity-current-composition**: [44680602254](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44680602254), source `dd0f2e58232f0266ac7793908754d8a4164ed805`, request `c26cd88e0987a25c0b1a3d32fb9c414f5e5c49a0`;8arquivos em curso. Aguardar também cleanup.
+- **Calculation-ancestry-parser-correction**: [44683555039](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683555039), source `ac009cd9fcf805ab357dca1c16fa32ed0c8d754b`, request `d6616c25952a2a190c2e4ca18aec2b765a0cfb96`;4arquivos/53testes previstos, depois do fix sintático concreto.
+- **Fila Native-real-response-and-reactive-json**: source `e5bb7153d9b2f5cb38604b3e7b7432ec3661a3f4`,5arquivos/10testes: mensal/HTTP/personal/BI e consumer-read2. #480/#487, bootstrapC08/logout/body capture prontos. Ainda não publicado.
+- **Fila Complete-physical-read-phases-and-final-witness**: source `1a82eb89bde94c542dc154f44676223945b7bda5`,9arquivos. #488 e follow-upS10,17+20controles novos/atualizados,19Planner+16mixed+11Dashboard, AM01portfolio/reeval/purchase/dependencies. Prazo/lease originais; Actions pendente.
+- **Fila Native-original-intent-recovery**: source `c493bad6e5f68253bfa665160727f26a7f87049f`,2arquivos, bloqueada pela revisão final do frontend; atualizar source depois dos dois fixes concretos. #491 usa somente original UUID/seletores, reautoriza pelo produtor real e não reenvia apply.
 - Máximo2workflows simultâneos incluindo cleanup; nenhuma repetição idêntica.
 
 ### Unions de produção preservadas
 
-- business-services `f4eaafaed2ba1aa0925ab66b69a6078f8c10b75b`: #403/#436/#441/#434/#464/#471/#472 +hunk privado readerIdentity#481. Cada união conferida por reversão byte a byte.
+- business-services `14512133f127a4c1d4389f91c618a797f79631d9`: #403/#436/#441/#434/#464/#471/#472 +readerIdentity#481 +fase#488. Cada união conferida por reversão byte a byte.
 - result-store `960ec20e78fb6a52e07cecebd2c6b12ce8c5393e`: #414+#438; verification `e47f875afd403b77703746fc5a70b4e490b6efd9`: #405+#445.
 - analysis-http `eba00a3718bc9ee68dc393d6d9eea30d27d175d9`: #439+caseInput estrito já mergeados.
-- host-context CLI `72aeb15a096c2d8384bb1c59410fc77124afc65d` e produto `acad4f00a2a03c7c1d7f6a381367168fab794cbb`: #446+#449.
-- owner `6d51c94533d7da048aad2dc72b99f9ccad0f2bd5`: #448+#461.
+- host-context CLI `0e99a7f796c504a26f07345c78f46307aa233b6c` e produto `f4c1430b0bad4564116d496f9395272e9f475a12`: #446+#449+#491.
+- owner `e3773a07ac58da3f4e8f7dc1c96a713eb663ec49`: #448+#461+#491.
 
 ## Ordem de merge e como retomar
 
 1. Coletar os workflows ativos por GitHub Actions, incluindo cleanup. Registrar sumário/log e falhas file:line; nada de rerun idêntico.
 2. Completar causas readonly AM01/ancestry e UI recovery/Dashboard; publicar fora de test/** somente em PR shared: separado, com controles. Gate apenas após fix concreto, máximo2. Falha idêntica duas vezes sem mudança vira unbound, não novo rerun.
-3. Merge de dependências qualificadas: #403→#436/#441→#464→#471→#472; #441→#455; #420→#424; #414; #405/#445; #446→#487 e #449/#452→#480→UI recovery; #448/#461; novos AM01/ancestry#481; CF13 com provas. #433/#435/#442/#434/#466/#439/#468 já mergeados. #438 foi mergeado externamente em`676584ba114e34da0a5ec523caa230746716591e` às04:09:27UTC e já pertence ao target; não repetir seu merge. Retarget após o pai, true merges e verificação dos blobs; nenhum rebase.
+3. Merge de dependências qualificadas: #403→#436/#441→#464→#471→#472→#488; #441→#455; #420→#424; #414; #405/#445; #446→#487 e #449/#452→#480→UI recovery#491; #448/#461; novos AM01/ancestry#481; CF13 com provas. #433/#435/#442/#434/#466/#439/#468 já mergeados. #438 foi mergeado externamente em`676584ba114e34da0a5ec523caa230746716591e` às04:09:27UTC e já pertence ao target; não repetir seu merge. Retarget após o pai, true merges e verificação dos blobs; nenhum rebase.
 4. Executar os três inventários completos originais da base, no máximo dois simultâneos, sobre a mesma árvore composta final. Não somar passes de gates focados. Corrigir todas as falhas, inclusive os14arquivos do shard5 não iniciados no baseline.
 5. Atualizar este documento com resultados finais e evidências; integrar #410, conferir árvore efetivamente mergeada e publicar a tabela final shard | run | N pass / M fail | falhas(file:line) | SHA do fix. Até lá o estado é IN_PROGRESS.
 
