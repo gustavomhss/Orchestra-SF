@@ -33,11 +33,16 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
       const url = new URL(response.url())
       return response.request().method() === "GET" && url.pathname.endsWith("/api/ui/projections/review") &&
         url.searchParams.get("page") === pageName
+    }).then(async (discovery) => {
+      expect(discovery.status()).toBe(200)
+      // Retain this original response body as soon as headers arrive, while the
+      // click may still be settling. Never refetch a changed source to replace it.
+      return object(await discovery.json())
     })
-    await agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click()
-    const discovery = await found
-    expect(discovery.status()).toBe(200)
-    const discovered = object(await discovery.json())
+    const [discovered] = await Promise.all([
+      found,
+      agenda.getByRole("button", { name: /Find authorized sections|Buscar seções autorizadas/ }).click(),
+    ])
     expect(discovered.status).toBe("ok")
     const items = object(discovered.value).items
     expect(Array.isArray(items)).toBe(true)
