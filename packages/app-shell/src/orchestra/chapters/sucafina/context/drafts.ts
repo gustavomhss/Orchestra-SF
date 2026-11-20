@@ -26,7 +26,7 @@ type RegistryState = "active" | "quarantined" | "revoked"
 
 /** One ephemeral owner registry outside every keyed chapter boundary. */
 export function createSfOwnerDrafts(
-  deps: SfContextDependencies,
+  deps: Pick<SfContextDependencies, "createDraft" | "revalidateDraft">,
   initial: Readonly<{ key: SfOwnerKey; identity: SfOwnerIdentity }>,
 ) {
   const entries = new Map<string, DraftEntry>()

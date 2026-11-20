@@ -58,8 +58,7 @@ export async function teamContextFixture(input: Parameters<typeof teamProductFix
   const handle = async (request: Request) => {
     const identity = await f.identity.handle(request)
     if (identity) return identity
-    const prepared = await f.identity.prepare?.(request)
-    if (prepared) return prepared
+    await f.identity.prepare?.(request)
     return await admin(request) ?? await native(request) ?? new Response(null, { status: 404 })
   }
   return { ...f, handler, live, calls, hooks, current, runtime, application, boundary, handle }

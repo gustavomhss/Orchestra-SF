@@ -56,7 +56,7 @@ export function decodeSfRouteRef(encoded: string): SfRef | undefined {
   }
 }
 
-/** Absence of all three query selectors means shell selection; partial URL is INVALID, never fallback. */
+/** An absent owner selector means shell intent; a partial owner is invalid and never filled from another selection. */
 export type SfSelectionResolution =
   | Readonly<{ status: "selected"; selection: SfOwnerSelection; explicit: boolean }>
   | Readonly<{ status: "invalid-link" }>
@@ -182,7 +182,6 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
         const discard = await deps.confirmDiscard()
         if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
         if (!discard) return { status: "kept-editing" }
-        if (chapterChanged && deps.discardDrafts && !deps.discardDrafts()) return { status: "kept-editing" }
         if (deps.revalidateAfterConsent) {
           const fresh = await deps.revalidateAfterConsent(resolved.route, resolved.ownerKey, abort.signal).catch(() => false)
           if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
@@ -198,6 +197,7 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
             !sfSameOwnerSelection(again.route.ownerSelection, selected.selection))
           return { status: again.status === "authorized" ? "denied" : again.status }
         admitted = again
+        if (chapterChanged && deps.discardDrafts && !deps.discardDrafts()) return { status: "kept-editing" }
       }
       // A denied/stale reply or a changed owner may never commit after preflight.
       if (abort.signal.aborted || epoch !== generation ||

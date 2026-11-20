@@ -1,17 +1,23 @@
 import { describe, expect, test } from "bun:test"
+import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
 import { readTeamContextQuery, readTeamProfileSelector } from "../../runtime/team-profile-selector"
 
 const binding = {
   installationId: "installation-one", tenantId: "11111111-2222-4333-8444-555555555555",
   origin: "https://sf.example.test", mount: "/sucafina",
 }
-const profile = { installationId: binding.installationId, tenantId: binding.tenantId,
-  teamObjectId: "a1111111-2222-4333-8444-555555555555" }
-const intent = { contractRevision: "sf-team-profile/1", kind: "team", profile }
-const query = { contractRevision: "sf-team-profile/1", installationId: binding.installationId,
-  tenantId: binding.tenantId, hostId: "host-one", kind: "team", teamObjectId: profile.teamObjectId }
-const url = (values: Record<string, string> = query) =>
-  binding.origin + binding.mount + "/api/ui/context?" + new URLSearchParams(values)
+const profile = Schema.decodeUnknownSync(TeamProfile.Ref)({ installationId: binding.installationId, tenantId: binding.tenantId,
+  teamObjectId: "a1111111-2222-4333-8444-555555555555" })
+const intent = Schema.decodeUnknownSync(TeamProfile.Selector)({ contractRevision: "sf-team-profile/1", kind: "team", profile })
+const query = Schema.decodeUnknownSync(SfTeamContextQuery)({ contractRevision: "sf-team-profile/1", installationId: binding.installationId,
+  tenantId: binding.tenantId, hostId: "host-one", kind: "team", teamObjectId: profile.teamObjectId })
+const url = (values: Readonly<Record<string, string | undefined>> = query) => {
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(values)) if (value !== undefined) params.append(key, value)
+  return binding.origin + binding.mount + "/api/ui/context?" + params
+}
 const business = (text = JSON.stringify(intent)) =>
   new Request(binding.origin + binding.mount + "/api/ui/decisions", {
     headers: { "x-sf-team-profile": text },
@@ -29,13 +35,13 @@ describe("Teams intent parser is not an authority", () => {
     expect(request.headers.has("x-sf-team-profile")).toBe(false)
   })
   test("zero/one/many selection and administration are explicit context intents", () => {
-    for (const kind of ["selection", "administration"]) {
+    for (const kind of ["selection", "administration"] as const) {
       const { teamObjectId, ...fields } = query
       const request = new Request(url({ ...fields, kind }))
-      expect(readTeamProfileSelector(request, binding)).toEqual({
+      expect(readTeamProfileSelector(request, binding)).toEqual(Schema.decodeUnknownSync(TeamProfile.Selector)({
         contractRevision: "sf-team-profile/1", kind,
         installationId: binding.installationId, tenantId: binding.tenantId,
-      })
+      }))
       expect(readTeamProfileSelector(business(JSON.stringify({
         contractRevision: "sf-team-profile/1", kind,
         installationId: binding.installationId, tenantId: binding.tenantId,
