@@ -83,3 +83,41 @@ describe("Microsoft installation discovery is placement metadata only", () => {
     expect(legacy.installations[0]?.authMode).toBe("local-operator")
   })
 })
+
+
+describe("current installed Microsoft bootstrap", () => {
+  const current = { select: "current", contractRevision: "sf-team-profile/1" } as const
+  test("closed current selector returns only the already-loaded runtime metadata", async () => {
+    let reads = 0, locations = 0
+    const source: SfTrustedInstallationSource = {
+      current: async () => { reads++; return installed },
+      forAdmittedLocation: async () => { locations++; throw new Error("Location must not be consulted") },
+    }
+    expect(parseSfInstallationSelector("/api/sucafina/installations?select=current&contractRevision=sf-team-profile%2F1")).toEqual(current)
+    expect(await readSfInstallations(source, current, signal())).toEqual({ installations: [{
+      ...identity, tenantId, publicOrigin: installed.publicOrigin, mount: installed.mount,
+      authMode: "microsoft", contractRevision: "sf-team-profile/1",
+    }] })
+    expect(reads).toBe(1)
+    expect(locations).toBe(0)
+  })
+  test("current never accepts an owner, legacy protocol, partial or mixed selector", () => {
+    for (const query of [
+      "select=current", "select=current&contractRevision=sf-native-ui%2F1",
+      "select=current&contractRevision=sf-team-profile%2F1&select=current",
+      "select=current&contractRevision=sf-team-profile%2F1&%63ontractRevision=sf-team-profile%2F1",
+      ...["installationId", "tenantId", "projectId", "teamObjectId", "principalRef", "accessRevision", "location[directory]"]
+        .map((key) => "select=current&contractRevision=sf-team-profile%2F1&" + key + "=caller"),
+    ]) expect(() => parseSfInstallationSelector("/api/sucafina/installations?" + query)).toThrow(SfInvalidInstallationSelector)
+  })
+  test("missing, local, incomplete or aborted runtime cannot become corporate bootstrap", async () => {
+    for (const runtime of [undefined, { ...installed, tenantId: undefined },
+      { ...installed, publicOrigin: "http://127.0.0.1:4096", authMode: "local-operator" as const }]) {
+      const source: SfTrustedInstallationSource = { current: async () => runtime, forAdmittedLocation: async () => [installed] }
+      expect(await readSfInstallations(source, current, signal())).toEqual({ installations: [] })
+    }
+    const abort = new AbortController()
+    const source: SfTrustedInstallationSource = { current: async () => { abort.abort(); return installed }, forAdmittedLocation: async () => [installed] }
+    expect(await readSfInstallations(source, current, abort.signal)).toEqual({ installations: [] })
+  })
+})

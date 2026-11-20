@@ -15,7 +15,7 @@ export const SucafinaGroup = HttpApiGroup.make("server.sucafina")
       .annotateMerge(OpenApi.annotations({
         identifier: "v2.sucafina.installations",
         summary: "Discover the selected Sucafina installation",
-        description: "Microsoft installations require the versioned installation and resource-tenant selector. Discovery returns placement metadata, never corporate admission. Legacy IDs/Location apply only to local-operator installations.",
+        description: "Microsoft bootstrap uses the versioned current selector for metadata of the single installed runtime; a selected installation uses its complete installation and resource-tenant selector. Discovery returns placement metadata, never corporate admission. Legacy IDs/Location apply only to local-operator installations.",
       })),
   )
   .annotateMerge(OpenApi.annotations({ title: "sucafina", description: "Selected installation discovery." }))

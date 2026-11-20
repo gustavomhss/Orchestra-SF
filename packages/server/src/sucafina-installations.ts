@@ -41,6 +41,10 @@ export function parseSfInstallationSelector(url: string): SfInstallationSelector
     throw new SfInvalidInstallationSelector()
   const choice = pairs.get("select")
   const present = (key: string) => pairs.has(key) && Boolean(pairs.get(key))
+  if (choice === "current" && entries.length === 2 &&
+      pairs.get("contractRevision") === "sf-team-profile/1") {
+    return { select: "current", contractRevision: "sf-team-profile/1" }
+  }
   if (choice === "installation" && entries.length === 4 &&
       entries.every(([key]) => ["select", "contractRevision", "installationId", "tenantId"].includes(key))) {
     const decoded = Schema.decodeUnknownOption(SfInstallationSelector)(Object.fromEntries(entries))
@@ -100,11 +104,12 @@ export async function readSfInstallations(
   signal: AbortSignal,
 ): Promise<SfInstallationList> {
   if (signal.aborted) return { installations: [] }
-  if (selector.select === "installation") {
+  if (selector.select === "current" || selector.select === "installation") {
     const loaded = await source.current(signal)
     const descriptor = loaded && toDescriptor(loaded)
     if (!descriptor || signal.aborted || descriptor.contractRevision !== "sf-team-profile/1" ||
-      descriptor.installationId !== selector.installationId || descriptor.tenantId !== selector.tenantId)
+      selector.select === "installation" &&
+        (descriptor.installationId !== selector.installationId || descriptor.tenantId !== selector.tenantId))
       return { installations: [] }
     return { installations: [descriptor] }
   }
