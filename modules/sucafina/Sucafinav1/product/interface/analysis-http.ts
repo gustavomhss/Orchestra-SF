@@ -1,5 +1,6 @@
 import type { SfHostServices } from "../contracts/host-context.ts"
 import type { SfAnalysisRequest } from "./analysis-input-port.ts"
+import type { PortResult } from "../contracts/ports.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
 import { contribution } from "../ui/components.ts"
@@ -27,15 +28,26 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   try {
     if (action === "prepare" && "selection" in input) {
       if (!selectedRequest(runtime, input.request)) return reply({ status: "denied" }, 403)
-      const prepared = await (hasCaseAnalysisInput(input.request.skillId)
-        ? prepareCaseAnalysisInput(request, runtime, input)
-        : input.request.skillId === "sf-contestar-decisao"
-          ? prepareReviewAnalysisInput(request, runtime, input)
-          : runtime.analysisInputs?.prepare(admitted.value, input) ?? Promise.resolve(undefined)).catch(() => undefined)
+      const port = runtime.analysisInputs
+      if (!port) return reply({ status: "unavailable" }, 503)
+      const observed = await observePreparation(request, runtime, input).catch(() => undefined)
+      if (!observed) return reply({ status: "unavailable" }, 503)
+      if (observed.status !== "ok") return reply({ status: observed.status }, statusCode(observed.status))
+      // Keep the closed browser intent and its actual admission together. The
+      // installed producer already normalizes saved-case/reviewer selectors,
+      // verifies the result and persists selectionScope for the later start.
+      const effective = structuredClone(input)
+      const wanted = digestSfValue(effective)
+      const prepared = await port.prepare(admitted.value, effective).catch(() => undefined)
       if (!prepared) return reply({ status: "unavailable" }, 503)
       if (prepared.status !== "ok") return reply({ status: prepared.status }, statusCode(prepared.status))
       const decoded = preparedInput(input.request.skillId, prepared.value)
       if (!decoded?.ok) return reply({ status: "unavailable" }, 503)
+      const current = await observePreparation(request, runtime, input).catch(() => undefined)
+      if (!current) return reply({ status: "unavailable" }, 503)
+      if (current.status !== "ok") return reply({ status: current.status }, statusCode(current.status))
+      if (digestSfValue(effective) !== wanted || digestSfValue(input) !== wanted || current.value !== observed.value)
+        return reply({ status: "stale" }, 409)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       return reply({ status: "ok", value: decoded.value }, 200)
     }
@@ -64,6 +76,23 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     }
     return reply({ status: "ok", value: result.value }, 200)
   } finally { runtime.human.finish(admitted.value) }
+}
+
+type Preparation = { request: SfAnalysisRequest; selection: Record<string, unknown> }
+
+/** These current reads are observations only. Their inputs never substitute for
+ * the installed producer, its verifier or the persisted human selection. */
+async function observePreparation(request: Request, runtime: AnalysisHttpRuntime, input: Preparation): Promise<PortResult<string>> {
+  const wanted = structuredClone(input)
+  if (hasCaseAnalysisInput(wanted.request.skillId)) {
+    const read = await prepareCaseAnalysisInput(request, runtime, wanted)
+    return read.status === "ok" ? { status: "ok", value: digestSfValue(read.value) } : read
+  }
+  if (wanted.request.skillId === "sf-contestar-decisao") {
+    const read = await prepareReviewAnalysisInput(request, runtime, wanted)
+    return read.status === "ok" ? { status: "ok", value: digestSfValue(read.value) } : read
+  }
+  return { status: "ok", value: digestSfValue(wanted) }
 }
 
 function statusCode(status: string) {

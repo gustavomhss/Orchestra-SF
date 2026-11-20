@@ -54,7 +54,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     runtime = await createSfHostRuntime({ installationId, directory, sourceRoot: path.resolve(import.meta.dir, "../../../product/ai"), origin,
       mount: "/sucafina", persistence, authenticate: identity.authenticate,
-      grants: [{ principalRef, namespaces: ["cases", "contributions"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
+      grants: [{ principalRef, namespaces: ["cases", "contributions", "preferences"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
       environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }) })
     workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime?.services?.() })
     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
@@ -142,6 +142,9 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     const intentPrepare = { action: "prepare", input: { request: intentRequest, selection: {} } }
     const framed = await post(intentPrepare)
     expect(framed.status).toBe(200)
+    const selections = await services.state.read(stateRequest, "preferences", (state) =>
+      Object.keys(state.preferences).filter((key) => key.startsWith("sf:analysis-selection:")).length)
+    expect(selections.status === "ok" && selections.value).toBe(1)
     expect(await framed.json()).toEqual({ status: "ok", value: { intentText: currentCase.objective, case: intentRequest.caseRef,
       context: { surface: "dashboard", period: currentCase.horizon, currency: currentCase.currency, sourceRefs: [] }, selectedSourceRefs: currentCase.sourceRefs } })
     expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, selection: { sourceRefs: ["forged"] } } })).status).toBe(400)
@@ -178,7 +181,14 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
         outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: skill.allowedOperations, objective: "Review forecast" },
       selection: {},
     } }
-    expect((await post(prepare)).status).toBe(503)
+    // The current producer exists and refuses this inaccessible case. Absence of
+    // the optional producer is a distinct boundary and remains unavailable.
+    expect((await post(prepare)).status).toBe(403)
+    const analysisRequest = (body: unknown) => new Request(`${origin}/sucafina/dashboard?sf=workbench-analysis`, {
+      method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(body),
+    })
+    const absent = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, analysisInputs: undefined }) })
+    expect((await absent(analysisRequest(prepare), "dashboard"))?.status).toBe(503)
     // Exercise the optional boundary with real authority and an intentionally invalid producer payload.
     // This checks schema/selection rejection; it is not a native analysis or producer witness.
     let prepareCalls = 0

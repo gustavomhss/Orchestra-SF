@@ -4,7 +4,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import { esc } from "../../src/screen-shell.ts"
 
 export async function scenarioAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
-  if (!runtime.analyses) return "<p>Specialist scenario analysis is currently unavailable.</p>"
+  if (!runtime.analyses || !runtime.analysisInputs) return "<p>Specialist scenario analysis is currently unavailable.</p>"
   const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-comparar-cenarios"))
   const skill = parent?.skills.find((item) => item.id === "sf-comparar-cenarios")
   const models = await runtime.models().catch(() => [])
@@ -34,7 +34,7 @@ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection,
 
 /** Uses the registered specialist and the current saved case; no browser source is promoted to authority. */
 export async function intentAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
-  if (!runtime.analyses) return "<p>Decision framing is currently unavailable.</p>"
+  if (!runtime.analyses || !runtime.analysisInputs) return "<p>Decision framing is currently unavailable.</p>"
   const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
   const skill = parent?.skills.find((item) => item.id === "sf-enquadrar-decisao")
   const model = (await runtime.models().catch(() => []))[0]
