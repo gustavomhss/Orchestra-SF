@@ -447,12 +447,36 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     const observation = plannerCaseRead.current
     if (!observation || call.kind !== "ui") return work()
+    // selectedCase awaits real C08/authority reads before the producer captures
+    // its input. That interval belongs to this invocation, including fallback.
+    const inputDigest = digestSfValue(request), source = host.requestFor(call)
+    const requestDigest = source && digestSfValue({ method: source.method, url: source.url, headers: [...source.headers] })
+    const binding = call.binding, bindingDigest = callBindingDigest(call), lease = call.lease
+    const owner = caseBindings.get(call), selectionDigest = digestSfValue(owner?.selected)
+    const reader = evidence.current, resolve = reader?.resolve, contextRead = reader?.context
+    const observe = observation.observe, sourceRead = product.sources.resolveForecastSource
+    const changed = (): PortResult<never> | undefined => {
+      if (call.kind !== "ui" || call.binding !== binding || call.lease !== lease || callBindingDigest(call) !== bindingDigest ||
+        host.requestFor(call) !== source || source && (source.signal.aborted ||
+          digestSfValue({ method: source.method, url: source.url, headers: [...source.headers] }) !== requestDigest) ||
+        caseBindings.get(call) !== owner || digestSfValue(owner?.selected) !== selectionDigest ||
+        plannerCaseRead.current !== observation || observation.observe !== observe || evidence.current !== reader ||
+        reader?.resolve !== resolve || reader?.context !== contextRead || product.sources.resolveForecastSource !== sourceRead)
+        return { status: "denied", reason: "case-access-unavailable" }
+      return digestSfValue(request) === inputDigest ? undefined : { status: "stale", reason: "scenario-source-changed" }
+    }
+    const guardedWork = () => {
+      const failure = changed()
+      return failure ? Promise.resolve(failure) : work()
+    }
     const selected = await selectedCase(call)
+    const failure = changed()
+    if (failure) return failure
     // Unselected/unsupported callers retain their canonical admission path.
-    if (selected.status !== "ok") return work()
+    if (selected.status !== "ok") return guardedWork()
     // Read-only consumers may join only this exact lexical case owner. Each
     // separate invocation starts fresh; publication remains outside this scope.
-    return observation.observe({ caseRef: selected.value, request }, call, work)
+    return observe({ caseRef: selected.value, request }, call, guardedWork)
   }
   const planner: typeof canonicalPlanner = { ...canonicalPlanner,
     compareScenarios: (request, call) => withPlannerObservation(request, call, () => canonicalPlanner.compareScenarios(request, call)),
