@@ -23,7 +23,7 @@ function fixture() {
   const transport: SfTransport = {
     async execute(operation, input, options) {
       expect(operation.operationId).toBe("files.export.members")
-      expect(Schema.decodeUnknownSync(operation.input)(input)).toEqual({ surface: "dashboard" })
+      expect(Schema.decodeUnknownSync(Schema.toType(operation.input))(input)).toEqual({ surface: "dashboard" })
       observed.sourceReads++
       const response = await handler(new Request("https://sf.example/sucafina/dashboard?download=members", { signal: options.signal }))
       if (!response) throw new Error("Original Members producer unavailable")
@@ -31,7 +31,7 @@ function fixture() {
       const bytes = new Uint8Array(await response.arrayBuffer())
       if (authority.revokeAfterProducer) authority.current = false
       return { kind: "response", status: response.status,
-        headers: Object.fromEntries(response.headers), body: Schema.decodeUnknownSync(operation.output)(bytes) }
+        headers: Object.fromEntries(response.headers), body: Schema.decodeUnknownSync(Schema.toType(operation.output))(bytes) }
     },
   }
   return { storage, authority, observed, transport }
