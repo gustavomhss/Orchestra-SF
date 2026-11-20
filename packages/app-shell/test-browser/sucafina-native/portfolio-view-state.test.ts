@@ -7,7 +7,7 @@ import { createSfPortfolioViewState } from "../../src/orchestra/chapters/sucafin
 import { sfProjectHref } from "../../src/orchestra/chapters/sucafina/portfolio/projects/paths"
 
 // Real provider/registry lifecycle with injected discovery, not installed auth evidence.
-const { batch, createComponent, createSignal, Show } = await import("solid-js")
+const { batch, createComponent, createSignal, onCleanup, Show } = await import("solid-js")
 const { render } = await import("solid-js/web")
 const { withBrowserPlatform } = await import("./platform-fixture")
 const { LanguageProvider }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
@@ -50,16 +50,16 @@ const projects = (year = 2026): SfResolvedRoute<"CAP10"> => ({
   pathname: "/orchestra/sf-portfolio/projects", query: { year },
 })
 type Reply = Awaited<ReturnType<SfContextDependencies["loadContext"]>>
-async function waitFor(predicate: () => boolean) {
+async function waitFor(predicate: () => boolean, diagnostic: () => object) {
   for (let i = 0; i < 100; i++) {
     if (predicate()) return
     await new Promise((resolve) => setTimeout(resolve, 10))
   }
-  throw new Error("Portfolio view-state fixture did not reach the expected state")
+  throw new Error("Portfolio view-state fixture did not reach the expected state: " + JSON.stringify(diagnostic()))
 }
 async function fixture() {
   const pending: (() => Promise<Reply>)[] = []
-  const captured: { handle?: SfContextHandle; controller?: ReturnType<typeof createSfPortfolioViewState> } = {}
+  const captured: { handle?: SfContextHandle; controller?: ReturnType<typeof createSfPortfolioViewState>; mounts: number; disposals: number } = { mounts: 0, disposals: 0 }
   const [route, setRoute] = createSignal<SfResolvedRoute<"CAP09" | "CAP10">>(overview())
   const [instance, setInstance] = createSignal(1)
   const dependencies: SfContextDependencies = {
@@ -70,13 +70,17 @@ async function fixture() {
     revalidateDraft: async () => ({ status: "unavailable" }),
   }
   const probe = () => {
+    captured.mounts += 1
+    onCleanup(() => { captured.disposals += 1 })
     captured.controller = createSfPortfolioViewState(useSfContext(), route)
     return null
   }
   const child = () => {
     captured.handle = useSfContext()
     return createComponent(Show, { get when() { return instance() }, keyed: true,
-      children: () => createComponent(probe, {}) })
+      // A keyed render prop must accept the key. A zero-argument child is an
+      // accessor with stable function identity and does not remount the probe.
+      children: (_instance: number) => createComponent(probe, {}) })
   }
   const node = document.createElement("div")
   document.body.append(node)
@@ -86,15 +90,25 @@ async function fixture() {
         get children() { return createComponent(child, {}) } })
     },
   })), node)
-  await waitFor(() => captured.handle?.state().status === "ready" && captured.controller?.value.filter === "watch")
+  const diagnostic = () => ({ status: captured.handle?.state().status,
+    filter: captured.controller?.value.filter, mounts: captured.mounts, disposals: captured.disposals })
+  try {
+    await waitFor(() => captured.handle?.state().status === "ready" && captured.controller?.value.filter === "watch", diagnostic)
+    expect(captured.mounts).toBe(1)
+    expect(captured.disposals).toBe(0)
+  } catch (error) { dispose(); node.remove(); throw error }
   return {
     get handle() { return captured.handle! },
     get controller() { return captured.controller! },
     pending,
     async remount(next: SfResolvedRoute<"CAP09" | "CAP10">) {
       const old = captured.controller
+      const mounts = captured.mounts
+      const disposals = captured.disposals
       batch(() => { setRoute(next); setInstance((value) => value + 1) })
-      await waitFor(() => captured.controller !== old)
+      await waitFor(() => captured.controller !== old, diagnostic)
+      expect(captured.mounts).toBe(mounts + 1)
+      expect(captured.disposals).toBe(disposals + 1)
     },
     close() { dispose(); node.remove() },
   }
