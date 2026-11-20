@@ -42,6 +42,8 @@ jobs:
           node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
           python3 -m unittest discover -s docs/qa/sucafina/uat-cio/scripts -p 'test_reconcile_history.py' -v
       - uses: ./.github/actions/setup-bun
+        with:
+          save: "true"
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:
           ORCHESTRA_OMNI_CONTROL: declared
@@ -53,6 +55,7 @@ jobs:
 
   static:
     name: sf/static-and-contracts
+    needs: [preflight]
     runs-on: ubuntu-24.04
     timeout-minutes: 22
     steps:
@@ -207,6 +210,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/omni-binaries
+        with:
+          save: "true"
       - name: Require actual Linux binary artifacts
         run: |
           set -euo pipefail
@@ -226,7 +231,7 @@ jobs:
   # CI-SF case or the fail-closed eight-suite release gate.
   procurement-queue-proof:
     name: sf/procurement-queue-integration
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
@@ -256,7 +261,7 @@ jobs:
 
   unit:
     name: sf/test-${{ matrix.id }}
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 28
     strategy:
@@ -352,7 +357,7 @@ jobs:
 
   unit-sf:
     name: sf/test-CI-SF-${{ matrix.shard }}
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -440,7 +445,7 @@ jobs:
 
   ui:
     name: sf/test-${{ matrix.id }}
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 24
     strategy:
