@@ -35,6 +35,7 @@ test("Executive component renders four canonical measures with compatible, missi
   expectSpawn(import.meta.path)
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "sf-executive-component-"))
   const cleanup: (() => Promise<unknown> | void)[] = [() => rm(root, { recursive: true, force: true })]
+  const owned: { driver?: Awaited<ReturnType<typeof launchBrowserDriver>> } = {}
   try {
     const shellDirectory = path.resolve(import.meta.dir, "../../../../../packages/app-shell")
     const node = Bun.which("node")
@@ -89,7 +90,8 @@ test("Executive component renders four canonical measures with compatible, missi
     } })
     cleanup.push(() => server.stop(true))
     const driver = await launchBrowserDriver("dashboard-monthly")
-    cleanup.push(async () => { await driver.close(); driver.report() })
+    owned.driver = driver
+    cleanup.push(() => driver.close())
     const page = await driver.browser.newPage()
     page.setDefaultTimeout(10000)
     page.setDefaultNavigationTimeout(10000)
@@ -144,4 +146,6 @@ test("Executive component renders four canonical measures with compatible, missi
     for (const close of cleanup.reverse()) await Promise.resolve().then(close).catch((error) => failures.push(error))
     if (failures.length) throw new AggregateError(failures, "Executive component cleanup failed")
   }
+  if (!owned.driver) throw new Error("Executive component browser did not start")
+  owned.driver.report()
 }, 90000)
