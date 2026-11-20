@@ -14,7 +14,7 @@ const storedNamespaces = ["preferences", "reviews", "relations", "threads", "con
 // retains code identity, never an observed case, snapshot or admitted authority.
 const caseReads = new WeakMap<object, {
   id: string
-  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
+  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => unknown
 }>()
 const readinessReads = new WeakMap<object, { namespace: SfStateNamespace; mode: "read" | "write"; select: (state: SfProductState, authority: SfStateAuthority) => { storageVersion: number; aggregateRevision: number; incarnation: string } | undefined }>()
 
@@ -29,6 +29,26 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
     })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
+  return read
+}
+
+/**
+ * Projects the owner only from the same current state authority as the case.
+ * The result is display/storage metadata and never a transferable admission.
+ * Preserve the registered single-case clone path; large unrelated cases stay private.
+ */
+export function selectSfCaseWithOwner(id: string, context: TrustedDomainContext) {
+  const selected = selectSfCase(id, context)
+  const project = (cases: SfProductState["cases"], authority: SfStateAuthority) => {
+    const value = selected({ cases }, authority)
+    const owner = value && authority.profile ? Schema.decodeUnknownSync(TeamProfile.Owner)({
+      profile: authority.profile,
+      principal: { tenantId: authority.profile.tenantId, principalObjectId: authority.principalRef },
+    }) : undefined
+    return { value, ...(owner ? { owner } : {}) }
+  }
+  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) => project(state.cases, authority)
+  if (caseReads.has(selected)) caseReads.set(read, { id, project })
   return read
 }
 
