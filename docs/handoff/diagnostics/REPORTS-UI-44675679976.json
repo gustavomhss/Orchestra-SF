@@ -1,0 +1,280 @@
+{
+  "schema": "reports-retained-ui-evidence/v1",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "6c6303f5a52cd6123762f8875b33822ba28e1ed8",
+    "snapshot": "46a4d879e86077a6ab35f0fd64b3df86e8807a33",
+    "run": 44675679976,
+    "job": 136086802928,
+    "artifact": 14602935208,
+    "artifactSha256": "5c5c28592f0c20810b162112f1e1c7dce6722607e1a25ff7b471e13a825b35ea",
+    "artifactBytes": 1470718,
+    "attempt": 1
+  },
+  "reader": {
+    "candidate": "39715c27bbf176e2acee5b533d5f085512b4e3ce",
+    "snapshot": "ae7d26b24f13a576dc805f7b41c32cf74ad14a31",
+    "tree": "c8d71908ac4172e51e71f0ebeeb52fd386c27167",
+    "requestBlob": "a1c53721f7e7ec4b112d6d171b4c50c83960c9e7",
+    "run": 44680294301,
+    "job": 136101790707,
+    "cleanupJob": 136102091854,
+    "conclusion": "success",
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 1312.308695,
+    "attempt": 1
+  },
+  "unchangedPreviousRecords": true,
+  "priorEvidence": "REPORTS-NOMINAL-44675679976.json",
+  "uiRecords": [
+    {
+      "kind": "UI",
+      "value": {
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "source": "runtime-json",
+        "association": "retained-attachment-reference",
+        "folder": "sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium",
+        "attachment": {
+          "name": "error-context",
+          "contentType": "text/markdown"
+        },
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 41,
+          "column": 3
+        },
+        "statuses": [
+          "    - status [ref=e10]: Homologação local · unknown · Microsoft 365 desativado neste perfil",
+          "          - status [ref=e28]: Preserved review review:051efa4e699fe3fb154d309c4c360cebcf6bed3f04ed1c6e9c42c63ecd285c94 v1 · 2026-11-20T04:42:35.230Z",
+          "        - status",
+          "          - status [ref=e193]: The response was not received. Your draft and action are retained. Draft and original action retained. Reconcile before an explicit retry."
+        ],
+        "controls": [
+          {
+            "name": "Ask about this review",
+            "nodes": [
+              {
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "name": "Reconcile discussion",
+            "nodes": []
+          },
+          {
+            "name": "Reconcile action",
+            "nodes": [
+              {
+                "disabled": false
+              }
+            ]
+          },
+          {
+            "name": "Retry same action",
+            "nodes": []
+          },
+          {
+            "name": "Send reply",
+            "nodes": []
+          },
+          {
+            "name": "Review this answer",
+            "nodes": []
+          }
+        ]
+      }
+    },
+    {
+      "kind": "UI",
+      "value": {
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "source": "runtime-json",
+        "association": "retained-attachment-reference",
+        "folder": "sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium",
+        "attachment": {
+          "name": "error-context",
+          "contentType": "text/markdown"
+        },
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 123,
+          "column": 3
+        },
+        "statuses": [
+          "    - status [ref=e10]: Homologação local · unknown · Microsoft 365 desativado neste perfil",
+          "          - status [ref=e28]: Preserved review review:c1baf0db98496a86c554332eb75b5dc23c7fe3420061e83e8c2a39e33079382f v1 · 2026-11-20T04:46:59.472Z",
+          "        - status",
+          "          - status [ref=e193]: The response was not received. Your draft and action are retained. Draft and original action retained. Reconcile before an explicit retry."
+        ],
+        "controls": [
+          {
+            "name": "Ask about this review",
+            "nodes": [
+              {
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "name": "Reconcile discussion",
+            "nodes": []
+          },
+          {
+            "name": "Reconcile action",
+            "nodes": [
+              {
+                "disabled": false
+              }
+            ]
+          },
+          {
+            "name": "Retry same action",
+            "nodes": []
+          },
+          {
+            "name": "Send reply",
+            "nodes": []
+          },
+          {
+            "name": "Review this answer",
+            "nodes": []
+          }
+        ]
+      }
+    },
+    {
+      "kind": "UI",
+      "value": {
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "source": "retained-html",
+        "association": "retained-attachment-reference",
+        "folder": "data",
+        "attachment": {
+          "name": "error-context",
+          "contentType": "text/markdown"
+        },
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 41,
+          "column": 3
+        },
+        "statuses": [
+          "    - status [ref=e10]: Homologação local · unknown · Microsoft 365 desativado neste perfil",
+          "          - status [ref=e28]: Preserved review review:051efa4e699fe3fb154d309c4c360cebcf6bed3f04ed1c6e9c42c63ecd285c94 v1 · 2026-11-20T04:42:35.230Z",
+          "        - status",
+          "          - status [ref=e193]: The response was not received. Your draft and action are retained. Draft and original action retained. Reconcile before an explicit retry."
+        ],
+        "controls": [
+          {
+            "name": "Ask about this review",
+            "nodes": [
+              {
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "name": "Reconcile discussion",
+            "nodes": []
+          },
+          {
+            "name": "Reconcile action",
+            "nodes": [
+              {
+                "disabled": false
+              }
+            ]
+          },
+          {
+            "name": "Retry same action",
+            "nodes": []
+          },
+          {
+            "name": "Send reply",
+            "nodes": []
+          },
+          {
+            "name": "Review this answer",
+            "nodes": []
+          }
+        ]
+      }
+    },
+    {
+      "kind": "UI",
+      "value": {
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "source": "retained-html",
+        "association": "retained-attachment-reference",
+        "folder": "data",
+        "attachment": {
+          "name": "error-context",
+          "contentType": "text/markdown"
+        },
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 123,
+          "column": 3
+        },
+        "statuses": [
+          "    - status [ref=e10]: Homologação local · unknown · Microsoft 365 desativado neste perfil",
+          "          - status [ref=e28]: Preserved review review:c1baf0db98496a86c554332eb75b5dc23c7fe3420061e83e8c2a39e33079382f v1 · 2026-11-20T04:46:59.472Z",
+          "        - status",
+          "          - status [ref=e193]: The response was not received. Your draft and action are retained. Draft and original action retained. Reconcile before an explicit retry."
+        ],
+        "controls": [
+          {
+            "name": "Ask about this review",
+            "nodes": [
+              {
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "name": "Reconcile discussion",
+            "nodes": []
+          },
+          {
+            "name": "Reconcile action",
+            "nodes": [
+              {
+                "disabled": false
+              }
+            ]
+          },
+          {
+            "name": "Retry same action",
+            "nodes": []
+          },
+          {
+            "name": "Send reply",
+            "nodes": []
+          },
+          {
+            "name": "Review this answer",
+            "nodes": []
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "ui": 4,
+    "missing": 0,
+    "association": "direct error-context attachment in both runtime JSON and HTML",
+    "traceFolderFallbackUsed": false,
+    "tracesRead": 0,
+    "productTestsRun": 0
+  },
+  "interpretation": {
+    "observed": "Both scenarios show the recoverable missing-response status with a retained original action, Ask disabled, Reconcile action enabled, and no Reconcile discussion or Retry same action button.",
+    "staticSource": "collaboration-view.ts:65,68 precede intent creation at70-94 and submitIntent at95; mutation POST is at232. collaboration-client.ts:68,73,78 emits the observed message for missing response or aborted controller. Its deadline is30000ms at62.",
+    "conclusion": "The UI passed the context/storage preflights and retained a question intent. Together with the original create waiters, the block is creation without an observed response, not an ignored click or a pre-intent failure.",
+    "limits": "No network trace or request/response payload was read. The UI status does not identify the transport cause, prove that the server received the request, or establish its commit outcome. The nominal remains one passed and three timed out cases."
+  }
+}

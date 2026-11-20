@@ -209,7 +209,7 @@ across transport attachments. This reader closes no product gate and
 authorizes no retry.
 
 
-## Supplemental retained UI metadata: prepared, not executed
+## Supplemental retained UI metadata: qualified
 
 The first reader located the initial Ask wait but retained no network observer
 for the browser's subsequent preflights. The existing error-context markdown
@@ -246,5 +246,37 @@ cookie or raw error-context text is printed.
 
 All previously qualified parser, transport selection, scenario metadata,
 step-tree selection, workflow and request behavior remain unchanged.
-The supplemental reader awaits cold review and authorization; there is no
-additional run ID yet.
+The supplemental reader was cold-reviewed at
+`39715c27bbf176e2acee5b533d5f085512b4e3ce`. Its single snapshot
+`ae7d26b24f13a576dc805f7b41c32cf74ad14a31`
+(tree `c8d71908ac4172e51e71f0ebeeb52fd386c27167`) adds only request
+`a1c53721f7e7ec4b112d6d171b4c50c83960c9e7`.
+Run `44680294301`, job `136101790707`: **1/0/0 skipped,
+1312.308695 ms**, attempt 1. Cleanup `136102091854` succeeded.
+
+[REPORTS-UI-44675679976.json](REPORTS-UI-44675679976.json) preserves the
+four actual UI records and their provenance. Both runtime JSON and HTML
+directly referenced error-context markdown for RPT-02 and RPT-04. There
+were zero UI_MISSING records and the trace-folder fallback was unused.
+The prior 23 sanitized records are byte-identical as JSON values after
+excluding the four new UI records.
+
+Both scenarios showed the missing-response status with the draft and original
+action retained. Ask was disabled; Reconcile action was enabled; Reconcile
+discussion and Retry same action were absent. The context/storage preflights
+precede intent creation in `collaboration-view.ts:65,68,70-94`, followed
+by submitIntent at line 95 and the mutation POST at line 232. The observed
+intent therefore proves those preflights were reached successfully; this is
+not the no-intent suspended branch or a click silently ignored by busy.
+
+Together with the original create waiters (which observe any matching HTTP
+response before subsequent status assertions), the evidence localizes the
+block to creation without an observed response. The exact missing-response
+message is emitted at `collaboration-client.ts:68,73,78` for absent response
+or an aborted controller; the existing deadline is 30000 ms at line 62.
+This is a code trace, not a measurement of which transport cause occurred.
+
+No request/response body, network trace or server commit result was read.
+The recoverable UI correctly retained the action; it does not prove receipt
+or commit at the server. The original nominal remains 1 pass / 3 timeouts.
+No additional reader, product run or retry is authorized by this result.
