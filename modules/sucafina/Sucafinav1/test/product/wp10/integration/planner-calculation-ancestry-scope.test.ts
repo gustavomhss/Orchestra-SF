@@ -103,13 +103,14 @@ for (const fault of ["result", "request", "source", "input", "headers", "lease",
             if (!original) throw new Error("The actual evidence producer was not mounted")
             fixture.business.evidence.current = { ...original }
           }
-          if (fault === "coverage-reader") fixture.replaceCoverage()
+          if (fault === "coverage-reader") observed.changed = fixture.replaceCoverage()
           observed.second = await fixture.resolve(call)
           return { status: "ok", value: observed.second }
         })
       })
       expect(observed.first?.state).toBe("fresh")
       expect(observed.resultReads).toBe(6)
+      if (fault === "coverage-reader") expect(observed.changed).toBe(true)
       expect(observed.second?.state).toBe("unavailable")
       expect(result.status).not.toBe("ok")
       expect(fixture.counts.resolutions).toBe(1)
@@ -307,6 +308,135 @@ test("ordinary leaf reads retain two independent canonical replays outside an an
     if (result.status === "ok") expect(result.value.map((entry) => entry.state)).toEqual(["fresh", "fresh"])
     expect(fixture.counts.resolutions).toBe(2)
     expect(fixture.counts.results).toBe(12)
+    expect(await fixture.capture()).toEqual(before)
+  } finally { await fixture.cleanup() }
+}, 120000)
+
+test("the authenticated case read keeps both evidence passes inside one completed ancestry phase", async () => {
+  const fixture = await ancestryProofFixture()
+  try {
+    const before = await fixture.capture()
+    const evidence = fixture.business.evidence.current
+    if (!evidence) throw new Error("The real BCS producer was not mounted")
+    const original = evidence.context
+    const passes: { results: number; sources: number; fresh: boolean }[] = []
+    evidence.context = async (...args) => {
+      const value = await original(...args)
+      passes.push({ results: fixture.counts.results, sources: fixture.counts.sources,
+        fresh: value.length > 0 && value.every((item) => item.state === "fresh") })
+      return value
+    }
+    const read = await fixture.run(async (call) => {
+      fixture.reset()
+      passes.length = 0
+      return fixture.business.cases.read({ caseRef: `case:${fixture.caseRef.id}:${fixture.caseRef.incarnation}` }, call)
+    })
+    expect(read.status).toBe("ok")
+    if (read.status !== "ok") throw new Error("The actual case projection was not returned")
+    expect(read.value.case.id).toBe(fixture.caseRef.id)
+    expect(read.value.case.incarnation).toBe(fixture.caseRef.incarnation)
+    expect(read.value.case.version).toBe(fixture.caseRef.version)
+    expect(read.value.events[0]?.evidenceRefs).toEqual([fixture.leaf])
+    expect(read.value.evidenceRefs).toEqual([fixture.leaf])
+    expect(passes).toHaveLength(2)
+    expect(passes.map((pass) => pass.fresh)).toEqual([true, true])
+    expect(passes.map((pass) => pass.results)).toEqual([6, 6])
+    expect(passes[1]!.sources).toBeGreaterThan(passes[0]!.sources)
+    expect(fixture.counts.results).toBe(6)
+    expect(await fixture.capture()).toEqual(before)
+  } finally { await fixture.cleanup() }
+}, 120000)
+
+test("the public Planner preview keeps its two real BCS admissions and closes the ancestry proof before the next preview", async () => {
+  const fixture = await ancestryProofFixture()
+  try {
+    const before = await fixture.capture()
+    const evidence = fixture.business.evidence.current
+    if (!evidence) throw new Error("The real BCS producer was not mounted")
+    const original = evidence.resolve
+    const passes: { results: number; sources: number; fresh: boolean; digest: string }[] = []
+    evidence.resolve = async (...args) => {
+      const value = await original(...args)
+      passes.push({ results: fixture.counts.results, sources: fixture.counts.sources,
+        fresh: value.state === "fresh", digest: digestSfValue(value.ref) })
+      return value
+    }
+    const preview = () => fixture.ui("sf_scenario_simulate", (call) => fixture.business.withCase(call, fixture.caseRef, {}, async () => {
+      fixture.reset()
+      passes.length = 0
+      return fixture.business.planner.simulateScenario(fixture.incoming, call)
+    }))
+    const first = await preview()
+    expect(first.status).toBe("ok")
+    if (first.status !== "ok") throw new Error("The real Planner preview was not returned")
+    expect(first.value.comparisonStatus).toBe("conditioned")
+    expect(first.value.total).toBeNull()
+    expect(first.value.sourceRefs).toContainEqual(fixture.eventRef)
+    expect(passes).toHaveLength(2)
+    expect(passes.map((pass) => pass.fresh)).toEqual([true, true])
+    expect(passes.map((pass) => pass.digest)).toEqual([digestSfValue(fixture.eventRef), digestSfValue(fixture.eventRef)])
+    expect(passes.map((pass) => pass.results)).toEqual([6, 6])
+    expect(passes[1]!.sources).toBeGreaterThan(passes[0]!.sources)
+    expect(fixture.counts.results).toBe(6)
+    const second = await preview()
+    expect(second.status).toBe("ok")
+    if (second.status === "ok") expect(second.value).toEqual(first.value)
+    expect(passes).toHaveLength(2)
+    expect(passes.map((pass) => pass.results)).toEqual([6, 6])
+    expect(fixture.counts.results).toBe(6)
+    expect(await fixture.capture()).toEqual(before)
+  } finally { await fixture.cleanup() }
+}, 120000)
+
+test("a current persisted scenario request keeps both canonical outer reads and only the completed leaf proof within its read suffix", async () => {
+  const fixture = await ancestryProofFixture()
+  try {
+    const produced = await fixture.ui("sf_scenario_simulate", (call) => fixture.business.withCase(call, fixture.caseRef, {}, async () => {
+      const simulated = await fixture.business.planner.simulateScenario(fixture.incoming, call)
+      if (simulated.status !== "ok") return simulated
+      return fixture.business.calculations.persist({ kind: "scenario", request: fixture.incoming, result: simulated.value }, "request-read-outer", call)
+    }))
+    expect(produced.status).toBe("ok")
+    if (produced.status !== "ok") throw new Error("The real outer calculation was not persisted")
+    const outer = produced.value.resultRef
+    const before = await fixture.capture()
+    if (before.state.status !== "ok") throw new Error("The complete C08 envelope was unavailable")
+    const stored = before.state.value.state.decisionResults?.[outer]
+    if (!stored || stored.kind !== "scenario") throw new Error("The actual persisted outer scenario was absent")
+    const reads: string[] = []
+    const original = fixture.business.results.readForCalculation
+    fixture.business.results.readForCalculation = (request, call) => {
+      reads.push(request.resultRef)
+      return original(request, call)
+    }
+    const read = () => fixture.run(async (call) => {
+      fixture.reset()
+      reads.length = 0
+      return fixture.business.calculations.requests.read(outer, call)
+    })
+    const first = await read()
+    expect(first.status).toBe("ok")
+    if (first.status !== "ok") throw new Error("The canonical scenario request was not returned")
+    expect(first.value.resultRef).toBe(outer)
+    expect(first.value.caseRef).toEqual(fixture.caseRef)
+    expect(first.value.request).toEqual(fixture.incoming)
+    expect(first.value.requestDigest).toBe(digestSfValue(fixture.incoming))
+    expect(first.value.resultDigest).toBe(stored.resultDigest)
+    expect(first.value.engineVersion).toBe("planner-runtime-v1")
+    expect(first.value.recordDigest).toBe(digestSfValue(Object.fromEntries(Object.entries(first.value).filter(([key]) => key !== "recordDigest"))))
+    expect(reads.filter((reference) => reference === outer)).toHaveLength(2)
+    expect(reads.filter((reference) => reference === fixture.leaf.target.runId)).toHaveLength(6)
+    expect(reads).toHaveLength(8)
+    expect(fixture.counts.results).toBe(8)
+    expect(fixture.counts.sources).toBeGreaterThan(0)
+    expect(fixture.counts.coverage).toBeGreaterThan(0)
+    expect(await fixture.capture()).toEqual(before)
+    const second = await read()
+    expect(second).toEqual(first)
+    expect(reads.filter((reference) => reference === outer)).toHaveLength(2)
+    expect(reads.filter((reference) => reference === fixture.leaf.target.runId)).toHaveLength(6)
+    expect(reads).toHaveLength(8)
+    expect(fixture.counts.results).toBe(8)
     expect(await fixture.capture()).toEqual(before)
   } finally { await fixture.cleanup() }
 }, 120000)

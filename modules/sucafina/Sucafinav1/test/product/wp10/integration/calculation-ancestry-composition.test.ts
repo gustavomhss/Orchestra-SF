@@ -92,15 +92,22 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
     }
     const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) => {
       const started = performance.now(), before = control.canonicalResultReads, completed = control.canonicalResultReadsCompleted
+      const trace = (phase: string) => console.info("SF_CALCULATION_ANCESTRY_STEP", JSON.stringify({ producer: idempotencyKey, phase,
+        elapsedMs: Math.round(performance.now() - started), canonicalResultReads: control.canonicalResultReads - before,
+        canonicalResultReadsCompleted: control.canonicalResultReadsCompleted - completed, aborted: deadline.signal.aborted }))
       return ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
+        trace("case-admitted")
         const issued = await business.plannerProduct.issueSource("v0", call)
         if (issued.status !== "ok") return issued
         const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
         const simulated = await business.planner.simulateScenario(input, call)
+        trace("public-preview-returned")
         if (simulated.status !== "ok") return simulated
         const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
+        trace("persistence-returned")
         if (saved.status !== "ok") return saved
         const calculation = await business.calculations.issue(saved.value.resultRef, call)
+        trace("explicit-issuance-returned")
         return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
       })).finally(() => console.info("SF_CALCULATION_ANCESTRY", JSON.stringify({ phase: `produce-${idempotencyKey}`,
         elapsedMs: Math.round(performance.now() - started), canonicalResultReads: control.canonicalResultReads - before,
