@@ -53,7 +53,7 @@ test("one ancestry invocation reuses only a completed leaf and still performs fr
   } finally { await fixture.cleanup() }
 }, 120000)
 
-for (const fault of ["result", "request", "source", "input", "headers", "lease", "access", "day", "actor", "reader", "source-reader"] as const) {
+for (const fault of ["result", "request", "source", "input", "headers", "lease", "access", "day", "actor", "reader", "source-reader", "evidence-holder", "coverage-reader"] as const) {
   test("completed ancestry proof refuses the same-reference change in " + fault, async () => {
     const fixture = await ancestryProofFixture()
     try {
@@ -98,6 +98,12 @@ for (const fault of ["result", "request", "source", "input", "headers", "lease",
             const original = fixture.business.plannerSources.resolveForecastSource
             fixture.business.plannerSources.resolveForecastSource = (...args) => original(...args)
           }
+          if (fault === "evidence-holder") {
+            const original = fixture.business.evidence.current
+            if (!original) throw new Error("The actual evidence producer was not mounted")
+            fixture.business.evidence.current = { ...original }
+          }
+          if (fault === "coverage-reader") fixture.replaceCoverage()
           observed.second = await fixture.resolve(call)
           return { status: "ok", value: observed.second }
         })

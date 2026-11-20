@@ -514,6 +514,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculationProducer = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
     writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
+    readerIdentity: () => [forecastCoverage.current, decisionDomain.current,
+      ...[evidence.current, baselineCoverage, decisionDomain.current?.proposalCoverage].flatMap((reader) =>
+        [reader, ...Object.entries(reader ?? {}).flatMap(([key, value]) => [key, value])])],
     // The historical reader alone receives this coverage route. The exposed
     // Planner and baseline registry continue using the strict original selector.
     resolveHistoricalForecastCoverage: async (ref, call) => {
