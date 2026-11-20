@@ -481,7 +481,7 @@ export function createSfAtlasBusiness(input: {
   })
   const context = assembled.service
   resolveAncestry = assembled.resolveAncestry
-  const canonicalMemory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
+  const canonicalMemory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", observeRecovery: recallScope?.observe, now: input.now })
   const memory = {
     ...canonicalMemory,
     recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
