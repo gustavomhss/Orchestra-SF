@@ -361,3 +361,15 @@ for (const grantedScopes of ["User.Read https://graph.microsoft.com/Team.ReadBas
     expect(await read(f.client, input(session))).toMatchObject({ state: "complete", teams: [] })
   })
 }
+
+test("graph-client-03: omitted refresh scope cannot be inferred from newly configured capability", async () => {
+  const f = await microsoftFixture({ teams: "direct", grantedScopes: null })
+  const session = await login(f)
+  expect(session.tokens.grantedScopes).toContain("Team.ReadBasic.All")
+  if (!session.tokens.refreshToken) throw new Error("Original refresh token required")
+  const refreshed = await f.client.refresh(session.tokens.refreshToken)
+  expect(refreshed.grantedScopes).toBeUndefined()
+  const count = f.requests.length
+  expect(await read(f.client, { ...input(session), tokens: refreshed })).toEqual({ state: "unavailable", reason: "consent_required" })
+  expect(f.requests).toHaveLength(count)
+})

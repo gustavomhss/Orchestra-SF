@@ -178,9 +178,10 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     if (data.refresh_token !== undefined && (typeof data.refresh_token !== "string" || !data.refresh_token.trim())) throw new Error("Invalid refresh token response")
     if (data.id_token !== undefined && (typeof data.id_token !== "string" || !data.id_token.trim())) throw new Error("Invalid identity token response")
     if ((profile === "web-confidential" || data.token_type !== undefined) && data.token_type !== "Bearer") throw new Error("Invalid Entra token type")
-    // Microsoft omits scope when the successful redemption retains the requested scopes.
-    // Persist that observation here; an old credential without this field is not upgraded by the reader.
-    const grantedScopes = data.scope === undefined ? teams === "direct" ? scopes.split(" ") : undefined : typeof data.scope === "string" && data.scope.trim() && !/[\x00-\x1f\x7f]/.test(data.scope) ? data.scope.split(" ").filter(Boolean) : null
+    // Microsoft may omit scope on code redemption when it retains the initial requested scopes.
+    // A refresh token alone does not prove that initial set; missing refresh scopes stay unavailable.
+    // An old credential without this field is not upgraded by the reader.
+    const grantedScopes = data.scope === undefined ? teams === "direct" && fields.grant_type === "authorization_code" ? scopes.split(" ") : undefined : typeof data.scope === "string" && data.scope.trim() && !/[\x00-\x1f\x7f]/.test(data.scope) ? data.scope.split(" ").filter(Boolean) : null
     if (grantedScopes === null || (grantedScopes && new Set(grantedScopes).size !== grantedScopes.length)) throw new Error("Invalid Entra token scope")
     const tokens: EntraTokens = {
       accessToken: data.access_token,
