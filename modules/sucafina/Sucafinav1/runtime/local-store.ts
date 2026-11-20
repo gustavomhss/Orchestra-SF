@@ -579,20 +579,18 @@ function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
     if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
     const descriptors = Object.getOwnPropertyDescriptors(value)
     const keys = Object.keys(descriptors)
-    const copied: Record<string, unknown> = {}
-    const defineProperty = Object.defineProperty
-    const normalized = { value: undefined as unknown, enumerable: true, writable: true, configurable: true }
-    Object.setPrototypeOf(normalized, null)
+    const copied: Record<string, unknown> = Object.create(null)
+    const setPrototypeOf = Object.setPrototypeOf
+    const prototype = Object.prototype
     // Capture every descriptor before child visits, which can replace siblings.
-    // The private output descriptor cannot observe inherited get/set attributes.
+    // Keep assignments isolated from inherited setters until the copy is complete.
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index]!
       const descriptor = descriptors[key]!
       if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
-      normalized.value = copyValue(descriptor.value, ancestors)
-      defineProperty(copied, key, normalized)
+      copied[key] = copyValue(descriptor.value, ancestors)
     }
-    return copied
+    return setPrototypeOf(copied, prototype)
   } finally {
     ancestors.delete(value)
   }

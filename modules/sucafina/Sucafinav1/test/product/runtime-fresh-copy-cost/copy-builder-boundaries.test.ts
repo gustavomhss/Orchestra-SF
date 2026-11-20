@@ -20,10 +20,12 @@ for (const prototype of prototypes) {
         const own = { marker: "own data" }
         const live = { mustNotEscape: true }
         const late = Symbol("late-symbol")
+        const empty = Object.create(prototype.value)
         const target: Record<PropertyKey, unknown> = Object.create(prototype.value)
         Object.defineProperty(target, "alpha", { value: alpha, enumerable: false, writable: false, configurable: true })
         Object.defineProperty(target, "__proto__", { value: own, enumerable: false, configurable: true })
         Object.defineProperty(target, late, { value: live, enumerable: true, configurable: true })
+        snapshot.data.emptyBoundary = empty
         snapshot.data.boundary = new Proxy(target, {
           getPrototypeOf(subject) {
             trace.push("prototype")
@@ -46,10 +48,14 @@ for (const prototype of prototypes) {
             return { commit: false, value: child }
           }) : currentTarget(store)
           const copied = record(observed.data.boundary)
+          const emptyCopy = record(observed.data.emptyBoundary)
           expect(trace).toEqual([
             ...Array.from({ length: prototype.reads }, () => "prototype"),
             "keys:1", "keys:2", "descriptor:alpha", "descriptor:__proto__", "descriptor:symbol",
           ])
+          expect(Object.getPrototypeOf(emptyCopy)).toBe(Object.prototype)
+          expect(Object.keys(emptyCopy)).toEqual([])
+          expect(emptyCopy).not.toBe(empty)
           expect(Object.keys(copied)).toEqual(["alpha", "__proto__"])
           expect(Object.getOwnPropertySymbols(copied)).toEqual([])
           expect(Object.getPrototypeOf(copied)).toBe(Object.prototype)
