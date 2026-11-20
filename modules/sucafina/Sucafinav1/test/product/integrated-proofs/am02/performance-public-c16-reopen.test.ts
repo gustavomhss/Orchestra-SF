@@ -157,8 +157,9 @@ test("AM02 Performance UI/C16 private MCP keep three business ports and receipts
     }
     const freshSeries = await fixture.issue(["budgetSeries"])
     const freshMetrics = await fixture.issue(["budgetMetrics"])
-    expect(freshSeries.selectionRef).not.toBe(series.selectionRef)
-    expect(freshMetrics.selectionRef).not.toBe(metrics.selectionRef)
+    // Reopening the same store preserves source identity; native authority is renewed separately.
+    expect(freshSeries.selectionRef).toBe(series.selectionRef)
+    expect(freshMetrics.selectionRef).toBe(metrics.selectionRef)
     const freshRoutes = [
       { ...routes[0], payload: { ...routes[0].payload, selectionRef: freshSeries.selectionRef } },
       { ...routes[1], payload: { ...routes[1].payload, metricRef: dashboardMetricSelector(freshMetrics.selectionRef, "total-budget") } },
