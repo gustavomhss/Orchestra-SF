@@ -161,9 +161,11 @@ async function forward(client) {
   })
   await opened.promise
   const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
-  // The async iterator pauses incoming reads while the WebSocket is backpressured.
-  // EOF closes only the input half. Keep the writable half for WebSocket replies
-  // until the clean close handshake and queued write callbacks complete below.
+  // Pause incoming reads while the WebSocket is backpressured, but retain the
+  // writable half after a clean EOF. The default async iterator destroys the
+  // Duplex at EOF; on this allowHalfOpen socket that aborts pending replies and
+  // the normal WebSocket close handshake below. This function owns both halves
+  // and still requires explicit end, physical close, drained writes and WS1000.
   for await (const chunk of client.iterator({ destroyOnReturn: false })) {
     if (failure) throw failure
     if (pending.length + chunk.length > limits.maxQueuedBytes) throw new Error("Browser bridge input exceeded its bound")
@@ -211,6 +213,8 @@ try {
   const launchTimeoutMs = Math.min(launchCeilingMs, startup.deadlineEpochMs - Date.now())
   if (launchTimeoutMs <= 0) throw new Error("Node browser startup deadline expired before launch")
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launch", timeoutMs: launchTimeoutMs, deadlineEpochMs: startup.deadlineEpochMs }))
+  // Actions provisions this Playwright version's default Chromium headless shell.
+  // Do not fall back to the runner's unrelated Chrome or start a fresh deadline.
   server = await chromium.launchServer({ host: "127.0.0.1", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
   clearInterval(launchSampler)
   inspectLaunch()
@@ -289,7 +293,7 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
 
 /** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed.
  * A caller's shorter acquisition deadline cancels the owned process scope, not only its await. */
-export async function launchBrowserDriver(consumer: "wp01-native-decisions" | "planner-monthly" | "wp10-review-access" | "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
+export async function launchBrowserDriver(consumer: "bi-lifecycle" | "import-analysis-output" | "wp01-native-decisions" | "wp10-review-access" | "planner-monthly" | "wp07-review" | "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool" | "wp05-renderer", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
   const launchTimeout = startup?.timeoutMs ?? 15000
   const launchCeilingMs = consumer === "wp01-shared-pool" ? 30000 : 15000
   if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > launchCeilingMs) throw new Error("Invalid browser driver startup deadline")

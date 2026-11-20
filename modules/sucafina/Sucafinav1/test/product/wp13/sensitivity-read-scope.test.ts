@@ -108,25 +108,52 @@ test("a failed sensitivity scope cannot retain its old grant or publish a callba
   }
 }, 120000)
 
+for (const fault of ["binding", "stored"] as const) {
+  test("unscoped sensitivity verification rejects final-callback mutation of its " + fault + " without retaining its old grant", async () => {
+    const proof = await scopeProof("unscoped-" + fault, true)
+    try {
+      expect(await proof.verify()).toBe(true)
+      const finalCall = proof.scope.checks
+      expect(finalCall).toBeGreaterThan(0)
+      expect(await proof.fence()).toBe(true)
+      const before = await proof.snapshots()
+      const injected = { value: false, provisional: undefined as boolean | undefined }
+      proof.scope.finalAt = finalCall
+      proof.scope.final = async () => {
+        injected.provisional = await proof.fence()
+        injected.value = true
+        if (fault === "binding") proof.binding.request.parameterBounds.maximum += 1
+        if (fault === "stored") proof.stored.requestDigest += "-changed-at-final-callback"
+      }
+      expect(await proof.verify()).toBe(false)
+      expect(injected.value).toBe(true)
+      expect(injected.provisional).toBe(false)
+      expect(proof.scope.checks).toBe(finalCall)
+      expect(await proof.fence()).toBe(false)
+      expect(await proof.snapshots()).toEqual(before)
+    } finally { await proof.cleanup() }
+  }, 120000)
+}
+
 /** Financial observations, samples and sensitivity C08 are produced by the real
  * Planner and persisted through the real store. The binding envelope below is
  * private verifier input derived from that result and the real rule issuer;
  * full binding publication and all four cold replays remain in the integration
  * suite, avoiding seven unrelated verifier replays in each scope counterexample. */
-async function scopeProof(label: string) {
+async function scopeProof(label: string, unscoped = false) {
   const fixture = await createPortfolioCoverageFixture("omitted")
   try {
-    const scope: { checks: number; final?: () => Promise<void> } = { checks: 0 }
+    const scope: { checks: number; finalAt?: number; final?: () => Promise<void> } = { checks: 0 }
     const host: Pick<DomainPortHost, "persistence" | "requestFor" | "revalidate"> = {
       persistence: fixture.store,
       requestFor: fixture.host.requestFor,
       revalidate: async (context) => {
         scope.checks++
-        if (scope.checks === 2) await scope.final?.()
+        if (scope.checks === (scope.finalAt ?? 2)) await scope.final?.()
         return fixture.host.revalidate(context)
       },
     }
-    const services = await persistedServices(fixture, `scope-${label}`, { readScopeHost: host })
+    const services = await persistedServices(fixture, `scope-${label}`, { readScopeHost: unscoped ? false : host, ...(unscoped ? { revalidate: host.revalidate } : {}) })
     const request: SensitivityRequest = { ...fixture.sensitivityRequest, parameterBounds: { ...fixture.sensitivityRequest.parameterBounds, steps: 1 } }
     const evaluated = await services.sensitivity(request, fixture.context)
     if (evaluated.status !== "ok") throw new Error(`Canonical sensitivity unavailable: ${JSON.stringify(evaluated)}`)

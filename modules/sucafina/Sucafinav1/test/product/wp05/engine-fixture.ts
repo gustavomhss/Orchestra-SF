@@ -17,17 +17,18 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
 import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
-import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
-import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
 import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
+import { observePlannerSensitivity } from "../../../product/planner/sensitivity-observation.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
 import { createPlannerSensitivity } from "../../../product/portfolio/planner-sensitivity.ts"
 import { createPersistentSensitivityPort } from "../../../product/portfolio/sensitivity-store.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { resolve } from "../../../src/identity.ts"
+import { createRenewalCaseOperationVerifier } from "../wp11/renewal-operation-verifier.ts"
+import { createFixtureReadObservation, fixtureReaderIdentities } from "../wp11/fixture-read-observation.ts"
 
 export const wp05Horizon = { start: "2027-01-01", end: "2027-12-31" }
 const november = { start: "2027-11-01", end: "2027-11-30" }
@@ -170,20 +171,30 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
     if (selectedStored.status !== "ok" || baselineStored.status !== "ok") throw new Error(`Scenario persistence unavailable: ${JSON.stringify({ selectedStored, baselineStored })}`)
     const selectedRef = selectedStored.value.resultRef
     const baselineRef = baselineStored.value.resultRef
-    const scenarioInputs = createPlannerScenarioInputs({ planner, sources, verifyAssumption: async () => ({ status: "unavailable", reason: "human-confirmation-required" }) })
-    const verifyOperations = createPlannerOperationVerifier({ host, planner, sources, scenarioInputs })
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "wp05-case", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => "unused", now })
+    // Keep all canonical operation checks inside one real read-only Planner snapshot.
+    // The shared fixture verifier retains human-confirmation-required for assumptions.
+    const verifyOperations = createRenewalCaseOperationVerifier(host, sources)
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "wp05-case", authorizeCase: async () => access.allowed, verifyScenarioOperations: verifyOperations, evidence: evidenceService, createId: () => "unused", now })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async (coverageBasis, assessment) => access.allowed && coverageBasis.sourceRefs.every(sourceMatches) && assessment.evaluatedSourceRefs.every(sourceMatches) })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
-    const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted)
+    const canonicalPreview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted)
     const ruleOperation = { id: "wp05-criterion" }
     const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
     const rules = createCriterionRuleRegistry({ state, host, authorizeCase: async () => access.allowed, authorizeRule: async () => access.allowed, verifyEvidence: async (rule) => access.allowed && rule.evidenceRefs.every(sourceMatches), verifySnapshot: () => access.allowed, readMetric: (input, trusted) => {
       if (!metrics.read) throw new Error("Planner criterion metric is not wired")
       return metrics.read(input, trusted)
     }, verifyMetric: async (metric) => access.allowed && metric.evidenceRefs.every(sourceMatches), operationIdentity: () => ruleOperation.id, proposalCoverageWrites, now })
-    const issuer = createPlannerSensitivityUnits({ host, cases, scenarios, store: results, evidence: evidenceService, rules })
-    metrics.read = createPlannerCriterionMetric({ host, rules, units: issuer, preview })
+    const canonicalUnits = createPlannerSensitivityUnits({ host, cases, scenarios, store: results, evidence: evidenceService, rules })
+    const canonicalCaseRead = cases.read
+    const observe = createFixtureReadObservation({ host, state,
+      identities: () => [sourceMatches, verifyOperations, coverageAccess.resolve, metrics.read,
+        ...fixtureReaderIdentities(sources, evidenceService, cases, results, scenarios, rules, planner, canonicalUnits)],
+      witness: () => ({ allowed: access.allowed, revokedSources: [...access.revokedSources].sort(), sourceRefs, scopeRefs, basis, caseRef }) })
+    cases.read = (input, trusted) => observe(input, trusted, () => canonicalCaseRead(input, trusted))
+    const observed = observePlannerSensitivity({ units: canonicalUnits, preview: canonicalPreview, observe })
+    const issuer = observed.units, preview = observed.preview
+    const metric = createPlannerCriterionMetric({ host, rules, units: issuer, preview })
+    metrics.read = (input, trusted) => observe(input, trusted, () => metric(input, trusted))
     const issued = await issuer.issue({ scenarioRef: selectedRef, baselineRef, parameterRef }, context)
     if (issued.status !== "ok") throw new Error(`Sensitivity units unavailable: ${JSON.stringify(issued)}`)
     const criterion = options.mode === "renewal-usd" ? { id: "renewal-difference", operator: "lte" as const, value: -20000 } : { id: "renewal-difference", operator: "gte" as const, value: 0 }
@@ -203,7 +214,8 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
     const bound = await comparisonBindings.bind({ caseRef, resultRef: comparisonRef, request: comparisonRequest, expectedRules: proofs.value }, context)
     if (bound.status !== "ok") throw new Error(`Comparison binding unavailable: ${JSON.stringify(bound)}`)
     const bindings = createCriterionResultBindings({ state, host, rules, results, authorizeCase: async () => access.allowed, verifyBinding: async () => access.allowed, verifySnapshot: () => access.allowed, operationIdentity: () => "wp05-sensitivity-binding", proposalCoverageWrites, now })
-    const exact = createPlannerExactThreshold({ units: issuer, preview })
+    const canonicalExact = createPlannerExactThreshold({ units: issuer, preview })
+    const exact: typeof canonicalExact = (input, baselineRef, trusted) => observe({ input, baselineRef }, trusted, () => canonicalExact(input, baselineRef, trusted))
     const exactCalls = { count: 0 }
     const sensitivity = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview, exactThreshold: (input, binding, trusted) => { exactCalls.count++; return exact(input, binding.baselineRef, trusted) }, idempotencyKey: async (digest) => `wp05-samples-${digest}` })
     const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "portfolio-not-requested" }), sensitivity }, results, bindings, resolveBinding: issuer.resolve, idempotencyKey: async (digest) => `wp05-sensitivity-${digest}` })

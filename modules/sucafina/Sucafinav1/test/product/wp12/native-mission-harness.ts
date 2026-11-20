@@ -73,6 +73,8 @@ export async function withWp12NativeMissionHost<T>(options: {
   humanActions?: readonly SfHumanAction[]
   namespaces?: SfProductGrant["namespaces"]
   assets?: AssetServices
+  /** Declared source-observation clock shared by the actual projector and environment. */
+  observedAt?: string
   initialize: (persistence: SourcePersistence) => Promise<void>
 }, work: (harness: {
   open: <R>(phase: "initial" | "reopened", work: (context: Wp12NativeMissionContext) => Promise<R>) => Promise<R>
@@ -83,7 +85,7 @@ export async function withWp12NativeMissionHost<T>(options: {
   const origin = "https://wp12-native-missions.example.test"
   const principalRef = `wp12-synthetic-${options.label}-principal`
   const admittedRequests = new WeakSet<Request>()
-  const at = new Date().toISOString()
+  const at = options.observedAt ?? new Date().toISOString()
   const request = (body?: unknown, route = "/sucafina/planner?sf=analysis", method: "GET" | "POST" = "POST") => {
     const multipart = method === "POST" && body instanceof FormData
     const value = new Request(new URL(route, origin), { method,
