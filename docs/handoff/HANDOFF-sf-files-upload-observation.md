@@ -2,14 +2,14 @@
 
 ## SHA e estado
 
-- Estado: **PARTIAL — código e testes preparados; qualificação Actions pendente**.
+- Estado: **COMPLETE — recorte compartilhado qualificado em Actions; jornadas instaladas continuam separadas**.
 - Branch: `sf-files-upload-observation`.
 - Base congelada: `d4ded81224e05f2d3b9789b3eec40b9de8a32fa1` (`sf-join-four`, após #407).
 - Código inicial: `a075b0bd6d199e63ab0ad1c3a229e1b89bebec55`.
 - Código final desta entrega: `3041fcd305c9014c1558197c30863952a2abbdbe`.
 - Tree do código: `746e1320a205bbfdf9103c1ce657f790c1da859a`.
 - Este handoff acrescenta documentação; não qualifica UI55, Operations, baseline ou pacote.
-- Nenhum PR, merge, gate, dispatch, GO ou deploy foi executado pelo autor desta entrega.
+- O integrador abriu o PR #431 e executou o gate único abaixo. Nenhum GO, deploy ou qualificação global foi emitido.
 
 ## Causa demonstrada
 
@@ -146,39 +146,39 @@ Request idêntico e current() novamente. As assertions e a política não mudara
 Essa revisão não encontrou outro bloqueio concreto por leitura. A revisão curta
 independente de Reports cobriu ambos observers e o wiring, sem leitura dos testes
 nessa rodada; também não adicionou outro bloqueio. Nenhuma dessas revisões é gate.
-A leitura do delta final e a qualificação Actions continuam pendentes.
+A leitura do delta final confirmou a ordem corrigida. O gate único foi executado pelo integrador sobre os bytes publicados.
 
-Gate único proposto ao integrador, seguindo o mesmo timeout de unit já usado
-na qualificação de #407:
+Gate único executado, seguindo o mesmo timeout de unit já usado na qualificação de #407:
 
 ```json
 {"package":"sucafina","runner":"bun","args":["./Sucafinav1/test/native-ui-contract/asset-health.test.ts","./Sucafinav1/test/native-ui-contract/import-health.test.ts","./Sucafinav1/test/assets.test.ts","--timeout","120000"]}
 ```
 
-Nenhum teste local, typecheck local ou novo Actions foi executado pelo autor.
-Guard result, CI completo e aceite final permanecem pendentes.
+Nenhum teste ou typecheck local foi executado. O integrador leu os jobs e o log real:
+
+- Run: [44666552454](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44666552454), conclusão **success**.
+- Snapshot: `5038302de56e1dc4c4a255eace3ab5210d6ae535`, filho direto do source `6732ff508922b097e5c9c42b457e3dc8dc6c65ae`; somente .ci-run.json acrescentado.
+- Test job `136057127618`: success; cleanup `136057491026`: success.
+- **26 pass / 0 fail / 182 expect() calls**, 3 arquivos, 729 ms.
+- Oito testes novos passaram contra SQLite/autoridade/serviços reais; 18 regressões originais de assets passaram.
+- O controle Omni declarou corretamente não aplicável: zero spawn/delegação; não se atribui inferência ou scanner vivo a este gate.
+- Artefato de contexto do runner: `14596919880`, `test-ci-guard-context-5038302de56e1dc4c4a255eace3ab5210d6ae535-1`; não é baseline nem execução do comando final de guards.
+
+A qualificação COMPLETE é somente dos nove paths deste PR e da disponibilidade compartilhada. Não qualifica UI55 instalada, DOC com ClamD, Operations completo, guards, sf-ci, pacote ou GO.
 
 ## Aberto / unbound / como retomar
 
-- OP-PROC-02 e OP-PROC-03: somente timeout global demonstrado. Linhas
-  `operations.spec.ts:18:3` e `:23:3` são declarações de teste, não a primeira
-  asserção ou await causal. Não atribuir causa a runtime.ts:176 sem artefato.
+- OP-PROC-02 e OP-PROC-03: o leitor posterior do artefato original, run `44666025425` success, localizou o último clique completo em `operations-support/runtime.ts:175:18`. O await :176 é inferido da fonte, não evento do trace. A causa independente dos scores esparsos foi corrigida na branch `sf-sourcing-json`; sua qualificação permanece separada.
 - UI55 Import: o helper antigo usa `[data-import-workbench]`, status direto,
   índice de opção e sequência de preview/recovery que divergem dos controles
-  atuais. O integrador assumiu essa migração em branch separada, preservando
-  seleção, digest, CAS, um Apply e receipt/recovery. Esta branch não modifica
-  o helper nem declara o consumidor completo.
+  atuais. A migração ainda não foi publicada: precisa preservar seleção, digest, CAS, um Apply e receipt/recovery. Esta branch não modifica o helper nem declara o consumidor completo.
 - DOC: a causa de observação ausente está corrigida em fonte; é necessário
-  qualificar unit e depois compor Operations com ClamD real para comprovar o fluxo.
+  compor Operations com ClamD real para comprovar o fluxo.
 - O novo hash de host-context aumenta o drift já conhecido de contract-freeze;
   o integrador fará reconciliação única com história genuína após os produtores
   finais. Esta branch não modifica pins nem baseline.
-- Integrar somente após revisão do diff e conclusão success do gate correspondente.
-  Um sucesso de unit pode qualificar este recorte compartilhado sem declarar
-  Operations/UI55 verdes.
+- O diff foi revisado independentemente e o gate correspondente concluiu success. O integrador pode integrar este recorte compartilhado; Operations/UI55 continuam sem qualificação global.
 - Não repetir gate sem mudança causal. Manter no máximo dois gates simultâneos;
   sf-ci e pacote final pertencem ao integrador após os merges.
 
-Retorno desta entrega: código `3041fcd305c9014c1558197c30863952a2abbdbe` |
-merges: nenhum | guards: não executados | sf-ci: não executado |
-pacote: nenhum | unbound: OP-PROC-02/03 sem file:line causal no log.
+Retorno: código `3041fcd305c9014c1558197c30863952a2abbdbe` | gate `44666552454` success, 26/0/182 | PR #431 qualificado para integração | guards/sf-ci/pacote finais separados | unbound do consumidor: `operations-support/imports.ts:155:22`; DOC e Sourcing aguardam gates dos compostos corrigidos.
