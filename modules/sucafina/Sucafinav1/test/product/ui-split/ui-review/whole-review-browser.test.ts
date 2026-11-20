@@ -10,11 +10,11 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const fixture = await createMeetingFixture()
     const browser = await launchWp01Browser().catch(async (error) => { await fixture.close(); throw error })
     try {
-      const context = await browser.newContext()
+      const context = await fixture.newContext(browser)
       const page = await context.newPage(), errors: string[] = []
       page.setDefaultTimeout(10_000)
       page.on("pageerror", (error) => errors.push(error.message))
-      expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
+      expect((await fixture.loginPage(page))?.status()).toBe(200)
       await page.goto(`${fixture.origin}/sucafina/dashboard?page=Budget+Overview&year=2026`)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
       const panel = page.locator("[data-dashboard-workbench]")

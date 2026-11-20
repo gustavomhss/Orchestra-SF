@@ -9,10 +9,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const fixture = await createMeetingFixture()
     const browser = await launchWp01Browser().catch(async (error) => { await fixture.close(); throw error })
     try {
-      const context = await browser.newContext()
+      const context = await fixture.newContext(browser)
       const page = await context.newPage()
       page.setDefaultTimeout(10_000)
-      expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
+      expect((await fixture.loginPage(page))?.status()).toBe(200)
       await page.goto(`${fixture.origin}/sucafina/dashboard?page=Budget+Overview&year=2026`)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
       const options = await loadOptions(page)
@@ -28,7 +28,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(response.status()).toBe(403)
       // The real UI aborts the denied browser request while purging its view.
       // Reopen the same real route under the same revoked cookie to inspect its body.
-      const replay = await fetch(fixture.historyUrl, { headers: { cookie: fixture.cookie } })
+      const replay = await fixture.fetch(fixture.historyUrl, { headers: { cookie: fixture.cookie } })
       expect(replay.status).toBe(403)
       const deniedBody = await replay.text()
       expect(deniedBody).not.toContain(fixture.original.id)

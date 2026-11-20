@@ -1,19 +1,6 @@
 import { expect } from "bun:test"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import path from "node:path"
-import { randomBytes, randomUUID } from "node:crypto"
-import { Location } from "@orchestra/core/location"
-import { AbsolutePath } from "@orchestra/core/schema"
-import { createModule } from "../../../index.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
-import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
-import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
+import { randomUUID } from "node:crypto"
 import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
-import { createDecisionCapabilities } from "../../../product/decisions/capabilities.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -21,6 +8,8 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
+import { oid } from "../../microsoft-login/oidc-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -32,20 +21,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   }
 
   test("contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation", async () => {
-    let phase = "open store"
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-contextual-decision-"))
-    await chmod(directory, 0o700)
-    const driver = await within(openLocalStore(directory), phase)
-    const routed: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routed.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin
-    const now = () => "2026-11-13T08:00:00Z"
-    const persistence = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(now), createId: randomUUID }) }
-    const operator = { installationId: randomUUID(), uid: 1000, name: "Context test operator" }
-    const person = `macos:${operator.installationId}:${operator.uid}`
-    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
-    const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
-    const environment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request) })
+    let phase = "open Microsoft component"
+    const host = await createMicrosoftComponentFixture({
+      names: ["Context reviewer", "Other reviewer"],
+      grants: [{ principalRef: oid, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }],
+    })
+    const { origin, persistence, store: driver } = host
     let business: Awaited<ReturnType<typeof createFixtureBusiness>> | undefined
     let failure: unknown
     try {
@@ -56,26 +37,26 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         return { commit: true, value: undefined }
       }), "seed contracts")
       const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
-      const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence, authenticate: identity.authenticate, environment, proposalCoverageWrites, dashboardHostWrites,
-        grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now,
+      const authority = host.productAuthority({
+        proposalCoverageWrites, dashboardHostWrites,
         commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
-        inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+        authorizeDocument: async () => undefined,
+      })
       business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
-      const cases = business.cases
-      const descriptors = createDecisionCapabilities({ cases, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: authority.authority.receiptFor })
+      const descriptors = business.descriptors
       const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors, authority: authority.authority,
         validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
         validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok) })
-      const services = { ...authority, dispatch } as SfHostServices
+      const unmounted = (port: string): never => { throw new Error("Contextual component does not mount " + port) }
+      const services = { ...authority, dispatch,
+        get sessions() { return unmounted("sessions") }, get selected() { return unmounted("selected") }, models: () => unmounted("models") } satisfies SfHostServices
       const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-      const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 })
-      routed.handle = async (request) => await identity.handle(request) ?? await app(request)
-      phase = "enroll actual operator"
-      const authenticated = await within(identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), phase)}`)), phase)
-      const cookie = authenticated!.headers.get("set-cookie")!.split(";")[0]!
+      host.mount({ product }, { contextualDecision: true })
+      const app = host.dispatch
+      let cookie = host.cookie
       const returnTo = "/sucafina/dashboard?page=Vendor+Contracts&year=2026&q=Context&filter=#record-contract-a"
       const contextUrl = (back = returnTo) => `${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-context", recordId: "contract-a", start: "2026-01-01", end: "2026-12-31", returnTo: back })}`
-      const get = (url: string) => within(app(new Request(url, { headers: { cookie } })), `GET ${new URL(url).searchParams.get("sf")}`)
+      const get = (url: string) => { const selected = new URL(url); return within(app(host.request(selected.pathname.slice("/sucafina".length) + selected.search, cookie)), `GET ${selected.searchParams.get("sf")}`) }
       phase = "validate work and contextual boundaries"
       const unavailableWork = await get(`${origin}/sucafina/dashboard?sf=workbench-work-select&start=2026-01-01&end=2026-12-31`)
       expect(unavailableWork?.status).toBe(503)
@@ -90,7 +71,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         expect(await response!.text()).not.toContain("data-source-refs=")
       }
       const absentSource = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => ({ ...services, host: { ...authority.host, persistence: driver } }) })
-      expect((await within(absentSource(new Request(contextUrl(), { headers: { cookie } }), "dashboard"), "missing source port"))?.status).toBe(503)
+      expect((await within(absentSource(host.request(new URL(contextUrl()).pathname.slice("/sucafina".length) + new URL(contextUrl()).search, cookie), "dashboard"), "missing source port"))?.status).toBe(503)
       // The source projection can issue evidence only for its actual as-of period.
       const futureContext = new URL(contextUrl())
       futureContext.searchParams.set("start", "2027-01-01")
@@ -110,11 +91,17 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const errors: string[] = []
       let browserFailure: unknown
       try {
-        tab = await within(browser.newPage(), "open page")
+        const context = await within(host.newContext(browser), "open authenticated component context")
+        tab = await within(context.newPage(), "open page")
         tab.setDefaultTimeout(10000)
         tab.setDefaultNavigationTimeout(15000)
-        const separator = cookie.indexOf("=")
-        await tab.context().addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), url: origin }])
+        await within(host.loginPage(tab), "complete Microsoft redirects")
+        // Programmatic probes use the very session issued to this browser. Reading
+        // its real cookie does not inject a credential or invent an admission.
+        const sessionName = cookie.slice(0, cookie.indexOf("="))
+        const session = (await context.cookies(origin)).find((item) => item.name === sessionName && item.httpOnly && item.path === "/sucafina")
+        if (!session) throw new Error("The Microsoft callback did not issue the expected browser session")
+        cookie = session.name + "=" + session.value
         tab.on("pageerror", (error) => { errors.push(error.message) })
         const dialogs: string[] = []
         tab.on("dialog", async (dialog) => { dialogs.push(dialog.type()); await dialog.accept() })
@@ -141,8 +128,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         expect(original.target.period).toEqual({ start: "2026-01-01", end: "2026-12-31" })
         expect(original.refDigest).toBe(digestSfEvidenceRef(original))
         const draft = (refs: readonly BusinessEvidenceRef[]) => ({ objective: "Review contextual renewal", horizon: original.target.period!, currency: "USD", criteria: ["Cost", "Continuity"], sourceRefs: refs })
-        const post = (refs: readonly BusinessEvidenceRef[], key: string) => within(app(new Request(`${origin}/sucafina/dashboard?sf=workbench-command`, { method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify({ operation: "sf_case_draft", input: draft(refs) }) })), "create case command")
-        const readCases = () => within(authority.state.read(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }), "cases", (state) => Object.values(state.cases)), "read persisted cases")
+        const post = (refs: readonly BusinessEvidenceRef[], key: string) => within(app(host.request("/dashboard?sf=workbench-command", cookie, { method: "POST", headers: { origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify({ operation: "sf_case_draft", input: draft(refs) }) })), "create case command")
+        const readCases = () => within(authority.state.read(host.request("/dashboard", cookie), "cases", (state) => Object.values(state.cases)), "read persisted cases")
         phase = "reject altered source evidence"
         const corrupted = { ...original, refDigest: "0".repeat(64) }
         // A self-consistent digest still cannot move an issued selector to a different record.
@@ -205,9 +192,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         await form.getByLabel("Decision objective", { exact: true }).fill("Must not persist after logout")
         await form.getByLabel("Currency", { exact: true }).fill("USD")
         await form.getByLabel("Criteria, one per line", { exact: true }).fill("Cost")
-        expect(await within(tab.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST", credentials: "same-origin", signal: AbortSignal.timeout(5000) })).status), "logout operator")).toBe(204)
+        expect(await within(tab.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST", credentials: "same-origin", signal: AbortSignal.timeout(5000) })).status), "logout Microsoft session")).toBe(204)
         await form.getByRole("button", { name: "Create decision", exact: true }).click()
-        await tab.getByText("Your access changed. Reload before creating a decision.", { exact: true }).waitFor()
+        await tab.getByText("Your access changed. Reopen an authorized page to reconcile this creation.", { exact: true }).waitFor()
         expect(await tab.locator("[data-source-refs], [data-decision-context] h2, [data-decision-context] input").count()).toBe(0)
         expect((await get(contextUrl()))?.status).toBe(403)
         expect((await post(sourceRefs, "revoked-session"))?.status).toBe(403)
@@ -226,9 +213,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     finally {
       const cleanup: unknown[] = []
       try { business?.dispose() } catch (error) { cleanup.push(error) }
-      try { await within(Promise.resolve(server.stop(true)), "stop server") } catch (error) { cleanup.push(error) }
-      try { await within(driver.dispose(), "dispose store") } catch (error) { cleanup.push(error) }
-      try { await within(rm(directory, { recursive: true, force: true }), "remove directory") } catch (error) { cleanup.push(error) }
+      try { await within(host.close(), "close Microsoft contextual component") } catch (error) { cleanup.push(error) }
       if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Contextual persistence cleanup failed")
     }
   }, 90000)

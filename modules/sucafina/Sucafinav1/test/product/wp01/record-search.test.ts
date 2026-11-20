@@ -1,14 +1,9 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import path from "node:path"
-import { randomBytes, randomUUID } from "node:crypto"
-import { createModule } from "../../../index.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
+import type { openLocalStore } from "../../../runtime/local-store.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -27,12 +22,16 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   }
 
   async function withSearch(role: SearchPolicy["role"], check: (fixture: SearchFixture) => Promise<void>) {
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-record-search-"))
-    await chmod(directory, 0o700)
-    const store = await openLocalStore(directory)
-    const policy: SearchPolicy = { role, urls: [], entryReads: 0, downgradeAtRevalidation: false }
-    const state: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => {
+    const host = await createMicrosoftComponentFixture({ names: ["Search reviewer", "Other reviewer"] })
+    const store = host.store, origin = host.origin
+    host.setRole(role)
+    const policy: SearchPolicy = {
+      get role() { return host.policy.role },
+      set role(value) { host.setRole(value) },
+      urls: [], entryReads: 0, downgradeAtRevalidation: false,
+    }
+    host.mount({}, { recordSearch: true, accessRevision: false })
+    host.routing.handle = async (request) => {
       const url = new URL(request.url)
       if (request.method === "GET" && url.pathname === "/sucafina/dashboard" && !url.searchParams.has("sf")) {
         policy.urls.push(url.href)
@@ -41,22 +40,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
           if (policy.entryReads === 2) policy.role = "viewer"
         }
       }
-      return await state.handle?.(request) ?? new Response(null, { status: 503 })
-    } })
-    const origin = server.url.origin
-    const operator = { installationId: randomUUID(), uid: 1000, name: "Search test operator" }
-    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
-    // Explicit integration-test policy: restrict an already authenticated, durably
-    // enrolled principal to viewer. This neither replaces authentication nor proves
-    // production role provisioning/native resident execution.
-    const authenticate: typeof identity.authenticate = async (request, context) => {
-      const principal = await identity.authenticate(request, context)
-      if (!principal || !context || policy.role === "admin") return principal
-      return { ...principal, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
+      return host.dispatch(request)
     }
-    const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
-    const app = createModule("/sucafina", { persistence: store, authenticate, environment, maxJsonBytes: 100000 })
-    state.handle = async (request) => await identity.handle(request) ?? await app(request)
     let context: BrowserContext | undefined
     let page: Page | undefined
     let phase = "seed real search records"
@@ -73,15 +58,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         return { commit: true, value: undefined }
       })
       phase = "create isolated browser context"
-      context = await within(browser.newContext(), phase)
+      context = await within(host.newContext(browser), phase)
       page = await within(context.newPage(), "open browser page")
       page.setDefaultTimeout(10_000)
       page.setDefaultNavigationTimeout(15_000)
       page.on("pageerror", (error) => { errors.push(error.message) })
-      phase = "complete real operator enrollment"
-      const enrollment = await page.goto(`${origin}/sucafina/auth/local?code=${await within(identity.enroll(), "enroll the real operator")}`, { waitUntil: "domcontentloaded" })
+      phase = "complete real Microsoft authentication"
+      const enrollment = await host.loginPage(page)
       expect(enrollment?.status()).toBe(200)
-      await page.waitForURL(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded" })
+      await page.goto(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded" })
       await page.locator('main[data-drawn="true"]').waitFor()
       phase = "exercise authorized record search"
       await check({ page, origin, policy, errors, store })
@@ -100,9 +85,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       for (const [step, close] of [
         ["close page", () => page?.close({ runBeforeUnload: false })],
         ["close browser context", () => context?.close()],
-        ["stop server", () => server.stop(true)],
-        ["dispose store", () => store.dispose()],
-        ["remove fixture directory", () => rm(directory, { recursive: true, force: true })],
+        ["close Microsoft component host", () => host.close()],
       ] as const) {
         try { await within(Promise.resolve(close()), step) } catch (error) { failures.push(error) }
       }

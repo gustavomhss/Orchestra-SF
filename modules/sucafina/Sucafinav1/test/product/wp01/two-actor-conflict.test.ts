@@ -1,16 +1,8 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import path from "node:path"
-import { randomBytes, randomUUID } from "node:crypto"
-import { createModule } from "../../../index.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
-import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { object } from "../../../runtime/contract.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -26,43 +18,22 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     return form
   }
 
-  // Each cookie comes from the production enrollment handler and is checked by
-  // its production authenticator over encrypted SQLite sessions. Installing that
-  // issued cookie keeps two local operators on the same real application mount.
-  async function enrollContext(identity: ReturnType<typeof createOperatorIdentity>, context: BrowserContext, origin: string) {
-    const response = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
-    expect(response?.status).toBe(303)
-    const cookie = response!.headers.get("set-cookie")!.split(";")[0]!
-    const separator = cookie.indexOf("=")
-    expect(separator).toBeGreaterThan(0)
-    await context.addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), domain: new URL(origin).hostname, path: "/sucafina", httpOnly: true, sameSite: "Lax" }])
-  }
-
+  // Each independent Chromium context follows real confidential Microsoft OAuth.
+  // Both current principals share a Team and the same domain; no cookies are injected.
   test("two authenticated principals preserve the losing draft and reconcile a real version conflict only after explicit review", async () => {
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp01-two-actor-conflict-"))
-    await chmod(directory, 0o700)
-    const driver = await openLocalStore(directory)
-    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID })
-    const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin
-    const installationId = randomUUID()
-    const first = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1001, name: "First reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
-    const second = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1002, name: "Second reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
-    const firstId = `macos:${installationId}:1001`
-    const secondId = `macos:${installationId}:1002`
-    const authenticate: typeof first.authenticate = async (request, context) => await first.authenticate(request, context) ?? await second.authenticate(request, context)
-    const app = createModule("/sucafina", { persistence, authenticate,
-      environment: async (request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: [...await first.directory(request), ...await second.directory(request)] }), maxJsonBytes: 100000 })
+    const host = await createMicrosoftComponentFixture({ names: ["First reviewer", "Second reviewer"] })
+    const { origin, persistence } = host
+    const firstId = host.principalRef, secondId = host.otherPrincipalRef
     const writes: { principal: string | undefined; version: unknown; status: number; text: unknown }[] = []
-    routing.handle = async (request) => {
-      const command = request.method === "POST" ? object(await request.clone().json()) : {}
-      const principal = command.action === "save-deviation" ? await first.person(request) ?? await second.person(request) : undefined
-      const response = await app(request)
-      if (command.action === "save-deviation" && response) writes.push({ principal: principal?.id, version: command.version, status: response.status, text: object(command.values).text })
+    host.routing.handle = async (request) => {
+      const command = request.method === "POST" && new URL(request.url).pathname === "/sucafina/dashboard" ? object(await request.clone().json()) : {}
+      const principal = command.action === "save-deviation" ? await host.identity.person(request) : undefined
+      const response = await host.dispatch(request)
+      if (command.action === "save-deviation") writes.push({ principal: principal?.id, version: command.version, status: response.status, text: object(command.values).text })
       return response
     }
     const contexts: BrowserContext[] = []
+    let failure: unknown
     try {
       await persistence.initializeSources("dashboard")
       await persistence.transaction("dashboard", async (snapshot) => {
@@ -70,12 +41,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         snapshot.data.opexEntries = [{ id: "jan", ownerId: "owner-1", year: 2026, month: 1, budget: 100, actual: 25, forecast: 90 }]
         return { commit: true, value: undefined }
       })
-      const firstContext = await browser.newContext()
+      const firstContext = await host.newContext(browser)
       contexts.push(firstContext)
-      const secondContext = await browser.newContext()
+      const secondContext = await host.newContext(browser, host.otherPrincipalRef)
       contexts.push(secondContext)
-      await enrollContext(first, firstContext, origin)
-      await enrollContext(second, secondContext, origin)
       const firstPage = await firstContext.newPage()
       const secondPage = await secondContext.newPage()
       const errors: string[] = []
@@ -84,6 +53,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         page.on("pageerror", (error) => errors.push(error.message))
         page.on("dialog", (dialog) => dialog.accept())
       }
+      await host.loginPage(firstPage)
+      await host.loginPage(secondPage)
       const url = `${origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`
       expect((await firstPage.goto(url))?.status()).toBe(200)
       expect((await secondPage.goto(url))?.status()).toBe(200)
@@ -150,13 +121,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(writes).toHaveLength(3)
       expect(writes[2]).toEqual({ principal: secondId, version: 1, status: 200, text: secondText })
       expect(errors).toEqual([])
-    } finally {
+    } catch (error) { failure = error; throw error }
+    finally {
       const closed = await Promise.allSettled(contexts.map((context) => context.close()))
-      await server.stop(true)
-      await driver.dispose()
-      await rm(directory, { recursive: true, force: true })
+      closed.push(...await Promise.allSettled([host.close()]))
       const failed = closed.filter((result): result is PromiseRejectedResult => result.status === "rejected")
-      if (failed.length) throw new AggregateError(failed.map((result) => result.reason), "Two-actor browser contexts did not close")
+      if (failed.length) throw new AggregateError([...(failure ? [failure] : []), ...failed.map((result) => result.reason)], "Two-actor component contexts did not close")
     }
   }, 60_000)
 }

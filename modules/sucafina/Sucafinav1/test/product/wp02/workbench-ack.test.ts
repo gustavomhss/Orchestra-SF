@@ -16,11 +16,11 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const f = await createRecoveryFixture()
     let context: BrowserContext | undefined
     try {
-      context = await browser.newContext()
+      context = await f.newContext(browser)
       const page = await context.newPage(), errors: string[] = []
       page.setDefaultTimeout(10_000)
       page.on("pageerror", (error) => errors.push(error.message))
-      await page.goto(`${f.origin}/sucafina/auth/local?code=${await f.identity.enroll()}`)
+      await f.loginPage(page)
       await page.goto(`${f.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
       const panel = page.locator("[data-dashboard-workbench]")

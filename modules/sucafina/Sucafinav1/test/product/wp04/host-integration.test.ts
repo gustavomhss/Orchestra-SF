@@ -324,19 +324,25 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
       fixture.afterReceiptCommit(async () => {
         const current = await fixture.storedCase()
-        const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit" }
+        // Reconciliation deliberately preserves unrelated case edits. This race changes
+        // the reviewed choice itself while retaining its identity, so its material
+        // digest must prevent attachment of the already committed domain receipt.
+        const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit",
+          choices: current.value.choices.map((choice) => choice.id === prepared.request.choiceId ? { ...choice, reason: "Concurrent authorized choice amendment" } : choice),
+        }
         const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })
         if (saved.status !== "ok") throw new Error("concurrent real case edit failed")
       })
       const conflict = await fixture.http("decision-apply", application)
       expect(conflict.response.status).toBe(409)
-      expect(conflict.body).toEqual({ status: "stale", reason: "case-changed-after-application" })
+      expect(conflict.body).toEqual({ status: "stale", reason: "prepared-choice-changed" })
       expect(fixture.receiptCommits).toHaveLength(1)
       const after = await fixture.material()
       expect(object(after.request.pr).estAmount).toBe(150)
       expect(after.request.history).toHaveLength(1)
       const decision = await fixture.storedCase()
       expect(decision.value.objective).toBe("Concurrent authorized case edit")
+      expect(decision.value.choices.find((choice) => choice.id === prepared.request.choiceId)?.reason).toBe("Concurrent authorized choice amendment")
       expect(decision.value.preparedChanges[0]?.state).toBe("planned")
       expect(decision.value.receipts).toEqual([])
       const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
@@ -373,7 +379,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       fixture.advance(300_001)
       const changedProof = await fixture.http("decision-apply", { ...application, reviewDigest: changedReviewDigest(application.reviewDigest) }, "alice", "recover-application")
       expect(changedProof.response.status).toBe(409)
-      expect(changedProof.body).toEqual({ status: "conflict", reason: "review-proof-mismatch" })
+      // The durable application intent is checked before a fresh review proof.
+      expect(changedProof.body).toEqual({ status: "conflict", reason: "application-intent-mismatch" })
       expect(await fixture.material()).toEqual(afterCommit)
       expect(fixture.receiptCommits).toHaveLength(1)
       const recovered = await fixture.http("decision-apply", application, "alice", "recover-application")
@@ -539,7 +546,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const attempted = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-apply")
       await apply.click()
       expect((await attempted).status()).toBe(503)
-      await expect(article.locator("[data-change-status]")).toHaveText("Could not confirm application. The reviewed request is locked; retry the same request to reconcile its receipt.")
+      await expect(article.locator("[data-change-status]")).toHaveText("Could not confirm application. Check the decision; its outcome is still unconfirmed. Retry the same request.")
       await expect(review).toBeDisabled()
       await expect(confirmation).toBeDisabled()
       const retry = article.getByRole("button", { name: "Retry same application", exact: true })
@@ -558,12 +565,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       // A retry must be authorized from durable proof after this owned cache clears.
       // The process, SQLite store and browser stay alive; this is not a restart test.
       fixture.business.procurementDecisions.dispose()
+      // Read the exact replay bytes before releasing them to the consumer,
+      // whose valid ACK immediately reloads and retires Chrome's response handle.
+      const replayBodies: unknown[] = []
+      await page.route("**/sf/procurement?sf=decision-apply", async (route) => {
+        const response = await route.fetch()
+        replayBodies.push(await response.json())
+        await route.fulfill({ response })
+      })
       const reconciled = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-apply")
       const reloaded = page.waitForEvent("domcontentloaded")
       await retry.click()
       const replay = await reconciled
       expect(replay.status()).toBe(200)
-      expect(await replay.json()).toEqual(first[0]!.result)
+      expect(replayBodies).toHaveLength(1)
+      expect(replayBodies[0]).toEqual(first[0]!.result)
       await reloaded
       await expect(article.getByText("State: applied", { exact: true })).toBeVisible()
       expect(navigationKeys).toEqual([null, null])

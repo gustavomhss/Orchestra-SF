@@ -20,7 +20,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     return values[0]!.value
   }
 
-  // Reuse the published real host fixture: encrypted operator identity, SQLite,
+  // Reuse the published real host fixture: signed Microsoft/Team identity, SQLite,
   // source lifecycle, C08 authority, Dashboard services and actual HTTP handlers.
   // The initial business records are fixtures. The later change is a canonical
   // domain command, not a store edit or a replacement consumer response.
@@ -35,10 +35,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         snapshot.data.capexEntries = []
         return { commit: true, value: undefined }
       })
-      const context = await browser.newContext()
+      const context = await fixture.newContext(browser)
       const page = await context.newPage(), errors: string[] = []
       page.on("pageerror", (error) => errors.push(error.message))
-      expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
+      expect((await fixture.loginPage(page))?.status()).toBe(200)
       const url = `${fixture.origin}/sucafina/dashboard?page=Budget+Overview&year=2026`
       await page.goto(url)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
@@ -170,7 +170,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         return { commit: true, value: undefined }
       })
       const cookie = fixture.request().headers.get("cookie")!
-      const post = (mode: string, value: unknown) => fetch(`${fixture.origin}/sucafina/dashboard?sf=${mode}`, {
+      const post = (mode: string, value: unknown) => fixture.fetch(`${fixture.origin}/sucafina/dashboard?sf=${mode}`, {
         method: "POST", headers: { cookie, origin: fixture.origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify(value),
       })
       const discovered = await post("dashboard-workbench", { page: "Budget Overview", period })
@@ -200,11 +200,11 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const historyUrl = new URL(`${fixture.origin}/sucafina/dashboard`)
       historyUrl.searchParams.set("sf", "dashboard-review")
       historyUrl.searchParams.set("id", String(original.id))
-      const before = await fetch(historyUrl, { headers: { cookie } })
+      const before = await fixture.fetch(historyUrl, { headers: { cookie } })
       expect(before.status).toBe(200)
       expect(await before.json()).toEqual({ status: "ok", value: original })
 
-      const changed = await fetch(`${fixture.origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`, {
+      const changed = await fixture.fetch(`${fixture.origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`, {
         method: "POST", headers: { cookie, origin: fixture.origin, "content-type": "application/json" },
         body: JSON.stringify({ page: "OPEX Detail", action: "save", id: "preserved-owner", version: 0, values: { name: "Preserved Operations", budget: 2400 } }),
       })
@@ -214,7 +214,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         budget: rows(snapshot.data.opexOwners)[0]!.budget, version: snapshot.versions["opexOwners:preserved-owner"]?.version,
       } }))).toEqual({ budget: 2400, version: 1 })
 
-      // The same authenticated operator still reads the same source incarnation.
+      // The same authenticated Microsoft principal still reads the same source incarnation.
       // Its larger current version changes the live number, not the historical body.
       const currentDiscovery = await post("dashboard-workbench", { page: "Budget Overview", period })
       expect(currentDiscovery.status).toBe(200)
@@ -228,7 +228,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(currentSource?.incarnation).toBe(originalSource!.incarnation)
       expect(Number(currentSource?.version)).toBeGreaterThan(Number(originalSource!.version))
 
-      const reopened = await fetch(historyUrl, { headers: { cookie } })
+      const reopened = await fixture.fetch(historyUrl, { headers: { cookie } })
       const reopenedResponse = object(await reopened.json())
       console.info("SF_WP01_C05_HISTORICAL_REVIEW", { reviewId: original.id, originalCreatedAt: original.createdAt, originalTotal: 1300, currentTotal: 2400,
         sameSourceIncarnation: currentSource?.incarnation === originalSource!.incarnation, httpStatus: reopened.status, resultStatus: reopenedResponse.status, reason: reopenedResponse.reason })

@@ -1,20 +1,10 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext } from "@playwright/test"
-import { randomBytes, randomUUID } from "node:crypto"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-import { AbsolutePath } from "@orchestra/core/schema"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
+import { randomUUID } from "node:crypto"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
-import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { sfHumanReadActions } from "../../../product/integration/human-authority.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
-import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { createCollaborationHost } from "../../../product/collaboration/host.ts"
 import { createCollaborationHttp } from "../../../product/collaboration/http.ts"
@@ -23,6 +13,8 @@ import { createProcurementCollectionMemberIssuer } from "../../../product/procur
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
+import { oid } from "../../microsoft-login/oidc-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -35,23 +27,19 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
    * distinct from the real authentication denial after logout. These are consumer
    * recovery proofs, not positive acceptance of the shared navigation producer. */
   async function fixture() {
-    const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-work-destination-"))
-    await chmod(directory, 0o700)
-    const driver = await openLocalStore(directory)
-    const routing: { handle?: (request: Request) => Promise<Response> } = {}
-    const server = Bun.serve({ hostname: "127.0.0.1", port: 0, idleTimeout: 30, fetch: (request) => routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin, installationId = randomUUID(), principalRef = `macos:${installationId}:1000`, at = "2026-11-14T08:00:00Z"
-    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID, projectScope: createSfSourceScopeProjector(() => at) })
-    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1000, name: "Authorized approval reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
+    const host = await createMicrosoftComponentFixture({
+      names: ["Authorized approval reviewer", "Other reviewer"], at: "2026-11-14T08:00:00Z",
+      grants: [{ principalRef: oid, namespaces: ["cases", "threads", "relations", "confirmations", "preferences"],
+        operations: ["sf_case_read", "sf_work_list"], humanActions: ["collaboration.work.destination"] }],
+    })
+    const { origin, principalRef, persistence } = host, at = host.clock.at
     const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
     let business: Awaited<ReturnType<typeof createFixtureBusiness>> | undefined, context: BrowserContext | undefined
     const close = async () => {
       const errors: unknown[] = []
-      try { await server.stop(true) } catch (error) { errors.push(error) }
       try { business?.dispose() } catch (error) { errors.push(error) }
       try { await context?.close() } catch (error) { errors.push(error) }
-      try { await driver.dispose() } catch (error) { errors.push(error) }
-      try { await rm(directory, { recursive: true, force: true }) } catch (error) { errors.push(error) }
+      try { await host.close() } catch (error) { errors.push(error) }
       if (errors.length) throw new AggregateError(errors, "Work destination fixture did not close")
     }
     try {
@@ -63,12 +51,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         }])) }
         return { commit: true, value: undefined }
       })
-      const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
-        installationId, origin, policyVersion: "policy", persistence, authenticate: identity.authenticate,
-        environment: async (request) => ({ at, id: randomUUID, directory: await identity.directory(request) }), now: Date.now, createId: randomUUID,
+      const authority = host.productAuthority({
         commandIdentity: async (request, operation) => request.method === "GET" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
-        proposalCoverageWrites, dashboardHostWrites, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
-        grants: [{ principalRef, namespaces: ["cases", "threads", "relations", "confirmations", "preferences"], operations: ["sf_case_read", "sf_work_list"], humanActions: ["collaboration.work.destination"] }] })
+        proposalCoverageWrites, dashboardHostWrites, authorizeDocument: async () => undefined,
+      })
       const services = business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
       const collaboration = createCollaborationHost({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget, scopedSources: persistence,
         evidence: services.context, procurement: services.procurement, collections: services.registry, cases: services.cases, authority: authority.authority, human: authority.human,
@@ -91,21 +77,16 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         get sessions() { return unmounted("sessions") }, get selected() { return unmounted("selected") }, models: () => unmounted("models") } satisfies SfHostServices
       const workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime })
       const responses: { mode: string | null; status: number }[] = []
-      routing.handle = async (request) => {
-        const auth = await identity.handle(request)
-        if (auth) return auth
-        const response = await http(request) ?? await workbench(request, "dashboard") ?? new Response(null, { status: 404 })
+      host.mount({ product: async (request, surface) => await http(request) ?? await workbench(request, surface) })
+      host.routing.handle = async (request) => {
+        const response = await host.dispatch(request)
         responses.push({ mode: new URL(request.url).searchParams.get("sf"), status: response.status })
         return response
       }
-      const login = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
-      const cookie = login?.headers.get("set-cookie")?.split(";")[0]
-      if (!cookie) throw new Error("Real approval reviewer enrollment failed")
-      context = await browser.newContext()
-      const separator = cookie.indexOf("=")
-      await context.addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), domain: new URL(origin).hostname, path: "/sucafina", httpOnly: true, sameSite: "Lax" }])
+      context = await host.newContext(browser)
       const page = await context.newPage(), errors: string[] = []
       page.setDefaultTimeout(10_000); page.on("pageerror", (error) => errors.push(error.message))
+      await host.loginPage(page)
       const selected = await page.goto(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "workbench-work-select", start: "2026-01-01", end: "2026-12-31" })}`)
       expect(selected?.status()).toBe(200)
       const href = await page.getByRole("link", { name: "Procurement requests", exact: true }).getAttribute("href")
