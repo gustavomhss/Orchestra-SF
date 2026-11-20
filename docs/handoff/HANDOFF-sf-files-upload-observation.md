@@ -6,8 +6,8 @@
 - Branch: `sf-files-upload-observation`.
 - Base congelada: `d4ded81224e05f2d3b9789b3eec40b9de8a32fa1` (`sf-join-four`, após #407).
 - Código inicial: `a075b0bd6d199e63ab0ad1c3a229e1b89bebec55`.
-- Código final desta entrega: `f793cea8f7d3a2ef22902886807fbdd555c07c46`.
-- Tree do código: `dd640cd8945de8921a9654396f946b666ca22cb4`.
+- Código final desta entrega: `3041fcd305c9014c1558197c30863952a2abbdbe`.
+- Tree do código: `746e1320a205bbfdf9103c1ce657f790c1da859a`.
 - Este handoff acrescenta documentação; não qualifica UI55, Operations, baseline ou pacote.
 - Nenhum PR, merge, gate, dispatch, GO ou deploy foi executado pelo autor desta entrega.
 
@@ -135,8 +135,18 @@ descritor/método, chave ou configuração. A indisponibilidade inicial do scann
 
 Revisão manual inicial do integrador confirmou o recorte do predicado e a
 separação de configuração/scan. Ela motivou a configuração numérica de Procurement
-e as cercas adicionais de identidade. Revisão independente e Actions ainda
-precisam ser registrados contra o SHA final.
+e as cercas adicionais de identidade.
+
+A revisão independente de Operations leu os oito paths e encontrou um bloqueio
+no código anterior: import-health verificava requestFor antes de validate.
+O contrato original ui-authority.ts:51 registra consumed:false; validate:58–64
+consome a admissão; requestFor:70–72 só então disponibiliza o Request. O commit
+`3041fcd305c9014c1558197c30863952a2abbdbe` valida primeiro e depois confere
+Request idêntico e current() novamente. As assertions e a política não mudaram.
+Essa revisão não encontrou outro bloqueio concreto por leitura. A revisão curta
+independente de Reports cobriu ambos observers e o wiring, sem leitura dos testes
+nessa rodada; também não adicionou outro bloqueio. Nenhuma dessas revisões é gate.
+A leitura do delta final e a qualificação Actions continuam pendentes.
 
 Gate único proposto ao integrador, seguindo o mesmo timeout de unit já usado
 na qualificação de #407:
@@ -169,6 +179,6 @@ Guard result, CI completo e aceite final permanecem pendentes.
 - Não repetir gate sem mudança causal. Manter no máximo dois gates simultâneos;
   sf-ci e pacote final pertencem ao integrador após os merges.
 
-Retorno desta entrega: código `f793cea8f7d3a2ef22902886807fbdd555c07c46` |
+Retorno desta entrega: código `3041fcd305c9014c1558197c30863952a2abbdbe` |
 merges: nenhum | guards: não executados | sf-ci: não executado |
 pacote: nenhum | unbound: OP-PROC-02/03 sem file:line causal no log.
