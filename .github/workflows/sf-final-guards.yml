@@ -23,6 +23,38 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
+      - name: Verify first driver creation and direct frozen parent
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises'
+          const event = JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8'))
+          const expected = process.env.SF_FINAL_SHA
+          const driver = process.env.GITHUB_SHA
+          const requireState = (ok, message) => { if (!ok) throw new Error(message) }
+          requireState(/^[a-f0-9]{40}$/.test(expected || '') && /^[a-f0-9]{40}$/.test(driver || ''),
+            'A real frozen SHA and driver SHA are required')
+          requireState(process.env.GITHUB_EVENT_NAME === 'push' &&
+            process.env.GITHUB_REPOSITORY === 'gustavomhss/Orchestra-SF' &&
+            event.repository?.id === 1455724710 &&
+            process.env.GITHUB_REF === 'refs/heads/sf-final-guards' &&
+            event.ref === process.env.GITHUB_REF && event.created === true &&
+            event.deleted !== true && event.forced !== true &&
+            event.before === '0'.repeat(40) && event.after === driver &&
+            process.env.GITHUB_RUN_ATTEMPT === '1',
+            'Only the first creation of this guard driver branch is admitted')
+          const response = await fetch('https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/' + driver, {
+            redirect: 'error', signal: AbortSignal.timeout(10000),
+            headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + process.env.GH_READ_TOKEN,
+              'X-GitHub-Api-Version': '2022-11-28' },
+          })
+          if (response.status !== 200) throw new Error('Guard driver commit unavailable')
+          const commit = await response.json()
+          requireState(commit.sha === driver && Array.isArray(commit.parents) &&
+            commit.parents.length === 1 && commit.parents[0].sha === expected,
+            'The guard driver must be a direct child of the frozen candidate')
+          NODE
       - name: Checkout the frozen candidate
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
