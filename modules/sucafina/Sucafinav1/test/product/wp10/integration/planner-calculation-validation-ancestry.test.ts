@@ -21,8 +21,8 @@ async function validateWithRealProducers(changeAfterWrite: boolean) {
   const fixture = await ancestryProofFixture()
   try {
     return await fixture.ui("sf_scenario_simulate", (call) => fixture.business.withCase(call, fixture.caseRef, {}, async () => {
-      // Produce the input through the public calculation producer. The replay
-      // counted below still invokes the complete canonical Planner directly.
+      // Produce the input through the public calculation producer. Each replay
+      // below delegates to the same mounted Planner, including its nested owner.
       const preview = await fixture.business.calculations.simulateScenario(fixture.incoming, call)
       if (preview.status !== "ok") throw new Error("The real nested scenario preview was unavailable: " + JSON.stringify(preview))
       const incoming = { kind: "scenario" as const, request: structuredClone(fixture.incoming), result: preview.value }
@@ -243,7 +243,9 @@ test("a real Planner change after successful C09 readback invalidates the next v
   expect(second.after.results - second.before.results).toBe(0)
   expect(second.after.revalidations).toBeGreaterThan(second.before.revalidations)
   expect(observed.callbacks[3]!.request).toEqual(observed.originalInput.request)
-  expect(observed.callbacks[3]!.result).toEqual({ status: "stale", reason: "scenario-evidence-not-current" })
+  // The mounted Planner closes its nested owner too: an invalidated parent
+  // converts the internal stale evidence result into this public failure.
+  expect(observed.callbacks[3]!.result).toEqual({ status: "unavailable", reason: "calculation-ancestry-observation-changed" })
   expect(observed.order).toEqual(["resolve-case:0", "validate:1:enter", "simulate:1", "resolve-case:1", "validate:1:exit",
     "write:enter", "write:exit", "validate:2:enter", "simulate:2", "validate:2:exit"])
   expect(second.beforeState.state).toEqual(write.committed!.state)
