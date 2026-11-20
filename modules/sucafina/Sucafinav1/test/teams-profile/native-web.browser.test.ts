@@ -39,7 +39,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
       ? Response.json({ error: { code: "ServiceUnavailable" } }, { status: 503 }) : undefined
     driver = await launchBrowserDriver("teams-web-transport")
     const open = async (fixture: NonNullable<typeof f>, name: "business" | "admin") => {
-      const browser = await driver!.browser.newContext({ locale: "en-US", viewport: { width: 1360, height: 900 } })
+      const browser = await driver!.browser.newContext({ offline: true, serviceWorkers: "block", locale: "en-US", viewport: { width: 1360, height: 900 } })
       browser.setDefaultTimeout(7000)
       contexts.push(browser)
       browser.on("page", (page) => page.on("pageerror", (error) => errors.push(error.message)))
@@ -88,12 +88,40 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     const waitTeam = (page: Page, id: string) => page.waitForFunction((expected) =>
       document.querySelector("[data-sf-teams-shell]")?.getAttribute("data-sf-team-selected") === expected, id)
     const picker = (page: Page) => page.locator(".sf-team-picker-wide [data-sf-team-picker]")
-    const signIn = async (page: Page) => {
+    // Playwright only routes the first hop of a redirect chain. Keep the
+    // browser offline, observe each unchanged 303/Set-Cookie, then navigate to
+    // its exact Location as a new routed request. No cookie/token injection.
+    // https://playwright.dev/docs/network#redirects
+    const redirect = async (page: Page, url: string, navigate: () => Promise<unknown>) => {
+      const reply = page.waitForResponse((response) => response.url() === url && response.request().isNavigationRequest())
+      const blocked = page.waitForEvent("requestfailed", { predicate: (request) =>
+        request.isNavigationRequest() && request.redirectedFrom()?.url() === url })
+      const [movement, response, failed] = await Promise.allSettled([navigate(), reply, blocked])
+      if (response.status !== "fulfilled" || failed.status !== "fulfilled")
+        throw new Error("The isolated browser did not observe the expected redirect")
+      if (movement.status === "rejected" && !String(movement.reason).includes("net::ERR_INTERNET_DISCONNECTED"))
+        throw new Error("Unexpected navigation failure in the isolated Microsoft fixture")
+      expect(response.value.status()).toBe(303)
+      expect(failed.value.failure()?.errorText).toBe("net::ERR_INTERNET_DISCONNECTED")
+      const location = response.value.headers()["location"]
+      if (!location) throw new Error("Microsoft fixture redirect has no Location")
+      const target = new URL(location, url)
+      expect(failed.value.url() === target.href).toBe(true)
+      return target
+    }
+    const signIn = async (page: Page, fixture: NonNullable<typeof f>) => {
       await waitState(page, "unauthenticated")
       const link = page.locator("[data-sf-microsoft-login]")
-      expect(await link.getAttribute("href")).toBe(f!.binding.origin + f!.binding.mount + "/auth/login?returnTo=%2F")
+      const login = fixture.binding.origin + fixture.binding.mount + "/auth/login?returnTo=%2F"
+      expect(await link.getAttribute("href")).toBe(login)
       expect(await link.getAttribute("target")).toBe("_self")
-      await link.click()
+      const authorize = await redirect(page, login, () => link.click({ noWaitAfter: true }))
+      expect(authorize.origin + authorize.pathname).toBe(authority + "/oauth2/v2.0/authorize")
+      const callback = await redirect(page, authorize.href, () => page.goto(authorize.href))
+      expect(callback.origin + callback.pathname).toBe(fixture.binding.origin + fixture.binding.mount + "/auth/callback")
+      const root = await redirect(page, callback.href, () => page.goto(callback.href))
+      expect(root.href).toBe(fixture.binding.origin + "/")
+      await page.goto(root.href, { waitUntil: "domcontentloaded" })
       await waitState(page, "authenticated")
       expect(new URL(page.url()).pathname).toBe("/")
     }
@@ -104,7 +132,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     expect(observed.some((call) => call.path === "/api/sucafina/installations" && call.status === 200 && !call.basic)).toBe(true)
     expect(f.metadataCalls.locations).toBe(0)
     phase = "microsoft-login"
-    await signIn(human.page)
+    await signIn(human.page, f)
     const session = (await human.browser.cookies()).find((cookie) => cookie.name.includes("_session"))
     expect(session).toMatchObject({ httpOnly: true, secure: true, path: f.binding.mount, sameSite: "Lax" })
     expect(await human.page.evaluate(() => document.cookie)).not.toContain("_session")
@@ -207,7 +235,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
 
     phase = "independent-administration"
     const administrator = await open(admin, "admin")
-    await signIn(administrator.page)
+    await signIn(administrator.page, admin)
     expect(await administrator.page.locator("[data-sf-team-status]").textContent()).toContain("currently unavailable")
     await administrator.page.locator(".sf-team-sidebar").getByRole("button", { name: "Team administration", exact: true }).click()
     await administrator.page.locator('[data-sf-team-administration="ready"]').waitFor({ state: "visible" })
