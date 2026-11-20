@@ -1,6 +1,6 @@
 # Handoff — sf-continuation-reports
 
-SHA: 79e30c62e5eef4ca7f85e4de3e9f062cc6b32ed7 (code; this handoff is a later documentation commit)
+SHA: 537b8defbe86606ce3ddb1e9d65e282a6526c9ea (code; this handoff is a later documentation commit)
 Data: 2026-11-19 (America/Sao_Paulo)
 Estado: partial
 
@@ -17,8 +17,9 @@ Owner: Reports continuation only. Integration and every Actions dispatch belong 
 - After redeeming the original single-use enrollment, signIn calls the already-existing connectInstalledShell(page, installation). That helper reads this isolated Daemon's owner-only issued credential, calls authenticated location discovery, decodes the original installation/context schemas, compares the real actor stamp, and uses the actual shell server/project controls.
 - No identity, grant, descriptor, cookie, localStorage record, response or baseline was manufactured. Project selection is made through the product UI. The helper is reused unchanged.
 - The alternative of appending an explicit owner triplet to the Budget URL was rejected: owner-runtime231.tsx:433-436 deliberately refuses losing an explicit owner through the exact triplet-less Reports href required by the UI task. Real shell project selection preserves that navigation contract without changing the guard.
+- Commit 537b8defbe86606ce3ddb1e9d65e282a6526c9ea adds fail-closed capture checks in reports-support/fixture.ts before withReportsInstallation can prepare enrollment or read the issued credential. The fixture receives Playwright's resolved trace, video and screenshot options and requires all three to be off. reports.spec.ts:21 already selects off for all three. test-ci.yml appends --trace retain-on-failure; if that overrides the spec's effective value, the new assertion stops before credential entry. No assumption about CLI precedence or unproven tracing.stop lifecycle is required. The real gate still must validate the installed Playwright fixture types and resolved option values.
 - Only two code files changed: packages/app-shell/e2e/sucafina/reports-support/production-installation.ts and fixture.ts. The fixture's worker diagnostic now describes the owned listener; the one-worker assertion is unchanged.
-- GitHub readback matched both intended files exactly. Compare reports one code commit ahead, zero behind the assigned base.
+- GitHub readback matched all intended code files exactly after both code commits.
 
 ## Pendente
 
@@ -47,7 +48,7 @@ Owner: Reports continuation only. Integration and every Actions dispatch belong 
 ## Como retomar
 
 1. Keep this branch isolated; confirm its live head before any later write.
-2. Lead composes code 79e30c62e5eef4ca7f85e4de3e9f062cc6b32ed7 with the shared Reports upstream selection and the qualified Session 1 UI blobs.
+2. Lead composes code 537b8defbe86606ce3ddb1e9d65e282a6526c9ea with the shared Reports upstream selection and the qualified Session 1 UI blobs.
 3. Run the one original Reports spec using the supported request below. Record snapshot/code SHA and the first real failure without attributing unrelated historical lines to this tree.
 4. If a later native selection/review/export control is missing, coordinate its precise product path with the lead before changing ownership. Preserve the financial, historical, source-count and source-immutability requirements.
 5. After a concrete fix, request a new gate from the lead. Never repeat an identical failing gate without code change; lead owns the maximum two simultaneous gates and the single final sf-ci.
@@ -56,7 +57,7 @@ Owner: Reports continuation only. Integration and every Actions dispatch belong 
 ## Comandos e resultados
 
 GitHub-only source review and readback: performed.
-Local commands/build/tests/guards/typecheck: not run.
+Applicable packages/app-shell/AGENTS.md and packages/app-shell/e2e/AGENTS.md read; no deeper sucafina or reports-support AGENTS.md exists at this head. Local commands/build/tests/guards/typecheck: not run.
 Actions gates, sf-ci, PR, merge, package/deploy: not run by this owner.
 
 Smallest supported nominal request (entire Reports file, no grep/skip/relaxed assertion):
