@@ -5,7 +5,6 @@ import { createNativeBrowserAssets } from "../native-ui-browser/browser-assets.t
 import { createNativeBrowserHost } from "../native-ui-browser/host.ts"
 import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
 import { observeSfDecisionIntentHealth } from "../../../../../../apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts"
-import type { SfNativeChapterNavigationResult } from "../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/host/native-chapter-entry.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -178,7 +177,7 @@ test("native Decisions uses actual identity, SQLite and case dispatcher with rev
       for (const chapter of ["sf-dashboard", "sf-planner", "sf-procurement"]) {
         const move = (chapter: string) => tab.evaluate(async (chapter) => {
           const request = (window as typeof window & {
-            sfHttpChapterNavigation?: (chapter: string) => Promise<SfNativeChapterNavigationResult>
+            sfHttpChapterNavigation?: (chapter: string) => Promise<unknown>
           }).sfHttpChapterNavigation
           if (!request) throw new Error("SF_HTTP_NATIVE_NAVIGATION_MISSING")
           return request(chapter)
