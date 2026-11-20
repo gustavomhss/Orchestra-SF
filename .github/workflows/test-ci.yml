@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   test:
@@ -179,6 +180,7 @@ jobs:
       - name: Run tests
         id: sf66_product_run
         env:
+          REPORTS_ARTIFACT_TOKEN: ${{ github.token }}
           ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
           ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
           PACKAGE: ${{ steps.request.outputs.package }}
