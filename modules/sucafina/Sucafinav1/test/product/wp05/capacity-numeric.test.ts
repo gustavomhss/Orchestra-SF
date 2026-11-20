@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import path from "node:path"
 import { createSfBiFactory } from "../../../product/analytics/factory.ts"
 import { plannerCapacityPresentation } from "../../../product/planner/bi.ts"
@@ -7,6 +8,7 @@ import { plannerFixture, plannerPeriod, plannerSnapshot } from "../wp03/planner-
 import { inspectWp05Browser } from "./browser.ts"
 
 test("real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data", async () => {
+  expectSpawn(import.meta.path)
   const snapshot = plannerSnapshot()
   const version = rows(snapshot.data.versions)[0]!
   version.closed = 0

@@ -61,7 +61,9 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function caseInput(value: unknown) {
-  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) || typeof value.id !== "string" || typeof value.incarnation !== "string" || typeof value.version !== "number" || !Number.isSafeInteger(value.version)) return undefined
+  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) ||
+    typeof value.id !== "string" || !value.id.trim() || typeof value.incarnation !== "string" || !value.incarnation.trim() ||
+    typeof value.version !== "number" || !Number.isSafeInteger(value.version) || value.version < 1) return undefined
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 

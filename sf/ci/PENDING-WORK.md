@@ -1,8 +1,8 @@
 # Orchestra-SF — Backlog integral para encerrar CI/Testes e habilitar go-live
 
-> **Status:** CI RESCUE INTEGRATED / FOLLOW-UP IN REVIEW / PRODUCT QUALIFICATION PENDING / AZURE RELEASE BLOCKED
+> **Status:** CI RESCUE + FOLLOW-UP INTEGRATED / DEFAULT CACHE REUSE PROVEN / PRODUCT QUALIFICATION PENDING / AZURE RELEASE BLOCKED
 >
-> **Atualizado:** 2026-11-19 (America/Sao_Paulo). Integração: `sf-join-four`. A segunda rodada está no [PR #425](https://github.com/gustavomhss/Orchestra-SF/pull/425). SHAs e resultados focados ficam em [PERFORMANCE.md](./PERFORMANCE.md); nenhum deles qualifica automaticamente um SHA posterior.
+> **Fechamento operacional observado:** 2026-11-20 00:55 (America/Sao_Paulo), run `44670849654`. Integração: `sf-join-four`. A segunda rodada foi mergeada pelos PRs [#425](https://github.com/gustavomhss/Orchestra-SF/pull/425) e [#429](https://github.com/gustavomhss/Orchestra-SF/pull/429). SHAs e resultados focados ficam em [PERFORMANCE.md](./PERFORMANCE.md); nenhum deles qualifica automaticamente um SHA posterior.
 >
 > **Referência histórica preservada:** o [PR #242](https://github.com/gustavomhss/Orchestra-SF/pull/242) continua aberto, draft e não mergeado em `close-final-candidate`. O snapshot de 16/11 (`sf-ci-lean@0e4848847b85d3d5f97d03de63574c5461c50cba`, base `1cb77b8deb144e01a655c36987922338b1474003`, [run 43956369500](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43956369500)) é histórico; as suas falhas não são uma triagem atual do head de integração.
 
@@ -18,10 +18,23 @@ pelos PRs [#408](https://github.com/gustavomhss/Orchestra-SF/pull/408) e
 [44661129868](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661129868)
 passou 176 testes e o typecheck real de Sucafina; o relatório registra o SHA exato e a prova de cache.
 
-A rodada do PR #425 trata os inputs omitidos do cache, a preparação duplicada do Node,
-o registro de tempos de execuções verdes/vermelhas, a geração vinculada dos oito shards e
-a publicação de diagnósticos antes do limite total do job. O seu estado de validação e promoção
-fica em [PERFORMANCE.md](./PERFORMANCE.md).
+A segunda rodada foi integrada em `sf-join-four` pelo PR #425, merge
+`c74724c3e82f9a3fd3bdf2cd5492d966069caed8`, e em `dev` pelo PR #429,
+merge `c777c057b23f40d835c2c26387954202d4bad4c4`. Ela fecha os inputs omitidos do cache,
+a preparação duplicada do Node, a coleta separada de timings e a geração vinculada dos oito shards.
+Os steps preservam margem para diagnóstico dentro dos limites existentes dos jobs.
+
+| Entrega verificada nesta rodada | Evidência efetiva |
+| --- | --- |
+| Código de CI e fixture mínima | 294 testes passaram, Core/Sucafina typechecks passaram e guard SF estrito sem findings em [44668900773](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44668900773); o run inteiro segue RED por preparação LFS do probe |
+| Ausência de novos gates herdados | Comparação executada em [44669419937](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44669419937): dois protected paths idênticos à base, zero novos; o suplemento mantém seu RED auxiliar de dependência do spawn check |
+| Candidato default final | [44670478053](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670478053) SUCCESS: 22 controles e guard estrito contra dev com zero findings |
+| Publicação default | [44670593832](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670593832) SUCCESS: cache v5 salvo sob refs/heads/dev a partir de SF `95d3ffdc5478edcfa0ce012ba7f367ef7ab39259` |
+| Consumo por ref inédita | [44670849654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44670849654) SUCCESS: hit exato, restore 11,508s, instalação pulada, 29 testes/2 arquivos, job de 50s e branch temporária removida |
+
+O registro completo de SHAs, chaves, limites, timings parciais e todos os probes RED fica em
+[PERFORMANCE.md](./PERFORMANCE.md). A implementação e a promoção desta rodada estão concluídas;
+a qualificação integral abaixo permanece pendente.
 
 Pendências de qualificação continuam explícitas:
 
@@ -29,7 +42,10 @@ Pendências de qualificação continuam explícitas:
 - O baseline browser de 32 arquivos precisa ser reconciliado com o inventário atual, que já cresceu; somente uma execução real verde pode fornecer o novo inventário de casos.
 - As frentes de composição/runtime, incluindo [#414](https://github.com/gustavomhss/Orchestra-SF/pull/414),
   [#420](https://github.com/gustavomhss/Orchestra-SF/pull/420) e [#403](https://github.com/gustavomhss/Orchestra-SF/pull/403),
-  estão em trabalho independente. O rescue não substitui suas provas.
+  continuam abertos e draft. O gate composto de #414/#420 [44663788472](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663788472) terminou 49 pass/1 fail;
+  o de #403 [44662130965](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662130965) terminou 23 pass/1 fail.
+  O follow-up [#424](https://github.com/gustavomhss/Orchestra-SF/pull/424) também mantém um gate RED.
+  Esses resultados pertencem aos seus SHAs; o rescue não os substitui nem os transfere à integração atual.
 - A comparação global com `origin/dev` ainda encontra `protected-paths` em `godfile-waivers.json` e
   `script/spawn-allowlist.json`, herdados da integração. A validação focada mede regressões sem conceder
   aprovação a esses paths; a integração final precisa da revisão correspondente e de guards estritos verdes.
@@ -157,4 +173,4 @@ Entrega histórica do piloto #242, posteriormente evoluída na integração: wor
 - Nunca autoaprovar proteção de branch, nunca publicar segredos em artefatos, nunca afrouxar validações de origem/permissão/CAS/revogação, nunca declarar “não aplicável” por indisponibilidade.
 - O PR #242 permanece **DRAFT, NÃO MERGEADO**; o Epic legado segue intacto. A ferramenta de leitura de branch protection retornou `403 Resource not accessible by integration`: a alteração de required checks precisa ser verificada por pessoa com permissão e **não foi executada**.
 
-**Status operacional:** primeiro rescue de CI integrado e comprovado por testes focados; segunda rodada no PR #425; qualificação completa do produto e baselines pendentes; Azure release BLOCKED. As evidências históricas permanecem vinculadas aos seus SHAs.
+**Status operacional:** rescue e segunda rodada integrados; cache default → ref inédita comprovado com test-ci real verde; qualificação completa do produto, clearance global e baselines pendentes; Azure release BLOCKED. As evidências históricas permanecem vinculadas aos seus SHAs.

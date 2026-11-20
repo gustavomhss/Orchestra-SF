@@ -22,7 +22,7 @@ import {
 import { SfReceiptView } from "../../shared/receipt"
 import { encodeSfRouteRef } from "../../navigation-state"
 import {
-  readBudgetPage, writeBudgetPage,
+  readBudgetPage, writeBudgetPage, budgetDeviationSourceMatches,
   type BudgetCapability, type BudgetCommand, type BudgetCommandName,
   type BudgetEntry, type BudgetForm, type BudgetOwner, type BudgetPage,
 } from "./model"
@@ -398,7 +398,11 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     if (editor.action === "annual-entry" && !numberPresent(fields.annual)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
     if (editor.action === "year-amount" && fields.amount.trim() !== "" && (!numberPresent(fields.amount) || Number(fields.amount) < 0)) return t(key("yearAmountInvalid"))
     if (editor.action !== "save" && editor.action !== "save-entry" && editor.action !== "annual-entry" && editor.action !== "year-amount" && editor.action !== "save-deviation" && editor.action !== "delete") return t(sfCommonKey("sf.common.invalidLink"))
-    if (editor.recordId !== undefined && view.page?.versions[editor.versionKey] !== editor.version && editor.action !== "save-entry") return t(sfCommonKey("sf.common.stale"))
+    if (editor.action === "save-deviation" && !budgetDeviationSourceMatches(
+      view.page, props.capability, year(), { ...editor, sourcePresent: state.base !== null },
+    )) return t(sfCommonKey("sf.common.stale"))
+    if (editor.recordId !== undefined && view.page?.versions[editor.versionKey] !== editor.version &&
+        editor.action !== "save-entry" && editor.action !== "save-deviation") return t(sfCommonKey("sf.common.stale"))
     if (!allowed(editor.action)) return t(sfCommonKey("sf.common.noAccess"))
     return undefined
   }
