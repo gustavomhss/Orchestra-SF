@@ -991,7 +991,11 @@ export const createSfHostRuntimeWithRoutineNative = async (
               operationId === "dashboard.dashboard-hot-topic-source" ? dashboard.issue :
               operationId === "dashboard.dashboard-draft-read" ? decisions.revalidateDraftRead :
               operationId === "dashboard.dashboard-hot-topic-draft" ? decisions.drafts.register :
-              operationId === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list : decisions.drafts.lookupFirstSave
+              operationId === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list :
+              operationId === "dashboard.dashboard-hot-topic-prepare" ? decisions.prepare :
+              operationId === "dashboard.dashboard-hot-topic-review" ? decisions.review :
+              operationId === "dashboard.dashboard-hot-topic-apply" ? decisions.apply :
+              operationId === "dashboard.dashboard-hot-topic-recover" ? decisions.recover : decisions.drafts.lookupFirstSave
             return { producer: productHttp, handler: dashboardHttp, operation,
               dependencies: [authority, authority.host, authority.host.authenticate, authority.host.environment,
                 authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity, authority.human,
@@ -999,6 +1003,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
                 dashboard, dashboard.discover, dashboard.issue, dashboard.capture, dashboard.observer, dashboard.observer.preparePrivateDraftRead,
                 decisions, decisions.discover, decisions.revalidateDraftRead, decisions.drafts, decisions.drafts.register,
                 decisions.drafts.readCurrent, decisions.drafts.list, decisions.drafts.lookupFirstSave,
+                decisions.prepare, decisions.review, decisions.apply, decisions.recover,
                 business.cases, business.cases.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
                 business.dashboardRecords, business.dashboardRecords.issue, business.dashboardRecords.resolve, business.dashboardRecords.read,
                 input.persistence, input.persistence.transaction, input.persistence.transactionAll,

@@ -1,13 +1,17 @@
 import { SfPrivateHotTopicEditor } from "./private-draft"
 import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
+import { clearSfDashboardRecovery, openSfDashboardRecovery, SF_DASHBOARD_RECOVERY_LIFETIME_MS } from "./recovery-intents"
+import type { SfDashboardRecoveryIntent, SfDashboardRecoveryStore } from "./recovery-intents"
+import { decodeSfDashboardApplicationOutcome } from "./application-outcome"
+import type { SfDashboardApplicationOutcome } from "./application-outcome"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
-import type { SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
+import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../../context/contracts"
 import { useSfContext } from "../../../context"
-import { encodeSfRouteRef } from "../../../navigation-state"
+import { sfHotTopicProposalRoute } from "./proposal-route"
 import { SfPageFrame } from "../../../shared/frame"
 import { SfStatePanel } from "../../../shared/states"
 import { SfChangeReview } from "../../../shared/change-review"
@@ -26,6 +30,7 @@ type CandidateDraft = Readonly<{
 type Prepared = Readonly<{ caseRef: CaseRef; choiceId: string; changeId: string; label: string; state: string }>
 type Preparation = Readonly<{ caseRef: CaseRef; choiceId: string; draftRef: string; label: string; reason: string }>
 type Workbench = Readonly<{
+  cases: readonly CaseRef[]
   drafts: readonly CandidateDraft[]
   preparations: readonly Preparation[]
   changes: readonly Prepared[]
@@ -52,11 +57,17 @@ function caseRef(value: unknown): CaseRef | undefined {
 /** Runtime narrowing of the *producer's* bounded C12 discovery, not a new API DTO. */
 function decodeWorkbench(value: unknown): Workbench | undefined {
   const root = obj(value), discovered = obj(root?.decisions)
-  if (!discovered || !Array.isArray(discovered.drafts) ||
+  if (!discovered || !Array.isArray(discovered.cases) || !Array.isArray(discovered.drafts) ||
     !Array.isArray(discovered.preparations) || !Array.isArray(discovered.changes)) return
   const permissions = obj(discovered.permissions)
   if (typeof permissions?.draft !== "boolean" ||
     typeof permissions.prepare !== "boolean" || typeof permissions.apply !== "boolean") return
+  const cases: CaseRef[] = []
+  for (const raw of discovered.cases) {
+    const reference = caseRef(obj(raw)?.caseRef)
+    if (!reference) return
+    cases.push(reference)
+  }
   const drafts: CandidateDraft[] = []
   for (const raw of discovered.drafts) {
     const item = obj(raw), reference = caseRef(item?.caseRef), fields = obj(item?.fields)
@@ -85,7 +96,7 @@ function decodeWorkbench(value: unknown): Workbench | undefined {
     changes.push({ caseRef: reference, choiceId: item.choiceId,
       changeId: item.changeId, label: item.label, state: item.state })
   }
-  return { drafts, preparations, changes,
+  return { cases, drafts, preparations, changes,
     permissions: { draft: permissions.draft, prepare: permissions.prepare, apply: permissions.apply } }
 }
 function scalar(value: unknown): value is string | number | boolean | null {
@@ -112,14 +123,6 @@ function decodeReview(value: unknown, expected: Prepared): Review | undefined {
       ? { receipt: { id: receipt.id, ...(string(receipt.status) ? { status: receipt.status } : {}) } } : {}) }
 }
 
-function proposalRoute(props: SfSurfaceProps<"UI54">, changeId: string): string {
-  const query = new URLSearchParams({
-    server: props.route.ownerSelection.serverKey,
-    project: props.route.ownerSelection.projectId,
-  })
-  if (props.route.ownerSelection.installationId) query.set("installation", props.route.ownerSelection.installationId)
-  return "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(changeId) + "?" + query.toString()
-}
 
 /**
  * UI54 — C12 workbench → first-party preparation → current producer review →
@@ -142,8 +145,24 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     state: SfUiState; workbench: Workbench | null; review: Review | null
     reason: string | null; preparationBusy: boolean; applyBusy: boolean
     outcome: "none" | "unknown" | "applied" | "rejected"
+    correlation: "loading" | "ready" | "unavailable"; pending: SfDashboardRecoveryIntent | null
+    expired: boolean; receipt: SfDashboardApplicationOutcome | null; recovered: boolean
   }>({ state: "loading", workbench: null, review: null, reason: null,
-    preparationBusy: false, applyBusy: false, outcome: "none" })
+    preparationBusy: false, applyBusy: false, outcome: "none", correlation: "loading", pending: null,
+    expired: false, receipt: null, recovered: false })
+  let recoveryStore: SfDashboardRecoveryStore | undefined
+  let writeAbort: AbortController | undefined
+  const unresolved = (intent: SfDashboardRecoveryIntent, pending: boolean) => intent.kind === "apply" && current()?.drafts.markUnresolved({
+    surfaceId: "UI54", identity: { kind: "new", newIntentRef: intent.key as SfIntentRef },
+    editScopeKey: "UI54:application" as SfEditScopeKey,
+  }, pending)
+  const purge = () => {
+    writeAbort?.abort()
+    clearSfDashboardRecovery(context); recoveryStore = undefined
+    setStore({ state: "denied", workbench: null, review: null, pending: null, receipt: null,
+      outcome: "none", reason: null, correlation: "unavailable", applyBusy: false })
+    context.invalidate("revoked")
+  }
   const reference = () => props.route.params.proposalRef
   const current = () => context.state().status === "ready" ? context.ready() : undefined
   const isAdmitted = (operationId: string) => {
@@ -159,8 +178,36 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     item.changeId === reference()))
   const suggestedPreparation = createMemo(() =>
     store.workbench?.preparations.find((item) => item.draftRef === chosenDraft()?.draftRef))
-  const readState = () => store.state === "ready" && !chosenChange() && !chosenDraft()
+  const pendingApplication = () => store.pending?.kind === "apply" && store.pending.changeId === reference() ? store.pending : undefined
+  const readState = () => store.state === "ready" && !chosenChange() && !chosenDraft() && !pendingApplication()
     ? "not-found" as const : store.state
+  const canRecover = () => {
+    const pending = pendingApplication()
+    return !!pending && store.correlation === "ready" && !!recoveryStore?.current() && !store.expired &&
+      Date.now() < pending.expiresAt && !store.applyBusy && store.state === "ready" && !!store.workbench?.permissions.apply &&
+      store.workbench.cases.some((ref) => ref.id === pending.caseRef.id && ref.incarnation === pending.caseRef.incarnation &&
+        ref.version >= pending.caseRef.version) && isAdmitted("dashboard.dashboard-hot-topic-recover")
+  }
+  createEffect(() => {
+    const ready = current(), generation = context.generation()
+    if (!ready) {
+      recoveryStore = undefined; writeAbort?.abort()
+      setStore({ correlation: "loading", pending: null, receipt: null, expired: false })
+      return
+    }
+    let active = true
+    setStore("correlation", "loading")
+    void openSfDashboardRecovery(context).then((storage) => {
+      if (!active || context.generation() !== generation || current()?.transport !== ready.transport) return
+      recoveryStore = storage
+      const slot = storage?.read()
+      if (!slot || slot.state === "unavailable") { setStore({ correlation: "unavailable", outcome: "unknown" }); return }
+      if (slot.state === "empty") { setStore({ correlation: "ready", pending: null, expired: false }); return }
+      unresolved(slot.intent, true)
+      setStore({ correlation: "ready", pending: slot.intent, expired: slot.expired, outcome: "unknown", review: null })
+    }).catch(() => { if (active) setStore({ correlation: "unavailable", outcome: "unknown" }) })
+    onCleanup(() => { active = false; writeAbort?.abort() })
+  })
 
   createEffect(() => {
     const generation = context.generation()
@@ -187,6 +234,7 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
         if (response.kind !== "response") {
           setStore({ state: "unavailable", workbench: null, reason: response.reason });return
         }
+        if (response.status === 403 || response.body.status === "denied") { purge(); return }
         if (response.body.status !== "ok") {
           setStore({ state: response.body.status === "denied" ? "denied" :
             response.body.status === "stale" ? "stale" :
@@ -208,7 +256,7 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     const currentChange = chosenChange()
     const ready = current()
     const generation = context.generation()
-    if (!currentChange || !ready || !isAdmitted("dashboard.dashboard-hot-topic-review")) {
+    if (!currentChange || !ready || store.correlation !== "ready" || store.pending || !isAdmitted("dashboard.dashboard-hot-topic-review")) {
       setStore("review", null);return
     }
     const abort = new AbortController()
@@ -218,6 +266,7 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     }, { signal: abort.signal }).then((response) => {
       if (abort.signal.aborted || context.generation() !== generation ||
         context.ready()?.transport !== ready.transport) return
+      if (response.kind === "response" && (response.status === 403 || response.body.status === "denied")) { purge(); return }
       if (response.kind !== "response" || response.body.status !== "ok") {
         setStore("review", null);setStore("reason",
           response.kind !== "response" ? response.reason : "reason" in response.body ? response.body.reason ?? "review-not-current" : "review-not-current")
@@ -235,7 +284,7 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
   async function prepare() {
     const pending = suggestedPreparation(), ready = current()
     if (!pending || !ready || !store.workbench?.permissions.prepare ||
-      !isAdmitted("dashboard.dashboard-hot-topic-prepare") || store.preparationBusy) return
+      !isAdmitted("dashboard.dashboard-hot-topic-prepare") || store.preparationBusy || store.pending || store.correlation !== "ready") return
     const generation = context.generation()
     setStore("preparationBusy", true)
     try {
@@ -250,30 +299,63 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
       const result = obj(response.body.value)
       if (!result || !string(result.changeId) || !caseRef(result.caseRef) ||
         result.choiceId !== pending.choiceId) {setStore("outcome", "unknown");return}
-      navigate(proposalRoute(props, result.changeId))
+      navigate(sfHotTopicProposalRoute(props, result.changeId))
     } catch {setStore("outcome", "unknown")}
     finally {setStore("preparationBusy", false)}
   }
+  const acceptReceipt = (value: unknown, intent: SfDashboardRecoveryIntent, recovered: boolean) => {
+    const ready = current()
+    const receipt = ready && decodeSfDashboardApplicationOutcome(value, ready.context.stamp.principalRef)
+    if (!receipt || !recoveryStore?.clear(intent.key)) return false
+    unresolved(intent, false)
+    setStore({ pending: null, expired: false, receipt, recovered,
+      outcome: receipt.status === "applied" ? "applied" : "rejected", review: null })
+    bump((count) => count + 1)
+    return true
+  }
   async function apply() {
     const change = chosenChange(), currentReview = store.review, ready = current()
-    if (!change || !currentReview || !ready || store.applyBusy ||
-      store.outcome === "unknown" || !store.workbench?.permissions.apply ||
+    if (!change || !currentReview || !ready || store.applyBusy || store.pending || store.correlation !== "ready" ||
+      !recoveryStore?.current() || store.outcome === "unknown" || !store.workbench?.permissions.apply ||
       !isAdmitted("dashboard.dashboard-hot-topic-apply") ||
       currentReview.state !== "planned" || change.state !== "planned") return
-    const generation = context.generation()
-    setStore("applyBusy", true)
+    const reviewDigest = currentReview.reviewDigest
+    const caseRef = { id: change.caseRef.id, incarnation: change.caseRef.incarnation, version: change.caseRef.version }
+    const intent: SfDashboardRecoveryIntent = { kind: "apply", key: crypto.randomUUID(), caseRef,
+      choiceId: change.choiceId, changeId: change.changeId, expiresAt: Date.now() + SF_DASHBOARD_RECOVERY_LIFETIME_MS }
+    if (!recoveryStore.write(intent)) { setStore({ correlation: "unavailable", outcome: "unknown" }); return }
+    const generation = context.generation(), abort = new AbortController()
+    writeAbort?.abort(); writeAbort = abort
+    unresolved(intent, true)
+    setStore({ applyBusy: true, pending: intent, expired: false, outcome: "unknown", recovered: false })
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-apply"]({
-        caseRef: change.caseRef, choiceId: change.choiceId, changeId: change.changeId,
-        reviewDigest: currentReview.reviewDigest,
-      }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
-      if (context.generation() !== generation || current()?.transport !== ready.transport) return
-      if (response.kind !== "response") {setStore("outcome", "unknown");return}
-      if (response.body.status !== "ok") {setStore("outcome", "rejected");return}
-      setStore("outcome", "applied")
-      bump((count) => count + 1) // read current source/receipt; never reapply
-    } catch {setStore("outcome", "unknown")}
-    finally {setStore("applyBusy", false)}
+        caseRef, choiceId: change.choiceId, changeId: change.changeId, reviewDigest,
+      }, { signal: abort.signal, idempotencyKey: intent.key })
+      if (abort.signal.aborted || context.generation() !== generation || current()?.transport !== ready.transport) return
+      if (response.kind === "response" && (response.status === 403 || response.body.status === "denied")) { purge(); return }
+      if (response.kind === "response" && response.body.status === "ok" && acceptReceipt(response.body.value, intent, false)) return
+      setStore("outcome", "unknown")
+    } catch { if (!abort.signal.aborted) setStore("outcome", "unknown") }
+    finally { if (!abort.signal.aborted && context.generation() === generation) setStore("applyBusy", false) }
+  }
+  async function recover() {
+    const ready = current(), intent = pendingApplication()
+    if (!ready || !intent || !canRecover()) return
+    const generation = context.generation(), abort = new AbortController()
+    writeAbort?.abort(); writeAbort = abort
+    setStore("applyBusy", true)
+    try {
+      const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-recover"]({
+        purpose: "recover", caseRef: { id: intent.caseRef.id, incarnation: intent.caseRef.incarnation, version: intent.caseRef.version },
+        choiceId: intent.choiceId, changeId: intent.changeId,
+      }, { signal: abort.signal, idempotencyKey: intent.key })
+      if (abort.signal.aborted || context.generation() !== generation || current()?.transport !== ready.transport) return
+      if (response.kind === "response" && (response.status === 403 || response.body.status === "denied")) { purge(); return }
+      if (response.kind === "response" && response.body.status === "ok" && acceptReceipt(response.body.value, intent, true)) return
+      setStore("outcome", "unknown")
+    } catch { if (!abort.signal.aborted) setStore("outcome", "unknown") }
+    finally { if (!abort.signal.aborted && context.generation() === generation) setStore("applyBusy", false) }
   }
 
   const displayValue = (value: string | number | boolean | null) => value === null
@@ -324,7 +406,7 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
             {(choice) => <div class="sf-u38-actions">
               <p>{choice().reason}</p>
               <button type="button" class="mx-btn" disabled={!store.workbench?.permissions.prepare ||
-                !isAdmitted("dashboard.dashboard-hot-topic-prepare") || store.preparationBusy || store.outcome === "unknown"}
+                !isAdmitted("dashboard.dashboard-hot-topic-prepare") || store.preparationBusy || store.outcome === "unknown" || store.correlation !== "ready" || !!store.pending}
                 onClick={() => {void prepare()}}>{t(key("sf.u38.proposalReview"))}</button>
             </div>}
           </Show>
@@ -343,7 +425,8 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
         <section class="sf-u38-section" aria-label={t(key("sf.u38.proposalReview"))}>
           <h2>{t(key("sf.u38.proposalReview"))}</h2>
           <Show when={chosenChange() && store.review && store.review.state === "planned" &&
-            store.workbench?.permissions.apply && isAdmitted("dashboard.dashboard-hot-topic-apply")}
+            store.workbench?.permissions.apply && isAdmitted("dashboard.dashboard-hot-topic-apply") &&
+            store.correlation === "ready" && !store.pending && store.outcome !== "unknown"}
             fallback={<p role="status">{t(key("sf.u38.proposalNeedsReview"))}</p>}>
             <SfChangeReview
               operation={{ ref: ("proposal:" + chosenChange()!.changeId) as SfOperationRef,
@@ -373,7 +456,7 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
         </section>
         <section class="sf-u38-section">
           <h2>{t(key("sf.u38.proposalReceipt"))}</h2>
-          <Show when={store.review?.receipt}
+          <Show when={store.receipt ?? store.review?.receipt}
             fallback={<p role="status">{t(key("sf.u38.proposalNeedsReview"))}</p>}>
             {(receipt) => <dl class="sf-u38-meta">
               <div><dt>{t(key("sf.u38.proposalReceipt"))}</dt><dd><bdi>{receipt().id}</bdi></dd></div>
@@ -382,6 +465,17 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
             </dl>}
           </Show>
         </section>
+        <Show when={store.pending || store.correlation === "unavailable"}>
+          <section class="sf-u38-section" aria-label={t(key("sf.u38.applicationRecovery"))}>
+            <p role="status">{t(key(store.correlation === "unavailable" ? "sf.u38.recoveryUnavailable" :
+              store.expired ? "sf.u38.recoveryExpired" : "sf.u38.applicationPending"))}</p>
+            <button type="button" class="mx-btn" disabled={!canRecover()} onClick={() => { void recover() }}>
+              {t(key("sf.u38.applicationRecover"))}
+            </button>
+            <button type="button" class="mx-btn" disabled>{t(key("sf.u38.proposalApply"))}</button>
+          </section>
+        </Show>
+        <Show when={store.recovered}><p role="status">{t(key("sf.u38.applicationRecovered"))}</p></Show>
         <Show when={store.outcome !== "none"}><p role="alert" data-proposal-outcome={store.outcome}>
           {t(key(store.outcome === "applied" ? "sf.u38.savedRefetch" :
             store.outcome === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}

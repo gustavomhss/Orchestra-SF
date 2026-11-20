@@ -26,6 +26,8 @@ export const SfOperationExtensions = Object.freeze({
   // Original Dashboard C08 reads; outcome uses the first save's command identity.
   "dashboard.dashboard-draft-read": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-draft-read"}},
   "dashboard.dashboard-hot-topic-draft-outcome": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"dashboard-hot-topic-draft-outcome"}},
+  // Recovery may reconcile C08 with an existing receipt; it cannot dispatch a domain command.
+  "dashboard.dashboard-hot-topic-recover": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"dashboard-hot-topic-recover"}},
   // Closed Collaboration inputs use the original dashboard adapter (host-context/http-routes).
   "collaboration.answer-confirm": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"mutation","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-confirm"}},
   "collaboration.answer-prepare": {"method":"POST","pathTemplate":"{mount}/dashboard","effect":"read","responseMode":"json","fixedQuery":{"sf":"collaboration-answer-prepare"}},
