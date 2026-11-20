@@ -2,7 +2,7 @@
 
 ## SHA e estado
 
-- Estado: **PARTIAL / CLASSIFIED — todos os 16 gates de correção encerrados: 10 success, 5 failure e 1 cancelled; zero gates ativos. Shards 4 e 6 enumerados, shard 5 interrompido. Todas as falhas observadas restantes têm classificação; os testes não alcançados do shard 5 permanecem unbound. Nenhum shard integral declarado verde.**
+- Estado: **IN_PROGRESS — continuação autorizada para entrega completa, verde e mergeada; ver seção de continuação. Os resultados anteriores são históricos e não qualificam o candidato atual.**
 - Base imutável: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` (`sf-join-four`).
 - Branch: sf-shard-b; código neste checkpoint: e55478bd29cd03d604116b855d45e3664270ba4e. Esta revisão acrescenta somente a atualização do handoff.
 - Escopo: CI-SF shards 4, 5 e 6 de 8; apenas GitHub; verificação por Actions.
