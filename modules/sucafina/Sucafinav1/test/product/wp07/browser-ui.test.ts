@@ -1,4 +1,5 @@
 import { test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { chmod, mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { randomBytes, randomUUID } from "node:crypto"
@@ -22,9 +23,10 @@ import type { ReviewAgendaItem } from "../../../product/reviews/selection.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { captureChromiumCleanup } from "./chromium-cleanup.ts"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 
 test("Chromium preserves the annual agenda, recovers a lost response and removes revoked content", async () => {
+  expectSpawn(import.meta.path)
   const started = Date.now()
   const checkpoint = (phase: string) => console.info(`WP07 browser: ${phase} +${Date.now() - started}ms`)
   const traces = new AsyncLocalStorage<Map<string, { calls: number; milliseconds: number }>>()
@@ -49,7 +51,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
   }
   const diagnostic = (error: unknown) => new Error((error instanceof Error ? error.stack ?? error.message : String(error)).replace(/([?&]code=)[a-f0-9]{64}/g, "$1[redacted]"))
   const failures: unknown[] = []
-  const { chromium, expect } = await timed("playwright-import", () => import("@playwright/test"))
+  const { expect } = await timed("playwright-import", () => import("@playwright/test"))
   const built = await timed("browser-build", () => Bun.build({ entrypoints: [fileURLToPath(new URL("./browser-ui-entry.ts", import.meta.url))], target: "browser", format: "esm", sourcemap: "none" }))
   expect(built.success).toBe(true)
   const bundle = built.outputs.find((output) => output.kind === "entry-point")
@@ -230,8 +232,14 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       return { commit: true, value: undefined }
     })
     const storedReviews = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-    runtime.browser = await timed("chrome-launch", () => chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 }), 20000)
-    runtime.closeBrowser = await timed("chrome-ownership", () => captureChromiumCleanup(runtime.browser!))
+    // The published Node driver owns Chromium's extra stdio descriptors.
+    // Bun uses its public Unix-pipe connection; the original 15s startup
+    // deadline and the driver's physical cleanup proof remain mandatory.
+    checkpoint("chrome-launch:start")
+    const driver = await launchBrowserDriver("wp07-review")
+    runtime.browser = driver.browser
+    runtime.closeBrowser = async () => { await driver.close(); driver.report() }
+    checkpoint("chrome-launch:done")
     const context = await timed("browser-context", () => runtime.browser!.newContext({ viewport: { width: 1440, height: 1000 } }))
     const page = await timed("browser-page", () => context.newPage())
     page.setDefaultTimeout(5000)
@@ -239,7 +247,27 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const errors: string[] = []
     page.on("pageerror", (error) => { errors.push(error.message) })
     const code = await timed("operator-enrollment", () => identity.enroll())
-    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/auth/local?code=${code}`, { waitUntil: "domcontentloaded", timeout: 5000 }))
+    const enrollmentUrl = `${origin}/sucafina/auth/local?code=${code}`
+    // Chromium owns the real Set-Cookie exchange. The product redirects to the
+    // native root, which is intentionally absent from this isolated component host.
+    // A separate page contains Chromium's asynchronous error-document navigation;
+    // the authenticated cookie remains in this same BrowserContext.
+    const enrollmentPage = await timed("operator-enrollment-page", () => context.newPage())
+    try {
+      const [enrollment] = await timed("operator-enrollment-http", () => Promise.all([
+        enrollmentPage.waitForResponse((response) => response.url() === enrollmentUrl),
+        enrollmentPage.goto(enrollmentUrl, { waitUntil: "domcontentloaded", timeout: 5000 }).catch((error: unknown) => {
+          if (!(error instanceof Error) || !error.message.includes("net::ERR_HTTP_RESPONSE_CODE_FAILURE")) throw error
+          return null
+        }),
+      ]))
+      expect(enrollment.status()).toBe(303)
+      expect(enrollment.headers().location).toBe("/")
+      const redirected = enrollment.request().redirectedTo()
+      expect(redirected?.url()).toBe(`${origin}/`)
+      expect((await redirected?.response())?.status()).toBe(404)
+    } finally { await timed("operator-enrollment-page-close", () => enrollmentPage.close()) }
+    await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded", timeout: 5000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
     checkpoint("selection-load")
