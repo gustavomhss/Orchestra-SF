@@ -1,0 +1,7743 @@
+{
+  "schema": "sf-c17-mixed-boundary-evidence/v1",
+  "purpose": "Numeric CI-only observation of C17 publication and the complete original sibling case; not a product qualification pass.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "1542afe3a79550d6f3002eff8dcdbc442c981a79",
+    "tree": "06d5a4e4afb84aa4e2f4fd0e6e8e19f2447e1841"
+  },
+  "diagnostic": {
+    "sha": "ee8a0f08ed6894bda2d88b2479af2abd0d8b1ca6",
+    "tree": "f074e56a84d219e1784340b56c77d1faffa921e1",
+    "snapshot": "475a47a0caf9bef0477b1c71a8f69173a966d62a",
+    "snapshotParent": "ee8a0f08ed6894bda2d88b2479af2abd0d8b1ca6",
+    "snapshotChangedPaths": 0,
+    "run": 44676526556,
+    "job": 136089557876,
+    "branch": "ci-run-linux-mixed-profile",
+    "attempt": 1,
+    "event": "push",
+    "workflow": "test-ci"
+  },
+  "compiler": {
+    "run": 44676184697,
+    "job": 136088460766,
+    "head": "76037d83a13dc8bd5eb954566160d6738948ae3d",
+    "product": "ee8a0f08ed6894bda2d88b2479af2abd0d8b1ca6",
+    "pass": 2,
+    "fail": 0,
+    "skip": 0,
+    "totalMs": 85528.605541,
+    "sucafinaMs": 43354.518604,
+    "cliMs": 42092.37403,
+    "markers": [
+      "SF_AUDIT_COMPILER_PRODUCT ee8a0f08ed6894bda2d88b2479af2abd0d8b1ca6 sucafina",
+      "SF_AUDIT_COMPILER_PRODUCT ee8a0f08ed6894bda2d88b2479af2abd0d8b1ca6 cli"
+    ],
+    "snapshotTree": "59bb68587ee40485d9675eb205517bb3724f680c",
+    "snapshotParent": "ee8a0f08ed6894bda2d88b2479af2abd0d8b1ca6",
+    "requestBlob": "08cbf39a78acc498ddf56f906aecf8674461e36b",
+    "harnessPath": "apps/cli/audit-mixed-profile-compiler.node-smoke.mjs",
+    "harnessBlob": "e3ad4733d2a9393414063201dd5acf7e9edced8b",
+    "cleanup": {
+      "job": 136089310106,
+      "conclusion": "success"
+    }
+  },
+  "request": {
+    "blob": "14cda2a733e6d5e338c130b72698b6bc2a437914",
+    "content": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "30000",
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "Sucafinav1/test/product/wp10/integration/audit-calculation-mixed-profile.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    }
+  },
+  "originalBlobs": {
+    "c17": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+    "mixedOriginal15": "7284d86b907b602809f5e1eeb3aa1694f79b5455",
+    "mixedFixture": "3600f6b3bd1bc59a93dec692067ae38cd2b316ef",
+    "rootFixture": "f7a08a7ccfbd10dd80aa88ce86a46cbbf4127b34"
+  },
+  "diagnosticBlobs": {
+    "root": "aef74931f4f9b677b3f00c0ad2509f38bde97e0b",
+    "services": "eb71df544d8f5db2698f0dc78daf012257c2e4cb",
+    "observer": "dcffd8afece0e51fe8e22bacc619d4f091174051",
+    "siblingCopy": "02631e161f08cbe95b34a42033c0f3684546f692"
+  },
+  "unchangedSemantics": {
+    "awaits": {
+      "root": 17,
+      "services": 43,
+      "siblingCopy": 9
+    },
+    "siblingAssertions": 8,
+    "c17TestMs": 120000,
+    "c17CooperativeDeadlineMs": 105000,
+    "siblingTestMs": 120000
+  },
+  "interpretation": [
+    "All span durations are inclusive, overlapping wall times, not additive exclusive CPU costs.",
+    "Counters and spans are cumulative for the process; split the two tests by their observed markers and log sections.",
+    "Root new/join/foreign/unsupported counters classify route selection/preparation; callback marks physical root entry and accepted marks accepted egress.",
+    "Diagnostic overhead includes bookkeeping and previous emissions; a snapshot does not include its own emission cost.",
+    "Active spans and aborted counts are prefixes; they do not independently prove deadlock or complete-path runtime.",
+    "No probe, compiler harness, request or copied diagnostic spec belongs in the product integration."
+  ],
+  "terminal": {
+    "conclusion": "failure",
+    "pass": 0,
+    "fail": 2,
+    "assertions": 10,
+    "tests": 2,
+    "files": 2,
+    "durationSeconds": 271.93,
+    "cleanup": {
+      "job": 136091483594,
+      "conclusion": "success"
+    },
+    "omni": {
+      "status": "not-applicable",
+      "reason": "Focused diagnostic ran no declaring test, made no Omni spawn and delegated none; it proves nothing about Omni."
+    }
+  },
+  "failures": [
+    {
+      "test": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "durationMs": 105009.1,
+      "signature": "error: calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+      "frames": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts:39:7"
+      ],
+      "phase": "produce-outer; first outer publish.issue is active until cooperative abort",
+      "unreached": [
+        "reopening and resolving persisted ancestry",
+        "persisted-cycle refusal",
+        "revoked-authority checks"
+      ]
+    },
+    {
+      "test": "the actual mixed producer admits both calculation siblings concurrently inside one owned root",
+      "durationMs": 166368.2,
+      "signature": "this test timed out after 120000ms.",
+      "phase": "Fixture completes first; mixed production completes after the test budget. The subsequent final issue, real root and both barrier targets also complete before the timeout is reported.",
+      "assertionFailureInLog": false
+    }
+  ],
+  "measured": {
+    "recordCount": 69,
+    "parseErrors": 0,
+    "lastDiagnosticMs": 5.61,
+    "c17": {
+      "emissions": [
+        1,
+        20
+      ],
+      "inner": {
+        "timestamp": "2026-11-20T04:46:30.6055220Z",
+        "phase": "produce-inner",
+        "elapsedMs": 2324,
+        "canonicalResultReads": 14,
+        "canonicalResultReadsCompleted": 14,
+        "aborted": false
+      },
+      "outer": {
+        "timestamp": "2026-11-20T04:48:13.2168514Z",
+        "phase": "produce-outer",
+        "elapsedMs": 102602,
+        "canonicalResultReads": 871,
+        "canonicalResultReadsCompleted": 871,
+        "aborted": true
+      },
+      "outerPublication": {
+        "replay": {
+          "emissions": [
+            9,
+            10
+          ],
+          "inclusiveMs": 4788.194
+        },
+        "persist": {
+          "emissions": [
+            11,
+            12
+          ],
+          "inclusiveMs": 22605.492
+        },
+        "register": {
+          "emissions": [
+            13,
+            14
+          ],
+          "inclusiveMs": 37339.894
+        },
+        "issue": {
+          "emissions": [
+            15,
+            20
+          ],
+          "inclusiveMs": 31256.844,
+          "aborted": true
+        }
+      },
+      "mixed": {
+        "prepareInclusiveMs": 27.603,
+        "produceInclusiveMs": 31202.96,
+        "rootsAtAbort": {
+          "0": {
+            "new": 0,
+            "join": 0,
+            "foreign": 0,
+            "unsupported": 0,
+            "callback": 0,
+            "accepted": 0
+          },
+          "1": {
+            "new": 0,
+            "join": 52,
+            "foreign": 0,
+            "unsupported": 0,
+            "callback": 0,
+            "accepted": 0
+          },
+          "2": {
+            "new": 1,
+            "join": 0,
+            "foreign": 0,
+            "unsupported": 0,
+            "callback": 1,
+            "accepted": 0
+          }
+        }
+      },
+      "note": "The first outer publish.issue did not reach accepted egress. Counts 871/871 and 52 record joins are aborted prefixes, not successful-path totals."
+    },
+    "siblings": {
+      "emissions": [
+        21,
+        69
+      ],
+      "fixtureInclusiveMs": 4596.69,
+      "produceInclusiveMs": 122190.92,
+      "finalIssueInclusiveMs": 39575.116,
+      "beforeFinalIssueMs": 126790.041,
+      "outerPublication": {
+        "replayInclusiveMs": 3610.718,
+        "persistInclusiveMs": 13109.024,
+        "registerInclusiveMs": 22979.646,
+        "issueInclusiveMs": 39357.307
+      },
+      "setupExplicitIssue": {
+        "mixedPrepareInclusiveMs": 31.393,
+        "mixedProduceInclusiveMs": 39416.217
+      },
+      "finalIssue": {
+        "mixedPrepareInclusiveMs": 34.991,
+        "mixedProduceInclusiveMs": 39475.927,
+        "barrierSecondArrivalGapMs": 0.458,
+        "barrierReleaseToLastCompletionMs": 1164.898
+      },
+      "rootCounterDeltas": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 96,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 3
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 1,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 2
+      },
+      "note": "The observed barrier completed both targets. The full test is still failed on its unchanged 120000ms budget; this observation is not a passing qualification."
+    }
+  },
+  "compositionPhases": [
+    {
+      "timestamp": "2026-11-20T04:46:28.2155070Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "started",
+      "elapsedMs": 3
+    },
+    {
+      "timestamp": "2026-11-20T04:46:28.2812703Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "returned",
+      "phaseMs": 67,
+      "elapsedMs": 70,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-20T04:46:28.2814312Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "started",
+      "elapsedMs": 70
+    },
+    {
+      "timestamp": "2026-11-20T04:46:30.6057457Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "returned",
+      "phaseMs": 2324,
+      "elapsedMs": 2394,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-20T04:46:30.6125845Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "started",
+      "elapsedMs": 2401
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.2170218Z",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "returned",
+      "phaseMs": 102602,
+      "elapsedMs": 105003,
+      "aborted": true
+    }
+  ],
+  "canonicalReads": [
+    {
+      "timestamp": "2026-11-20T04:46:30.6055220Z",
+      "phase": "produce-inner",
+      "elapsedMs": 2324,
+      "canonicalResultReads": 14,
+      "canonicalResultReadsCompleted": 14,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.2168514Z",
+      "phase": "produce-outer",
+      "elapsedMs": 102602,
+      "canonicalResultReads": 871,
+      "canonicalResultReadsCompleted": 871,
+      "aborted": true
+    }
+  ],
+  "numericRecords": [
+    {
+      "timestamp": "2026-11-20T04:46:28.4133204Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 213.398,
+      "emissions": 1,
+      "diagnosticMs": 0.006,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.persist": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:28.4875416Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 287.601,
+      "emissions": 2,
+      "diagnosticMs": 0.125,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:28.4883757Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 288.373,
+      "emissions": 3,
+      "diagnosticMs": 0.201,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:28.7573130Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 557.476,
+      "emissions": 4,
+      "diagnosticMs": 0.272,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:28.7581498Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 557.555,
+      "emissions": 5,
+      "diagnosticMs": 0.342,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:29.0434633Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 843.584,
+      "emissions": 6,
+      "diagnosticMs": 0.412,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:29.0442711Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 843.667,
+      "emissions": 7,
+      "diagnosticMs": 0.49,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:29.8427381Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 1642.578,
+      "emissions": 8,
+      "diagnosticMs": 0.516,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:37.2233228Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 9023.155,
+      "emissions": 9,
+      "diagnosticMs": 0.58,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 74.267,
+          "lastMs": 74.267
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:42.0115297Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 13811.364,
+      "emissions": 10,
+      "diagnosticMs": 0.65,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:46:42.0128859Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 13812.304,
+      "emissions": 11,
+      "diagnosticMs": 0.747,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 269.1,
+          "lastMs": 269.1
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:04.6177969Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 36417.813,
+      "emissions": 12,
+      "diagnosticMs": 0.807,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:04.6186440Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 36417.928,
+      "emissions": 13,
+      "diagnosticMs": 0.913,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 286.025,
+          "lastMs": 286.025
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:41.9581054Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 73757.855,
+      "emissions": 14,
+      "diagnosticMs": 0.943,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:41.9594814Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 73757.999,
+      "emissions": 15,
+      "diagnosticMs": 1.08,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:41.9680720Z",
+      "label": "mixed.prepare",
+      "state": "start",
+      "elapsedMs": 73767.976,
+      "emissions": 16,
+      "diagnosticMs": 1.107,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:41.9958116Z",
+      "label": "mixed.prepare",
+      "state": "finish",
+      "elapsedMs": 73795.581,
+      "emissions": 17,
+      "diagnosticMs": 1.175,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:47:42.0118451Z",
+      "label": "mixed.produce",
+      "state": "start",
+      "elapsedMs": 73811.697,
+      "emissions": 18,
+      "diagnosticMs": 1.241,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.2149095Z",
+      "label": "mixed.produce",
+      "state": "finish",
+      "elapsedMs": 105014.668,
+      "emissions": 19,
+      "diagnosticMs": 1.614,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 798.907,
+          "lastMs": 798.907
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.2162070Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 105014.843,
+      "emissions": 20,
+      "diagnosticMs": 1.723,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.2236177Z",
+      "label": "siblings.fixture",
+      "state": "start",
+      "elapsedMs": 105023.466,
+      "emissions": 21,
+      "diagnosticMs": 1.768,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.3514531Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 105151.294,
+      "emissions": 22,
+      "diagnosticMs": 1.829,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 2,
+          "active": 1,
+          "inclusiveMs": 4862.461,
+          "lastMs": 4788.194
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.4242964Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 105224.091,
+      "emissions": 23,
+      "diagnosticMs": 1.897,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.4257168Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 105224.918,
+      "emissions": 24,
+      "diagnosticMs": 1.964,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 2,
+          "active": 1,
+          "inclusiveMs": 22874.592,
+          "lastMs": 22605.492
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.6575376Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 105457.346,
+      "emissions": 25,
+      "diagnosticMs": 2.007,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.6589133Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 105457.414,
+      "emissions": 26,
+      "diagnosticMs": 2.068,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 2,
+          "active": 1,
+          "inclusiveMs": 37625.919,
+          "lastMs": 37339.894
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.9258895Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 105725.667,
+      "emissions": 27,
+      "diagnosticMs": 2.099,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:13.9272505Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 105725.743,
+      "emissions": 28,
+      "diagnosticMs": 2.17,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 2,
+          "active": 1,
+          "inclusiveMs": 32055.751,
+          "lastMs": 31256.844
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:14.6870488Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 106487.097,
+      "emissions": 29,
+      "diagnosticMs": 2.202,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:15.5442826Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 107344.433,
+      "emissions": 30,
+      "diagnosticMs": 2.272,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 4935.253,
+          "lastMs": 72.791
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:15.6134515Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 107413.237,
+      "emissions": 31,
+      "diagnosticMs": 2.337,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:15.6148030Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 107414,
+      "emissions": 32,
+      "diagnosticMs": 2.438,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 23107.017,
+          "lastMs": 232.425
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:15.8687278Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 107668.542,
+      "emissions": 33,
+      "diagnosticMs": 2.501,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:15.8700508Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 107668.612,
+      "emissions": 34,
+      "diagnosticMs": 2.559,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 37894.166,
+          "lastMs": 268.247
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:16.1649926Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 107965.098,
+      "emissions": 35,
+      "diagnosticMs": 2.585,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:16.9932687Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 107965.178,
+      "emissions": 36,
+      "diagnosticMs": 2.655,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 32817.099,
+          "lastMs": 761.348
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:16.9941632Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 108793.413,
+      "emissions": 37,
+      "diagnosticMs": 2.703,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:17.8199913Z",
+      "label": "siblings.fixture",
+      "state": "finish",
+      "elapsedMs": 109620.156,
+      "emissions": 38,
+      "diagnosticMs": 2.773,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:17.8221759Z",
+      "label": "siblings.produce",
+      "state": "start",
+      "elapsedMs": 109622.414,
+      "emissions": 39,
+      "diagnosticMs": 2.837,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:21.4507345Z",
+      "label": "publish.replay",
+      "state": "start",
+      "elapsedMs": 113250.395,
+      "emissions": 40,
+      "diagnosticMs": 2.888,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 5004.058,
+          "lastMs": 68.806
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:25.0613067Z",
+      "label": "publish.replay",
+      "state": "finish",
+      "elapsedMs": 116861.114,
+      "emissions": 41,
+      "diagnosticMs": 2.956,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:25.0627857Z",
+      "label": "publish.persist",
+      "state": "start",
+      "elapsedMs": 116862.057,
+      "emissions": 42,
+      "diagnosticMs": 3.014,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 23361.556,
+          "lastMs": 254.539
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:38.1711471Z",
+      "label": "publish.persist",
+      "state": "finish",
+      "elapsedMs": 129971.099,
+      "emissions": 43,
+      "diagnosticMs": 3.062,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:48:38.1720348Z",
+      "label": "publish.register",
+      "state": "start",
+      "elapsedMs": 129971.214,
+      "emissions": 44,
+      "diagnosticMs": 3.161,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 38190.653,
+          "lastMs": 296.487
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:01.1509602Z",
+      "label": "publish.register",
+      "state": "finish",
+      "elapsedMs": 152950.882,
+      "emissions": 45,
+      "diagnosticMs": 3.23,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:01.1518501Z",
+      "label": "publish.issue",
+      "state": "start",
+      "elapsedMs": 152951.005,
+      "emissions": 46,
+      "diagnosticMs": 3.337,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:01.1616312Z",
+      "label": "mixed.prepare",
+      "state": "start",
+      "elapsedMs": 152961.465,
+      "emissions": 47,
+      "diagnosticMs": 3.388,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 27.603,
+          "lastMs": 27.603
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 1,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:01.1959898Z",
+      "label": "mixed.prepare",
+      "state": "finish",
+      "elapsedMs": 152995.745,
+      "emissions": 48,
+      "diagnosticMs": 3.498,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 61.878,
+          "lastMs": 34.276
+        },
+        "mixed.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:01.2158496Z",
+      "label": "mixed.produce",
+      "state": "start",
+      "elapsedMs": 153015.689,
+      "emissions": 49,
+      "diagnosticMs": 3.583,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 61.878,
+          "lastMs": 34.276
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 1,
+          "active": 1,
+          "inclusiveMs": 31202.96,
+          "lastMs": 31202.96
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 52,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 1,
+          "accepted": 0
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:40.4812407Z",
+      "label": "mixed.produce",
+      "state": "finish",
+      "elapsedMs": 192281.306,
+      "emissions": 50,
+      "diagnosticMs": 3.779,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 4,
+          "active": 1,
+          "inclusiveMs": 33645.332,
+          "lastMs": 828.233
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 61.878,
+          "lastMs": 34.276
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 70468.564,
+          "lastMs": 39265.604
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 84,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 2,
+          "accepted": 1
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:40.5081968Z",
+      "label": "publish.issue",
+      "state": "finish",
+      "elapsedMs": 192308.317,
+      "emissions": 51,
+      "diagnosticMs": 3.897,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 61.878,
+          "lastMs": 34.276
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 70468.564,
+          "lastMs": 39265.604
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 84,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 2,
+          "accepted": 1
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:40.5192068Z",
+      "label": "mixed.prepare",
+      "state": "start",
+      "elapsedMs": 192319.004,
+      "emissions": 52,
+      "diagnosticMs": 4,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 3,
+          "completed": 2,
+          "active": 1,
+          "inclusiveMs": 61.878,
+          "lastMs": 34.276
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 70468.564,
+          "lastMs": 39265.604
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 84,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 2,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 2,
+          "accepted": 1
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:40.5506402Z",
+      "label": "mixed.prepare",
+      "state": "finish",
+      "elapsedMs": 192350.397,
+      "emissions": 53,
+      "diagnosticMs": 4.098,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 93.271,
+          "lastMs": 31.393
+        },
+        "mixed.produce": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "inclusiveMs": 70468.564,
+          "lastMs": 39265.604
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 84,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 2,
+          "accepted": 1
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:49:40.5733306Z",
+      "label": "mixed.produce",
+      "state": "start",
+      "elapsedMs": 192373.113,
+      "emissions": 54,
+      "diagnosticMs": 4.163,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 93.271,
+          "lastMs": 31.393
+        },
+        "mixed.produce": {
+          "started": 3,
+          "completed": 2,
+          "active": 1,
+          "inclusiveMs": 70468.564,
+          "lastMs": 39265.604
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 84,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 2,
+          "accepted": 1
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:19.9891856Z",
+      "label": "mixed.produce",
+      "state": "finish",
+      "elapsedMs": 231789.341,
+      "emissions": 55,
+      "diagnosticMs": 4.398,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 93.271,
+          "lastMs": 31.393
+        },
+        "mixed.produce": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:20.0133118Z",
+      "label": "siblings.produce",
+      "state": "finish",
+      "elapsedMs": 231813.339,
+      "emissions": 56,
+      "diagnosticMs": 4.506,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 93.271,
+          "lastMs": 31.393
+        },
+        "mixed.produce": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 0,
+          "completed": 0,
+          "active": 0,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:20.0145456Z",
+      "label": "siblings.issue",
+      "state": "start",
+      "elapsedMs": 231813.507,
+      "emissions": 57,
+      "diagnosticMs": 4.578,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 93.271,
+          "lastMs": 31.393
+        },
+        "mixed.produce": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:20.0260297Z",
+      "label": "mixed.prepare",
+      "state": "start",
+      "elapsedMs": 231826.189,
+      "emissions": 58,
+      "diagnosticMs": 4.643,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 93.271,
+          "lastMs": 31.393
+        },
+        "mixed.produce": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 3,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:20.0611120Z",
+      "label": "mixed.prepare",
+      "state": "finish",
+      "elapsedMs": 231861.184,
+      "emissions": 59,
+      "diagnosticMs": 4.746,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:20.0802725Z",
+      "label": "mixed.produce",
+      "state": "start",
+      "elapsedMs": 231880.423,
+      "emissions": 60,
+      "diagnosticMs": 4.804,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 0,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:20.0823781Z",
+      "label": "siblings.root.enter",
+      "state": "point",
+      "elapsedMs": 231882.572,
+      "emissions": 61,
+      "diagnosticMs": 4.857,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 116,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 3,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 0,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:37.4163377Z",
+      "label": "siblings.barrier.enter",
+      "state": "point",
+      "elapsedMs": 249216.022,
+      "emissions": 62,
+      "diagnosticMs": 4.97,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 128,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 1,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:37.4179032Z",
+      "label": "siblings.barrier.enter",
+      "state": "point",
+      "elapsedMs": 249216.48,
+      "emissions": 63,
+      "diagnosticMs": 5.077,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 128,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 0,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:37.4193247Z",
+      "label": "siblings.barrier.release",
+      "state": "point",
+      "elapsedMs": 249216.548,
+      "emissions": 64,
+      "diagnosticMs": 5.135,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 128,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:38.5814580Z",
+      "label": "siblings.barrier.complete",
+      "state": "point",
+      "elapsedMs": 250381.344,
+      "emissions": 65,
+      "diagnosticMs": 5.188,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 130,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 1
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:38.5823663Z",
+      "label": "siblings.barrier.complete",
+      "state": "point",
+      "elapsedMs": 250381.446,
+      "emissions": 66,
+      "diagnosticMs": 5.263,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 130,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 0,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 2
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:59.5542932Z",
+      "label": "siblings.root.leave",
+      "state": "point",
+      "elapsedMs": 271353.499,
+      "emissions": 67,
+      "diagnosticMs": 5.348,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 3,
+          "active": 1,
+          "inclusiveMs": 109884.782,
+          "lastMs": 39416.217
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 148,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 2
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 1,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 2
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:59.5582908Z",
+      "label": "mixed.produce",
+      "state": "finish",
+      "elapsedMs": 271356.356,
+      "emissions": 68,
+      "diagnosticMs": 5.517,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 149360.708,
+          "lastMs": 39475.927
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 0,
+          "active": 1,
+          "inclusiveMs": 0,
+          "lastMs": 0
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 148,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 3
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 1,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 2
+      }
+    },
+    {
+      "timestamp": "2026-11-20T04:50:59.5887386Z",
+      "label": "siblings.issue",
+      "state": "finish",
+      "elapsedMs": 271388.628,
+      "emissions": 69,
+      "diagnosticMs": 5.61,
+      "inclusive": 1,
+      "spans": {
+        "publish.replay": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 8614.776,
+          "lastMs": 3610.718
+        },
+        "publish.persist": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 36470.58,
+          "lastMs": 13109.024
+        },
+        "publish.register": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 61170.299,
+          "lastMs": 22979.646
+        },
+        "publish.issue": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "inclusiveMs": 73002.639,
+          "lastMs": 39357.307
+        },
+        "mixed.prepare": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 128.262,
+          "lastMs": 34.991
+        },
+        "mixed.produce": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "inclusiveMs": 149360.708,
+          "lastMs": 39475.927
+        },
+        "siblings.fixture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 4596.69,
+          "lastMs": 4596.69
+        },
+        "siblings.produce": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 122190.92,
+          "lastMs": 122190.92
+        },
+        "siblings.issue": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "inclusiveMs": 39575.116,
+          "lastMs": 39575.116
+        }
+      },
+      "roots": {
+        "0": {
+          "new": 0,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "1": {
+          "new": 0,
+          "join": 148,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 0,
+          "accepted": 0
+        },
+        "2": {
+          "new": 4,
+          "join": 0,
+          "foreign": 0,
+          "unsupported": 0,
+          "callback": 4,
+          "accepted": 3
+        }
+      },
+      "points": {
+        "siblings.root.enter": 1,
+        "siblings.root.leave": 1,
+        "siblings.barrier.enter": 2,
+        "siblings.barrier.release": 1,
+        "siblings.barrier.complete": 2
+      }
+    }
+  ],
+  "limits": [
+    "Do not add nested inclusive spans to estimate total or exclusive cost.",
+    "The 871-read prefix cannot be compared as a controlled speedup or regression against other environments or runs.",
+    "No claims of C17 reopen, persisted-cycle or revocation closure are supported.",
+    "No production change or nominal rerun was authorized by these data."
+  ]
+}
