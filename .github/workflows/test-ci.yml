@@ -256,6 +256,117 @@ jobs:
           printf 'guards canonical dev status=%s; source PR base=%s status=%s\n' "$dev_status" "$SF_GUARD_PR_BASE" "$pr_status"
           test "$dev_status" -eq 0 && test "$pr_status" -eq 0
 
+
+      # Snapshot-only strict proof for the exact repaired native fixtures; never merge this control step.
+      - name: Typecheck the three repaired native fixtures
+        if: github.ref == 'refs/heads/ci-run-linux-sfc-fixture-types'
+        working-directory: modules/sucafina
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { appendFileSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
+          import { execFileSync, spawnSync } from 'node:child_process'
+          import path from 'node:path'
+          
+          const root = realpathSync(process.env.GITHUB_WORKSPACE)
+          assert.equal(realpathSync(process.cwd()), path.join(root, 'modules/sucafina'))
+          const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim()
+          const source = '236a1703278d87e478958a957269b04100e5af66'
+          const configPath = 'modules/sucafina/Sucafinav1/tsconfig.sfc-fixture-types.json'
+          const fixtures = [
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/asset-health.test.ts",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/import-health.test.ts",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/budget-deviation-projection.test.ts"
+          ]
+          const expectedRequest = {
+            "package": "sucafina",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "120000",
+              "Sucafinav1/test/native-ui-contract/asset-health.test.ts",
+              "Sucafinav1/test/native-ui-contract/import-health.test.ts",
+              "Sucafinav1/test/native-ui-contract/budget-deviation-projection.test.ts"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+            }
+          }
+          const expectedConfig = {
+            "extends": "./tsconfig.json",
+            "include": [
+              "test/native-ui-contract/asset-health.test.ts",
+              "test/native-ui-contract/import-health.test.ts",
+              "test/native-ui-contract/budget-deviation-projection.test.ts"
+            ]
+          }
+          const pins = {
+            'modules/sucafina/Sucafinav1/test/native-ui-contract/asset-health.test.ts': '5d2f67d3b0a71dc10516f4e6558a2dfda0c0504d',
+            'modules/sucafina/Sucafinav1/test/native-ui-contract/import-health.test.ts': '1208354d5e8260f615b75900bc6ce457f29dea22',
+            'modules/sucafina/Sucafinav1/test/native-ui-contract/budget-deviation-projection.test.ts': 'b75a837a419dfb791438659de0d55dc2ced6fcff',
+            'apps/cli/src/sucafina-product/native-ui/import-health.ts': '817f50ae7dab6c092d13f342cb0f33edc82c0c53',
+            'modules/sucafina/Sucafinav1/tsconfig.json': '7907cb2a010cd229b6b28a710cb3b67861e6017b',
+            'modules/sucafina/Sucafinav1/package.json': '18911fee9313f8fb57c1a972bc70eec2f7864c55',
+          }
+          assert.equal(process.env.GITHUB_REPOSITORY, 'gustavomhss/Orchestra-SF')
+          assert.equal(process.env.GITHUB_EVENT_NAME, 'push')
+          assert.equal(process.env.GITHUB_REF, 'refs/heads/ci-run-linux-sfc-fixture-types')
+          assert.equal(process.env.GITHUB_RUN_ATTEMPT, '1')
+          assert.equal(process.env.RUNNER_OS, 'Linux')
+          assert.equal(process.env.RUNNER_ARCH, 'X64')
+          assert.equal(process.env.GITHUB_SHA, git('rev-parse', 'HEAD'))
+          assert.equal(git('show', '-s', '--format=%P', 'HEAD'), source)
+          const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'))
+          assert.equal(event.repository?.full_name, process.env.GITHUB_REPOSITORY)
+          assert.equal(event.ref, process.env.GITHUB_REF)
+          assert.equal(event.after, process.env.GITHUB_SHA)
+          assert.equal(event.before, '0'.repeat(40))
+          assert.equal(event.created, true)
+          assert.equal(event.deleted, false)
+          assert.equal(event.forced, false)
+          assert.deepEqual(git('diff', '--name-only', source, 'HEAD').split('\n').sort(),
+            ['.ci-run.json', '.github/workflows/test-ci.yml', configPath].sort())
+          assert.equal(git('rev-parse', source + ':.github/workflows/test-ci.yml'),
+            '75af315fb7084eb7f95542e6281cc7ae7b6167c8')
+          assert.deepEqual(JSON.parse(execFileSync('git', ['show', 'HEAD:.ci-run.json'], { cwd: root, encoding: 'utf8' })),
+            expectedRequest)
+          assert.deepEqual(JSON.parse(readFileSync(path.join(root, '.ci-run.json'), 'utf8')),
+            { ...expectedRequest, directory: 'modules/sucafina' })
+          assert.deepEqual(JSON.parse(readFileSync(path.join(root, configPath), 'utf8')), expectedConfig)
+          assert.equal(JSON.parse(readFileSync(path.join(root, 'modules/sucafina/package.json'), 'utf8')).scripts.typecheck,
+            'bun --cwd Sucafinav1 typecheck')
+          assert.equal(JSON.parse(readFileSync(path.join(root, 'modules/sucafina/Sucafinav1/package.json'), 'utf8')).scripts.typecheck,
+            'tsgo --noEmit')
+          for (const [file, blob] of Object.entries(pins)) {
+            assert.equal(git('rev-parse', source + ':' + file), blob)
+            assert.equal(git('hash-object', file), blob)
+          }
+          const command = ['run', 'typecheck', '--project', 'tsconfig.sfc-fixture-types.json', '--pretty', 'false', '--listFiles']
+          const run = spawnSync('bun', command, { cwd: process.cwd(), encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+          const stdout = run.stdout ?? ''
+          const stderr = run.stderr ?? ''
+          process.stdout.write(stdout)
+          process.stderr.write(stderr)
+          const listed = new Set(stdout.split(/\r?\n/).map((line) => line.trim()).filter((line) => path.isAbsolute(line)))
+          const required = [...fixtures, 'apps/cli/src/sucafina-product/native-ui/import-health.ts']
+          const included = required.map((file) => ({ file, included: listed.has(path.join(root, file)) }))
+          const evidence = { source, snapshot: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT, command: ['bun', ...command], config: configPath,
+            compilerStatus: run.status, compilerSignal: run.signal, compilerStarted: !run.error,
+            listedFiles: listed.size, included, pins, wholeProject: false }
+          writeFileSync(path.join(root, 'test-ci-evidence/fixture-types.json'), JSON.stringify(evidence, null, 2) + '\n')
+          writeFileSync(path.join(root, 'test-ci-evidence/fixture-types.log'), stdout + stderr)
+          console.log('SF_NATIVE_FIXTURE_TYPES ' + JSON.stringify(evidence))
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, '\n### Native fixture TypeScript scope\n\n' +
+            '- Source: ' + source + '\n- Snapshot: ' + process.env.GITHUB_SHA +
+            '\n- Compiler exit: ' + String(run.status) + '\n- Listed files: ' + listed.size +
+            '\n- Required inputs present: ' + included.filter((entry) => entry.included).length + '/' + required.length +
+            '\n- Scope: three original fixtures and their transitive imports; not the whole native project.\n')
+          if (run.error) throw run.error
+          if (run.status !== 0) process.exit(run.status ?? 1)
+          assert.ok(included.every((entry) => entry.included), 'Required fixture or original Import producer absent from compiler list')
+          NODE
+
       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
       - name: Run tests
