@@ -319,7 +319,8 @@ test("native menu snapshots the reactive Team owner without accepting extra wire
       contractRevision: "sf-team-profile/1", server: binding.publicOrigin,
       installationId: a.installationId, tenantId: a.tenantId, teamObjectId: a.teamObjectId,
     })
-    for (const team of [{ ...a, principal: principal.principalObjectId }, { ...a, installationId: "foreign" }]) {
+    for (const team of [{ ...a, principal: principal.principalObjectId },
+      Schema.decodeUnknownSync(TeamProfile.Ref)({ ...a, installationId: "foreign" })]) {
       expect(() => ownerModule.sfOwnerQuery({ ...state.selection, team })).toThrow("SF_OWNER_SELECTOR_MISMATCH")
     }
   } finally { f.close() }
