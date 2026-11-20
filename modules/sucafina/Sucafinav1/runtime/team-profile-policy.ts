@@ -16,7 +16,7 @@ export type TeamProfileCatalog = Readonly<{
 }>
 export type TeamProfilePolicyAudit = Readonly<{
   configRevision: number
-  action: TeamProfilePolicyCommand["action"]
+  action: TeamProfilePolicyCommand["action"] | "configuration"
   profile: TeamProfile.Ref
   principal: TeamProfile.Principal
   at: number
@@ -46,4 +46,23 @@ export function teamProfileRef(binding: TeamProfilePolicyBinding, teamObjectId: 
 
 export function sameTeamProfileBinding(profile: TeamProfilePolicyBinding, binding: TeamProfilePolicyBinding) {
   return profile.installationId === binding.installationId && profile.tenantId === binding.tenantId
+}
+
+/** Snapshot before the first await. JSON bytes are shared content, never authority. */
+export function teamConfigurationCommand(value: unknown): TeamProfile.ConfigurationCommand | undefined {
+  const parsed = Schema.decodeUnknownOption(TeamProfile.ConfigurationCommand)(value)
+  if (Option.isNone(parsed)) return undefined
+  const document = freezeTeamConfiguration(parsed.value.document)
+  if (new TextEncoder().encode(JSON.stringify(document)).byteLength > 65536) return undefined
+  return Object.freeze({ profile: Object.freeze({ ...parsed.value.profile }),
+    expectedRevision: parsed.value.expectedRevision, document })
+}
+
+export function freezeTeamConfiguration(value: TeamProfile.ConfigurationDocument): TeamProfile.ConfigurationDocument {
+  const agents = value.settings.agents
+  return Object.freeze({ version: value.version, settings: Object.freeze({
+    ...value.settings,
+    ...(agents ? { agents: Object.freeze(Object.fromEntries(Object.entries(agents).toSorted(([left], [right]) =>
+      left < right ? -1 : left > right ? 1 : 0).map(([id, agent]) => [id, Object.freeze({ ...agent })]))) } : {}),
+  }) })
 }

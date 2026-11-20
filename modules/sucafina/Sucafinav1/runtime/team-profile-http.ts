@@ -2,8 +2,10 @@ import { Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { createTeamProfileResolver } from "./team-profile-resolver.ts"
 
-type Resolver = Pick<ReturnType<typeof createTeamProfileResolver>, "list" | "configure">
+type Resolver = Pick<ReturnType<typeof createTeamProfileResolver>, "list" | "configure"> &
+  Partial<Pick<ReturnType<typeof createTeamProfileResolver>, "configuration" | "configureConfiguration">>
 const maximumBodyBytes = 8192
+const maximumConfigurationBytes = 65536
 const bodyDeadlineMs = 5000
 
 /** This private installation route carries configuration data, never an admitted runtime handle. */
@@ -21,12 +23,16 @@ export function createTeamProfileHttp(options: {
   const installationId = options.installationId
   const tenantId = options.tenantId
   const route = `${options.mount}/api/ui/team-profiles`
-  const resolver = Object.freeze({ list: options.resolver.list, configure: options.resolver.configure })
+  const resolver = Object.freeze({
+    list: options.resolver.list, configure: options.resolver.configure,
+    configuration: options.resolver.configuration, configureConfiguration: options.resolver.configureConfiguration,
+  })
 
   return async (request: Request): Promise<Response | undefined> => {
     const url = new URL(request.url)
-    if (url.pathname !== route) return undefined
-    const respond = (value: TeamProfile.AdminListResult | TeamProfile.AdminConfigureResult, status: number, extra: Record<string, string> = {}) =>
+    const configuration = url.pathname === `${route}/configuration`
+    if (url.pathname !== route && !configuration) return undefined
+    const respond = (value: TeamProfile.AdminListResult | TeamProfile.AdminConfigureResult | TeamProfile.ConfigurationReadResult, status: number, extra: Record<string, string> = {}) =>
       new Response(request.method === "HEAD" ? null : JSON.stringify(value), {
         status,
         headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...extra },
@@ -38,13 +44,29 @@ export function createTeamProfileHttp(options: {
     if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
 
     const query = [...url.searchParams]
-    if (url.hash || query.length !== 3 || new Set(query.map(([key]) => key)).size !== 3 ||
-        query.some(([key]) => !["contractRevision", "installationId", "tenantId"].includes(key)) ||
+    const queryKeys = configuration && request.method === "GET"
+      ? ["contractRevision", "installationId", "tenantId", "teamObjectId"]
+      : ["contractRevision", "installationId", "tenantId"]
+    if (url.hash || query.length !== queryKeys.length || new Set(query.map(([key]) => key)).size !== queryKeys.length ||
+        query.some(([key]) => !queryKeys.includes(key)) ||
         url.searchParams.get("contractRevision") !== "sf-team-profile/1" ||
         !Schema.is(TeamProfile.InstallationId)(url.searchParams.get("installationId")) ||
         !Schema.is(TeamProfile.TenantId)(url.searchParams.get("tenantId"))) return respond({ status: "invalid-request" }, 400)
     if (url.searchParams.get("installationId") !== installationId || url.searchParams.get("tenantId") !== tenantId) return respond({ status: "denied" }, 403)
 
+    if (configuration && request.method === "GET") {
+      const profile = { installationId, tenantId, teamObjectId: url.searchParams.get("teamObjectId") }
+      if (!Schema.is(TeamProfile.Ref)(profile)) return respond({ status: "invalid-request" }, 400)
+      if (!resolver.configuration) return respond({ status: "unavailable", reason: "capability-disabled" }, 503)
+      const result = await resolver.configuration(request, profile)
+        .catch(() => ({ status: "unavailable" as const, reason: "invalid-response" as const }))
+      if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
+      if (!Schema.is(TeamProfile.ConfigurationReadResult)(result) ||
+          result.status === "ok" && (result.configuration.profile.installationId !== installationId ||
+            result.configuration.profile.tenantId !== tenantId || result.configuration.profile.teamObjectId !== profile.teamObjectId))
+        return respond({ status: "unavailable", reason: "invalid-response" }, 503)
+      return respond(result, statusCode(result))
+    }
     if (request.method === "GET") {
       const result = await resolver.list(request).catch(() => ({ status: "unavailable" as const, reason: "invalid-response" as const }))
       if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
@@ -56,9 +78,22 @@ export function createTeamProfileHttp(options: {
         (request.headers.has("content-encoding") && request.headers.get("content-encoding") !== "identity")) return respond({ status: "invalid-request" }, 415)
     const contentLength = request.headers.get("content-length")
     if (contentLength !== null && (!/^\d+$/.test(contentLength) || !Number.isSafeInteger(Number(contentLength)))) return respond({ status: "invalid-request" }, 400)
-    if (contentLength !== null && Number(contentLength) > maximumBodyBytes) return respond({ status: "invalid-request" }, 413)
-    const body = await readCommand(request, contentLength === null ? undefined : Number(contentLength))
+    const bodyLimit = configuration ? maximumConfigurationBytes : maximumBodyBytes
+    if (contentLength !== null && Number(contentLength) > bodyLimit) return respond({ status: "invalid-request" }, 413)
+    const body = await readCommand(request, contentLength === null ? undefined : Number(contentLength), bodyLimit)
     if (body.status !== "parsed") return respond({ status: "invalid-request" }, body.status)
+    if (configuration) {
+      if (!Schema.is(TeamProfile.ConfigurationCommand)(body.value)) return respond({ status: "invalid-request" }, 400)
+      if (body.value.profile.installationId !== installationId || body.value.profile.tenantId !== tenantId)
+        return respond({ status: "denied" }, 403)
+      if (!resolver.configureConfiguration) return respond({ status: "unavailable", reason: "capability-disabled" }, 503)
+      if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
+      const result = await resolver.configureConfiguration(request, body.value)
+        .catch(() => ({ status: "unavailable" as const, reason: "invalid-response" as const }))
+      if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
+      if (!Schema.is(TeamProfile.AdminConfigureResult)(result)) return respond({ status: "unavailable", reason: "invalid-response" }, 503)
+      return respond(result, statusCode(result))
+    }
     if (!Schema.is(TeamProfile.AdminCommand)(body.value)) return respond({ status: "invalid-request" }, 400)
     if (body.value.profile.installationId !== installationId || body.value.profile.tenantId !== tenantId) return respond({ status: "denied" }, 403)
     if (request.signal.aborted) return respond({ status: "unauthenticated" }, 401)
@@ -69,7 +104,7 @@ export function createTeamProfileHttp(options: {
   }
 }
 
-function statusCode(result: TeamProfile.AdminListResult | TeamProfile.AdminConfigureResult) {
+function statusCode(result: TeamProfile.AdminListResult | TeamProfile.AdminConfigureResult | TeamProfile.ConfigurationReadResult) {
   if (result.status === "ok") return 200
   if (result.status === "unauthenticated") return 401
   if (result.status === "denied") return 403
@@ -79,7 +114,7 @@ function statusCode(result: TeamProfile.AdminListResult | TeamProfile.AdminConfi
   return 503
 }
 
-async function readCommand(request: Request, contentLength: number | undefined): Promise<{ status: "parsed"; value: unknown } | { status: 400 | 408 | 413 }> {
+async function readCommand(request: Request, contentLength: number | undefined, maximumBytes: number): Promise<{ status: "parsed"; value: unknown } | { status: 400 | 408 | 413 }> {
   if (!request.body || request.bodyUsed || request.body.locked || request.signal.aborted) return { status: 400 }
   const reader = request.body.getReader()
   const stopped = Promise.withResolvers<never>()
@@ -102,7 +137,7 @@ async function readCommand(request: Request, contentLength: number | undefined):
       if (request.signal.aborted) return { status: 400 }
       if (next.done) break
       size.bytes += next.value.byteLength
-      if (size.bytes > maximumBodyBytes) {
+      if (size.bytes > maximumBytes) {
         stop(413)
         return { status: 413 }
       }

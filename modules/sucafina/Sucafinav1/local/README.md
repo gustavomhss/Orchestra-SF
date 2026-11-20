@@ -185,3 +185,50 @@ Uma réplica e arquivos no mesmo disco não protegem contra perda deste Mac. Um 
 O Planner aceita planilhas `.xlsx` e `.xls` BIFF8 reais, com limites de tamanho, folhas e células, sem executar fórmulas nem aceitar links externos. A exportação All Members do Dashboard pode ser importada diretamente: Summary by Leader é auxiliar e os campos de talento não entram no roster. Em planos desbloqueados, a importação sincroniza as posições atomicamente; em planos bloqueados, apenas o roster é atualizado.
 
 As páginas de negócio consultam alterações a cada 30 segundos enquanto visíveis. Campos modificados e editores abertos impedem a substituição do conteúdo até salvar ou navegar, preservando a escrita em andamento. Os links de notificações abrem o registro correspondente, quando autorizado, inclusive uma requisição fechada.
+
+## Configuração compartilhada de Team (contrato v1)
+
+Uma Team habilitada pode receber um documento compartilhado em
+`<mount>/api/ui/team-profiles/configuration`. A leitura administrativa usa GET
+com a consulta fechada `contractRevision=sf-team-profile/1&installationId=...&tenantId=...&teamObjectId=...`.
+A alteração usa POST com a mesma consulta sem `teamObjectId`, o cookie da sessão
+Microsoft atual, `Origin` igual à origem pública configurada e
+`Content-Type: application/json`.
+
+O corpo contém `profile` completo, `expectedRevision` numérico igual à revisão
+corrente do catálogo e `document: { version: 1, settings: ... }`. A revisão é
+compartilhada com habilitar, desabilitar e remover Teams; uma alteração
+concorrente retorna conflito e exige reler o estado antes de propor outro
+documento. Uma repetição semanticamente idêntica com a revisão corrente não
+cria novo evento de auditoria. A política corrente e o pertencimento ao grupo
+supremo são verificados de novo dentro da escrita.
+
+O subconjunto inicial de `settings` admite `model`, `default_agent` e
+`agents`. Cada agente pode declarar `name`, `description`, `system`,
+`model`, `variant`, `mode`, `hidden` e `disabled`. O identificador de
+modelo usa `provedor/modelo`; o documento não concede acesso ao provedor.
+O leitor recusa campos fora desse contrato, inclusive credenciais, conexões
+pessoais, headers, comandos, providers, MCP, plugins, skills, caminhos,
+permissões e aprovação de ferramentas. Documentos de no máximo 64 KiB e no
+máximo 100 agentes têm limites adicionais por campo.
+
+O GET retorna `origin: "installation-team-store"`, a referência completa da
+Team, a revisão e o documento. Esse rótulo identifica a origem dos dados,
+sem substituir a autorização. O banco privado guarda a configuração e a
+auditoria fora dos snapshots de negócio. Remover uma Team impede a leitura
+ativa de seu documento; a configuração histórica não muda de titular nem é
+reatribuída a outra Team.
+
+No Core corporativo, abrir os serviços de uma localização exige uma
+configuração atual obtida por uma admissão privada de sessão. Um documento
+ausente, uma revisão antiga ou uma sessão revogada impedem a abertura; não
+há descoberta substituta em `orchestra.json`, no diretório global ou em
+`.orchestra`. Serviços mutáveis ficam separados por Team, pessoa, revisões
+e lease da requisição, ainda que usem a mesma pasta técnica. Criar ou ler uma
+sessão continua exigindo as ações explícitas e as ACLs de recurso correntes;
+configurar uma Team não concede essas ações.
+
+Esta fonte fechada ainda não qualifica execução de modelo, credenciais
+pessoais, MCP, plugins, hooks ou tarefas agendadas. Essas fronteiras precisam
+de seus próprios vínculos e verificações de proprietário antes da ativação
+corporativa. Nenhum documento legado é importado ou adotado automaticamente.

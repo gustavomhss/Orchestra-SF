@@ -63,7 +63,7 @@ export async function teamProductFixture(input: {
   const direct = input.direct ?? enabled
   f.provider.directTeams.set(oid, direct.map((profile) => teamRow(profile.teamObjectId)))
   f.provider.directTeams.set(other, direct.map((profile) => teamRow(profile.teamObjectId)))
-  const hooks: { beforeGrants?: () => Promise<void>; beforeCommand?: () => Promise<void>; beforeEnvironment?: () => Promise<void> } = {}
+  const hooks: { beforeGrants?: () => Promise<void>; beforeCommand?: () => Promise<void>; beforeEnvironment?: () => Promise<void>; beforeConfiguration?: () => Promise<void> } = {}
   const technical = Object.freeze({
     installationId, hostId: productHostId, projectId: "synthetic-technical-project",
     location: Location.Ref.make({ directory: AbsolutePath.make(f.workspaceDirectory) }),
@@ -85,6 +85,7 @@ export async function teamProductFixture(input: {
       grants, readGrants: async () => { await hooks.beforeGrants?.(); return f.microsoft.readGrants() },
       teamProfiles: {
         revalidate: installed.resolver.revalidate, revalidateResolution: installed.resolver.revalidateResolution,
+        readConfiguration: async (admission) => { await hooks.beforeConfiguration?.(); return installed.resolver.readConfiguration(admission) },
         resolve: (request) => {
           const selector = readTeamProfileSelector(request, binding)
           return selector ? installed.resolver.resolve(request, selector) : Promise.resolve({ status: "denied" })
