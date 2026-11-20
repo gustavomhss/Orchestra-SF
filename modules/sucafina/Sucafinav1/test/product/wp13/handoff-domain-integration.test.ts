@@ -285,7 +285,7 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
       originalIntent: preparedOriginalIntent(secondRequest, secondChange, choice, reviews.get(secondChange.id)!, binding),
     }
     const reservation = {
-      namespace: "cases", scopeDigest: digestSfValue(["cases"]), principalRef: "principal",
+      namespace: "cases" as const, scopeDigest: digestSfValue(["cases"]), principalRef: "principal",
       targetRef: decision.id, targetIncarnation: decision.incarnation, commandDigest: digestSfValue(attempted),
       storageVersion: applicationBeforeFailure.storageVersion + 1, aggregateRevision: applicationBeforeFailure.aggregateRevision + 1,
       incarnation: applicationBeforeFailure.incarnation, value: attempted,
