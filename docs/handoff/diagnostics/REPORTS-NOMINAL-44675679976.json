@@ -1,0 +1,4760 @@
+{
+  "schema": "reports-retained-nominal-evidence/v1",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "6c6303f5a52cd6123762f8875b33822ba28e1ed8",
+    "snapshot": "46a4d879e86077a6ab35f0fd64b3df86e8807a33",
+    "run": 44675679976,
+    "job": 136086802928,
+    "artifact": 14602935208,
+    "artifactSha256": "5c5c28592f0c20810b162112f1e1c7dce6722607e1a25ff7b471e13a825b35ea",
+    "artifactBytes": 1470718,
+    "attempt": 1
+  },
+  "reader": {
+    "candidate": "d121a4b8e38dbc5facb1c761be3d8db3ca967eb1",
+    "snapshot": "c144b39752a8f38c7d2774ecb1fe435e6fbc0efd",
+    "tree": "11a6166a42f83ecc0bab8a41d501c34b0452d767",
+    "requestBlob": "a1c53721f7e7ec4b112d6d171b4c50c83960c9e7",
+    "run": 44679031600,
+    "job": 136097709971,
+    "cleanupJob": 136098187195,
+    "conclusion": "success",
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 2328.06586,
+    "attempt": 1
+  },
+  "limitations": [
+    "This is a read of one existing artifact, not a product rerun.",
+    "The source nominal remains one passed and three timed out scenarios.",
+    "SCENARIO preserves original runtime JSON metadata; RESULT preserves retained HTML detail separately.",
+    "Step durations are inclusive and may overlap. Parent/child durations must not be added.",
+    "Each transport attachment has its own elapsedMs origin; cross-attachment elapsedMs values are not directly comparable.",
+    "The selected tree is slow >=1000ms, final45 steps, all waits/errors and their ancestors; flatCount/selected/omitted and index/parent disclose selection.",
+    "No trace, Office file, preserved review body, DOM snapshot, header, cookie, token, signed URL or C05 payload was extracted.",
+    "No request/response transport from the C05 click/preflight period is retained in these selected attachments. A pending create waiter does not prove whether its request was sent.",
+    "A download response200 followed by browser ERR_ABORTED does not override the original completed export assertions.",
+    "The connection-refused events appear at the original deadline/teardown and do not prove a primary server crash."
+  ],
+  "records": [
+    {
+      "kind": "PIN",
+      "value": {
+        "originalRun": 44675679976,
+        "originalArtifact": 14602935208,
+        "snapshot": "46a4d879e86077a6ab35f0fd64b3df86e8807a33",
+        "artifactDigest": "5c5c28592f0c20810b162112f1e1c7dce6722607e1a25ff7b471e13a825b35ea",
+        "bytes": 1470718
+      }
+    },
+    {
+      "kind": "SCENARIO",
+      "value": {
+        "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 26,
+          "column": 3
+        },
+        "status": "timedOut",
+        "duration": 180020,
+        "retry": 0,
+        "errors": [
+          [
+            "Test timeout of 180000ms exceeded"
+          ],
+          [
+            "net::ERR_CONNECTION_REFUSED"
+          ],
+          [
+            "Test timeout of 180000ms exceeded"
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 26,
+        "name": "reports-agenda-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-agenda"
+        },
+        "elapsedMs": 1789,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "request",
+            "elapsedMs": 33,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "response",
+            "elapsedMs": 1720,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 26,
+        "name": "reports-report-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-report"
+        },
+        "elapsedMs": 20596,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-report",
+            "kind": "request",
+            "elapsedMs": 41,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 17551,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-report",
+            "kind": "response",
+            "elapsedMs": 20594,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 26,
+        "name": "reports-download-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "GET",
+          "mode": "review-download"
+        },
+        "elapsedMs": 24873,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "request",
+            "elapsedMs": 28,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 6892,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "response",
+            "elapsedMs": 24869,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "requestfailed",
+            "elapsedMs": 24871,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 26,
+        "name": "reports-report-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-report"
+        },
+        "elapsedMs": 39652,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-report",
+            "kind": "request",
+            "elapsedMs": 54,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 745,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 10745,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 30745,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-report",
+            "kind": "response",
+            "elapsedMs": 39651,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 26,
+        "name": "reports-download-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "GET",
+          "mode": "review-download"
+        },
+        "elapsedMs": 34912,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "request",
+            "elapsedMs": 32,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 1032,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 21032,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 31032,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "response",
+            "elapsedMs": 34910,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "requestfailed",
+            "elapsedMs": 34910,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 26,
+        "name": "reports-read-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "GET",
+          "mode": "review-read"
+        },
+        "elapsedMs": 44657,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 88,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 15038,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 25038,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "response",
+            "elapsedMs": 26184,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 26229,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 44589,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "kind": "console",
+            "elapsedMs": 44594,
+            "codes": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "categories": []
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "request",
+            "elapsedMs": 44601,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "requestfailed",
+            "elapsedMs": 44635,
+            "method": "POST",
+            "codes": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "categories": []
+          },
+          {
+            "kind": "console",
+            "elapsedMs": 44635,
+            "codes": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "categories": []
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 44654,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 44656,
+            "method": "GET",
+            "codes": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "categories": []
+          }
+        ]
+      }
+    },
+    {
+      "kind": "SCENARIO",
+      "value": {
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 41,
+          "column": 3
+        },
+        "status": "timedOut",
+        "duration": 180027,
+        "retry": 0,
+        "errors": [
+          [
+            "Test timeout of 180000ms exceeded"
+          ],
+          [
+            "Target page, context or browser has been closed"
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 41,
+        "name": "reports-agenda-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-agenda"
+        },
+        "elapsedMs": 1658,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "request",
+            "elapsedMs": 36,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "response",
+            "elapsedMs": 1604,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 41,
+        "name": "reports-read-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "GET",
+          "mode": "review-read"
+        },
+        "elapsedMs": 20574,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 54,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "response",
+            "elapsedMs": 6304,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 6343,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 8932,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "request",
+            "elapsedMs": 8940,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "response",
+            "elapsedMs": 9003,
+            "method": "POST",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 9015,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "response",
+            "elapsedMs": 15052,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 15065,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 17608,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "request",
+            "elapsedMs": 17616,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "response",
+            "elapsedMs": 17676,
+            "method": "POST",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 17706,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 20244,
+            "method": "GET",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "SCENARIO",
+      "value": {
+        "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 107,
+          "column": 3
+        },
+        "status": "passed",
+        "duration": 67367,
+        "retry": 0,
+        "errors": []
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 107,
+        "name": "reports-agenda-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-agenda"
+        },
+        "elapsedMs": 1705,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "request",
+            "elapsedMs": 35,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "response",
+            "elapsedMs": 1656,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "SCENARIO",
+      "value": {
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 123,
+          "column": 3
+        },
+        "status": "timedOut",
+        "duration": 180020,
+        "retry": 0,
+        "errors": [
+          [
+            "Test timeout of 180000ms exceeded"
+          ],
+          [
+            "Test timeout of 180000ms exceeded"
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 123,
+        "name": "reports-agenda-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-agenda"
+        },
+        "elapsedMs": 1739,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "request",
+            "elapsedMs": 44,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "kind": "response",
+            "elapsedMs": 1686,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 123,
+        "name": "reports-report-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-report"
+        },
+        "elapsedMs": 11914,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-report",
+            "kind": "request",
+            "elapsedMs": 39,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-report",
+            "kind": "response",
+            "elapsedMs": 11913,
+            "method": "POST",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 123,
+        "name": "reports-download-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "GET",
+          "mode": "review-download"
+        },
+        "elapsedMs": 8053,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "request",
+            "elapsedMs": 24,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "response",
+            "elapsedMs": 8050,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-download",
+            "kind": "requestfailed",
+            "elapsedMs": 8051,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "TRANSPORT",
+      "value": {
+        "line": 123,
+        "name": "reports-read-transport",
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "review"
+        },
+        "expected": {
+          "method": "GET",
+          "mode": "review-read"
+        },
+        "elapsedMs": 22391,
+        "dropped": 0,
+        "entries": [
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 71,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 894,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "response",
+            "elapsedMs": 5093,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "requestfailed",
+            "elapsedMs": 5099,
+            "method": "GET",
+            "codes": [
+              "net::ERR_ABORTED"
+            ],
+            "categories": [
+              "aborted"
+            ]
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 5129,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 12234,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "request",
+            "elapsedMs": 12244,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "request",
+            "elapsedMs": 12308,
+            "method": "GET",
+            "resource": "document"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "response",
+            "elapsedMs": 12358,
+            "method": "POST",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review",
+            "kind": "response",
+            "elapsedMs": 17372,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 17386,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 19437,
+            "method": "GET",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "request",
+            "elapsedMs": 19444,
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "other",
+            "kind": "response",
+            "elapsedMs": 19522,
+            "method": "POST",
+            "status": 200
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "request",
+            "elapsedMs": 19524,
+            "method": "GET",
+            "resource": "fetch"
+          },
+          {
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-read",
+            "kind": "response",
+            "elapsedMs": 21591,
+            "method": "GET",
+            "status": 200
+          }
+        ]
+      }
+    },
+    {
+      "kind": "RESULT",
+      "value": {
+        "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 26,
+          "column": 3
+        },
+        "status": "timedOut",
+        "duration": 180020,
+        "errors": [
+          [
+            "Test timeout of 180000ms exceeded"
+          ],
+          [
+            "net::ERR_CONNECTION_REFUSED"
+          ],
+          [
+            "Test timeout of 180000ms exceeded"
+          ]
+        ],
+        "stepCount": 7786,
+        "tree": [
+          {
+            "index": 0,
+            "parent": null,
+            "depth": 0,
+            "title": "Before Hooks",
+            "duration": 3866,
+            "startTime": "2026-11-20T04:39:15.421Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7,
+            "parent": 0,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 3648,
+            "startTime": "2026-11-20T04:39:15.639Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 13,
+            "parent": null,
+            "depth": 0,
+            "title": "Prepare and explicitly preserve the authorized dossier",
+            "duration": 11879,
+            "startTime": "2026-11-20T04:39:19.288Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 29,
+              "column": 23
+            }
+          },
+          {
+            "index": 46,
+            "parent": 13,
+            "depth": 1,
+            "title": "Click locator([quoted]).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 3552,
+            "startTime": "2026-11-20T04:39:19.812Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 32,
+              "column": 76
+            }
+          },
+          {
+            "index": 49,
+            "parent": 13,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 1718,
+            "startTime": "2026-11-20T04:39:23.399Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 41,
+              "column": 30
+            }
+          },
+          {
+            "index": 76,
+            "parent": 13,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 4194,
+            "startTime": "2026-11-20T04:39:25.541Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 74,
+              "column": 32
+            }
+          },
+          {
+            "index": 92,
+            "parent": 13,
+            "depth": 1,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 1326,
+            "startTime": "2026-11-20T04:39:29.816Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 102,
+            "parent": null,
+            "depth": 0,
+            "title": "Edit the real January source once without refreshing the capture",
+            "duration": 2097,
+            "startTime": "2026-11-20T04:39:31.167Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 30,
+              "column": 5
+            }
+          },
+          {
+            "index": 118,
+            "parent": 102,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 463,
+            "startTime": "2026-11-20T04:39:31.829Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 201,
+              "column": 30
+            }
+          },
+          {
+            "index": 131,
+            "parent": 102,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 416,
+            "startTime": "2026-11-20T04:39:32.329Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 225,
+              "column": 28
+            }
+          },
+          {
+            "index": 142,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 2510,
+            "startTime": "2026-11-20T04:39:33.264Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 151,
+            "parent": null,
+            "depth": 0,
+            "title": "Download DOCX and assert values, periods, all identities and the long-note tail",
+            "duration": 46815,
+            "startTime": "2026-11-20T04:39:35.792Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 32,
+              "column": 18
+            }
+          },
+          {
+            "index": 155,
+            "parent": 151,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 20593,
+            "startTime": "2026-11-20T04:39:35.824Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 248,
+              "column": 24
+            }
+          },
+          {
+            "index": 170,
+            "parent": 151,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 24870,
+            "startTime": "2026-11-20T04:39:56.484Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 278,
+              "column": 27
+            }
+          },
+          {
+            "index": 171,
+            "parent": 151,
+            "depth": 1,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 24870,
+            "startTime": "2026-11-20T04:39:56.485Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 281,
+              "column": 18
+            }
+          },
+          {
+            "index": 4175,
+            "parent": null,
+            "depth": 0,
+            "title": "Download PPTX and inspect every content slide",
+            "duration": 75725,
+            "startTime": "2026-11-20T04:40:22.608Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 33,
+              "column": 18
+            }
+          },
+          {
+            "index": 4179,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 39650,
+            "startTime": "2026-11-20T04:40:22.630Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 248,
+              "column": 24
+            }
+          },
+          {
+            "index": 4194,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 34909,
+            "startTime": "2026-11-20T04:41:02.344Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 278,
+              "column": 27
+            }
+          },
+          {
+            "index": 4195,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 34909,
+            "startTime": "2026-11-20T04:41:02.344Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 281,
+              "column": 18
+            }
+          },
+          {
+            "index": 7741,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.324Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7742,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-17",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.324Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7743,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.325Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7744,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-18",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.325Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7745,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.325Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7746,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-19",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.326Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7747,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.326Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7748,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-20",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.326Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7749,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.327Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7750,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-21",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.327Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7751,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.327Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7752,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-22",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.328Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7753,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.328Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7754,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-23",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.328Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7755,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.329Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7756,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-24",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.329Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7757,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.329Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7758,
+            "parent": 4175,
+            "depth": 1,
+            "title": "pptx: exactly one selected source record reports-project-25",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.329Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 49,
+              "column": 128
+            }
+          },
+          {
+            "index": 7759,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.330Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 50,
+              "column": 120
+            }
+          },
+          {
+            "index": 7760,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Attach [quoted]",
+            "duration": 1,
+            "startTime": "2026-11-20T04:41:38.331Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 56,
+              "column": 14
+            }
+          },
+          {
+            "index": 7761,
+            "parent": 4175,
+            "depth": 1,
+            "title": "Attach [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.333Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "ooxml.ts",
+              "line": 57,
+              "column": 14
+            }
+          },
+          {
+            "index": 7762,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.334Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 34,
+              "column": 31
+            }
+          },
+          {
+            "index": 7763,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:41:38.335Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 35,
+              "column": 29
+            }
+          },
+          {
+            "index": 7764,
+            "parent": null,
+            "depth": 0,
+            "title": "Open and reload the real meeting URL",
+            "duration": 44657,
+            "startTime": "2026-11-20T04:41:38.336Z",
+            "failed": true,
+            "error": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 36,
+              "column": 5
+            }
+          },
+          {
+            "index": 7765,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).locator([quoted])",
+            "duration": 9,
+            "startTime": "2026-11-20T04:41:38.338Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 302,
+              "column": 32
+            }
+          },
+          {
+            "index": 7766,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).locator([quoted])",
+            "duration": 13,
+            "startTime": "2026-11-20T04:41:38.348Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 303,
+              "column": 32
+            }
+          },
+          {
+            "index": 7767,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 24,
+            "startTime": "2026-11-20T04:41:38.362Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 305,
+              "column": 24
+            }
+          },
+          {
+            "index": 7768,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 11,
+            "startTime": "2026-11-20T04:41:38.387Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 306,
+              "column": 24
+            }
+          },
+          {
+            "index": 7769,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 44526,
+            "startTime": "2026-11-20T04:41:38.399Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 307,
+              "column": 26
+            }
+          },
+          {
+            "index": 7770,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 26138,
+            "startTime": "2026-11-20T04:41:38.399Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 308,
+              "column": 16
+            }
+          },
+          {
+            "index": 7771,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 5,
+            "startTime": "2026-11-20T04:42:22.965Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 309,
+              "column": 90
+            }
+          },
+          {
+            "index": 7772,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 13,
+            "startTime": "2026-11-20T04:42:22.971Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 311,
+              "column": 27
+            }
+          },
+          {
+            "index": 7773,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted])",
+            "duration": 3,
+            "startTime": "2026-11-20T04:42:22.985Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 312,
+              "column": 47
+            }
+          },
+          {
+            "index": 7774,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 129,
+            "startTime": "2026-11-20T04:42:22.988Z",
+            "failed": true,
+            "error": [
+              "Test timeout of 180000ms exceeded"
+            ],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 314,
+              "column": 25
+            }
+          },
+          {
+            "index": 7775,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Reload",
+            "duration": 3,
+            "startTime": "2026-11-20T04:42:22.989Z",
+            "failed": true,
+            "error": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 315,
+              "column": 16
+            }
+          },
+          {
+            "index": 7776,
+            "parent": 7764,
+            "depth": 1,
+            "title": "Attach [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:42:22.993Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 457,
+              "column": 18
+            }
+          },
+          {
+            "index": 7777,
+            "parent": null,
+            "depth": 0,
+            "title": "After Hooks",
+            "duration": 3873,
+            "startTime": "2026-11-20T04:42:19.251Z",
+            "failed": true,
+            "error": []
+          },
+          {
+            "index": 7778,
+            "parent": 7777,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 3848,
+            "startTime": "2026-11-20T04:42:19.252Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 7779,
+            "parent": 7777,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:42:23.100Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7780,
+            "parent": 7777,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 18,
+            "startTime": "2026-11-20T04:42:23.100Z",
+            "failed": true,
+            "error": []
+          },
+          {
+            "index": 7781,
+            "parent": 7780,
+            "depth": 2,
+            "title": "Close context",
+            "duration": -1,
+            "startTime": "2026-11-20T04:42:23.115Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7782,
+            "parent": null,
+            "depth": 0,
+            "title": "Worker Cleanup",
+            "duration": 24,
+            "startTime": "2026-11-20T04:42:23.125Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7783,
+            "parent": 7782,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:42:23.126Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 21,
+              "column": 13
+            }
+          },
+          {
+            "index": 7784,
+            "parent": 7782,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 22,
+            "startTime": "2026-11-20T04:42:23.126Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7785,
+            "parent": 7782,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:42:23.148Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 21,
+              "column": 13
+            }
+          }
+        ],
+        "flatCount": 7786,
+        "selected": 64,
+        "omitted": 7722
+      }
+    },
+    {
+      "kind": "RESULT",
+      "value": {
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 41,
+          "column": 3
+        },
+        "status": "timedOut",
+        "duration": 180027,
+        "errors": [
+          [
+            "Test timeout of 180000ms exceeded"
+          ],
+          [
+            "Target page, context or browser has been closed"
+          ]
+        ],
+        "stepCount": 195,
+        "tree": [
+          {
+            "index": 0,
+            "parent": null,
+            "depth": 0,
+            "title": "Before Hooks",
+            "duration": 3339,
+            "startTime": "2026-11-20T04:42:23.614Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7,
+            "parent": 0,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 3223,
+            "startTime": "2026-11-20T04:42:23.730Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 45,
+            "parent": null,
+            "depth": 0,
+            "title": "Click locator([quoted]).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 3204,
+            "startTime": "2026-11-20T04:42:27.471Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 32,
+              "column": 76
+            }
+          },
+          {
+            "index": 48,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 1603,
+            "startTime": "2026-11-20T04:42:30.706Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 41,
+              "column": 30
+            }
+          },
+          {
+            "index": 75,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 4104,
+            "startTime": "2026-11-20T04:42:32.679Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 74,
+              "column": 32
+            }
+          },
+          {
+            "index": 91,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 1635,
+            "startTime": "2026-11-20T04:42:36.911Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 116,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 478,
+            "startTime": "2026-11-20T04:42:38.772Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 201,
+              "column": 30
+            }
+          },
+          {
+            "index": 129,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 873,
+            "startTime": "2026-11-20T04:42:39.287Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 225,
+              "column": 28
+            }
+          },
+          {
+            "index": 144,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 8895,
+            "startTime": "2026-11-20T04:42:40.737Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 307,
+              "column": 26
+            }
+          },
+          {
+            "index": 145,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 6278,
+            "startTime": "2026-11-20T04:42:40.738Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 308,
+              "column": 16
+            }
+          },
+          {
+            "index": 149,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 8604,
+            "startTime": "2026-11-20T04:42:49.704Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 314,
+              "column": 25
+            }
+          },
+          {
+            "index": 150,
+            "parent": null,
+            "depth": 0,
+            "title": "Reload",
+            "duration": 6063,
+            "startTime": "2026-11-20T04:42:49.705Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 315,
+              "column": 16
+            }
+          },
+          {
+            "index": 151,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 8,
+            "startTime": "2026-11-20T04:42:58.340Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 316,
+              "column": 89
+            }
+          },
+          {
+            "index": 152,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted])",
+            "duration": 12,
+            "startTime": "2026-11-20T04:42:58.349Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 317,
+              "column": 47
+            }
+          },
+          {
+            "index": 153,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:42:58.362Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 318,
+              "column": 24
+            }
+          },
+          {
+            "index": 154,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { level: 2 })",
+            "duration": 3,
+            "startTime": "2026-11-20T04:42:58.362Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 319,
+              "column": 62
+            }
+          },
+          {
+            "index": 155,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 41,
+            "startTime": "2026-11-20T04:42:58.366Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 320,
+              "column": 76
+            }
+          },
+          {
+            "index": 156,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { level: 2 })",
+            "duration": 2866,
+            "startTime": "2026-11-20T04:42:58.407Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 321,
+              "column": 62
+            }
+          },
+          {
+            "index": 157,
+            "parent": null,
+            "depth": 0,
+            "title": "Attach [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.277Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 457,
+              "column": 18
+            }
+          },
+          {
+            "index": 158,
+            "parent": null,
+            "depth": 0,
+            "title": "Confirm through the installed Review controls against the exact visible preserved projection",
+            "duration": 150776,
+            "startTime": "2026-11-20T04:43:01.278Z",
+            "failed": true,
+            "error": [
+              "Target page, context or browser has been closed"
+            ],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 47,
+              "column": 29
+            }
+          },
+          {
+            "index": 159,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.281Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 22,
+              "column": 20
+            }
+          },
+          {
+            "index": 160,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.281Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 18,
+              "column": 40
+            }
+          },
+          {
+            "index": 161,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.282Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 19,
+              "column": 60
+            }
+          },
+          {
+            "index": 162,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.282Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 26,
+              "column": 18
+            }
+          },
+          {
+            "index": 163,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.283Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 27,
+              "column": 33
+            }
+          },
+          {
+            "index": 164,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:01.283Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 30,
+              "column": 32
+            }
+          },
+          {
+            "index": 165,
+            "parent": 158,
+            "depth": 1,
+            "title": "POST [quoted]",
+            "mode": "review-thread-context",
+            "duration": 13432,
+            "startTime": "2026-11-20T04:43:01.285Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 37,
+              "column": 36
+            }
+          },
+          {
+            "index": 166,
+            "parent": 158,
+            "depth": 1,
+            "title": "review-thread-context",
+            "duration": 1,
+            "startTime": "2026-11-20T04:43:14.718Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 44,
+              "column": 55
+            }
+          },
+          {
+            "index": 167,
+            "parent": 158,
+            "depth": 1,
+            "title": "review-thread-context: ok",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.719Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 49,
+              "column": 95
+            }
+          },
+          {
+            "index": 168,
+            "parent": 158,
+            "depth": 1,
+            "title": "review-thread-context",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.720Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 50,
+              "column": 38
+            }
+          },
+          {
+            "index": 169,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.720Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 37,
+              "column": 18
+            }
+          },
+          {
+            "index": 170,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 1,
+            "startTime": "2026-11-20T04:43:14.720Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 38,
+              "column": 31
+            }
+          },
+          {
+            "index": 171,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.721Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 40,
+              "column": 18
+            }
+          },
+          {
+            "index": 172,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 3,
+            "startTime": "2026-11-20T04:43:14.721Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 43,
+              "column": 28
+            }
+          },
+          {
+            "index": 173,
+            "parent": 158,
+            "depth": 1,
+            "title": "The installed host must provide its authorized recipient and verifiable X-SF-Review-Binding before a C05 mutation getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 2,
+            "startTime": "2026-11-20T04:43:14.724Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 45,
+              "column": 122
+            }
+          },
+          {
+            "index": 174,
+            "parent": 158,
+            "depth": 1,
+            "title": "Select option getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 3,
+            "startTime": "2026-11-20T04:43:14.727Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 46,
+              "column": 66
+            }
+          },
+          {
+            "index": 175,
+            "parent": 158,
+            "depth": 1,
+            "title": "Select option getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 5,
+            "startTime": "2026-11-20T04:43:14.731Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 47,
+              "column": 65
+            }
+          },
+          {
+            "index": 176,
+            "parent": 158,
+            "depth": 1,
+            "title": "Select option getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 2,
+            "startTime": "2026-11-20T04:43:14.737Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 48,
+              "column": 61
+            }
+          },
+          {
+            "index": 177,
+            "parent": 158,
+            "depth": 1,
+            "title": "Fill [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 4,
+            "startTime": "2026-11-20T04:43:14.740Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 50,
+              "column": 76
+            }
+          },
+          {
+            "index": 178,
+            "parent": 158,
+            "depth": 1,
+            "title": "POST [quoted]",
+            "mode": "collaboration-storage-version",
+            "duration": 35,
+            "startTime": "2026-11-20T04:43:14.745Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 37,
+              "column": 36
+            }
+          },
+          {
+            "index": 179,
+            "parent": 158,
+            "depth": 1,
+            "title": "collaboration-storage-version",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.782Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 44,
+              "column": 55
+            }
+          },
+          {
+            "index": 180,
+            "parent": 158,
+            "depth": 1,
+            "title": "collaboration-storage-version: ok",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.782Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 49,
+              "column": 95
+            }
+          },
+          {
+            "index": 181,
+            "parent": 158,
+            "depth": 1,
+            "title": "collaboration-storage-version",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.783Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 50,
+              "column": 38
+            }
+          },
+          {
+            "index": 182,
+            "parent": 158,
+            "depth": 1,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:43:14.785Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "lost-created-thread-read.ts",
+              "line": 28,
+              "column": 64
+            }
+          },
+          {
+            "index": 183,
+            "parent": 158,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 137262,
+            "startTime": "2026-11-20T04:43:14.785Z",
+            "failed": true,
+            "error": [
+              "Test timeout of 180000ms exceeded"
+            ],
+            "location": {
+              "file": "lost-created-thread-read.ts",
+              "line": 29,
+              "column": 32
+            }
+          },
+          {
+            "index": 184,
+            "parent": 158,
+            "depth": 1,
+            "title": "Wait for event [quoted]",
+            "duration": 137259,
+            "startTime": "2026-11-20T04:43:14.788Z",
+            "failed": true,
+            "error": [
+              "Test timeout of 180000ms exceeded"
+            ],
+            "location": {
+              "file": "lost-created-thread-read.ts",
+              "line": 64,
+              "column": 25
+            }
+          },
+          {
+            "index": 185,
+            "parent": 158,
+            "depth": 1,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 37,
+            "startTime": "2026-11-20T04:43:14.788Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "lost-created-thread-read.ts",
+              "line": 65,
+              "column": 90
+            }
+          },
+          {
+            "index": 186,
+            "parent": null,
+            "depth": 0,
+            "title": "After Hooks",
+            "duration": 5156,
+            "startTime": "2026-11-20T04:45:26.906Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 187,
+            "parent": 186,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 5122,
+            "startTime": "2026-11-20T04:45:26.907Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 188,
+            "parent": 186,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:45:32.029Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 189,
+            "parent": 186,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 26,
+            "startTime": "2026-11-20T04:45:32.029Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 190,
+            "parent": 189,
+            "depth": 2,
+            "title": "Close context",
+            "duration": 9,
+            "startTime": "2026-11-20T04:45:32.045Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 191,
+            "parent": null,
+            "depth": 0,
+            "title": "Worker Cleanup",
+            "duration": 24,
+            "startTime": "2026-11-20T04:45:32.062Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 192,
+            "parent": 191,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:45:32.062Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 21,
+              "column": 13
+            }
+          },
+          {
+            "index": 193,
+            "parent": 191,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 23,
+            "startTime": "2026-11-20T04:45:32.062Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 194,
+            "parent": 191,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:45:32.086Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 21,
+              "column": 13
+            }
+          }
+        ],
+        "flatCount": 195,
+        "selected": 56,
+        "omitted": 139
+      }
+    },
+    {
+      "kind": "RESULT",
+      "value": {
+        "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 107,
+          "column": 3
+        },
+        "status": "passed",
+        "duration": 67367,
+        "errors": [],
+        "stepCount": 228,
+        "tree": [
+          {
+            "index": 0,
+            "parent": null,
+            "depth": 0,
+            "title": "Before Hooks",
+            "duration": 3289,
+            "startTime": "2026-11-20T04:45:32.486Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 7,
+            "parent": 0,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 3180,
+            "startTime": "2026-11-20T04:45:32.595Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 48,
+            "parent": null,
+            "depth": 0,
+            "title": "Click locator([quoted]).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 3286,
+            "startTime": "2026-11-20T04:45:36.348Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 32,
+              "column": 76
+            }
+          },
+          {
+            "index": 51,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 1654,
+            "startTime": "2026-11-20T04:45:39.667Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 41,
+              "column": 30
+            }
+          },
+          {
+            "index": 73,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 2086,
+            "startTime": "2026-11-20T04:45:41.431Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 104,
+              "column": 24
+            }
+          },
+          {
+            "index": 97,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 4180,
+            "startTime": "2026-11-20T04:45:43.824Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 74,
+              "column": 32
+            }
+          },
+          {
+            "index": 113,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 1886,
+            "startTime": "2026-11-20T04:45:48.069Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 142,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 472,
+            "startTime": "2026-11-20T04:45:50.260Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 201,
+              "column": 30
+            }
+          },
+          {
+            "index": 155,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 433,
+            "startTime": "2026-11-20T04:45:50.767Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 225,
+              "column": 28
+            }
+          },
+          {
+            "index": 166,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 2596,
+            "startTime": "2026-11-20T04:45:51.746Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 176,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 21116,
+            "startTime": "2026-11-20T04:45:54.393Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 146,
+              "column": 21
+            }
+          },
+          {
+            "index": 183,
+            "parent": null,
+            "depth": 0,
+            "title": "The installed URL must identify the confirmed review state without Reports form parameters",
+            "duration": 2,
+            "startTime": "2026-11-20T04:46:15.558Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 140,
+              "column": 116
+            }
+          },
+          {
+            "index": 184,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:15.561Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 151,
+              "column": 6
+            }
+          },
+          {
+            "index": 185,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:15.561Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 152,
+              "column": 117
+            }
+          },
+          {
+            "index": 186,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 20062,
+            "startTime": "2026-11-20T04:46:15.562Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 153,
+              "column": 25
+            }
+          },
+          {
+            "index": 187,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 69,
+            "startTime": "2026-11-20T04:46:15.563Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 154,
+              "column": 88
+            }
+          },
+          {
+            "index": 188,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.625Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 156,
+              "column": 29
+            }
+          },
+          {
+            "index": 189,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.626Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 157,
+              "column": 45
+            }
+          },
+          {
+            "index": 190,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.665Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 159,
+              "column": 23
+            }
+          },
+          {
+            "index": 191,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.665Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 26,
+              "column": 48
+            }
+          },
+          {
+            "index": 192,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.666Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 27,
+              "column": 42
+            }
+          },
+          {
+            "index": 193,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.666Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 28,
+              "column": 42
+            }
+          },
+          {
+            "index": 194,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.666Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 161,
+              "column": 23
+            }
+          },
+          {
+            "index": 195,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.667Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 162,
+              "column": 34
+            }
+          },
+          {
+            "index": 196,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.667Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 163,
+              "column": 57
+            }
+          },
+          {
+            "index": 197,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.668Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 164,
+              "column": 57
+            }
+          },
+          {
+            "index": 198,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.668Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 18,
+              "column": 40
+            }
+          },
+          {
+            "index": 199,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.669Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 19,
+              "column": 60
+            }
+          },
+          {
+            "index": 200,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:35.669Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 166,
+              "column": 6
+            }
+          },
+          {
+            "index": 201,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted])",
+            "duration": 12,
+            "startTime": "2026-11-20T04:46:35.670Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 167,
+              "column": 49
+            }
+          },
+          {
+            "index": 202,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted]).filter({ has: getByRole([quoted], { name: [quoted], exact: true }) }).getByRol",
+            "duration": 23,
+            "startTime": "2026-11-20T04:46:35.683Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 170,
+              "column": 6
+            }
+          },
+          {
+            "index": 203,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 4391,
+            "startTime": "2026-11-20T04:46:35.707Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 204,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 1,
+            "startTime": "2026-11-20T04:46:40.099Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 55,
+              "column": 29
+            }
+          },
+          {
+            "index": 205,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:40.100Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 56,
+              "column": 47
+            }
+          },
+          {
+            "index": 206,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:40.103Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 58,
+              "column": 23
+            }
+          },
+          {
+            "index": 207,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:40.104Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 26,
+              "column": 48
+            }
+          },
+          {
+            "index": 208,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:40.104Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 27,
+              "column": 42
+            }
+          },
+          {
+            "index": 209,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:40.105Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 28,
+              "column": 42
+            }
+          },
+          {
+            "index": 210,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:40.105Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 60,
+              "column": 20
+            }
+          },
+          {
+            "index": 211,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 8,
+            "startTime": "2026-11-20T04:46:40.105Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 171,
+              "column": 70
+            }
+          },
+          {
+            "index": 212,
+            "parent": null,
+            "depth": 0,
+            "title": "The installed URL must identify the confirmed review state without Reports form parameters",
+            "duration": 2,
+            "startTime": "2026-11-20T04:46:40.114Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 140,
+              "column": 116
+            }
+          },
+          {
+            "index": 213,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 2966,
+            "startTime": "2026-11-20T04:46:40.116Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 214,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.083Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 55,
+              "column": 29
+            }
+          },
+          {
+            "index": 215,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.083Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 56,
+              "column": 47
+            }
+          },
+          {
+            "index": 216,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.086Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 58,
+              "column": 23
+            }
+          },
+          {
+            "index": 217,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.087Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 26,
+              "column": 48
+            }
+          },
+          {
+            "index": 218,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.087Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 27,
+              "column": 42
+            }
+          },
+          {
+            "index": 219,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.088Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 28,
+              "column": 42
+            }
+          },
+          {
+            "index": 220,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.088Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 60,
+              "column": 20
+            }
+          },
+          {
+            "index": 221,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 7,
+            "startTime": "2026-11-20T04:46:43.088Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 173,
+              "column": 69
+            }
+          },
+          {
+            "index": 222,
+            "parent": null,
+            "depth": 0,
+            "title": "Attach [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:43.095Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 116,
+              "column": 16
+            }
+          },
+          {
+            "index": 223,
+            "parent": null,
+            "depth": 0,
+            "title": "After Hooks",
+            "duration": 5123,
+            "startTime": "2026-11-20T04:46:43.095Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 224,
+            "parent": 223,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 5113,
+            "startTime": "2026-11-20T04:46:43.096Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 225,
+            "parent": 223,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:46:48.210Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 226,
+            "parent": 223,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 5,
+            "startTime": "2026-11-20T04:46:48.210Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 227,
+            "parent": 226,
+            "depth": 2,
+            "title": "Close context",
+            "duration": 4,
+            "startTime": "2026-11-20T04:46:48.211Z",
+            "failed": false,
+            "error": []
+          }
+        ],
+        "flatCount": 228,
+        "selected": 56,
+        "omitted": 172
+      }
+    },
+    {
+      "kind": "RESULT",
+      "value": {
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "location": {
+          "file": "reports.spec.ts",
+          "line": 123,
+          "column": 3
+        },
+        "status": "timedOut",
+        "duration": 180020,
+        "errors": [
+          [
+            "Test timeout of 180000ms exceeded"
+          ],
+          [
+            "Test timeout of 180000ms exceeded"
+          ]
+        ],
+        "stepCount": 4174,
+        "tree": [
+          {
+            "index": 0,
+            "parent": null,
+            "depth": 0,
+            "title": "Before Hooks",
+            "duration": 2686,
+            "startTime": "2026-11-20T04:46:48.220Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 5,
+            "parent": 0,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 2657,
+            "startTime": "2026-11-20T04:46:48.249Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 43,
+            "parent": null,
+            "depth": 0,
+            "title": "Click locator([quoted]).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 3395,
+            "startTime": "2026-11-20T04:46:51.393Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 32,
+              "column": 76
+            }
+          },
+          {
+            "index": 46,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 1684,
+            "startTime": "2026-11-20T04:46:54.821Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 41,
+              "column": 30
+            }
+          },
+          {
+            "index": 73,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 4228,
+            "startTime": "2026-11-20T04:46:56.848Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 74,
+              "column": 32
+            }
+          },
+          {
+            "index": 89,
+            "parent": null,
+            "depth": 0,
+            "title": "GET [quoted]",
+            "mode": "review-read",
+            "duration": 1358,
+            "startTime": "2026-11-20T04:47:01.141Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 54,
+              "column": 34
+            }
+          },
+          {
+            "index": 102,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 11912,
+            "startTime": "2026-11-20T04:47:02.588Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 248,
+              "column": 24
+            }
+          },
+          {
+            "index": 117,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 8051,
+            "startTime": "2026-11-20T04:47:14.570Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 278,
+              "column": 27
+            }
+          },
+          {
+            "index": 118,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 8051,
+            "startTime": "2026-11-20T04:47:14.571Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 281,
+              "column": 18
+            }
+          },
+          {
+            "index": 4126,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 12176,
+            "startTime": "2026-11-20T04:47:23.962Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 307,
+              "column": 26
+            }
+          },
+          {
+            "index": 4127,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 5045,
+            "startTime": "2026-11-20T04:47:23.963Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 308,
+              "column": 16
+            }
+          },
+          {
+            "index": 4129,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 10,
+            "startTime": "2026-11-20T04:47:36.195Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 311,
+              "column": 27
+            }
+          },
+          {
+            "index": 4130,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted])",
+            "duration": 3,
+            "startTime": "2026-11-20T04:47:36.206Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 312,
+              "column": 47
+            }
+          },
+          {
+            "index": 4131,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 7131,
+            "startTime": "2026-11-20T04:47:36.210Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 314,
+              "column": 25
+            }
+          },
+          {
+            "index": 4132,
+            "parent": null,
+            "depth": 0,
+            "title": "Reload",
+            "duration": 5084,
+            "startTime": "2026-11-20T04:47:36.210Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 315,
+              "column": 16
+            }
+          },
+          {
+            "index": 4133,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 8,
+            "startTime": "2026-11-20T04:47:43.373Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 316,
+              "column": 89
+            }
+          },
+          {
+            "index": 4134,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted])",
+            "duration": 10,
+            "startTime": "2026-11-20T04:47:43.382Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 317,
+              "column": 47
+            }
+          },
+          {
+            "index": 4135,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:43.393Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 318,
+              "column": 24
+            }
+          },
+          {
+            "index": 4136,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { level: 2 })",
+            "duration": 3,
+            "startTime": "2026-11-20T04:47:43.394Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 319,
+              "column": 62
+            }
+          },
+          {
+            "index": 4137,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 31,
+            "startTime": "2026-11-20T04:47:43.398Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 320,
+              "column": 76
+            }
+          },
+          {
+            "index": 4138,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { level: 2 })",
+            "duration": 2864,
+            "startTime": "2026-11-20T04:47:43.430Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 321,
+              "column": 62
+            }
+          },
+          {
+            "index": 4139,
+            "parent": null,
+            "depth": 0,
+            "title": "Attach [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:46.296Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "review-flow.ts",
+              "line": 457,
+              "column": 18
+            }
+          },
+          {
+            "index": 4140,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:46.298Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 22,
+              "column": 20
+            }
+          },
+          {
+            "index": 4141,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:46.298Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 18,
+              "column": 40
+            }
+          },
+          {
+            "index": 4142,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:46.299Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "model.ts",
+              "line": 19,
+              "column": 60
+            }
+          },
+          {
+            "index": 4143,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:46.299Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 26,
+              "column": 18
+            }
+          },
+          {
+            "index": 4144,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:46.299Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 27,
+              "column": 33
+            }
+          },
+          {
+            "index": 4145,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 1,
+            "startTime": "2026-11-20T04:47:46.299Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 30,
+              "column": 32
+            }
+          },
+          {
+            "index": 4146,
+            "parent": null,
+            "depth": 0,
+            "title": "POST [quoted]",
+            "mode": "review-thread-context",
+            "duration": 11172,
+            "startTime": "2026-11-20T04:47:46.301Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 37,
+              "column": 36
+            }
+          },
+          {
+            "index": 4147,
+            "parent": null,
+            "depth": 0,
+            "title": "review-thread-context",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.474Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 44,
+              "column": 55
+            }
+          },
+          {
+            "index": 4148,
+            "parent": null,
+            "depth": 0,
+            "title": "review-thread-context: ok",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.474Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 49,
+              "column": 95
+            }
+          },
+          {
+            "index": 4149,
+            "parent": null,
+            "depth": 0,
+            "title": "review-thread-context",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.475Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 50,
+              "column": 38
+            }
+          },
+          {
+            "index": 4150,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.475Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 37,
+              "column": 18
+            }
+          },
+          {
+            "index": 4151,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.475Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 38,
+              "column": 31
+            }
+          },
+          {
+            "index": 4152,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.476Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 40,
+              "column": 18
+            }
+          },
+          {
+            "index": 4153,
+            "parent": null,
+            "depth": 0,
+            "title": "Expect [quoted] getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 3,
+            "startTime": "2026-11-20T04:47:57.476Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 43,
+              "column": 28
+            }
+          },
+          {
+            "index": 4154,
+            "parent": null,
+            "depth": 0,
+            "title": "The installed host must provide its authorized recipient and verifiable X-SF-Review-Binding before a C05 mutation getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 2,
+            "startTime": "2026-11-20T04:47:57.479Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 45,
+              "column": 122
+            }
+          },
+          {
+            "index": 4155,
+            "parent": null,
+            "depth": 0,
+            "title": "Select option getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 4,
+            "startTime": "2026-11-20T04:47:57.481Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 46,
+              "column": 66
+            }
+          },
+          {
+            "index": 4156,
+            "parent": null,
+            "depth": 0,
+            "title": "Select option getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 6,
+            "startTime": "2026-11-20T04:47:57.486Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 47,
+              "column": 65
+            }
+          },
+          {
+            "index": 4157,
+            "parent": null,
+            "depth": 0,
+            "title": "Select option getByRole([quoted], { name: [quoted], exact: true }).getByLabel([quoted], { exact: true })",
+            "duration": 3,
+            "startTime": "2026-11-20T04:47:57.493Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 48,
+              "column": 61
+            }
+          },
+          {
+            "index": 4158,
+            "parent": null,
+            "depth": 0,
+            "title": "Fill [quoted] getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 4,
+            "startTime": "2026-11-20T04:47:57.497Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 50,
+              "column": 76
+            }
+          },
+          {
+            "index": 4159,
+            "parent": null,
+            "depth": 0,
+            "title": "POST [quoted]",
+            "mode": "collaboration-storage-version",
+            "duration": 48,
+            "startTime": "2026-11-20T04:47:57.502Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 37,
+              "column": 36
+            }
+          },
+          {
+            "index": 4160,
+            "parent": null,
+            "depth": 0,
+            "title": "collaboration-storage-version",
+            "duration": 3,
+            "startTime": "2026-11-20T04:47:57.554Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 44,
+              "column": 55
+            }
+          },
+          {
+            "index": 4161,
+            "parent": null,
+            "depth": 0,
+            "title": "collaboration-storage-version: ok",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.558Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 49,
+              "column": 95
+            }
+          },
+          {
+            "index": 4162,
+            "parent": null,
+            "depth": 0,
+            "title": "collaboration-storage-version",
+            "duration": 0,
+            "startTime": "2026-11-20T04:47:57.559Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "confirmation.ts",
+              "line": 50,
+              "column": 38
+            }
+          },
+          {
+            "index": 4163,
+            "parent": null,
+            "depth": 0,
+            "title": "Wait for event [quoted]",
+            "duration": 118466,
+            "startTime": "2026-11-20T04:47:57.560Z",
+            "failed": true,
+            "error": [
+              "Test timeout of 180000ms exceeded"
+            ],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 170,
+              "column": 24
+            }
+          },
+          {
+            "index": 4164,
+            "parent": null,
+            "depth": 0,
+            "title": "Click getByRole([quoted], { name: [quoted], exact: true }).getByRole([quoted], { name: [quoted], exact: true })",
+            "duration": 57,
+            "startTime": "2026-11-20T04:47:57.561Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "human-answer-flow.ts",
+              "line": 171,
+              "column": 16
+            }
+          },
+          {
+            "index": 4165,
+            "parent": null,
+            "depth": 0,
+            "title": "After Hooks",
+            "duration": 5155,
+            "startTime": "2026-11-20T04:49:50.881Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 4166,
+            "parent": 4165,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 5127,
+            "startTime": "2026-11-20T04:49:50.882Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "fixture.ts",
+              "line": 7,
+              "column": 33
+            }
+          },
+          {
+            "index": 4167,
+            "parent": 4165,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:49:56.010Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 4168,
+            "parent": 4165,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 19,
+            "startTime": "2026-11-20T04:49:56.010Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 4169,
+            "parent": 4168,
+            "depth": 2,
+            "title": "Close context",
+            "duration": 5,
+            "startTime": "2026-11-20T04:49:56.024Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 4170,
+            "parent": null,
+            "depth": 0,
+            "title": "Worker Cleanup",
+            "duration": 28,
+            "startTime": "2026-11-20T04:49:56.036Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 4171,
+            "parent": 4170,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:49:56.037Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 21,
+              "column": 13
+            }
+          },
+          {
+            "index": 4172,
+            "parent": 4170,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 26,
+            "startTime": "2026-11-20T04:49:56.037Z",
+            "failed": false,
+            "error": []
+          },
+          {
+            "index": 4173,
+            "parent": 4170,
+            "depth": 1,
+            "title": "Fixture [quoted]",
+            "duration": 0,
+            "startTime": "2026-11-20T04:49:56.063Z",
+            "failed": false,
+            "error": [],
+            "location": {
+              "file": "reports.spec.ts",
+              "line": 21,
+              "column": 13
+            }
+          }
+        ],
+        "flatCount": 4174,
+        "selected": 56,
+        "omitted": 4118
+      }
+    },
+    {
+      "kind": "SUMMARY",
+      "value": {
+        "originalRun": 44675679976,
+        "originalArtifact": 14602935208,
+        "snapshot": "46a4d879e86077a6ab35f0fd64b3df86e8807a33",
+        "artifactDigest": "5c5c28592f0c20810b162112f1e1c7dce6722607e1a25ff7b471e13a825b35ea",
+        "inspected": 4,
+        "installations": 4,
+        "source": "retained-html",
+        "tracesRead": 0,
+        "productTestsRun": 0
+      }
+    }
+  ]
+}

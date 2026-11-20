@@ -99,7 +99,7 @@ removed. The qualified archive-size and depth limits remain unchanged. The
 old scenario counts were 7781, 240, 213 and 4236; they are schema evidence,
 not counts or results attributed to the current nominal.
 
-## Isolated workflow and pending gate
+## Isolated workflow and qualified reader
 
 The only changes to `.github/workflows/test-ci.yml` are `actions: read` in
 its existing read permission block and `REPORTS_ARTIFACT_TOKEN: github.token`
@@ -119,6 +119,91 @@ The planned request is the same qualified node-reader request
 }
 ```
 
-The reader is prepared with `[skip ci]`. Its single CI snapshot will add only
-the request after cold review and authorization. No product compiler, browser
-retry, nominal rerun, integration or sf-ci execution is part of this work.
+The reader was prepared and reviewed at
+`d121a4b8e38dbc5facb1c761be3d8db3ca967eb1` with `[skip ci]`.
+Its single CI snapshot `c144b39752a8f38c7d2774ecb1fe435e6fbc0efd`
+(tree `11a6166a42f83ecc0bab8a41d501c34b0452d767`) added only the
+qualified request. Reader run `44679031600`, job `136097709971`:
+**1 passed / 0 failed / 0 skipped, 2328.06586 ms**, attempt 1.
+Cleanup `136098187195` succeeded. No product compiler, browser retry,
+nominal rerun, integration or sf-ci execution was performed.
+
+
+## Observed result and remaining uncertainty
+
+The durable sanitized records are
+[REPORTS-NOMINAL-44675679976.json](REPORTS-NOMINAL-44675679976.json).
+The reader verified the actual ZIP digest/length, all four installation
+manifests, four runtime JSON results, four retained HTML trees and 13 existing
+transport attachments. It read zero traces and ran zero product tests.
+
+| Scenario | Original status | Duration from runtime JSON |
+| --- | --- | ---: |
+| RPT-01 | timedOut | 180020 ms |
+| RPT-02 | timedOut | 180027 ms |
+| RPT-03 | passed | 67367 ms |
+| RPT-04 | timedOut | 180020 ms |
+
+HTML metadata reports the same durations in this artifact; no equality
+requirement was imposed by the reader. The detailed/selected/omitted step
+counts are RPT-01 7786/64/7722, RPT-02 195/56/139, RPT-03 228/56/172 and
+RPT-04 4174/56/4118.
+
+### RPT-01: export and first meeting open consume the available time
+
+The DOCX export step completed in 46815 ms; the PPTX step completed in
+75725 ms. These are original whole-step durations, including their own
+assertions. The request-to-response intervals below are arithmetic
+differences within each retained transport attachment, not CPU measurements:
+
+| Observed request | Response | Interval |
+| --- | ---: | ---: |
+| First review-report POST (DOCX) | 200 | 20594 - 41 = 20553 ms |
+| First review-download GET | 200 | 24869 - 28 = 24841 ms |
+| Second review-report POST (PPTX) | 200 | 39651 - 54 = 39597 ms |
+| Second review-download GET | 200 | 34910 - 32 = 34878 ms |
+| Meeting review HTML GET | 200 | 26184 - 88 = 26096 ms |
+| Following review-read JSON GET | 200 | 44589 - 26229 = 18360 ms |
+
+The HTML interval is distinguishable from an overlapping review fetch:
+that fetch started at 15038 ms and failed at 25038 ms before the document
+response. The meeting step (`reports.spec.ts:36`) lasted 44657 ms;
+its first review-read waiter (`review-flow.ts:307`) completed in 44526 ms.
+Only then was the reload waiter armed at `review-flow.ts:314`; it lasted
+129 ms and reached the original deadline. Transport records show connection
+refused at the end, including the reload document request at 44654 ms and
+failure at 44656 ms. They do not establish a primary server crash.
+
+Some download/navigation fetches record ERR_ABORTED, including document
+download responses already observed as 200. The original complete export
+steps passed their assertions. Background review GETs overlapped exports;
+this evidence does not attribute a performance cost or cause to them.
+
+### RPT-02 and RPT-04: initial creation wait, not later answer/recovery stages
+
+RPT-02's real helper POST review-thread-context completed in 13432 ms at
+`confirmation.ts:37`, followed by successful context assertions; its
+storage-version helper call completed in 35 ms. The subsequent UI click at
+`lost-created-thread-read.ts:65` completed in 37 ms. The initial create
+receipt waiter at `:29` remained pending for 137262 ms, and the expected
+read-loss requestfailed waiter at `:64` for 137259 ms. The code did not
+advance to reconciliation (`:78`), focus refresh (`:92-96`) or exact
+explicit retry (`:114-116`). The finally/unroute error at `:142` masked
+this initial wait.
+
+RPT-04's helper context POST completed in 11172 ms, then storage-version in
+48 ms. The Ask click at `human-answer-flow.ts:171` completed in 57 ms.
+The create response waiter at `:170`, called from `:54`, remained pending
+for 118466 ms. No reply, answer confirmation or revocation stage was reached.
+
+Those direct helper calls are different invocations from the browser UI's
+own context/version preflight. The existing transport observer ends before
+the C05 click period, so these retained records do not prove whether the UI
+sent thread-create, received a preflight error, or waited on an unfinished
+request. That is the concrete remaining evidence gap. A completed click is
+not proof of completed asynchronous browser work.
+
+All times are inclusive retained observations and may include teardown
+settlement. Do not sum parent and child spans or compare elapsedMs origins
+across transport attachments. This reader closes no product gate and
+authorizes no retry.
