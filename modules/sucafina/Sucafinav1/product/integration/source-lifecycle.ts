@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto"
+import { c17BoundaryStart, c17BoundaryEnd, c17BoundaryMeasure } from "../../runtime/audit-c17-boundary-profile.ts"
 import { types } from "node:util"
 import { currentLocalReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
@@ -105,23 +106,26 @@ export function createSfSourcePersistence(input: {
     return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
   }
   const guard = (surface: Surface, snapshot: Snapshot) => {
-    const before = digestSfValue(snapshot.sfSources)
+    const before = c17BoundaryMeasure(1, () => digestSfValue(snapshot.sfSources))
     const auditStart = snapshot.audit.length
-    const auditPrefix = digestSfValue(snapshot.audit)
+    const auditPrefix = c17BoundaryMeasure(2, () => digestSfValue(snapshot.audit))
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     return () => {
-      requireSourceIdentities(snapshot)
-      if (before !== digestSfValue(snapshot.sfSources) && !sanctionedIdentity.has(snapshot)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
-      if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
-      const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
-      if (input.purpose === "business-restore") {
-        if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
-        if (productState === undefined) delete snapshot.data.__sfProductV1
-        if (productState !== undefined) snapshot.data.__sfProductV1 = productState
-      }
-      synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, replacement)
-      synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
-      requireSourceIdentities(snapshot)
+      const diagnosticStarted = c17BoundaryStart()
+      try {
+        requireSourceIdentities(snapshot)
+        if (before !== digestSfValue(snapshot.sfSources) && !sanctionedIdentity.has(snapshot)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+        if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
+        const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
+        if (input.purpose === "business-restore") {
+          if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
+          if (productState === undefined) delete snapshot.data.__sfProductV1
+          if (productState !== undefined) snapshot.data.__sfProductV1 = productState
+        }
+        synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, replacement)
+        synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
+        requireSourceIdentities(snapshot)
+      } finally { c17BoundaryEnd(diagnosticStarted, 4) }
     }
   }
   const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
@@ -186,7 +190,7 @@ export function createSfSourcePersistence(input: {
       input.persistence.transactionAll!(async (snapshots) => {
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const original = surfaces.map((surface) => snapshots[surface])
-        const before = surfaces.map((surface) => digestSfValue(snapshots[surface]))
+        const before = c17BoundaryMeasure(3, () => surfaces.map((surface) => digestSfValue(snapshots[surface])))
         const finish = surfaces.map((surface) => guard(surface, snapshots[surface]))
         const result = await work(snapshots)
         if (result.commit) {
@@ -255,9 +259,12 @@ function synchronizeSources(snapshot: Snapshot, entries: readonly SfSourceIdenti
 }
 
 function requireSourceIdentities(snapshot: Snapshot) {
-  const state = snapshot.sfSources
-  if (!state || state.schemaVersion !== 1 || !state.records || Array.isArray(state.records) || Object.values(state.records).some((entry) => !entry || typeof entry.incarnation !== "string" || !entry.incarnation.trim() || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest))) throw new Error("SF_SOURCE_IDENTITIES_UNAVAILABLE")
-  if (state.scopes !== undefined && (!state.scopes || typeof state.scopes !== "object" || Array.isArray(state.scopes) || Object.entries(state.scopes).some(([key, entry]) => !entry || !entry.scope || key !== digestSfValue(entry.scope) || ![entry.scope.principalRef, entry.scope.accessRevision, entry.scope.policyVersion, entry.scope.recordType, entry.scope.recordId, entry.incarnation, entry.sourceIncarnation].every((value) => typeof value === "string" && !!value.trim()) || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest)))) throw new Error("SF_SOURCE_SCOPES_UNAVAILABLE")
+  const diagnosticStarted = c17BoundaryStart()
+  try {
+    const state = snapshot.sfSources
+    if (!state || state.schemaVersion !== 1 || !state.records || Array.isArray(state.records) || Object.values(state.records).some((entry) => !entry || typeof entry.incarnation !== "string" || !entry.incarnation.trim() || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest))) throw new Error("SF_SOURCE_IDENTITIES_UNAVAILABLE")
+    if (state.scopes !== undefined && (!state.scopes || typeof state.scopes !== "object" || Array.isArray(state.scopes) || Object.entries(state.scopes).some(([key, entry]) => !entry || !entry.scope || key !== digestSfValue(entry.scope) || ![entry.scope.principalRef, entry.scope.accessRevision, entry.scope.policyVersion, entry.scope.recordType, entry.scope.recordId, entry.incarnation, entry.sourceIncarnation].every((value) => typeof value === "string" && !!value.trim()) || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest)))) throw new Error("SF_SOURCE_SCOPES_UNAVAILABLE")
+  } finally { c17BoundaryEnd(diagnosticStarted, 5) }
 }
 
 /** Recomputed at every durable write, including intermediate A→B→A writes without a reader. */

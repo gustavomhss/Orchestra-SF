@@ -1,4 +1,5 @@
 import { types } from "node:util"
+import { c17BoundaryMeasure } from "../../runtime/audit-c17-boundary-profile.ts"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
@@ -253,7 +254,7 @@ export function createSfProductState(input: {
           : selectedResults ? await read(selectedResults, authority)
           : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
           : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
-          : await read(structuredClone(state), authority)
+          : await read(c17BoundaryMeasure(6, () => structuredClone(state)), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, mode)
         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
