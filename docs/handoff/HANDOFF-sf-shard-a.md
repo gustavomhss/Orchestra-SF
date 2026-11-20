@@ -52,7 +52,7 @@ Prefixo dos caminhos abaixo: `modules/sucafina/Sucafinav1/test/`.
 
 | File:line | Classificação / evidência |
 | --- | --- |
-| `product/mixed-source-contracts/recorded-fallback.test.ts:11` | Deadline cooperativo 165000ms; proof emitido depois das asserções; encerramento excede orçamento. Desempenho/cleanup sem await caro isolado. |
+| `product/mixed-source-contracts/recorded-fallback.test.ts:11` | Deadline cooperativo 165000ms; proof emitido ao fim das asserções quando o orçamento já estava excedido (~165444ms). close() propaga a expiração; await caro não isolado, sem evidência de cleanup lento. |
 | `product/wp08/thread-period-continuity.test.ts:17` | Hot Topic day excede 30000ms; await causador não identificado. Timeout, sem aumento autorizado. |
 | `product/wp05/sensitivity-integration.test.ts:9; product/wp05/browser.ts:9` | Chrome launch excede 180000ms; também produz erro não tratado. Lifecycle do Chrome sob Bun; avaliação de fixture compartilhada pendente. |
 | `product/operations-fixes/document-search.test.ts:5` | SQLITE_IOERR em runtime/local-store.ts:55 durante autenticação via product/wp06/runtime-fixture.ts:30. Causa final não demonstrada; não atribuir a disco cheio/cleanup sem prova. |
