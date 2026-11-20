@@ -93,11 +93,20 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
       const preparedCase = await prepareWp12PortfolioCase(context, [sources.page, sources.project, sources.other, sources.capex])
       const criterionId = preparedCase.case.criteria[0]?.id
       if (!criterionId) throw new Error("The actual dependency case has no criterion")
+      const choiceStartedAt = performance.now()
+      let choicePhaseAt = choiceStartedAt
       const chosen = await chooseWp12Alternative(context, { caseRef: preparedCase.caseRef,
         baselineResultRef: preparedCase.baseline.resultRef, alternativeResultRef: preparedCase.lowerCost.resultRef,
         alternativeId: preparedCase.lowerCost.alternative.id, alternativeVersion: preparedCase.lowerCost.alternative.version,
         parameterRef: preparedCase.parameterRef, criterionId, threshold: -20_000,
-        reason: "Human choice retained for review of delivery conditions; financial preview does not establish capacity or delivery feasibility." })
+        reason: "Human choice retained for review of delivery conditions; financial preview does not establish capacity or delivery feasibility." }, {
+        beforeAction: async (phase) => {
+          const at = performance.now()
+          console.log("SF_WP12_NATIVE_DEPENDENCY_CHOICE_PHASE:" + JSON.stringify({ githubSha: process.env.GITHUB_SHA ?? null,
+            caseRef: preparedCase.caseRef, phase, elapsedMs: at - choiceStartedAt, sincePreviousPhaseMs: at - choicePhaseAt }))
+          choicePhaseAt = at
+        },
+      })
       const declaredConstraints = [`Human expects delivery in March ${delivery.observationPeriod.start.slice(0, 4)}; this is an unverified request, not a confirmed due date.`,
         "A human mentioned 1 FTE; no available capacity or allocation was confirmed."]
       const selection = { relationRefIds: [sources.project.refId, sources.capex.refId], commitmentIds: [chosen.choice.id],
