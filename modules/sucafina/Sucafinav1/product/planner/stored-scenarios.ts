@@ -19,12 +19,13 @@ type ScenarioBatch = NonNullable<PlannerScenarioHost["resolveMany"]>
 // is retained here; each call still starts all canonical observation phases.
 const storedScenarioBatches = new WeakMap<PlannerScenarioHost["resolve"], ScenarioBatch>()
 
-/** C09 may group siblings only through the original scalar/batch pair. An
- * opaque or modified facade keeps the caller's concurrent scalar schedule. */
+/** Group siblings only through the original scalar/batch pair. An opaque or
+ * modified facade keeps the caller's explicit scalar observation schedule. */
 export async function resolveStoredPlannerScenarios(
   scenarios: PlannerScenarioHost,
   incoming: readonly string[],
   context: TrustedDomainContext,
+  fallback: "parallel" | "sequential" = "parallel",
 ): Promise<PortResult<ResolvedScenario>[]> {
   const references = [...incoming]
   if (!references.length) return []
@@ -39,8 +40,14 @@ export async function resolveStoredPlannerScenarios(
       return references.map(() => ({ status: "unavailable", reason: "scenario-batch-invalid" }))
     return structuredClone(observed).map((entry) => structuredClone(entry))
   }
-  // Preserve Promise.all and its final joint clone for unknown scalar readers.
-  // In particular, never invoke a copied or replaced resolveMany capability.
+  // The metric observer takes each detached snapshot before the next scalar
+  // call. C09 retains Promise.all and its final joint clone by default.
+  // Neither path may invoke a copied or replaced resolveMany capability.
+  if (fallback === "sequential") {
+    const observed: PortResult<ResolvedScenario>[] = []
+    for (const reference of references) observed.push(structuredClone(await scenarios.resolve(reference, context)))
+    return observed
+  }
   return structuredClone(await Promise.all(references.map((reference) => scenarios.resolve(reference, context))))
 }
 
