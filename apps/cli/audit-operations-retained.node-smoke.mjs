@@ -17,7 +17,7 @@ const cases = new Map([["OP-PROC-01", 13], ["OP-PROC-02", 18], ["OP-PROC-03", 23
   ["OP-IMPORT-01", 28], ["OP-DOC-01", 33]])
 const phases = new Set(["Operations local operator enrollment", "Operations installation discovery",
   "Operations native context admission", "Operations native profile selection",
-  "Operations Requests ready for original operator"])
+  "Operations Requests ready for the original operator"])
 const categories = new Set(["test.step", "pw:api", "expect", "hook", "fixture", "test.attach"])
 const apis = new Set(["page.goto", "page.reload", "page.waitForResponse", "page.waitForURL",
   "page.waitForLoadState", "page.url", "page.evaluate", "locator.click", "locator.fill", "locator.press",
