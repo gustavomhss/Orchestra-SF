@@ -45,7 +45,9 @@ function eventType(data: object) {
 const readable = (access: SubscriberAccess, event: EventV2.Payload) => Effect.gen(function* () {
   yield* access.owners.verify(access.scope)
   if (!ownedTypes.has(event.type)) return access.owners.owner(access.scope) === undefined
-  const sessionID = Schema.decodeUnknownOption(Session.ID)(event.data.sessionID).valueOrUndefined
+  const data = event.data
+  if (!data || typeof data !== "object" || !("sessionID" in data)) return false
+  const sessionID = Schema.decodeUnknownOption(Session.ID)(data.sessionID).valueOrUndefined
   return sessionID ? yield* access.owners.canRead(access.scope, sessionID) : false
 })
 

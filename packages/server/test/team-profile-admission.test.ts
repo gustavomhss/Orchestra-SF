@@ -189,12 +189,12 @@ test("http-owner-08: SQL pages contain only the current owner and cursors cannot
     yield* f.seed( "ses_http_page_3")
     const first = yield* Effect.promise(() => http.mounted(f.request("/api/session?limit=1&order=asc")))
     const page = yield* decode(first, List)
-    expect(page.data.map((item) => item.id)).toEqual(["ses_http_page_1"])
+    expect(page.data.map((item) => item.id)).toEqual([Session.ID.make("ses_http_page_1")])
     const token = page.cursor.next
     expect(token?.startsWith("sf1.")).toBe(true)
     if (!token) throw new Error("Actual pagination token required")
     const next = yield* Effect.promise(() => http.mounted(f.request("/api/session?limit=1&cursor=" + encodeURIComponent(token))))
-    expect((yield* decode(next, List)).data.map((item) => item.id)).toEqual(["ses_http_page_2"])
+    expect((yield* decode(next, List)).data.map((item) => item.id)).toEqual([Session.ID.make("ses_http_page_2")])
     for (const [profile, cookie] of [[profileB, f.cookie], [profileA, secondCookie]] as const) {
       const foreign = yield* Effect.promise(() => http.mounted(f.request("/api/session?cursor=" + encodeURIComponent(token), profile, cookie)))
       expect(foreign.status).toBe(400)
@@ -283,8 +283,8 @@ test("http-owner-12: mutations require the exact Origin before admission even wi
 test("http-owner-13: admitted empty collections and Session responses label the current full owner and generation without changing durable bytes", async () => {
   await using f = await teamSessionHttpFixture()
   await f.run((http) => Effect.gen(function* () {
-    const expected = { version: 1, owner: { profile: profileA,
-      principal: { tenantId: profileA.tenantId, principalObjectId: oid } }, authorityGeneration: 1 }
+    const expected = Schema.decodeUnknownSync(TeamProfile.SessionNamespace)({ version: 1, owner: { profile: profileA,
+      principal: { tenantId: profileA.tenantId, principalObjectId: oid } }, authorityGeneration: 1 })
     const empty = yield* Effect.promise(() => http.mounted(f.request("/api/session")))
     const listed = yield* decode(empty, List)
     expect(listed.data).toEqual([])

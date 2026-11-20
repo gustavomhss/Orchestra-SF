@@ -9,7 +9,7 @@ import { Commands } from "../commands"
 import { Runtime } from "../../framework/runtime"
 import { Daemon } from "../../services/daemon"
 import { miniOptions } from "./mini-options"
-import { runTurn, type Event } from "../../turn"
+import { requireTechnicalSession, runTurn, type Event } from "../../turn"
 
 type Client = ReturnType<typeof Orchestra.make>
 
@@ -246,20 +246,20 @@ function fail(options: Options, message: string) {
 
 async function resolveSession(client: Client, options: Options, location: { directory: string } | undefined) {
   const found = options.session
-    ? await client.sessions.get({ sessionID: options.session }).catch(() => undefined)
+    ? await client.sessions.get({ sessionID: options.session }).then(requireTechnicalSession).catch(() => undefined)
     : options.continue
-      ? (await client.sessions.list({ limit: 25, order: "desc", directory: location?.directory })).data.find((item) => !item.parentID)
+      ? requireTechnicalSession(await client.sessions.list({ limit: 25, order: "desc", directory: location?.directory })).data.find((item) => !item.parentID)
       : undefined
   // An unknown --session resolves to undefined; every other path resolves to the session ID the run prompts.
   if (options.session && !found) return undefined
-  if (found && options.fork) return (await client.sessions.fork({ sessionID: found.id })).id
+  if (found && options.fork) return requireTechnicalSession(await client.sessions.fork({ sessionID: found.id })).id
   if (found) return found.id
   // --continue with nothing to continue still starts a session; say so, since the user expected a resume.
   if (options.continue) {
     const where = location ? ` in ${location.directory}` : ""
     process.stderr.write(`No earlier session to continue${where}; started a new session.` + EOL)
   }
-  const created = await client.sessions.create({ location })
+  const created = requireTechnicalSession(await client.sessions.create({ location }))
   if (options.title) await client.sessions.rename({ sessionID: created.id, title: options.title })
   return created.id
 }

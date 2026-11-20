@@ -48,7 +48,7 @@ test("http-events-01: live HTTP subscribers see only their captured person and T
     const b = yield* f.seed( "ses_stream_b", profileB)
     const person = yield* f.seed( "ses_stream_person", profileA, secondCookie)
     const identities = [[profileA, f.cookie, a.id], [profileB, f.cookie, b.id], [profileA, secondCookie, person.id]] as const
-    const streams = []
+    const streams: Array<ReturnType<typeof reader>> = []
     for (const [profile, cookie] of identities) {
       const response = yield* Effect.promise(() => http.mounted(f.request("/api/event", profile, cookie)))
       expect(response.status).toBe(200)
