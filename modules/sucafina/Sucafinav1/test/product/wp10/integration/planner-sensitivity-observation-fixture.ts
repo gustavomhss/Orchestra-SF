@@ -14,19 +14,24 @@ export async function sensitivityObservationFixture(deadline: ReturnType<typeof 
   const units = createPlannerSensitivityUnits({ host: fixture.business.host, cases: fixture.business.cases,
     scenarios: fixture.scenarios, store: fixture.business.results, evidence: fixture.business.context, rules: fixture.portfolio.rules })
   const selection = { scenarioRef: fixture.request.scenarioRef, baselineRef: fixture.request.baselineRef, parameterRef: "line:1" }
-  const issued = await fixture.business.withCase(fixture.call, fixture.caseRef, {}, () => units.issue(selection, fixture.call))
+  const issued = await deadline.phase("fixture.sensitivity-units", () =>
+    fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
+      fixture.business.withPlannerObservation(selection, fixture.call, () => units.issue(selection, fixture.call))))
   if (issued.status !== "ok") throw new Error("Actual sensitivity units unavailable: " + issued.reason)
   const rule = { caseRef: fixture.caseRef, criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte" as const,
     value: 0, unit: "USD", period: fixture.period, evidenceRefs: fixture.sources, expectedRuleVersion: 1, sensitivity: issued.value.units }
   const human = await fixture.authority.human.admit(fixture.stateRequest(), "decisions.criteria", rule)
   if (human.status !== "ok") throw new Error("Actual sensitivity rule admission unavailable")
-  const registered = await fixture.business.withCase(human.value, fixture.caseRef, {}, () => fixture.portfolio.rules.register(rule, human.value))
+  const registered = await deadline.phase("fixture.sensitivity-rule", () =>
+    fixture.business.withCase(human.value, fixture.caseRef, {}, () => fixture.portfolio.rules.register(rule, human.value)))
     .finally(() => fixture.authority.human.finish(human.value))
   if (registered.status !== "ok") throw new Error("Actual sensitivity rule registration unavailable: " + registered.reason)
   const request: SensitivityRequest = { scenarioRef: selection.scenarioRef,
     parameterBounds: { parameterRef: selection.parameterRef, minimum: 80, maximum: 400, steps: 2 },
     criterion: { id: "cost", operator: "lte", value: 0 } }
-  const resolved = await fixture.business.withCase(fixture.call, fixture.caseRef, {}, () => units.resolve(request, fixture.call))
+  const resolved = await deadline.phase("fixture.sensitivity-binding", () =>
+    fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
+      fixture.business.withPlannerObservation(request, fixture.call, () => units.resolve(request, fixture.call))))
   if (resolved.status !== "ok") throw new Error("Actual sensitivity binding unavailable: " + resolved.reason)
   const binding = resolved.value
   const preview = (incoming: Parameters<typeof comparePlannerPreview>[1]) => comparePlannerPreview({
