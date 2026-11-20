@@ -86,6 +86,16 @@ The remaining time is a diagnostic opportunity, not a guarantee against a stalle
 The full product run stays reserved until the active WPs are closed. The next integrated run must still provide
 authentic case coverage, reconcile pending/stale baselines and measure actual shard wall times and runner minutes.
 
+### Follow-up validation history
+
+The first scoped [probe 44665814246](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44665814246),
+snapshot `95bf65fdd974976d0c663c443718030600c97a8b`, remained **RED**.
+It passed 133 of 134 Node controls and all 13 Python timing tests. The workflow ownership guard
+correctly rejected an additional run script until timing collection received a narrow explicit contract.
+The default-candidate fingerprint also exposed a Bun Transpiler limitation with the real postinstall shebang;
+only the import-analysis string was corrected, while the fingerprint retains the original bytes.
+No Bun product tests or real JUnit timing proof ran in that first attempt.
+
 ## Where the time went
 
 The observations were captured at 2026-11-20 01:52:56 UTC (2026-11-19 in São Paulo).

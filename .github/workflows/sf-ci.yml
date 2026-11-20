@@ -315,6 +315,7 @@ jobs:
             process.stdout.write(suite.directory)
           ')"
           test -f "$root/$suite_dir/package.json"
+          printf 'SF_TIMINGS_DIRECTORY=%s\n' "$suite_dir" >> "$GITHUB_ENV"
           cd "$root/$suite_dir"
           set +e
           {
@@ -353,20 +354,12 @@ jobs:
         env:
           TEST_CONCLUSION: ${{ steps.tests.outcome }}
         run: |
-          suite_dir="$(node --input-type=module -e '
-            import { readFileSync } from "node:fs"
-            const manifest = JSON.parse(readFileSync("sf/ci/suites.json", "utf8"))
-            const suites = Array.isArray(manifest.suites) ? manifest.suites : []
-            const suite = suites.find((entry) => entry.id === process.env.SF_SUITE_ID)
-            if (!suite) throw new Error("SF_CI_UNKNOWN_SUITE")
-            process.stdout.write(suite.directory)
-          ')"
           python3 script/sf-ci/timings.py \
             --report "sf-ci-evidence/$SF_SUITE_ID/report.xml" \
             --output "sf-ci-evidence/$SF_SUITE_ID/timings.json" \
             --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
-            --job-name "$GITHUB_JOB" --suite "$SF_SUITE_ID" --directory "$suite_dir" \
-            --file-root "$GITHUB_WORKSPACE/$suite_dir" --conclusion "$TEST_CONCLUSION"
+            --job-name "$GITHUB_JOB" --suite "$SF_SUITE_ID" --directory "${SF_TIMINGS_DIRECTORY:-.}" \
+            --file-root "$GITHUB_WORKSPACE/${SF_TIMINGS_DIRECTORY:-.}" --conclusion "$TEST_CONCLUSION"
       - name: Publish Bun timings separately from acceptance receipts
         if: always() && !cancelled() && steps.tests.outcome != 'skipped'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
