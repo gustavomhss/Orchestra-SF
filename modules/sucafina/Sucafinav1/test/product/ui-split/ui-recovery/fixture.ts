@@ -1,5 +1,5 @@
 import { expect } from "bun:test"
-import type { BrowserContext, Locator, Page, Response } from "@playwright/test"
+import type { BrowserContext, Locator, Page, Response, Route } from "@playwright/test"
 import { object, rows } from "../../../../runtime/contract.ts"
 import { createConsumerReadFixture, initialCaseRef } from "../../dashboard-installed-closure/ownhost-fixture.ts"
 import { storeExistingChoice } from "../../wp02/workbench-recovery-fixture.ts"
@@ -18,6 +18,34 @@ export const applicationPanel = (page: Page) => page.locator('[data-sf-surface="
 export const modeUrl = (mode: string) => (url: URL) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
 export const modeResponse = (mode: string) => (response: Response) =>
   response.request().method() === "POST" && modeUrl(mode)(new URL(response.url()))
+
+/**
+ * A pending UI write already displays "Result unknown". Only completion of the
+ * genuine intercepted request proves that its response was read and its chosen
+ * delivery fault was applied. Keep callback errors inside the owning test.
+ */
+export async function observeRecoveryRoute(page: Page, mode: string, failures: unknown[],
+  work: (route: Route) => Promise<void>) {
+  let completed = 0, consumed = 0
+  const waiting = new Map<number, () => void>()
+  await page.route(modeUrl(mode), async (route) => {
+    try { await work(route) }
+    catch (error) {
+      failures.push(error)
+      try { await route.abort("failed") }
+      catch (cleanup) { failures.push(cleanup) }
+    } finally {
+      completed++
+      const finish = waiting.get(completed)
+      waiting.delete(completed)
+      finish?.()
+    }
+  })
+  return () => {
+    const next = ++consumed
+    return completed >= next ? Promise.resolve() : new Promise<void>((resolve) => { waiting.set(next, resolve) })
+  }
+}
 
 const captures = new WeakMap<BrowserContext, NativeFetchCapture>()
 const captureFor = (page: Page) => {
@@ -134,8 +162,17 @@ export async function prepareApply(page: Page, fixture: RecoveryFixture, action:
 }
 
 export async function reloadApply(page: Page) {
+  const original = await correlations(page)
+  expect(original).toHaveLength(1)
   page.once("dialog", (dialog) => void dialog.accept())
-  expect((await page.reload())?.status()).toBe(200)
+  const [context, workbench, navigation] = await Promise.all([
+    receiveContext(page), receive(page, "dashboard-workbench"), page.reload(),
+  ])
+  expect(navigation?.status()).toBe(200)
+  expect(context.status).toBe(200)
+  expect(workbench.status).toBe(200)
+  expect(object(workbench.body).status).toBe("ok")
+  expect(await correlations(page)).toEqual(original)
   const panel = applicationPanel(page)
   await panel.getByRole("region", { name: "Original application recovery", exact: true }).waitFor()
   const recover = panel.getByRole("button", { name: "Read original application receipt", exact: true })

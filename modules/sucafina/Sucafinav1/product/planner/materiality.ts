@@ -6,6 +6,7 @@ import type { PlannerPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
 import { plannerScenarioDigest } from "./preview-comparison.ts"
+import { resolveStoredPlannerScenarios } from "./stored-scenarios.ts"
 
 type SignalSelection = { caseRef: { id: string; incarnation: string; version: number }; choiceId: string; source: SourceRef; evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; fields: readonly string[]; period: { start: string; end: string }; criterionId: string; scenarioRefs: readonly [string, string] }
 
@@ -16,7 +17,7 @@ export function createPlannerMateriality(input: { scenarios: PlannerScenarioHost
     const choice = structuredClone(request.choice)
     if (!selection || selection.source.surface !== "planner" || selection.evidence.target.surface !== "planner" || selection.choiceId !== choice.id || !selection.criterionId.trim() || !selection.fields.length || new Set(selection.fields).size !== selection.fields.length || selection.fields.some((field) => !selection.source.fields.includes(field) || !selection.evidence.target.fields.includes(field)) || selection.scenarioRefs.length !== 2 || selection.scenarioRefs[0] === selection.scenarioRefs[1] || selection.scenarioRefs.some((ref) => !ref.trim()) || selection.evidence.refDigest !== digestSfEvidenceRef(selection.evidence) || selection.evidence.installationId !== context.binding.installationId || selection.evidence.projectId !== context.binding.projectId || selection.evidence.target.recordType !== selection.source.type || selection.evidence.target.recordId !== selection.source.id || selection.evidence.target.incarnation !== selection.source.incarnation || selection.evidence.target.version !== selection.source.version || !selection.evidence.target.period || selection.evidence.target.period.start > selection.period.start || selection.evidence.target.period.end < selection.period.end || selection.source.period.start > selection.period.start || selection.source.period.end < selection.period.end) return { status: "needs-input", reason: "invalid-materiality-selection" } as const
     if (!await input.verifyBinding(selection, choice, context)) return { status: "denied", reason: "materiality-binding-unavailable" } as const
-    const load = () => Promise.all(selection.scenarioRefs.map((ref) => input.scenarios.resolve(ref, context)))
+    const load = () => resolveStoredPlannerScenarios(input.scenarios, selection.scenarioRefs, context)
     const scenarios = await load()
     if (scenarios[0].status !== "ok") return scenarios[0]
     if (scenarios[1].status !== "ok") return scenarios[1]

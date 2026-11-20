@@ -110,8 +110,9 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
     const human = await fixture.authority.human.admit(fixture.request("metric-shared-base-promotion"), "decisions.promote-alternative", request)
     if (human.status !== "ok") throw new Error("Actual shared-base promotion admission unavailable")
     try {
-      promotedAlternative = await fixture.business.withCase(human.value, caseRef, {}, () =>
-        fixture.portfolio.mutations.addAlternative(request, human.value))
+      promotedAlternative = await deadline.phase("fixture.promote-alternative", () =>
+        fixture.business.withCase(human.value, caseRef, {}, () =>
+          fixture.portfolio.mutations.addAlternative(request, human.value)))
       if (promotedAlternative.status !== "ok") throw new Error("Actual shared-base promotion unavailable: " + promotedAlternative.reason)
       selectedCaseRef = promotedAlternative.value.caseRef
     } finally { fixture.authority.human.finish(human.value) }
@@ -120,7 +121,8 @@ export async function plannerObservationFixture(deadline: ReturnType<typeof comp
     unit: "USD", period, evidenceRefs: sources, expectedRuleVersion: 0 }
   const human = await fixture.authority.human.admit(fixture.request(), "decisions.criteria", ruleInput)
   if (human.status !== "ok") throw new Error("Actual human criterion admission unavailable")
-  const rule = await fixture.business.withCase(human.value, selectedCaseRef, {}, () => fixture.portfolio.rules.register(ruleInput, human.value))
+  const rule = await deadline.phase("fixture.register-rule", () =>
+    fixture.business.withCase(human.value, selectedCaseRef, {}, () => fixture.portfolio.rules.register(ruleInput, human.value)))
     .finally(() => fixture.authority.human.finish(human.value))
   if (rule.status !== "ok") throw new Error(`Actual criterion registration failed: ${rule.reason}`)
   const scenarios = fixture.business.plannerProduct.scenarios

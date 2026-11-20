@@ -42,7 +42,7 @@ test("exact with distinct human alternatives on the same base keeps every previe
       return canonical(incoming, () => exact(world.request, world.selection.baselineRef, fixture.call))
     }
     observation.reset()
-    const control = await work(), expected = { ...observation.counts }, controlEffects = { ...effects }
+    const control = await deadline.phase("exact.control", work), expected = { ...observation.counts }, controlEffects = { ...effects }
     expect(control.status).toBe("ok")
     if (control.status !== "ok") throw new Error("Canonical shared-base exact threshold unavailable")
     expect(control.value.value).toBeGreaterThanOrEqual(320)
@@ -56,7 +56,7 @@ test("exact with distinct human alternatives on the same base keeps every previe
     expect(expected.scalar + expected.batch).toBeGreaterThan(0)
     observation.reset()
     Object.assign(effects, { calls: 0, outside: false, previews: 0, previewsOutside: 0, authority: 0 })
-    expect(await observe(phase(incoming), fixture.call, work)).toEqual(control)
+    expect(await deadline.phase("exact.observed", () => observe(phase(incoming), fixture.call, work))).toEqual(control)
     expect(effects.calls).toBe(1)
     expect(effects.outside).toBe(true)
     expect(effects.previews).toBe(controlEffects.previews)

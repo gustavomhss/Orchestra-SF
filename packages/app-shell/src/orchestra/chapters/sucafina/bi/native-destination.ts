@@ -12,15 +12,65 @@ const dashboardPages: Readonly<Record<string, string>> = {
   "IT Performance Contract": "CAP16",
 }
 
+/** Current producer URLs already name native pages. Admit only the same
+ * destinations and selectors emitted by extended-source-links; the path codec
+ * rejects noncanonical opaque refs. The caller supplies the current owner.
+ */
+function nativeProducerDestination(value: string, binding: SfInstallationDescriptor): URL | undefined {
+  if (!value || [...value].some((ch) => ch.charCodeAt(0) <= 32 || ch.charCodeAt(0) === 127 || ch === "\\" || ch === "#")) return
+  if (!URL.canParse(binding.publicOrigin)) return
+  const origin = new URL(binding.publicOrigin)
+  if (!["http:", "https:"].includes(origin.protocol) || origin.username || origin.password ||
+      origin.pathname !== "/" || origin.search || origin.hash) return
+  const mount = binding.mount === "/" ? "" : binding.mount.replace(/\/$/, "")
+  if (mount && (!mount.startsWith("/") || mount.includes("//") || ["%", "\\", "?", "#"].some((part) => mount.includes(part)) ||
+      mount.split("/").some((part) => part === "." || part === ".."))) return
+  if (!URL.canParse(value, origin.origin)) return
+  const source = new URL(value, origin.origin)
+  if (!["http:", "https:"].includes(source.protocol) || source.origin !== origin.origin ||
+      source.username || source.password || source.hash) return
+  const candidate = matchSfNativeRoutePath(source.pathname)
+  if (!candidate) return
+  const query = source.searchParams, keys = [...query.keys()]
+  if (new Set(keys).size !== keys.length ||
+      [...query.values()].some((item) => !item || item.length > 4096 || /[\u0000-\u001f\u007f]/.test(item))) return
+  const only = (allowed: readonly string[]) => keys.every((key) => allowed.includes(key))
+  const year = query.get("year")
+  if (year !== null && !/^\d{4}$/.test(year)) return
+  if (candidate.surfaceId === "CAP17" && candidate.kind === "entry") {
+    if (!query.has("version") || !only(["version", "year"])) return
+  } else if (candidate.kind === "entry" && Object.values(dashboardPages).includes(candidate.surfaceId)) {
+    if (["CAP01", "CAP11", "CAP12"].includes(candidate.surfaceId)) {
+      if (!only(["year", "month"]) || !year || !/^202[4-7]$/.test(year) ||
+          !/^(?:[1-9]|1[0-2])$/.test(query.get("month") ?? "")) return
+    } else if (["CAP14", "CAP15", "CAP16"].includes(candidate.surfaceId)) {
+      if (keys.length) return
+    } else if (!only(["year"])) return
+  } else if (candidate.surfaceId === "CAP25" && candidate.kind === "entry") {
+    if (!only(["request"])) return
+  } else if (candidate.surfaceId === "CAP27" && candidate.kind === "detail") {
+    if (keys.length) return
+  } else return
+  return source
+}
+
 /** Translate only an already-proven producer destination into its published
  * native route. This is a selector, never authorization: F01 admits the route
  * and the native leaf reads the same source again before rendering.
  */
 export function nativeBiDestination(value: string, binding: SfInstallationDescriptor,
   selection: SfOwnerSelection): string | undefined {
-  const safe = safeBiDestination(value, binding)
-  if (!safe || selection.projectId !== binding.projectId ||
+  if (selection.projectId !== binding.projectId ||
       selection.installationId !== binding.installationId || !selection.serverKey) return
+  const native = nativeProducerDestination(value, binding)
+  if (native) {
+    const owner = new URLSearchParams({ server: String(selection.serverKey), project: String(selection.projectId),
+      installation: String(selection.installationId) })
+    for (const [key, value] of native.searchParams) owner.set(key, value)
+    return native.pathname + "?" + owner.toString()
+  }
+  const safe = safeBiDestination(value, binding)
+  if (!safe) return
   const source = new URL(safe), query = source.searchParams
   const mount = binding.mount === "/" ? "" : binding.mount.replace(/\/$/, "")
   let surface: string | undefined, kind = "entry", reference: string | undefined
