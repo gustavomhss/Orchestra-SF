@@ -6,6 +6,7 @@ import { isAbsolute, join, parse, resolve, sep } from "node:path"
 import type { AuthLimits, LocalStore } from "./local-contract.ts"
 import { createAuthenticationSecrets, initializeAuthentication } from "./auth-maintenance.ts"
 import { createTeamProfilePolicyStore, initializeTeamProfilePolicy } from "./team-profile-store.ts"
+import { createTeamConnectionStore, initializeTeamConnections } from "./team-connection-store.ts"
 import { teamProfilePolicyBinding } from "./team-profile-policy.ts"
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
@@ -76,7 +77,10 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
         `)
         const limits = initializeAuthentication(initial, options.authentication)
-        if (teamProfileBinding) initializeTeamProfilePolicy(initial, teamProfileBinding)
+        if (teamProfileBinding) {
+          initializeTeamProfilePolicy(initial, teamProfileBinding)
+          initializeTeamConnections(initial, teamProfileBinding)
+        }
         initial.exec("COMMIT")
         return limits
       } finally {
@@ -219,6 +223,48 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     }),
   })
 
+  // Both consumers observe the actual three business snapshots on the already locked SQL connection.
+  // This scope admits reads only and rejects caught nested writes or unfinished readers before returning.
+  const readonlyReadScope = async <T>(db: Database, work: () => Promise<T>, signal?: AbortSignal): Promise<T> => {
+    if (context.getStore() || !db.inTransaction) throw new Error("Invalid private authority read scope")
+    const copies: Partial<Record<Surface, () => Snapshot>> = {}
+    const read = (surface: Surface) => {
+      const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+      // Keep the same SQL order and changed-payload admission as mutable
+      // roots. No target escapes here, so every initial memo hit can copy.
+      const source = observeSnapshot(surface, row?.payload)
+      if (source.copy) copies[surface] = source.copy
+      const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
+      return () => {
+        if (observed.value) return observed.value
+        observed.value = observed.materialize!()
+        observed.materialize = undefined
+        return observed.value
+      }
+    }
+    const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+    const snapshots = {
+      get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
+      get procurement() { return observed.procurement() },
+    }
+    const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: signal }
+    try {
+      const value = await context.run(scope, work)
+      requireScope(scope)
+      if (scope.root.poisoned) throw new Error("Nested local write attempted")
+      if (scope.root.readers) throw new Error("Nested local read still active")
+      return value
+    } finally {
+      scope.open = false
+      // This root never exposes its private observations. Closed descendants
+      // need neither their graphs/getters nor the initial memo's copy plans.
+      scope.root.snapshots = {}
+      delete copies.dashboard
+      delete copies.planner
+      delete copies.procurement
+    }
+  }
+
   const teamProfiles = teamProfileBinding ? createTeamProfilePolicyStore({
     binding: teamProfileBinding,
     // Profile policy is current authority metadata, not an older business read snapshot.
@@ -240,47 +286,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     write: (work, signal) => operation(true, work, signal),
   }) : undefined
 
+  const teamConnections = teamProfileBinding ? createTeamConnectionStore({
+    binding: teamProfileBinding,
+    locked: (work, signal) => operation(true, work, signal),
+    authorityRead: readonlyReadScope,
+  }) : undefined
+
   return {
     ...(teamProfiles ? { teamProfiles } : {}),
+    ...(teamConnections ? { teamConnections } : {}),
     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
-      operation(true, async (db) => {
-        const copies: Partial<Record<Surface, () => Snapshot>> = {}
-        const read = (surface: Surface) => {
-          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-          // Keep the same SQL order and changed-payload admission as mutable
-          // roots. No target escapes here, so every initial memo hit can copy.
-          const source = observeSnapshot(surface, row?.payload)
-          if (source.copy) copies[surface] = source.copy
-          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
-          return () => {
-            if (observed.value) return observed.value
-            observed.value = observed.materialize!()
-            observed.materialize = undefined
-            return observed.value
-          }
-        }
-        const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
-        const snapshots = {
-          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
-          get procurement() { return observed.procurement() },
-        }
-        const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
-        try {
-          const value = await context.run(scope, work)
-          requireScope(scope)
-          if (scope.root.poisoned) throw new Error("Nested local write attempted")
-          if (scope.root.readers) throw new Error("Nested local read still active")
-          return value
-        } finally {
-          scope.open = false
-          // This root never exposes its private observations. Closed descendants
-          // need neither their graphs/getters nor the initial memo's copy plans.
-          scope.root.snapshots = {}
-          delete copies.dashboard
-          delete copies.planner
-          delete copies.procurement
-        }
-      }, transactionOptions?.signal),
+      operation(true, (db) => readonlyReadScope(db, work, transactionOptions?.signal), transactionOptions?.signal),
     currentSnapshots: () => {
       const scope = context.getStore()
       if (!scope) return undefined
