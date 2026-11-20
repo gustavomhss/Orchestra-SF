@@ -847,6 +847,7 @@ jobs:
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           artifact-ids: ${{ needs.teams-profile-artifact.outputs.artifact-id }}
+          merge-multiple: true
           path: ${{ env.SF_TEAMS_RESIDUE_ARCHIVE_ROOT }}
       - name: Independently verify artifact API identity and downloaded bytes
         env:
