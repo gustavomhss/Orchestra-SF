@@ -137,6 +137,22 @@ Nenhum código compartilhado foi alterado. As duas falhas seguintes são preserv
 A instrumentação de `planner-calculation.test.ts:112-123` substitui um método da cópia exposta em `business-services.ts:726`; Atlas usa o original capturado em :540. O contador 0 não prova falta de autorização. Corrigir a fronteira observável sem reduzir esperado 1; se exigir composição compartilhada, abrir PR `shared:`.
 
 
+## Propostas shared revisadas — ainda não publicadas
+
+Dois patches de produção receberam revisão independente, mas continuam **NOT_RUN / sem commit de código** enquanto a enumeração do shard 6 não termina:
+
+| Causa | Branch planejada | Mudança | Gate único planejado |
+| --- | --- | --- | --- |
+| S10 — mutação na última autorização | sf-shard-b-shared-sensitivity | Retirar o retorno precoce sem scope em verification.ts:205; usar snapshots, token de tentativa, captura provisória e fingerprints finais antes de publicar. Preservar o contexto original e o caminho scoped. | wp13/coverage-sensitivity-integration.test.ts + wp13/sensitivity-read-scope.test.ts |
+| S11 — replay durável após avanço do caso | sf-shard-b-shared-draft-replay | Em hot-topic-draft.ts:94/99, usar uma referência de leitura na versão atual somente quando existe transação anterior e versão não regrediu. Pedido original permanece no digest, autorização e CAS de novos comandos. | ui-split/ui-source/draft-replay.test.ts + wp11/hot-topic-draft-domain.test.ts + wp11/hot-topic-snapshot.test.ts |
+
+S10 e S11 terão PRs separados, com título iniciado por `shared:`, base `sf-join-four`, sem incorporar produção na branch de testes. `hot-topic-draft-domain` é regressão adicional da partição 3; não é enumeração nem qualificação do shard 3.
+
+Risco concreto de S10: o caso que falhou em :115 terminou no primeiro estado de training após 134680 ms. Ao prosseguir, pode atingir o orçamento original de 300000 ms dos três estados. Preservar o orçamento e classificar qualquer ponto posterior.
+
+PRs de outras sessões inspecionados somente para evitar sobreposição: [#398 Atlas](https://github.com/gustavomhss/Orchestra-SF/pull/398), [#400 resposta Planner](https://github.com/gustavomhss/Orchestra-SF/pull/400), [#401 custo BI](https://github.com/gustavomhss/Orchestra-SF/pull/401). Nenhum deles altera verification.ts ou hot-topic-draft.ts. Não foram integrados, alterados ou usados como evidência verde destes shards. #398 é uma possível dependência a investigar para os positivos de recall indisponíveis; a equivalência causal não foi demonstrada pelo log deste baseline.
+
+
 ## Pendente / como retomar
 
 1. Aguardar e enumerar o run 44651628624; não repetir gates sem mudança.
