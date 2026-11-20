@@ -90,7 +90,8 @@ export async function observeSfImportHealth(input: {
     const proof = context.binding
     if (!current() || proof.installationId !== stamp.installationId || proof.projectId !== stamp.projectId ||
       proof.principalRef !== stamp.principalRef || proof.policyVersion !== stamp.policyVersion || proof.accessRevision !== stamp.accessRevision ||
-      authority.ui.requestFor(context) !== request || !await authority.ui.validate(context, "sf_import_preview", digest)) return []
+      !await authority.ui.validate(context, "sf_import_preview", digest) ||
+      authority.ui.requestFor(context) !== request || !current()) return []
     const actions = await authority.humanActions(request)
     const health = async (namespace: "documents" | "receipts", mode: "read" | "write") => {
       const read = () => authority.state.read(request, namespace, selectSfNamespaceHealth(namespace, expectedStamp, mode))
