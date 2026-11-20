@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { DateTime, Effect, Exit, Fiber, Queue, Schema, Stream } from "effect"
+import { Context, DateTime, Effect, Exit, Fiber, Queue, Schema, Stream } from "effect"
 import { TestClock } from "effect/testing"
 import { EventV2 } from "@orchestra/core/event"
 import { SessionV2 } from "@orchestra/core/session"
@@ -9,6 +9,7 @@ import { SessionEvent } from "@orchestra/schema/session-event"
 import { OrchestraEventTransport } from "@orchestra/protocol/groups/event"
 import { encodeEvent, eventFrames, eventStream } from "../src/handlers/event"
 import { teamSessionHttpFixture, profileA, profileB, other } from "./fixture/team-session-http"
+import { roleMap } from "../../../modules/sucafina/Sucafinav1/runtime/admin"
 
 function reader(response: Response) {
   if (!response.body) throw new Error("Actual event stream required")
@@ -185,3 +186,111 @@ test("http-events-05: burst order and finite history replay keep canonical paylo
     expect(foreign.status).toBe(401)
   }))
 })
+
+
+const InPublisherListener = Context.Reference<boolean>("Server.Test.SessionEventListener", { defaultValue: () => false })
+
+/** Instrument the actual private admission and real bus, never a substitute decision or Scope. */
+const observedSubscriber = (
+  f: Awaited<ReturnType<typeof teamSessionHttpFixture>>,
+  owners: SessionOwner.Interface,
+  events: EventV2.Interface,
+  afterFirstInspection?: () => Promise<unknown>,
+) => Effect.gen(function* () {
+  const inspections = { listener: 0, other: 0 }
+  const lease = yield* owners.capture(() => Effect.promise(() => f.authority.readCoreSessionAdmission(f.businessRequest())).pipe(
+    Effect.map((admission): SessionOwner.Admission | undefined => {
+      if (!admission?.inspect) throw new Error("Actual current-policy inspection required")
+      const inspect = admission.inspect
+      return {
+        ...admission,
+        inspect: (operations) => Effect.gen(function* () {
+          const listener = yield* InPublisherListener
+          if (listener) inspections.listener++
+          else inspections.other++
+          const result = yield* inspect(operations)
+          if (listener && inspections.listener === 1 && afterFirstInspection)
+            yield* Effect.promise(afterFirstInspection)
+          return result
+        }),
+      }
+    }),
+  ))
+  if (!lease) return yield* Effect.die("Actual subscriber lease required")
+  const scope = yield* SessionOwner.withLease(lease, owners.open())
+  const observedEvents: EventV2.Interface = {
+    ...events,
+    listen: (callback) => events.listen((event) => callback(event).pipe(Effect.provideService(InPublisherListener, true))),
+  }
+  return { scope, events: observedEvents, inspections }
+})
+
+test("http-events-06: one canonical enqueue performs two real policy inspections while egress rechecks independently", async () => {
+  await using f = await teamSessionHttpFixture()
+  await f.run(() => Effect.gen(function* () {
+    const session = yield* f.seed("ses_stream_two_observations")
+    const events = yield* EventV2.Service
+    const owners = yield* SessionOwner.Service
+    const observed = yield* observedSubscriber(f, owners, events)
+    const pull = yield* Stream.toPull(eventStream(observed.events, eventFrames(), { owners, scope: observed.scope }))
+    let ready = ""
+    while (!ready.includes("server.connected")) ready += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
+    expect(observed.inspections.listener).toBe(0)
+    const beforeEgress = observed.inspections.other
+    const sent = yield* f.admitted(f.businessRequest(), events.publish(SessionEvent.Renamed, {
+      sessionID: session.id, timestamp: DateTime.nowUnsafe(), title: "current-owner-after-two-inspections",
+    }))
+    expect(observed.inspections.listener).toBe(2)
+    let delivered = ""
+    while (!delivered.includes(sent.id)) delivered += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
+    expect(delivered).toContain("current-owner-after-two-inspections")
+    expect(delivered).toContain('"namespace"')
+    expect(observed.inspections.other).toBeGreaterThan(beforeEgress)
+    expect(observed.inspections.listener).toBe(2)
+    console.info("SESSION_SSE_CANONICAL_INSPECTIONS", { listener: observed.inspections.listener, egress: observed.inspections.other - beforeEgress })
+  }))
+})
+
+for (const change of ["role-map", "session-expiry"] as const) {
+  test("http-events-07: " + change + " between current checks prevents enqueue and encoding of a canonical event", async () => {
+    await using f = await teamSessionHttpFixture({ sessionSeconds: 60 })
+    await f.run((http) => Effect.gen(function* () {
+      const session = yield* f.seed("ses_stream_changed_" + change.replaceAll("-", "_"))
+      const events = yield* EventV2.Service
+      const owners = yield* SessionOwner.Service
+      let changed = false
+      const observed = yield* observedSubscriber(f, owners, events, async () => {
+        if (change === "session-expiry") f.provider.clock.value += 61_000
+        else await f.store.transaction("dashboard", async (snapshot) => {
+          snapshot.data.roleMap = roleMap(snapshot, "dashboard").map((row) => ({ ...row, version: row.version + 1 }))
+          return { commit: true, value: undefined }
+        })
+        changed = true
+      })
+      const encoded: string[] = []
+      const frame = eventFrames((data) => { const text = encodeEvent(data); encoded.push(text); return text })
+      const pull = yield* Stream.toPull(eventStream(observed.events, frame, { owners, scope: observed.scope }))
+      let ready = ""
+      while (!ready.includes("server.connected")) ready += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
+      const encodedBefore = encoded.length
+      // The real bus invokes the listener inside this separately captured publisher lease.
+      yield* f.admitted(f.businessRequest(), events.publish(SessionEvent.Renamed, {
+        sessionID: session.id, timestamp: DateTime.nowUnsafe(), title: "must-not-cross-stale-listener",
+      })).pipe(Effect.exit)
+      expect(changed).toBe(true)
+      expect(observed.inspections.listener).toBe(2)
+      const ended = yield* pull.pipe(Effect.exit)
+      expect(Exit.isFailure(ended)).toBe(true)
+      expect(encoded).toHaveLength(encodedBefore)
+      expect(encoded.join("")).not.toContain("must-not-cross-stale-listener")
+      if (change === "session-expiry") {
+        const reconnect = yield* Effect.promise(() => http.mounted(f.request("/api/event")))
+        expect(reconnect.status).toBe(401)
+      } else {
+        // A new current decision is still possible: only the retained old revision was revoked.
+        const current = yield* Effect.promise(() => f.authority.readCoreSessionAdmission(f.businessRequest()))
+        expect(current).toBeDefined()
+      }
+    }))
+  })
+}

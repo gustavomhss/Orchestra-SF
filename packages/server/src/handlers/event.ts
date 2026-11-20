@@ -42,12 +42,17 @@ function eventType(data: object) {
 }
 
 /** Only canonical Session-bearing definitions identify an owner; metadata and Location never do. */
+const sessionFor = (event: EventV2.Payload) => {
+  if (!ownedTypes.has(event.type)) return undefined
+  const data = event.data
+  if (!data || typeof data !== "object" || !("sessionID" in data)) return undefined
+  return Schema.decodeUnknownOption(Session.ID)(data.sessionID).valueOrUndefined
+}
+
 const readable = (access: SubscriberAccess, event: EventV2.Payload) => Effect.gen(function* () {
   yield* access.owners.verify(access.scope)
   if (!ownedTypes.has(event.type)) return access.owners.owner(access.scope) === undefined
-  const data = event.data
-  if (!data || typeof data !== "object" || !("sessionID" in data)) return false
-  const sessionID = Schema.decodeUnknownOption(Session.ID)(data.sessionID).valueOrUndefined
+  const sessionID = sessionFor(event)
   return sessionID ? yield* access.owners.canRead(access.scope, sessionID) : false
 })
 
@@ -56,8 +61,17 @@ const admittedEvents = (events: EventV2.Interface, access: SubscriberAccess) => 
   // Event callbacks execute in the publisher's fiber. Always use the captured
   // subscriber Scope, and check before retaining any payload in its queue.
   const unsubscribe = yield* events.listen((event) => Effect.gen(function* () {
-    if (!(yield* readable(access, event))) return
-    yield* access.owners.verify(access.scope)
+    const sessionID = sessionFor(event)
+    if (sessionID) {
+      // canRead observes current policy before owner SQL and again afterward.
+      // The dropping offer below cannot await external work; egress remains a
+      // separate authority boundary when the subscriber consumes this payload.
+      if (!(yield* access.owners.canRead(access.scope, sessionID))) return
+    } else {
+      // Preserve the existing checks for technical or malformed definitions.
+      if (!(yield* readable(access, event))) return
+      yield* access.owners.verify(access.scope)
+    }
     const accepted = yield* Queue.offer(queue, event)
     if (!accepted) yield* Queue.fail(queue, new EventV2.SubscriberOverflowError({ capacity: subscriberCapacity }))
   }).pipe(Effect.catchCause(() => Queue.fail(queue, new SessionStreamEnded()).pipe(Effect.asVoid))))
