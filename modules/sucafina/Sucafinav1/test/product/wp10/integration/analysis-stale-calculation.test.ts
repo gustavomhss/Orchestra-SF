@@ -237,7 +237,7 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
   const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
   const admittedCalls: TrustedUiContext[] = []
   const sourceReads: { call: TrustedDomainContext; locked: boolean; states: string[] }[] = []
-  let originalCall: TrustedDomainContext | undefined
+  let originalCall: TrustedUiContext | undefined
   const human = { ...authority.human, admit: async (...args: Parameters<typeof authority.human.admit>) => {
     expect(args[0]).toBe(request)
     const admitted = await authority.human.admit(...args)
@@ -257,6 +257,7 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
   const stale = createSfStaleAnalysisAccess({ authority: staleAuthority, persistence, request, start,
     proof: { runRef: run.runRef, caseRef, contextFingerprint: run.contextFingerprint, evidenceRefs: [calculation] },
     context: { context: async (selection, call) => {
+      if (!originalCall) throw new Error("Original analysis UI call unavailable")
       expect(call).toBe(originalCall)
       expect(authority.host.requestFor(call)).toBe(request)
       const read = ++metrics.contextReads
@@ -276,6 +277,7 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
       return persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { status: "ok" as const, value: { sourceFence: sfRunSourceFence(snapshot) } } }))
     },
     revalidateForCommit: async (record, call, snapshot, output) => {
+      if (!originalCall) throw new Error("Original analysis UI call unavailable")
       expect(call).toBe(originalCall)
       expect(authority.host.requestFor(call)).toBe(request)
       if (record.state !== "stale") return { status: "denied", reason: "fixture-fresh-publication-unavailable" }
@@ -286,7 +288,8 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
   const store = stale.wrapStore(raw)
   const enter = createSfAnalysisRunContext({ authority: currentAuthority, business, request, runRef: run.runRef, caseRef, start,
     active: () => fixture.control.active, replayContexts: new WeakMap() })
-  const withRun = async <T>(action: (call: TrustedDomainContext) => Promise<PortResult<T>>) => phase(`settlement.${settlementId}.with-run`, () => enter(run.runRef, async (call) => {
+  const withRun = async <T>(action: (call: TrustedUiContext) => Promise<PortResult<T>>) => phase(`settlement.${settlementId}.with-run`, () => enter(run.runRef, async (call) => {
+    if (call.kind !== "ui") throw new Error("Original analysis admission must be a human UI call")
     originalCall = call
     try { return await action(call) } finally { originalCall = undefined }
   }))
