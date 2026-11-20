@@ -57,7 +57,7 @@ describe("node build", () => {
             Effect.die("The dependency cycle must be rejected before a Location is acquired"),
           ), { idleTimeToLive: "1 minute" },
         )
-        return { ...locations, keys: RcMap.keys(locations.rcMap) }
+        return { ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) }
       }),
     )
     const map = Node.makeGlobalNode({ service: LocationServiceMap.Service, layer: mapLayer, deps: [b] })

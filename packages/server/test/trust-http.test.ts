@@ -39,7 +39,7 @@ function serve(input: { config: string; locations: Locations }) {
     const routes = HttpApiBuilder.layer(api).pipe(
       Layer.provide(TrustHandler),
       Layer.provide(Layer.succeedContext(context)),
-      Layer.provide(Layer.succeed(LocationServiceMap.Service, { ...input.locations, keys: RcMap.keys(input.locations.rcMap) })),
+      Layer.provide(Layer.succeed(LocationServiceMap.Service, { ...input.locations, keys: RcMap.keys(input.locations.rcMap).pipe(Effect.map((values) => Array.from(values))) })),
       Layer.provide(authorizationLayer),
       Layer.provide(schemaErrorLayer),
       Layer.provide(ServerAuth.Config.configLayer({ username: "orchestra", password: Option.some("secret") })),

@@ -250,7 +250,7 @@ describe("SessionV2 stops runs on archive and remove", () => {
         Layer.effectContext<LocationServices, never, never>(Effect.sync(() => { locations++ }).pipe(
           Effect.andThen(Effect.die("A deleted Session must not acquire provider/tool services")),
         )),
-      ).pipe(Effect.map((map) => ({ ...map, keys: RcMap.keys(map.rcMap) }))))
+      ).pipe(Effect.map((map) => ({ ...map, keys: RcMap.keys(map.rcMap).pipe(Effect.map((values) => Array.from(values))) }))))
       yield* Effect.gen(function* () {
         const session = yield* SessionV2.Service
         const runs = yield* SessionExecution.Service

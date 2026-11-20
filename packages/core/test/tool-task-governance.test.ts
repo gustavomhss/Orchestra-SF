@@ -145,7 +145,7 @@ const it = testEffect(AppNodeBuilder.build(LayerNode.group([
   [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service,
     LayerMap.make((_ref: Location.Ref) =>
       Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))).pipe(
-        Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap) })),
+        Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) })),
       ))],
   [SessionExecution.node, execution],
   [TaskGovernance.node, governance],

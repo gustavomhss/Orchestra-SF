@@ -65,7 +65,7 @@ export function make(options: { password?: string } = {}) {
       ])
       return LayerNode.compile(nodes.node).pipe(Layer.fresh,
         Layer.provide(LayerNode.compile(nodes.hoisted, [[Database.node, databaseNode]])))
-    }, { idleTimeToLive: "60 minutes" }).pipe(Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap) }))))
+    }, { idleTimeToLive: "60 minutes" }).pipe(Effect.map((locations) => ({ ...locations, keys: RcMap.keys(locations.rcMap).pipe(Effect.map((values) => Array.from(values))) }))))
     const context = yield* Layer.build(Layer.mergeAll(Layer.succeed(Database.Service, database), map,
       LayerNode.compile(EventV2.node, [[Database.node, databaseNode]])))
     const locations = Context.get(context, LocationServiceMap.Service)
