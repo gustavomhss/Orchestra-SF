@@ -93,7 +93,7 @@ Prefixo: `modules/sucafina/Sucafinav1/test/`. A última falha da tabela é uma a
 | `product/c12-receipt-recovery/recovery-ui.test.ts:197` | unbound/produtor UI | decision-apply.ts:10 não tem data-recover-change, e script não chama decision-recover. Consumer é UI local real, não console legado. |
 | `product/wp12/native-execution-portfolio.test.ts:14; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
 | `product/wp12/native-execution-portfolio.test.ts:134; product/wp12/native-portfolio-preparation.ts:150` | precondição de fixture | Fixture registra coverage completa e baseline sem operações; scenario-port.ts:107–118 retorna total240000/complete. Helper:139–153 aplica indevidamente expectativas de alternativa condicionada ao baseline. Não alterar total real nem enfraquecer cobertura. |
-| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em apps/cli/src/sucafina-product/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP400 em vez de200; não reduzir o positivo a rejeição. |
+| `product/wp01/workbench-analysis.test.ts:144` | unbound/produtor HTTP | prepareInput em product/interface/analysis-http.ts:79 exclui as skills de enquadrar/contestar exigidas pelo positivo. HTTP400 em vez de200; não reduzir o positivo a rejeição. |
 | `product/wp01/workbench-analysis.test.ts:380` | fixture-contract | Revogação injetada via models não ocorre em action output. models só participa de start; preservar403/denied/fechamento de lease e migrar injeção em fatia própria. |
 | `product/wp10/integration/analysis-stale-calculation.test.ts:303` | fixture-contract | BCS original retorna historical; teste ainda espera unavailable de contrato antigo com lease privado. |
 | `product/wp10/integration/analysis-stale-calculation.test.ts:346` | fixture-contract | Mutação injetada só no private read não ocorre; produtor atual usa o mesmo call original. Não trocar denied porok. |
@@ -125,6 +125,13 @@ Feito: branch isolada; seleção dos três shards conferida; requisição compat
 Pendente: concluir shard 3; depois aplicar duas fatias comprovadas (adapter descriptors no shard 1 e guard C08 no shard 2), com um gate completo por causa. Demais causas permanecem classificadas, com suas asserções intactas.
 
 Asserções removidas: nenhuma até este checkpoint. Testes pulados/removidos: nenhum. Produto, projeções, fixtures e workflows: nenhuma alteração.
+
+### Justificativas das duas substituições propostas
+
+- Adapter (`product/routine-native-admission/adapter-boundaries.test.ts:113`): a expectativa de array vazio para qualquer perda de binding será substituída pela lista exata de cinco IDs quando publication existir, e por array vazio somente quando publication faltar. A ausência de watch permanece coberta pela lista fechada. Será acrescentada a chamada real de `routines.readAdmission`, exigindo o erro exato de reader indisponível e contadores exatamente zero. Não é uma redução para nonempty/truthy.
+- Executive (`product/wp12/native-execution-executive.test.ts:213`): o oracle parcial `unavailable/analysis-source-unavailable` será substituído por HTTP403 e body exato `denied/case-selection-unavailable`, pois o guard C08 externo precede o produtor. Todas as asserções de digest, preservação histórica, downloads GET reais e recusa anônima permanecem.
+
+Essas propostas ainda não foram aplicadas: primeiro deve encerrar a enumeração do shard3.
 
 ## Como retomar
 
