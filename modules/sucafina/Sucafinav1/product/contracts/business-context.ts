@@ -1,3 +1,4 @@
+import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { Surface } from "../../src/identity.ts"
 import type { Period, DomainProjection, CommandReceiptView } from "./context.ts"
 import type { TrustedDomainContext } from "./sf-execution.ts"
@@ -64,7 +65,7 @@ export type BusinessContextService = {
   emitFromLedger: (sourceEventRef: BusinessEvidenceRef, trustedCall: TrustedDomainContext) => Promise<MemoryWriteReceipt>
 }
 export type AuthorizedCaseProjection = {
-  context: { installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string } & (
+  context: { installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string; owner?: TeamProfile.Owner } & (
     | { kind: "native"; profileId: string }
     | { kind: "ui"; profileId?: never }
   )
