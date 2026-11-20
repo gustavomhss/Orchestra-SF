@@ -51,16 +51,18 @@ export async function revokeReportsSession(input: {
     const deniedBody = await forbidden.text()
     for (const secret of [answer.message.body, answer.pin.reviewDigest, ...Object.values(retainedPending.drafts)])
       expect(deniedBody, "The real denied read must not return protected content or drafts").not.toContain(secret)
-    const cleared = retained.locator("[data-sf-review-workspace]")
-    await expect(cleared.getByRole("status")).toHaveText("O acesso mudou. Reabra uma revisão autorizada.")
+    const cleared = retained.locator('[data-sf-host="owner-runtime231"]')
+    await expect(cleared).toHaveAttribute("data-sf-provider-state", "denied")
+    await expect(cleared.locator('[role="status"][data-sf-f01="denied"]')).toHaveText("You do not have access to this content.")
     // The installed host now disposes all protected views on denied access.
-    // Removing navigation entirely is stronger than retaining a disabled button.
+    // Its access toolbar remains available; all protected review controls disappear.
     await expect(meeting).toHaveCount(0)
     await expect(meeting.getByRole("heading")).toHaveCount(0)
     await expect(meeting.getByRole("listitem")).toHaveCount(0)
     await expect(cleared.getByRole("heading")).toHaveCount(0)
     await expect(cleared.getByRole("listitem")).toHaveCount(0)
-    await expect(cleared.getByRole("button")).toHaveCount(0)
+    await expect(cleared.getByRole("button")).toHaveCount(1)
+    await expect(cleared.getByRole("button", { name: "Refresh access", exact: true })).toBeVisible()
     await expect(retained.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("region", { name: "Confirmed answer", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("button", { name: "Next topic", exact: true })).toHaveCount(0)

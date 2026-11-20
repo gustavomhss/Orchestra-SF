@@ -25,6 +25,7 @@ type Intent = {
   threadId?: string
   reconciled: boolean
   payload: CreateInput | ReplyInput | EditInput | ConfirmInput
+  prepared?: Prepared
 }
 
 function asThread(value: unknown): Thread | undefined {
@@ -65,6 +66,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
   let discussion: HTMLElement | undefined
   let intent: Intent | undefined
   let operation: AbortController | undefined
+  let disposed = false
   const actor = () => owner.ready()?.context.stamp.principalRef ?? ""
   const sections = () => props.review.sections
   const selected = () => sections().find((section) => section.id === ui.sectionId) ?? sections()[0]
@@ -82,12 +84,26 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     intent = next
     setUi({ hasIntent: !!next, reconciled: next?.reconciled ?? false })
   }
-  onCleanup(() => operation?.abort())
+  onCleanup(() => { disposed = true; operation?.abort(); intent = undefined })
+
+  const assertAuthority = (result: { kind: string; status?: number }) => {
+    if (result.kind !== "response" || (result.status !== 401 && result.status !== 403)) return
+    operation?.abort()
+    markIntent(undefined)
+    setUi({
+      question: "", reply: "", edits: {}, recipients: [], recipientRef: "", sourceRef: "", sectionId: "",
+      thread: undefined, prepared: undefined, confirmed: undefined, historyText: "", status: "",
+    })
+    owner.invalidate(result.status === 401 ? "session-expired" : "revoked")
+    throw new Error("Review discussion access changed")
+  }
 
   const readConfirmed = async (client: ReturnType<typeof createSfCollaborationClient>, questionId: string, signal: AbortSignal) => {
     const result = await client["collaboration.answer-read"]({ questionId }, { signal })
-    if (signal.aborted) return
-    if (result.kind !== "response" || result.body.status !== "ok") {
+    if (signal.aborted || disposed) return
+    assertAuthority(result)
+    if (result.kind !== "response") throw new Error("Confirmed answer read unavailable")
+    if (result.body.status !== "ok") {
       setUi("confirmed", undefined)
       return
     }
@@ -129,7 +145,9 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       const client = createSfCollaborationClient(active.transport)
       const people = await client["collaboration.recipients"]({}, { signal: controller.signal })
       if (controller.signal.aborted || owner.generation() !== generation || props.review.id !== reviewId) return
-      if (people.kind === "response" && people.body.status === "ok") {
+      assertAuthority(people)
+      if (people.kind !== "response" || people.body.status !== "ok") throw new Error("Review recipients unavailable")
+      if (people.body.status === "ok") {
         const installed = active.context.stamp.principalRef
         setUi({
           recipients: people.body.value,
@@ -139,19 +157,15 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       const bound = reviewLocationBinding().reviewThread
       if (!bound) return
       const read = await client["collaboration.thread-read"]({ id: bound }, { signal: controller.signal })
-      if (controller.signal.aborted || owner.generation() !== generation || read.kind !== "response" || read.body.status !== "ok") return
+      if (controller.signal.aborted || owner.generation() !== generation || props.review.id !== reviewId) return
+      assertAuthority(read)
+      if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
       const thread = asThread(read.body.value)
       if (!thread || thread.id !== bound) return
       setUi("thread", thread)
       await readConfirmed(client, bound, controller.signal)
-    })().catch(() => undefined)
+    })().catch((error) => fail(error))
   })
-
-  const probe = async () => {
-    if (typeof location === "undefined") return
-    const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store" })
-    await response.body?.cancel().catch(() => undefined)
-  }
 
   const refreshBound = async () => {
     const active = owner.ready()
@@ -161,23 +175,27 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const abort = new AbortController()
     operation = abort
     const read = await client["collaboration.thread-read"]({ id }, { signal: abort.signal })
-    if (abort.signal.aborted) return
-    if (read.kind === "response" && read.body.status === "ok") {
-      const thread = asThread(read.body.value)
-      if (thread?.id === id) setUi("thread", thread)
-    }
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(read)
+    if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
+    const thread = asThread(read.body.value)
+    if (!thread || thread.id !== id) throw new Error("Review discussion unavailable")
+    setUi("thread", thread)
     await readConfirmed(client, id, abort.signal)
   }
 
-  const onFocus = () => { void refreshBound().catch(() => undefined); void probe().catch(() => undefined) }
+  const onFocus = () => {
+    if (ui.busy || ui.suspended || ui.hasIntent) return
+    void refreshBound().catch((error) => fail(error))
+  }
   if (typeof window !== "undefined") window.addEventListener("focus", onFocus)
   onCleanup(() => { if (typeof window !== "undefined") window.removeEventListener("focus", onFocus) })
 
-  const call = async (current: Intent, signal: AbortSignal) => {
+  const call = async (current: Intent, signal: AbortSignal, retry: boolean) => {
     const active = owner.ready()
     if (!active) return
     const client = createSfCollaborationClient(active.transport)
-    const options = { signal, idempotencyKey: current.key }
+    const options = { signal, idempotencyKey: current.key, ...(retry ? { retry: "same-intent" as const } : {}) }
     if (current.kind === "question") return client["collaboration.thread-create"](current.payload as CreateInput, options)
     if (current.kind === "reply") return client["collaboration.thread-reply"](current.payload as ReplyInput, options)
     if (current.kind === "edit") return client["collaboration.thread-edit"](current.payload as EditInput, options)
@@ -193,6 +211,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       if (!created) throw new Error("Question was not saved against the issued pin.")
       current.threadId = created.id
       const read = await client["collaboration.thread-read"]({ id: created.id }, { signal })
+      if (signal.aborted || disposed) return
+      assertAuthority(read)
       if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
       const thread = asThread(read.body.value)
       if (!thread || thread.id !== created.id) throw new Error("Review discussion unavailable")
@@ -206,6 +226,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       const receipt = asThread(value)
       if (!receipt || receipt.id !== current.threadId) throw new Error("Reply unavailable")
       const read = await client["collaboration.thread-read"]({ id: receipt.id }, { signal })
+      if (signal.aborted || disposed) return
+      assertAuthority(read)
       if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
       const thread = asThread(read.body.value)
       if (!thread) throw new Error("Review discussion unavailable")
@@ -220,6 +242,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       if (receipt.id !== payload.id || receipt.messageId !== payload.messageId || receipt.version !== payload.expectedVersion + 1)
         throw new Error("Answer edit unavailable")
       const read = await client["collaboration.thread-read"]({ id: payload.id }, { signal })
+      if (signal.aborted || disposed) return
+      assertAuthority(read)
       if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
       const thread = asThread(read.body.value)
       if (!thread) throw new Error("Review discussion unavailable")
@@ -239,7 +263,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
       setUi("status", copy["sf.u32.answerEdited"])
       return
     }
-    const prepared = ui.prepared
+    const prepared = current.prepared
     const receipt = value as { answerRef?: string; observedVersion?: number }
     if (!prepared || receipt.answerRef !== prepared.answerRef || receipt.observedVersion !== prepared.observedSourceVersion)
       throw new Error("Answer confirmation unavailable")
@@ -252,20 +276,25 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const current = intent
     const active = owner.ready()
     if (!current || !active) return
+    const retry = current.reconciled
     current.reconciled = false
     setUi({ reconciled: false, prepared: undefined })
     const abort = new AbortController()
     operation = abort
-    const result = await call(current, abort.signal)
-    if (abort.signal.aborted || !result) return
+    const result = await call(current, abort.signal, retry)
+    if (abort.signal.aborted || disposed || !result) return
+    assertAuthority(result)
     if (result.kind !== "response" || result.status !== 200 || result.body.status !== "ok")
       throw new Error("Review discussion unavailable")
     await finish(current, result.body.value, abort.signal)
+    if (abort.signal.aborted || disposed) return
     if (intent === current) markIntent(undefined)
     setUi("suspended", false)
   }
 
   const fail = (error: unknown) => {
+    if (disposed || !owner.ready()) return
+    console.error("Review discussion action failed", error instanceof Error ? error.name : "unknown")
     const message = error instanceof Error ? error.message : "Review discussion unavailable"
     setUi({
       suspended: true,
@@ -274,15 +303,17 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
   }
 
   const run = async (recovery: boolean, action: () => Promise<void>) => {
-    if (ui.busy) return
+    if (disposed || ui.busy || !owner.ready()) return
     if (ui.suspended && !recovery) return fail(new Error("Reconcile the discussion before starting another action"))
     if (intent && !recovery) return fail(new Error("Resolve the retained action before starting another"))
     setUi("busy", true)
     hold(true)
     try { await action() } catch (error) { fail(error) } finally {
-      setUi("busy", false)
-      hold(false)
-      if (operation) operation = undefined
+      if (!disposed) {
+        setUi("busy", false)
+        hold(false)
+        operation = undefined
+      }
     }
   }
 
@@ -297,13 +328,15 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const abort = new AbortController()
     operation = abort
     const issued = await reviews["reviews.review-thread-context"]({ reviewRef: props.review.id, sectionId: section.id, basis }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(issued)
     if (issued.kind !== "response" || issued.body.status !== "ok") throw new Error("The producer did not issue a review pin.")
     const pin = issued.body.value
     if (pin.reviewRef !== props.review.id || pin.reviewVersion !== props.review.version || pin.sectionId !== section.id) throw new Error("Issued pin does not match this preserved review.")
     const client = createSfCollaborationClient(active.transport)
     const version = await client["collaboration.storage-version"]({ namespace: "threads" }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(version)
     if (version.kind !== "response" || version.body.status !== "ok") throw new Error("Collaboration version unavailable.")
     const key = crypto.randomUUID()
     const payload = {
@@ -325,7 +358,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const abort = new AbortController()
     operation = abort
     const version = await client["collaboration.storage-version"]({ namespace: "threads" }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(version)
     if (version.kind !== "response" || version.body.status !== "ok") throw new Error("Collaboration version unavailable.")
     const key = crypto.randomUUID()
     const payload = { id: thread.id, body, mutation: { expectedStorageVersion: version.body.value, idempotencyKey: key } }
@@ -342,7 +376,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const abort = new AbortController()
     operation = abort
     const version = await client["collaboration.storage-version"]({ namespace: "threads" }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(version)
     if (version.kind !== "response" || version.body.status !== "ok") throw new Error("Collaboration version unavailable.")
     const key = crypto.randomUUID()
     const payload = {
@@ -362,7 +397,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const result = await createSfCollaborationClient(active.transport)["collaboration.answer-prepare-message"]({
       questionId: thread.id, messageId: message.id, incarnation: message.incarnation, version: message.version,
     }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(result)
     if (result.kind !== "response" || result.body.status !== "ok" || !result.body.value.reviewContext || result.body.value.answer !== message.body)
       throw new Error("Preparation did not return this answer's issued pin.")
     setUi({ prepared: result.body.value, status: "Inspect the captured source and answer before confirming." })
@@ -378,7 +414,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const abort = new AbortController()
     operation = abort
     const version = await client["collaboration.storage-version"]({ namespace: "threads" }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(version)
     if (version.kind !== "response" || version.body.status !== "ok") throw new Error("Collaboration version unavailable for confirmation.")
     const key = crypto.randomUUID()
     const payload = {
@@ -389,7 +426,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
         expectedScopeFingerprint: prepared.expectedScopeFingerprint,
       },
     }
-    markIntent({ kind: "confirm", key, text: prepared.answer, threadId: thread.id, reconciled: false, payload })
+    markIntent({ kind: "confirm", key, text: prepared.answer, threadId: thread.id, reconciled: false, payload, prepared })
     await submitIntent()
   }
 
@@ -402,7 +439,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     operation = abort
     if (current.threadId) {
       const read = await client["collaboration.thread-read"]({ id: current.threadId }, { signal: abort.signal })
-      if (abort.signal.aborted) return
+      if (abort.signal.aborted || disposed) return
+      assertAuthority(read)
       if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
       const thread = asThread(read.body.value)
       if (!thread || thread.id !== current.threadId) throw new Error("Review discussion unavailable")
@@ -420,7 +458,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const abort = new AbortController()
     operation = abort
     const read = await createSfCollaborationClient(active.transport)["collaboration.thread-read"]({ id }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(read)
     if (read.kind !== "response" || read.body.status !== "ok") throw new Error("Review discussion unavailable")
     const thread = asThread(read.body.value)
     if (!thread || thread.id !== id) throw new Error("Review discussion unavailable")
@@ -439,7 +478,8 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const result = await createSfCollaborationClient(active.transport)["collaboration.thread-history"]({
       id: thread.id, messageId: binding.reviewMessage, incarnation: binding.reviewIncarnation, version,
     }, { signal: abort.signal })
-    if (abort.signal.aborted) return
+    if (abort.signal.aborted || disposed) return
+    assertAuthority(result)
     if (result.kind !== "response" || result.body.status !== "ok") throw new Error("Original answer unavailable")
     setUi({ historyText: result.body.value.message.body, status: copy["sf.u32.originalOpened"] })
   }
