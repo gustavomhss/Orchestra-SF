@@ -118,6 +118,57 @@ test("native Settings exposes canonical defaults and first-write CAS without inv
   expect(domain.execute(f.state, admin, reset, environment)).toMatchObject({ ok: false, status: 409, currentVersionCAS: 1 })
   expect(f.state).toEqual(committed)
   expect(f.commits).toEqual([false, false])
+
+  // Supplier.create persists the shared store but does not create a Settings
+  // revision. Exercise both first writes through the original domain contract.
+  for (const action of ["reset", "save"] as const) {
+    const withSupplier = fixture()
+    expect(domain.execute(withSupplier.state, admin, {
+      page: "Suppliers", action: "create", version: 0,
+      values: { supplier: { legalName: "Supplier before first Settings write" } },
+    }, environment).ok).toBe(true)
+    const supplierRows = structuredClone(rows(object(withSupplier.state.data.store).suppliers))
+    expect(supplierRows).toHaveLength(1)
+    expect(supplierRows[0]).toMatchObject({ id: "supplier-1", legalName: "Supplier before first Settings write" })
+    expect(Object.hasOwn(withSupplier.state.data, "store")).toBe(true)
+    expect(withSupplier.state.versions).toEqual({ "suppliers:supplier-1": { version: 1, by: admin.id } })
+    const beforeSettings = structuredClone(withSupplier.state)
+    const source = await settings(await withSupplier.read("CAP28"))
+    expect(source.value.data.settings).toEqual(initialProcurementSettings())
+    expect(source.value.data.settingsInitialization).toEqual({ state: "absent", expectedVersion: 0 })
+    expect(source.value.versions).toEqual({})
+    expect(settingsVersion(source)).toBe(0)
+    expect(withSupplier.state).toEqual(beforeSettings)
+    expect(withSupplier.commits).toEqual([false])
+    const proposed = action === "reset" ? source.value.data.resetSettings! :
+      { ...source.value.data.settings, uploadCap: 1048576 }
+    const review = settingsReview(source, proposed, operation, action)
+    expect(review.base).toMatchObject({ kind: "not-provided" })
+    expect(review.current).toMatchObject({ kind: "not-provided" })
+    expect(review.coverage.state).toBe("partial")
+    expect(review.coverage.expectedCount).toBeNull()
+    expect(review.confirmation).toMatchObject({
+      kind: "admitted", purpose: action,
+      binding: { operationId: "domain.command.CAP28." + action, version: { kind: "record", expectedVersion: 0 } },
+    })
+    const command = { page: "Settings", action, version: 0,
+      values: action === "reset" ? {} : { settings: proposed } }
+    expect(domain.execute(withSupplier.state, admin, command, environment)).toEqual({ ok: true })
+    expect(withSupplier.state.versions.settings).toEqual({ version: 1, by: admin.id })
+    expect(withSupplier.state.versions["suppliers:supplier-1"]).toEqual(beforeSettings.versions["suppliers:supplier-1"]!)
+    expect(rows(object(withSupplier.state.data.store).suppliers)).toEqual(supplierRows)
+    expect(withSupplier.state.audit).toHaveLength(beforeSettings.audit.length + 1)
+    const saved = await settings(await withSupplier.read("CAP28"))
+    expect(saved.value.data.settings).toEqual(proposed)
+    expect(Object.hasOwn(saved.value.data, "settingsInitialization")).toBe(false)
+    expect(settingsVersion(saved)).toBe(1)
+    const afterSettings = structuredClone(withSupplier.state)
+    expect(domain.execute(withSupplier.state, admin, command, environment)).toMatchObject({
+      ok: false, status: 409, currentVersionCAS: 1,
+    })
+    expect(withSupplier.state).toEqual(afterSettings)
+    expect(withSupplier.commits).toEqual([false, false])
+  }
 })
 
 test("native Settings keeps missing, contradictory and unauthorized reset sources closed", async () => {
@@ -135,25 +186,38 @@ test("native Settings keeps missing, contradictory and unauthorized reset source
   const noDefaults = { ...initial, value: { ...initial.value, data: { ...initial.value.data, resetSettings: undefined } } }
   expect(settingsReview(noDefaults, initial.value.data.resetSettings!, operation, "reset").confirmation.kind).toBe("blocked")
 
-  for (const stored of [null, {}, { settings: initialProcurementSettings() }, undefined]) {
-    const existing = fixture()
-    existing.state.data.store = stored
-    const unchanged = structuredClone(existing.state)
-    const projected = await settings(await existing.read("CAP28"))
-    expect(Object.hasOwn(projected.value.data, "settingsInitialization")).toBe(false)
-    expect(settingsVersion(projected)).toBeUndefined()
-    expect(settingsReview(projected, projected.value.data.resetSettings!, operation, "reset").confirmation.kind).toBe("blocked")
-    expect(existing.state).toEqual(unchanged)
-    expect(existing.commits).toEqual([false])
+  // An own revision entry never means "absent", including explicit undefined.
+  // Invalid metadata is refused by the original output codec; JSON drops an
+  // undefined value, but without the marker the consumer still cannot use CAS 0.
+  for (const revision of [null, undefined, {}, { version: -1, by: admin.id }, { version: 0 }, { version: "0", by: admin.id }]) {
+    const invalid = fixture()
+    Object.defineProperty(invalid.state.versions, "settings", { value: revision, enumerable: true, configurable: true })
+    const unchanged = structuredClone(invalid.state)
+    const response = await invalid.read("CAP28")
+    expect(response.status).toBe(200)
+    const body = await response.json()
+    expect(Object.hasOwn(invalid.state.versions, "settings")).toBe(true)
+    expect(Object.hasOwn(body.value.data, "settingsInitialization")).toBe(false)
+    if (revision === undefined) {
+      const decoded = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(body)
+      if (decoded.status !== "ok") throw new Error("Expected unchanged Settings projection")
+      expect(settingsVersion(decoded)).toBeUndefined()
+      expect(settingsReview(decoded, decoded.value.data.resetSettings!, operation, "reset").confirmation.kind).toBe("blocked")
+    } else {
+      expect(() => Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(body)).toThrow()
+    }
+    expect(invalid.state).toEqual(unchanged)
+    expect(invalid.commits).toEqual([false])
   }
-  const malformedVersion = fixture()
-  Object.defineProperty(malformedVersion.state.versions, "settings", { value: null, enumerable: true, configurable: true })
-  const malformed = await malformedVersion.read("CAP28")
-  const malformedBody = await malformed.json()
-  expect(malformedBody.value?.data?.settingsInitialization).toBeUndefined()
-  expect(() => Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(malformedBody)).toThrow()
-  expect(malformedVersion.state.versions.settings).toBeNull()
-  expect(malformedVersion.commits).toEqual([false])
+  const invalidSettings = fixture()
+  invalidSettings.state.data.store = { settings: { ...initialProcurementSettings(), currency: 99 } }
+  const beforeInvalidRead = structuredClone(invalidSettings.state)
+  const invalidSettingsResponse = await invalidSettings.read("CAP28")
+  expect(invalidSettingsResponse.status).toBe(200)
+  const invalidSettingsBody = await invalidSettingsResponse.json()
+  expect(() => Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(invalidSettingsBody)).toThrow()
+  expect(invalidSettings.state).toEqual(beforeInvalidRead)
+  expect(invalidSettings.commits).toEqual([false])
 
   for (const role of ["viewer", "buyer", "supplier admin", null] as const) {
     f.controls.role = role
