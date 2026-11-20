@@ -45,9 +45,10 @@ export function createThreadPort(input: {
   now: () => string
 }) {
   const checkRecipient = input.checkRecipientAtCommit ?? createRecipientCommitCheck()
-  const checkThreadRecipient = (recipientRef: string, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, basis?: ThreadSourceContext, reviewCheck?: typeof input.checkReviewRecipientAtCommit) => basis?.reviewContext
-    ? input.checkReviewRecipientAtCommit !== reviewCheck ? false : reviewCheck ? reviewCheck(recipientRef, basis, context) && input.checkReviewRecipientAtCommit === reviewCheck : recipientRef === context.binding.principalRef
-    : checkRecipient(recipientRef, refs, context)
+  const checkThreadRecipient = (recipientRef: string, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, basis?: ThreadSourceContext, reviewCheck?: typeof input.checkReviewRecipientAtCommit) => {
+    if (basis?.reviewContext) return !!reviewCheck && input.checkReviewRecipientAtCommit === reviewCheck && reviewCheck(recipientRef, basis, context) && input.checkReviewRecipientAtCommit === reviewCheck
+    return checkRecipient(recipientRef, refs, context)
+  }
   return {
     create: async (draft: Draft, mutation: Mutation, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
       if (context.kind !== "ui") return { status: "denied", reason: "human-action-required" }
@@ -67,13 +68,13 @@ export function createThreadPort(input: {
       const prepareReviewFence = input.prepareReviewThreadFence
       const checkReviewRecipient = input.checkReviewRecipientAtCommit
       const reviewFence = sourceContext && prepareReviewFence ? await prepareReviewFence(sourceContext, context) : undefined
-      if (sourceContext && !reviewFence) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+      if (sourceContext && (!reviewFence || selected.draft.recipientRef && !checkReviewRecipient)) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
       const fence = await input.mutationFence.prepare(() => input.authorize(structuredClone(selected.draft), context, "write"))
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const thread: CollaborationThread = { id: input.createId(), kind: selected.draft.kind, sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, ...(selected.draft.recipientRef ? { recipientRef: selected.draft.recipientRef } : {}), state: "open", messages: [{ id: input.createId(), incarnation: input.createId(), version: 1, authorRef: context.binding.principalRef, body: selected.draft.body, createdAt: input.now(), ...(sourceContext ? { sourceContext } : {}) }], evidenceRefs: selected.draft.evidenceRefs }
       if (!thread.id.trim() || !thread.messages[0]?.id.trim() || !thread.messages[0]?.incarnation.trim() || !isThread(thread)) return { status: "unavailable", reason: "identity-unavailable" }
       const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue(selected.draft), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || sourceContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || selected.draft.recipientRef && !checkThreadRecipient(selected.draft.recipientRef, selected.draft.evidenceRefs, context, sourceContext, checkReviewRecipient) || state.threads[thread.id]) return { commit: false, value: null }
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || sourceContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || selected.draft.recipientRef && !checkReviewRecipient) || !input.mutationFence.check(fence) || selected.draft.recipientRef && !checkThreadRecipient(selected.draft.recipientRef, selected.draft.evidenceRefs, context, sourceContext, checkReviewRecipient) || state.threads[thread.id]) return { commit: false, value: null }
         state.threads[thread.id] = thread
         return { commit: true, value: thread }
       })
@@ -146,14 +147,14 @@ export function createThreadPort(input: {
     const prepareReviewFence = input.prepareReviewThreadFence
     const checkReviewRecipient = input.checkReviewRecipientAtCommit
     const reviewFence = reviewBasis && prepareReviewFence ? await prepareReviewFence(reviewBasis, context) : undefined
-    if (reviewBasis && !reviewFence) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+    if (reviewBasis && (!reviewFence || prior.recipientRef && !checkReviewRecipient)) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
     const fence = await input.mutationFence.prepare(() => input.authorize(structuredClone(prior), context, "write"))
     if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
     const messageId = selected.action.kind === "reply" ? input.createId() : undefined
     const incarnation = selected.action.kind === "reply" ? input.createId() : undefined
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
     const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || prior.recipientRef && !checkThreadRecipient(prior.recipientRef, prior.evidenceRefs, context, reviewBasis, checkReviewRecipient) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
+      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || prior.recipientRef && !checkReviewRecipient) || !input.mutationFence.check(fence) || prior.recipientRef && !checkThreadRecipient(prior.recipientRef, prior.evidenceRefs, context, reviewBasis, checkReviewRecipient) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
       const next: CollaborationThread = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now(), ...(prior.messages[0]?.sourceContext?.reviewContext ? { sourceContext: structuredClone(prior.messages[0].sourceContext) } : {}) }] } : { ...prior, state: "resolved" }
       if (!isThread(next)) return { commit: false, value: null }
       state.threads[id] = next

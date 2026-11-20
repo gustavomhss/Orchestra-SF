@@ -14,7 +14,7 @@ export const SfDomainAmountInput = Schema.Union([Schema.Finite, Schema.String, S
 export const SfDomainYears = Schema.Int.check(Schema.isBetween({ minimum: 2024, maximum: 2027 }))
 export const SfDomainMonths = Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 12 }))
 export const SfDomainVersionNumbers = Schema.Record(Schema.String, NonNegativeInt )
-export const SfDomainVersionInput = Schema.Record(Schema.String, Schema.Union([NonNegativeInt, Schema.String]))
+export const SfDomainVersionInput = Schema.Record(Schema.String, NonNegativeInt)
 export const SfDomainReadSelection = Schema.Struct({
   year: optional(SfDomainYears),
   month: optional(SfDomainMonths),

@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
 import type { StoredDecisionResult, createSfDecisionResultStore } from "../decisions/result-store.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import type { PortfolioBinding } from "../decisions/portfolio-bindings.ts"
 import type { CriterionResultBinding } from "../decisions/criterion-rules.ts"
 import type { PlannerDirectIntervalProof } from "../decisions/coverage-interval.ts"
@@ -113,9 +114,12 @@ export function createPortfolioProofVerifier(input: {
     const issued = structuredClone(await input.units.resolve(binding.request, context))
     if (issued.status !== "ok" || issued.value.ruleRef !== binding.ruleRef || issued.value.ruleVersion !== binding.ruleVersion || digestSfValue(issued.value.caseRef) !== digestSfValue(binding.caseRef)) return false
     const unitBinding = issued.value
-    const source = structuredClone(await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context))
-    const baseline = structuredClone(await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context))
-    if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== binding.request.scenarioRef || baseline.value.resultRef !== unitBinding.baselineRef || source.value.requestDigest !== digestSfValue(unitBinding.scenario) || [source.value, baseline.value].some((value) => value.resultDigest !== digestSfValue(value.result) || value.caseRef.id !== binding.caseRef.id || value.caseRef.incarnation !== binding.caseRef.incarnation || value.caseRef.version > binding.caseRef.version)) return false
+    // Both historical reads precede validation. The original C08 producer can
+    // share its read envelopes while retaining every per-result source check.
+    const resultStore = input.results
+    const [source, baseline] = (await readHistoricalScenarios(resultStore,
+      [binding.request.scenarioRef, unitBinding.baselineRef], context)).map((value) => structuredClone(value))
+    if (input.results !== resultStore || source?.status !== "ok" || baseline?.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== binding.request.scenarioRef || baseline.value.resultRef !== unitBinding.baselineRef || source.value.requestDigest !== digestSfValue(unitBinding.scenario) || [source.value, baseline.value].some((value) => value.resultDigest !== digestSfValue(value.result) || value.caseRef.id !== binding.caseRef.id || value.caseRef.incarnation !== binding.caseRef.incarnation || value.caseRef.version > binding.caseRef.version)) return false
     const sourceScenario = source.value.result
     const baselineScenario = baseline.value.result
     const interval = input.coveragePreview ? structuredClone(await input.coveragePreview.issue(structuredClone(binding.request), unitBinding.baselineRef, context)) : undefined
@@ -164,9 +168,10 @@ export function createPortfolioProofVerifier(input: {
       },
       revalidate: async (_samples, _threshold, trusted) => {
         if (!await input.units.revalidate(unitBinding, trusted) || samples.length !== expectedResult.evaluated.length) return false
-        const currentSource = structuredClone(await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, trusted))
-        const currentBaseline = structuredClone(await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, trusted))
-        if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
+        const currentResultStore = input.results
+        const [currentSource, currentBaseline] = (await readHistoricalScenarios(currentResultStore,
+          [binding.request.scenarioRef, unitBinding.baselineRef], trusted)).map((value) => structuredClone(value))
+        if (input.results !== currentResultStore || currentSource?.status !== "ok" || currentBaseline?.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         if (interval?.status === "ok" && (!input.coveragePreview || !await input.coveragePreview.revalidate(interval.value.intervalRef, trusted))) return false
         if (!exact.value) return true
         if (!input.exactThreshold) return false
@@ -202,7 +207,6 @@ export function createPortfolioProofVerifier(input: {
   }
   const verifySensitivity = async (incomingBinding: CriterionResultBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
     const host = input.sensitivityReadScope
-    if (!host) return replaySensitivity(incomingBinding, incomingStored, context)
     let fenceKey: string | undefined
     let attempt: symbol | undefined
     let published = false
@@ -219,6 +223,27 @@ export function createPortfolioProofVerifier(input: {
       const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
       const binding = structuredClone(incomingBinding)
       const stored = structuredClone(incomingStored)
+      const unchangedInputs = () => input.sensitivityReadScope === host && sensitivityAttempts.get(fenceKey!) === attempt &&
+        digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
+        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
+        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+      const staged: { capture?: StagedCapture } = {}
+      const stageCapture = (entry: StagedCapture) => {
+        if (staged.capture || entry.key !== fenceKey) throw new Error("Sensitivity source fence capture changed")
+        staged.capture = entry
+      }
+      const publish = () => {
+        const entry = staged.capture
+        if (!entry || entry.key !== fenceKey || !unchangedInputs()) return false
+        const now = Date.now()
+        for (const [ref, value] of fences) if (value.expires <= now) fences.delete(ref)
+        if (entry.value.expires <= now || fences.size >= 2048 && !fences.has(fenceKey!)) return false
+        // No awaited callback follows publication, with or without a LocalStore read scope.
+        fences.set(fenceKey!, entry.value)
+        published = true
+        return true
+      }
+      if (!host) return await replaySensitivity(binding, stored, context, stageCapture) && publish()
       const persistence = host.persistence
       const transaction = persistence.transaction
       const currentSnapshots = persistence.currentSnapshots
@@ -234,37 +259,23 @@ export function createPortfolioProofVerifier(input: {
         return digestSfValue({ method: request.method, url: request.url, headers: headers.sort(([left], [right]) => left.localeCompare(right)) })
       }
       const requestDigest = requestFingerprint()
-      const unchanged = () => !request.signal.aborted && input.sensitivityReadScope === host && host.persistence === persistence &&
+      const unchanged = () => unchangedInputs() && !request.signal.aborted && host.persistence === persistence &&
         persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots &&
-        host.requestFor === requestFor && host.revalidate === revalidate && host.requestFor(context) === request && requestFingerprint() === requestDigest &&
-        sensitivityAttempts.get(fenceKey!) === attempt && digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
-        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
-        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+        host.requestFor === requestFor && host.revalidate === revalidate && host.requestFor(context) === request && requestFingerprint() === requestDigest
       let invocations = 0
       let workAccepted = false
-      const staged: { capture?: StagedCapture } = {}
       const accepted = await persistence.transaction("planner", async () => {
         invocations++
         if (invocations !== 1 || !currentSnapshots.call(persistence) || !unchanged() || !await host.revalidate(context) || !unchanged()) return { commit: false, value: false }
-        const replayed = await replaySensitivity(binding, stored, context, (entry) => {
-          if (staged.capture || entry.key !== fenceKey) throw new Error("Sensitivity source fence capture changed")
-          staged.capture = entry
-        })
+        const replayed = await replaySensitivity(binding, stored, context, stageCapture)
         // All asynchronous authority observations finish inside the immutable root.
         // LocalStore can still refuse this value for a swallowed nested write.
         workAccepted = replayed && unchanged() && await host.revalidate(context) && unchanged() && !!currentSnapshots.call(persistence)
         return { commit: false, value: workAccepted }
       }, { signal: request.signal })
-      const entry = staged.capture
-      if (!accepted || !workAccepted || invocations !== 1 || !entry || entry.key !== fenceKey || !unchanged()) return false
-      const now = Date.now()
-      for (const [ref, value] of fences) if (value.expires <= now) fences.delete(ref)
-      if (entry.value.expires <= now || fences.size >= 2048 && !fences.has(fenceKey)) return false
-      // No awaited callback follows publication. A rejected/aborted/poisoned root
-      // never publishes its staged capture and never reuses an earlier grant.
-      fences.set(fenceKey, entry.value)
-      published = true
-      return true
+      if (!accepted || !workAccepted || invocations !== 1 || !unchanged()) return false
+      // A rejected, aborted or poisoned root never publishes its staged capture.
+      return publish()
     } catch {
       return false
     } finally {

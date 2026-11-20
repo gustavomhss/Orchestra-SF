@@ -449,18 +449,34 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
 /** The host calls this after returning from a detail screen. */
 export function restoreBiFocus(container: HTMLElement, selection: BiSelection | BiFocusTarget | string) {
   const valueId = typeof selection === "string" ? selection : selection.valueId
+  const opened = typeof selection === "object" && selection !== null && "selectionRef" in selection && "reference" in selection
   const origin = typeof selection === "string" ? undefined : "reference" in selection ? selection.reference?.refDigest : selection.originDigest
   const values = Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId)
+  const chartMarks = opened ? values.filter((element) => element.getAttribute("role") === "button" && (element.getAttribute("data-bi-series") !== null || element.closest("svg"))) : []
+  const seen = new Set<Element>()
   const candidates = [
+    ...chartMarks,
     ...(origin ? values.filter((element) => element.getAttribute("data-bi-origin") === origin) : []),
     ...values,
     ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
   ]
   for (const target of candidates) {
-    if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) continue
-    if (!target.isConnected || target.closest("[hidden], [inert]") || !target.getClientRects().length || getComputedStyle(target).visibility === "hidden") continue
-    target.focus()
-    if (target.ownerDocument.activeElement === target) return true
+    if (seen.has(target)) continue
+    seen.add(target)
+    if (focusBiControl(target)) return true
   }
   return false
+}
+
+function focusBiControl(target: Element) {
+  if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) return false
+  if (!target.isConnected || target.closest("[hidden], [inert]") || !target.getClientRects().length || getComputedStyle(target).visibility === "hidden") return false
+  if (target instanceof SVGElement) {
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "0")
+    target.setAttribute("focusable", "true")
+  }
+  const focus = target.focus
+  if (typeof focus !== "function") return false
+  try { focus.call(target) } catch { return false }
+  return target.ownerDocument.activeElement === target
 }

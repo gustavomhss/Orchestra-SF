@@ -51,6 +51,7 @@ export async function startCapture(handlers: CaptureHandlers, want = { microphon
   )
   contents.setWindowOpenHandler(() => ({ action: "deny" }))
   contents.on("will-navigate", (event) => event.preventDefault())
+  contents.on("will-redirect", (event) => event.preventDefault())
   contents.ipc.on("live-capture:audio", (_, me: Float32Array, them: Float32Array) => handlers.audio(me, them))
   contents.ipc.on("live-capture:status", (_, sense, status, reason) => handlers.status(sense, status, String(reason)))
   contents.ipc.on("live-capture:state", (_, state, reason) => handlers.state(state, String(reason)))

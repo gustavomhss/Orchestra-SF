@@ -20,6 +20,28 @@ type TalentData = Extract<TalentResponse, { status: "ok" }>["value"]["data"]
 type TalentSelection = Readonly<{ id: string; edit: boolean }> | Readonly<{ newMember: true; edit: true }>
 const key = (value: string) => value as SfCopyKey
 const ref = (value: string) => value as SfRef
+const STATUS_KEY = {
+  Active: "sf.u47.active",
+  "On Leave": "sf.u47.onLeave",
+  Terminated: "sf.u47.terminated",
+} as const
+const CLASS_KEY = {
+  Talent: "sf.u47.talent",
+  "Solid Contributor": "sf.u47.solidContributor",
+  Lagger: "sf.u47.lagger",
+} as const
+const OUTLOOK_KEY = {
+  Promote: "sf.u47.promote",
+  Stay: "sf.u47.stay",
+  Replace: "sf.u47.replace",
+  Termination: "sf.u47.termination",
+} as const
+function tokenKey(name: "status" | "cls" | "outlook", value: string) {
+  if (name === "status" && value in STATUS_KEY) return STATUS_KEY[value as keyof typeof STATUS_KEY]
+  if (name === "cls" && value in CLASS_KEY) return CLASS_KEY[value as keyof typeof CLASS_KEY]
+  if (name === "outlook" && value in OUTLOOK_KEY) return OUTLOOK_KEY[value as keyof typeof OUTLOOK_KEY]
+  return "sf.u47.notReviewed"
+}
 
 // Literal values and field names come from dashboard-people.ts / memberForm.
 // CAP08 is the only place where admin-authorized cls/outlook/notes are edited.
@@ -216,7 +238,7 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                   <select id="sf-talent-status" value={filter()}
                     onChange={(event) => setLocal("filter", event.currentTarget.value)}>
                     <For each={allowedStatuses}>
-                      {(status) => <option value={status}>{status}</option>}
+                      {(status) => <option value={status}>{t(key(tokenKey("status", status)))}</option>}
                     </For>
                   </select>
                   <Show when={session.can("save")}>
@@ -254,10 +276,10 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                             {person.name ?? person.id}
                           </button></th>
                           <Show when={session.can("save")}>
-                            <td>{person.cls || t(key("sf.u47.notReviewed"))}</td>
-                            <td>{person.outlook || t(key("sf.u47.notReviewed"))}</td>
+                            <td>{t(key(tokenKey("cls", person.cls ?? "")))}</td>
+                            <td>{t(key(tokenKey("outlook", person.outlook ?? "")))}</td>
                           </Show>
-                          <td>{person.status ?? "—"}</td>
+                          <td>{t(key(tokenKey("status", person.status ?? "")))}</td>
                           <td>
                             <Show when={session.can("save")}>
                               <button type="button" class="mx-btn"
@@ -290,7 +312,9 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                         (session.can("save") || !["cls", "outlook", "notes"].includes(field.name)))}>
                         {(field) => <div>
                           <dt>{t(field.labelKey)}</dt>
-                          <dd>{String((record() as Record<string, unknown>)[field.name] ?? "")}</dd>
+                          <dd>{field.name === "status" || field.name === "cls" || field.name === "outlook"
+                            ? t(key(tokenKey(field.name, String((record() as Record<string, unknown>)[field.name] ?? ""))))
+                            : String((record() as Record<string, unknown>)[field.name] ?? "")}</dd>
                         </div>}
                       </For>
                     </dl>}

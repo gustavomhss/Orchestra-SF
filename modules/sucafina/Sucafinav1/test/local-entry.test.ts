@@ -98,6 +98,21 @@ test("explicit local operator enrollment enters Orchestra and HTML console faces
       expect(head?.status).toBe(404)
       expect(await head!.text()).toBe("")
     }
+    const page = await installation.handler(new Request(`${origin}/sucafina/dashboard?page=Executive%20Dashboard`, { headers: { cookie } }))
+    expect(page?.status).toBe(200)
+    const html = await page!.text()
+    expect(html.toLowerCase()).toContain("<!doctype html>")
+    expect(html).toContain('href="/sucafina/backups"')
+    expect(html).toContain('data-notifications="/sucafina/notifications"')
+    expect(html).toContain('class="environment-banner"')
+    const fragment = await installation.handler(new Request(`${origin}/sucafina/dashboard?page=Executive%20Dashboard&asset=page`, { headers: { cookie } }))
+    expect(fragment?.status).toBe(200)
+    expect(fragment?.headers.get("content-type")).toContain("text/html")
+    const fragmentHtml = await fragment!.text()
+    expect(fragmentHtml.toLowerCase()).not.toContain("<!doctype html>")
+    expect(fragmentHtml).not.toContain('href="/sucafina/backups"')
+    expect(fragmentHtml).not.toContain('data-notifications="/sucafina/notifications"')
+    expect(fragmentHtml).not.toContain('class="environment-banner"')
     const status = await installation.handler(new Request(`${origin}/sucafina/status`))
     expect(await status!.json()).toMatchObject({ login: "local-operator" })
   } finally { await installation.dispose(); await f.store.dispose() }
@@ -116,11 +131,24 @@ test("enrolled operator authenticates when the serving process cannot resolve th
     const enrolled = await installation.handler(new Request(`${origin}/sucafina/auth/local?code=${f.code}`))
     expect(enrolled?.status).toBe(303)
     const cookie = enrolled!.headers.getSetCookie()[0].split(";")[0]
-    const dashboard = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
-    expect(dashboard?.status).toBe(200)
-    const html = await dashboard!.text()
+    const retired = await installation.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { cookie } }))
+    expect(retired?.status).toBe(404)
+    expect(await retired?.text()).toBe("legacy console decommissioned — use /")
+    const backups = await installation.handler(new Request(`${origin}/sucafina/backups`, { headers: { cookie } }))
+    expect(backups?.status).toBe(200)
+    const html = await backups!.text()
     expect(html).toContain("Homologação local")
     expect(html).toContain(name)
+    expect(html).not.toContain(userInfo().username)
+    const saved = await installation.handler(new Request(`${origin}/sucafina/dashboard?page=IT%20Risks`, {
+      method: "POST", headers: { origin, cookie, "content-type": "application/json" },
+      body: JSON.stringify({ page: "IT Risks", action: "save", version: 0, values: { name: "Recorded operator risk", impact: 3, probability: 2 } }),
+    }))
+    expect(saved?.status).toBe(200)
+    await f.store.transaction("dashboard", async (snapshot) => {
+      expect(snapshot.audit.at(-1)?.name).toBe(name)
+      return { commit: false, value: undefined }
+    })
   } finally { await installation.dispose(); await f.store.dispose() }
 })
 

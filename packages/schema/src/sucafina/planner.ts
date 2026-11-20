@@ -273,7 +273,10 @@ function legacyInput<
     confirmed: Optional(Schema.Boolean),
   })
 }
-const DraftCell = Schema.Struct({ measure: Schema.Literals(["budget","actual","forecast"]), month: Month, text: Schema.String })
+const MonthlyAmountText = Schema.String.check(Schema.makeFilter((value) =>
+  value !== "budget" && value !== "actual" && value !== "forecast" || "amount cannot be a measure label",
+))
+const DraftCell = Schema.Struct({ measure: Schema.Literals(["budget","actual","forecast"]), month: Month, text: MonthlyAmountText })
 const Draft = Schema.Struct({ rowId: NonEmpty, revision: NonNegativeInt, cells: Schema.Array(DraftCell).check(Schema.isMinLength(1)).check(Schema.isMaxLength(36)) })
 const MonthlyRequest = Schema.Struct({ page: Schema.Literals(["OPEX","CAPEX"]), versionId: NonEmpty, drafts: Schema.Array(Draft).check(Schema.isMinLength(1)).check(Schema.isMaxLength(500)) })
 const MonthlyRow = Schema.Struct({

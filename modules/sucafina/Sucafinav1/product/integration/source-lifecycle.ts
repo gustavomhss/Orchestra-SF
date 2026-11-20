@@ -1,7 +1,23 @@
+import { randomUUID } from "node:crypto"
 import type { Persistence, Snapshot, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+
+const sanctionedIdentity = new WeakSet<Snapshot>()
+
+/** Allocate the incarnation a same-transaction correlation must name before finish() assigns it. */
+export function bindCreatedSourceIdentity(snapshot: Snapshot, recordType: string, recordId: string) {
+  requireSourceIdentities(snapshot)
+  const records = snapshot.sfSources!.records
+  const key = JSON.stringify([recordType, recordId])
+  const existing = records[key]
+  if (existing?.alive) return existing.incarnation
+  const incarnation = randomUUID()
+  records[key] = { incarnation, version: 1, alive: true, inputDigest: "0".repeat(64) }
+  sanctionedIdentity.add(snapshot)
+  return incarnation
+}
 
 export type SfSourceScope = NonNullable<NonNullable<Snapshot["sfSources"]>["scopes"]>[string]["scope"]
 export type SfScopedSourcePort = {
@@ -16,16 +32,26 @@ export type SfScopedSourcePort = {
   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
+type CanonicalScopedSourceCheck = NonNullable<SfScopedSourcePort["checkScopedSource"]>
+// Register only factory-owned code. No snapshot, observation or result is retained.
+const canonicalSourceChecks = new WeakMap<object, CanonicalScopedSourceCheck>()
+
+/** A wrapped/replaced method must keep its wrapper's existing authority path. */
+export function canonicalScopedSourceCheck(port: SfScopedSourcePort): CanonicalScopedSourceCheck | undefined {
+  const check = canonicalSourceChecks.get(port)
+  return check && Object.getOwnPropertyDescriptor(port, "checkScopedSource")?.value === check ? check : undefined
+}
+
 export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
 export function createSfSourcePersistence(input: {
-  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
+  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot">
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
   purpose?: "business-restore"
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
-}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
     requireSourceIdentities(snapshot)
     const scope = structuredClone(requested)
@@ -61,7 +87,7 @@ export function createSfSourcePersistence(input: {
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     return () => {
       requireSourceIdentities(snapshot)
-      if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+      if (before !== digestSfValue(snapshot.sfSources) && !sanctionedIdentity.has(snapshot)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
       if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
       const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
       if (input.purpose === "business-restore") {
@@ -74,8 +100,9 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
     }
   }
-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
+    ...(input.persistence.currentSnapshot ? { currentSnapshot: (surface: Surface) => input.persistence.currentSnapshot!(surface) } : {}),
     // Scope forwarding does not admit a source. Callers still enter transaction
     // below, preserving source guards and any underlying CurrentChoice fence.
     ...(input.persistence.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) =>
@@ -146,6 +173,7 @@ export function createSfSourcePersistence(input: {
         return result
       }, options) } : {}),
   }
+  if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
   return persistence
 }
 

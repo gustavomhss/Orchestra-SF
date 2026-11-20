@@ -31,6 +31,31 @@ type Contract = Readonly<{
 
 const invalid = (): SfWireDecodeResult => ({ status: "invalid" })
 
+const deniedIsNotData = new Set<string>([
+  "intelligence.analysis.cancel",
+  "intelligence.analysis.choices",
+  "intelligence.analysis.list",
+  "intelligence.analysis.output",
+  "intelligence.analysis.prepare",
+  "intelligence.analysis.read",
+  "intelligence.analysis.start",
+  "projection.residents",
+  "dashboard.dashboard-agenda",
+  "dashboard.dashboard-capture",
+  "dashboard.dashboard-history",
+  "dashboard.dashboard-review",
+  "dashboard.dashboard-review-preserve",
+  "projection.review",
+  "reviews.report.prepare",
+  "reviews.review-source",
+  "reviews.review-update",
+])
+
+function deniedBody(value: unknown): boolean {
+  return !!value && typeof value === "object" && !Array.isArray(value) &&
+    "status" in value && value.status === "denied"
+}
+
 function decode(schema: Schema.Top, value: unknown): SfWireDecodeResult {
   // The exact source shape must parse before its JSON wire representation
   // can be admitted. No JSON passthrough, guessed response or relaxed parsing.
@@ -44,7 +69,12 @@ function decode(schema: Schema.Top, value: unknown): SfWireDecodeResult {
 function codec(source: Contract): SfOperationCodec {
   return Object.freeze({
     decodeInput: (value: unknown) => decode(source.input, value),
-    decodeOutput: (value: unknown) => decode(source.output, value),
+    decodeOutput: (value: unknown) => {
+      const decoded = decode(source.output, value)
+      if (decoded.status === "ok" && deniedIsNotData.has(source.operationId) && deniedBody(decoded.value))
+        return invalid()
+      return decoded
+    },
   })
 }
 

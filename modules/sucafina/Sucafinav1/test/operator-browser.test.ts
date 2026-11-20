@@ -1,14 +1,13 @@
 import { expect, test } from "bun:test"
-import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
+import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
-import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV } from "../src/nav.ts"
 
-test("Chrome follows the private enrollment gateway into actual HTML screens without Microsoft", async () => {
+test("Chrome follows the private enrollment gateway into the Orchestra shell without Microsoft", async () => {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
   const file = await prepareLocalConfiguration(root)
   const access = await prepareOperatorAccess(file, true)
@@ -19,40 +18,36 @@ test("Chrome follows the private enrollment gateway into actual HTML screens wit
     XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
   }
   const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
-  const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
+  const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => {
+    const url = new URL(request.url)
+    if (url.pathname === "/") return new Response("<!doctype html><title>Orchestra</title><main>Orchestra</main>", { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } })
+    return await installation.handler(request) ?? new Response(null, { status: 404 })
+  } })
   const { chromium } = await import("@playwright/test")
   const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
   const failures: string[] = []
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
     page.on("pageerror", (error) => { failures.push(error.message) })
+    const enrollment = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/auth/local")
     await page.goto(pathToFileURL(access.artifact).href)
-    await page.waitForURL("http://localhost:4110/sucafina/dashboard")
-    await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
+    const admitted = await enrollment
+    expect(admitted.status()).toBe(303)
+    expect(admitted.headers()["location"]).toBe("/")
+    await page.waitForURL((url) => url.origin === "http://localhost:4110" && url.pathname === "/")
+    expect(await page.locator("main").innerText()).toBe("Orchestra")
+    expect(await page.locator("body").innerText()).not.toContain("Microsoft 365 application is not configured")
+    const status = await page.goto("http://localhost:4110/sucafina/status")
+    expect(status?.status()).toBe(200)
+    expect(await status!.json()).toMatchObject({ login: "local-operator" })
+    const notifications = await page.goto("http://localhost:4110/sucafina/notifications")
+    expect(notifications?.status()).toBe(200)
+    expect(notifications?.headers()["content-type"]).toContain("application/json")
+    expect(await notifications!.json()).toEqual({ items: [] })
     for (const surface of ["dashboard", "planner", "procurement"]) {
       const response = await page.goto(`http://localhost:4110/sucafina/${surface}`)
-      expect(response?.status()).toBe(200)
-      await page.locator(`body[data-surface="${surface}"]`).waitFor()
-      expect(await page.locator("#content").innerText()).toContain("Homologação local")
-      expect(await page.locator("body").innerText()).not.toContain("Microsoft 365 application is not configured")
-      // Other product widgets may have their own <nav>; qualify only the real sidebar.
-      const sidebar = page.locator("aside.sidebar > nav")
-      // Links are grouped by presentation sections, not by the registry's key index.
-      // Validate exact human-facing order and no missing/extra authorized pages.
-      const expected = surface === "dashboard" ? [...DASHBOARD_PAGES]
-        : surface === "planner" ? ["Overview", "Versions", ...PLANNER_TABS.filter((page) => page !== "Overview" && page !== "Versions")]
-        : [...PROCUREMENT_NAV]
-      const titles = await sidebar.locator("a").allTextContents()
-      expect(titles).toEqual(expected)
-      expect(new Set(titles)).toEqual(new Set(surface === "dashboard" ? DASHBOARD_PAGES : surface === "planner" ? PLANNER_TABS : PROCUREMENT_NAV))
-      const hrefs = await sidebar.locator("a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
-      await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `operator-${surface}.png`), fullPage: true })
-      for (const href of hrefs) {
-        const screen = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
-        expect(screen?.status()).toBe(200)
-        await page.locator(`body[data-surface="${surface}"]`).waitFor()
-        expect(await page.locator("#content").innerText()).toContain("Homologação local")
-      }
+      expect(response?.status()).toBe(404)
+      expect(await response!.text()).toBe("legacy console decommissioned — use /")
     }
     expect(failures).toEqual([])
   } finally {

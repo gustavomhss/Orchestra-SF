@@ -1028,6 +1028,10 @@ function amount(request: Record<string, unknown>) {
 function requestStatusLabel(status: string) {
   return ({ draft: "Requisition draft", pr_pending: "Requisition approval", pr_rejected: "Requisition rejected", sourcing: "Sourcing", src_pending: "Sourcing approval", src_rejected: "Sourcing rejected", po_draft: "Purchase order draft", po_pending: "Purchase order approval", po_rejected: "Purchase order rejected", po_approved: "Purchase order approved", po_issued: "Issued internally", cancelled: "Cancelled" } as Record<string, string>)[status] ?? status
 }
+function supplierUpload(page: string, id: string, name: string, version: number, actor: Actor): string {
+  if (!id || !actor.canWrite || !actor.roles.some((role) => role === "admin" || role === "supplier admin")) return ""
+  return `<form data-private-upload="supplier" data-page="${esc(page)}" data-record="${esc(id)}" data-version="${version}"><label>${esc(name)}<input type="file" name="file" required></label><button type="submit">Upload document</button></form>`
+}
 function queueRequestLink(row: ProcurementQueueRow, href: string) {
   return `<a href="${esc(href)}" data-source-ref="${esc(row.evidence.refId)}" data-source-digest="${esc(row.evidence.refDigest)}" data-source-version="${row.version}">${esc(row.id)}</a>`
 }
@@ -1185,8 +1189,31 @@ function repeatRows(
     )
     .join("")
 }
+function procurementPageData(data: Record<string, unknown>, context: RenderContext) {
+  if (Array.isArray(data.requests) || !data.store || typeof data.store !== "object") return { data, context }
+  const view = domain.view(
+    { data, versions: context.versions, sequences: {}, audit: [], notices: [] } as Snapshot,
+    context.actor,
+    { at: context.at, id: () => "procurement-page", directory: [{ id: context.actor.id, name: context.actor.id }] },
+  )
+  return {
+    data: {
+      ...view.data,
+      ...(Object.hasOwn(data, "request") ? { request: data.request } : {}),
+      ...(Object.hasOwn(data, "q") ? { q: data.q } : {}),
+      ...(Object.hasOwn(data, "filter") ? { filter: data.filter } : {}),
+      ...(Object.hasOwn(data, "search") ? { search: data.search } : {}),
+      ...(Object.hasOwn(data, "procurementQueueView") ? { procurementQueueView: data.procurementQueueView } : {}),
+    },
+    context: { ...context, versions: view.versions },
+  }
+}
+
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
   if (!pages.includes(page as (typeof pages)[number])) return undefined
+  const projected = procurementPageData(data, context)
+  data = projected.data
+  context = projected.context
   const requests = rows(data.requests)
   const queueView = readProcurementQueueView(data.procurementQueueView)
   if (["Requests", "My approvals"].includes(page) && Object.hasOwn(data, "procurementQueueView") &&
@@ -1415,7 +1442,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           const readiness = privileged
             ? `<section><h3>Activation prerequisites</h3><p>This checklist reports recorded prerequisites only; eligibility also depends on authorization and supplier policies. A recorded sanctions screening date does not verify external screening.</p>${bankUnavailable ? "<p>Bank verification is unavailable; the masked or empty bank view cannot establish whether IBAN is recorded.</p>" : ""}${requirements.length ? `<p>Complete these recorded prerequisites before activation: ${requirements.map((item) => `<span>${esc(supplierRequirementLabel(item))}</span>`).join(", ")}</p>` : "<p>No missing prerequisites are visible in this view. Policy eligibility has not been evaluated.</p>"}</section>`
             : ""
-          return `<details id="supplier-${esc(id)}"${supplier === requestedSupplier ? " open" : ""}><summary>${esc(text(supplier.legalName))}</summary><nav>General · Categories · Contacts · Commercial · Bank · Compliance · Linked requests · Audit</nav>${canMaintain ? controls(page, "save", id, "<h3>Update supplier</h3>" + scalarFields("", supplier, general) + fields([{ name: "categories", label: "Categories (one per line)", type: "textarea", value: Array.isArray(supplier.categories) ? supplier.categories.join("\n") : supplier.categories }]) + repeatRows("contacts", rows(supplier.contacts), ["name", "email", "phone"]) + scalarFields("commercial", object(supplier.commercial), ["notes"]) + scalarFields("compliance", object(supplier.compliance), ["notes"]), "Save supplier") : table(["Supplier field", "Recorded value"], general.map((field) => [esc(labels[field] ?? field), supplier[field] == null ? "Unavailable" : esc(String(supplier[field]))])) + table(["Category"], (Array.isArray(supplier.categories) ? supplier.categories : []).map((category) => [esc(String(category))])) + table(["Contact", "Email", "Phone"], rows(supplier.contacts).map((contact) => [esc(text(contact.name)), esc(text(contact.email)), esc(text(contact.phone))])) + table(["Commercial notes", "Compliance notes"], [[esc(text(object(supplier.commercial).notes)), esc(text(object(supplier.compliance).notes))]])}<section><h3>Bank</h3>${privileged ? controls(page, "change-bank", id, scalarFields("", supplier, [...bankFields]), "Save bank details") : "<p>Bank details masked.</p>"}</section>${bankRevalidation}${readiness}${[...(privileged ? ["activate", "block", "inactivate"] : []), ...(canMaintain && supplier.status === "pending" && !linked ? ["delete"] : [])].map((action) => controls(page, action, id, "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<h3>Linked requests</h3>${table(
+          return `<details id="supplier-${esc(id)}"${supplier === requestedSupplier || visible.length === 1 ? " open" : ""}><summary>${esc(text(supplier.legalName))}</summary><nav>General · Categories · Contacts · Commercial · Bank · Compliance · Linked requests · Audit</nav>${canMaintain ? controls(page, "save", id, "<h3>Update supplier</h3>" + scalarFields("", supplier, general) + fields([{ name: "categories", label: "Categories (one per line)", type: "textarea", value: Array.isArray(supplier.categories) ? supplier.categories.join("\n") : supplier.categories }]) + repeatRows("contacts", rows(supplier.contacts), ["name", "email", "phone"]) + scalarFields("commercial", object(supplier.commercial), ["notes"]) + scalarFields("compliance", object(supplier.compliance), ["notes"]), "Save supplier") : table(["Supplier field", "Recorded value"], general.map((field) => [esc(labels[field] ?? field), supplier[field] == null ? "Unavailable" : esc(String(supplier[field]))])) + table(["Category"], (Array.isArray(supplier.categories) ? supplier.categories : []).map((category) => [esc(String(category))])) + table(["Contact", "Email", "Phone"], rows(supplier.contacts).map((contact) => [esc(text(contact.name)), esc(text(contact.email)), esc(text(contact.phone))])) + table(["Commercial notes", "Compliance notes"], [[esc(text(object(supplier.commercial).notes)), esc(text(object(supplier.compliance).notes))]])}<section><h3>Bank</h3>${privileged ? controls(page, "change-bank", id, scalarFields("", supplier, [...bankFields]), "Save bank details") : "<p>Bank details masked.</p>"}</section>${bankRevalidation}${readiness}${[...(privileged ? ["activate", "block", "inactivate"] : []), ...(canMaintain && supplier.status === "pending" && !linked ? ["delete"] : [])].map((action) => controls(page, action, id, "", action.charAt(0).toUpperCase() + action.slice(1))).join("")}<h3>Linked requests</h3>${table(
             ["Request"],
             requests
               .filter(
@@ -1427,7 +1454,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           )}<h3>Audit</h3>${table(
             ["Field"],
             rows(supplier.history).map((line) => [esc(text(line.field))]),
-          )}</details>`
+          )}${supplierUpload(page, id, text(supplier.legalName), version(`suppliers:${id}`), context.actor)}</details>`
         })
         .join("")
     )

@@ -1,4 +1,4 @@
-import { digestSfValue } from "../contracts/canonical.ts"
+import { canonicalSfValue, digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { BusinessContextService, BusinessEvidenceRef, AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import type { DecisionCase, PreparedChangeView } from "../contracts/decisions.ts"
@@ -90,10 +90,10 @@ export function createDecisionCasePort(input: {
         if (read.status !== "ok") return failure(read)
         const value = read.value
         if (!value || value.incarnation !== ref.incarnation || (context.kind === "native" && context.binding.caseVersion !== value.version) || !value.participants.includes(context.binding.principalRef)) return { status: "denied", reason: "case-access-unavailable" }
-        const caseDigest = digestSfValue(value)
+        const caseCanonical = canonicalSfValue(value)
         if (!await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
         const refs = evidenceReferences(value)
-        const refsDigest = digestSfValue(refs)
+        const refsCanonical = canonicalSfValue(refs)
         if (!sourcesCovered(value, refs) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
         if (!await input.authorizeCase(value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
         const checkedAt = input.now()
@@ -104,7 +104,7 @@ export function createDecisionCasePort(input: {
         if (again.status !== "ok") return failure(again)
         // Namespace authorization may await after the state callback. Check
         // the live lease synchronously with the complete final snapshot.
-        if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
+        if (!again.value || canonicalSfValue(again.value) !== caseCanonical || canonicalSfValue(value) !== caseCanonical || canonicalSfValue(refs) !== refsCanonical || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
         const final = again.value
         const projection: AuthorizedCaseProjection = {
           context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },

@@ -36,7 +36,7 @@ export function createPlannerProduct(input: { standalone?: StandaloneScenarioPro
   const issueSource = createPlannerSourceIssuer({ host: input.host, scopedSources: input.scopedSources, sources: plannerSources })
   const versions = createPlannerVersionsHost({ host: input.host, humanAuthorize: input.versionAuthorize ?? (async () => false) })
   const overview = createPlannerOverviewHost({ host: input.host, planner, issueSource, versions })
-  return { planner, sources, scenarios, scenarioInputs, issueSource, versions, overview, presentComparison: plannerScenarioCostPresentation }
+  return { planner, sources, scenarios, scenarioInputs, issueSource, readSourceProjection: plannerSources.readProjection, versions, overview, presentComparison: plannerScenarioCostPresentation }
 }
 
 /** Route case coverage to its case-scoped authority and original sources to the forecast authority. */

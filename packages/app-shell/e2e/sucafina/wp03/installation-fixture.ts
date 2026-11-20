@@ -50,7 +50,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     await rm(directory, { recursive: true, force: true })
     throw new Error(redactDiagnostics(error instanceof Error ? error.message : String(error)))
   }
-  const child = spawn("bun", ["run", path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110",
+  const child = spawn("bun", ["--preload", path.join(here, "../installed-console-preload.ts"), path.join(repository, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110",
     "--installation", path.join(repository, "modules/sucafina/Sucafinav1/local/entry.ts")], {
     cwd: directory, env: environment, stdio: ["ignore", "pipe", "pipe"],
   })

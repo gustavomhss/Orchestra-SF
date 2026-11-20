@@ -5,6 +5,7 @@ import type { ScenarioRequest, SensitivityRequest } from "../contracts/operation
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import { plannerPreviewDigest, plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import { createSensitivityEvaluator, quantifiedSensitivityScenario } from "./sensitivity.ts"
 import type { SensitivitySampledResult } from "./sensitivity.ts"
@@ -70,7 +71,7 @@ export function createPlannerSensitivity(input: {
     const interval = input.coveragePreview ? structuredClone(await input.coveragePreview.issue(structuredClone(request), binding.baselineRef, context)) : undefined
     if (interval && interval.status !== "ok" && interval.status !== "unavailable") return interval
     const samples: { request: ScenarioRequest; resultRef: string; digest: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean; qualification?: PortfolioCoverageQualification }[] = []
-    const exactEvidence: { value?: KnownSubtotalThreshold } = {}
+    const exactEvidence: { value?: KnownSubtotalThreshold; coverageDigest?: string } = {}
     const certify = (certificate: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }, trusted: TrustedDomainContext) => validatePlannerThreshold({ request, binding, source: sourceScenario, baseline: baselineScenario, certificate, preview: input.preview, context: trusted })
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
@@ -94,7 +95,14 @@ export function createPlannerSensitivity(input: {
         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion, ...(qualification ? { coverageQualification: qualification } : {}) } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario) || !assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        // Bootstrap inventory is not a coverage proof. Current classified components
+        // can prove a known-subtotal bound while missing categories stay disclosed.
+        if (!assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) {
+          const coverage = await input.coveragePreview?.proveKnownSubtotal(request, binding.baselineRef, { source: sourceScenario, baseline: baselineScenario }, trusted)
+          if (coverage?.status !== "ok") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+          exactEvidence.coverageDigest = coverage.value
+        }
         const result = structuredClone(await input.exactThreshold(structuredClone(request), structuredClone(binding), trusted))
         if (result.status !== "ok") return result
         const certificate = await certify(result.value, trusted)
@@ -104,9 +112,10 @@ export function createPlannerSensitivity(input: {
       revalidate: async (_samples, _threshold, trusted) => {
         const latest = structuredClone(await input.resolve(structuredClone(request), trusted))
         if (latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(binding) || !await input.revalidate(structuredClone(binding), trusted)) return false
-        const currentSource = structuredClone(await readScenario(request.scenarioRef, trusted))
-        const currentBaseline = structuredClone(await readScenario(binding.baselineRef, trusted))
-        if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
+        const currentResultStore = input.results
+        const [currentSource, currentBaseline] = (await readHistoricalScenarios(currentResultStore,
+          [request.scenarioRef, binding.baselineRef], trusted)).map((value) => structuredClone(value))
+        if (input.results !== currentResultStore || currentSource?.status !== "ok" || currentBaseline?.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         const checked = await Promise.all(samples.map(async (sample) => {
           const stored = structuredClone(await input.results.read({ kind: "scenario", resultRef: sample.resultRef }, trusted))
           const current = structuredClone(await input.preview({ baselineRef: binding.baselineRef, scenario: structuredClone(sample.request) }, trusted))
@@ -119,6 +128,10 @@ export function createPlannerSensitivity(input: {
         // Reproduce its boundary and adjacent rejected input with fresh previews;
         // searching for the same boundary again adds work, not a new observation.
         const certificate = await certify(structuredClone(exactEvidence.value), trusted)
+        if (exactEvidence.coverageDigest !== undefined) {
+          const coverage = await input.coveragePreview?.proveKnownSubtotal(request, binding.baselineRef, { source: sourceScenario, baseline: baselineScenario }, trusted)
+          if (coverage?.status !== "ok" || coverage.value !== exactEvidence.coverageDigest) return false
+        }
         return certificate.status === "ok" && digestSfValue(certificate.value) === digestSfValue(exactEvidence.value) && await input.revalidate(structuredClone(binding), trusted)
       },
       verifyCoverageQualification: input.coveragePreview?.verify,
@@ -185,7 +198,8 @@ export function finalizePlannerSensitivity(input: {
   })
 }
 
-/** Pending-only inventory has not assessed a category. Do not search it into an exact bound. */
+/** Every priced component needs assessed coverage; omitted categories remain unknown. */
 function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
-  return scenario.costCoverage.entries.some((entry) => entry.status !== "pending")
+  const included = scenario.costCoverage.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+  return scenario.costCoverage.coverageState !== "unavailable" && scenario.costCoverage.issues.length === 0 && quantifiedSensitivityScenario(scenario) && scenario.components.every((component) => included.includes(component.id))
 }

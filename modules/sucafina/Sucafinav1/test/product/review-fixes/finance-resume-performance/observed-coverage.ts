@@ -53,6 +53,7 @@ export function observeRenewalCoverage(history: RenewalHistory, after: ReturnTyp
   })
   const coverage = createPortfolioCoveragePreview({ units: after.issuer, preview: after.preview, resolveAuthority })
   return {
+    proveKnownSubtotal: trace.wrap("confirmed.coverage.prove-known-subtotal", coverage.proveKnownSubtotal),
     issue: trace.wrap("confirmed.coverage.issue", coverage.issue),
     qualify: trace.wrap("confirmed.coverage.qualify", coverage.qualify),
     revalidate: trace.wrap("confirmed.coverage.revalidate", coverage.revalidate),

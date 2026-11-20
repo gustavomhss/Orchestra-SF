@@ -77,6 +77,9 @@ test("hosted linux x64 glibc qualifies packaged native CLI and built web from th
     if (webBuild.code !== 0) throw new Error(`WEB_BUILD_FAILED code=${webBuild.code}\n${webBuild.stderr}`)
     const webSnap = await snapshot(webDist)
     if (!webSnap) throw new Error("WEB_DIST_MISSING")
+    // The original Vite build retains debugging maps, but the distribution must not.
+    const sourceMaps = [...webSnap.files.keys()].filter((name) => /\.map(?:\.(?:gz|br))?$/i.test(name))
+    if (!sourceMaps.length) throw new Error("VITE_SOURCEMAP_NEGATIVE_CONTROL_MISSING")
     const index = webSnap.files.get("index.html")
     const asset = [...webSnap.files.keys()].filter((file) => file.endsWith(".js")).sort()[0]
     const assetFile = asset === undefined ? undefined : webSnap.files.get(asset)
@@ -101,6 +104,11 @@ test("hosted linux x64 glibc qualifies packaged native CLI and built web from th
     expect(names.some((file) => file.startsWith("bin/tree-sitter/"))).toBe(true)
     expect(names.some((file) => file.startsWith("bin/ripgrep/"))).toBe(true)
     for (const [path, file] of webSnap.files) {
+      if (/\.map(?:\.(?:gz|br))?$/i.test(path)) {
+        if (packed.files.has(`bin/web/${path}`) || manifest.files.some((entry) => entry.path === `bin/web/${path}`))
+          throw new Error(`PRIVATE_SOURCEMAP_DISTRIBUTED: ${path}`)
+        continue
+      }
       const copied = packed.files.get(`bin/web/${path}`)
       if (!copied || !copied.bytes.equals(file.bytes)) throw new Error(`WEB_BYTES_MISMATCH: ${path}`)
       expect(sha256(copied.bytes)).toBe(sha256(file.bytes))

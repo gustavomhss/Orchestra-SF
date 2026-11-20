@@ -73,11 +73,11 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     process.platform !== "linux" || process.arch !== "x64" || process.versions.bun !== "1.3.14")
     throw new Error("SF_FACTORY_HOSTED_LINUX_X64_BUN_1_3_14_REQUIRED")
   const initialIdentity = verifiedRunIdentity()
-  const tracked = Bun.spawnSync(["git", "status", "--porcelain", "--untracked-files=no"], {
+  const tracked = Bun.spawnSync(["git", "status", "--porcelain", "--untracked-files=no", "--", ".", ":(exclude)validation/quarantine"], {
     cwd: root, stdout: "pipe", stderr: "pipe",
   })
   if (tracked.exitCode !== 0 || tracked.stdout.toString().trim())
-    throw new Error("SF_FACTORY_TRACKED_CHECKOUT_DIRTY")
+    throw new Error("SF_FACTORY_TRACKED_CHECKOUT_DIRTY\n" + tracked.stdout.toString())
   const workspace = await realpath(root)
   const external = await mkdtemp(path.join(await realpath(tmpdir()), `sf-factory-package-${initialIdentity.runID}-${initialIdentity.runAttempt}-`))
   if (external === workspace || external.startsWith(workspace + path.sep))

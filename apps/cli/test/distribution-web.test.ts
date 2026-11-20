@@ -141,6 +141,32 @@ test("verify rejects a published web asset whose bytes diverge", async () => {
   expect(await payloadSnapshot(value.source)).toEqual(source)
 })
 
+test("removes Vite sourcemaps from the public payload without changing builder assets", async () => {
+  const value = await fixture()
+  const maps = ["app.js.map", "app.js.map.gz", "app.js.map.br"]
+  for (const name of maps) await writeFile(join(value.web, "assets", name), Buffer.from('{"sourcesContent":["private source"]}'))
+  const before = await seal(value.source, value.web)
+  const input = { ...value.input, web: value.web }
+  const manifest = await prepareDistribution(input)
+  expect(await verifyDistribution(input.out)).toEqual(manifest)
+  for (const name of maps) {
+    expect(manifest.files.some((entry) => entry.path === `bin/web/assets/${name}`)).toBe(false)
+    await expect(lstat(join(input.out, "bin/web/assets", name))).rejects.toMatchObject({ code: "ENOENT" })
+    expect(await readFile(join(value.web, "assets", name), "utf8")).toContain("private source")
+  }
+  expect(manifest.files.some((entry) => entry.path === "bin/web/assets/app.js")).toBe(true)
+  expect(await seal(value.source, value.web)).toEqual(before)
+})
+
+test("rejects inline sourcemaps before publishing native or web files", async () => {
+  const value = await fixture()
+  await writeFile(join(value.web, "assets/app.js"), Buffer.from("console.log(1)\n//# sourceMappingURL=data:application/json;base64,AAAA\n"))
+  const before = await seal(value.source, value.web)
+  await expect(prepareDistribution({ ...value.input, web: value.web })).rejects.toThrow("Public web inline sourcemap forbidden")
+  await expect(lstat(value.input.out)).rejects.toMatchObject({ code: "ENOENT" })
+  expect(await seal(value.source, value.web)).toEqual(before)
+})
+
 async function fixture() {
   const value = await payloadFixture(roots)
   const web = join(value.root, "web")

@@ -96,7 +96,9 @@ export function AgentsRoster(props: {
                         {language.t(
                           item.agent.mode === "subagent"
                             ? "orchestra.agents.kind.subagent"
-                            : "orchestra.agents.kind.primary",
+                            : item.agent.mode === "all"
+                              ? "orchestra.agents.mode.all"
+                              : "orchestra.agents.kind.primary",
                         )}
                       </span>
                     </div>

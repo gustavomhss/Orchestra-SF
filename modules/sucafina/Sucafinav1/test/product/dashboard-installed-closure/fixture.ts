@@ -98,7 +98,7 @@ export async function createDashboardProofFixture() {
     get persistence() { return current.persistence }, get authority() { return current.authority }, get records() { return current.records },
     get observer() { return current.observer }, get dashboard() { return current.dashboard },
     get environment() { return current.environment }, get authenticate() { return current.authenticate },
-    page: (page: string, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard?page=${encodeURIComponent(page)}`, { headers: { cookie: cookies.get(person)! } }),
+    page: (page: string, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard?page=${encodeURIComponent(page)}&asset=page`, { headers: { cookie: cookies.get(person)! } }),
     command: (command: Command, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard`, { method: "POST", headers: { cookie: cookies.get(person)!, origin, "content-type": "application/json" }, body: JSON.stringify(command) }),
     logout: async (person: Person = "owner") => current.identities.find((entry) => entry.name === person)!.identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { origin, cookie: cookies.get(person)! } })),
     disconnect: () => current.driver.dispose(),

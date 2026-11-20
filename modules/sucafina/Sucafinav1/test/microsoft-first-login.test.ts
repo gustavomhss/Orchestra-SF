@@ -47,8 +47,8 @@ test("first configured Microsoft member reaches all three HTML surfaces without 
       return await app(trusted) ?? new Response("Not found", { status: 404 })
     }
     const anonymous = await request("/dashboard")
-    expect(anonymous.status).toBe(303)
-    expect(new URL(anonymous.headers.get("location")!, publicOrigin).pathname).toBe("/sucafina/auth/login")
+    expect(anonymous.status).toBe(401)
+    expect(await anonymous.text()).toBe("Authentication required")
 
     const login = await request("/auth/login")
     expect(login.status).toBe(303)
@@ -62,15 +62,18 @@ test("first configured Microsoft member reaches all three HTML surfaces without 
     expect(cookie).toContain("__Secure-sucafina_")
 
     for (const surface of ["dashboard", "planner", "procurement"]) {
-      const page = await request(`/${surface}`, cookie)
-      expect(page.status).toBe(200)
-      expect(page.headers.get("content-type")).toContain("text/html")
-      expect(await page.text()).toContain("<html")
+      const retired = await request(`/${surface}`, cookie)
+      expect(retired.status).toBe(404)
+      expect(await retired.text()).toBe("legacy console decommissioned — use /")
+      const admitted = await request(`/${surface}?asset=admission`, cookie)
+      expect(admitted.status).not.toBe(401)
+      expect(admitted.status).not.toBe(403)
+      expect(await admitted.text()).not.toBe("legacy console decommissioned — use /")
     }
     // Live Graph membership is still rechecked, including for an already issued cookie.
     provider.account.groups.splice(0)
     for (const surface of ["dashboard", "planner", "procurement"]) {
-      const denied = await request(`/${surface}`, cookie)
+      const denied = await request(`/${surface}?asset=admission`, cookie)
       expect(denied.status).toBe(401)
       expect(await denied.text()).toBe("Authentication required")
     }

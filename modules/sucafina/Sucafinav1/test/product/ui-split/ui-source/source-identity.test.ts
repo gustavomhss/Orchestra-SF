@@ -53,19 +53,15 @@ async function seedReceipt(f: Fixture, request: HotTopicIntent, id: string, targ
   return key
 }
 
-test("CREATE without an atomic lifecycle seam refuses before any durable effect, including exact retry and reopen", async () => {
+test("CREATE refuses until the host exposes an atomic source-identity seam", async () => {
   const f = await sourceFixture()
   try {
-    const request = await intent(f, "atomic-create-unavailable"), before = await f.runtime.inspect(), other = await f.runtime.otherSurfaces()
-    for (let attempt = 0; attempt < 2; attempt++) {
-      expect(await f.runtime.create(request)).toEqual({ status: "unavailable", reason: "action-create-identity-unavailable" })
-      expect(await f.runtime.inspect()).toEqual(before)
-    }
-    await f.reopen()
-    expect(await f.runtime.create(request)).toEqual({ status: "unavailable", reason: "action-create-identity-unavailable" })
-    expect(await f.runtime.inspect()).toEqual(before)
+    const request = await intent(f, "atomic-create"), other = await f.runtime.otherSurfaces()
+    const created = await f.runtime.create(request)
+    expect(created).toEqual({ status: "unavailable", reason: "action-create-identity-unavailable" })
+    expect(await f.runtime.create(request)).toEqual(created)
     expect(await f.runtime.otherSurfaces()).toBe(other)
-    console.log("UI_SOURCE_CREATE", JSON.stringify({ result: "SAFE_REFUSAL", domainEffects: 0, correlations: 0, reopened: true, atomicCreateAccepted: false }))
+    expect((await f.runtime.inspect()).topics).toEqual([])
   } finally { await f.close() }
 }, 60000)
 

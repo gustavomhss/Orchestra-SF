@@ -101,7 +101,13 @@ test("oversized captured text and source references become complete identified c
   expect(nextRecordIndex).toBeGreaterThan(4)
   const continuation = projectRows.slice(0, nextRecordIndex)
   expect(xmlText(continuation[0]!.cells[0]!)).toContain(id + ":")
+  expect(continuation[0]!.xml).not.toContain('w:val="SfCapturedContinuation"')
   for (const row of continuation.slice(1)) {
+    for (const cell of row.cells) {
+      const paragraphs = xmlParagraphs(cell)
+      expect(paragraphs[0]!.xml).toContain('w:val="SfCapturedContinuation"')
+      expect(paragraphs.slice(1).every((paragraph) => !paragraph.xml.includes('w:val="SfCapturedContinuation"'))).toBe(true)
+    }
     expect(xmlParagraphs(row.cells[0]!)[0]!.text).toContain("Record 1 · " + id + " (continued)")
     expect(xmlParagraphs(row.cells[1]!)[0]!.text).toContain("2026-01-01")
     expect(xmlParagraphs(row.cells[2]!)[0]!.text).toContain("Sources (continued")

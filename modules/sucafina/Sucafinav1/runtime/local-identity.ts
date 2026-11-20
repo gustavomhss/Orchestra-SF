@@ -14,6 +14,7 @@ type IdentityOptions = {
   now?: () => Date
   sessionSeconds?: number
   loginSeconds?: number
+  groups?: { dashboard: Record<string, string>; planner: Record<string, string>; procurement: Record<string, string> }
 }
 
 /** The local composition remains explicitly restricted to loopback. */
@@ -215,7 +216,13 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     async authenticate(request, context) {
       const current = await ready(request)
       if (!current || !context) return null
-      const actor = await options.client.resolve(current.value.tokens.accessToken, context.roleMap.filter((row) => row.surface === context.surface)).catch(() => null)
+      const surfaceRows = context.roleMap.filter((row) => row.surface === context.surface)
+      const configured = options.groups?.[context.surface]
+      const map = surfaceRows.some((row) => row.entra) || !configured ? surfaceRows : surfaceRows.map((row) => {
+        const entra = configured[row.role]
+        return entra ? { ...row, entra } : row
+      })
+      const actor = await options.client.resolve(current.value.tokens.accessToken, map).catch(() => null)
       if (!actor || actor.id !== current.value.person.id || !actor.roles.length || actor.roles.some((role) => role.surface !== context.surface)) return null
       return (await ready(request))?.handle === current.handle ? actor : null
     },

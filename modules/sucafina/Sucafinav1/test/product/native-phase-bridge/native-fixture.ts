@@ -1,7 +1,10 @@
 import path from "node:path"
-import { DateTime, Effect, Schema } from "effect"
+import { DateTime, Effect, Layer, Schema } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
+import { makeLocationNode } from "@orchestra/core/effect/app-node"
 import { EventV2 } from "@orchestra/core/event"
+import { PluginV2 } from "@orchestra/core/plugin"
+import { SkillV2 } from "@orchestra/core/skill"
 import { ModelV2 } from "@orchestra/core/model"
 import { ProviderV2 } from "@orchestra/core/provider"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
@@ -11,6 +14,7 @@ import { AuthoringGraph } from "@orchestra/relay/authoring/graph"
 import { MaestroEvent } from "@orchestra/schema/maestro-event"
 import { SessionEvent } from "@orchestra/schema/session-event"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
+import type { SfSourceCapability } from "../../../product/contracts/runtime.ts"
 import { createSfExecutionBindingRegistry } from "../../../product/host-binding/execution-context.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
 import { registerSfResidentAgents, sfSourceFor } from "../../../product/host-binding/resident-agents.ts"
@@ -25,15 +29,44 @@ import type { PlanningLease } from "../../../../../../apps/cli/src/sucafina-prod
 import { SF_ROUTINE_INPUT_PARAMETER } from "../../../../../../apps/cli/src/sucafina-product/routine-native-input.ts"
 import type { PhaseFixture } from "./fixture.ts"
 
+const residentCapabilities = new WeakMap<SkillV2.Interface, SfSourceCapability>()
+
+function phaseResidentSelection() {
+  const root = path.resolve(import.meta.dir, "../../../product/ai")
+  return createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") }).then((bundle) => {
+    const profile = bundle.profiles.find((profile) => profile.id === "sf_maestro")
+    const skill = bundle.skills.find((skill) => skill.allowedProfiles.includes("sf_maestro") && skill.allowedOperations.includes("sf_routine_catalog"))
+    if (!profile || !skill) throw new Error("resident skill missing")
+    const selected = { profile, skills: [skill], operationIds: skill.allowedOperations.filter((operation) => profile.allowedOperations.includes(operation)), manifestDigest: bundle.manifestDigest }
+    return { bundle, profile, skill, selected }
+  })
+}
+
+/** Session skill lookup boots the location itself. Register on every acquisition, not only the test's first scope. */
+export function phaseResidentLocationNode() {
+  return makeLocationNode({
+    name: "sucafina/phase-resident-skill",
+    deps: [AgentV2.node, SkillV2.node, PluginV2.node],
+    layer: Layer.effectDiscard(Effect.gen(function* () {
+      const agents = yield* AgentV2.Service
+      const skills = yield* SkillV2.Service
+      const plugins = yield* PluginV2.Service
+      yield* plugins.wait(PluginV2.ID.make("config-agent"))
+      const loaded = yield* Effect.promise(() => phaseResidentSelection())
+      const capability = yield* registerSfResidentAgents({ agents, skills, selected: [loaded.selected], source: loaded.bundle.source }).pipe(Effect.orDie)
+      residentCapabilities.set(skills, capability)
+    })),
+  })
+}
+
 /** Actual C11 registry and genuine skill loader/receipt, with fixture identity/role rights (not enterprise auth). */
 export const nativeCaller = Effect.fn("PhaseFixture.nativeCaller")(function* (f: PhaseFixture) {
-  const root = path.resolve(import.meta.dir, "../../../product/ai")
-  const bundle = yield* Effect.promise(() => createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") }))
-  const profile = bundle.profiles.find((profile) => profile.id === "sf_maestro")!
-  const skill = bundle.skills.find((skill) => skill.allowedProfiles.includes(profile.id) && skill.allowedOperations.includes("sf_routine_catalog"))!
-  const selected = { profile, skills: [skill], operationIds: skill.allowedOperations.filter((operation) => profile.allowedOperations.includes(operation)),
-    manifestDigest: bundle.manifestDigest }
-  const sourceCapability = yield* registerSfResidentAgents({ agents: f.resources.agents, skills: f.skills, selected: [selected], source: bundle.source })
+  const loaded = yield* Effect.promise(() => phaseResidentSelection())
+  const bundle = loaded.bundle
+  const profile = loaded.profile
+  const skill = loaded.skill
+  const selected = loaded.selected
+  const sourceCapability = residentCapabilities.get(f.skills) ?? (yield* registerSfResidentAgents({ agents: f.resources.agents, skills: f.skills, selected: [selected], source: bundle.source }))
   const resident = yield* f.sessions.create({ location: f.resources.identity.location, agent: AgentV2.ID.make(profile.id) })
   const runId = crypto.randomUUID()
   const receipt = yield* loadSfSkill({ session: f.sessions, skills: f.skills, sourceCapability, selected, sessionID: resident.id,

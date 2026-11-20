@@ -42,7 +42,10 @@ export function createSfRoutinePhaseFence(input: { resources: () => SfRoutineNat
   let lastDatabase: Database.Interface | undefined
   let lastDirectory: string | undefined
   let contextInstalled = 0
-  const directory = (fallback?: string) => (typeof input.originDirectory === "string" ? input.originDirectory : input.originDirectory()) ?? fallback
+  const directory = (fallback?: string) => {
+    const value = (typeof input.originDirectory === "string" ? input.originDirectory : input.originDirectory()) ?? fallback
+    return value && path.isAbsolute(value) ? path.resolve(value) : value
+  }
   const find = async (store: SessionStore.Interface, database: Database.Interface, id: SessionSchema.ID) => {
     const seen = new Set<string>()
     let copied: SessionSchema.ID | undefined

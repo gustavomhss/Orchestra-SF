@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { createSfPlannerEvidence } from "../../../../../../apps/cli/src/sucafina-product/planner-evidence.ts"
 import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -8,6 +9,7 @@ import { resolve } from "../../../src/identity.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
+import { sfPlannerSourceSelector } from "../../../product/integration/planner-sources.ts"
 import { sfPlannerProjectionSelector, createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { plannerPreparedRevision, preparePlannerMutation } from "../../../product/planner/prepared.ts"
 import { createPlannerPreparedReview } from "../../../product/planner/prepared-review.ts"
@@ -38,6 +40,29 @@ test("planner issuer resolves authenticated current identities and rejects stale
     if (first.status !== "ok") return
     expect(first.value.evidence.refId).toMatch(/^planner-version:/)
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "ok" })
+    const canonicalObservation = await product.readSourceProjection(first.value.evidence.refId, binding)
+    expect(canonicalObservation.status).toBe("ok")
+    if (canonicalObservation.status !== "ok") throw new Error("The canonical Planner canonicalObservation was unavailable")
+    expect(canonicalObservation.value.evidence).toEqual(first.value.evidence)
+    expect(digestSfValue({ versionId: canonicalObservation.value.versionId, projection: canonicalObservation.value.projection })).toBe(first.value.evidence.target.projectionDigest)
+    expect(Object.isFrozen(canonicalObservation.value.projection)).toBe(true)
+    expect(Object.isFrozen(canonicalObservation.value.projection.summary)).toBe(true)
+    const direct = createSfPlannerEvidence({ host, sources: product.sources })
+    const completed = createSfPlannerEvidence({ host, sources: product.sources, readSourceProjection: product.readSourceProjection })
+    const period = { start: "2027-01-01", end: "2027-01-31" }
+    const expectedProjection = await direct(first.value.evidence, binding, { period, currency: "USD" })
+    expect(expectedProjection.status).toBe("ok")
+    const canonicalRead = persistence.readScopedSourcePrepared!
+    let sourceReads = 0
+    persistence.readScopedSourcePrepared = async (...args) => {
+      sourceReads++
+      return canonicalRead(...args)
+    }
+    try {
+      expect(await completed(first.value.evidence, binding, { period, currency: "USD" })).toEqual(expectedProjection)
+      expect(sourceReads).toBe(2)
+    } finally { persistence.readScopedSourcePrepared = canonicalRead }
+
     const confirmation = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner: product.planner })
     const confirmationScope = { sourceRef: { surface: "planner" as const, type: "planner-version", id: "v0", incarnation: first.value.evidence.target.incarnation }, fields: ["summary"], period: { start: "2027-01-01", end: "2027-01-31" }, materialDependencies: [], scopeDefinitionVersion: "planner-c06-v1" }
     const observation = await confirmation.observe(confirmationScope, binding)
@@ -93,7 +118,21 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, target, evidence: first.value.evidence, scope: { ...scope, accessRevision: "revoked" }, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
     expect(preparePlannerMutation({ snapshot: captured, actor, environment, context: binding, evidence: first.value.evidence, target: { ...target, period: { start: "2027-02-01", end: "2027-02-28" } }, scope, command: { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f0: 42 } }, operationId: "operation", idempotencyKey: "edit" })).toBeUndefined()
 
-    await persistence.transaction("planner", async (snapshot) => { const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]; versions[0].lines[0].b[0] = 200; return { commit: true, value: undefined } })
+    // Change the real source between the producer's two observations.
+    sourceReads = 0
+    persistence.readScopedSourcePrepared = async (...args) => {
+      const result = await canonicalRead(...args)
+      if (++sourceReads === 1) await persistence.transaction("planner", async (snapshot) => {
+        const versions = snapshot.data.versions as { lines: { b: number[] }[] }[]
+        versions[0].lines[0].b[0] = 200
+        return { commit: true, value: undefined }
+      })
+      return result
+    }
+    try {
+      expect(await completed(first.value.evidence, binding, { period, currency: "USD" })).toMatchObject({ status: "stale" })
+      expect(sourceReads).toBe(2)
+    } finally { persistence.readScopedSourcePrepared = canonicalRead }
     if (observation.state === "available") expect(await persistence.transactionAll!(async () => ({ commit: false, value: await confirmation.fence(confirmationScope, observation, binding) }))).toBe(false)
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "stale" })
     const second = await product.issueSource("v0", binding)
@@ -103,5 +142,31 @@ test("planner issuer resolves authenticated current identities and rejects stale
     expect(await product.issueSource("v0", binding)).toMatchObject({ status: "denied" })
     expect(await confirmation.issueForActor(first.value.evidence.target, binding)).toMatchObject({ status: "denied" })
     expect(await product.sources.resolveForecastSource(first.value.evidence.refId, binding)).toMatchObject({ status: "denied" })
+    expect(await product.readSourceProjection(first.value.evidence.refId, binding)).toMatchObject({ status: "denied" })
+    expect(await completed(first.value.evidence, binding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
+    // The storage fixture can hold an actor-scoped selector even though the
+    // public issuer refuses local principals. Neither projection path may use it.
+    const localPrincipal = "local:finance"
+    const localRequest = new Request("https://example.test", { headers: { authorization: localPrincipal } })
+    const localBinding = { ...binding, binding: { ...binding.binding, principalRef: localPrincipal } } as TrustedDomainContext
+    const localHost: DomainPortHost = { ...host, requestFor: () => localRequest, revalidate: async () => true,
+      authenticate: async (_request, context) => resolve(localPrincipal, [...context!.roleMap], (group) => group === "finance-group") }
+    const localSelector = await persistence.transaction("planner", async (snapshot) => ({ commit: false,
+      value: sfPlannerProjectionSelector(snapshot, { ...actor, id: localPrincipal }) }))
+    const localScoped = await persistence.readScopedSource("planner", { principalRef: localPrincipal, accessRevision: "1", policyVersion: "1",
+      recordType: "planner-version", recordId: "v0", selector: localSelector }, async () => true)
+    if (!localScoped) throw new Error("The real local scoped source fixture was not observed")
+    const localProduct = createPlannerProduct({ host: localHost, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "missing" }) })
+    const localRef = sfPlannerSourceSelector("v0", localScoped.incarnation, localScoped.version)
+    const localSource = await localProduct.sources.resolveForecastSource(localRef, localBinding)
+    expect(localSource.status).toBe("ok")
+    if (localSource.status !== "ok") throw new Error("The local refusal counterexample lacks its real source selector")
+    expect(await localProduct.issueSource("v0", localBinding)).toMatchObject({ status: "denied" })
+    expect(await localProduct.readSourceProjection(localRef, localBinding)).toMatchObject({ status: "denied" })
+    const localLegacy = createSfPlannerEvidence({ host: localHost, sources: localProduct.sources })
+    const localCompleted = createSfPlannerEvidence({ host: localHost, sources: localProduct.sources, readSourceProjection: localProduct.readSourceProjection })
+    expect(await localLegacy(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "stale", reason: "planner-source-changed" })
+    expect(await localCompleted(localSource.value.evidence, localBinding, { period, currency: "USD" })).toMatchObject({ status: "denied" })
+
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })

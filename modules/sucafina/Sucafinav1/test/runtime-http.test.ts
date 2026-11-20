@@ -123,21 +123,27 @@ test("HTTP write checks current identity, rejects spoofed actors and cross-origi
   expect(app.state).toEqual(before)
 })
 
-test("HTTP request boundaries retain host routes and retire console HTML GET/HEAD", async () => {
+test("HTTP request boundaries retain host routes, serve one page query, and retire bare console GET/HEAD", async () => {
   const app = fixture()
   expect(await app.handler(new Request("https://installation.example/api/session"))).toBeUndefined()
   const response = await app.handler(new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks"))
-  expect(response?.status).toBe(404)
+  expect(response?.status).toBe(200)
   expect(response?.headers.get("cache-control")).toBe("no-store")
-  expect(response?.headers.get("content-type")).toContain("text/plain")
-  expect(await response?.text()).toBe("legacy console decommissioned — use /")
+  expect(response?.headers.get("content-type")).toContain("text/html")
+  expect(await response?.text()).toContain('data-page="IT Risks"')
   const head = await app.handler(
     new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks", { method: "HEAD" }),
   )
-  expect(head?.status).toBe(404)
+  expect(head?.status).toBe(200)
   expect(await head?.text()).toBe("")
-  for (const surface of ["planner", "procurement"])
-    expect((await app.handler(new Request(`https://installation.example/sucafina/${surface}`)))?.status).toBe(404)
+  for (const surface of ["dashboard", "planner", "procurement"]) {
+    const retired = await app.handler(new Request(`https://installation.example/sucafina/${surface}`))
+    expect(retired?.status).toBe(404)
+    expect(await retired?.text()).toBe("legacy console decommissioned — use /")
+    const empty = await app.handler(new Request(`https://installation.example/sucafina/${surface}?`))
+    expect(empty?.status).toBe(404)
+    expect(await empty?.text()).toBe("legacy console decommissioned — use /")
+  }
   app.identity.principal = null
   // Export is still an authorized data operation, not an HTML route.
   expect((await app.handler(new Request("https://installation.example/sucafina/dashboard?download=json")))?.status).toBe(401)

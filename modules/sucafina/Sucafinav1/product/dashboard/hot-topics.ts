@@ -1,5 +1,5 @@
 import { DashboardPeople, hotTopicView } from "../../runtime/dashboard-people.ts"
-import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
+import { rows, text, type Actor, type Environment, type Snapshot } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PortResult } from "../contracts/ports.ts"
@@ -12,6 +12,8 @@ type Correlation = { digest: string; id: string; targetIncarnation?: string; res
 // mutation in one durable dashboard transaction. It must revalidate the binding before returning.
 export type HotTopicHost = {
   transact: <T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<string, Correlation>) => { commit: boolean; value: PortResult<T> }) => Promise<PortResult<T>>
+  // Absent until the host can bind the created row's incarnation in the same transaction.
+  bindCreatedIdentity?: (snapshot: Snapshot, recordId: string) => string
 }
 export type HotTopicIntent = { correlationKey: string; sourceRefs: readonly BusinessEvidenceRef[]; action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string }
 
@@ -20,7 +22,7 @@ export function createHotTopicPort(host: HotTopicHost) {
     create: (input: HotTopicIntent, binding: TrustedDomainContext) => {
       const intent = (() => { try { return structuredClone(input) } catch { return undefined } })()
       if (!intent || !Array.isArray(intent.sourceRefs) || [intent.correlationKey, intent.action, intent.owner, intent.due, intent.priority, intent.notes].some((value) => typeof value !== "string")) return Promise.resolve({ status: "needs-input" as const, reason: "invalid-intent" })
-      return host.transact<{ state: "created" | "existing"; topic: HotTopic }>(binding, intent.sourceRefs, (snapshot, actor, _environment, correlations) => {
+      return host.transact<{ state: "created" | "existing"; topic: HotTopic }>(binding, intent.sourceRefs, (snapshot, actor, environment, correlations) => {
         if (!intent.correlationKey.trim() || !intent.action.trim() || !intent.sourceRefs.length) return { commit: false, value: { status: "needs-input", reason: "intent-and-source-required" } }
         if (!actor.canWrite || !actor.roles.some((role) => role === "admin" || role === "domain leader")) return { commit: false, value: { status: "denied", reason: "hot-topic-write-denied" } }
         const key = digestSfValue({ correlationKey: intent.correlationKey })
@@ -36,10 +38,22 @@ export function createHotTopicPort(host: HotTopicHost) {
           if (currentIncarnation !== existing.targetIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-replaced" } }
           return { commit: false, value: { status: "ok", value: { state: "existing" as const, topic } } }
         }
-        // The published host finalizes source identities after this callback. Until it
-        // exposes atomic creation/binding, neither a textual ID nor a later write can
-        // establish which physical action this correlation created.
-        return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
+        if (!host.bindCreatedIdentity) return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
+        const beforeIds = new Set(rows(snapshot.data.hotTopics).map((row) => String(row.id ?? "")))
+        const saved = DashboardPeople.domain.execute(snapshot, actor, {
+          page: "Hot Topics & Actions", action: "save", version: 0,
+          values: { action: intent.action, owner: intent.owner, due: intent.due, status: "open", priority: intent.priority, notes: intent.notes },
+        }, environment)
+        if (!saved.ok) return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
+        const topic = rows(snapshot.data.hotTopics).find((row) => !beforeIds.has(String(row.id ?? "")))
+        const topicId = topic && (typeof topic.id === "string" || typeof topic.id === "number") ? String(topic.id) : ""
+        if (!topic || !topicId) return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
+        let targetIncarnation = ""
+        try { targetIncarnation = host.bindCreatedIdentity(snapshot, topicId) } catch { return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } } }
+        if (!targetIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
+        const result = { id: topicId, action: text(topic.action), owner: text(topic.owner), due: text(topic.due), status: text(topic.status), priority: text(topic.priority), notes: text(topic.notes), version: snapshot.versions[`hotTopics:${topicId}`]?.version ?? 1 }
+        correlations[key] = { digest, id: topicId, targetIncarnation, result }
+        return { commit: true, value: { status: "ok", value: { state: "created", topic: result } } }
       })
     },
     read: (id: string, sourceRefs: readonly BusinessEvidenceRef[], binding: TrustedDomainContext) => {

@@ -58,15 +58,55 @@ const BUILT_IN: PermissionRule[] = [
   { action: "external_directory", resource: "*", effect: "ask" },
 ]
 
-// Keeps the well-formed rules of a config value, in its order.
+const isEffect = (value: unknown): value is PermissionEffect => PERMISSION_ACTIONS.some((action) => action === value)
+
+const ruleFrom = (action: string, resource: string, effect: unknown): PermissionRule[] =>
+  isEffect(effect) ? [{ action, resource, effect }] : []
+
+export type PermissionObject = Record<string, PermissionEffect | Record<string, PermissionEffect>>
+
 export function permissionRules(value: unknown): PermissionRule[] {
-  if (!Array.isArray(value)) return []
-  return value.flatMap((item: { action?: unknown; resource?: unknown; effect?: unknown } | null) => {
-    if (!item || typeof item !== "object") return []
-    const effect = PERMISSION_ACTIONS.find((action) => action === item.effect)
-    if (typeof item.action !== "string" || typeof item.resource !== "string" || !effect) return []
-    return [{ action: item.action, resource: item.resource, effect }]
+  if (Array.isArray(value)) {
+    return value.flatMap((item: { action?: unknown; resource?: unknown; effect?: unknown } | null) => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) return []
+      if (typeof item.action !== "string" || typeof item.resource !== "string") return []
+      return ruleFrom(item.action, item.resource, item.effect)
+    })
+  }
+  if (typeof value === "string") return ruleFrom("*", "*", value)
+  if (!value || typeof value !== "object") return []
+  return Object.entries(value).flatMap(([action, rule]) => {
+    if (typeof rule === "string") return ruleFrom(action, "*", rule)
+    if (!rule || typeof rule !== "object" || Array.isArray(rule)) return []
+    return Object.entries(rule).flatMap(([resource, effect]) => ruleFrom(action, resource, effect))
   })
+}
+
+export function permissionSource(config: { permissions?: unknown; permission?: unknown }) {
+  if (permissionObjectForm(config.permission) && permissionRules(config.permission).length > 0) return config.permission
+  const listed = config.permissions
+  if (permissionRules(listed).length > 0) return listed
+  return config.permission ?? listed
+}
+
+export function permissionObjectForm(value: unknown) {
+  return typeof value === "string" || (!!value && typeof value === "object" && !Array.isArray(value))
+}
+
+export function permissionObject(rules: readonly PermissionRule[]): PermissionObject {
+  const object: PermissionObject = {}
+  for (const rule of rules) {
+    const current = object[rule.action]
+    if (rule.resource === "*" && current === undefined) {
+      object[rule.action] = rule.effect
+      continue
+    }
+    const patterns: Record<string, PermissionEffect> = typeof current === "object" ? { ...current } : {}
+    if (typeof current === "string") patterns["*"] = current
+    patterns[rule.resource] = rule.effect
+    object[rule.action] = patterns
+  }
+  return object
 }
 
 // The tool's default, as the server evaluates it: last match wins, and only rules that cover every input

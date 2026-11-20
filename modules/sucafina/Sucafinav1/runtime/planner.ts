@@ -2069,7 +2069,37 @@ function monthlyChart(summary: Row): string {
   return `<figure><figcaption>Monthly Budget, Actual, Outlook (USD)</figcaption><p>Missing or unpriced actual data is unavailable. Recorded zero remains visible in open and closed months.</p><ul class="chart-legend">${series.map((line) => `<li><span aria-hidden="true" style="background:${line.color}"></span>${line.name}</li>`).join("")}</ul>${values.length ? `<svg viewBox="0 0 720 230" role="img" aria-label="Monthly Budget, Actual, Outlook in USD"><title>Monthly Budget, Actual, Outlook in USD</title><g class="chart-axis">${[...new Set([low, 0, high / 2, high])].map((value) => `<line x1="100" x2="705" y1="${y(value)}" y2="${y(value)}" stroke="#cbd5e1"/><text x="95" y="${y(value) + 4}" text-anchor="end" font-size="11">${esc(money(value))}</text>`).join("")}${months.map((month, index) => `<text x="${115 + index * 52}" y="202" text-anchor="middle" font-size="12">${month}</text>`).join("")}<text x="100" y="16" font-size="12">USD</text><text x="400" y="224" text-anchor="middle" font-size="12">Month</text></g>${series.map((line) => line.values.map((value, index) => value === null ? "" : `<circle data-planner-series="${line.key}" data-month="${index + 1}" cx="${115 + index * 52}" cy="${y(value)}" r="4" fill="${line.color}"><title>${line.name} ${index + 1}: ${esc(money(value))}</title></circle>`).join("")).join("")}</svg>` : '<p class="chart-empty">No data available for this chart.</p>'}</figure>`
 }
 
+function plannerPageData(data: Record<string, unknown>, context: RenderContext) {
+  if (Array.isArray(data.directory)) return { data, context }
+  const view = domain.view(
+    { data, versions: context.versions, sequences: {}, audit: [], notices: [] } as Snapshot,
+    context.actor,
+    { at: context.at, id: () => "planner-page", directory: [{ id: context.actor.id, name: context.actor.id }] },
+  )
+  const supplied = new Map(rows(data.versions).map((row) => [idOf(row.id), row]))
+  const versions = rows(view.data.versions).map((version) => {
+    const original = supplied.get(idOf(version.id))
+    if (!original || !Object.hasOwn(original, "summary")) return version
+    return { ...version, summary: original.summary }
+  })
+  return {
+    data: {
+      ...view.data,
+      versions,
+      ...(Object.hasOwn(data, "version") ? { version: data.version } : {}),
+      ...(Object.hasOwn(data, "owner") ? { owner: data.owner } : {}),
+      ...(Object.hasOwn(data, "class") ? { class: data.class } : {}),
+      ...(Object.hasOwn(data, "q") ? { q: data.q } : {}),
+      ...(Object.hasOwn(data, "mode") ? { mode: data.mode } : {}),
+    },
+    context: { ...context, versions: view.versions },
+  }
+}
+
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {
+  const projected = plannerPageData(data, context)
+  data = projected.data
+  context = projected.context
   const html = renderPage(page, data, context)
   if (html === undefined) return undefined
   const normalized = plannerData(data).data

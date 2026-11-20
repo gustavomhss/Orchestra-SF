@@ -130,7 +130,8 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
       const ready = yield* Deferred.make<void, Error>()
       const tail = { value: "" }
       const child = yield* launcher.spawn(command([
-        "run", path.join(repository, "apps/cli/src/index.ts"), "serve",
+        "--preload", path.join(import.meta.dirname, "../installed-console-preload.ts"),
+        path.join(repository, "apps/cli/src/index.ts"), "serve",
         "--hostname", "localhost", "--port", "4110", "--installation", path.join(local, "entry.ts"),
       ]))
       owned.child = child

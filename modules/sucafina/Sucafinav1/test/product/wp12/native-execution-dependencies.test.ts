@@ -56,8 +56,8 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
           fields: ["name", "milestones"], period: WP12_PORTFOLIO_PERIOD }, call)
         const capex = await context.business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: capexId,
           fields: ["name"], period: WP12_PORTFOLIO_PERIOD }, call)
-        if (page.status !== "ok" || project.status !== "ok" || other.status !== "ok" || capex.status !== "ok")
-          throw new Error("The real dashboard issuers did not authorize the selected dependency sources")
+  if (page.status !== "ok" || project.status !== "ok" || other.status !== "ok" || capex.status !== "ok")
+    throw new Error(`The real dashboard issuers did not authorize the selected dependency sources: page=${page.status}:${"reason" in page ? page.reason : ""}; project=${project.status}:${"reason" in project ? project.reason : ""}; other=${other.status}:${"reason" in other ? other.reason : ""}; capex=${capex.status}:${"reason" in capex ? capex.reason : ""}`)
         return { page: page.value.evidence, project: project.value, other: other.value, capex: capex.value }
       })
       const storageVersion = await collaboration(context, "storage-version", { namespace: "relations" })

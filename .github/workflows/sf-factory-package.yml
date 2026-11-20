@@ -54,6 +54,8 @@ jobs:
           bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
           no-cache: true
       - name: Install pinned dependencies
+        env:
+          HUSKY: "0"
         run: bun install --frozen-lockfile
       - name: Build real native Omni companions
         working-directory: native/omni

@@ -380,9 +380,15 @@ export function createAppDock(options: {
       return { action: "deny" }
     })
     // Desktop sign-in pages can dispatch their URI from a hidden iframe.
-    // will-navigate covers only the main frame.
+    // will-navigate covers only the main frame. A subframe follows the same https rule.
     listen("will-frame-navigate", details => {
-      if (externalURL(details.url)) details.preventDefault()
+      if (externalURL(details.url)) {
+        details.preventDefault()
+        return
+      }
+      if (details.isMainFrame) return
+      if (URL.canParse(details.url) && new URL(details.url).protocol === "https:") return
+      details.preventDefault()
     })
     listen("will-navigate", (event, url) => {
       if (externalURL(url)) { event.preventDefault(); return }

@@ -66,12 +66,15 @@ export const make = <Key, E>(options: {
       stopping: false,
     })
 
-    const start = (key: Key, entry: Entry<E>, work: Effect.Effect<void, E>, successor = false) => {
+    const start = (key: Key, entry: Entry<E>, work: Effect.Effect<void, E>, successor = false, afterSettle?: () => void) => {
       const ready = Deferred.makeUnsafe<void>()
       const owner = fork(
         (successor ? Effect.yieldNow : Deferred.await(ready)).pipe(
           Effect.andThen(work),
-          Effect.onExit((exit) => Effect.sync(() => settle(key, entry, exit))),
+          Effect.onExit((exit) => Effect.sync(() => {
+            settle(key, entry, exit)
+            afterSettle?.()
+          })),
           Effect.exit,
           Effect.asVoid,
         ),
@@ -143,11 +146,13 @@ export const make = <Key, E>(options: {
         const next = makeEntry(exclusiveOptions?.discardPending ?? false)
         active.set(key, next)
         const result = Deferred.makeUnsafe<A, E2>()
-        // The caller hears the effect's own outcome; the entry only settles ownership, so it never fails.
-        start(key, next, effect.pipe(Effect.onExit((exit) => Deferred.done(result, exit)), Effect.ignore))
-        // An interrupt that lands before the effect starts settles only the entry.
-        const stopped = Deferred.await(next.done).pipe(Effect.exit, Effect.andThen(Effect.interrupt))
-        return restore(Effect.raceFirst(Deferred.await(result), stopped)).pipe(Effect.map(Option.some))
+        let outcome: Exit.Exit<A, E2> | undefined
+        // Publish the operation's outcome only after its ownership settles. A queued drain may already own the key,
+        // but the caller must not wait for that successor. Cancellation of this waiter still leaves its owner alone.
+        start(key, next, effect.pipe(Effect.onExit((exit) => Effect.sync(() => { outcome = exit })), Effect.ignore), false,
+          // An interrupt before the operation starts still settles its waiting caller.
+          () => Deferred.doneUnsafe(result, outcome ?? Effect.interrupt))
+        return restore(Deferred.await(result)).pipe(Effect.map(Option.some))
       })
 
     const stop = (key: Key, expected?: Entry<E>, stopOptions?: InterruptOptions): Effect.Effect<void> =>

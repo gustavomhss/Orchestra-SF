@@ -87,7 +87,7 @@ test("real WAL replication restores an earlier commit and business restore prese
     if (!issuedCookie) throw new Error("Local enrollment did not issue a session cookie")
     const cookie = issuedCookie.split(";")[0]!
     expect((await app.handler(new Request(destination)))?.status).toBe(403)
-    expect((await app.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { Cookie: cookie } })))?.status).toBe(200)
+    expect((await app.handler(new Request(`${origin}/sucafina/dashboard?asset=page`, { headers: { Cookie: cookie } })))?.status).toBe(200)
 
     const liveVersion = await store.transaction("dashboard", async (snapshot) => {
       snapshot.data.marker = "http-live-after-target"
@@ -113,7 +113,7 @@ test("real WAL replication restores an earlier commit and business restore prese
     expect(await restored!.json()).toMatchObject({ ok: true })
     expect(await live()).toEqual({ marker: "before", version: liveVersion + 1 })
     // The same session was minted after target; restoring business data must retain it.
-    expect((await app.handler(new Request(`${origin}/sucafina/dashboard`, { headers: { Cookie: cookie } })))?.status).toBe(200)
+    expect((await app.handler(new Request(`${origin}/sucafina/dashboard?asset=page`, { headers: { Cookie: cookie } })))?.status).toBe(200)
   } finally {
     try { await state.app?.dispose() } finally {
       try {

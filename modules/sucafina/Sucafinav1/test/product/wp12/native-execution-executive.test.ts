@@ -215,7 +215,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
       const refused = await context.services.productHttp!(unauthorized, "dashboard")
       if (!refused) throw new Error("The real review download route disappeared")
       expect(refused.status).toBe(403)
-      expect(refused.headers.get("content-type")).not.toContain("officedocument")
+      expect(refused.headers.get("content-type") ?? "").not.toContain("officedocument")
       console.log("SF_WP12_NATIVE_REVIEW_REOPEN:" + JSON.stringify({ scope: "real-preserved-review-and-download-after-source-change",
         githubSha: process.env.GITHUB_SHA ?? null, reviewRef: initial.review.id, reviewDigest: initial.review.digest,
         reports: initial.reports, consumerRef: "createReviewHttp:review-read/review-download", inputReopened: true,
@@ -282,6 +282,8 @@ function reviewSnapshot(value: unknown) {
       !Array.isArray(projection.values) || !projection.values.length || !Array.isArray(projection.components)) throw new Error("A selected preserved section has no complete captured values")
     expect(section.period).toEqual(reviewPeriod)
     expect(projectionContext.period).toEqual(reviewPeriod)
+    if (!Array.isArray(projectionContext.sourceRefs) || !projectionContext.sourceRefs.length) throw new Error("A captured review section has no source identity")
+    for (const source of projectionContext.sourceRefs) expect(object(source).period).toEqual(caseHorizon)
     for (const component of projection.components) expect(object(component).period).toEqual(reviewPeriod)
     const values = projection.values.map((entry) => {
       const value = object(entry)

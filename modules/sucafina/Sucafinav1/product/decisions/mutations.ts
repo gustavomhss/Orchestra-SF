@@ -108,21 +108,26 @@ export function createDecisionMutations(input: MutationHost) {
       if (scenario.value.costCoverage.basisId !== coverage.value.basis.id || scenario.value.costCoverage.basisVersion !== coverage.value.basis.version) return { status: "conflict", reason: "alternative-basis-mismatch" }
       const attributed: ScenarioResult = scenario.value.comparisonStatus === "complete" ? { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } } : { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
       const basis = coverage.value.basis
-      const reassessed = digestSfValue(scenario.value.costCoverage) !== digestSfValue(coverage.value.assessment)
       // Matching coverage still needs the current producer proof consumed by the
-      // commit fence. Reassess its entries so the proof binds the canonical result.
-      const entries = input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined
-      if (entries && entries.status !== "ok") return entries
-      const result = input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : !reassessed ? attributed : undefined
+      // commit fence. Absent evidence is a refusal, not a skip past that proof.
+      const coverageEvidence = input.coverageEvidence
+      if (!coverageEvidence) return { status: "unavailable", reason: "scenario-source-fence-unavailable" }
+      const entries = await callMutationPort(() => coverageEvidence.entries(attributed, coverage.value.assessment, context))
+      if (entries.status !== "ok") return entries
+      const result = await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => coverageEvidence.resolve(refs, context), supports: coverageEvidence.supports })
       if (!result) return { status: "unavailable", reason: "scenario-coverage-reassessment-unavailable" }
       const coverageError = validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)
       if (coverageError) return { status: "conflict", reason: coverageError }
-      if (result.comparisonStatus === "complete" && !input.coverageEvidence) return { status: "unavailable", reason: "scenario-source-fence-unavailable" }
       const existingBasis = loaded.value.case.costCoverageBases.find((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version)
       if (existingBasis && digestSfValue(existingBasis) !== digestSfValue(coverage.value.basis)) return { status: "conflict", reason: "coverage-inventory-version-conflict" }
-      const alternative = { id: result.costCoverage.alternativeId, version: result.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result }
+      // A source-only observation carries no proposed edit. Preserve the exact
+      // producer proof; hypothetical inputs retain their unapplied-preview stamp.
+      const preview = request.scenario.operations.length || request.scenario.assumptions.length
+        ? stampUnappliedPreview(result)
+        : result
+      const alternative = { id: preview.costCoverage.alternativeId, version: preview.costCoverage.alternativeVersion, title: request.title, scenario: request.scenario, result: preview }
       if (!alternative.id.trim() || !Number.isSafeInteger(alternative.version)) return { status: "conflict", reason: "alternative-identity-conflict" }
-      return saveCase(input, loaded.value, context, "add-alternative", request, (value) => ({ ...value, state: value.choices.length ? "reconsidering" : "comparing", alternatives: [...value.alternatives.filter((item) => item.id !== alternative.id), alternative], costCoverageBases: value.costCoverageBases.some((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version) ? value.costCoverageBases : [...value.costCoverageBases, coverage.value.basis] }), { request: request.scenario, result, ...(input.coverageEvidence ? { sourceFence: (snapshot: import("../../runtime/contract.ts").Snapshot) => input.coverageEvidence!.verifySnapshot(snapshot, result, basis, context) } : {}) })
+      return saveCase(input, loaded.value, context, "add-alternative", request, (value) => ({ ...value, state: value.choices.length ? "reconsidering" : "comparing", alternatives: [...value.alternatives.filter((item) => item.id !== alternative.id), alternative], costCoverageBases: value.costCoverageBases.some((basis) => basis.id === coverage.value.basis.id && basis.version === coverage.value.basis.version) ? value.costCoverageBases : [...value.costCoverageBases, coverage.value.basis] }), { request: request.scenario, result: preview, sourceFence: (snapshot: import("../../runtime/contract.ts").Snapshot) => input.coverageEvidence === coverageEvidence && coverageEvidence.verifySnapshot(snapshot, preview, basis, context) })
     },
     prepareChanges: async (incoming: { caseRef: CaseRef; choiceId: string; operations: readonly ScenarioOperation[] }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
       const request = structuredClone(incoming)
@@ -288,6 +293,14 @@ async function callMutationPort<T>(work: () => Promise<PortResult<T>>): Promise<
     return await work()
   } catch {
     return { status: "unavailable", reason: "domain-source-unavailable" }
+  }
+}
+
+function stampUnappliedPreview(result: ScenarioResult): ScenarioResult {
+  return {
+    ...result,
+    unresolvedConditions: result.unresolvedConditions.includes("scenario-is-hypothetical") ? result.unresolvedConditions : [...result.unresolvedConditions, "scenario-is-hypothetical"],
+    restrictions: result.restrictions.includes("preview-not-applied") ? result.restrictions : [...result.restrictions, "preview-not-applied"],
   }
 }
 

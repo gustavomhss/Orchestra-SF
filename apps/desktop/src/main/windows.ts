@@ -282,9 +282,11 @@ export function createLiveOverlayWindow(bounds: Rectangle) {
   })
   registerRendererPermissions(win.webContents.session, win.webContents, isRendererUrl)
   win.webContents.setWindowOpenHandler(() => ({ action: "deny" }))
-  win.webContents.on("will-navigate", (event, url) => {
+  const stayInApp = (event: { preventDefault(): void }, url: string) => {
     if (!isRendererUrl(url)) event.preventDefault()
-  })
+  }
+  win.webContents.on("will-navigate", stayInApp)
+  win.webContents.on("will-redirect", stayInApp)
   loadWindow(win, "live/index.html")
   return win
 }
@@ -324,6 +326,9 @@ function wireNavigationPolicy(win: BrowserWindow) {
     if (isRendererUrl(url)) return
     event.preventDefault()
     openExternalURL(url)
+  })
+  win.webContents.on("will-redirect", (event, url) => {
+    if (!isRendererUrl(url)) event.preventDefault()
   })
   // before-quit stops the sidecars before it calls app.quit again, so a page beforeunload that cancels the unload would leave the app open with a dead server.
   // Unsaved work is not lost by this: the page saved it, or kept it locally, when flushWindow asked before the close

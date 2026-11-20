@@ -156,20 +156,40 @@ const layer = Layer.effectDiscard(
           yield* requireParent(store, location, context, decodeCalled, called)
           yield* policy.assertChild(context.sessionID, model)
           yield* revalidateTarget(existing)
-          const child = yield* sessions.create({
-            id: childID,
-            parentID: context.sessionID,
-            agent: target.id,
-            model,
-            location: Location.Ref.make({ directory: placement.directory, workspaceID: placement.workspaceID }),
-          })
+          const child = yield* sessions
+            .create({
+              id: childID,
+              parentID: context.sessionID,
+              agent: target.id,
+              model,
+              location: Location.Ref.make({ directory: placement.directory, workspaceID: placement.workspaceID }),
+            })
+            .pipe(
+              Effect.catchDefect((defect) =>
+                defect instanceof SessionV2.ConflictError
+                  ? Effect.fail(
+                      new ToolFailure({
+                        message: `Task child parent, agent, or placement mismatch: ${childID}`,
+                      }),
+                    )
+                  : Effect.die(defect),
+              ),
+            )
           adopted.current = true
           const failure = requireChild(child, placement, context, target.id, model)
           if (failure) return yield* failure
-          // A governance that binds rules starts from the inherited ones (see `TaskGovernance.Admission`).
-          const permissions = (
-            admission.permissions ??
-            inheritedPermissions(yield* store.permissions(context.sessionID), primaryTools(yield* config.entries()))
+          // Admission may add rules; it cannot drop the parent's effective denies, including agent-rule denies.
+          const seated = yield* agents.resolve(parent.agent)
+          const caller = context.agent === parent.agent ? seated : yield* agents.resolve(context.agent)
+          const missing = [{ action: "*", resource: "*", effect: "deny" as const }]
+          const agentRules =
+            caller === seated
+              ? (seated?.permissions ?? missing)
+              : [...(seated?.permissions ?? missing), ...(caller?.permissions ?? missing)]
+          const permissions = inheritedPermissions(
+            [...agentRules, ...(yield* store.permissions(context.sessionID))],
+            primaryTools(yield* config.entries()),
+            admission.permissions,
           ).map((rule) => ({ action: rule.action, resource: rule.resource, effect: rule.effect }))
           // Compared first so an exact retry records no second permission change.
           if (!isDeepStrictEqual(permissions, yield* store.permissions(child.id)))

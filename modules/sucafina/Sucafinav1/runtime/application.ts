@@ -14,6 +14,7 @@ import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
 import { readProcurementQueueView } from "../product/procurement/queue-view.ts"
+import { renderInstalledConsole } from "./installed-console.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -55,7 +56,7 @@ export function createApplication(mount: string, application: Application) {
     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement") return reply("Not found", 404)
     if (!["GET", "HEAD", "POST"].includes(request.method))
       return reply("Method not allowed", 405, { Allow: "GET, HEAD, POST" })
-    // Old document pages are no longer a product interface. API/export/asset dispatch stays below.
+    // A bare or empty-query console GET stays decommissioned. One page query, and no download, asset, or projection, is the installed screen.
     const decommissioned = () => reply(request.method === "HEAD" ? null : "legacy console decommissioned — use /", 404, {
       "Content-Type": "text/plain; charset=utf-8",
     })
@@ -74,10 +75,15 @@ export function createApplication(mount: string, application: Application) {
     if (queueProjection && (url.searchParams.getAll("projection").length !== 1 || url.searchParams.getAll("page").length !== 1))
       return reply("Invalid projection selection", 400)
     // Product operations own fresh authentication and transactions; never nest them in the page lock.
+    const retiredPage = request.method !== "POST" && !queueProjection && !url.searchParams.has("download") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link")
     const product = await application.product?.(request, surface)
     if (product) {
       // Product JSON and native operations keep their existing authorization and behavior.
-      if (request.method !== "POST" && product.headers.get("content-type")?.toLowerCase().includes("text/html")) return decommissioned()
+      if (request.method !== "POST" && product.headers.get("content-type")?.toLowerCase().includes("text/html")) {
+        const denied = await admitRetiredPage(request, surface, application)
+        if (denied) return denied
+        return decommissioned()
+      }
       return product
     }
     const parsed =
@@ -91,8 +97,18 @@ export function createApplication(mount: string, application: Application) {
     if (request.method !== "POST" && url.searchParams.has("download"))
       return serveDownload(request, surface, application, transaction, environment)
     // Native projections were dispatched by the installation; retain authorized asset GETs.
-    if (request.method !== "POST" && !queueProjection && !url.searchParams.has("asset") && !url.searchParams.has("asset-link"))
+    if (retiredPage) {
+      const denied = await admitRetiredPage(request, surface, application)
+      if (denied) return denied
+      if (singlePageShell(request, url)) {
+        const rendered = await renderInstalledConsole(request, surface, application)
+        if (rendered?.ok) return rendered
+        const plain = await renderInstalledConsole(request, surface, { ...application, productView: undefined })
+        if (plain) return plain
+        if (rendered) return rendered
+      }
       return decommissioned()
+    }
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
@@ -218,6 +234,19 @@ export function createApplication(mount: string, application: Application) {
           ),
         }
       }
+      if (request.method !== "POST" && url.searchParams.get("asset") === "page") {
+        const body = contribution.render(page, snapshot.data, {
+          actor,
+          year: Number(environment.at.slice(0, 4)),
+          month: Number(environment.at.slice(5, 7)),
+          at: environment.at,
+          versions: snapshot.versions,
+        })
+        if (!body) return { commit: false, value: reply("Page implementation unavailable", 503) }
+        return { commit: false, value: reply(body, 200, { "Content-Type": "text/html; charset=utf-8" }) }
+      }
+      if (request.method !== "POST" && url.searchParams.get("asset") === "admission")
+        return { commit: false, value: new Response(null, { status: 204, headers: { "Cache-Control": "no-store" } }) }
       if (request.method !== "POST" && (url.searchParams.has("asset") || url.searchParams.has("asset-link"))) {
         if (!blobs || !application.assets)
           return {
@@ -470,6 +499,19 @@ function json(value: unknown, status: number) {
   return reply(JSON.stringify(value), status, {
     "Content-Type": "application/json; charset=utf-8",
   })
+}
+function singlePageShell(request: Request, url: URL) {
+  if (request.method !== "GET" && request.method !== "HEAD") return false
+  const pages = url.searchParams.getAll("page")
+  return pages.length === 1 && pages[0] !== "" && !url.searchParams.has("download") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link") && !url.searchParams.has("projection")
+}
+async function admitRetiredPage(request: Request, surface: Surface, application: Application) {
+  const principal = await application.persistence.transaction(surface, async (snapshot) => ({
+    commit: false,
+    value: await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) }),
+  }))
+  if (!principal || !principal.id || principal.id.startsWith("local:")) return reply("Authentication required", 401)
+  return undefined
 }
 function reply(body: string | null, status: number, headers: Record<string, string> = {}) {
   return new Response(body, {

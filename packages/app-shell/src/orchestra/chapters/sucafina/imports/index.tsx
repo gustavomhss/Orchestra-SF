@@ -79,7 +79,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const auth = useSfContext()
   const language = useLanguage()
   const key = (value: string): SfCopyKey => value as SfCopyKey
-  const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
+  const t = (value: string, params?: Record<string, string | number>) =>
+    language.t(value as Parameters<typeof language.t>[0], params)
   const [state, setState] = createStore<LeafState>({
     status: "loading", phase: "selecting", surface: "planner",
     start: "", end: "", targets: [], discovery: undefined, selectionRef: "",
@@ -562,7 +563,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const changeSummary = (kind: Detail["detail"]["changes"][number]["kind"]) =>
     state.detail?.detail.changes.filter((item) => item.kind === kind) ?? []
   const displayValue = (value: Detail["detail"]["changes"][number]["before"]) =>
-    value.state !== "present" ? value.state : value.value === null ? "null" : JSON.stringify(value.value)
+    value.state === "present" ? value.value === null ? t("sf.u23.null") : JSON.stringify(value.value) :
+    value.state === "absent" ? t("sf.u23.absent") : t("sf.u23.undefined")
+  const poStateLabel = () => t("sf.u23.poState." + state.poState)
   const matchedSurface = () => state.manifest?.context.surface === state.surface
 
   return (
@@ -589,7 +592,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
                 <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
-                  <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
+                  <option value="planner">{t("sf.u23.planner")}</option><option value="dashboard">{t("sf.u23.dashboard")}</option>
                 </select>
               </label>
               <label>{t("sf.u23.periodStart")}
@@ -647,10 +650,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               <label>{t("sf.u23.source")}
                 <select value={state.surface} disabled={editLocked()}
                   onChange={(event) => newSource(event.currentTarget.value as ImportSurface)}>
-                  <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
+                  <option value="planner">{t("sf.u23.planner")}</option><option value="dashboard">{t("sf.u23.dashboard")}</option>
                 </select>
               </label>
-              <label>importPreviewRef
+              <label>{t("sf.u23.importPreviewRef")}
                 <input type="text" maxlength="512" required autocomplete="off" spellcheck={false}
                   value={state.historyRef} disabled={editLocked()}
                   onInput={(event) => {
@@ -668,7 +671,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
                 <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
-                  <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
+                  <option value="planner">{t("sf.u23.planner")}</option><option value="dashboard">{t("sf.u23.dashboard")}</option>
                 </select>
               </label>
               <button type="button" class="mx-btn" disabled={state.busy || !("manifestId" in props.route.params)}
@@ -777,29 +780,28 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   <option value="suppliers">{t("sf.u23.exportSuppliers")}</option>
                   <option value="register">{t("sf.u23.exportRegister")}</option>
                   <option value="json">{t("sf.u23.exportJson")}</option>
-                  <option value="po">Individual purchase order / approvals (HTML)</option>
+                  <option value="po">{t("sf.u23.exportPo")}</option>
                 </select>
               </label>
               <Show when={state.exportKind === "po"}>
-                <label>Current authorized purchase order
+                <label>{t("sf.u23.poCurrent")}
                   <select value={state.poSelection} disabled={state.busy || state.poState !== "ready"}
                     onChange={(event) => { revokeExport(); setState("poSelection", event.currentTarget.value) }}>
-                    <option value="">Select a PO by its source PR reference</option>
+                    <option value="">{t("sf.u23.poSelect")}</option>
                     <For each={poCandidates()}>{(row) =>
                       <option value={requestRef(row)}>{row.po?.number} · {row.number} · {row.status}</option>
                     }</For>
                   </select>
                 </label>
-                <p role="status">Selection: {state.poState}. Only a producer-authenticated PO is exportable;
-                  a receiving receipt is not available as a separate admitted producer.</p>
+                <p role="status">{t("sf.u23.selection", { state: poStateLabel() })} {t("sf.u23.poOnly")}</p>
                 <button type="button" class="mx-btn" disabled={state.busy}
                   onClick={() => { revokeExport(); setState("poRefresh", state.poRefresh + 1) }}>
-                  Refresh PO source references
+                  {t("sf.u23.poRefresh")}
                 </button>
               </Show>
               <Show when={state.download}>
                 {(download) => <p role="status" data-sf-export="authorized-bytes">
-                  {t("sf.u23.download")}: {download().name}. To download again, request fresh authorization.
+                  {t("sf.u23.download")}: {download().name}. {t("sf.u23.downloadAgain")}
                 </p>}
               </Show>
             </div>

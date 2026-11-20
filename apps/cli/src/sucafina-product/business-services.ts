@@ -287,6 +287,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const historical = observed !== undefined && observed > captured.version
     if (!historical) {
       const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+      // Preserve a proven source outage without admitting an inaccessible selection.
+      if (current.status === "unavailable" && current.reason === "case-evidence-unavailable") return current
       if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version))
         return { status: "denied", reason: "case-selection-unavailable" }
     }
@@ -445,7 +447,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
-  const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
+  const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources, readSourceProjection: product.readSourceProjection })
   const procurementProducer = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })

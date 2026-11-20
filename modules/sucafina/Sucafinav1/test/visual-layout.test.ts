@@ -64,7 +64,7 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       for (const surface of ["dashboard", "planner", "procurement"]) {
         const entry = `${surface} entry at ${width}px`
         console.info(`SF visual layout phase: ${entry}`)
-        await step(`${entry}: navigate`, () => page.goto(`${origin}/sucafina/${surface}`))
+        await step(`${entry}: navigate`, () => page.goto(`${origin}/sucafina/${surface}?${surface === "dashboard" ? "page=Executive+Dashboard&asset=page" : "asset=page"}`))
         const hrefs = await step(`${entry}: read authorized navigation`, () => page.locator("aside.sidebar > nav > a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!)))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
