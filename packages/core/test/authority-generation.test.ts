@@ -41,7 +41,8 @@ async function fixture(activate = true) {
       const result = yield* effect
       yield* command("COMMIT")
       return result
-    }).pipe(Effect.ensuring(Effect.sync(() => { if (business.inTransaction()) business.execute("ROLLBACK") })))
+    }).pipe(Effect.ensuring(Effect.suspend(() => business.inTransaction()
+      ? command("ROLLBACK").pipe(Effect.asVoid) : Effect.void)))
   return {
     filename, business, old, prepared, controlDriver, control, storage, marker, generation, guarded, command, transaction,
     async [Symbol.asyncDispose]() {
@@ -227,4 +228,30 @@ test("rollback remains possible when a pending transaction makes its marker unre
   expect(f.business.all("SELECT * FROM protected_item")).toEqual([])
   expect(f.marker()?.generation).toBe(1)
   expect(f.control.pendingWriters(f.storage)).toEqual([])
+})
+
+test("Project deletion cannot cascade into retained sessions, even with a current private writer", async () => {
+  await using f = await fixture(false)
+  f.business.execute("CREATE TABLE project (id TEXT PRIMARY KEY)")
+  f.business.execute("CREATE TABLE session (id TEXT PRIMARY KEY, project_id TEXT REFERENCES project(id) ON DELETE CASCADE)")
+  f.business.execute("INSERT INTO project VALUES ('shared-placement'), ('empty-placement')")
+  f.business.execute("INSERT INTO session VALUES ('owner-a', 'shared-placement'), ('unresolved-owner', 'shared-placement')")
+  const oldDelete = f.old.prepare("DELETE FROM project WHERE id = ?")
+  try {
+    f.control.registerSuspended(f.storage, plan)
+    f.business.execute("BEGIN IMMEDIATE")
+    AuthoritySqlFence.install(f.business, { generation: 1, controlId: f.control.controlId }, ["session"])
+    f.business.execute("COMMIT")
+    f.control.activate(f.storage, 1, plan, f.marker)
+    expect(() => oldDelete.run("shared-placement")).toThrow("sf-project-placement-retains-session")
+    const denied = await Effect.runPromise(f.generation.withWriter(1,
+      f.transaction(f.command("DELETE FROM project WHERE id = 'shared-placement'"))).pipe(Effect.exit))
+    expect(Exit.isFailure(denied)).toBe(true)
+    expect(f.business.all("SELECT id FROM session ORDER BY id")).toEqual([{ id: "owner-a" }, { id: "unresolved-owner" }])
+    expect(f.business.all("SELECT id FROM project ORDER BY id")).toHaveLength(2)
+    await Effect.runPromise(f.generation.withWriter(1,
+      f.transaction(f.command("DELETE FROM project WHERE id = 'empty-placement'"))))
+    expect(f.business.all("SELECT id FROM project")).toEqual([{ id: "shared-placement" }])
+    expect(f.control.pendingWriters(f.storage)).toEqual([])
+  } finally { oldDelete.finalize() }
 })
