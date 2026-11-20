@@ -570,8 +570,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     if (current.status !== "ready" || !auth.ready()) return
     const selected = sfReadyOwnerSelection(current)
     const requested = props.route.ownerSelection
-    if (!selected || selected.serverKey !== requested.serverKey ||
-        selected.projectId !== requested.projectId || selected.installationId !== requested.installationId) return
+    if (!selected || !selected.serverKey || !selected.projectId || !selected.installationId) return
+    if (selected.serverKey !== requested.serverKey || selected.projectId !== requested.projectId ||
+        selected.installationId !== requested.installationId) return
     const id = state.manifest?.id
     if (!id) return
     const path = step === "list" ? "/orchestra/sf-imports" :
