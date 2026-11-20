@@ -23,12 +23,12 @@ const profile = Schema.decodeUnknownSync(TeamProfile.Ref)({
 const principal = Schema.decodeUnknownSync(TeamProfile.Principal)({
   tenantId: binding.tenantId, principalObjectId: "11111111-1111-4111-8111-111111111111",
 })
-const projection = () => Schema.decodeUnknownSync(SfTeamContext)({
+const projection = (actor = principal) => Schema.decodeUnknownSync(SfTeamContext)({
   contractRevision: "sf-team-profile/1", authMode: "microsoft",
   stamp: { installationId: binding.installationId, projectId: binding.projectId, hostId: binding.hostId,
-    principalRef: principal.principalObjectId, policyVersion: "policy", accessRevision: "ui-only-source" },
+    principalRef: actor.principalObjectId, policyVersion: "policy", accessRevision: "ui-only-source" },
   profile: { contractRevision: "sf-team-profile/1", status: "authenticated", installationId: binding.installationId,
-    principal, accessRevision: "ui-only-source", administration: { status: "available" }, teams: { status: "no-teams" } },
+    principal: actor, accessRevision: "ui-only-source", administration: { status: "available" }, teams: { status: "no-teams" } },
   destinations: [], availability: [],
 })
 const document = Schema.decodeUnknownSync(TeamProfile.ConfigurationDocument)({
@@ -39,10 +39,16 @@ const document = Schema.decodeUnknownSync(TeamProfile.ConfigurationDocument)({
   } },
 })
 const json = (value: unknown, status = 200) => Response.json(value, { status, headers: { "cache-control": "no-store" } })
-function fixture(initial: TeamProfile.ConfigurationDocument | undefined = document) {
+function fixture(initial: TeamProfile.ConfigurationDocument | undefined = document, options: Readonly<{
+  storage?: Map<string, string>; windowId?: string; principal?: TeamProfile.Principal;
+  persistent?: boolean; blockedStorage?: boolean;
+}> = {}) {
   const previous = window.location.href
   window.location.href = binding.publicOrigin + "/"
-  let saved = initial ? structuredClone(initial) : undefined, revision = 7, generation = 1, current = projection()
+  const storage = options.storage ?? new Map<string, string>()
+  const windowId = options.windowId ?? "22222222-2222-4222-8222-222222222222"
+  const actor = options.principal ?? principal
+  let saved = initial ? structuredClone(initial) : undefined, revision = 7, generation = 1, current = projection(actor)
   let refreshes = 0, confirmations = 0, consent = true
   let hook: ((request: Request) => Promise<Response | undefined>) | undefined
   const calls: Request[] = [], notices: string[] = []
@@ -63,18 +69,24 @@ function fixture(initial: TeamProfile.ConfigurationDocument | undefined = docume
     return json({ status: "ok", configRevision: revision, changed: true })
   }
   const editor = createTeamConfigurationState({
-    binding, context: () => current, generation: () => generation, fetch,
+    binding, window: { id: windowId, persistent: options.persistent ?? true, dispose() {} },
+    storage: {
+      getItem: (key) => storage.get(key) ?? null,
+      setItem: (key, value) => { if (options.blockedStorage) throw new Error("Storage unavailable"); storage.set(key, value) },
+      removeItem: (key) => { storage.delete(key) },
+    },
+    context: () => current, generation: () => generation, fetch,
     confirmDiscard: async () => { confirmations++; return consent },
     refresh: async () => { refreshes++ }, notice: (key) => notices.push(key),
   })
-  return { editor, calls, notices, saved: () => saved, revision: () => revision, context: () => current,
+  return { editor, calls, notices, storage, windowId, saved: () => saved, revision: () => revision, context: () => current,
     refreshes: () => refreshes, confirmations: () => confirmations,
     setConsent: (value: boolean) => { consent = value },
     setHook: (value: typeof hook) => { hook = value },
     setSaved: (value: TeamProfile.ConfigurationDocument | undefined, nextRevision = revision) => {
       saved = value ? structuredClone(value) : undefined; revision = nextRevision
     },
-    retire() { generation++; current = projection(); editor.guard.retire() },
+    retire() { generation++; current = projection(actor); editor.guard.retire() },
     close() { editor.dispose(); window.location.href = previous },
   }
 }
@@ -252,4 +264,125 @@ test("invalid agent keys and an over-budget document fail before any configurati
     expect(f.calls.filter((request) => request.method === "POST")).toHaveLength(0)
     expect(f.revision()).toBe(7)
   } finally { f.close() }
+})
+
+test("reload restores only a pending reference after current admission and GET, never the submitted draft", async () => {
+  const first = fixture(), storage = first.storage
+  let recorded: TeamProfile.ConfigurationDocument | undefined
+  try {
+    await first.editor.open(profile)
+    first.editor.agentText("analyst", "system", "Do not persist this unsent or uncertain body.")
+    first.setHook(async (request) => {
+      if (request.method !== "POST") return
+      recorded = Schema.decodeUnknownSync(TeamProfile.ConfigurationCommand)(await request.json()).document
+      first.setSaved(recorded, 8)
+      throw new Error("response lost after commit")
+    })
+    expect(await first.editor.save()).toBe(false)
+    expect(storage.size).toBe(1)
+    const retained = [...storage.values()].join("")
+    expect(retained).not.toMatch(/Do not persist|provider\/model|Shared analytical|document"|"settings"|grant|cookie|token/)
+    expect(retained).toContain('"documentHash"')
+    expect(retained).toContain('"expectedRevision":7')
+    first.close()
+    const restored = fixture(recorded, { storage, windowId: first.windowId })
+    restored.setSaved(recorded, 8)
+    try {
+      expect(restored.editor.state.document).toEqual({ version: 1, settings: {} })
+      expect(restored.editor.state.pending).toBe(false)
+      expect(await restored.editor.open(profile)).toBe(true)
+      expect(restored.calls.map((request) => request.method)).toEqual(["GET"])
+      expect(restored.editor.state.document).toEqual(recorded)
+      expect(restored.editor.state.message).toBe("sf.teams.configObserved")
+      expect(restored.notices).not.toContain("sf.teams.configSaved")
+      expect(restored.editor.state.pending).toBe(false)
+      expect(restored.refreshes()).toBe(1)
+      expect(storage.size).toBe(0)
+    } finally { restored.close() }
+  } finally { first.close() }
+})
+
+test("a retained uncertain change is invisible to another person or window and remains private after a denial", async () => {
+  const first = fixture(), storage = first.storage
+  try {
+    await first.editor.open(profile)
+    first.editor.agentText("analyst", "system", "Original owner only, not a persisted body.")
+    first.setHook(async (request) => { if (request.method === "POST") throw new Error("response lost") })
+    expect(await first.editor.save()).toBe(false)
+    first.close()
+    const otherPrincipal = Schema.decodeUnknownSync(TeamProfile.Principal)({
+      tenantId: binding.tenantId, principalObjectId: "33333333-3333-4333-8333-333333333333",
+    })
+    for (const options of [
+      { storage, windowId: "44444444-4444-4444-8444-444444444444" },
+      { storage, windowId: first.windowId, principal: otherPrincipal },
+    ]) {
+      const other = fixture(document, options)
+      try {
+        expect(await other.editor.open(profile)).toBe(true)
+        expect(other.editor.state.pending).toBe(false)
+        expect(other.editor.state.message).toBeUndefined()
+        expect(storage.size).toBe(1)
+      } finally { other.close() }
+    }
+    const denied = fixture(document, { storage, windowId: first.windowId })
+    denied.setHook(async () => json({ status: "denied" }, 403))
+    try {
+      expect(await denied.editor.open(profile)).toBe(false)
+      expect(denied.editor.state.document).toEqual({ version: 1, settings: {} })
+      expect(denied.editor.state.pending).toBe(false)
+      expect(denied.editor.state.profile).toBeUndefined()
+      expect(storage.size).toBe(1)
+    } finally { denied.close() }
+    const original = fixture(document, { storage, windowId: first.windowId })
+    try {
+      expect(await original.editor.open(profile)).toBe(true)
+      expect(original.editor.state.pending).toBe(true)
+      expect(original.editor.state.message).toBe("sf.teams.configDifferent")
+      expect(original.editor.state.document).toEqual(document)
+      expect(JSON.stringify(original.editor.state.document)).not.toContain("Original owner only")
+      expect(original.calls.map((request) => request.method)).toEqual(["GET"])
+    } finally { original.close() }
+  } finally { first.close() }
+})
+
+test("the whole original command identity must match, and unavailable window storage prevents dispatch", async () => {
+  const first = fixture(), storage = first.storage
+  try {
+    await first.editor.open(profile)
+    first.editor.settings("model", "provider/new")
+    first.setHook(async (request) => {
+      if (request.method !== "POST") return
+      first.setSaved(Schema.decodeUnknownSync(TeamProfile.ConfigurationCommand)(await request.json()).document, 8)
+      throw new Error("response lost")
+    })
+    expect(await first.editor.save()).toBe(false)
+    const [key, raw] = [...storage][0]!
+    const value: unknown = JSON.parse(raw)
+    if (!value || typeof value !== "object") throw new Error("Pending metadata required")
+    storage.set(key, JSON.stringify({ ...value, identity: "0".repeat(64) }))
+    first.close()
+    const restored = fixture(first.saved(), { storage, windowId: first.windowId })
+    restored.setSaved(first.saved(), 8)
+    try {
+      expect(await restored.editor.open(profile)).toBe(true)
+      expect(restored.editor.state.pending).toBe(true)
+      expect(restored.editor.state.message).toBe("sf.teams.configDifferent")
+      expect(await restored.editor.reconcileWrite()).toBe(false)
+      expect(restored.calls.every((request) => request.method === "GET")).toBe(true)
+      expect(storage.size).toBe(1)
+    } finally { restored.close() }
+  } finally { first.close() }
+  for (const options of [{ blockedStorage: true }, { persistent: false }]) {
+    const blocked = fixture(document, options)
+    try {
+      await blocked.editor.open(profile)
+      blocked.editor.settings("model", "provider/new")
+      expect(await blocked.editor.save()).toBe(false)
+      expect(blocked.editor.state.pending).toBe(false)
+      expect(blocked.editor.state.message).toBe("sf.teams.configJournalUnavailable")
+      expect(blocked.calls.every((request) => request.method === "GET")).toBe(true)
+      expect(blocked.saved()).toEqual(document)
+    } finally { blocked.close() }
+  }
 })

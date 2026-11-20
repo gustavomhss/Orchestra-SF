@@ -8,11 +8,13 @@ import type { SfTransportFetch } from "@orchestra/client/sucafina/transport"
 import { useLanguage } from "../../../../context/language"
 import { createTeamConfigurationState, type TeamAdministrativeDraft } from "./team-configuration-state"
 import { SfTeamConfigurationForm } from "./team-configuration"
+import type { TeamWindowIdentity } from "../../../../utils/team-profile-storage"
 
 type CopyKey = Parameters<ReturnType<typeof useLanguage>["t"]>[0]
 type View = Readonly<{ status: "loading" | "ready" | "denied" | "unavailable";
   profiles: readonly TeamProfile.AdminProfile[]; configRevision?: number }>
 export function SfTeamProfilesAdministration(props: Readonly<{
+  window: TeamWindowIdentity; storage: Pick<Storage, "getItem" | "setItem" | "removeItem">
   binding: SfTeamInstallationDescriptor; context: () => SfTeamContext | undefined
   generation: () => number; fetch: SfTransportFetch; refresh(): Promise<void>
   confirmDiscard(): Promise<boolean>
@@ -24,7 +26,8 @@ export function SfTeamProfilesAdministration(props: Readonly<{
     view: { status: "loading", profiles: [] }, input: "", busy: false, limit: 100,
   })
   const editor = createTeamConfigurationState({
-    binding: props.binding, context: props.context, generation: props.generation, fetch: props.fetch,
+    binding: props.binding, window: props.window, storage: props.storage,
+    context: props.context, generation: props.generation, fetch: props.fetch,
     refresh: props.refresh, confirmDiscard: props.confirmDiscard, notice: props.notice,
   })
   const unregister = props.registerDraft(editor.guard)

@@ -75,7 +75,7 @@ O formulário permite definir o modelo no formato `provedor/modelo`, o agente pa
 
 A gravação compara a revisão que foi lida com a revisão atual do servidor. Em caso de conflito, o rascunho fica na tela; use **Ler configuração** e confirme o descarte para editar a versão corrente. O rascunho existe apenas na memória da janela e participa da confirmação de navegação. Revogação de acesso ou saída da conta limpa esses dados.
 
-Se a resposta de uma gravação se perder, use **Verificar configuração atual**. A aplicação compara a leitura corrente com as alterações enviadas e não repete a gravação. Uma correspondência confirma o estado atual, sem afirmar qual solicitação o gravou. Uma diferença mantém o resultado original indeterminado.
+Se a resposta de uma gravação se perder, use **Verificar configuração atual**. A aplicação compara a leitura corrente com as alterações enviadas e não repete a gravação. Uma correspondência confirma o estado atual, sem afirmar qual solicitação o gravou. Uma diferença mantém o resultado original indeterminado. A janela pode conservar apenas a referência dessa pendência: pessoa, perfil, janela, revisão esperada e resumos criptográficos da alteração. O texto e o documento não são armazenados. Após recarregar ou entrar novamente, a referência só reaparece para o titular original, depois de nova admissão e leitura autorizada da configuração corrente. Se a janela não conseguir conservar essa referência, a alteração não é enviada.
 
 Salvar a configuração renova o contexto para que as próximas ações usem as revisões correntes. Essa configuração declarativa não concede acesso a modelos, provedores, credenciais, ferramentas ou MCP.
 

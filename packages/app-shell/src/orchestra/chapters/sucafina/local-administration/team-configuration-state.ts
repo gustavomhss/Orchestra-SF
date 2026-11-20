@@ -4,11 +4,19 @@ import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { createSfTeamProfileClient } from "@orchestra/client/sucafina/team-profile"
 import type { SfTransportFetch } from "@orchestra/client/sucafina/transport"
+import { teamPrivateKey, type TeamWindowIdentity } from "../../../../utils/team-profile-storage"
 
 const strict = { onExcessProperty: "error" } as const
 type Editable<Value> = Value extends object ? { -readonly [Key in keyof Value]: Editable<Value[Key]> } : Value
 type Document = Editable<TeamProfile.ConfigurationDocument>
 const empty = (): Document => ({ version: 1, settings: {} })
+const PendingConfiguration = Schema.Struct({
+  version: Schema.Literal(1), owner: TeamProfile.Owner, windowId: Schema.String,
+  expectedRevision: Schema.Number.check(Schema.makeFilter((value) => Number.isSafeInteger(value) && value >= 0)),
+  identity: Schema.String.check(Schema.isPattern(/^[0-9a-f]{64}$/)),
+  documentHash: Schema.String.check(Schema.isPattern(/^[0-9a-f]{64}$/)),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+type Write = typeof PendingConfiguration.Type
 const sorted = (value: unknown): unknown => Array.isArray(value) ? value.map(sorted) :
   value && typeof value === "object" ? Object.fromEntries(Object.entries(value)
     .filter(([, item]) => item !== undefined).sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)
@@ -25,7 +33,7 @@ export type TeamAdministrativeDraft = Readonly<{
   retire(): void
 }>
 type Notice = "sf.teams.configSaved" | "sf.teams.configObserved" | "sf.teams.configDifferent" |
-  "sf.teams.configUnknown" | "sf.teams.configInvalid" | "sf.teams.configMissing" |
+  "sf.teams.configUnknown" | "sf.teams.configInvalid" | "sf.teams.configMissing" | "sf.teams.configJournalUnavailable" |
   "sf.teams.adminConflict" | "sf.teams.adminFailed" | "sf.teams.adminDenied" | "sf.teams.adminUnavailable"
 type State = {
   status: "idle" | "loading" | "ready" | "denied" | "unavailable"
@@ -37,13 +45,14 @@ type State = {
   message?: Notice
 }
 type Lifetime = { generation: number; context: SfTeamContext; abort: AbortController; profile: TeamProfile.Ref;
-  client: ReturnType<typeof createSfTeamProfileClient> }
-type Write = { command: TeamProfile.ConfigurationCommand; identity: string; documentHash: string }
+  owner: TeamProfile.Owner; key: string; client: ReturnType<typeof createSfTeamProfileClient> }
 
 /** An administrative draft is presentation state. Its identity/hash only compare
  * an explicit subsequent GET; they never admit a write or prove who committed it. */
 export function createTeamConfigurationState(input: Readonly<{
   binding: SfTeamInstallationDescriptor
+  window: TeamWindowIdentity
+  storage: Pick<Storage, "getItem" | "setItem" | "removeItem">
   context(): SfTeamContext | undefined
   generation(): number
   fetch: SfTransportFetch
@@ -57,6 +66,36 @@ export function createTeamConfigurationState(input: Readonly<{
     input.generation() === life.generation && input.context() === life.context &&
     life.context.profile.administration.status === "available"
   const snapshot = () => structuredClone(unwrap(state.document))
+  // Only an original-owner intent is retained. The document, draft, grants and
+  // request body never enter browser storage, and this label is not admission.
+  const remembered = (life: Lifetime): Write | undefined => {
+    if (!input.window.persistent) return
+    try {
+      const raw = input.storage.getItem(life.key)
+      if (!raw || raw.length > 2048) return
+      const value = Schema.decodeUnknownOption(PendingConfiguration, strict)(JSON.parse(raw))
+      if (Option.isNone(value) || value.value.windowId !== input.window.id ||
+          canonical(value.value.owner) !== canonical(life.owner)) return
+      return value.value
+    } catch { return }
+  }
+  const remember = (life: Lifetime, written: Write) => {
+    if (!input.window.persistent) return false
+    try {
+      const raw = JSON.stringify(written)
+      input.storage.setItem(life.key, raw)
+      return input.storage.getItem(life.key) === raw
+    } catch { return false }
+  }
+  const forget = (life: Lifetime, written: Write) => {
+    try {
+      if (remembered(life)?.identity === written.identity) input.storage.removeItem(life.key)
+    } catch { /* A retained intent is reconciled by a later admitted read, never retried. */ }
+  }
+  const matches = async (life: Lifetime, written: Write, observed: TeamProfile.ConfigurationSnapshot) =>
+    observed.configRevision >= written.expectedRevision &&
+    await digest(observed.document) === written.documentHash &&
+    await digest({ profile: life.profile, expectedRevision: written.expectedRevision, document: observed.document }) === written.identity
   const dirty = () => state.busy || state.pending || state.status === "ready" && canonical(snapshot()) !== baseline
   const retire = () => {
     serial++; active?.abort.abort(); active = undefined; pending = undefined; baseline = canonical(empty())
@@ -83,7 +122,9 @@ export function createTeamConfigurationState(input: Readonly<{
     if (Option.isNone(parsed) || parsed.value.installationId !== input.binding.installationId ||
         parsed.value.tenantId !== input.binding.tenantId) return false
     retire()
-    const life: Lifetime = { generation, context, profile: parsed.value, abort: new AbortController(),
+    const owner = Schema.decodeUnknownSync(TeamProfile.Owner, strict)({ profile: parsed.value, principal: context.profile.principal })
+    const life: Lifetime = { generation, context, profile: parsed.value, owner,
+      key: teamPrivateKey(owner, "configuration-pending", input.window.id), abort: new AbortController(),
       client: createSfTeamProfileClient({ binding: input.binding, generation, currentGeneration: input.generation, fetch: input.fetch }) }
     active = life
     setState({ status: "loading", profile: life.profile, busy: true, message: undefined })
@@ -91,7 +132,18 @@ export function createTeamConfigurationState(input: Readonly<{
       const result = await life.client.readConfiguration(life.profile, { signal: life.abort.signal })
       if (!current(life)) return false
       if (result.kind !== "response") { await denied(life, "unavailable"); return false }
-      if (result.body.status === "ok") { install(result.body.configuration.document, result.body.configuration.configRevision); return true }
+      if (result.body.status === "ok") {
+        const observed = result.body.configuration, retained = remembered(life)
+        const matched = retained ? await matches(life, retained, observed) : false
+        if (!current(life)) return false
+        install(observed.document, observed.configRevision)
+        if (retained && matched) {
+          forget(life, retained); show("sf.teams.configObserved"); await input.refresh()
+        } else if (retained) {
+          pending = retained; setState("pending", true); show("sf.teams.configDifferent")
+        }
+        return true
+      }
       if (result.body.status !== "not-found") { await denied(life, result.body.status); return false }
       // A missing document has no revision. Read current installation metadata
       // explicitly; a racing edit is still rejected by the server's CAS.
@@ -101,7 +153,10 @@ export function createTeamConfigurationState(input: Readonly<{
           !list.body.profiles.some((row) => row.profile.teamObjectId === life.profile.teamObjectId && row.enabled)) {
         await denied(life, list.kind === "response" ? list.body.status : "unavailable"); return false
       }
-      install(empty(), list.body.configRevision); show("sf.teams.configMissing")
+      install(empty(), list.body.configRevision)
+      const retained = remembered(life)
+      if (retained) { pending = retained; setState("pending", true); show("sf.teams.configUnknown") }
+      else show("sf.teams.configMissing")
       return true
     } catch (error) {
       if (current(life)) { setState("status", "unavailable"); show("sf.teams.adminUnavailable")
@@ -123,14 +178,17 @@ export function createTeamConfigurationState(input: Readonly<{
     try {
       const identity = await digest(command), documentHash = await digest(command.document)
       if (!current(life)) return false
-      pending = { command, identity, documentHash }; setState("pending", true)
+      const written: Write = { version: 1, owner: life.owner, windowId: input.window.id,
+        expectedRevision: command.expectedRevision, identity, documentHash }
+      if (!remember(life, written)) { show("sf.teams.configJournalUnavailable"); return false }
+      pending = written; setState("pending", true)
       dispatched = true
       const result = await life.client.configureDocument(command, { signal: life.abort.signal })
       if (!current(life)) return false
       if (result.kind === "transport-error" && result.reason === "outcome-unknown") {
         show("sf.teams.configUnknown"); return false
       }
-      pending = undefined; setState("pending", false)
+      forget(life, written); pending = undefined; setState("pending", false)
       if (result.kind !== "response") { show("sf.teams.configInvalid"); return false }
       if (result.body.status === "ok") {
         install(command.document, result.body.configRevision); show("sf.teams.configSaved")
@@ -154,7 +212,7 @@ export function createTeamConfigurationState(input: Readonly<{
     if (!life || !written || !current(life) || state.busy) return false
     setState("busy", true)
     try {
-      if (await digest(written.command) !== written.identity || !current(life) || pending !== written) return false
+      if (!current(life) || pending !== written) return false
       const result = await life.client.readConfiguration(life.profile, { signal: life.abort.signal })
       if (!current(life) || pending !== written) return false
       if (result.kind !== "response" || result.body.status !== "ok") {
@@ -164,13 +222,12 @@ export function createTeamConfigurationState(input: Readonly<{
         return false
       }
       const observed = result.body.configuration
-      const matches = await digest(observed.document) === written.documentHash &&
-        observed.configRevision >= written.command.expectedRevision
+      const matched = await matches(life, written, observed)
       if (!current(life) || pending !== written) return false
-      if (!matches) { show("sf.teams.configDifferent"); return false }
+      if (!matched) { show("sf.teams.configDifferent"); return false }
       // A matching current document establishes the requested state, not who
       // committed it or the response of the original request. No POST is retried.
-      pending = undefined
+      forget(life, written); pending = undefined
       install(observed.document, observed.configRevision); show("sf.teams.configObserved")
       await input.refresh(); return true
     } catch (error) {

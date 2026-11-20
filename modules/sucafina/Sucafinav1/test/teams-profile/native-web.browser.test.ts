@@ -32,7 +32,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   const observed: { fixture: "business" | "admin"; path: string; method: string; cookie: boolean; basic: boolean; selector: string | null; status: number }[] = []
   const startedAt = performance.now()
   const httpPhases: { fixture: "business" | "admin"; path: string; method: string; startedMs: number; elapsedMs?: number; status?: number }[] = []
-  let passed = false, phase = "build", holdLogout = false
+  let passed = false, phase = "build", holdLogout = false, loseConfigurationResponse = false
   const logoutEntered = Promise.withResolvers<void>(), logoutRelease = Promise.withResolvers<void>(), logoutHandled = Promise.withResolvers<void>()
   try {
     phase = "browser-start"
@@ -84,11 +84,20 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
                 bound: !!stamp && "team" in stamp })
             }
           }
+          let delivered = response
+          if (name === "admin" && loseConfigurationResponse && request.method === "POST" &&
+              url.pathname === fixture.binding.mount + "/api/ui/team-profiles/configuration" && response.status === 200) {
+            // The real command already committed. Lose only its HTTP reply so
+            // the native UI must reconcile a retained reference without retry.
+            loseConfigurationResponse = false
+            void response.body?.cancel().catch(() => {})
+            delivered = new Response("Synthetic lost response after commit", { status: 502, headers: { "Cache-Control": "no-store" } })
+          }
           observed.push({ fixture: name, path: url.pathname, method: request.method,
             cookie: request.headers.has("cookie"), basic: request.headers.has("authorization"),
-            selector: request.headers.get("x-sf-team-profile"), status: response.status })
+            selector: request.headers.get("x-sf-team-profile"), status: delivered.status })
           if (name === "business" && url.pathname === fixture.binding.mount + "/auth/logout") logoutHandled.resolve()
-          return response
+          return delivered
         },
       })
       networks.push(network)
@@ -369,10 +378,33 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
     expect(await picker(administrator.page).isDisabled()).toBe(true)
     expect(observed.some((call) => call.fixture === "admin" && call.path.endsWith("/api/ui/team-profiles/configuration") &&
       call.method === "POST" && call.cookie && !call.basic && call.selector === null && call.status === 200)).toBe(true)
+    phase = "shared-configuration-unknown-reload"
+    await administrator.page.locator('[data-sf-config-open="' + profileA.teamObjectId + '"]').click()
+    await configuration.waitFor({ state: "visible" })
+    await configuration.locator("[data-sf-config-agent]").selectOption("analyst")
+    await configuration.locator("[data-sf-config-instructions]").fill("Observed only after the original administrator is admitted again.")
+    loseConfigurationResponse = true
+    await configuration.locator("[data-sf-config-save]").click()
+    await configuration.locator("[data-sf-config-check]").waitFor({ state: "visible" })
+    expect((await admin.profiles.read()).configRevision).toBe(3)
+    const retainedConfiguration = await administrator.page.evaluate(() =>
+      Object.values(sessionStorage).filter((value) => value.includes('"documentHash"')))
+    expect(retainedConfiguration).toHaveLength(1)
+    expect(retainedConfiguration.join("")).not.toMatch(/Observed only|fixture\/shared-model|"settings"|"system"/)
+    administrator.page.once("dialog", (dialog) => { void dialog.accept() })
+    await administrator.page.reload({ waitUntil: "domcontentloaded" })
+    await administrator.page.locator('[data-sf-team-administration="ready"]').waitFor({ state: "visible" })
+    expect(await administrator.page.locator("body").textContent()).not.toContain("Observed only after")
+    await administrator.page.locator('[data-sf-config-open="' + profileA.teamObjectId + '"]').click()
+    await administrator.page.locator(".sf-team-notice").filter({ hasText: "matches the settings you submitted" }).waitFor({ state: "visible" })
+    expect(await administrator.page.evaluate(() =>
+      Object.values(sessionStorage).filter((value) => value.includes('"documentHash"')))).toEqual([])
+    expect(observed.filter((call) => call.fixture === "admin" &&
+      call.path.endsWith("/api/ui/team-profiles/configuration") && call.method === "POST").map((call) => call.status)).toEqual([200, 502])
     admin.provider.account.groups = admin.provider.account.groups.filter((value) => value !== group)
     await administrator.page.getByRole("button", { name: "Read current configuration", exact: true }).click()
     await administrator.page.locator('[data-sf-team-administration="denied"]').waitFor({ state: "visible" })
-    expect(await admin.profiles.read()).toEqual({ configRevision: 2, profiles: [{ profile: profileA, enabled: true }] })
+    expect(await admin.profiles.read()).toEqual({ configRevision: 3, profiles: [{ profile: profileA, enabled: true }] })
     expect(admin.metadataCalls.locations).toBe(0)
 
     expect(observed.some((call) => call.basic)).toBe(false)
