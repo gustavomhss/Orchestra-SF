@@ -41,7 +41,10 @@ export function createCompositeDecisionPlanner(input: {
         const conditions = external.map((item) => `external-operation:${item.operationDigest}:${item.condition}`)
         const sourceRefs = [...value.sourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
         const costCoverage = { ...value.costCoverage, coverageState: value.costCoverage.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...new Set([...value.costCoverage.issues, "external-operation-cost-unresolved"])], evaluatedSourceRefs: [...value.costCoverage.evaluatedSourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index) }
-        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: plannerScenarioDigest(value), proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
+        // The external edit is still an unapplied hypothesis even when the Planner
+        // projection itself has no operations. Emit these semantics before a
+        // promotion captures the exact result proof consumed at commit.
+        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: plannerScenarioDigest(value), proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions, "scenario-is-hypothetical"])], restrictions: value.restrictions.includes("preview-not-applied") ? value.restrictions : [...value.restrictions, "preview-not-applied"] } }
       } catch { return { status: "unavailable", reason: "scenario-composition-unavailable" } }
     },
   }

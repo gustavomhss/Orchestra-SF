@@ -2,8 +2,8 @@ import { expect, test, type Page, type Request } from "@playwright/test"
 import { asRecord, caseIdentity, clickCommand, enterWorkbench, isCommand, readReply } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 
-/** Consume the published C12 path only after the caller proves a compatible domain approval. */
-export async function applyRecoveryJourney(page: Page, origin: string, selection: { reference: string; objective: string; choiceId: string }, observations: Record<string, unknown>[], approveBeforeApply: (page: Page, review: Record<string, unknown>, operation: Record<string, unknown>) => Promise<{ requestId: string; amount: unknown; currency: string; version: number; action: string }>) {
+/** Apply and recover the reviewed draft before Procurement submits and approves its exact saved amount. */
+export async function applyRecoveryJourney(page: Page, origin: string, selection: { reference: string; objective: string; choiceId: string }, observations: Record<string, unknown>[], approveAfterApply: (page: Page, review: Record<string, unknown>, operation: Record<string, unknown>) => Promise<{ requestId: string; amount: unknown; currency: string; version: number; action: string }>) {
   const identity = caseIdentity(selection.reference)
   const context = asRecord(JSON.parse((await page.locator("form[data-decision-choice]").getAttribute("data-context"))!))
   const selected = (context.choices as unknown[]).map(asRecord).filter((choice) => choice.id === selection.choiceId)
@@ -63,23 +63,21 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
       return review
     })
     const requestId = String(asRecord(reviewed.target).id)
-    const approval = await approveBeforeApply(audit, reviewed, operation)
-    expect(approval).toMatchObject({ requestId, amount: operation.amount, currency: operation.currency, action: "approve" })
-    // Formal approval cannot silently authorize a stale draft-edit preparation. The
-    // existing domain review must still prove this same change after that transition.
+    // Reopen the same draft review before Apply. The owner's C12 order submits
+    // and approves only after this draft has been applied and its receipt recovered.
     const reviewedAgain = page.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-review"))
     await entry.getByRole("button", { name: "Review current changes", exact: true }).click()
-    const afterApproval = asRecord((await readReply(await reviewedAgain, observations)).value)
-    expect(afterApproval).toMatchObject({ target: reviewed.target, choiceId: selection.choiceId, changeId: change.changeId,
+    const currentReview = asRecord((await readReply(await reviewedAgain, observations)).value)
+    expect(currentReview).toMatchObject({ target: reviewed.target, choiceId: selection.choiceId, changeId: change.changeId,
       surface: "procurement", state: "planned", expectedVersion: change.expectedVersion, fields: reviewed.fields })
-    expect(afterApproval.reviewDigest).toMatch(/^[a-f0-9]{64}$/)
-    expect(afterApproval.receipt).toBeUndefined()
-    reviewed = afterApproval
+    expect(currentReview.reviewDigest).toMatch(/^[a-f0-9]{64}$/)
+    expect(currentReview.receipt).toBeUndefined()
+    reviewed = currentReview
     expect(commands).toEqual([])
     const domain = await openRequest(audit, origin, requestId)
     const domainVersion = Number(await domain.getAttribute("data-version"))
     expect(Number.isSafeInteger(domainVersion) && domainVersion > 0).toBe(true)
-    const lost = await test.step("confirm one financial change and lose the response after the domain commit", async () => {
+    const lost = await test.step("confirm one reviewed draft change and lose the response after the domain commit", async () => {
       await entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true }).check()
       const interruption = await loseClosureResponse(page, origin, "procurement", "decision-apply")
       try {
@@ -98,7 +96,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
         await expect(entry.getByRole("button", { name: "Retry same application", exact: true })).toBeEnabled()
         await expect(entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true })).toBeDisabled()
         observations.push({ stage: "apply-response-lost", caseRef: change.caseRef, choiceId: selection.choiceId, changeId: change.changeId,
-          preview: reviewed, receipt, approval, applyRequests: 1, explicitApplyConfirmation: true, separateFinancialApproval: true,
+          preview: reviewed, receipt, applyRequests: 1, explicitApplyConfirmation: true, financialApproval: false,
           interruptionPoint: "Original HTTP response after the real handler returned; this does not isolate the domain-commit/case-reconciliation gap." })
         return result
       } finally { await interruption.close() }
@@ -158,6 +156,13 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
         applyRequests: 1, recoverRequests: 1, domainVersionBefore: domainVersion, domainVersionAfter: domainVersion + 1,
         originalChoiceUnchanged: true, nativeRestartProved: false })
     })
+    const approval = await approveAfterApply(audit, reviewed, operation)
+    expect(approval).toMatchObject({ requestId, amount: operation.amount, currency: operation.currency, action: "approve" })
+    expect(commands.filter((command) => command.mode === "decision-apply")).toHaveLength(1)
+    expect(commands.filter((command) => command.mode === "decision-recover")).toHaveLength(1)
+    observations.push({ stage: "c12-applied-recovered-and-approved", caseRef: editedRef, choiceId: selection.choiceId,
+      changeId: change.changeId, approval, applyRequests: 1, recoverRequests: 1, separateFinancialApproval: true,
+      approvalOrder: "after-reviewed-apply-and-recovery" })
   } finally {
     page.context().off("request", record)
     await fresh.close()

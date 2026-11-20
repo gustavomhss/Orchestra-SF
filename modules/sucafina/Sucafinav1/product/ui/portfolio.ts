@@ -25,7 +25,7 @@ document.querySelectorAll('[data-portfolio-history]').forEach(async (section) =>
     }
   } catch { results.replaceChildren(); status.textContent = 'Portfolio history unavailable or access changed.' }
 })
-document.querySelectorAll('[data-portfolio]').forEach((section) => {
+document.querySelectorAll('section[data-portfolio]').forEach((section) => {
   if (section.dataset.sfPortfolioReady) return; section.dataset.sfPortfolioReady = 'true'
   const status = section.querySelector('[role=status]'); const casesNode = section.querySelector('[data-portfolio-case-list]'); const candidatesNode = section.querySelector('[data-portfolio-candidates]'); const output = section.querySelector('[data-portfolio-results]'); const save = section.querySelector('[data-portfolio-save]'); const form = section.querySelector('[data-portfolio-form]')
   const promotion = section.querySelector('[data-portfolio-promote]'); const promotionStatus = promotion.querySelector('[role=status]'); const preparation = section.querySelector('[data-portfolio-prepare]'); const preparationStatus = preparation.querySelector('[role=status]')

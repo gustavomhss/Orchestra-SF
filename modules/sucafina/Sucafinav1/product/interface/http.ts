@@ -7,12 +7,14 @@ import { RequestBodyError, readRequestBody } from "../../runtime/request-body.ts
 import { decisionDesk, routineStatus, workList } from "../ui/components.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import { handleSfAnalysis } from "./analysis-http.ts"
+import { withSfAnalysisHistory } from "./analysis-history-bootstrap.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
-import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
+import { decisionCreateForm, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
 import { handleSfPlannerMonthly } from "./planner-http.ts"
 import { handleSfForecastInput } from "./forecast-http.ts"
-import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm } from "../ui/forecast-analysis.ts"
+import { analysisHistoryForm, forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm } from "../ui/forecast-analysis.ts"
 import { decisionEditForm, decisionEditScript } from "../ui/decision-edit.ts"
+import { decisionAlternativesForm, decisionAlternativesScript } from "../ui/decision-alternatives.ts"
 import { decisionChoiceForm, decisionChoiceScript } from "../ui/decision-choice.ts"
 import { handleSfViews } from "./views-http.ts"
 import { personalViewsScript, personalViewsWidget } from "../ui/personal-views.ts"
@@ -151,7 +153,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         } finally { runtime.ui.finish(access.value) }
       })() : undefined
       const routines = runs ? `<h2>Routines</h2>${runs.length ? `<ul>${runs.map((run, index) => `<li>${run.runRef ? `<a href="?${esc(new URLSearchParams({ sf: "workbench-routine", runRef: run.runRef }).toString())}">Routine ${index + 1}</a>` : `Routine ${index + 1}`} · ${esc(run.admission)}</li>`).join("")}</ul>` : "<p>No accessible routine runs.</p>"}` : "<p>Routine list is currently unavailable.</p>"
-      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${decisionCreateForm}${portfolioWidget}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
+      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${scopeDecisionCreateForm(decisionCreateForm, decisionCreationScope(admitted.value.binding))}${portfolioWidget}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
       const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined) : undefined
       if (decoded?.ok && !result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
       if (result && result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
@@ -162,11 +164,22 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       const workOutput = operation === "sf_work_list" && result?.status === "ok" ? decodeSfOperationOutput("sf_work_list", result.result) : undefined
       const routineOutput = operation === "sf_routine_status" && result?.status === "ok" ? decodeSfOperationOutput("sf_routine_status", result.result) : undefined
       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
-      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
-      if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
-      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${script}</script>`)
-      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+      // Resolve model-dependent forms before the independent history read so no
+      // analysis-list request competes with the first user command after navigation.
+      const analysisForms = caseOutput?.ok ? await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) : ""
+      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionAlternativesForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+      const render = async (body: string) => {
+        if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+        const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionAlternativesScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${script}</script>`)
+        return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+      }
+      if (!caseOutput?.ok) return await render(body)
+      return await withSfAnalysisHistory({ request, parent: admitted.value, runtime,
+        caseRef: { id: caseOutput.value.case.id, incarnation: caseOutput.value.case.incarnation, version: caseOutput.value.case.version },
+        render: (history) => render(body + (runtime.analyses ? analysisHistoryForm(caseOutput.value, history) : "") + analysisForms),
+        denied: () => reply({ status: "denied" }, 403),
+      })
     } finally { runtime.ui.finish(admitted.value) }
   }
 }

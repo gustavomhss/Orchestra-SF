@@ -27,7 +27,7 @@ export async function procurementClosureJourney(page: Page, installation: { orig
     await registerKnownIncreaseRule(page, observations)
     const compared = asRecord((await clickCommand(page, form.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
     expect(asRecord(compared.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
-    const reason = "I choose the 140 USD proposal under its unresolved external cost conditions. Financial approval is still required before Apply."
+    const reason = "I choose the 140 USD proposal under its unresolved external cost conditions. Financial approval remains a separate action after the reviewed draft is applied."
     await form.getByLabel("Reason for choosing", { exact: true }).fill(reason)
     const sent = page.waitForRequest((request) => isCommand(request, "decision-choose"))
     const loaded = page.waitForEvent("domcontentloaded")
@@ -58,8 +58,8 @@ export async function procurementClosureJourney(page: Page, installation: { orig
     await expect(form.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
     await expect(original.locator("[data-request-summary]")).toContainText("Requisition draft")
   } finally { await audit.close() }
-  // Published C12 is consumed here; no Apply is sent until its current preview and
-  // a real, compatible domain approval both succeed. Missing stages never pass.
+  // Published C12 applies and recovers the reviewed draft first; Procurement then
+  // submits and approves that exact saved amount. Missing stages never pass.
   await applyRecoveryJourney(page, installation.origin, { ...selection, choiceId }, observations,
     (approvalPage, review, operation) => approveExactRequisition(approvalPage, installation.origin, review, operation, observations))
 }

@@ -211,7 +211,7 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
   const preview = form.querySelector('[data-alternative-preview]'); const inventory = form.querySelector('[data-alternative-inventory]'); const current = form.querySelector('[data-alternative-current]')
   const procurement = form.elements.namedItem('procurement-request'); const proposedAmount = form.elements.namedItem('procurement-proposed-amount')
   const procurementPreview = form.querySelector('[data-alternative-procurement-preview]')
-  let choices = []; let procurementChoices = []; let loaded; let prepared; let newBasis; let pending
+  let choices = []; let procurementChoices = []; let actions = []; let loaded; let prepared; let newBasis; let pending
   const procurementOperation = () => {
     if (!procurement?.value) return undefined
     const selected = procurementChoices.find((item) => item.source.refDigest === procurement.value)
@@ -227,10 +227,10 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
   const lock = (value) => { form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = value }) }
   const ready = () => {
     lock(false); source.disabled = !choices.length || !!prepared; discover.disabled = !!prepared; inspect.disabled = !source.value || !!prepared; basis.disabled = !loaded || !!prepared
-    coverage.disabled = !loaded || !!prepared || loaded.expectedVersion !== 0 || !basis.value
+    coverage.disabled = !actions.includes('decisions.coverage') || !loaded || !!prepared || loaded.expectedVersion !== 0 || !basis.value
     if (procurement) procurement.disabled = !loaded || !procurementChoices.length
     if (proposedAmount) { proposedAmount.disabled = !loaded || !procurement?.value; proposedAmount.required = !!procurement?.value }
-    reason.disabled = !!prepared; submit.disabled = !prepared || procurementOperation() === null
+    reason.disabled = !!prepared; submit.disabled = !actions.includes('decisions.promote-alternative') || !prepared || procurementOperation() === null
     shown(retry, false); shown(review, false)
   }
   const unresolved = (error) => {
@@ -280,11 +280,12 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
   }
   discover.addEventListener('click', async () => {
     if (busy || pending) return
-    busy = true; lock(true); preview.replaceChildren(); delete preview.dataset.state; loaded = undefined; prepared = undefined
+    busy = true; lock(true); preview.replaceChildren(); delete preview.dataset.state; actions = []; loaded = undefined; prepared = undefined
     status.textContent = 'Loading attached scenarios…'
     try {
       const result = await read('decision-controls', { case: context.caseSelector, procurement: 'attached', format: 'json' })
-      if (!sameCase(result.selected?.caseRef)) throw new Error('conflict')
+      if (!sameCase(result.selected?.caseRef) || result.accessRevision !== context.authority.accessRevision || !Array.isArray(result.actions)) throw new Error('conflict')
+      actions = result.actions
       const options = await read('bi-options', { viewId: 'BI01', start: context.horizon.start, end: context.horizon.end })
       if (!live()) return
       choices = result.selected.forecasts.filter((item) => item.source.kind === 'record' && item.source.target.surface === 'planner' && item.source.target.recordType === 'planner-version' && context.sourceRefs.some((ref) => ref.refDigest === item.source.refDigest && same(ref, item.source)))
@@ -309,11 +310,12 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
     if (busy || pending) return
     const selected = choices.find((item) => item.source.refDigest === source.value)
     if (!selected) return
-    busy = true; lock(true); loaded = undefined; prepared = undefined; preview.replaceChildren(); delete preview.dataset.state; status.textContent = 'Inspecting current scenario…'
+    busy = true; lock(true); actions = []; loaded = undefined; prepared = undefined; preview.replaceChildren(); delete preview.dataset.state; status.textContent = 'Inspecting current scenario…'
     try {
       const result = await read('decision-controls', { case: context.caseSelector, source: selected.source.refDigest, procurement: 'attached', format: 'json' })
       const forecast = result.selected?.forecast
-      if (!sameCase(result.selected?.caseRef) || result.accessRevision !== context.authority.accessRevision || !forecast || !same(forecast.source, selected.source) || !project(forecast.projection) || !Number.isSafeInteger(forecast.expectedVersion) || forecast.expectedVersion < 0) throw new Error('conflict')
+      if (!sameCase(result.selected?.caseRef) || result.accessRevision !== context.authority.accessRevision || !Array.isArray(result.actions) || !forecast || !same(forecast.source, selected.source) || !project(forecast.projection) || !Number.isSafeInteger(forecast.expectedVersion) || forecast.expectedVersion < 0) throw new Error('conflict')
+      actions = result.actions
       loaded = forecast
       const currentProcurement = result.selected.procurementEvidence?.sources || []
       procurementChoices = procurementChoices.filter((item) => currentProcurement.some((current) => same(current.source, item.source)))
@@ -352,7 +354,7 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
     finally { busy = false; if (live()) ready() }
   })
   coverage.addEventListener('click', () => {
-    if (busy || pending || !loaded || loaded.expectedVersion !== 0) return
+    if (busy || pending || !actions.includes('decisions.coverage') || !loaded || loaded.expectedVersion !== 0) return
     const selectedBasis = basis.value === 'new' ? newBasis : context.bases.find((item) => item.id + ':' + item.version === basis.value)
     if (!selectedBasis || !reason.value.trim()) { status.textContent = 'Select the inventory and explain why its cost categories remain pending.'; reason.focus(); return }
     try {
@@ -361,7 +363,7 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
     } catch { if (live()) { status.textContent = 'Could not retain the intention safely. Reopen any unconfirmed request before starting another save.'; lock(true) } }
   })
   form.addEventListener('submit', (event) => {
-    event.preventDefault(); if (busy || pending || !prepared || !loaded || !form.reportValidity()) return
+    event.preventDefault(); if (busy || pending || !actions.includes('decisions.promote-alternative') || !prepared || !loaded || !form.reportValidity()) return
     if (!title.value.trim()) { status.textContent = 'Enter an alternative title before creating it.'; title.focus(); return }
     try {
       const operation = procurementOperation()

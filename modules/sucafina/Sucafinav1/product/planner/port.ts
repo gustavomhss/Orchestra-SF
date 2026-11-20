@@ -18,7 +18,7 @@ import { plannerActualMonth } from "./actual-presence.ts"
 import { plannerCoverageComplete } from "./coverage.ts"
 import { simulateScenario } from "./scenario-port.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
-import { compareScenarios } from "./scenario-comparison-port.ts"
+import { createPlannerScenarioComparator } from "./scenario-comparison-port.ts"
 import type { PlannerCriteriaHost, PlannerScenarioHost } from "./scenario-comparison-port.ts"
 
 // The registry and port hash the same actor-filtered inputs and engine output.
@@ -61,7 +61,7 @@ export function createPlannerPort(input: { host: DomainPortHost; sources: Planne
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
     simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource, qualify: buildPlannerFinancialProjection }, request, binding),
-    compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
+    compareScenarios: createPlannerScenarioComparator(input),
     evaluateSensitivity: input.sensitivity ?? (async () => ({ status: "unavailable", reason: "sensitivity-not-connected" })),
   }
 }
