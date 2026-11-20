@@ -79,6 +79,10 @@ export type Persistence = {
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+  // Lexical presence only: the same scope lifetime/abort checks, without copying
+  // or validating snapshot contents. Never a source witness or authorization.
+  // Adapters without this capability retain currentSnapshots for presence checks.
+  hasCurrentSnapshots?: () => boolean
   // Internal root-only scope, not source admission or business authorization.
   // Consumers must still use their canonical transaction(surface, work) inside it
   // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
