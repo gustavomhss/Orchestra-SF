@@ -728,8 +728,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
                 <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
                 <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
-                <For each={state.manifest!.receipts}>{(item) =>
-                  <p>{item.id} · {item.at} · {item.status} · {item.version}</p>}</For>
+                <p>{t("sf.u23.manifest")}: {receipt().manifestId}</p>
+                <For each={state.manifest!.receipts}>{(item) => <>
+                  <p>{item.id} · {item.at} · {item.status} · {item.version}</p>
+                  <p>{t("sf.u23.actor")}: {item.principalRef} · {t("sf.u23.version")}: {item.version}</p>
+                </>}</For>
               </section>}
             </Show>
             <div class="sf-files-actions">
