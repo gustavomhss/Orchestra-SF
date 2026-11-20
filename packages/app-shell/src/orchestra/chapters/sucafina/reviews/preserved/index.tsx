@@ -1,5 +1,7 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
+import type { Schema } from "effect"
+import type { SfReviewUpdate, SfReviewsReviewAgenda } from "@orchestra/schema/sucafina/reviews"
 import { useLanguage } from "@/context/language"
 import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -10,10 +12,15 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { preservedMeetingLine, readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
 import { SfPreservedAnswer } from "./answer"
-import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
+import { AmountText, PeriodText, StatusText, WhenText, operationGranted } from "../labels"
+import { SfAgendaRecordSelection } from "../agenda/record-selection"
+import { encodeSfRouteRef } from "../../navigation-state"
 import "./preserved.css"
 
 const key = (value: string) => value as SfCopyKey
+type Successor = Schema.Schema.Type<typeof SfReviewUpdate>
+type RevisionPreview = Extract<Schema.Schema.Type<typeof SfReviewsReviewAgenda.output>, { status: "ok" }>["value"]
+type RevisionPhase = "selecting" | "previewing" | "reviewing" | "submitting" | "outcome-unknown" | "confirmed"
 
 /** UI48: an original source read under the current owner; never reconstruct from title. */
 export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
@@ -28,16 +35,17 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     topic: 0,
     sourceLinks: [] as readonly { label: string; url: string }[],
     updateStatus: "ready" as SfUiState,
-    successor: undefined as Readonly<{
-      available: boolean
-      previousReviewRef: string
-      confirmations: readonly { sectionId: string; label: string }[]
-      unavailableSections: readonly { sectionId: string; title: string; reason: string }[]
-    }> | undefined,
+    successor: undefined as Successor | undefined,
+    revisionPhase: "selecting" as RevisionPhase,
+    revisionPreview: undefined as RevisionPreview | undefined,
+    revisionResult: undefined as PreservedReview | undefined,
   })
   const ref = () => props.route.kind === "entry" || props.route.kind === "present"
     ? props.route.params.reviewRef : undefined
   let successorAbort: AbortController | undefined
+  const revisionLocked = () => store.revisionPhase === "submitting" || store.revisionPhase === "outcome-unknown" || store.revisionPhase === "confirmed"
+  const mayRevise = () => operationGranted(owner.ready()?.context, "reviews.review-agenda", { family: "reviews" })
+  const mayPreserveRevision = () => operationGranted(owner.ready()?.context, "reviews.review-preserve", { family: "reviews" })
   const current = (generation: number, ownerKey: string) => {
     const state = owner.state()
     return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
@@ -50,6 +58,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     store.retry
     setStore({
       review: undefined, successor: undefined, topic: 0, sourceLinks: [], updateStatus: "ready",
+      revisionPhase: "selecting", revisionPreview: undefined, revisionResult: undefined,
       presenting: props.route.kind === "present",
       status: state.status === "denied" ? "denied"
         : state.status === "unauthenticated" ? "session-expired"
@@ -119,12 +128,12 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   }
   const update = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review
-    if (!active || state.status !== "ready" || !review || store.updateStatus === "loading") return
+    if (!active || state.status !== "ready" || !review || store.updateStatus === "loading" || revisionLocked()) return
     const generation = owner.generation()
     successorAbort?.abort()
     const controller = new AbortController()
     successorAbort = controller
-    setStore({ updateStatus: "loading", successor: undefined })
+    setStore({ updateStatus: "loading", successor: undefined, revisionPhase: "selecting", revisionPreview: undefined, revisionResult: undefined })
     try {
       const result = await createSfReviewsClient(active.transport)["reviews.review-update"](
         { reviewRef: review.id }, { signal: controller.signal },
@@ -142,6 +151,77 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       if (controller.signal.aborted || !current(generation, state.ownerKey)) return
       console.error("Sucafina preserved review successor read failed", error instanceof Error ? error.name : "unknown")
       setStore("updateStatus", "unavailable")
+    }
+  }
+  const prepareRevision = async () => {
+    const active = owner.ready(), state = owner.state(), review = store.review, successor = store.successor
+    if (!active || state.status !== "ready" || !review || !successor?.available ||
+        successor.previousReviewRef !== review.id || successor.unavailableSections.length ||
+        !successor.items.length || !mayRevise() || revisionLocked() || store.revisionPhase === "previewing") return
+    const generation = owner.generation(), ownerKey = state.ownerKey
+    const controller = new AbortController()
+    successorAbort?.abort()
+    successorAbort = controller
+    const items = successor.items.map((item) => ({
+      kind: "dashboard" as const, id: item.id, topic: item.topic, selectionRef: item.selectionRef,
+      period: { start: item.period.start, end: item.period.end },
+      ...(item.recordRefs === undefined ? {} : { recordRefs: [...item.recordRefs] }),
+      ...(item.agendaNote === undefined ? {} : { agendaNote: item.agendaNote }),
+    }))
+    setStore({ revisionPhase: "previewing", revisionPreview: undefined, updateStatus: "loading" })
+    try {
+      const result = await createSfReviewsClient(active.transport)["reviews.review-agenda"](
+        { items }, { signal: controller.signal },
+      )
+      if (controller.signal.aborted || !current(generation, ownerKey)) return
+      if (result.kind === "response" && result.body.status === "ok") {
+        const expected = items.map((item) => item.id)
+        if (result.body.value.sectionRefs.length !== expected.length ||
+            result.body.value.sectionRefs.some((id, index) => id !== expected[index])) {
+          setStore({ revisionPhase: "selecting", updateStatus: "stale" })
+          return
+        }
+        setStore({ revisionPhase: "reviewing", revisionPreview: result.body.value, updateStatus: "ready" })
+        return
+      }
+      setStore({ revisionPhase: "selecting", updateStatus: reviewReadState(result) })
+    } catch (error) {
+      if (controller.signal.aborted || !current(generation, ownerKey)) return
+      console.error("Sucafina revision preparation failed", error instanceof Error ? error.name : "unknown")
+      setStore({ revisionPhase: "selecting", updateStatus: "unavailable" })
+    }
+  }
+  const preserveRevision = async () => {
+    const active = owner.ready(), state = owner.state(), review = store.review, prepared = store.revisionPreview
+    if (!active || state.status !== "ready" || !review || !prepared ||
+        !mayPreserveRevision() || store.revisionPhase !== "reviewing") return
+    const generation = owner.generation(), ownerKey = state.ownerKey
+    const controller = new AbortController()
+    successorAbort = controller
+    setStore({ revisionPhase: "submitting", updateStatus: "loading" })
+    try {
+      const result = await createSfReviewsClient(active.transport)["reviews.review-preserve"](
+        { previousReviewRef: review.id, selectionRef: prepared.selectionRef, sectionRefs: [...prepared.sectionRefs] },
+        { signal: controller.signal, idempotencyKey: crypto.randomUUID() },
+      )
+      if (controller.signal.aborted || !current(generation, ownerKey)) return
+      if (result.kind === "response" && result.body.status === "ok") {
+        const next = result.body.value
+        if (next.id === review.id || next.previousReviewRef !== review.id ||
+            next.sections.length !== prepared.sectionRefs.length ||
+            next.sections.some((section, index) => section.id !== prepared.sectionRefs[index])) {
+          setStore({ revisionPhase: "outcome-unknown", updateStatus: "outcome-unknown" })
+          return
+        }
+        setStore({ revisionPhase: "confirmed", revisionResult: next, updateStatus: "ready" })
+        return
+      }
+      const status = reviewReadState(result)
+      setStore({ revisionPhase: "outcome-unknown", updateStatus: status === "unavailable" ? "outcome-unknown" : status })
+    } catch (error) {
+      if (controller.signal.aborted || !current(generation, ownerKey)) return
+      console.error("Sucafina revision preservation did not settle", error instanceof Error ? error.name : "unknown")
+      setStore({ revisionPhase: "outcome-unknown", updateStatus: "outcome-unknown" })
     }
   }
   onCleanup(() => successorAbort?.abort())
@@ -221,7 +301,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                 onTopic={(topic) => setStore("topic", topic)}
                 onSource={(referenceId) => { void openSource(referenceId) }}
                 onUpdate={() => { void update() }}
-                updateBusy={store.updateStatus === "loading"}
+                updateBusy={store.updateStatus === "loading" || revisionLocked()}
               />
               <Show when={store.sourceLinks.length}>
                 <nav aria-label={SF_U32_COPY["sf.u32.authorizedSources"]}>
@@ -242,7 +322,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
               </section>
               <div class="sf-n28-actions">
                 <button type="button" class="mx-btn" onClick={() => { void update() }}
-                  disabled={store.updateStatus === "loading" || store.status !== "ready"}>{t("sf.u32.update")}</button>
+                  disabled={store.updateStatus === "loading" || store.status !== "ready" || revisionLocked()}>{t("sf.u32.update")}</button>
               </div>
               <Show when={store.successor}>
                 {(next) => <section class="mx-card sf-n28-section" data-sf-successor-availability={next().available}>
@@ -251,6 +331,36 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <ul><For each={next().confirmations}>{(item) => <li>{item.label}</li>}</For></ul>
                   <h3>{t("sf.u32.unavailableSections")}</h3>
                   <ul><For each={next().unavailableSections}>{(item) => <li><strong>{item.title}</strong>: <StatusText value={item.reason} /></li>}</For></ul>
+                  <Show when={next().available && next().unavailableSections.length === 0}>
+                    <For each={next().items}>{(item) => <SfAgendaRecordSelection section={item}
+                      disabled={revisionLocked() || store.revisionPhase === "previewing"}
+                      onSelection={(recordRefs) => {
+                        setStore("successor", (successor) => successor ? { ...successor, items: successor.items.map((section) => section.id === item.id ? { ...section, recordRefs } : section) } : successor)
+                        setStore({ revisionPreview: undefined, revisionPhase: "selecting" })
+                      }} />}</For>
+                    <button class="mx-btn" type="button" disabled={!mayRevise() || revisionLocked() || store.revisionPhase === "previewing"}
+                      onClick={() => { void prepareRevision() }}>{t("sf.u32.prepareRevision")}</button>
+                  </Show>
+                </section>}
+              </Show>
+              <Show when={store.revisionPhase === "reviewing" ? store.revisionPreview : undefined}>
+                {(preview) => <section class="mx-card sf-n28-section" data-sf-revision-preview>
+                  <h3>{t("sf.u32.revisionPreview")}</h3>
+                  <ol>
+                    <For each={preview().sections}>{(section) => <li data-section-id={section.id}>
+                      <h4>{section.title}</h4>
+                      <p>{t("sf.u32.records")}: {section.recordCount}</p>
+                      <ul><For each={section.projection.values}>{(value) => <li>{preservedMeetingLine(value)}</li>}</For></ul>
+                    </li>}</For>
+                  </ol>
+                  <button class="mx-btn primary" type="button" disabled={!mayPreserveRevision()}
+                    onClick={() => { void preserveRevision() }}>{t("sf.u32.preserveRevision")}</button>
+                </section>}
+              </Show>
+              <Show when={store.revisionResult}>
+                {(result) => <section class="mx-card sf-n28-section" data-sf-preserved-revision={result().id}>
+                  <p role="status">{t("sf.u32.revisionPreserved")}</p>
+                  <a href={"/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(result().id)}>{t("sf.u32.openRevision")}</a>
                 </section>}
               </Show>
               <Show when={store.updateStatus !== "ready" && store.updateStatus !== "loading"}>

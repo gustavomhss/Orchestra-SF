@@ -14,7 +14,8 @@ import type { createSfProductAuthority } from "../../../../../modules/sucafina/S
 import type { SfScopedSourcePort } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { createSfBusinessServices } from "../business-services.ts"
 import type { createSfReviewServices } from "../review-services.ts"
-import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "../extended-review-cycle.ts"
+import { createSfExtendedReviewCycle } from "../extended-review-cycle.ts"
+import { projectSfDashboardReviewItem } from "../review-agenda-projection.ts"
 
 type Input = Readonly<{
   origin: string
@@ -157,7 +158,12 @@ export function createSfReviewsProjectionHandlers(input: Input) {
           return fail(discovered.status, discovered.reason, codeFor(discovered.status))
         if (!discovered.value.agenda)
           return fail("unavailable", "review-source-selection-unavailable", 503)
-        const item = sfDashboardReviewAgendaItem(discovered.value.agenda.section)
+        const section = discovered.value.agenda.section
+        const projected = await projectSfDashboardReviewItem(business, {
+          ...section, id: `dashboard:${section.topic}:${period.start}:${period.end}`,
+        }, call)
+        if (projected.status !== "ok") return fail(projected.status, projected.reason, codeFor(projected.status))
+        const item = projected.value
         data = { items: [item], period }
         // Preserve the same live scoped source. A new discovery would mint a
         // different selectionRef, so validate the original issued reference.

@@ -3,7 +3,6 @@ import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav
 import type { DomainProjection, PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
-import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import { reviewDecisionEvidence } from "../../../../modules/sucafina/Sucafinav1/product/reviews/decision.ts"
 import type { ReviewOutcomeComparison } from "../../../../modules/sucafina/Sucafinav1/product/reviews/outcome.ts"
 import type { ObservedResultProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -12,16 +11,11 @@ import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfReviewServices } from "./review-services.ts"
-import type { DashboardAgendaSection } from "./dashboard-services.ts"
+import { projectSfDashboardReviewItem } from "./review-agenda-projection.ts"
+import type { SfDashboardReviewItem } from "./review-agenda-projection.ts"
+export { sfDashboardReviewAgendaItem } from "./review-agenda-projection.ts"
 
-export type SfReviewUpdate = { available: boolean; previousReviewRef: string; items: ReviewAgendaItem[]; confirmations: { sectionId: string; label: string }[]; unavailableSections: { sectionId: string; title: string; reason: string }[] }
-
-/** Dashboard discovery has a UI title; the C04 dashboard agenda accepts only its canonical selection fields. */
-export function sfDashboardReviewAgendaItem(section: DashboardAgendaSection): Extract<ReviewAgendaItem, { kind: "dashboard" }> {
-  return { kind: "dashboard", id: section.id, topic: section.topic, selectionRef: section.selectionRef,
-    period: { start: section.period.start, end: section.period.end },
-    ...(section.recordRefs === undefined ? {} : { recordRefs: section.recordRefs }) }
-}
+export type SfReviewUpdate = { available: boolean; previousReviewRef: string; items: SfDashboardReviewItem[]; confirmations: { sectionId: string; label: string }[]; unavailableSections: { sectionId: string; title: string; reason: string }[] }
 
 /** Preserved review order/period/notes survive. Ambiguous original record selections require a new explicit human choice. */
 export function createSfExtendedReviewCycle(input: { authority: ReturnType<typeof createSfProductAuthority>; business: ReturnType<typeof createSfBusinessServices>; reviews: ReturnType<typeof createSfReviewServices>["application"]; persistence: SfScopedSourcePort }) {
@@ -49,7 +43,9 @@ export function createSfExtendedReviewCycle(input: { authority: ReturnType<typeo
         if (discovered.status !== "ok") return discovered
         if (!discovered.value.agenda) { value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "Este tópico requer uma seleção de origem antes de preparar a nova revisão." }); continue }
         value.available ||= resolved.value.evidence.target.incarnation !== source.incarnation || resolved.value.evidence.target.version !== source.version
-        const item: ReviewAgendaItem = { ...sfDashboardReviewAgendaItem(discovered.value.agenda.section), id: section.id,
+        const projected = await projectSfDashboardReviewItem(business, { ...discovered.value.agenda.section, id: section.id }, call)
+        if (projected.status !== "ok") return projected
+        const item = { ...projected.value,
           ...(projection.reviewAgendaNote !== undefined ? { agendaNote: projection.reviewAgendaNote } : {}) }
         // C04 keeps the exact projection but does not persist its original C17 recordRefs. Do not infer "all" from a count.
         value.confirmations.push({ sectionId: section.id, label: `Selecionar explicitamente os registros atuais autorizados de ${source.id}, ${section.period.start} – ${section.period.end}; revisar a lista e remover registros antes de preservar.` })

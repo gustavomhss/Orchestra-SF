@@ -10,6 +10,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
 import { operationGranted, PeriodText } from "../labels"
+import { SfAgendaRecordSelection } from "./record-selection"
 import "./agenda.css"
 
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
@@ -161,7 +162,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     if (!access || state.status !== "ready" || !mayPreview() || store.selected.length === 0 || store.selected.length > 30 ||
       store.phase === "submitting" || store.phase === "outcome-unknown") return
     const sections = store.selected.map((item) => ({
-      id: item.id, title: item.topic, topic: item.topic, selectionRef: item.selectionRef,
+      id: item.id, title: item.title ?? item.topic, topic: item.topic, selectionRef: item.selectionRef,
       period: { start: item.period.start, end: item.period.end },
       ...(item.recordRefs === undefined ? {} : { recordRefs: [...item.recordRefs] }),
     }))
@@ -279,7 +280,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             <ul class="sf-n28-items">
               <For each={store.available.filter((item) => item.topic.toLocaleLowerCase().includes(store.filter.toLocaleLowerCase()))}>
                 {(item) => <li class="mx-card">
-                  <strong>{item.topic}</strong>
+                  <strong>{item.title ?? item.topic}</strong>
                   <span>{t("sf.u25.period")}: <PeriodText start={item.period.start} end={item.period.end} /></span>
                   <button class="mx-btn" type="button" onClick={() => add(item)}
                     disabled={store.selected.length >= 30 || store.selected.some((selected) => selected.id === item.id) ||
@@ -298,8 +299,14 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             <p>{t("sf.u25.limit")}</p>
             <ol class="sf-n28-items" data-sf-agenda-order>
               <For each={store.selected}>{(item, index) => <li class="mx-card" data-section-id={item.id}>
-                <strong>{item.topic}</strong>
+                <strong>{item.title ?? item.topic}</strong>
                 <p>{t("sf.u25.period")}: <PeriodText start={item.period.start} end={item.period.end} /></p>
+                <SfAgendaRecordSelection section={item}
+                  disabled={store.phase === "submitting" || store.phase === "outcome-unknown" || store.phase === "confirmed"}
+                  onSelection={(recordRefs) => {
+                    setStore("selected", (sections) => sections.map((section) => section.id === item.id ? { ...section, recordRefs } : section))
+                    invalidatePreview()
+                  }} />
                 <div class="sf-n28-actions">
                   <button type="button" class="mx-btn" disabled={index() === 0 || store.phase === "submitting" || store.phase === "outcome-unknown"}
                     onClick={() => reorder(item.id, -1)} aria-label={t("sf.u25.up") + ": " + item.topic}>{t("sf.u25.up")}</button>

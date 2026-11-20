@@ -65,6 +65,12 @@ const dashboardTopics: Record<DashboardTopic, { page: string; title: string }> =
   "it-performance": { page: "IT Performance Contract", title: "IT Performance Contract" },
 }
 
+/** The producer owns canonical dashboard review titles for every consumer. */
+export function dashboardReviewTitle(topic: string) {
+  return Object.entries(dashboardTopics).find(([key]) => key === topic)?.[1].title
+}
+
+
 /** Resolves an ordered, editable agenda through the authenticated C02 producer ports. */
 export function createReviewAgendaSelection(input: {
   ports: ReviewAgendaPorts

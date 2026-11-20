@@ -8,12 +8,15 @@ import type { ReportsCorpus } from "./corpus.ts"
 import { agendaResult, object, projection, readReview, responseFor, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
 
-const reportPages = ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"] as const
+const reportPages = ["Portfolio Dashboard", "Budget Overview", "Hot Topics & Actions"] as const
 const reportPageTopics = {
   "Budget Overview": "budget",
   "Portfolio Dashboard": "projects",
   "Hot Topics & Actions": "hot-topics",
 } as const
+const reportPageTitles = { "Budget Overview": "Budget", "Portfolio Dashboard": "Projects", "Hot Topics & Actions": "Hot Topics" } as const
+type DashboardPreview = Pick<ReviewAgendaPreview, "selectionRef" | "sections">
+type RecordOption = { recordRef: string; recordId: string; label: string }
 
 export async function prepareReview(page: Page, app: ReportsInstallation, corpus: ReportsCorpus, info: TestInfo, options: { removeOne?: boolean } = {}) {
   await page.goto(`/orchestra/sf-dashboard/budget?${new URLSearchParams({ year: String(corpus.year) })}`)
@@ -23,9 +26,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await reportsEntry.click()
   const agenda = page.locator('[data-sf-surface="UI47"]')
   await expect(agenda).toBeVisible()
-  if (options.removeOne) {
-    throw new Error("UNBOUND WP1: UI47 can remove a section, but has no control to remove one authorized record (reviews/agenda/index.tsx:308).")
-  }
+  const selected: { id: string; topic: string; records: RecordOption[] }[] = []
   for (const pageName of reportPages) {
     await agenda.getByLabel(/Source dashboard page|Página de origem do dashboard/).fill(pageName)
     const found = page.waitForResponse((response) => {
@@ -41,38 +42,53 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
     const items = object(discovered.value).items
     expect(Array.isArray(items)).toBe(true)
     expect(items).toHaveLength(1)
-    expect(object((items as unknown[])[0]).topic).toBe(reportPageTopics[pageName])
+    const item = object((items as unknown[])[0])
+    expect(item.topic).toBe(reportPageTopics[pageName])
+    expect(item.title).toBe(reportPageTitles[pageName])
+    expect(item.period).toEqual(corpus.annual)
+    expect(Array.isArray(item.recordOptions)).toBe(true)
+    const records = (item.recordOptions as unknown[]).map((value) => {
+      const option = object(value)
+      return { recordRef: text(option.recordRef), recordId: text(option.recordId), label: text(option.label) }
+    })
+    expect(item.recordRefs).toEqual(records.map((record) => record.recordRef))
+    expect(new Set(records.map((record) => record.recordRef)).size).toBe(records.length)
+    if (pageName === "Portfolio Dashboard") {
+      expect(records).toHaveLength(25)
+      expect(records.map((record) => record.recordId).sort()).toEqual(corpus.projects.map((project) => project.id).sort())
+    }
+    const id = text(item.id)
+    selected.push({ id, topic: text(item.topic), records })
     const add = agenda.getByRole("button", { name: /Add to agenda|Adicionar à pauta/ })
     await expect(add).toHaveCount(1)
     await expect(add).toBeEnabled()
     await add.click()
-    await expect(agenda.locator("[data-sf-agenda-order] > li").last().locator("strong")).toHaveText(reportPageTopics[pageName])
+    const selectedRow = agenda.locator(`[data-sf-agenda-order] > li[data-section-id=${JSON.stringify(id)}]`)
+    await expect(selectedRow.locator(":scope > strong")).toHaveText(reportPageTitles[pageName])
   }
   const selectedRows = agenda.locator("[data-sf-agenda-order] > li")
   await expect(selectedRows).toHaveCount(reportPages.length)
-  await expect(selectedRows.locator("strong")).toHaveText(reportPages.map((pageName) => reportPageTopics[pageName]))
-  const sectionIds = (await selectedRows.evaluateAll((items) => items.map((item) => item.getAttribute("data-section-id"))))
-    .filter((id): id is string => typeof id === "string" && id.length > 0)
-  expect(sectionIds).toHaveLength(reportPages.length)
-  const preview = page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ })
-  await expect(preview).toBeEnabled()
-  const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
-  await preview.click()
-  const agendaResponse = await pendingAgenda
-  expect(agendaResponse.status()).toBe(200)
-  const agendaBody = object(await agendaResponse.json())
-  expect(agendaBody.status).toBe("ok")
-  const agendaValue = object(agendaBody.value)
-  const selectionRef = text(agendaValue.selectionRef)
-  expect(Array.isArray(agendaValue.sections)).toBe(true)
-  const previewSections = (agendaValue.sections as unknown[]).map(object)
-  expect(previewSections.map((section) => text(section.id))).toEqual(sectionIds)
-  const counts = previewSections.map((section) => section.recordCount)
-  expect(counts[reportPages.indexOf("Portfolio Dashboard")]).toBe(25)
+  await expect(selectedRows.locator(":scope > strong")).toHaveText(reportPages.map((pageName) => reportPageTitles[pageName]))
+  const sectionIds = selected.map((item) => item.id)
+  expect(new Set(sectionIds).size).toBe(reportPages.length)
+  expect(await selectedRows.evaluateAll((items) => items.map((item) => item.getAttribute("data-section-id")))).toEqual(sectionIds)
+  let prepared = await previewDashboardAgenda(page, app)
+  expect(prepared.sections.map((section) => section.id)).toEqual(sectionIds)
+  expect(prepared.sections.map((section) => section.recordCount)[reportPages.indexOf("Portfolio Dashboard")]).toBe(25)
+  expect(prepared.sections.map((section) => section.recordCount)[reportPages.indexOf("Hot Topics & Actions")]).toBe(0)
+  if (options.removeOne) {
+    const projects = selected.filter((item) => item.topic === "projects")
+    expect(projects).toHaveLength(1)
+    prepared = await removeOneProject(page, app, prepared, projects[0]!)
+  }
+  const selectionRef = prepared.selectionRef
+  const counts = prepared.sections.map((section) => section.recordCount)
+  const projectCount = options.removeOne ? 24 : 25
+  expect(counts[reportPages.indexOf("Portfolio Dashboard")]).toBe(projectCount)
   expect(counts[reportPages.indexOf("Hot Topics & Actions")]).toBe(0)
   const shown = agenda.locator("[data-sf-agenda-preview]")
   await expect(shown).toBeVisible()
-  await expect(shown.locator("li").nth(reportPages.indexOf("Portfolio Dashboard"))).toContainText(/Authorized records: 25|Registros autorizados: 25/)
+  await expect(shown.locator("li").nth(reportPages.indexOf("Portfolio Dashboard"))).toContainText(new RegExp(`Authorized records: ${projectCount}|Registros autorizados: ${projectCount}`))
   await expect(shown.locator("li").nth(reportPages.indexOf("Hot Topics & Actions"))).toContainText(/Authorized records: 0|Registros autorizados: 0/)
   const confirm = agenda.getByRole("button", { name: /Confirm preservation|Confirmar preservação/ })
   await expect(confirm).toBeEnabled()
@@ -86,17 +102,17 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   const saved = review(body.value)
   expect(saved.sections.map((section) => section.id)).toEqual(sectionIds)
   expect(saved.sections.map((section) => section.count)).toEqual(counts)
-  expect(saved.sections[reportPages.indexOf("Portfolio Dashboard")]!.count).toBe(25)
+  expect(saved.sections[reportPages.indexOf("Portfolio Dashboard")]!.count).toBe(projectCount)
   const confirmed = agenda.locator("[data-sf-preserved-confirmed]")
   await expect(confirmed).toBeVisible()
-  await expect(confirmed.locator("dd").first()).toHaveText(saved.id)
+  await expect(confirmed.locator("dd")).toHaveText([saved.id, String(saved.version)])
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
   await page.goto("/orchestra/sf-reviews/reviews/" + encodeReviewRef(saved.id))
   const preparation = page.locator('[data-sf-surface="UI48"]')
   await expect(preparation).toBeVisible()
   const article = preparation.locator(`[data-review-ref="${saved.id}"]`)
   await expect(article).toBeVisible()
-  await expect(article.locator("dd").first()).toHaveText(saved.id)
+  await expect(article.locator("header").getByText(saved.id, { exact: true })).toBeVisible()
   for (const section of saved.sections) {
     const row = article.locator(`[data-section-id="${section.id}"]`)
     await expect(row.locator("h3")).toHaveText(section.title)
@@ -106,25 +122,49 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   return { preparation, saved }
 }
 
-// UNBOUND: UI47 currently removes whole sections only; retain the record-level contract.
-async function removeOneProject(page: Page, app: ReportsInstallation, selected: ReviewAgendaPreview) {
-  const section = selected.sections.filter((entry) => entry.title === "Projects")
+async function previewDashboardAgenda(page: Page, app: ReportsInstallation): Promise<DashboardPreview> {
+  const preview = page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ })
+  await expect(preview).toBeEnabled()
+  const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
+  await preview.click()
+  const response = await pending
+  expect(response.status()).toBe(200)
+  const body = object(await response.json())
+  expect(body.status).toBe("ok")
+  const value = object(body.value)
+  text(value.selectionRef)
+  expect(Array.isArray(value.sections)).toBe(true)
+  for (const section of value.sections as unknown[]) {
+    const current = object(section)
+    text(current.id)
+    text(current.title)
+    projection(current.projection)
+    expect(Number.isSafeInteger(current.recordCount)).toBe(true)
+  }
+  return value as DashboardPreview
+}
+
+async function removeOneProject(
+  page: Page, app: ReportsInstallation, selected: DashboardPreview,
+  projects: { id: string; records: RecordOption[] },
+) {
+  const section = selected.sections.filter((entry) => entry.id === projects.id)
   expect(section).toHaveLength(1)
-  const choices = selected.sectionRecordRefs.filter((entry) => entry.sectionRef === section[0]!.id)
-  expect(choices).toHaveLength(1)
-  expect(choices[0]!.recordRefs).toHaveLength(25)
-  expect(new Set(choices[0]!.recordRefs).size).toBe(25)
-  // The opaque identity comes from the actual authorized selector. Do not invent
-  // a ref encoding or pretend the page-level evidence identifies one project.
-  const reference = choices[0]!.recordRefs[0]!
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
-  await preparation.getByRole("button", { name: `Remove record ${reference}`, exact: true }).click()
-  const retained = await agendaResult(await pending)
-  expect(retained.sectionRecordRefs.filter((entry) => entry.sectionRef === section[0]!.id)).toEqual([
-    { sectionRef: section[0]!.id, recordRefs: choices[0]!.recordRefs.filter((entry) => entry !== reference) },
-  ])
-  const after = retained.sections.filter((entry) => entry.id === section[0]!.id)
+  expect(section[0]!.title).toBe("Projects")
+  expect(section[0]!.recordCount).toBe(25)
+  expect(projects.records).toHaveLength(25)
+  const chosen = projects.records[0]!
+  const agenda = page.locator('[data-sf-surface="UI47"]')
+  const records = agenda.locator(`[data-sf-record-selection=${JSON.stringify(projects.id)}]`)
+  await expect(records.getByRole("checkbox")).toHaveCount(25)
+  const record = records.locator(`input[type="checkbox"][value=${JSON.stringify(chosen.recordRef)}]`)
+  await expect(record).toBeChecked()
+  await record.uncheck()
+  await expect(record).not.toBeChecked()
+  const retained = await previewDashboardAgenda(page, app)
+  expect(retained.selectionRef).not.toBe(selected.selectionRef)
+  expect(retained.sections.map((entry) => entry.id)).toEqual(selected.sections.map((entry) => entry.id))
+  const after = retained.sections.filter((entry) => entry.id === projects.id)
   expect(after).toHaveLength(1)
   expect(after[0]!.recordCount).toBe(24)
   const beforeIds = section[0]!.projection.values.filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id))
@@ -133,12 +173,21 @@ async function removeOneProject(page: Page, app: ReportsInstallation, selected: 
   expect(afterIds).toHaveLength(24)
   const removed = beforeIds.filter((value) => !afterIds.some((current) => current.id === value.id))
   expect(removed).toHaveLength(1)
+  expect(removed[0]!.value).toBe(chosen.recordId)
   const prefix = removed[0]!.id.slice(0, -2)
   expect(after[0]!.projection.values.map((value) => ({ id: value.id, value: value.value, period: value.period }))).toEqual(
     section[0]!.projection.values.filter((value) => !value.id.startsWith(prefix))
       .map((value) => ({ id: value.id, value: value.value, period: value.period })),
   )
-  await expect(preparation.getByRole("status")).toHaveText("Selection refreshed from the authorized sources. Check the new counts and values before preserving.")
+  for (const unchanged of selected.sections.filter((entry) => entry.id !== projects.id)) {
+    const current = retained.sections.find((entry) => entry.id === unchanged.id)
+    expect(current).toMatchObject({ id: unchanged.id, title: unchanged.title, period: unchanged.period, recordCount: unchanged.recordCount })
+    expect(current!.projection.values.map((value) => ({ id: value.id, value: value.value, period: value.period }))).toEqual(
+      unchanged.projection.values.map((value) => ({ id: value.id, value: value.value, period: value.period })),
+    )
+  }
+  await expect(records.getByRole("checkbox")).toHaveCount(25)
+  await expect(records.locator('input[type="checkbox"]:checked')).toHaveCount(24)
   return retained
 }
 
@@ -150,20 +199,69 @@ export async function readSourceData(request: APIRequestContext, app: ReportsIns
   return { projects: data.projects, opexOwners: data.opexOwners, opexEntries: data.opexEntries, hotTopics: data.hotTopics }
 }
 
-// UNBOUND: UI48 reads successor availability, but does not create/preserve a revision.
 export async function preserveNewRevision(page: Page, app: ReportsInstallation, prior: PreservedReview, corpus: ReportsCorpus) {
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+  const preparation = page.locator('[data-sf-surface="UI48"]')
+  const available = page.waitForResponse(responseFor(app.dashboardURL, "review-update", "GET"))
+  await preparation.getByRole("button", { name: "Check whether a new review can be prepared", exact: true }).click()
+  const update = await available
+  expect(update.status()).toBe(200)
+  const updateBody = object(await update.json())
+  expect(updateBody.status).toBe("ok")
+  const successor = object(updateBody.value)
+  expect(successor.available).toBe(true)
+  expect(successor.previousReviewRef).toBe(prior.id)
+  expect(successor.unavailableSections).toEqual([])
+  expect(Array.isArray(successor.items)).toBe(true)
+  const items = (successor.items as unknown[]).map(object)
+  expect(items.map((item) => item.id)).toEqual(prior.sections.map((section) => section.id))
+  const priorProjects = prior.sections.filter((section) => section.title === "Projects")
+  expect(priorProjects).toHaveLength(1)
+  const retainedIds = projection(priorProjects[0]!.content).values
+    .filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id)).map((value) => text(value.value))
+  expect(retainedIds).toHaveLength(24)
+  expect(new Set(retainedIds).size).toBe(24)
+  const projectItems = items.filter((item) => item.topic === "projects")
+  expect(projectItems).toHaveLength(1)
+  const project = projectItems[0]!
+  expect(Array.isArray(project.recordOptions)).toBe(true)
+  const choices = (project.recordOptions as unknown[]).map(object)
+  expect(choices).toHaveLength(25)
+  expect(new Set(choices.map((choice) => text(choice.recordRef))).size).toBe(25)
+  expect(choices.map((choice) => text(choice.recordId)).sort()).toEqual(corpus.projects.map((project) => project.id).sort())
+  const records = preparation.locator(`[data-sf-successor-availability="true"] [data-sf-record-selection=${JSON.stringify(text(project.id))}]`)
+  await expect(records.getByRole("checkbox")).toHaveCount(25)
+  const excluded = choices.filter((choice) => !retainedIds.includes(text(choice.recordId)))
+  expect(excluded).toHaveLength(1)
+  for (const choice of choices) {
+    const checkbox = records.locator(`input[type="checkbox"][value=${JSON.stringify(text(choice.recordRef))}]`)
+    await expect(checkbox).toBeChecked()
+    if (!retainedIds.includes(text(choice.recordId))) await checkbox.uncheck()
+  }
+  await expect(records.locator('input[type="checkbox"]:checked')).toHaveCount(24)
   const load = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
   await preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
   const selected = await agendaResult(await load)
   expect(selected.sections.flatMap((section) => section.projection.values).filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
   expect(selected.sections.filter((section) => section.title === "Projects").map((section) => section.recordCount)).toEqual([24])
+  expect(selected.sectionRecordRefs.filter((entry) => entry.sectionRef === project.id)).toEqual([{
+    sectionRef: project.id,
+    recordRefs: choices.filter((choice) => retainedIds.includes(text(choice.recordId))).map((choice) => text(choice.recordRef)),
+  }])
+  const revisionPreview = preparation.locator("[data-sf-revision-preview]")
+  await expect(revisionPreview).toBeVisible()
+  const budget = selected.sections.filter((section) => section.title === "Budget")
+  expect(budget).toHaveLength(1)
+  await expect(revisionPreview.locator(`[data-section-id="${budget[0]!.id}"]`)).toContainText(
+    `${corpus.forecastField}: ${corpus.after} unspecified · ${corpus.annual.start} – ${corpus.annual.end}`,
+  )
   const preserve = page.waitForResponse(responseFor(app.dashboardURL, "review-preserve", "POST"))
   await preparation.getByRole("button", { name: "Preserve this review", exact: true }).click()
   const response = await preserve
   expect(response.status()).toBe(200)
-  expect(response.request().postDataJSON()).toMatchObject({ previousReviewRef: prior.id, selectionRef: selected.selectionRef })
+  expect(response.request().postDataJSON()).toEqual({
+    previousReviewRef: prior.id, selectionRef: selected.selectionRef, sectionRefs: selected.sectionRefs,
+  })
   const body = object(await response.json())
   expect(body.status).toBe("ok")
   const next = review(body.value)
@@ -173,10 +271,19 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   expect(next.sections.map((section) => section.count)).toEqual(prior.sections.map((section) => section.count))
   expect(projection(next.sections[1]!.content).values.filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
-  await expect(preparation.getByRole("table", { name: "Budget · selected source values", exact: true })
-    .getByRole("row").filter({ has: page.getByRole("cell", { name: corpus.forecastField, exact: true }) }).getByRole("cell"))
-    .toHaveText([corpus.forecastField, `${corpus.after} unspecified`, `${corpus.annual.start} – ${corpus.annual.end}`])
+  const result = preparation.locator(`[data-sf-preserved-revision="${next.id}"]`)
+  await expect(result.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
+  const open = result.getByRole("link", { name: "Open preserved revision", exact: true })
+  await expect(open).toHaveAttribute("href", "/orchestra/sf-reviews/reviews/" + encodeReviewRef(next.id))
+  const reloaded = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review", "GET"))
+  await open.click()
+  const read = await reloaded
+  expect(read.status()).toBe(200)
+  expect(object(await read.json()).value).toEqual(next)
+  const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
+  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
+  await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+  await expectCapturedBudget(page, corpus, corpus.after, 190)
   expect(await readReview(page.request, app.dashboardURL, prior.id)).toEqual(prior)
   expect(await readReview(page.request, app.dashboardURL, next.id)).toEqual(next)
   return next
@@ -377,13 +484,13 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   return { meeting, url }
 }
 
-export async function expectCapturedBudget(page: Page, corpus: ReportsCorpus, amount = corpus.before) {
+export async function expectCapturedBudget(page: Page, corpus: ReportsCorpus, amount = corpus.before, january = 110) {
   const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
   const navigation = meeting.getByRole("list", { name: "Preserved source navigation", exact: true })
   for (const value of [
     { id: "budgetMetrics." + corpus.year + ".totalForecast", amount, period: corpus.annual },
-    { id: "budget:" + corpus.year + "-01:forecast", amount: 110, period: corpus.january },
+    { id: "budget:" + corpus.year + "-01:forecast", amount: january, period: corpus.january },
   ]) {
     const prefix = value.id + ": " + value.amount + " unspecified · " + value.period.start + " – " + value.period.end + " · "
     const line = meeting.getByRole("listitem").filter({ hasText: new RegExp("^" + value.id.replace(/[.*+?^{}$()|[\]\\]/g, "\\$&") + ":") })
