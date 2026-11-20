@@ -24,7 +24,7 @@ function reader(response: Response) {
           buffer = buffer.slice(delimiter + 2)
           const data = frame.split("\n").filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).join("\n")
           if (data) {
-            const decoded = Schema.decodeUnknownSync(OrchestraEventTransport)(JSON.parse(data))
+            const decoded = Schema.decodeUnknownSync(Schema.toCodecJson(OrchestraEventTransport))(JSON.parse(data))
             if (!("event" in decoded)) throw new Error("Corporate stream namespace required")
             return decoded
           }
@@ -44,9 +44,9 @@ test("http-events-01: live HTTP subscribers see only their captured person and T
   const secondCookie = await f.login(other)
   await f.run((http) => Effect.gen(function* () {
     const sessions = yield* SessionV2.Service
-    const a = yield* f.create(http, "ses_stream_a")
-    const b = yield* f.create(http, "ses_stream_b", profileB)
-    const person = yield* f.create(http, "ses_stream_person", profileA, secondCookie)
+    const a = yield* f.seed( "ses_stream_a")
+    const b = yield* f.seed( "ses_stream_b", profileB)
+    const person = yield* f.seed( "ses_stream_person", profileA, secondCookie)
     const identities = [[profileA, f.cookie, a.id], [profileB, f.cookie, b.id], [profileA, secondCookie, person.id]] as const
     const streams = []
     for (const [profile, cookie] of identities) {
@@ -78,8 +78,8 @@ test("http-events-01: live HTTP subscribers see only their captured person and T
 test("http-events-02: owner filtering precedes serialization and publisher-created connected events gain no public exception", async () => {
   await using f = await teamSessionHttpFixture()
   await f.run((http) => Effect.gen(function* () {
-    const own = yield* f.create(http, "ses_stream_encode_own")
-    const foreign = yield* f.create(http, "ses_stream_encode_foreign", profileB)
+    const own = yield* f.seed( "ses_stream_encode_own")
+    const foreign = yield* f.seed( "ses_stream_encode_foreign", profileB)
     const events = yield* EventV2.Service
     const owners = yield* SessionOwner.Service
     const scope = yield* f.admitted(f.businessRequest(), owners.open())
@@ -92,7 +92,8 @@ test("http-events-02: owner filtering precedes serialization and publisher-creat
       return encodeEvent(data)
     })
     const pull = yield* Stream.toPull(eventStream(events, frame, { owners, scope }))
-    yield* pull
+    let ready = ""
+    while (!ready.includes("server.connected")) ready += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
     const first = encoded.length
     const forbidden = yield* f.admitted(f.businessRequest(profileB), events.publish(SessionEvent.Renamed, {
       sessionID: foreign.id, timestamp: DateTime.nowUnsafe(), title: "foreign-secret",
@@ -116,8 +117,8 @@ test("http-events-03: logout closes the original HTTP subscription when a differ
   const secondCookie = await f.login(other)
   await f.run((http) => Effect.gen(function* () {
     const sessions = yield* SessionV2.Service
-    yield* f.create(http, "ses_stream_logged_out")
-    const foreign = yield* f.create(http, "ses_stream_late", profileA, secondCookie)
+    yield* f.seed( "ses_stream_logged_out")
+    const foreign = yield* f.seed( "ses_stream_late", profileA, secondCookie)
     const response = yield* Effect.promise(() => http.mounted(f.request("/api/event")))
     const incoming = reader(response)
     expect((yield* Effect.promise(() => incoming.next()))?.event.type).toBe("server.connected")
@@ -156,12 +157,13 @@ test("http-events-04: an idle corporate stream revalidates on the unchanged 15-s
 test("http-events-05: burst order and finite history replay keep canonical payloads and private owner records off the wire", async () => {
   await using f = await teamSessionHttpFixture()
   await f.run((http) => Effect.gen(function* () {
-    const owned = yield* f.create(http, "ses_stream_order")
+    const owned = yield* f.seed( "ses_stream_order")
     const events = yield* EventV2.Service
     const owners = yield* SessionOwner.Service
     const scope = yield* f.admitted(f.businessRequest(), owners.open())
     const pull = yield* Stream.toPull(eventStream(events, eventFrames(), { owners, scope }))
-    yield* pull
+    let ready = ""
+    while (!ready.includes("server.connected")) ready += (yield* pull).map((chunk) => new TextDecoder().decode(chunk)).join("")
     const ids: string[] = []
     for (let index = 0; index < 12; index++) {
       const event = yield* f.admitted(f.businessRequest(), events.publish(SessionEvent.Renamed, {

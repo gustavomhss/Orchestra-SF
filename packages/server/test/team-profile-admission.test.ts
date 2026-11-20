@@ -48,9 +48,9 @@ test("http-owner-02: two people and two Teams sharing the same placement have se
   await using f = await teamSessionHttpFixture()
   const secondCookie = await f.login(other)
   await f.run((http) => Effect.gen(function* () {
-    const own = yield* f.create(http, "ses_http_person_a")
-    const team = yield* f.create(http, "ses_http_team_b", profileB)
-    const person = yield* f.create(http, "ses_http_person_b", profileA, secondCookie)
+    const own = yield* f.seed( "ses_http_person_a")
+    const team = yield* f.seed( "ses_http_team_b", profileB)
+    const person = yield* f.seed( "ses_http_person_b", profileA, secondCookie)
     expect(team.location).toEqual(own.location)
     expect(person.projectID).toBe(own.projectID)
     for (const [profile, cookie, expected] of [[profileA, f.cookie, own.id], [profileB, f.cookie, team.id], [profileA, secondCookie, person.id]] as const) {
@@ -182,11 +182,11 @@ test("http-owner-08: SQL pages contain only the current owner and cursors cannot
   await using f = await teamSessionHttpFixture()
   const secondCookie = await f.login(other)
   await f.run((http) => Effect.gen(function* () {
-    yield* f.create(http, "ses_http_page_1")
-    yield* f.create(http, "ses_http_page_foreign", profileB)
-    yield* f.create(http, "ses_http_page_2")
-    yield* f.create(http, "ses_http_page_person", profileA, secondCookie)
-    yield* f.create(http, "ses_http_page_3")
+    yield* f.seed( "ses_http_page_1")
+    yield* f.seed( "ses_http_page_foreign", profileB)
+    yield* f.seed( "ses_http_page_2")
+    yield* f.seed( "ses_http_page_person", profileA, secondCookie)
+    yield* f.seed( "ses_http_page_3")
     const first = yield* Effect.promise(() => http.mounted(f.request("/api/session?limit=1&order=asc")))
     const page = yield* decode(first, List)
     expect(page.data.map((item) => item.id)).toEqual(["ses_http_page_1"])
@@ -218,7 +218,7 @@ test("http-owner-09: logout while Project acquisition awaits prevents creation a
     const pending = yield* Effect.promise(() => http.mounted(f.jsonRequest("/api/session", { id: "ses_http_after_logout" }))).pipe(Effect.forkChild)
     try {
       yield* Effect.promise(() => pause.entered)
-      expect((yield* Effect.promise(() => f.logout(f.cookie)))?.status).toBe(303)
+      expect((yield* Effect.promise(() => f.logout(f.cookie)))?.status).toBe(204)
     } finally { pause.release() }
     const response = yield* Fiber.join(pending)
     expect(response.status).toBe(401)
@@ -231,8 +231,8 @@ test("http-owner-09: logout while Project acquisition awaits prevents creation a
 test("http-owner-10: a current Case resource exclusion is applied before pagination and Session lookup", async () => {
   await using f = await teamSessionHttpFixture()
   await f.run((http) => Effect.gen(function* () {
-    const hidden = yield* f.create(http, "ses_http_acl_1")
-    const visible = yield* f.create(http, "ses_http_acl_2")
+    const hidden = yield* f.seed( "ses_http_acl_1")
+    const visible = yield* f.seed( "ses_http_acl_2")
     const linked = yield* Effect.promise(() => f.linkCaseResource(hidden.id))
     yield* Effect.promise(() => linked.participants([other]))
     const page = yield* Effect.promise(() => http.mounted(f.request("/api/session?limit=1&order=asc")))

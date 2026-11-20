@@ -3,6 +3,7 @@ import { Context, Effect, Layer, Schema, Scope } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Session } from "@orchestra/schema/session"
+import { SessionV2 } from "@orchestra/core/session"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { teamSessionFixture, profileA } from "../../../core/test/fixture/team-session"
 import { applicationServices, createApiRoutesWithServices } from "../../src/routes"
@@ -18,7 +19,7 @@ export const List = Schema.Struct({
   cursor: Schema.Struct({ previous: Schema.optional(Schema.String), next: Schema.optional(Schema.String) }),
 })
 export const decode = <A>(response: Response, schema: Schema.Decoder<A>) =>
-  Effect.promise(() => response.json()).pipe(Effect.map(Schema.decodeUnknownSync(schema)))
+  Effect.promise(() => response.json()).pipe(Effect.map(Schema.decodeUnknownSync(Schema.toCodecJson(schema))))
 
 type Http = Readonly<{
   mounted: (request: Request) => Promise<Response>
@@ -29,7 +30,9 @@ type Http = Readonly<{
 /** Actual OIDC, current policy, owner SQL and production handlers over one AppNodeBuilder graph. */
 export async function teamSessionHttpFixture(input: Omit<NonNullable<Parameters<typeof teamSessionFixture>[0]>, "extraNodes"> = {}) {
   const f = await teamSessionFixture({ ...input, extraNodes: [applicationServices] })
-  const metadata = { mode: "ready" as "ready" | "missing" | "failed", locations: 0 }
+  const metadata: { mode: "ready" | "missing" | "failed"; locations: number } = { mode: "ready", locations: 0 }
+  const observations: { grants: number; calls: Array<{ path: string; milliseconds: number; grants: number; graph: number }> } = { grants: 0, calls: [] }
+  f.productHooks.beforeGrants = async () => { observations.grants++ }
   const source: SfTrustedInstallationSource = {
     current: async () => {
       if (metadata.mode === "failed") throw new Error("Deliberately unavailable installed metadata")
@@ -62,7 +65,17 @@ export async function teamSessionHttpFixture(input: Omit<NonNullable<Parameters<
         }).pipe(Layer.provide(Layer.succeedContext(context)), Layer.provide(HttpServer.layerServices)), { disableLogger: true })),
         (value) => Effect.promise(() => value.dispose()),
       )
-      return yield* body({ mounted, generic: generic.handler, originals })
+      const observed = async (original: Request) => {
+        const start = Date.now()
+        const grants = observations.grants
+        const graph = f.provider.requests.length
+        try { return await mounted(original) }
+        finally { observations.calls.push({ path: new URL(original.url).pathname, milliseconds: Date.now() - start,
+          grants: observations.grants - grants, graph: f.provider.requests.length - graph }) }
+      }
+      return yield* body({ mounted: observed, generic: generic.handler, originals }).pipe(
+        Effect.tapCause(() => Effect.sync(() => console.info("Installed Session HTTP observations", observations.calls))),
+      )
     }))
   const create = (http: Http, id: string, profile: TeamProfile.Ref = profileA, cookie = f.cookie) =>
     Effect.gen(function* () {
@@ -70,5 +83,10 @@ export async function teamSessionHttpFixture(input: Omit<NonNullable<Parameters<
       expect(response.status).toBe(200)
       return (yield* decode(response, Info)).data
     })
-  return { ...f, metadata, rawRequest: f.request, request, jsonRequest, run, create }
+  /** Prepare actual owned SQL through Core; HTTP tests still exercise their requested route boundaries. */
+  const seed = (id: string, profile: TeamProfile.Ref = profileA, cookie = f.cookie) => Effect.gen(function* () {
+    const sessions = yield* SessionV2.Service
+    return yield* f.admitted(f.businessRequest(profile, cookie), sessions.create({ id: Session.ID.make(id), location: f.location }))
+  })
+  return { ...f, metadata, observations, rawRequest: f.request, request, jsonRequest, run, create, seed }
 }

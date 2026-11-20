@@ -42,7 +42,8 @@ export const openSessionAccess = (owners: SessionOwner.Interface, endpoint: stri
   Effect.gen(function* () {
     const action = actions[endpoint]
     if (!action) return yield* unauthorized()
-    const scope = yield* owners.open().pipe(Effect.mapError(unauthorized))
+    const installed = yield* InstalledSession
+    const scope = installed?.scope ?? (yield* owners.open().pipe(Effect.mapError(unauthorized)))
     yield* (sessionID ? owners.assert(scope, sessionID, action) : owners.authorize(scope, action))
       .pipe(Effect.mapError(unauthorized))
     // A command can execute immediately and may change its model after rendering.
