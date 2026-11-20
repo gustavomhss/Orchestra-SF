@@ -77,6 +77,22 @@ export async function observeNativeResponses(page: Page, origin: string) {
     starts.delete(callKey(permit.start))
   }
   const pump = (key: string, lane: Lane) => {
+    if (lane.pending?.rejected !== undefined) {
+      // End waits behind a known rejection, including pass-through starts.
+      // Keep only the uncertain dispatched permit: a late Request must still
+      // bind to it, never to a newly admitted fetch at the same URL.
+      const error = new Error("Native response start is blocked by a rejected fetch without its original Request")
+      for (const permit of lane.queued.splice(0)) {
+        if (permit.capture) {
+          permit.capture.withdrawn = true
+          tickets.delete(permit.ticket)
+          fail(permit.capture.scope, error)
+        }
+        forget(permit)
+        permit.reject(error)
+      }
+      return
+    }
     while (!lane.pending && lane.queued.length) {
       const permit = lane.queued.shift()!
       if (!starts.has(callKey(permit.start))) continue
@@ -142,6 +158,8 @@ export async function observeNativeResponses(page: Page, origin: string) {
       permit.rejected = message.error
       if (permit.phase !== "permitted")
         fail(permit.capture?.scope, new Error("Native fetch was dispatched without its start permit"))
+      const lane = lanes.get(permit.key)
+      if (lane) pump(permit.key, lane)
       return null
     }
     if (message.kind === "complete") {
@@ -203,7 +221,8 @@ export async function observeNativeResponses(page: Page, origin: string) {
     })
   })
   const onRequest = (request: ReturnType<Response["request"]>) => {
-    if (disposed || request.resourceType() !== "fetch" || observed.has(request)) return
+    if (disposed || request.resourceType() !== "fetch" ||
+      request.redirectedFrom() !== null || observed.has(request)) return
     // A service worker request may have no frame; it cannot be this page's fetch.
     try { if (request.frame() !== frame) return } catch { return }
     const key = laneKey(request.method(), request.url())
