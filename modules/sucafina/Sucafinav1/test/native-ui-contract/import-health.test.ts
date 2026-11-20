@@ -14,8 +14,9 @@ import { financialCompositionFixture } from "../product/wp10/integration/financi
 
 const origin = "https://example.test"
 const mount = "/sucafina"
-const readIds = ["files.import-targets", "files.import-reference", "files.import-detail"]
-const allIds = [...readIds, "files.import-admit", "files.import-preview", "files.import-apply"]
+type ImportOperationId = Awaited<ReturnType<typeof observeSfImportHealth>>[number]["operationId"]
+const readIds: ImportOperationId[] = ["files.import-targets", "files.import-reference", "files.import-detail"]
+const allIds: ImportOperationId[] = [...readIds, "files.import-admit", "files.import-preview", "files.import-apply"]
 
 async function importFixture(policy: { preview?: boolean; documents?: boolean; receipts?: boolean; human?: boolean; scanner?: boolean } = {}) {
   const f = await financialCompositionFixture()
@@ -85,7 +86,7 @@ test("UI55 health uses the actual Import producer, policy and C08 without acquir
 })
 
 test("actual restricted policy and absent scanner configuration cannot borrow another operation's grant", async () => {
-  const cases = [
+  const cases: { policy: Parameters<typeof importFixture>[0]; ids: ImportOperationId[] }[] = [
     { policy: { preview: false }, ids: [] },
     { policy: { documents: false }, ids: [] },
     { policy: { receipts: false }, ids: allIds.filter((id) => id !== "files.import-apply") },
