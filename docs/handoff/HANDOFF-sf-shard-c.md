@@ -279,3 +279,17 @@ Paths desta tabela relativos a `modules/sucafina/Sucafinav1/test/product/`, salv
 - `sf-ci`: **não rodado**.
 
 Não há declaração de release, inferência de agente, AM02 qualificado, cobertura completa dos oito shards ou GO.
+
+
+## Retomada ativa — conclusão e merges exigidos
+
+Estado: **IN_PROGRESS**. O usuário exigiu endereçar todas as falhas e entregar tudo mergeado verde. O checkpoint parcial acima é histórico; não encerra o trabalho. PR de acompanhamento: [#397](https://github.com/gustavomhss/Orchestra-SF/pull/397), base `sf-join-four`. Nenhum merge foi feito até esta atualização.
+
+- AM02 oracle de persistência: fix `e24aa85b0c8d88d0cd007b977ff84ff73eca8f30`, snapshot `96b648684730b2b0e81a71370ce8adf80b77db25`, branch `ci-run-linux-sfc-am02-oracle`. Prova as duas escritas por preparação a partir dos registros originais e admissions novos, mantendo o snapshot completo, seis consumers e controles finais. Gate em execução; não se declara verde.
+- Atlas observação consumível/cache: implementação compartilhada isolada em `sfc-atlas-observation`; preservar limite de leituras canônicas, single-use, C08 e revogação.
+- WP12 fixture de período/escalares: `sfc-dependency-fixture`. O total Portfolio permanece com B, evitando dois fixes concorrentes.
+- WP12 escopo de resposta Planner: `sfc-planner-answer`, PR compartilhado separado.
+- Operations private admission: fixture chama assinatura obsoleta da instalação; migração ao lifecycle real e observação do scanner em andamento. Os guards continuam comandos reais; nenhuma aprovação é sintetizada.
+- A/B receberam pedido de resultados, SHAs e gates no corpo de #397; os handoffs atuais permanecem a fonte de coordenação. A base `sf-join-four` foi revalidada em `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`; a integração `sf-continuation` está ativa e exige shared primeiro.
+
+Restrições mantidas: apenas GitHub; nenhuma execução local; máximo dois gates desta sessão; nenhum gate idêntico sem mudança; nenhum sf-ci; nenhuma alteração de runtime/application.ts; nenhuma porta proibida; asserções e cobertura preservadas. A tabela agregada será atualizada com os resultados terminais reais e os merges, sem somar recortes como se fossem um shard completo.
