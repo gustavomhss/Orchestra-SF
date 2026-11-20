@@ -1,0 +1,161 @@
+name: ci-rescue-official
+
+on:
+  push:
+    branches: [ci-rescue-final]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-rescue-official-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          persist-credentials: false
+      - name: Restore shared SF dependencies
+        id: dependencies
+        uses: ./.github/actions/setup-bun
+        with:
+          save: "false"
+      - name: Require an exact dependency hit from the default branch
+        env:
+          MODULES_HIT: ${{ steps.dependencies.outputs.modules-cache-hit }}
+          MODULES_KEY: ${{ steps.dependencies.outputs.modules-cache-key }}
+        run: |
+          set -euo pipefail
+          test "$MODULES_HIT" = true
+          test -n "$MODULES_KEY"
+          printf 'Fresh restore-only branch; exact default-scope dependency hit=%s; key=%s\n' "$MODULES_HIT" "$MODULES_KEY"
+      - uses: ./.github/actions/omni-binaries
+        with:
+          save: "false"
+      - uses: ./.github/actions/ripgrep
+      - name: Gate and scheduling regressions
+        if: ${{ !cancelled() }}
+        run: node --test script/sf-ci/gate.test.mjs script/sf-ci/shard-plan.test.mjs
+      - name: Compare actual selection to unchanged baseline selector
+        if: ${{ !cancelled() }}
+        run: |
+          node script/sf-ci/gate.mjs plan CI-SF > sf-shard-plan.json
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { createHash } from 'node:crypto'
+          import { readFileSync, writeFileSync } from 'node:fs'
+          const original = await import('./script/sf-ci/probe-baseline-gate.mjs')
+          const current = await import('./script/sf-ci/gate.mjs')
+          const manifest = JSON.parse(readFileSync('sf/ci/suites.json', 'utf8'))
+          const beforeStart = performance.now()
+          const before = original.selectSuiteFiles(manifest, 'CI-SF')
+          const beforeMs = performance.now() - beforeStart
+          const afterStart = performance.now()
+          const after = current.selectSuiteFiles(manifest, 'CI-SF')
+          const afterMs = performance.now() - afterStart
+          assert.deepEqual(after, before)
+          const plan = JSON.parse(readFileSync('sf-shard-plan.json', 'utf8'))
+          const files = plan.shards.flatMap(shard => shard.files).sort()
+          assert.deepEqual(files, after)
+          assert.equal(new Set(files).size, after.length)
+          assert.equal(plan.shards.length, 8)
+          assert.ok(plan.shards.every(shard => shard.files.length > 0))
+          const summary = {
+            sourceSha: process.env.GITHUB_SHA,
+            selectedFiles: after.length,
+            selectedFilesSha256: createHash('sha256').update(after.join('\n')).digest('hex'),
+            originalSelectorMs: beforeMs, currentSelectorMs: afterMs,
+            shards: plan.shards.map(shard => ({
+              index: shard.index, files: shard.files.length,
+              historicalLoadSeconds: shard.historicalLoadSeconds,
+              unprofiledFiles: shard.unprofiledFiles
+            })),
+            note: 'Selection equivalence and scheduling only; historical weights are not wall-time benchmarks.'
+          }
+          writeFileSync('sf-selection-probe.json', JSON.stringify(summary, null, 2) + '\n')
+          console.log(JSON.stringify(summary))
+          NODE
+      - name: Existing cache and surgical runner contracts
+        if: ${{ !cancelled() }}
+        working-directory: packages/core
+        env:
+          GITHUB_ACTIONS: "false"
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: bun test --timeout 30000 test/setup-bun-cache.test.ts test/test-ci-request.test.ts test/test-ci-app-lanes.test.ts test/test-ci-guard-context.test.ts
+      - name: Static command ownership and negative controls
+        if: ${{ !cancelled() }}
+        working-directory: modules/sucafina
+        env:
+          GITHUB_ACTIONS: "false"
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: |
+          bun test --timeout 30000 \
+            Sucafinav1/test/product/fixture/ci-static-contract.test.ts \
+            Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts \
+            Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts \
+            Sucafinav1/test/product/ui-split/ui-work/guards.test.ts \
+            Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts
+      - name: Sucafina typecheck
+        if: ${{ !cancelled() }}
+        working-directory: modules/sucafina
+        run: bun run typecheck
+      - name: Validate the isolated default-cache workflow syntax
+        if: ${{ !cancelled() }}
+        run: |
+          bun --eval '
+            import assert from "node:assert/strict"
+            const workflow = Bun.YAML.parse(await Bun.file(".github/workflows/sf-cache-warm.yml").text())
+            assert.equal(workflow.name, "sf-cache-warm")
+            assert.deepEqual(workflow.on.push.branches, ["dev"])
+            assert.deepEqual(workflow.permissions, { contents: "read" })
+            assert.equal(workflow.jobs.warm["runs-on"], "ubuntu-24.04")
+            assert.equal(workflow.on.workflow_dispatch.inputs.source_sha.required, true)
+            assert.deepEqual(workflow.on.workflow_dispatch.inputs.source_ref.options, ["dev", "sf-join-four", "close-final-candidate"])
+            assert.ok(workflow.jobs.warm.if.includes("github.event.repository.default_branch"))
+            assert.equal(Object.hasOwn(workflow.on, "pull_request"), false)
+            assert.equal(Object.hasOwn(workflow.on, "pull_request_target"), false)
+            console.log("Default cache writer YAML parsed; activation remains restricted to the default branch.")
+          '
+      - name: Export evidence preserves bytes without binary stdout
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          bun --eval '
+            import assert from "node:assert/strict"
+            import { createHash } from "node:crypto"
+            import { join } from "node:path"
+            import { exportEvidenceDirectory, recordExportEvidence } from "./modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts"
+            const bytes = new Uint8Array(128 * 1024).fill(65)
+            const result = await recordExportEvidence({ caseId: "ci-rescue-byte-proof", name: "synthetic.bin",
+              mediaType: "application/octet-stream", bytes, observations: { syntheticProbe: true } })
+            assert.deepEqual(new Uint8Array(await Bun.file(join(exportEvidenceDirectory, result.file_name)).arrayBuffer()), bytes)
+            assert.equal(result.sha256, createHash("sha256").update(bytes).digest("hex"))
+            const stored = await Bun.file(join(exportEvidenceDirectory, result.case_id + ".manifest.json")).json()
+            assert.deepEqual(stored, result)
+          ' > sf-export-probe.log
+          test "$(wc -c < sf-export-probe.log)" -lt 2048
+          test "$(grep -c '^SF66_EXPORT_EVIDENCE ' sf-export-probe.log)" -eq 1
+          if grep -q '^SF66_EXPORT_BYTES ' sf-export-probe.log; then exit 1; fi
+          cat sf-export-probe.log
+      - name: Save probe evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-rescue-official-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            sf-shard-plan.json
+            sf-selection-probe.json
+            sf-export-probe.log
+            ${{ runner.temp }}/sf66-export-artifacts/
