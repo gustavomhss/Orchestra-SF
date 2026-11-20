@@ -13,6 +13,8 @@ import { SHARDED, validateManifest } from "./gate.mjs"
 //   and the real GITHUB_SHA/RUN_ID/RUN_ATTEMPT. stdout is newline-delimited,
 //   sorted, checkout-validated paths relative to each suite.directory;
 //   releaseOnlyFiles are excluded by the selector (not by YAML).
+// * Bun prefixes only its in-memory argv with one exact ./ loop after the guard.
+// * Each Bun job admits one strict Python timing sidecar; UI admits none.
 // * Every Bun case must execute bun test ... "${files[@]}" without file globs,
 //   hardcoded file paths, path-ignore filters, extra selectors or bypasses.
 // * UI must run: bun run test:e2e:local "${files[0]}" ... (no matrix.spec).
@@ -47,17 +49,70 @@ function assertExactIds(actual, expected, context) {
 function runScripts(job) {
   const lines = job.split("\n")
   const scripts = []
+  let stepStart = -1
+  requireContract(!/^\s*(?:-\s*)?<<:/m.test(job), "merged YAML metadata is not an auditable execution step")
   for (let index = 0; index < lines.length; index++) {
-    if (!/^ {8}run: \|\s*$/.test(lines[index])) continue
+    if (/^ {6}- /.test(lines[index])) stepStart = index
+    if (!/^(?: {8}run:| {6}- run:)/.test(lines[index])) continue
+    requireContract(stepStart >= 0 && /^ {8}run: \|\s*$/.test(lines[index]),
+      "every run step must use one explicit literal script")
+    const header = lines.slice(stepStart, index)
     const content = []
     for (++index; index < lines.length; index++) {
       if (!lines[index].trim()) { content.push(""); continue }
-      if (!lines[index].startsWith("          ")) { index--; break }
+      if (!lines[index].startsWith("          ")) break
       content.push(lines[index].slice(10))
     }
-    scripts.push(content.join("\n"))
+    const next = lines.findIndex((line, offset) => offset >= index && /^ {6}- /.test(line))
+    scripts.push({
+      script: content.join("\n"),
+      metadata: [...header, ...lines.slice(index, next < 0 ? undefined : next)]
+        .filter((line) => line.trim() && !/^\s*#/.test(line)),
+    })
+    index--
   }
   return scripts
+}
+
+/** Admit the entire sidecar, without discarding unknown shell commands. */
+function assertTimingSidecar(step, context) {
+  const metadata = [
+    "        if: always() && !cancelled() && steps.tests.outcome != 'skipped'",
+    "        env:",
+    "          TEST_CONCLUSION: ${{ steps.tests.outcome }}",
+  ]
+  requireContract(step.metadata.length === metadata.length + 1 &&
+    /^ {6}- name: \S.+$/.test(step.metadata[0]) &&
+    step.metadata.slice(1).every((line, index) => line === metadata[index]),
+  context + ": timing step metadata must bind only the actual test outcome")
+  const evidence = context === "unit" ? "sf-ci-evidence/$SF_SUITE_ID" : "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX"
+  const command = [
+    "python3 script/sf-ci/timings.py",
+    '--report "' + evidence + '/report.xml"',
+    '--output "' + evidence + '/timings.json"',
+    '--source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT"',
+    '--job-name "$GITHUB_JOB"',
+    context === "unit"
+      ? '--suite "$SF_SUITE_ID" --directory "${SF_TIMINGS_DIRECTORY:-.}" --file-root "$GITHUB_WORKSPACE/${SF_TIMINGS_DIRECTORY:-.}"'
+      : '--suite CI-SF --directory modules/sucafina --file-root "$GITHUB_WORKSPACE/modules/sucafina"',
+    '--conclusion "$TEST_CONCLUSION"',
+    ...(context === "unit-sf" ? ['--shard-index "$SF_SHARD_INDEX" --shard-count "$SF_SHARD_COUNT"'] : []),
+  ].join(" ")
+  const actual = step.script.replace(/\\\n[ \t]*/g, " ").trim()
+  requireContract(!actual.includes("\n") && actual.replace(/[ \t]+/g, " ") === command,
+    context + ": timing sidecar must be exactly one admitted Python command")
+}
+
+function executionScript(job, context) {
+  const scripts = runScripts(job)
+  requireContract(scripts.length === (context === "ui" ? 1 : 2),
+    context + ": one execution script and only the admitted Bun timing sidecar are required")
+  if (context !== "ui") {
+    requireContract(scripts[0].metadata.filter((line) => line === "        id: tests").length === 1,
+      context + ": timing outcome must refer to the execution step")
+    assertTimingSidecar(scripts[1], context)
+  }
+  return scripts[0].script
 }
 
 function cleanShell(script) {
@@ -72,14 +127,27 @@ function assertSelectionDataflow(script, count, context) {
     ? /^\s*test "\$\{#files\[@\]\}" -gt 0 \|\| exit [1-9][0-9]*\s*$/gm
     : /^\s*test "\$\{#files\[@\]\}" -eq 1 \|\| exit [1-9][0-9]*\s*$/gm
   const found = [selector, mapfile, nonempty].map((regex) => [...source.matchAll(regex)])
-  requireContract(found.every((matches) => matches.length === 1), `${context}: must invoke selector, mapfile and nonempty guard exactly once`)
+  requireContract(found.every((matches) => matches.length === 1), context + ": must invoke selector, mapfile and nonempty guard exactly once")
   const [selectPos, mapPos, guardPos] = found.map((matches) => matches[0].index)
-  requireContract(selectPos < mapPos && mapPos < guardPos, `${context}: broken selector -> files -> guard ordering`)
-  requireContract(!/^\s*cd\s+/m.test(source.slice(0, selectPos)), `${context}: selector invoked outside repository root`)
-  requireContract(!/\bfiles\s*=\s*\(|\bfiles\[[^\]]+\]\s*=|\breadarray\b|\bmapfile\b(?! -t files < "\$evidence\/selection\.txt")/.test(source),
-    `${context}: selected files overridden`)
-  requireContract(!/\|\|\s*(?:true|:)(?:\s|$)/m.test(source), `${context}: ignored selector/runner failure`)
-  return { source, guardPos }
+  requireContract(selectPos < mapPos && mapPos < guardPos, context + ": broken selector -> files -> guard ordering")
+  requireContract(!/^\s*cd\s+/m.test(source.slice(0, selectPos)), context + ": selector invoked outside repository root")
+  const prefix = 'for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done'
+  const prefixes = source.split("\n").filter((line) => line === prefix)
+  requireContract(prefixes.length === (count === "bun" ? 1 : 0), context + ": explicit file prefix loop must occur exactly once for Bun")
+  const prefixPos = source.indexOf(prefix)
+  const executePos = source.search(/\bbun (?:test|run test:e2e:local)\b/)
+  requireContract(executePos > guardPos && (count !== "bun" || (prefixPos > guardPos && prefixPos < executePos)),
+    context + ": explicit file prefix must follow the guard and precede execution")
+  // Only the admitted prefix changes argv. Every other files reference must
+  // read the complete Bun array or the single UI spec; the saved inventory stays intact.
+  const admitted = new Set(found.map((matches) => matches[0][0].trim()))
+  const untouched = source.split("\n")
+    .filter((line) => !admitted.has(line.trim()) && !(count === "bun" && line === prefix)).join("\n")
+    .replaceAll(count === "bun" ? "${files[@]}" : "${files[0]}", "")
+  requireContract(!/\bfiles\b|\breadarray\b|\bmapfile\b|\bselection\.txt\b/.test(untouched),
+    context + ": selected files overridden or selection inventory rewritten")
+  requireContract(!/\|\|\s*(?:true|:)(?:\s|$)/m.test(source), context + ": ignored selector/runner failure")
+  return { source, guardPos, prefixPos }
 }
 
 function caseArms(source) {
@@ -133,20 +201,23 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     requireContract(/^      SF_SUITE_ID:\s*\$\{\{\s*matrix\.id\s*\}\}\s*$/m.test(job), `${name}: SF_SUITE_ID not bound to matrix.id`)
     assertExactIds(jobMatrixIds(job, name), expected.map((suite) => suite.id), name)
   }
-  const unitScripts = runScripts(unit)
-  const uiScripts = runScripts(ui)
-  requireContract(unitScripts.length === 1 && uiScripts.length === 1, "one auditable execution script required per unit/ui job")
-  const selectedUnit = assertSelectionDataflow(unitScripts[0], "bun", "unit")
-  const selectedUi = assertSelectionDataflow(uiScripts[0], "ui", "ui")
+  const selectedUnit = assertSelectionDataflow(executionScript(unit, "unit"), "bun", "unit")
+  const selectedUi = assertSelectionDataflow(executionScript(ui, "ui"), "ui", "ui")
+  const directoryExport = 'printf \'SF_TIMINGS_DIRECTORY=%s\\n\' "$suite_dir" >> "$GITHUB_ENV"'
+  const unitLines = selectedUnit.source.split("\n")
+  const exported = unitLines.indexOf(directoryExport)
+  requireContract(exported > 0 && unitLines[exported - 1] === 'test -f "$root/$suite_dir/package.json"' &&
+    (selectedUnit.source.match(/\bSF_TIMINGS_DIRECTORY\b/g) || []).length === 1,
+  "unit: timing directory must be published once immediately after the validated suite directory")
   const { arms, casePos } = caseArms(selectedUnit.source)
-  requireContract(selectedUnit.guardPos < casePos, "unit: selector/guard must apply before every case")
+  requireContract(selectedUnit.prefixPos < casePos, "unit: selector/guard/prefix must apply before every case")
   assertExactIds([...arms.keys()].filter((id) => id !== "*"), singleSuites.map((suite) => suite.id), "unit arms")
   requireContract(/^.*\bexit [1-9][0-9]*\b/m.test(arms.get("*") || ""), "unit: unknown suite must fail")
   for (const suite of singleSuites) {
     const body = arms.get(suite.id)
     const flat = body.replace(/\\\n\s*/g, " ")
     const commands = flat.split("\n").filter((line) => /\bbun test\b/.test(line))
-    requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
+    requireContract(commands.length === 1 && (commands[0].match(/"\$\{files\[@\]\}"/g) || []).length === 1,
       `${suite.id}: Bun must consume all files from selector as argv, exactly once`)
     if (suite.id === "CI-APP-BROWSER") {
       requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: --bail=5 lost")
@@ -174,11 +245,9 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     requireContract(shards !== null, "unit-sf: missing shard matrix")
     assertExactIds(shards[1].split(",").map((item) => item.trim()),
       Array.from({ length: count }, (_, offset) => String(offset + 1)), "unit-sf shards")
-    const scripts = runScripts(job)
-    requireContract(scripts.length === 1, "unit-sf: one auditable execution script required")
-    const selected = assertSelectionDataflow(scripts[0], "bun", "unit-sf")
+    const selected = assertSelectionDataflow(executionScript(job, "unit-sf"), "bun", "unit-sf")
     const commands = selected.source.replace(/\\\n\s*/g, " ").split("\n").filter((line) => /\bbun test\b/.test(line))
-    requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
+    requireContract(commands.length === 1 && (commands[0].match(/"\$\{files\[@\]\}"/g) || []).length === 1,
       "unit-sf: Bun must consume the shard selection as argv, exactly once")
     requireContract(!/(?:^|\s)--bail(?:=|\s|$)/.test(commands[0]),
       "unit-sf: --bail would hide late shard cases")
