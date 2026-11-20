@@ -55,12 +55,21 @@ export async function mountNativeLocalBrowser(
     throw new Error("Native browser bundle files are invalid")
   const host = await microsoftNativeHost(disk, installation)
   try {
-    const selected = await installation.discovery?.current(new AbortController().signal)
+    const signal = new AbortController().signal
+    const selected = await installation.discovery?.current(signal)
     const identity = selected?.identity()
-    if (!selected || !identity || identity.location.directory !== disk.directory)
+    // The public identity is the three IDs. The original discovery adapter,
+    // not an undeclared identity field, admits the exact private directory.
+    const admitted = await installation.discovery?.forAdmittedLocation({ directory: disk.directory }, signal)
+    const located = admitted?.length === 1 ? admitted[0] : undefined
+    const locationIdentity = located?.identity()
+    if (!selected || !identity || !located || !locationIdentity ||
+        locationIdentity.installationId !== identity.installationId ||
+        locationIdentity.projectId !== identity.projectId || locationIdentity.hostId !== identity.hostId ||
+        located.publicOrigin !== selected.publicOrigin || located.mount !== selected.mount || located.authMode !== selected.authMode)
       throw new Error("Native browser must select the original installed directory")
     const origin = selected.publicOrigin
-    const config = JSON.stringify({ directory: identity.location.directory }).replaceAll("<", "\\u003c")
+    const config = JSON.stringify({ directory: disk.directory }).replaceAll("<", "\\u003c")
     const html = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       assets.filter((name) => name.endsWith(".css")).map((name) => '<link rel="stylesheet" href="/__sf_native/' + name + '">').join("") +
       '</head><body><div id="root"></div><script id="sf-native-fixture" type="application/json">' + config +
