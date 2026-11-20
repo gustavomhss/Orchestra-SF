@@ -34,6 +34,8 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface, initializeConfiguredMicrosoftRoleMaps } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
+import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
+import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
 import type { EntraOptions } from "../runtime/local-contract.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
@@ -93,7 +95,9 @@ export async function createConfiguredInstallation(
   const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
   const now = () => new Date().toISOString()
   const projectScope = createSfSourceScopeProjector(now)
-  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"))
+  const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"),
+    microsoft ? { teamProfiles: { installationId, tenantId: microsoft.loaded.config.tenantId } } : undefined)
   let runtime: SfHostRuntime | undefined
   // The packaged host supplies its own WeakSet-registered constructor; direct source
   // installations retain the original module implementation and its strict guard.
@@ -136,6 +140,17 @@ export async function createConfiguredInstallation(
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
+  const teamProfiles = (() => {
+    if (!microsoft) return undefined
+    if (!driver.teamProfiles || !identity.microsoftSession) throw new Error("Microsoft profile authority capability unavailable")
+    return createTeamProfileHttp({
+      origin: config.origin, mount: config.mount, installationId, tenantId: microsoft.loaded.config.tenantId,
+      resolver: createTeamProfileResolver({
+        installationId, tenantId: microsoft.loaded.config.tenantId, store: driver.teamProfiles,
+        microsoftSession: identity.microsoftSession, policy: microsoft.readTeamProfilePolicy,
+      }),
+    })
+  })()
   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
   const backups = await createLocalBackups(backupDirectory)
   const recovery = operator ? await loadRecoveryConfiguration(loaded.directory) : undefined
@@ -152,7 +167,6 @@ export async function createConfiguredInstallation(
   const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
   services.jobs = jobs
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
-  const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
@@ -276,12 +290,15 @@ export async function createConfiguredInstallation(
     } } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
-      if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+      const denied = () => microsoft && url.pathname === `${config.mount}/api/ui/team-profiles`
+        ? Response.json({ status: "denied" }, { status: 403, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+        : new Response("Access denied", { status: 403 })
+      if (url.origin !== config.origin) return denied()
       if (url.pathname === "/" && (request.method === "GET" || request.method === "HEAD")) {
         const frame = Bun.file(path.join(import.meta.dir, "../../../../apps/web/index.html"))
         if (await frame.exists()) return new Response(request.method === "HEAD" ? null : await frame.bytes(), { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
       }
-      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return denied()
       const readiness = status(request)
       if (readiness) return readiness
       const auth = await identity.handle(request)
@@ -290,6 +307,8 @@ export async function createConfiguredInstallation(
         return auth
       }
       await identity.prepare(request)
+      const teamProfileResponse = await teamProfiles?.(request)
+      if (teamProfileResponse) return teamProfileResponse
       if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
         const person = await identity.person(request)
