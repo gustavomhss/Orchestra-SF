@@ -30,7 +30,7 @@ async function fixture(input: Parameters<typeof teamProfileFixture>[0] = {}) {
   return { ...f, boundary, cookie, enable, business, context }
 }
 const roles = { surface: "dashboard" as const, roleMap: emptyMap().filter((row) => row.surface === "dashboard")
-  .map((row) => ({ ...row, entra: row.role === "admin" ? group : null })) }
+  .map((row) => ({ ...row, entra: row.role === "admin" ? `group:${group}` : null })) }
 
 test("business-identity-01: original corporate identity remains available with zero Teams; business identity does not", async () => {
   const f = await fixture()
