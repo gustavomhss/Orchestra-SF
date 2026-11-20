@@ -14,7 +14,7 @@ import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { usePlatform } from "@/context/platform"
 import { useLanguage } from "@/context/language"
-import { ServerConnection } from "@/context/server"
+import { ServerConnection } from "@/context/server-connection"
 import { pathKey } from "@/utils/path-key"
 import { authTokenFromCredentials } from "@/utils/server"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
