@@ -41,15 +41,21 @@ export function protectSfReviewReads(input: {
   const authorityOwner = pinReviewReadProperties(authority, ["host", "state", "creationTarget"])
   const stateReader = authorityOwner && pinReviewReadProperties(authorityOwner.values.state, ["read"])
   const target = authorityOwner && pinReviewReadProperties(authorityOwner.values.creationTarget, ["ref", "incarnation"])
-  const knownConsumer = !!authorityOwner && !!stateReader && !!target
-  const consumerCurrent = () => !knownConsumer || authorityOwner!.current() && stateReader!.current() && target!.current()
+  const hostReader = authorityOwner && pinReviewReadProperties(authorityOwner.values.host,
+    ["persistence", "requestFor", "revalidate", "authenticate", "environment"])
+  const snapshotReader = hostReader && pinReviewReadProperties(hostReader.values.persistence, ["currentSnapshots"])
+  const knownConsumer = !!authorityOwner && !!stateReader && !!target && !!hostReader && !!snapshotReader
+  const consumerCurrent = () => !knownConsumer || authorityOwner!.current() && stateReader!.current() && target!.current() &&
+    hostReader!.current() && snapshotReader!.current()
   const execution = new AsyncLocalStorage<ReadScope>()
   const defaultReaders = input.localSnapshotReaders === true
   const residentSnapshotReaders = input.residentSnapshotReaders
   const compositionCurrent = () => consumerCurrent() && input.dependenciesCurrent === dependenciesCurrent && input.captureDependencies === captureDependencies &&
     input.residentSnapshotReaders === residentSnapshotReaders &&
     (!dependenciesCurrent || dependenciesCurrent() !== false) && (!validation || validation.current())
-  const localReaders = () => knownConsumer && !!validation && compositionCurrent() && (!dependenciesCurrent || dependenciesCurrent() === true) &&
+  // Explicit default/wrapped readers retain before -> real read -> after.
+  // Only the registered port can validate a current C08 body directly.
+  const localReaders = () => knownConsumer && compositionCurrent() && (!dependenciesCurrent || dependenciesCurrent() === true) &&
     (defaultReaders || residentSnapshotReaders?.() === true)
   // Resident portfolio/native dependencies retain their original producer path.
   const supported = (review: PreservedReview) => snapshotBoundReview(review) && (defaultReaders || localRecordReview(review))
@@ -195,7 +201,7 @@ export function protectSfReviewReads(input: {
       // it from the final read-only C08 group when its complete proof has changed.
       // Without that producer proof, this invocation cannot authorize reuse of
       // the body. Actual producer/snapshot failures retain their own results.
-      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
+      if (host.persistence.currentSnapshots?.()) return !validation || scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
       let first = before.value
       for (let attempt = 0; attempt < 2; attempt++) {
         const result = structuredClone(await read(id, call))
@@ -205,7 +211,7 @@ export function protectSfReviewReads(input: {
         if (first.digest !== after.value.digest || first.receipt !== after.value.receipt || first.access !== after.value.access ||
           digestSfValue(result.value) !== after.value.digest) return denied()
         if (first.fence === after.value.fence && supported(result.value)) {
-          proofs.set(id, { fence: after.value.fence })
+          if (validation) proofs.set(id, { fence: after.value.fence })
           return result
         }
         if (!supported(result.value)) {
@@ -239,7 +245,7 @@ export function protectSfReviewReads(input: {
       const scope = execution.getStore()
       if (!scope) return legacyRead(id, call)
       if (!activeScope(scope, call)) return denied()
-      if (!localReaders()) return legacyRead(id, call)
+      if (!localReaders() || !validation) return legacyRead(id, call)
       if (!scope.calls.get(call)?.has(id)) return scope.delegated.get(call)?.has(id)
         ? legacyRead(id, call) : denied()
       const dependencyPin = captureDependencies?.()
