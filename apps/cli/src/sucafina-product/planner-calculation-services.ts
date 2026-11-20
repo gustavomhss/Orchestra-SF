@@ -13,6 +13,7 @@ import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/p
 import type { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
 import { createSfPlannerCalculationHistory } from "./planner-calculation-history.ts"
 import { createSfPlannerCalculationReadScope } from "./planner-calculation-read-scope.ts"
+import { createSfPlannerCalculationRoot } from "./planner-calculation-root.ts"
 import type { SfCalculationObservedReads } from "./planner-calculation-read-scope.ts"
 import type { SfCalculationCaseScope } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -50,6 +51,9 @@ export function createSfPlannerCalculationServices(input: {
   type ReplayScope = { call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; runs: ReadonlySet<string>; runId: string; open: boolean; observation?: ReadObservation }
   const replaying = new AsyncLocalStorage<ReplayScope>()
   const readScope = createSfPlannerCalculationReadScope({ host: input.host, state: input.state, lockedSourceFences: input.lockedSourceFences })
+  const rootHost = input.host, rootState = input.state, rootResults = input.results, rootSources = input.sources
+  const sourceReader = rootSources.resolveForecastSource, coverageReader = rootSources.resolveForecastCoverage
+  const readRoot = createSfPlannerCalculationRoot({ host: rootHost })
   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
     verifyRequestSources: async (request, stored, call): Promise<boolean> => {
@@ -161,6 +165,35 @@ export function createSfPlannerCalculationServices(input: {
         // turn a precise scope refusal into a generic unavailable request.
         return await input.withCalculationCase<Value>(call, selected.value.stored.caseRef, async () => {
           if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
+          let preparedRoot: Awaited<ReturnType<typeof readRoot>> | undefined
+          // A direct issue keeps its existing concurrency and observation order.
+          // Ancestry selects this physical optimization; it never grants access.
+          if (call.kind === "ui" && parent?.open && parent.call === call && parent.request === request &&
+            parent.requestDigest === requestDigest && parent.binding === binding && input.host === rootHost &&
+            input.state === rootState && input.results === rootResults && input.sources === rootSources &&
+            rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader) {
+            const preparedInput = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
+            const records = preparedInput.ok && !preparedInput.value.assumptions.length &&
+              !preparedInput.value.operations.some((operation) => operation.replacementRef) ? plannerRecordSources(selected.value.stored) : undefined
+            if (preparedInput.ok && records) {
+              const stateReader = rootState.read, resultReader = rootResults.readForCalculation
+              const selectedDigest = digestSfValue(selected.value)
+              const sameReaders = () => current() && parent.open && parent.call === call && parent.request === request &&
+                parent.requestDigest === requestDigest && parent.binding === binding && input.host === rootHost &&
+                input.state === rootState && input.results === rootResults && input.sources === rootSources &&
+                rootState.read === stateReader && rootResults.readForCalculation === resultReader &&
+                rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader &&
+                digestSfValue(selected.value) === selectedDigest
+              // Materializing readers finish before the original witness takes
+              // its baseline. An existing C08 root skips this preparation.
+              preparedRoot = await readRoot(call, async () => {
+                if (!await freshRecordSources(records, call) || !sameReaders()) return false
+                const coverage = await coverageReader.call(rootSources, preparedInput.value.baseRef, call)
+                return coverage.status === "ok" && sameReaders()
+              }, sameReaders)
+              if (!preparedRoot) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
+            }
+          }
           const eligible = call.kind === "ui" && plannerCalculationClosure(selected.value.stored)
           if (eligible) {
             scope.observation = await readScope.open(selected.value, call, current)
@@ -169,7 +202,10 @@ export function createSfPlannerCalculationServices(input: {
           const parsed = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
           const recordOnly = call.kind === "ui" && parsed.ok && !parsed.value.assumptions.length &&
             !parsed.value.operations.some((operation) => operation.replacementRef) && !!plannerRecordSources(selected.value.stored)
-          const issued = await (recordOnly ? recordCalculation : calculation).issue(runId, call)
+          const produce = () => (recordOnly ? recordCalculation : calculation).issue(runId, call)
+          // Stage the value until the physical root is accepted. The original
+          // completed/finish/final witness below still run after this boundary.
+          const issued = preparedRoot ? await preparedRoot.run(produce) : await produce()
           if (issued.status !== "ok") return issued
           const observed = scope.observation?.completed()
           if (scope.observation && !observed) return { status: "unavailable", reason: "calculation-observation-incomplete" }
