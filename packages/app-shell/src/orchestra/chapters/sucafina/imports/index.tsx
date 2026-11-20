@@ -783,7 +783,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isExport()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.format")}
-                <select value={state.exportKind} disabled={state.busy}
+                <select aria-label={t("sf.u23.format")} value={state.exportKind} disabled={state.busy}
                   onChange={(event) => {
                     const value = event.currentTarget.value
                     if (value !== "xlsx" && value !== "suppliers" && value !== "register" &&
