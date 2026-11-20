@@ -2,7 +2,7 @@
 
 ## SHA e estado
 
-- Estado: **PARTIAL — shards 4 e 6 enumerados; shard 5 interrompido; correções/gates por causa em andamento.**
+- Estado: **PARTIAL / CLASSIFIED — todos os 16 gates de correção encerrados: 10 success, 5 failure e 1 cancelled; zero gates ativos. Shards 4 e 6 enumerados, shard 5 interrompido. Todas as falhas observadas restantes têm classificação; os testes não alcançados do shard 5 permanecem unbound. Nenhum shard integral declarado verde.**
 - Base imutável: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` (`sf-join-four`).
 - Branch: sf-shard-b; código neste checkpoint: e55478bd29cd03d604116b855d45e3664270ba4e. Esta revisão acrescenta somente a atualização do handoff.
 - Escopo: CI-SF shards 4, 5 e 6 de 8; apenas GitHub; verificação por Actions.
@@ -12,9 +12,9 @@
 
 | Shard | Run | SHA testado | N pass / M fail | Estado |
 | --- | --- | --- | --- | --- |
-| 4 | [44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692) | `dd45d888617943df40e02815d58b59f88d8a18f7` | **497 pass / 14 fail** | 511 testes, todos os 118 arquivo s; Omni PASS, 428 spawns |
+| 4 | [44645900692](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645900692) | `dd45d888617943df40e02815d58b59f88d8a18f7` | **497 pass / 14 fail** | 511 testes, todos os 118 arquivos; Omni PASS, 428 spawns |
 | 5 | [44645913808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44645913808) | `f0bccdc48b42a9d000f3bda6565fa3d88286c845` | **≥576 pass / ≥21 fail observados, sem sumário final** | job cancelado no limite de 45 minutos; 105 de 119 arquivos iniciados |
-| 6 | [44651628624](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651628624) | `204a74491764dcde4da22ebe558efc318e04a777` | **409 pass / 23 fail / 2 skip** | 434 testes,109 arquivos, 7243 asserções, 2226,61 s; Omni declared PASS, 18 declarados / 824 spawns |
+| 6 | [44651628624](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44651628624) | `204a74491764dcde4da22ebe558efc318e04a777` | **409 pass / 23 fail / 2 skip** | 434 testes, 109 arquivos, 7243 asserções, 2226,61 s; Omni declared PASS, 18 declarados / 824 spawns |
 
 No shard 5 há 576 marcadores pass (um concatenado ao final de uma linha Received de HTML), 20 marcadores fail e uma asserção adicional visível em `work-bridge.test.ts:386`, cujo marcador fail não consta depois da linha longa. Há um skip Windows/DACL pré-existente em Linux. Esses números são limites observados, não uma reconstrução do sumário ausente. A checagem Omni final não chegou a executar.
 
@@ -155,14 +155,14 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 - C05: decisions/cost-coverage.ts:99–121 preserva a ordem da evidência humana, integrante do digest. Comparação exata, sem sort/contains.
 - C06: apps/cli/src/sucafina-product/extended-source-links.ts:61–62,76–78,94 define rota e label. BI passa de predicado parcial para igualdade completa; work-bridge exige anchor completo.
 - C07: c12-recovery-closure/original-intent.test.ts:60–68 exige conflito para versão alterada e recibo idêntico para request original.
-- C08: case-port.ts:84,107 exige identidade estável. Gate ultrapassou :95 e expôs :147, esperado case-reconciliation-pending, recebido recibo ok. Novo ponto corrigido por C17; conservar este resultado histórico, gate conjunto com C07 pendente.
+- C08: case-port.ts:84,107 exige identidade estável. Gate ultrapassou :95 e expôs :147, esperado case-reconciliation-pending, recebido recibo ok. Novo ponto corrigido por C17 e aprovado no gate conjunto com C07: 44663862857, 3 pass / 0 fail. O resultado C08 original permanece no histórico.
 - C09: procurement-decision-producer/preparation.test.ts:55–74 exige intenção de rascunho explícita. confirmed:false não significa aprovação.
 - C12: packages/core/src/session/subagent-models.ts:250 fornece o serviço real; package.json:397 exporta o módulo; AppNodeBuilder:24–33 fornece ao mapa de Locations os serviços exportados pelo root. Mesmas provas de grants, leases, tickets e interrupções nos 7 modos.
 - C14: contracts/operations.ts:29–34,1167–1175 aceita somente baseRef/candidateRef/period/currency. caseRef HTTP, ataques, digests e provas de preservação continuam.
 - C15: procurement/decision-preparation.ts:89–90 e prepared.ts:103–107 exigem CAS independente. Os probes collateral/settings de capabilities.test.ts:71,77 já omitiam confirmed:false e podem negar antes da razão nominal; este fix não amplia sua evidência.
 - C16: analytics/source-navigation.ts:10–14,22–30 conserva todas as fontes e oferece rótulos A/B com digest verdadeiro. Permanecem200 autorizado retido,403 após revogação, ausência de dados privados e descarte do 200 tardio.
 
-- C17: decisions/apply.ts:72–104 persiste a tentativa antes do dispatch e nega redispatch sem recibo; :125–158 já reconcilia o avanço normal do namespace. A fixture injeta perda da resposta somente após executePrepared real retornar ok, seguindo wp11/execution-reconciliation.test.ts:67–75. Indisponibilidade temporária do segundo producer ocorre antes da reserva. Exige os dois recibos reais completos, uma execução por domínio, valores 40/60 e CAS 5/5. Igualdades de receipts brutos usam state.read; cases.read continua nas provas da view. Revisão cruzada PASS, comportamento ainda depende de Actions.
+- C17: decisions/apply.ts:72–104 persiste a tentativa antes do dispatch e nega redispatch sem recibo; :125–158 já reconcilia o avanço normal do namespace. A fixture injeta perda da resposta somente após executePrepared real retornar ok, seguindo wp11/execution-reconciliation.test.ts:67–75. Indisponibilidade temporária do segundo producer ocorre antes da reserva. Exige os dois recibos reais completos, uma execução por domínio, valores 40/60 e CAS 5/5. Igualdades de receipts brutos usam state.read; cases.read continua nas provas da view. Revisão cruzada PASS e comportamento aprovado por Actions no gate conjunto C07+C17 (44663862857, 3 pass / 0 fail). A evidência continua limitada ao snapshot registrado; não cobre o rollback pré-commit de C09.
 
 ## Gates de correção
 
@@ -172,7 +172,7 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 | C08 | [44656700681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44656700681) | 9a699a80ee693cb257abe147d707ad073426143a | 0 pass / 1 fail; failure |
 | S10 | [44657814166](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657814166) | 1642f3229d99624550da44cedfc8df52848e537b | 9 pass / 2 fail; failure |
 | C04 | [44660393378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44660393378) | be8321dfa6fb969650264c7282bc759940a0320c | 1 pass / 3 fail + 1 erro(s); failure |
-| C06 | [44662186554](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662186554) | 2c3b227d23205cfd82ea42181e4cc2942acdaf33 | 3 pass / 0 fail; success |
+| C06 | [44662186554](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662186554) | 2c3b227d23205cfd82ea42181e4cc2942acdaf33 | 3 pass / 0 fail; 10 filtrados; success |
 | C09 | [44662583356](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662583356) | 54b955411b4bea65cfc246500b5f001f521e5c27 | 0 pass / 1 fail; failure |
 | C14 | [44662785880](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44662785880) | d9b371c6601f4d9c5cb3ea8649fa5da13be300f2 | 1 pass / 0 fail; success |
 | C16 | [44663094821](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44663094821) | aadfc91f667fdb42477499cc044d8e6c9fb5889c | 1 pass / 0 fail; success |
@@ -185,7 +185,7 @@ Locais abaixo referem-se à causa na base, salvo indicação explícita. Revisã
 | C12 | [44664197903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664197903) | 4ab7cb5700c7d6b180c4ffd0b7e0f3106f1e37d2 | 7 pass / 0 fail; success |
 | C15 | [44664473159](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44664473159) | 87320a6e2fdc0b237a41287f0f56485e23320611 | 3 pass / 0 fail; success |
 
-Os requests estão nos commits indicados, em .ci-run.json. Cada run testa o fix SHA associado, acrescido somente do request. Os dois slots contam workflows até o encerramento completo.
+Auditoria final dos 16 gates: todos concluídos, 10 success / 5 failure / 1 cancelled, sem gates ativos; cada run tem attempt=1, workflow .github/workflows/test-ci.yml e head_sha igual ao request registrado. Cada commit de request tem exatamente um pai, o SHA do fix associado, e modifica somente .ci-run.json. A ancestralidade de C07 original/extensão em C17 foi confirmada. Os intervalos created_at→updated_at confirmam máximo de dois workflows simultâneos nesses 16 gates, incluindo encerramento/cleanup. Essa conclusão não apaga os incidentes iniciais de admissão registrados acima.
 
 C07+C17 compartilham um único gate de três arquivos porque a fixture persistence precisa das duas correções e C07 ainda não tinha gate. C04 agrupa os consumidores dos shards 4 e 6. C06 agrupa os dois arquivos do shard 5. Não converter a passagem de um recorte em passagem do shard inteiro.
 
@@ -218,7 +218,7 @@ Caminhos relativos a modules/sucafina/; a árvore exata está no SHA do request.
 | C08 | Sucafinav1/test/product/wp13/handoff-persistence.test.ts |
 | S10 | Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts; Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts |
 | C04 | Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts; Sucafinav1/test/product/wp12/native-execution-purchase.test.ts; Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts |
-| C06 | Sucafinav1/test/product/wp12/native-execution-bi.test.ts; Sucafinav1/test/product/wp10/integration/work-bridge.test.ts ; filtro -t: ^(native contextual BI \[\|actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key$) |
+| C06 | Sucafinav1/test/product/wp12/native-execution-bi.test.ts; Sucafinav1/test/product/wp10/integration/work-bridge.test.ts; seleção por nome descrita abaixo |
 | C09 | Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts |
 | C14 | Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts |
 | C16 | Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts |
@@ -231,37 +231,48 @@ Caminhos relativos a modules/sucafina/; a árvore exata está no SHA do request.
 | C12 | Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts |
 | C15 | Sucafinav1/test/product/wp04/capabilities.test.ts |
 
+Filtro explícito de C06, passado depois de `-t`:
+
+```text
+^(native contextual BI \[|actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key$)
+```
+
+Seleciona os dois casos BI (sf_finance e sf_maestro) e um caso C08 de work-bridge; dez outros casos de work-bridge ficam filtrados. Os demais gates selecionam todos os casos dos arquivos indicados.
+
 ## Produção compartilhada — PRs separados
 
 | Causa | PR / branch | SHA do fix | Mudança e gate |
 | --- | --- | --- | --- |
-| S10 | [#405](https://github.com/gustavomhss/Orchestra-SF/pull/405), sf-shard-b-shared-sensitivity | 8da7b9c5c8600bad368b43432f6d71ed13317b4c | portfolio/verification.ts:203–205: sem sensitivityReadScope usa snapshots, token, captura provisória e fingerprints finais; gate coverage-sensitivity-integration + sensitivity-read-scope |
-| S11 | [#406](https://github.com/gustavomhss/Orchestra-SF/pull/406), sf-shard-b-shared-draft-replay | 3190d29fa62e902f8ceefdffcf703eb367c9b2c9 | decisions/hot-topic-draft.ts:94–101,206–207: leitura na versão atual só para transação durável existente e versão não regredida; gate draft-replay + hot-topic-draft-domain + hot-topic-snapshot |
+| S10 | [#405](https://github.com/gustavomhss/Orchestra-SF/pull/405), sf-shard-b-shared-sensitivity | 8da7b9c5c8600bad368b43432f6d71ed13317b4c | portfolio/verification.ts:203–205: sem sensitivityReadScope usa snapshots, token, captura provisória e fingerprints finais; gate coverage-sensitivity-integration + sensitivity-read-scope: **9 pass / 2 fail**, dois deadlines unbound; PR ainda sem qualificação de merge |
+| S11 | [#406](https://github.com/gustavomhss/Orchestra-SF/pull/406), sf-shard-b-shared-draft-replay | 3190d29fa62e902f8ceefdffcf703eb367c9b2c9 | decisions/hot-topic-draft.ts:94–101,206–207: leitura na versão atual só para transação durável existente e versão não regredida; gate draft-replay + hot-topic-draft-domain + hot-topic-snapshot: **9 pass / 0 fail** no snapshot do fix |
 
 Ambos drafts, título shared:, base sf-join-four, revisão independente PASS. Produção não foi incorporada em sf-shard-b. S10 preserva contexto original e caminho scoped. S11 mantém request original no digest, autorização e CAS; identidade/incarnação, escopo, fontes e integridade continuam verificados; novos comandos stale continuam negados.
 
-Risco S10: primeiro estado training levou134680 ms na base; os três estados compartilham 300000 ms. Não aumentar limite caso surja timeout posterior. hot-topic-draft-domain pertence ao shard 3 e é regressão adicional, não sua enumeração/qualificação.
+S10: os deadlines se materializaram no gate 44657814166, em coverage-sensitivity-integration.test.ts:22 e :141–142 → fixture-trace.ts:15; ambos classificados unbound. Houve continuação assíncrona depois do primeiro timeout, sem demonstração da raiz interna. Nenhum limite foi ampliado. hot-topic-draft-domain pertence ao shard 3 e é regressão adicional, não sua enumeração/qualificação.
 
-PRs alheios apenas inspecionados: [#398 Atlas](https://github.com/gustavomhss/Orchestra-SF/pull/398), [#400 resposta Planner](https://github.com/gustavomhss/Orchestra-SF/pull/400), [#401 custo BI](https://github.com/gustavomhss/Orchestra-SF/pull/401). Nenhum foi integrado, alterado ou rebaseado por esta sessão. #398 é hipótese para similarity217 sem equivalência causal demonstrada no log. #400 acrescenta resolveAnswerScope e um manifesto que preserva a fonte Planner completa; neste baseline ela contém 17 campos, correspondendo à lacuna em native-question-consumer:149; ainda requer verificação desse teste após integração. Não transferir green de outra sessão.
+PRs alheios apenas inspecionados: [#398 Atlas](https://github.com/gustavomhss/Orchestra-SF/pull/398), [#400 resposta Planner](https://github.com/gustavomhss/Orchestra-SF/pull/400), [#401 custo BI](https://github.com/gustavomhss/Orchestra-SF/pull/401). Nenhum foi integrado, alterado ou rebaseado por esta sessão. #398 continua hipótese para similarity217 sem equivalência causal demonstrada no log. #400 corresponde à lacuna de escopo completo da resposta Planner em native-question-consumer:149 (17 campos no baseline). Foi mesclado externamente em 2026-11-20T02:12:31Z, merge 392cecab68288d4b669828adc5d1aaa738693d80, head 50ce9319b03ae52ec3871043161c19b17c49a1b3, e é ancestral do target d4ded812…. Ainda não há, nesta sessão, gate desse teste no candidato composto; não transferir green de outra sessão nem atribuir a revisão de um head anterior a esse head final.
 
 ## Pendente e como retomar
 
-1. Aguardar os gates ativos (nenhum neste checkpoint) e registrar os resultados. Nunca repetir gate idêntico sem mudança.
-2. Gatear os commits pendentes por causa, até dois workflows ativos. C04/C06 agrupam arquivos com mesma raiz. Não declarar shard verde por recorte.
-3. Verificar a correção C17 do ponto C08:147 no gate conjunto C07+C17, preservando reconciliação durável e execução única.
-4. Timeouts/processos unbound não têm raiz interna provada; não elevar prazos por palpite.
-5. Migrar consumidores legados em trabalho próprio sem restaurar #content, data-surface, details/summary ou form[data-command] como contrato.
-6. Contract-freeze exige decisão de contrato; não trocar hash para verde. planner-calculation:112–123 intercepta cópia retornada em business-services:726, enquanto Atlas usa original:540; corrigir seam observável sem reduzir esperado 1.
-7. Shard5 mantém14 arquivos não iniciados e cauda Planner não enumerada, unbound pelo limite do job. Nenhum pass/fail atribuído a código não executado.
-8. Atualizar este handoff com run, SHA, contagens e file:line. Erro idêntico 2x sem mudança: parar e registrar unbound.
+1. Não há gate ativo nem fix desta sessão aguardando seu gate. Os 16 resultados são finais para os snapshots registrados. Não repetir request idêntico nem disparar CI apenas para observar estado.
+2. Próximas fatias devem começar com uma mudança concreta para uma causa classificada. Manter um gate por causa, agrupando arquivos com raiz comum, e no máximo dois workflows ativos até o fim do cleanup. Erro idêntico duas vezes sem mudança: parar e registrar unbound.
+3. C01, C04 e S10: investigar os checkpoints/deadlines documentados e a continuação assíncrona. Os logs não provam uma raiz interna; não elevar prazos, renovar seleção ou reduzir guards por palpite. C03: corrigir o transporte de inscrição real preservando a observação de 303 e tratando a landing 404 da fixture; a URL passada ao APIRequestContext já é absoluta.
+4. C09: decidir o contrato de recuperação pré-commit. A reserva anterior ao domínio altera aggregateRevision e impede redispatch sem receipt; se retry após rollback for requisito, desenhar evidência autoritativa de aborto em PR shared. Não ignorar metadados nem transformar essa falha em perda pós-commit. C17 prova outra situação e já passou.
+5. Migrar os consumidores legados em trabalho próprio, preservando suas garantias sem restaurar #content, data-surface, details/summary ou form[data-command] como contrato. Os locais de UI, apresentação e navegação estão nas tabelas dos shards 5 e 6.
+6. Contract-freeze exige decisão de contrato, sem trocar hash para verde. Corrigir a instrumentação de planner-calculation:112–123, que intercepta uma cópia retornada em business-services:726 enquanto Atlas usa o original em :540, preservando a expectativa de uma resolução. Tratar separadamente os contratos shared de revogação, acesso a sensibilidade e disponibilidade de recall.
+7. O shard 5 conserva 14 arquivos não iniciados e a cauda Planner não enumerada, unbound pelo limite do job. Retomar essa enumeração somente dentro de uma próxima fatia com mudança concreta que trate a execução interrompida; nunca atribuir pass/fail a código não executado ou lançar gate exploratório.
+8. Antes da integração, fixar o novo SHA alvo, verificar dependências e qualificar a composição modificada com recortes pertinentes. Os resultados desta sessão continuam vinculados à base f7dd58e… e aos SHAs de fix/request. Atualizar este handoff com novos runs, contagens e file:line, conservando o histórico.
 
 ## Integração e draft de testes
 
-- Draft de testes: [#410](https://github.com/gustavomhss/Orchestra-SF/pull/410), head de código e55478bd29cd03d604116b855d45e3664270ba4e.
-- Durante a sessão, sf-join-four avançou de f7dd58e32bc834f1485df20b91adbf759b4c4ad0 para 08854f14d83ab12d8665b0e3787881edbfaabd53 (PRs #399, #398, #404, #401, #402; 10 commits, 14 caminhos).
-- Auditoria read-only não encontrou sobreposição textual com os 17 arquivos de teste, o handoff ou os dois arquivos dos shared. #410 foi confirmado clean depois do cálculo inicial de mergeability. Isso não substitui verificação da composição.
-- Nenhuma mudança dessas outras sessões foi incorporada aos snapshots de gate desta sessão. Os resultados continuam vinculados à base imutável e ao SHA de cada fix/request.
+- Draft de testes: [#410](https://github.com/gustavomhss/Orchestra-SF/pull/410), head de código e55478bd29cd03d604116b855d45e3664270ba4e. Os commits seguintes desta branch apenas atualizam este handoff.
+- Último target observado nesta auditoria: sf-join-four em **d4ded81224e05f2d3b9789b3eec40b9de8a32fa1**. Esta é uma observação pontual, não um lock do branch.
+- O avanço f7dd58e… → 08854f14d83ab12d8665b0e3787881edbfaabd53 compreendeu 10 commits/14 caminhos, incluindo #399, #398, #404, #401 e #402. O [comparativo seguinte, 08854f14… → d4ded812…](https://github.com/gustavomhss/Orchestra-SF/compare/08854f14d83ab12d8665b0e3787881edbfaabd53...d4ded81224e05f2d3b9789b3eec40b9de8a32fa1), acrescenta 34 commits/84 arquivos, inclusive o merge externo de #400.
+- Os dois comparativos não têm sobreposição de arquivos com os 17 testes/fixtures, o handoff ou os dois arquivos de produção dos nossos shared. Isso não substitui a verificação da composição e não declara mergeability do target futuro.
+- **Mudança externa relevante para retomar:** script/sf-ci/gate.mjs agora usa planShards com custos históricos (LPT) em vez da partição por hash. Os números 4/5/6 deste handoff identificam os conjuntos fixos da base f7dd58e…, armazenados nos requests; não presumir que os mesmos índices no target atual contenham os mesmos arquivos. Recalcular e registrar o inventário do candidato antes de usar seus índices.
+- O target também alterou externamente o teste de guards e a revisão do contract-freeze (#417). As falhas registradas nesta sessão continuam fatos do baseline f7dd58e…; não declará-las resolvidas nesse target sem evidência específica.
+- Nenhuma mudança externa foi incorporada aos snapshots dos gates desta sessão. Todos os resultados continuam vinculados à base imutável e ao SHA de cada fix/request.
 
 ## Ordem de merge
 
-Nada foi mesclado. Primeiro qualificar/integrar shared #405 e #406, independentes entre si, e dependências aplicáveis de outras sessões (#400 para resposta Planner; #398 permanece hipótese). Depois integrar sf-shard-b sobre a base acordada. Nenhum rebase de branches alheias. UI legada e falhas unbound continuam bloqueios explícitos; não há GO.
+Nenhum merge foi realizado por esta sessão. Primeiro qualificar/integrar **shared #405 e #406**, independentes entre si: #405 continua bloqueado pelos dois deadlines classificados; #406 tem gate focado 9/0 no snapshot registrado. Confirmar as dependências já integradas externamente, inclusive #400, no SHA alvo acordado e verificar a composição quando ela mudar. Depois integrar **sf-shard-b / #410**. Não rebasear branches alheias. A base atual usa outra distribuição de shards; preservar o vínculo entre inventário e SHA. UI legada, contratos pendentes e falhas unbound permanecem explícitos; não há GO.
