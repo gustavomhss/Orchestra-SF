@@ -59,7 +59,7 @@ export function createSfPlannerCaseReadScope(input: {
       if (!current(scope) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
         actor.policyVersion !== call.binding.policyVersion || !value || value.id !== selected.id || value.incarnation !== selected.incarnation ||
         value.version !== selected.version || !value.participants.includes(actor.principalRef)) return { kind: "denied" }
-      const refs = plannerDependencies(value)
+      const refs = sfPlannerCaseDependencies(value)
       const snapshots = input.host.persistence.currentSnapshots?.(), sources = input.lockedSourceFences()
       if (!refs?.length || !snapshots || !sources) return { kind: "unsupported" }
       const protectedDigest = digestSfValue({ state, snapshots, sources })
@@ -180,7 +180,7 @@ export function createSfPlannerCaseReadScope(input: {
 function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) }
 
 /** No remote/calculation/draft source or unfinished command can borrow a local proof. */
-function plannerDependencies(value: DecisionCase): readonly PlannerRef[] | undefined {
+export function sfPlannerCaseDependencies(value: DecisionCase): readonly PlannerRef[] | undefined {
   if (value.preparedChanges.length || value.receipts.length ||
     [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.some((operation) =>
       operation.replacementRef !== undefined || operation.targetRef.startsWith("sf-procurement:") ||
