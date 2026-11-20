@@ -2,7 +2,7 @@ import type { SfHostServices } from "../contracts/host-context.ts"
 
 type AnalysisHttpRuntime = Pick<SfHostServices, "human" | "ui" | "models" | "analyses" | "analysisInputs">
 import { digestSfValue } from "../contracts/canonical.ts"
-import { contribution } from "../ui/components.ts"
+import { presentSfAnalysisOutput } from "./analysis-output.ts"
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
 export async function handleSfAnalysis(request: Request, origin: string, runtime: AnalysisHttpRuntime) {
@@ -43,10 +43,10 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     }
     if (action === "output" && "kind" in result.value) {
       const output = result.value
-      const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)
-      if (!html) return reply({ status: "unavailable" }, 503)
+      const presentation = await Promise.resolve().then(() => presentSfAnalysisOutput(output)).catch(() => undefined)
+      if (!presentation?.html) return reply({ status: "unavailable" }, 503)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-      return reply({ status: "ok", value: { html, ...(output.state === "ready" ? { outputRef: output.id } : {}) } }, 200)
+      return reply({ status: "ok", value: presentation }, 200)
     }
     return reply({ status: "ok", value: result.value }, 200)
   } finally { runtime.human.finish(admitted.value) }
@@ -61,9 +61,7 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 function caseInput(value: unknown) {
-  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) ||
-    typeof value.id !== "string" || !value.id.trim() || typeof value.incarnation !== "string" || !value.incarnation.trim() ||
-    typeof value.version !== "number" || !Number.isSafeInteger(value.version) || value.version < 1) return undefined
+  if (!record(value) || Object.keys(value).some((key) => !["id", "incarnation", "version"].includes(key)) || typeof value.id !== "string" || typeof value.incarnation !== "string" || typeof value.version !== "number" || !Number.isSafeInteger(value.version)) return undefined
   return { caseRef: { id: value.id, incarnation: value.incarnation, version: value.version } }
 }
 

@@ -8,6 +8,8 @@ import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
+import { createSfWorkClient } from "@orchestra/client/sucafina/work"
+import { sfPlannerSavedView, type SfPlannerSavedView } from "../../views/planner-view"
 import {
   prepareSfPlannerMonthlyRange, unresolvedSfPlannerMonthlyRows,
   type SfPlannerMonthlyDraftInput,
@@ -94,6 +96,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   const [state, setState] = createStore({
     phase: "loading" as SfUiState,
     page: null as Page | null,
+    restored: null as SfPlannerSavedView | null,
     busy: false,
     uncertainty: false,
     error: "",
@@ -145,6 +148,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       status !== "ready" ? "unavailable" as const : state.phase
   }
   const pageQuery = () => ({
+    ...(state.restored?.query ?? {}),
     ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
     ...((state.chosenVersion || props.route.query.version) ? { version: state.chosenVersion || props.route.query.version } : {}),
     ...(props.route.query.filter === undefined ? {} : { q: props.route.query.filter }),
@@ -184,18 +188,45 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       lastIdentity = identity
     }
     if (!ready || !contextDest()?.canRead) {
-      setState({ page: null, phase: status() })
+      setState({ page: null, restored: null, phase: status() })
       return
     }
     const controller = new AbortController()
     onCleanup(() => controller.abort())
-    setState({ page: null, phase: "loading", error: "" })
+    setState({ page: null, restored: null, phase: "loading", error: "" })
     const run = async () => {
       try {
+        let restored: SfPlannerSavedView | undefined
+        if (props.route.query.savedView) {
+          const operation = ready.context.availability.find((item) => item.family === "domain-read" && item.resource === "views")
+            ?.operations.find((item) => item.operationId === "views.open")
+          if (!operation?.operational || operation.state !== "ready") { setState("phase", "unavailable"); return }
+          const view = await createSfWorkClient(ready.transport)["views.open"]({
+            surface: "planner", action: "open", input: { id: props.route.query.savedView },
+          }, { signal: controller.signal })
+          if (controller.signal.aborted || owner.generation() !== generation || owner.ready() !== ready) return
+          if (view.kind !== "response") { setState("phase", "unavailable"); return }
+          if (view.body.status !== "ok") {
+            setState("phase", view.body.status === "denied" ? "denied" :
+              view.body.status === "invalid" || view.body.status === "needs-input" ? "invalid" :
+              view.body.status === "conflict" || view.body.status === "stale" ? "stale" : "unavailable")
+            return
+          }
+          restored = sfPlannerSavedView(view.body.value.view)
+          if (!restored || restored.id !== props.route.query.savedView || restored.page !== pageName()) {
+            setState("phase", "invalid"); return
+          }
+        }
+        const query = {
+          ...(restored?.query ?? {}),
+          ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+          ...((chosenVersion || props.route.query.version) ? { version: chosenVersion || props.route.query.version } : {}),
+          ...(props.route.query.filter === undefined ? {} : { q: props.route.query.filter }),
+        }
         const client = createSfPlannerClient(ready.transport)
         const response = isOpex()
-          ? await client["domain.page.CAP18"](pageQuery(), { signal: controller.signal })
-          : await client["domain.page.CAP19"](pageQuery(), { signal: controller.signal })
+          ? await client["domain.page.CAP18"](query, { signal: controller.signal })
+          : await client["domain.page.CAP19"](query, { signal: controller.signal })
         if (controller.signal.aborted || owner.generation() !== generation) return
         if (response.kind === "transport-error") {
           setState("phase", "unavailable")
@@ -226,9 +257,9 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         const projectRows = "projects" in projection.data ? projection.data.projects : []
         const refMissing = lineRef && !projection.data.lines.some(row => row.id === lineRef) ||
           projectRef && !projectRows.some(row => row.id === projectRef)
-        setState({ page: projection, phase: refMissing ? "not-found" :
+        setState({ page: projection, restored: restored ?? null, phase: refMissing ? "not-found" :
           (projection.data.lines.length || projectRows.length) ? "ready" :
-          (props.route.query.filter || props.route.query.element ? "filtered-empty" : "empty"),
+          (query.q || props.route.query.element ? "filtered-empty" : "empty"),
           closedChoice: projection.data.selectedVersion?.closed ?? 0, error: "" })
       } catch (error) {
         if (!controller.signal.aborted) {
@@ -243,7 +274,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (owner.state().status !== "ready") {
       editors.clear()
       monthlyDrafts.clear()
-      setState({ page: null, selected: "", paste: { phase: "idle" }, pasteInput: null, review: null, create: blankLine() })
+      setState({ page: null, restored: null, selected: "", paste: { phase: "idle" }, pasteInput: null, review: null, create: blankLine() })
     }
   })
 
@@ -297,6 +328,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       if (!Number.isInteger(month.month) || month.month < 1 || month.month > 12) continue
       const monthIndex = (month.month - 1) as SfMonthId
       for (const measure of ["budget","actual","forecast"] as const) {
+        const mode = state.restored?.query.mode
+        if (mode && mode !== "compare" && mode !== measure) continue
         const original = month[measure]
         const coord: SfCellCoordinate = { rowRef: row.id as SfRef, month: monthIndex, measure }
         const unit = { kind: "currency" as const, code: row.currency }
@@ -713,11 +746,12 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         disabled:!allowed("save") || !draftCells().some((cell)=>cell.dirty), busy:state.busy,
         onInvoke:previewDirtyCells,
       }}
-      density="comfortable" layout="work" onLayoutMode={()=>undefined}
+      density={state.restored?.density ?? "comfortable"} layout="work" onLayoutMode={()=>undefined}
     >
       <SfStatePanel state={status()} messageKey={key(note())} onRetryRead={reload}>
         <Show when={state.page}>
           {(page) => <div class="sf-u07" data-sf-surface={props.surfaceId}>
+            <Show when={state.restored}>{(saved) => <p role="status">{t("sf.ui32.restored", { title: saved().title })}</p>}</Show>
             <section class="sf-u07-toolbar">
               <label>{t("sf.u07.version")}
                 <select value={page().data.selectedVersion?.id ?? ""} disabled={state.busy || state.uncertainty}

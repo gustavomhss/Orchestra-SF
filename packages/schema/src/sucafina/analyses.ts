@@ -125,6 +125,9 @@ export const SfIntelligenceAnalysisOutput = Schema.Union([
       // contribution as HTML; do not expose the private ContributionEnvelope.
       html: Schema.String,
       outputRef: Schema.String.pipe(optional),
+      // A ready, authorized contribution may point to its original import simulation.
+      // This reference grants no file access; files.import-reference authorizes it again.
+      importPreviewRef: Text.pipe(optional),
       review: Schema.Struct({
         request: Request,
         model: Model.Ref,
