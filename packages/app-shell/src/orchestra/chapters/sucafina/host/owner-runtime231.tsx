@@ -17,6 +17,7 @@ import { useLanguage } from "@/context/language"
 import { ServerConnection } from "@/context/server"
 import { pathKey } from "@/utils/path-key"
 import { authTokenFromCredentials } from "@/utils/server"
+import { createSfOwnerServerFetch } from "./server-fetch"
 import { SfInstallationList, type SfHref, type SfInstallationDescriptor, type SfOwnerKey,
   type SfOwnerSelection, type SfRef, type SfResolvedRoute, type SfServerKey } from "@orchestra/schema/sucafina/context"
 import { createSfAuthActions, createSfTransport, type SfTransport, type SfTransportFetch } from "@orchestra/client/sucafina/transport"
@@ -231,13 +232,20 @@ function MountedSurface(props: Readonly<{
     if (state.status !== "ready" || !ready || authBusy()) return
     setAuthBusy(true); setAuthFailed(false)
     try {
+      const login = new URL(state.binding.mount + "/auth/login", state.binding.publicOrigin)
+      if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(state.binding.mount) ||
+          login.origin !== state.binding.publicOrigin || typeof window === "undefined" ||
+          login.origin !== window.location.origin ||
+          login.pathname !== state.binding.mount + "/auth/login" || login.search || login.hash)
+        throw new Error("SF_NATIVE_LOGOUT_DESTINATION_MISMATCH")
       await createSfAuthActions({
         binding: state.binding, transport: ready.transport,
         navigate: (url) => window.location.assign(url),
       }).logout()
       if (handle.generation() === generation && handle.ready()?.transport === ready.transport) {
+        // Revoke private views, retained drafts and in-flight reads before leaving.
         handle.invalidate("logout")
-        await handle.reload()
+        window.location.assign(login.href)
       }
     } catch (error) {
       console.warn("Sucafina sign-out failed", error instanceof Error && /^SF_NATIVE_[A-Z_]+$/.test(error.message)
@@ -300,8 +308,8 @@ export function SfOwnerRuntime231(props: SfOwnerRuntime231Props): JSX.Element {
   const platform = usePlatform()
   // A native browser fetch must retain its Window receiver when the transport
   // invokes the injected function through its options object.
-  const fetcher: SfTransportFetch = (input, init) =>
-    platform.fetch ? platform.fetch(input, init) : globalThis.fetch(input, init)
+  const fetcher = createSfOwnerServerFetch(props.server.http, (input, init) =>
+    platform.fetch ? platform.fetch(input, init) : globalThis.fetch(input, init))
   const source = createSfInstalledOwnerSource231(props.server, fetcher)
   const [discovery, setDiscovery] = createStore<Discovery>({ status: "resolving" })
   const [view, setView] = createStore<View>({ status: "resolving" })
