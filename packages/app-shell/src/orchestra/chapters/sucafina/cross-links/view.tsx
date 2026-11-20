@@ -4,6 +4,7 @@ import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import { useSfContext } from "../context"
 import { sfCommonKey, useSfPresentation } from "../shared/frame/presentation"
 import { SfStatePanel } from "../shared/states"
+import type { SfCopyKey } from "../shared/frame/types"
 import { sfExecutiveLinkAllowed, type SfExecutiveLink, type SfExecutiveSourceRoute } from "./index"
 
 type Label = Readonly<{ en: string; pt: string }>
@@ -15,10 +16,12 @@ const display = (value: unknown, fallback: string) =>
 export function SfExecutiveAction(props: Readonly<{
   from: SfExecutiveSourceRoute
   target: SfExecutiveLink
-  label: Label
+  label: Label | Readonly<{ key: SfCopyKey; params?: Readonly<Record<string, string | number>> }>
+  pressed?: boolean
+  title?: string
 }>): JSX.Element {
   const owner = useSfContext()
-  const { locale } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const [busy, setBusy] = createSignal(false)
   const [failure, setFailure] = createSignal<"denied" | "invalid" | "unavailable">()
   const pt = () => locale().toLowerCase().startsWith("pt")
@@ -33,8 +36,10 @@ export function SfExecutiveAction(props: Readonly<{
     try {
       const status = await owner.followExecutiveLink?.(props.from, props.target)
       if (status === "committed" || status === "aborted" || status === "kept-editing") return
+      console.error("SF executive navigation did not commit", { kind: props.target.kind, status })
       setFailure(status === "denied" ? "denied" : status === "invalid-link" ? "invalid" : "unavailable")
-    } catch {
+    } catch (error) {
+      console.error("SF executive navigation failed", error)
       setFailure("unavailable")
     } finally {
       setBusy(false)
@@ -44,8 +49,9 @@ export function SfExecutiveAction(props: Readonly<{
     : failure() === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")
   return <div data-sf-executive-action={props.target.kind}>
     <button type="button" class="mx-btn" disabled={!allowed() || busy()} aria-busy={busy()}
+      aria-pressed={props.pressed} title={props.title}
       onClick={() => { void invoke() }}>
-      {pt() ? props.label.pt : props.label.en}
+      {"key" in props.label ? t(props.label.key, props.label.params) : pt() ? props.label.pt : props.label.en}
     </button>
     <Show when={failure()}>{(state) =>
       <SfStatePanel state={state()} messageKey={failureKey()} />

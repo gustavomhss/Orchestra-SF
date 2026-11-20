@@ -94,6 +94,7 @@ import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
 import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
+import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
@@ -967,6 +968,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
         input.operational?.(request, stamp) ?? Promise.resolve([]),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
+        observeSfReviewAgendaHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          humanActions: authority.humanActions, source: () => {
+            if (services.productHttp !== productHttp || !identity()) return undefined
+            return { producer: productHttp, handler: dashboardHttp, dashboard: business.dashboardServices,
+              dependencies: [authority, authority.ui, authority.state, authority.state.transaction, authority.human, authority.human.admit,
+                authority.human.authorize, authority.humanActions, dashboardHttp, business.dashboardServices,
+                business.dashboardServices.agenda, business.dashboardServices.preserveReview, business.dashboard, business.dashboard.read,
+                business.dashboardSources, business.dashboardSources.resolveDashboardSource, business.dashboardRecords,
+                business.dashboardRecords.issue, business.dashboardRecords.resolve, input.persistence, input.persistence.transaction, input.persistence.resolveScopedSource] }
+          } }, request, stamp),
         observeSfReviewReadHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           source: (operationId) => {
             if (operationId === "dashboard.dashboard-review") {
