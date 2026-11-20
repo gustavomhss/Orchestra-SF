@@ -6,7 +6,7 @@ Estado: partial
 
 ## Feito
 
-- Composição pronta para um gate Reports, publicada somente em `sf-reports-observed`. Nenhum gate, PR ou merge de PR foi iniciado por este recorte.
+- Composição pronta para o gate Reports, publicada somente em `sf-reports-observed`. Nenhum gate, PR ou merge de PR foi iniciado pelo autor deste recorte. A integração já abriu o snapshot `4cdba6118ff547d9ed23cd5cdb284e55e218d675` na branch `ci-run-linux-sfc-reports-observed`, sobre o código4ccf9957; sua conclusão permanece pendente.
 - Primeiro parent real: UI congelada em `f34b80103f91cc9c075f9679cb9030e5258a1793`, tree `810493dc6ed55dfb86fe5c778bd12739ec7857ac`. A releitura imediatamente anterior à escrita incluiu `24054686cb119f193738da11a28664bea7d88213` (Settings) e `f34b8010` (validação das continuations Word). Todo o trabalho do dono fora dos quatro paths reconciliados de Reports foi preservado.
 - Segundo parent real: integração congelada `18a913220a6805bef1c62a58a26a310f991d6a0a`. Os dez blobs modificados desde `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` são idênticos aos dessa integração. Não houve conflito com os paths modificados pela UI.
 - O commit composto aponta para tree `07d41439fb0b7a839eb51c4a45a8ef2ea8620c16`. GitHub compare contra o primeiro parent confirmou exatamente vinte paths, dezenove blobs copiados e um conteúdo novo: o agendamento da leitura de Responses em `review-flow.ts`. Readback desse arquivo coincidiu integralmente com o patch revisado. Compare contra o segundo parent confirmou zero commits atrás e merge-base `18a9132`.
@@ -64,7 +64,7 @@ O [run44657226869](https://github.com/gustavomhss/Orchestra-SF/actions/runs/4465
 
 ## Pendente
 
-- Gate Reports completo no SHA composto: ainda não executado. O unitário do observer não qualifica os quatro cenários de navegador.
+- Gate Reports completo disparado pela integração no snapshot `4cdba6118ff547d9ed23cd5cdb284e55e218d675`, parent `4ccf99576e6886b178c5502fc02bfa41bef6730c`. GitHub compare confirmou somente `.ci-run.json`, um commit à frente e zero atrás. Run id e conclusão estão sendo acompanhados pelo integrador; o unitário do observer não qualifica os quatro cenários de navegador.
 - `unbound(packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:127:25)` no snapshot `0d7e3ec545def9b247253b5215a5d1ed93b94ae9`: RPT01/RPT03 tinham o botão Review selected sections desabilitado porque faltavam observações operacionais instaladas de agenda/preserve. Observer foi corrigido e qualificado em unidade; falta provar o navegador. A expectativa correspondente está agora em review-flow.ts:132.
 - `unbound(packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:40:47)` no mesmo snapshot: RPT02/RPT04 falharam ao consumir a Response original. O consumo imediato está implementado, mas falta qualificação no novo snapshot. O JSON de discovery continua sendo consumido em review-flow.ts:40.
 - Os antigos erros de CAP04 e downloadJSON500 de reports15 não foram atribuídos sem prova a este patch. Os contratos originais permanecem para o gate completo.
@@ -81,7 +81,7 @@ O [run44657226869](https://github.com/gustavomhss/Orchestra-SF/actions/runs/4465
 ## Como retomar
 
 1. Partir da branch sf-reports-observed; código4ccf99576e6886b178c5502fc02bfa41bef6730c, seguido deste handoff.
-2. Congelar o HEAD e criar o snapshot de gate somente pela integração, respeitando no máximo dois gates simultâneos. Request exato:
+2. Acompanhar o snapshot já criado pela integração, `4cdba6118ff547d9ed23cd5cdb284e55e218d675`; não criar um segundo gate idêntico. O parent de código é4ccf9957 e o request confirmado contém somente:
 
 ```json
 {"package":"app","runner":"playwright","config":"e2e/playwright.production.config.ts","args":["e2e/sucafina/reports.spec.ts"]}
@@ -95,7 +95,7 @@ O [run44657226869](https://github.com/gustavomhss/Orchestra-SF/actions/runs/4465
 
 - `bun typecheck` (app-shell): não executado localmente nem nesta branch; pendente de Actions.
 - `bun run check:guards --base origin/dev`: não executado neste recorte.
-- `bun run test:ci` Reports sobre este SHA: não rodado.
+- `bun run test:ci` Reports: snapshot4cdba611 disparado pela integração; conclusão pendente. Nenhum segundo gate foi iniciado por este recorte.
 - Unidade review-agenda-health: run44657226869 success,4pass/0fail/27expect, executado pela integração sobre os mesmos três blobs de código do observer.
 - Verificação estrutural via GitHub: parents confirmados;20paths de composição;19blobs copiados idênticos; readback do novo review-flow idêntico; zero divergência em relação à ancestry congelada18a.
 - sf-ci: não disparado; sem resultado por job neste recorte.
