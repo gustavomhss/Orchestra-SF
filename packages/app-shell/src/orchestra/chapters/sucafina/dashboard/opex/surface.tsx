@@ -488,7 +488,8 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       parentId: editor.parentId,
       year: year(),
       version: editor.version,
-      versions: page.versions,
+      // Snapshot the numeric CAS map before the digest and asynchronous dispatch.
+      versions: { ...page.versions },
       form: snapshot.value,
     }
     const abort = new AbortController()

@@ -130,20 +130,20 @@ export async function writeBudgetPage(
 ): Promise<BudgetWriteResponse> {
   const client = createSfDomainClient(transport)
   const { action, form, year, version, versions } = input
-  const id = input.recordId
+  const identity = input.recordId === undefined ? {} : { id: input.recordId }
   const amount = (raw: string): number | null => raw.trim() === "" ? null : Number(raw)
   switch (action) {
     case "save": {
       const values = { name: form.name, budget: amount(form.budget), versions }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.save"]({ id, version, values }, options)
-        : client["domain.command.CAP05.save"]({ id, version, values }, options)
+        ? client["domain.command.CAP04.save"]({ ...identity, version, values }, options)
+        : client["domain.command.CAP05.save"]({ ...identity, version, values }, options)
     }
     case "delete": {
       const values = { versions }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.delete"]({ id, version, values }, options)
-        : client["domain.command.CAP05.delete"]({ id, version, values }, options)
+        ? client["domain.command.CAP04.delete"]({ ...identity, version, values }, options)
+        : client["domain.command.CAP05.delete"]({ ...identity, version, values }, options)
     }
     case "save-entry": {
       if (!input.parentId) throw new Error("budget parent missing")
@@ -152,27 +152,27 @@ export async function writeBudgetPage(
         actual: amount(form.actual), forecast: amount(form.forecast), versions,
       }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.save-entry"]({ id, version, values: { ...common, ownerId: input.parentId } }, options)
-        : client["domain.command.CAP05.save-entry"]({ id, version, values: { ...common, projId: input.parentId } }, options)
+        ? client["domain.command.CAP04.save-entry"]({ ...identity, version, values: { ...common, ownerId: input.parentId } }, options)
+        : client["domain.command.CAP05.save-entry"]({ ...identity, version, values: { ...common, projId: input.parentId } }, options)
     }
     case "save-deviation": {
       const values = { year, month: form.month, flag: form.flag, text: form.text, versions }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.save-deviation"]({ id, version, values }, options)
-        : client["domain.command.CAP05.save-deviation"]({ id, version, values }, options)
+        ? client["domain.command.CAP04.save-deviation"]({ ...identity, version, values }, options)
+        : client["domain.command.CAP05.save-deviation"]({ ...identity, version, values }, options)
     }
     case "annual-entry": {
       const values = { year, annual: amount(form.annual), field: form.field, versions }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.annual-entry"]({ id, version, values }, options)
-        : client["domain.command.CAP05.annual-entry"]({ id, version, values }, options)
+        ? client["domain.command.CAP04.annual-entry"]({ ...identity, version, values }, options)
+        : client["domain.command.CAP05.annual-entry"]({ ...identity, version, values }, options)
     }
     case "year-amount": {
       // Clearing a year hint is null; an observed zero remains numeric zero.
       const values = { year, amount: amount(form.amount), versions }
       return capability === "CAP04"
-        ? client["domain.command.CAP04.year-amount"]({ id, version, values }, options)
-        : client["domain.command.CAP05.year-amount"]({ id, version, values }, options)
+        ? client["domain.command.CAP04.year-amount"]({ ...identity, version, values }, options)
+        : client["domain.command.CAP05.year-amount"]({ ...identity, version, values }, options)
     }
   }
 }

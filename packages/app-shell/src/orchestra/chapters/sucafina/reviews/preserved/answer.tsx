@@ -1,5 +1,5 @@
 import { For, Show, createEffect, on, onCleanup } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -360,10 +360,12 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     const body = ui.question
     const recipient = recipientRef()
     if (!active || !section || !basis || !recipient || !body.trim()) throw new Error("Choose a source, recipient and question")
+    // One plain source snapshot binds both the issued pin and the later question payload.
+    const capturedBasis = structuredClone(unwrap(basis))
     const reviews = createSfReviewsClient(active.transport)
     const abort = new AbortController()
     operation = abort
-    const issued = await reviews["reviews.review-thread-context"]({ reviewRef: props.review.id, sectionId: section.id, basis }, { signal: abort.signal })
+    const issued = await reviews["reviews.review-thread-context"]({ reviewRef: props.review.id, sectionId: section.id, basis: capturedBasis }, { signal: abort.signal })
     if (abort.signal.aborted || disposed) return
     assertAuthority(issued)
     if (issued.kind !== "response" || issued.body.status !== "ok") throw new Error("The producer did not issue a review pin.")
@@ -376,7 +378,7 @@ export function SfPreservedAnswer(props: { review: PreservedReview }) {
     if (version.kind !== "response" || version.body.status !== "ok") throw new Error("Collaboration version unavailable.")
     const key = crypto.randomUUID()
     const payload = {
-      draft: { kind: "clarification" as const, ...basis, reviewContext: pin, recipientRef: recipient, body },
+      draft: { kind: "clarification" as const, ...capturedBasis, reviewContext: pin, recipientRef: recipient, body },
       mutation: { expectedStorageVersion: version.body.value, idempotencyKey: key },
     }
     const decoded = Schema.decodeUnknownOption(Schema.toType(SfCollaboration.operations["collaboration.thread-create"].input), { onExcessProperty: "error" })(payload)
