@@ -144,6 +144,15 @@ test("Source navigation component filters original pages and fences delegated ow
       expect(prevented).toBe(false)
     }
     expect((await read("calls")).length).toBe(1)
+    // A previous listener may cancel this ordinary click. Native navigation
+    // must preserve that cancellation without delegating or committing it.
+    expect(await navigation.locator('[data-sf-capability="CAP03"]').evaluate((link) => {
+      const event = new MouseEvent("click", { bubbles: true, cancelable: true })
+      event.preventDefault()
+      return link.dispatchEvent(event)
+    })).toBe(false)
+    expect((await read("calls")).length).toBe(1)
+    expect(await read("commits")).toEqual(["CAP02"])
     await action("limited")
     await expect(context).toHaveText("ready")
     await expect(links).toHaveCount(1)
