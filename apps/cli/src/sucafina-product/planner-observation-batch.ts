@@ -6,6 +6,7 @@ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product
 import type { SfProductState } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { criterionRuleKey } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
+import { sfPlannerSensitivityObservation, sfPlannerSensitivitySources } from "./planner-sensitivity-observation.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { createSfCaseReadObservation } from "./case-read-batch.ts"
@@ -58,6 +59,7 @@ function phaseShape(value: unknown): value is Phase {
   }
   const compared = decodeSfOperationInput("sf_scenario_compare", phase.request)
   if (compared.ok && digestSfValue(compared.value) === digestSfValue(phase.request)) return true
+  if (sfPlannerSensitivityObservation(phase.request)) return true
   return request.metricRef === "planner:known-subtotal-difference" && typeof request.scenarioRef === "string" &&
     typeof request.baselineRef === "string" && typeof request.criterionId === "string" &&
     digestSfValue(request.caseRef) === digestSfValue(ref)
@@ -66,6 +68,7 @@ function phaseShape(value: unknown): value is Phase {
 function phaseSources(phase: Phase, value: DecisionCase, state: Readonly<SfProductState>, refs: readonly BusinessEvidenceRef[]) {
   if (value.id !== phase.caseRef.id || value.incarnation !== phase.caseRef.incarnation || value.version !== phase.caseRef.version) return false
   if (phase.kind === "empty-recall") return true
+  if (sfPlannerSensitivityObservation(phase.request)) return sfPlannerSensitivitySources(phase.request, value, state, refs)
   const request = object(phase.request)
   const decoded = decodeSfOperationInput("sf_scenario_compare", phase.request)
   const references = decoded.ok ? decoded.value.scenarioRefs : [String(request.baselineRef), String(request.scenarioRef)]
