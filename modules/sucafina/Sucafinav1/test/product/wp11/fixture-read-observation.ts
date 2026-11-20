@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { captureFixtureInput } from "./fixture-input-pin.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../product/contracts/ports.ts"
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
@@ -38,8 +39,7 @@ export function createFixtureReadObservation(input: {
         parent.invalid = true
         return unavailable()
       }
-      const digest = digestSfValue(incoming)
-      parent.pins.add(() => digestSfValue(incoming) === digest)
+      parent.pins.add(captureFixtureInput(incoming))
       parent.children++
       try {
         // The enclosing owner keeps this argument pinned until its fresh egress.
