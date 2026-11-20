@@ -6,6 +6,7 @@ import { lstat } from "node:fs/promises"
 import { dirname } from "node:path"
 import playwrightPackage from "@playwright/test/package.json" with { type: "json" }
 import { object } from "../../../runtime/contract.ts"
+import { browserLaunchObservationSource } from "./browser-launch-observation.ts"
 
 // Bun 1.3.14 can finalize recycled extra stdio descriptors used by Chromium's
 // DevTools pipes (oven-sh/bun#47956 and #47561). Node owns those descriptors;
@@ -14,7 +15,7 @@ import { object } from "../../../runtime/contract.ts"
 const transport = "playwright-unix-pipe-node-websocket"
 const limits = { maxFrameBytes: 16 * 1024 * 1024, maxQueuedBytes: 32 * 1024 * 1024 }
 const nodeDriver = String.raw`
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { chmod, lstat, mkdtemp, readFile, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
@@ -66,29 +67,20 @@ const launchLogger = {
     } catch { protocol.malformed++ }
   },
 }
+${browserLaunchObservationSource}
+const launchIoPressureInitial = startup.consumer === "teams-web-transport" ? launchIoPressure() : undefined
 const inspectLaunch = () => {
+  const sampleStarted = performance.now()
   const activeResources = process.getActiveResourcesInfo()
   const resources = Object.fromEntries([...new Set(activeResources)].map((name) => [name, activeResources.filter((value) => value === name).length]))
-  const children = []
-  if (process.platform === "linux") {
-    try {
-      const ids = readFileSync("/proc/" + process.pid + "/task/" + process.pid + "/children", "utf8").trim().split(/\s+/).filter(Boolean).slice(0, 8)
-      for (const id of ids) {
-        try {
-          const status = readFileSync("/proc/" + id + "/status", "utf8")
-          const parent = Number(/^PPid:\s+(\d+)/m.exec(status)?.[1])
-          if (parent !== process.pid) continue
-          children.push({ pid: Number(id), parent, name: readFileSync("/proc/" + id + "/comm", "utf8").trim(), state: /^State:\s+([^\n]+)/m.exec(status)?.[1], wait: readFileSync("/proc/" + id + "/wchan", "utf8").trim() })
-        } catch { children.push({ pid: Number(id), state: "exited-during-observation" }) }
-      }
-    } catch { children.push({ state: "process-observation-unavailable" }) }
-  }
+  const children = launchChildren(startup.consumer === "teams-web-transport")
   // No protocol payload, command arguments, cookies or environment values leave
   // the driver. These samples are diagnostic and never count as lifecycle proof.
   console.log(JSON.stringify({ event: "launch-diagnostic", runtime: process.release.name, pid: process.pid,
     elapsedMs: Math.round(performance.now() - launchStarted), resources, rss: process.memoryUsage().rss, children,
     deadlineEpochMs: startup.deadlineEpochMs, launchCeilingMs, remainingStartupMs: Math.max(0, startup.deadlineEpochMs - Date.now()),
     debugFileConfigured: typeof process.env.DEBUG_FILE === "string" && process.env.DEBUG_FILE.length > 0,
+    ...(launchIoPressureInitial ? { systemIoPressure: { initial: launchIoPressureInitial, current: launchIoPressure() }, sampleMs: Math.round((performance.now() - sampleStarted) * 1000) / 1000 } : {}),
     protocol: { sent: protocol.sent, received: protocol.received, malformed: protocol.malformed,
       lastSent: protocol.lastSent, lastReceived: protocol.lastReceived, pending: [...protocol.pending.values()] } }))
 }
