@@ -1,3 +1,4 @@
+import { sfCreateReportsDiagnostic } from "../../runtime/reports-create-diagnostic.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -51,6 +52,7 @@ export function createThreadPort(input: {
   }
   return {
     create: async (draft: Draft, mutation: Mutation, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
+      sfCreateReportsDiagnostic.phase("create-enter")
       if (context.kind !== "ui") return { status: "denied", reason: "human-action-required" }
       if (!draft || !["comment", "clarification", "review"].includes(draft.kind) || typeof draft.sourceRef !== "string" || !draft.sourceRef.trim() || typeof draft.sourceIncarnation !== "string" || !draft.sourceIncarnation.trim() || !Number.isSafeInteger(draft.observedVersion) || draft.observedVersion < 1 || !isSfPeriod(draft.period) || typeof draft.body !== "string" || !draft.body.trim() || !Array.isArray(draft.evidenceRefs) || !draft.evidenceRefs.length || (draft.recipientRef !== undefined && (typeof draft.recipientRef !== "string" || !draft.recipientRef.trim())) || (draft.kind !== "comment" && !draft.recipientRef) || (draft.reviewContext !== undefined && !isReviewThreadContext(draft.reviewContext)) || !validMutation(mutation)) return { status: "needs-input", reason: "invalid-thread" }
       const selected = structuredClone({ draft, mutation })
@@ -58,8 +60,11 @@ export function createThreadPort(input: {
       const source = sources[0]
       if (sources.length !== 1 || !source || source.kind !== "record" || !source.target || typeof source.target !== "object" || source.target.incarnation !== selected.draft.sourceIncarnation || source.target.version !== selected.draft.observedVersion || (!isSfPeriod(source.target.period) || source.target.period.start > selected.draft.period.start || source.target.period.end < selected.draft.period.end)) return { status: "needs-input", reason: "thread-source-mismatch" }
       const request = input.host.requestFor(context)
+      sfCreateReportsDiagnostic.requestMatch(request)
       if (!request || !await input.human.authorize(context, "collaboration.thread.create", selected) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
+      sfCreateReportsDiagnostic.phase("create-admission-done", request)
       const review = selected.draft.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
+      sfCreateReportsDiagnostic.phase("create-review-state-done", request)
       if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
       if (review && "reason" in review) return review
       if (selected.draft.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
@@ -67,23 +72,34 @@ export function createThreadPort(input: {
       const sourceContext: ThreadSourceContext | undefined = selected.draft.reviewContext ? { sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, evidenceRefs: selected.draft.evidenceRefs, reviewContext: selected.draft.reviewContext } : undefined
       const prepareReviewFence = input.prepareReviewThreadFence
       const checkReviewRecipient = input.checkReviewRecipientAtCommit
+      sfCreateReportsDiagnostic.phase("create-review-fence-enter", request)
       const reviewFence = sourceContext && prepareReviewFence ? await prepareReviewFence(sourceContext, context) : undefined
+      sfCreateReportsDiagnostic.phase("create-review-fence-done", request)
       if (sourceContext && (!reviewFence || selected.draft.recipientRef && !checkReviewRecipient)) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
+      sfCreateReportsDiagnostic.phase("create-mutation-fence-enter", request)
       const fence = await input.mutationFence.prepare(() => input.authorize(structuredClone(selected.draft), context, "write"))
+      sfCreateReportsDiagnostic.phase("create-mutation-fence-done", request)
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const thread: CollaborationThread = { id: input.createId(), kind: selected.draft.kind, sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, ...(selected.draft.recipientRef ? { recipientRef: selected.draft.recipientRef } : {}), state: "open", messages: [{ id: input.createId(), incarnation: input.createId(), version: 1, authorRef: context.binding.principalRef, body: selected.draft.body, createdAt: input.now(), ...(sourceContext ? { sourceContext } : {}) }], evidenceRefs: selected.draft.evidenceRefs }
       if (!thread.id.trim() || !thread.messages[0]?.id.trim() || !thread.messages[0]?.incarnation.trim() || !isThread(thread)) return { status: "unavailable", reason: "identity-unavailable" }
+      sfCreateReportsDiagnostic.phase("create-c08-enter", request)
       const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue(selected.draft), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
+        sfCreateReportsDiagnostic.phase("create-c08-callback-enter", request)
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || sourceContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || selected.draft.recipientRef && !checkReviewRecipient) || !input.mutationFence.check(fence) || selected.draft.recipientRef && !checkThreadRecipient(selected.draft.recipientRef, selected.draft.evidenceRefs, context, sourceContext, checkReviewRecipient) || state.threads[thread.id]) return { commit: false, value: null }
+        sfCreateReportsDiagnostic.phase("create-c08-checks-done", request)
         state.threads[thread.id] = thread
         return { commit: true, value: thread }
       })
+      sfCreateReportsDiagnostic.phase("create-c08-done", request)
       if (saved.status === "preview") return { status: "conflict", reason: "thread-not-committed" }
       if ("reason" in saved) return saved
       if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
+      sfCreateReportsDiagnostic.phase("create-egress-enter", request)
       const readable = await input.authorize(saved.value, context, "read").catch(() => undefined)
+      sfCreateReportsDiagnostic.phase("create-egress-read-done", request)
       if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-access-unavailable" }
       if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
+      sfCreateReportsDiagnostic.phase("create-egress-done", request)
       return { status: "ok", value: publicThreadProjection(saved.value) }
     },
     reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "reply", body }, mutation, context),

@@ -1,9 +1,12 @@
 /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
+import { finishSfCreateCanonicalObservation, startSfCreateCanonicalObservation } from "./reports-create-metrics.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 
 export function canonicalSfValue(value: unknown): string {
-  return JSON.stringify(canonical(value))
+  const started = startSfCreateCanonicalObservation()
+  try { return JSON.stringify(canonical(value)) }
+  finally { finishSfCreateCanonicalObservation(started) }
 }
 
 export function digestSfValue(value: unknown): string {
