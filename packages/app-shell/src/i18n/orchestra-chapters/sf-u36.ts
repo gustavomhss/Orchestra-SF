@@ -1,5 +1,5 @@
 // The two CAP28 title/primary translations are frozen in surface-manifest.json.
-// Other English values reproduce the pinned legacy Settings renderer verbatim;
+// Existing English values reproduce the pinned legacy Settings renderer verbatim;
 // until an approved pt-BR source exists, COPY-01 preserves these values unchanged.
 export const SF_U36_COPY = {
   "sf.cap28.title": "Settings",
@@ -12,6 +12,7 @@ export const SF_U36_COPY = {
   "sf.u36.commercial": "Commercial criteria",
   "sf.u36.payments": "Payment terms, categories & incoterms",
   "sf.u36.reset": "Reset settings",
+  "sf.u36.refresh": "Refresh settings",
   "sf.u36.resetHelp": "Restore the baseline configuration. Requests, suppliers, issued identifiers and submitted approval/FX snapshots remain preserved.",
   "sf.u36.save": "Save settings",
   "sf.u36.add": "Add row",
@@ -62,6 +63,7 @@ export const SF_U36_COPY_BR = {
   "sf.u36.commercial": "Commercial criteria",
   "sf.u36.payments": "Payment terms, categories & incoterms",
   "sf.u36.reset": "Reset settings",
+  "sf.u36.refresh": "Atualizar configurações",
   "sf.u36.resetHelp": "Restore the baseline configuration. Requests, suppliers, issued identifiers and submitted approval/FX snapshots remain preserved.",
   "sf.u36.save": "Save settings",
   "sf.u36.add": "Add row",

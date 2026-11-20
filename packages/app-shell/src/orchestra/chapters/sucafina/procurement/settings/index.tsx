@@ -1,4 +1,4 @@
-import { createEffect, createMemo, onCleanup, Show, For, type JSX } from "solid-js"
+import { createEffect, createMemo, onCleanup, untrack, Show, For, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfOperationRef } from "@orchestra/schema/sucafina/context"
@@ -13,9 +13,11 @@ import type { SfReviewConfirmation } from "../../shared/change-review"
 import { SfProcurementSettingsFields } from "./fields"
 import { SETTINGS_REF, changedSettings, settingsReview, settingsVersion } from "./model"
 import type { Settings, SettingsProjection } from "./model"
+import { createSfSettingsReadQueue, type SfSettingsReadQueue } from "./read-queue"
 import "./settings.css"
 
 type ReviewMode = "save" | "reset" | null
+type SettingsReadResponse = Awaited<ReturnType<ReturnType<typeof createSfProcurementClient>["domain.page.CAP28"]>>
 const key = (value: string) => value as SfCopyKey
 const stateMessage = (state: SfUiState): SfCopyKey => sfCommonKey(
   state === "ready" ? "sf.common.currentSource" :
@@ -40,7 +42,6 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     state: SfUiState
     projection?: SettingsProjection
     readGeneration?: number
-    refresh: number
     busy: boolean
     review: ReviewMode
     reviewRef?: SfOperationRef
@@ -49,9 +50,13 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     unknownOutcome: boolean
     confirmDiscard: boolean
   }>({
-    state: "loading", refresh: 0, busy: false, review: null,
+    state: "loading", busy: false, review: null,
     errorLines: [], confirmed: false, unknownOutcome: false, confirmDiscard: false,
   })
+  let settingsRead: Readonly<{
+    queue: SfSettingsReadQueue<SettingsReadResponse>
+    resumePolling(): void
+  }> | undefined
   let commandAbort: AbortController | undefined
   let disposed = false
   onCleanup(() => { disposed = true; commandAbort?.abort() })
@@ -83,7 +88,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const current = owner.state()
     const ready = owner.ready()
     const generation = owner.generation()
-    const _refresh = view.refresh
+    const resourceSelection = selection()
     if (current.status !== "ready" || !ready) {
       setView({
         projection: undefined, readGeneration: undefined, review: null, reviewRef: undefined, errorLines: [],
@@ -102,47 +107,96 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       setView({ projection: undefined, readGeneration: undefined, review: null, state: "denied" })
       return
     }
-    const abort = new AbortController()
-    setView({ projection: undefined, readGeneration: undefined, state: "loading", review: null, errorLines: [], confirmed: false })
-    void createSfProcurementClient(ready.transport)["domain.page.CAP28"](selection(), {
-      signal: abort.signal,
-    }).then((response) => {
-      if (abort.signal.aborted || owner.generation() !== generation ||
-          owner.state().status !== "ready") return
-      if (response.kind !== "response") {
+    let interval: ReturnType<typeof setInterval> | undefined
+    const visible = () => document.visibilityState !== "hidden"
+    const currentOwner = () => !disposed && owner.generation() === generation &&
+      owner.state().status === "ready" && view.state !== "denied" && view.state !== "session-expired"
+    const stopPolling = () => {
+      if (interval !== undefined) clearInterval(interval)
+      interval = undefined
+    }
+    const resumePolling = () => {
+      if (interval !== undefined || !visible() || !currentOwner() ||
+          view.state !== "ready" || view.busy) return
+      interval = setInterval(() => {
+        if (!visible() || !currentOwner() || view.state !== "ready" || view.busy) {
+          stopPolling()
+          return
+        }
+        queue.refresh()
+      }, 30000)
+    }
+    const queue = createSfSettingsReadQueue<SettingsReadResponse>({
+      current: currentOwner,
+      read: (signal) => createSfProcurementClient(ready.transport)["domain.page.CAP28"](
+        resourceSelection, { signal },
+      ),
+      publish: (response) => {
+        stopPolling()
+        if (response.kind !== "response") {
+          setView({ projection: undefined, state: "unavailable" })
+          return
+        }
+        const body = response.body
+        if (body.status !== "ok") {
+          if (body.status === "denied") owner.invalidate("revoked")
+          setView({
+            projection: undefined,
+            state: body.status === "unauthenticated" ? "session-expired"
+              : body.status === "denied" ? "denied"
+              : body.status === "needs-input" ? "invalid"
+              : body.status === "stale" ? "stale" : "unavailable",
+          })
+          return
+        }
+        const stamp = ready.context.stamp
+        if (body.value.capabilityId !== "CAP28" ||
+            body.context.installationId !== stamp.installationId ||
+            body.context.projectId !== stamp.projectId ||
+            body.context.hostId !== stamp.hostId ||
+            body.context.principalRef !== stamp.principalRef ||
+            body.context.accessRevision !== stamp.accessRevision ||
+            body.context.policyVersion !== stamp.policyVersion) {
+          setView({ projection: undefined, state: "denied" })
+          return
+        }
+        // Keep the mounted editor and its F01 draft. receiveRemote below owns
+        // clean refresh and dirty conflict semantics; focus never decides that.
+        setView({ projection: body, readGeneration: generation, state: view.unknownOutcome ? "outcome-unknown" : "ready" })
+        resumePolling()
+      },
+      failed: (error) => {
+        stopPolling()
+        console.error("Procurement settings read failed", error instanceof Error ? error.name : "unknown")
         setView({ projection: undefined, state: "unavailable" })
-        return
-      }
-      const body = response.body
-      if (body.status !== "ok") {
-        if (body.status === "denied") owner.invalidate("revoked")
-        setView({
-          projection: undefined,
-          state: body.status === "unauthenticated" ? "session-expired"
-            : body.status === "denied" ? "denied"
-            : body.status === "needs-input" ? "invalid"
-            : body.status === "stale" ? "stale" : "unavailable",
-        })
-        return
-      }
-      const stamp = ready.context.stamp
-      if (body.value.capabilityId !== "CAP28" ||
-          body.context.installationId !== stamp.installationId ||
-          body.context.projectId !== stamp.projectId ||
-          body.context.hostId !== stamp.hostId ||
-          body.context.principalRef !== stamp.principalRef ||
-          body.context.accessRevision !== stamp.accessRevision ||
-          body.context.policyVersion !== stamp.policyVersion) {
-        setView({ projection: undefined, state: "denied" })
-        return
-      }
-      setView({ projection: body, readGeneration: generation, state: view.unknownOutcome ? "outcome-unknown" : "ready" })
-    }).catch((error: unknown) => {
-      if (abort.signal.aborted || owner.generation() !== generation) return
-      console.error("Procurement settings read failed", error instanceof Error ? error.name : "unknown")
-      setView({ projection: undefined, state: "unavailable" })
+      },
     })
-    onCleanup(() => abort.abort())
+    const visibilityChanged = () => {
+      const enabled = visible()
+      queue.setEnabled(enabled)
+      if (!enabled) { stopPolling(); return }
+      if (view.state === "ready" || view.state === "loading") queue.refresh()
+      resumePolling()
+    }
+    const focused = () => {
+      if (visible() && currentOwner() && view.state === "ready" && !view.busy)
+        queue.refresh()
+    }
+    settingsRead = { queue, resumePolling }
+    setView({ projection: undefined, readGeneration: undefined, state: "loading", review: null, errorLines: [], confirmed: false })
+    document.addEventListener("visibilitychange", visibilityChanged)
+    window.addEventListener("focus", focused)
+    untrack(visibilityChanged)
+    onCleanup(() => {
+      stopPolling()
+      document.removeEventListener("visibilitychange", visibilityChanged)
+      window.removeEventListener("focus", focused)
+      queue.dispose()
+      if (settingsRead?.queue === queue) {
+        settingsRead = undefined
+        commandAbort?.abort()
+      }
+    })
   })
 
   const draft = createMemo(() => {
@@ -240,7 +294,8 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const state = active()
     const action = view.review
     const sourceVersion = settingsVersion(page)
-    if (!ready || current.status !== "ready" || !page || !state || !action || !view.reviewRef ||
+    const read = settingsRead
+    if (!read || !ready || current.status !== "ready" || !page || !state || !action || !view.reviewRef ||
         view.busy || !actionAllowed(action) || !(action === "reset" ? canReset() : canReview()) ||
         sourceVersion === undefined || state.baseVersion !== sourceVersion ||
         confirmation.purpose !== action ||
@@ -263,10 +318,11 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const bytes = new TextEncoder().encode(JSON.stringify(command))
     const hash = await crypto.subtle.digest("SHA-256", bytes)
     const digest = Array.from(new Uint8Array(hash)).map((byte) => byte.toString(16).padStart(2, "0")).join("")
-    if (disposed || view.busy || view.review !== action || view.reviewRef !== opRef ||
+    if (disposed || settingsRead !== read || view.busy || view.review !== action || view.reviewRef !== opRef ||
         owner.generation() !== generationAtReview || owner.state().status !== "ready" ||
         active()?.baseVersion !== command.version ||
         !actionAllowed(action) || !(action === "reset" ? canReset() : canReview())) return
+    read.queue.beginCommand()
     draft()?.setPending({
       operationRef: opRef, idempotencyKey, payloadDigest: digest, expectedVersion: command.version,
     })
@@ -280,13 +336,14 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       const reply = command.action === "reset"
         ? await client["domain.command.CAP28.reset"](command, { signal: abort.signal, idempotencyKey })
         : await client["domain.command.CAP28.save"](command, { signal: abort.signal, idempotencyKey })
-      if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
+      if (disposed || settingsRead !== read || owner.generation() !== generation || owner.state().status !== "ready") return
       if (reply.kind !== "response") {
         draft()?.setPhase("outcome-unknown")
         setView({ busy: false, state: "outcome-unknown", unknownOutcome: true })
         return
       }
       if (!reply.body.ok) {
+        if (reply.body.status === 403) owner.invalidate("revoked")
         // Known producer denial/conflict/validation is not evidence of success.
         // The owner retains the exact pending operation until reconciliation.
         setView({
@@ -301,17 +358,22 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       }
       // POST confirms success but does not return the new authoritative settings.
       // Refetch the SAME owner and exact resource before marking the draft clean.
-      const refreshed = await createSfProcurementClient(ready.transport)["domain.page.CAP28"](
-        selection(), { signal: abort.signal },
-      )
-      if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
-      if (refreshed.kind === "response" && refreshed.body.status === "ok" &&
+      // A held poll must finish before this queued confirmation read starts.
+      // Its pre-command response cannot publish or confirm the new mutation.
+      const refreshed = await read.queue.afterCommand()
+      if (disposed || settingsRead !== read || owner.generation() !== generation || owner.state().status !== "ready") return
+      if (refreshed?.kind === "response" && refreshed.body.status === "denied") {
+        owner.invalidate("revoked")
+        return
+      }
+      if (refreshed?.kind === "response" && refreshed.body.status === "ok" &&
           refreshed.body.value.capabilityId === "CAP28" &&
           refreshed.body.context.installationId === ready.context.stamp.installationId &&
           refreshed.body.context.projectId === ready.context.stamp.projectId &&
           refreshed.body.context.hostId === ready.context.stamp.hostId &&
           refreshed.body.context.principalRef === ready.context.stamp.principalRef &&
           refreshed.body.context.accessRevision === ready.context.stamp.accessRevision &&
+          refreshed.body.context.policyVersion === ready.context.stamp.policyVersion &&
           refreshed.body.value.versions.settings?.version !== undefined) {
         draft()?.confirmSave({
           kind: "projected", operationRef: opRef,
@@ -326,11 +388,13 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
         setView({ projection: undefined, readGeneration: undefined, state: "unavailable", busy: false, confirmed: true, unknownOutcome: false })
       }
     } catch (error) {
-      if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
+      if (disposed || settingsRead !== read || owner.generation() !== generation || owner.state().status !== "ready") return
       console.error("Procurement settings command outcome uncertain", error instanceof Error ? error.name : "unknown")
       draft()?.setPhase("outcome-unknown")
       setView({ busy: false, state: "outcome-unknown", unknownOutcome: true })
     } finally {
+      read.queue.finishCommand()
+      read.resumePolling()
       if (commandAbort === abort) commandAbort = undefined
     }
   }
@@ -349,7 +413,11 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       tabs={[]}
       activeTab={null}
       primaryAction={primary()}
-      secondaryActions={[]}
+      secondaryActions={[{
+        id: "refresh-settings", labelKey: key("sf.u36.refresh"), tone: "secondary",
+        disabled: view.busy || !pageAllowed() || view.state === "denied" || view.state === "session-expired", busy: false,
+        onInvoke: () => settingsRead?.queue.refresh(),
+      }]}
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
@@ -362,7 +430,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           <div role="status" class="mx-card sf-n21-settings-notice">
             <p>{t(sfCommonKey("sf.common.operationUnknown"))}</p>
             <button class="mx-btn" type="button"
-              onClick={() => setView("refresh", (value) => value + 1)}>
+              onClick={() => settingsRead?.queue.refresh()}>
               {t(sfCommonKey("sf.common.retry"))}
             </button>
           </div>
@@ -375,7 +443,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
         <SfStatePanel
           state={view.state}
           messageKey={stateMessage(view.state)}
-          onRetryRead={() => setView("refresh", (value) => value + 1)}
+          onRetryRead={() => settingsRead?.queue.refresh()}
           onLogin={() => { void owner.reload() }}
         >
           <Show when={currentProjection()}>
