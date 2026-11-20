@@ -1,21 +1,14 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import path from "node:path"
-import { randomBytes, randomUUID } from "node:crypto"
-import { Location } from "@orchestra/core/location"
-import { AbsolutePath } from "@orchestra/core/schema"
+import { randomUUID } from "node:crypto"
 import { createSfPersonalViewAuthority } from "../../../../../../apps/cli/src/sucafina-product/personal-view-authority.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createSfPersonalViews } from "../../../product/interface/personal-views.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
-import { createModule } from "../../../index.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
+import { oid, other } from "../../microsoft-login/oidc-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -42,7 +35,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   type Fixture = {
     page: Page
     context: BrowserContext
-    store: Awaited<ReturnType<typeof openLocalStore>>
+    store: Awaited<ReturnType<typeof createMicrosoftComponentFixture>>["persistence"]
     origin: string
     post: (action: string, input: unknown) => ReturnType<BrowserContext["request"]["post"]>
     otherList: () => Promise<Response | undefined>
@@ -52,37 +45,36 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   // The destination predicate is the exact published integration implementation,
   // over real encrypted sessions, SQLite, current domain views and source records.
   async function withViews(check: (fixture: Fixture) => Promise<void>) {
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp01-unavailable-views-"))
-    await chmod(directory, 0o700)
-    const store = await openLocalStore(directory)
-    const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
+    const host = await createMicrosoftComponentFixture({
+      names: ["View owner", "Other owner"],
+      grants: [oid, other].map((principalRef) => ({ principalRef, namespaces: ["preferences"], operations: [],
+        humanActions: ["views.read", "views.save", "views.remove"] })),
+    })
+    const { origin, persistence: store } = host
     const hold: Fixture["hold"] = { nextList: false }
     const releases = new Set<() => void>()
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin
-    const installationId = randomUUID()
-    const first = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1, name: "View owner" }, secrets: store.secrets, key: randomBytes(32) })
-    const second = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 2, name: "Other owner" }, secrets: store.secrets, key: randomBytes(32) })
-    const authenticate: typeof first.authenticate = async (request, context) => await first.authenticate(request, context) ?? await second.authenticate(request, context)
-    const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: [...await first.directory(request), ...await second.directory(request)] })
-    const authority = createSfProductAuthority({ identity: () => ({ installationId, projectId: "project", hostId: "host", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), installationId, origin, policyVersion: "policy", persistence: store, authenticate, environment,
-      grants: [1, 2].map((uid) => ({ principalRef: `macos:${installationId}:${uid}`, namespaces: ["preferences" as const], operations: [], humanActions: ["views.read" as const, "views.save" as const, "views.remove" as const] })), createId: randomUUID, now: Date.now,
+    let context: BrowserContext | undefined
+    let failure: unknown
+    try {
+    const authority = host.productAuthority({
       commandIdentity: async (request, operation) => request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
-      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+    })
     const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined, humanAuthorize: authority.human.authorize,
       authorizeView: createSfPersonalViewAuthority({ authority }) })
-    const services = { ...authority, personalViews } as SfHostServices
+    const unmounted = (port: string): never => { throw new Error("Personal views fixture does not mount " + port) }
+    const services = { ...authority, personalViews, dispatch: () => unmounted("dispatch"),
+      get sessions() { return unmounted("sessions") }, get selected() { return unmounted("selected") }, models: () => unmounted("models") } satisfies SfHostServices
     const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
-    const app = createModule("/sucafina", { persistence: store, authenticate, environment, product, maxJsonBytes: 100000 })
-    routing.handle = async (request) => {
+    host.mount({ product }, { personalViews: true })
+    host.routing.handle = async (request) => {
       // Reserve before an await: two concurrent reads must not both claim the gate.
       const candidate = hold.nextList && request.method === "POST" && new URL(request.url).searchParams.get("sf") === "workbench-views"
       if (candidate) hold.nextList = false
       const delayed = candidate && (await within(request.clone().json(), "read the delivery-gated list request")).action === "list"
       if (candidate && !delayed) hold.nextList = true
       const response = candidate
-        ? await within((async () => await first.handle(request) ?? await app(request))(), "produce the real delivery-gated list response")
-        : await first.handle(request) ?? await app(request)
+        ? await within(host.dispatch(request), "produce the real delivery-gated list response")
+        : await host.dispatch(request)
       if (!delayed || !response) return response
       // Delay exact bytes already produced by the real authorized application.
       // A live response stream must not keep the domain request or a store scope open.
@@ -111,26 +103,22 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       })
       return new Response(delivery, { status: response.status, headers })
     }
-    let context: BrowserContext | undefined
-    let failure: unknown
-    try {
       await store.transaction("planner", async (snapshot) => {
         snapshot.data.versions = ["previous-plan", "current-plan"].map((id) => ({ id, name: id, year: 2026, locked: false, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
         return { commit: true, value: undefined }
       })
-      const otherLogin = await second.handle(new Request(`${origin}/sucafina/auth/local?code=${await second.enroll()}`))
-      const otherCookie = otherLogin!.headers.get("set-cookie")!.split(";")[0]!
-      context = await browser.newContext()
+      const otherCookie = await host.login(other)
+      context = await host.newContext(browser)
       const page = await context.newPage()
       page.setDefaultTimeout(10_000)
       page.setDefaultNavigationTimeout(10_000)
       const errors: string[] = []
       page.on("pageerror", (error) => errors.push(error.message))
       page.on("dialog", (dialog) => dialog.accept())
-      expect((await page.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`))?.status()).toBe(200)
+      expect((await host.loginPage(page))?.status()).toBe(200)
       const active = context
       const post: Fixture["post"] = (action, input) => active.request.post(`${origin}/sucafina/planner?sf=workbench-views`, { headers: { origin, "idempotency-key": randomUUID() }, data: { action, input }, timeout: 5_000 })
-      await check({ page, context, store, origin, post, hold, otherList: () => product(new Request(`${origin}/sucafina/planner?sf=workbench-views`, { method: "POST", headers: { cookie: otherCookie, origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify({ action: "list", input: {} }) }), "planner") })
+      await check({ page, context, store, origin, post, hold, otherList: () => host.dispatch(host.request("/planner?sf=workbench-views", otherCookie, { method: "POST", headers: { origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify({ action: "list", input: {} }) })) })
       expect(errors).toEqual([])
     } catch (error) { failure = error; throw error }
     finally {
@@ -138,10 +126,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const cleanup: unknown[] = []
       // Abort remaining HTTP delivery before closing the browser context. All
       // failures are retained; lease/finalizer still require zero open contexts.
-      try { await within(Promise.resolve(server.stop(true)), "stop saved views HTTP") } catch (error) { cleanup.push(error) }
+      try { await within(host.close(), "close saved views Microsoft component") } catch (error) { cleanup.push(error) }
       try { if (context) await within(context.close(), "close saved views browser context") } catch (error) { cleanup.push(error) }
-      try { await within(store.dispose(), "dispose saved views store") } catch (error) { cleanup.push(error) }
-      try { await within(rm(directory, { recursive: true, force: true }), "remove saved views directory") } catch (error) { cleanup.push(error) }
       if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Saved views cleanup failed")
     }
   }
@@ -224,7 +210,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const late = await within(delivered, "observe the authorized response headers before revocation")
       expect(late.status()).toBe(200)
       await within(fixture.page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))), "allow the authorized reader to await its incomplete body")
-      expect((await within(fixture.context.request.post(`${fixture.origin}/sucafina/auth/logout`, { headers: { origin: fixture.origin }, timeout: 5_000 }), "revoke the actual operator session")).status()).toBe(204)
+      expect((await within(fixture.context.request.post(`${fixture.origin}/sucafina/auth/logout`, { headers: { origin: fixture.origin }, timeout: 5_000 }), "revoke the actual Microsoft session")).status()).toBe(204)
       const [refused] = await Promise.all([
         within(fixture.page.waitForResponse((response) => response.status() === 403 && new URL(response.url()).searchParams.get("sf") === "workbench-views", { timeout: 5_000 }), "observe the real revoked list response"),
         within(fixture.page.getByRole("button", { name: "Refresh saved views" }).click(), "request views with the revoked session"),

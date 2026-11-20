@@ -12,14 +12,14 @@ export async function createRealReviewFixture() {
   const post = async (mode: string, body: unknown, key = randomUUID()) => {
     const headers = new Headers(host.request().headers)
     headers.set("idempotency-key", key)
-    const response = await fetch(`${host.origin}/sucafina/dashboard?sf=${mode}`, { method: "POST", headers, body: JSON.stringify(body) })
+    const response = await host.fetch(`${host.origin}/sucafina/dashboard?sf=${mode}`, { method: "POST", headers, body: JSON.stringify(body) })
     const result = object(await response.json())
     if (!response.ok || result.status !== "ok") throw new Error(`Real review fixture ${mode}: ${response.status} ${String(result.reason)}`)
     return result.value
   }
   try {
     const discovery = await host.read((context) => host.dashboard.discover({ page: "Hot Topics & Actions" }, context))
-    if (discovery.status !== "ok") throw new Error("Real Dashboard discovery unavailable")
+    if (discovery.status !== "ok") throw new Error("Real Dashboard discovery unavailable: " + discovery.status + " " + discovery.reason)
     const source = discovery.value.records.find((entry) => entry.draft)?.draft
     if (!source) throw new Error("Real draft source unavailable")
     const saved = object(await post("dashboard-hot-topic-draft", { caseRef: initialCaseRef, ...source, fields: { ...source.fields, action: "Reviewed action" }, sourceRefs: [source.targetEvidence], expectedVersion: 0 }))
@@ -37,5 +37,8 @@ export async function createRealReviewFixture() {
     const current = await host.read((context) => host.business.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, context))
     if (current.status !== "ok") throw new Error("Real prepared case projection unavailable")
     return { host, post, request, review: result.value, projection: current.value, close: host.close }
-  } catch (error) { await host.close(); throw error }
+  } catch (error) {
+    try { await host.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Real review setup failed") }
+    throw error
+  }
 }

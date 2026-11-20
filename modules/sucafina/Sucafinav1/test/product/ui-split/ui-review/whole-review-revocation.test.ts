@@ -7,12 +7,14 @@ import { loadOptions, openReview } from "./browser-steps.ts"
 export function registerPoolTests(test: typeof import("bun:test").test) {
   test("WholeReview UI removes preserved material when the real history route revokes access", async () => {
     const fixture = await createMeetingFixture()
-    const browser = await launchWp01Browser().catch(async (error) => { await fixture.close(); throw error })
+    const browser = await launchWp01Browser().catch(async (error) => { try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Review setup and cleanup failed") } throw error })
+    let failure: unknown
+    const errors: string[] = []
     try {
-      const context = await browser.newContext()
+      const context = await fixture.newContext(browser)
       const page = await context.newPage()
       page.setDefaultTimeout(10_000)
-      expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
+      expect((await fixture.loginPage(page))?.status()).toBe(200)
       await page.goto(`${fixture.origin}/sucafina/dashboard?page=Budget+Overview&year=2026`)
       await page.locator("[data-dashboard-workbench-panel] > summary").click()
       const options = await loadOptions(page)
@@ -28,7 +30,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(response.status()).toBe(403)
       // The real UI aborts the denied browser request while purging its view.
       // Reopen the same real route under the same revoked cookie to inspect its body.
-      const replay = await fetch(fixture.historyUrl, { headers: { cookie: fixture.cookie } })
+      const replay = await fixture.fetch(fixture.historyUrl, { headers: { cookie: fixture.cookie } })
       expect(replay.status).toBe(403)
       const deniedBody = await replay.text()
       expect(deniedBody).not.toContain(fixture.original.id)
@@ -39,10 +41,14 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await oldPanel!.textContent()).not.toContain("Preserved Operations")
       expect(await page.locator("[data-dashboard-history-view]").count()).toBe(0)
       expect(await page.locator("body").textContent()).not.toContain(fixture.original.id)
-    } finally {
-      const results = await Promise.allSettled([closeWp01Browser(browser), fixture.close()])
+    } catch (error) { failure = error; console.error("G04 review component failed", { httpTrace: fixture.httpTrace, browserErrors: errors }, error); throw error }
+    finally {
+      // The component owns its proxy and contexts. Close it before releasing the
+      // shared browser lease; two concurrent context.close calls are not cleanup.
+      const results = await Promise.allSettled([fixture.close()])
+      results.push(...await Promise.allSettled([closeWp01Browser(browser)]))
       const errors = results.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
-      if (errors.length) throw new AggregateError(errors, "WholeReview revocation cleanup failed")
+      if (errors.length) throw new AggregateError([...(failure ? [failure] : []), ...errors], "WholeReview revocation cleanup failed")
     }
   }, 60_000)
 }

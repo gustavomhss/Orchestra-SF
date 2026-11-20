@@ -6,7 +6,7 @@ import { createRecoveryFixture, initialCaseRef, storeExistingChoice } from "../.
 export type RecoveryFixture = Awaited<ReturnType<typeof createRecoveryFixture>>
 
 export async function openWorkbench(page: Page, fixture: RecoveryFixture) {
-  await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)
+  await fixture.loginPage(page)
   await page.goto(`${fixture.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
   await page.locator("[data-dashboard-workbench-panel] > summary").click()
   const panel = page.locator("[data-dashboard-workbench]")

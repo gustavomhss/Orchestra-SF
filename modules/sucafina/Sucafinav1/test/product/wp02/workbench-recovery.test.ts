@@ -10,7 +10,7 @@ import { createRecoveryFixture, initialCaseRef, storeExistingChoice } from "./wo
 type RecoveryFixture = Awaited<ReturnType<typeof createRecoveryFixture>>
 
 async function openWorkbench(page: Page, fixture: RecoveryFixture) {
-  await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`)
+  await fixture.loginPage(page)
   await page.goto(`${fixture.origin}/sucafina/dashboard?page=Hot+Topics+%26+Actions`)
   await page.locator("[data-dashboard-workbench-panel] > summary").click()
   const panel = page.locator("[data-dashboard-workbench]")
@@ -39,11 +39,15 @@ async function currentDraft(fixture: RecoveryFixture) {
 test("Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery", async () => {
   expectSpawn(import.meta.path)
   const f = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => { await f.close(); throw error })
+  const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => {
+    try { await f.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   const release = Promise.withResolvers<void>(), delivered = Promise.withResolvers<void>()
   let revocationReleased = false
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await f.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, f)
     const attempts: { body: string | null; key: string | undefined; status: number }[] = []
@@ -143,7 +147,7 @@ test("Dashboard recovers a committed draft after response loss, restores only it
     await panel.getByText("Histórico aberto com seu acesso atual.", { exact: true }).waitFor()
     expect(await panel.locator("[data-dashboard-history-view]").textContent()).toContain("Original action")
     const version = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.versions["hotTopics:topic"]?.version ?? 0 }))
-    const deleted = await fetch(`${f.origin}/sucafina/dashboard`, { method: "POST", headers: f.request().headers,
+    const deleted = await f.fetch(`${f.origin}/sucafina/dashboard`, { method: "POST", headers: f.request().headers,
       body: JSON.stringify({ page: "Hot Topics & Actions", action: "delete", id: "topic", version, values: {}, confirmed: true }) })
     expect(deleted.status).toBe(200)
     expect(await deleted.json()).toMatchObject({ ok: true })
@@ -156,9 +160,10 @@ test("Dashboard recovers a committed draft after response loss, restores only it
     expect(await panel.locator("[data-dashboard-history-view]").textContent()).toBe("")
     expect(await panel.getByLabel("Reunião ou retrato preservado").locator("option").count()).toBe(1)
     expect(errors).toEqual([])
-  } finally {
+  } catch (error) { failure = error; throw error }
+  finally {
     release.resolve()
-    try { await driver.close() } finally { await f.close() }
+    await closeRecovery(f, driver, failure)
   }
   driver.report()
 }, 60000)
@@ -166,9 +171,13 @@ test("Dashboard recovers a committed draft after response loss, restores only it
 test("Dashboard retains the exact draft attempt when its first response is denied after the real host commits", async () => {
   expectSpawn(import.meta.path)
   const f = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => { await f.close(); throw error })
+  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => {
+    try { await f.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await f.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, f)
     const register = f.decisions.drafts.register
@@ -213,16 +222,21 @@ test("Dashboard retains the exact draft attempt when its first response is denie
     expect(await panel.locator("[data-dashboard-pending]").getAttribute("data-dirty")).toBeNull()
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await f.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(f, driver, failure) }
   driver.report()
 }, 60000)
 
 test("Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable", async () => {
   expectSpawn(import.meta.path)
   const f = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-source-recovery").catch(async (error) => { await f.close(); throw error })
+  const driver = await launchBrowserDriver("host-source-recovery").catch(async (error) => {
+    try { await f.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const unsavedPage = await driver.browser.newPage(), replacementPage = await driver.browser.newPage(), savedPage = await driver.browser.newPage(), errors: string[] = []
+    const unsavedPage = await (await f.newContext(driver.browser)).newPage(), replacementPage = await (await f.newContext(driver.browser)).newPage(), savedPage = await (await f.newContext(driver.browser)).newPage(), errors: string[] = []
     for (const page of [unsavedPage, replacementPage, savedPage]) page.on("pageerror", (error) => errors.push(error.message))
     const unsaved = await openWorkbench(unsavedPage, f)
     await editNewDraft(unsavedPage, "Private unsaved source wording")
@@ -237,7 +251,7 @@ test("Dashboard clears dirty draft consumers when the source disappears or is re
     const original = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { row: rows(snapshot.data.hotTopics)[0]!,
       identity: sfSourceIdentity(snapshot, "hotTopics", "topic"), version: snapshot.versions["hotTopics:topic"]?.version ?? 0 } }))
     expect(original.identity).toBeDefined()
-    const deleted = await fetch(`${f.origin}/sucafina/dashboard`, { method: "POST", headers: f.request().headers,
+    const deleted = await f.fetch(`${f.origin}/sucafina/dashboard`, { method: "POST", headers: f.request().headers,
       body: JSON.stringify({ page: "Hot Topics & Actions", action: "delete", id: "topic", version: original.version, values: {}, confirmed: true }) })
     expect(deleted.status).toBe(200)
     expect(await deleted.json()).toMatchObject({ ok: true })
@@ -275,16 +289,21 @@ test("Dashboard clears dirty draft consumers when the source disappears or is re
     await assertPurged(replacementPage, replacement, 1)
     await assertPurged(savedPage, saved, 1)
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await f.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(f, driver, failure) }
   driver.report()
 }, 60000)
 
 test("Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case", async () => {
   expectSpawn(import.meta.path)
   const f = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await f.close(); throw error })
+  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => {
+    try { await f.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await f.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, f)
     await editNewDraft(page, "Private application retained only with case access")
@@ -345,16 +364,21 @@ test("Dashboard discards an uncertain private application review when fresh disc
     const after = await f.authority.state.read(f.request(), "cases", (state) => state.cases[initialCaseRef.id])
     expect(after.status === "ok" && after.value?.receipts).toEqual(before.value.receipts)
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await f.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(f, driver, failure) }
   driver.report()
 }, 60000)
 
 test("Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads", async () => {
   expectSpawn(import.meta.path)
   const f = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => { await f.close(); throw error })
+  const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => {
+    try { await f.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await f.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, f)
     await editNewDraft(page, "Applied once despite response loss")
@@ -420,6 +444,14 @@ test("Dashboard recovers the same C12 application receipt after a committed resp
     expect(object(object(await page.evaluate(() => history.state)).sfDashboardWorkbench).application).toBeUndefined()
     expect(await panel.locator("[data-dashboard-pending]").getAttribute("data-dirty")).toBeNull()
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await f.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(f, driver, failure) }
   driver.report()
 }, 60000)
+
+async function closeRecovery(fixture: Awaited<ReturnType<typeof createRecoveryFixture>>, driver: Awaited<ReturnType<typeof launchBrowserDriver>>, primary: unknown) {
+  const results = await Promise.allSettled([fixture.close()])
+  results.push(...await Promise.allSettled([driver.close()]))
+  const failures = results.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
+  if (failures.length) throw new AggregateError([...(primary === undefined ? [] : [primary]), ...failures], "Recovery browser cleanup failed")
+}

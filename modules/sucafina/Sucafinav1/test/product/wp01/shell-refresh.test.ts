@@ -1,16 +1,8 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
-import path from "node:path"
-import { randomBytes, randomUUID } from "node:crypto"
-import { createModule } from "../../../index.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
-import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { object, rows } from "../../../runtime/contract.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -23,32 +15,25 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     context: BrowserContext
     origin: string
     url: string
-    persistence: ReturnType<typeof createSfSourcePersistence>
+    persistence: Awaited<ReturnType<typeof createMicrosoftComponentFixture>>["persistence"]
     delivery: { loseNextSave: boolean; posts: number }
   }) => Promise<void>) {
-    const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp01-shell-refresh-"))
-    await chmod(directory, 0o700)
-    const driver = await openLocalStore(directory)
-    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID })
-    const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-    const origin = server.url.origin
-    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId: randomUUID(), uid: 1000, name: "Refresh reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
-    const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate,
-      environment: async (request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) }), maxJsonBytes: 100000 })
+    const host = await createMicrosoftComponentFixture({ names: ["Refresh reviewer", "Other reviewer"] })
+    const { origin, persistence } = host
     const delivery = { loseNextSave: false, posts: 0 }
-    routing.handle = async (request) => {
+    host.routing.handle = async (request) => {
       const command = request.method === "POST" && new URL(request.url).pathname === "/sucafina/dashboard" ? object(await request.clone().json()) : {}
       if (command.action === "save-deviation") delivery.posts++
-      const response = await identity.handle(request) ?? await app(request)
+      const response = await host.dispatch(request)
       // Only delivery is damaged, after the real authenticated mutation commits.
-      if (command.action === "save-deviation" && delivery.loseNextSave && response?.ok) {
+      if (command.action === "save-deviation" && delivery.loseNextSave && response.ok) {
         delivery.loseNextSave = false
         return new Response("{", { headers: { "Content-Type": "application/json" } })
       }
       return response
     }
     let context: BrowserContext | undefined
+    let failure: unknown
     try {
       await persistence.initializeSources("dashboard")
       await persistence.transaction("dashboard", async (snapshot) => {
@@ -56,13 +41,13 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         snapshot.data.opexEntries = [{ id: "jan", ownerId: "owner-1", year: 2026, month: 1, budget: 100, actual: 25, forecast: 90 }]
         return { commit: true, value: undefined }
       })
-      context = await browser.newContext()
+      context = await host.newContext(browser)
       const page = await context.newPage()
       const errors: string[] = []
       page.setDefaultTimeout(10_000)
       page.on("pageerror", (error) => errors.push(error.message))
       page.on("dialog", (dialog) => dialog.accept())
-      expect((await page.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))?.status()).toBe(200)
+      expect((await host.loginPage(page))?.status()).toBe(200)
       const url = `${origin}/sucafina/dashboard?page=OPEX+Detail&year=2026`
       expect((await page.goto(url))?.status()).toBe(200)
       // Observe the shell's event without claiming it or installing a replacement
@@ -78,11 +63,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       })
       await check({ page, context, origin, url, persistence, delivery })
       expect(errors).toEqual([])
-    } finally {
-      await context?.close()
-      await server.stop(true)
-      await driver.dispose()
-      await rm(directory, { recursive: true, force: true })
+    } catch (error) { failure = error; throw error }
+    finally {
+      const failures: unknown[] = []
+      try { await context?.close() } catch (error) { failures.push(error) }
+      try { await host.close() } catch (error) { failures.push(error) }
+      if (failures.length) throw new AggregateError([...(failure ? [failure] : []), ...failures], "Shell component fixture cleanup failed")
     }
   }
 

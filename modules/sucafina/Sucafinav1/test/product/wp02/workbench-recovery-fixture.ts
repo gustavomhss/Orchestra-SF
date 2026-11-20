@@ -1,16 +1,6 @@
 import { expect } from "bun:test"
-import { randomBytes, randomUUID } from "node:crypto"
-import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
-import { tmpdir } from "node:os"
+import { randomUUID } from "node:crypto"
 import path from "node:path"
-import { AbsolutePath } from "@orchestra/core/schema"
-import { createModule } from "../../../index.ts"
-import { openLocalStore } from "../../../runtime/local-store.ts"
-import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
-import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
-import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
-import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
@@ -21,59 +11,54 @@ import contractFreeze from "../../../product/contracts/freeze-v1.json" with { ty
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfDashboardHttp } from "../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts"
+import { createMicrosoftComponentFixture } from "../wp01/microsoft-component-fixture.ts"
+import { oid } from "../../microsoft-login/oidc-fixture.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 export const initialCaseRef = { id: "private-case-identity", incarnation: "case-incarnation", version: 1 }
 
-// The browser composes the production BusinessContext, Dashboard, case and C12 services.
+// G04 composes the production BusinessContext, Dashboard, case and C12 components
+// under real Microsoft/Team admission. Installed navigation remains G02-owned.
 // Business records and the chosen scenario are fixture inputs; recovery faults affect delivery.
 // Unsupported historical/receipt sources remain unavailable through the actual evidence router.
 // No scanner is installed here; this consumer makes no native memory or publication claim.
 export async function createRecoveryFixture() {
-  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-dashboard-recovery-"))
-  await chmod(directory, 0o700)
-  const driver = await openLocalStore(directory)
-  const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
-  const origin = server.url.origin, installationId = randomUUID(), principalRef = `macos:${installationId}:1000`
-  const clock = { at: "2026-11-13T08:00:00Z" }, policy = { writable: true, readable: true }
+  const host = await createMicrosoftComponentFixture({
+    names: ["Dashboard reviewer", "Other reviewer"],
+    grants: [{ principalRef: oid, namespaces: ["cases", "preferences", "reviews", "receipts"],
+      operations: ["sf_dashboard_read", "sf_case_read"],
+      humanActions: ["reviews.preserve", "decisions.edit", "decisions.choose", "decisions.prepare-changes", "decisions.apply"] }],
+  })
+  const { origin, persistence, clock, policy, principalRef } = host
   const delayed: { next: boolean; release?: () => void; started?: () => void; calls: number } = { next: false, calls: 0 }
-  const httpTrace: { mode: string; method: string; state: "received" | "returned" | "threw"; status?: number; elapsedMs?: number }[] = []
-  const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID, projectScope: createSfSourceScopeProjector(() => clock.at) })
-  const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: 1000, name: "Dashboard reviewer" }, secrets: driver.secrets, key: randomBytes(32) })
-  const authenticate: typeof identity.authenticate = async (request, context) => {
-    const principal = await identity.authenticate(request, context)
-    return principal && policy.readable ? { ...principal, canWrite: policy.writable && principal.canWrite } : null
-  }
-  const environment = async (request: Request) => ({ at: clock.at, id: randomUUID, directory: await identity.directory(request) })
-  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+  const httpTrace: { mode: string; method: string; state: "received" | "returned" | "threw"; status?: number; elapsedMs?: number; providerRequests?: number; aborted?: boolean }[] = []
+  let disposeBusiness: (() => void) | undefined
+  try {
   await persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.hotTopics = [{ id: "topic", action: "Original action", owner: "Operations", due: "2026-12-01", priority: "normal", status: "open", notes: "" }]
     return { commit: true, value: undefined }
   })
   const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
-  const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "host", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
-    installationId, origin, policyVersion: "policy", persistence, authenticate, environment, now: Date.now, createId: randomUUID,
+  const authority = host.productAuthority({
     commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() :
       request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
-    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
     authorizeDocument: async () => undefined, proposalCoverageWrites, dashboardHostWrites,
-    grants: [{ principalRef, namespaces: ["cases", "preferences", "reviews", "receipts"], operations: ["sf_dashboard_read", "sf_case_read"],
-      humanActions: ["reviews.preserve", "decisions.edit", "decisions.choose", "decisions.prepare-changes", "decisions.apply"] }] })
+  })
   const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
+  disposeBusiness = () => business.dispose()
   const bundleRoot = path.resolve(import.meta.dir, "../../../product/ai")
   const bundle = await createResidentAiBundle({ root: bundleRoot, manifestPath: path.join(bundleRoot, "manifests/resident.json") })
   business.initializeAtlas(undefined, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
     manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
   const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
   const http = createSfDashboardHttp({ origin, mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
-  const module = createModule("/sucafina", { persistence, authenticate, environment, product: http, maxJsonBytes: 100000 })
-  routing.handle = async (request) => {
-    const mode = new URL(request.url).searchParams.get("sf"), started = performance.now()
-    const observation: (typeof httpTrace)[number] | undefined = mode === "dashboard-workbench" || mode === "dashboard-hot-topic-draft" ? { mode, method: request.method, state: "received" } : undefined
+  host.mount({ product: http }, { dashboardWorkbench: true })
+  host.routing.handle = async (request) => {
+    const mode = new URL(request.url).searchParams.get("sf"), started = performance.now(), providerStarted = host.provider.requests.length
+    const observation: (typeof httpTrace)[number] | undefined = mode?.startsWith("dashboard-") ? { mode, method: request.method, state: "received" } : undefined
     if (observation) httpTrace.push(observation)
     try {
-      const response = await identity.handle(request) ?? await module(request)
+      const response = await host.dispatch(request)
       if (mode === "dashboard-hot-topic-apply") {
         delayed.calls++
         if (delayed.next) { delayed.next = false; await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() }) }
@@ -84,13 +69,16 @@ export async function createRecoveryFixture() {
       if (observation) observation.state = "threw"
       throw error
     } finally {
-      if (observation) observation.elapsedMs = Math.round(performance.now() - started)
+      if (observation) {
+        observation.elapsedMs = Math.round(performance.now() - started)
+        // Inclusive provider calls can include overlapping component requests.
+        observation.providerRequests = host.provider.requests.length - providerStarted
+        observation.aborted = request.signal.aborted
+      }
     }
   }
-  const login = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
-  const cookie = login?.headers.get("set-cookie")?.split(";")[0]
-  if (!cookie) throw new Error("Operator enrollment failed")
-  const request = () => new Request(`${origin}/sucafina/dashboard?sf=dashboard-workbench`, { method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify({ page: "Hot Topics & Actions" }) })
+  const request = () => host.request("/dashboard?sf=dashboard-workbench", host.cookie, { method: "POST",
+    headers: { "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify({ page: "Hot Topics & Actions" }) })
   const read = async <T>(work: (context: TrustedDomainContext) => Promise<T>) => {
     const source = request(), digest = digestSfValue({ page: "Hot Topics & Actions" })
     const admitted = await authority.ui.admit(source, "sf_dashboard_read", digest)
@@ -109,8 +97,22 @@ export async function createRecoveryFixture() {
       return { commit: true, value: true }
     })
   expect(seeded.status).toBe("ok")
-  return { origin, identity, policy, clock, delayed, httpTrace, principalRef, persistence, authority, business, dashboard, decisions, request, read,
-    close: async () => { delayed.release?.(); business.dispose(); await server.stop(true); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
+  return { origin, identity: host.identity, policy, clock, delayed, httpTrace, principalRef, persistence, authority, business, dashboard, decisions, request, read,
+    newContext: host.newContext, loginPage: host.loginPage, fetch: host.fetch,
+    close: async () => {
+      delayed.release?.()
+      const failures: unknown[] = []
+      try { business.dispose() } catch (error) { failures.push(error) }
+      try { await host.close() } catch (error) { failures.push(error) }
+      if (failures.length) throw new AggregateError(failures, "Dashboard component cleanup failed")
+    } }
+  } catch (error) {
+    delayed.release?.()
+    const failures: unknown[] = [error]
+    try { disposeBusiness?.() } catch (cleanup) { failures.push(cleanup) }
+    try { await host.close() } catch (cleanup) { failures.push(cleanup) }
+    throw failures.length === 1 ? error : new AggregateError(failures, "Dashboard component setup failed")
+  }
 }
 
 export async function storeExistingChoice(f: Awaited<ReturnType<typeof createRecoveryFixture>>, draft: HotTopicDraft) {

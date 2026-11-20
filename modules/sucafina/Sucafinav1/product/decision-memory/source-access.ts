@@ -62,24 +62,37 @@ export function createSfDashboardSourceAccess(input: { host: DomainPortHost; iss
 }
 
 /** Individual records remain bound to the currently authorized scoped reference. */
-export function createSfDashboardRecordSourceAccess(input: { host: DomainPortHost; records: Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "resolve" | "read"> }) {
+export function createSfDashboardRecordSourceAccess(input: { host: DomainPortHost; records: Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "resolve" | "read"> & Partial<Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "observe">> }) {
   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
       if (ref.kind !== "record" || ref.target.surface !== "dashboard" || ref.target.recordType === "dashboard-page" || !ref.target.period || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
       const request = input.host.requestFor(call)
-      const binding = digestSfValue(call.binding)
-      if (!request || request.signal.aborted || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable()
+      const binding = digestSfValue(call.binding), selected = digestSfValue(ref), lease = call.lease
+      const observe = input.records.observe
+      const headers = request && digestSfValue([...request.headers.entries()])
+      const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
+        call.lease === lease && digestSfValue(call.binding) === binding && digestSfValue(ref) === selected &&
+        input.records.observe === observe && headers === digestSfValue([...request.headers.entries()])
+      if (!request || !stable() || !await input.host.revalidate(call) || !stable()) return unavailable()
       const now = await input.host.environment(request)
-      if (!Number.isFinite(Date.parse(now.at))) return unavailable()
-      const first = await input.records.resolve(ref.refId, call)
-      if (first.status !== "ok" || digestSfValue(first.value) !== digestSfValue(ref) || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable(now.at)
-      const projection = await input.records.read(ref.refId, call)
+      if (!Number.isFinite(Date.parse(now.at)) || !stable()) return unavailable()
+      // The production observer owns initial/final source, clock and authority
+      // checks around a synchronous projection. Older adapters keep their full
+      // resolve/read/resolve path; absence or refusal never invents a projection.
+      const observed = observe ? await observe.call(input.records, ref.refId, call) : undefined
+      if (observe && (!observed || observed.status !== "ok")) return unavailable(now.at)
+      const first = observed?.status === "ok" ? { status: "ok" as const, value: observed.value.evidence } : await input.records.resolve(ref.refId, call)
+      if (first.status !== "ok" || digestSfValue(first.value) !== selected || (!observe && !await input.host.revalidate(call)) || !stable()) return unavailable(now.at)
+      const projection = observed?.status === "ok" ? { status: "ok" as const, value: observed.value.projection } : await input.records.read(ref.refId, call)
       if (projection.status !== "ok" || projection.value.context.installationId !== call.binding.installationId || projection.value.context.projectId !== call.binding.projectId || projection.value.context.principalRef !== call.binding.principalRef || projection.value.context.accessRevision !== call.binding.accessRevision || projection.value.context.policyVersion !== call.binding.policyVersion || projection.value.context.surface !== "dashboard" || digestSfValue(projection.value.context.period) !== digestSfValue(ref.target.period)) return unavailable(now.at)
       const source = projection.value.context.sourceRefs
       if (source.length !== 1 || source[0]!.surface !== "dashboard" || source[0]!.type !== ref.target.recordType || source[0]!.id !== ref.target.recordId || source[0]!.incarnation !== ref.target.incarnation || source[0]!.version !== ref.target.version || digestSfValue(source[0]!.fields) !== digestSfValue(ref.target.fields) || digestSfValue(source[0]!.period) !== digestSfValue(ref.target.period) || projection.value.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref) || digestSfValue(value.drilldown) !== digestSfValue(ref))) return unavailable(now.at)
-      const again = await input.records.resolve(ref.refId, call)
-      if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(ref) || request.signal.aborted || !await input.host.revalidate(call) || digestSfValue(call.binding) !== binding) return unavailable(now.at)
+      const material = digestSfValue(projection.value)
+      const again = observed?.status === "ok" ? { status: "ok" as const, value: observed.value.evidence } : await input.records.resolve(ref.refId, call)
+      if (again.status !== "ok" || digestSfValue(again.value) !== selected || !stable() ||
+          !await input.host.revalidate(call) || !stable() || digestSfValue(projection.value) !== material ||
+          digestSfValue(again.value) !== selected) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: again.value, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {
       return unavailable()
