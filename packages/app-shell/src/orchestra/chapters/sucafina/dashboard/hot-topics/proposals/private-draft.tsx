@@ -72,8 +72,10 @@ export function SfPrivateHotTopicEditor(_props: SfSurfaceProps<"UI54">): JSX.Ele
     const nextSelection: Selection = {
       surfaceId: "UI54", editScopeKey: "UI54:private-hot-topic" as SfEditScopeKey,
       identity: incoming.id ? { kind: "record", recordRef: incoming.id as SfRef } :
+        // Scope incarnation is not physical identity. Retain by case and record;
+        // the original draft-read evidence proves continuity before reuse.
         { kind: "new", newIntentRef: JSON.stringify(["UI54", incoming.request.caseRef.id, incoming.request.caseRef.incarnation,
-          incoming.request.target.id, incoming.request.target.incarnation]) as SfIntentRef },
+          incoming.request.target.surface, incoming.request.target.type, incoming.request.target.id]) as SfIntentRef },
     }
     const old = reuse ? ready.drafts.peek<DraftValue>(nextSelection) : undefined
     const controller = old ?? ready.drafts.acquire<DraftValue>({

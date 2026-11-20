@@ -39,7 +39,7 @@ const sameCase = (a: CaseRef, b: CaseRef) => a.id === b.id && a.incarnation === 
 const evidenceMatches = (value: DraftRequest["targetEvidence"], expected: DraftRequest["targetEvidence"]) =>
   value.installationId === expected.installationId && value.projectId === expected.projectId &&
   value.target.surface === expected.target.surface && value.target.recordType === expected.target.recordType &&
-  value.target.recordId === expected.target.recordId && value.target.incarnation === expected.target.incarnation
+  value.target.recordId === expected.target.recordId
 
 export function readSelection(value: DraftValue): DraftReadRequest {
   return { caseRef: value.request.caseRef, targetEvidence: value.request.targetEvidence,
