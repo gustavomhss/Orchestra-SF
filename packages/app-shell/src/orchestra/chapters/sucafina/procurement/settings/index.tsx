@@ -1,5 +1,5 @@
 import { createEffect, createMemo, onCleanup, untrack, Show, For, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
@@ -258,7 +258,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       version: sourceVersion, values: {},
     } : {
       page: "Settings" as const, action: "save" as const,
-      version: sourceVersion, values: { settings: structuredClone(state.value) },
+      version: sourceVersion, values: { settings: structuredClone(unwrap(state.value)) },
     }
     const idempotencyKey = crypto.randomUUID()
     // F01/S03 binds the exact reviewed CAS, digest and idempotency key. Never
