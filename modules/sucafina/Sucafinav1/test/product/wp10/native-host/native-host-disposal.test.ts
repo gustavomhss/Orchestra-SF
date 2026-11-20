@@ -17,6 +17,7 @@ import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionMessage } from "@orchestra/core/session/message"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import { SessionStore } from "@orchestra/core/session/store"
+import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Context, Deferred, Effect, Layer } from "effect"
 import { createSfNativeHostContribution, SfNativeHost } from "../../../../../../../apps/cli/src/sucafina-product/native-host.ts"
@@ -54,7 +55,7 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
     const otherDirectory = path.join(root, "other")
     await mkdir(otherDirectory)
     const model = { providerID: ProviderV2.ID.make("sf-disposal-fixture"), id: ModelV2.ID.make("lifecycle") }
-    const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, SessionExecution.node, LocationServiceMap.node]),
+    const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, SessionExecution.node, SessionSubagentModels.node, LocationServiceMap.node]),
       [[SessionExecution.node, SessionExecutionLocal.node]])
     await Effect.gen(function* () {
       const session = yield* SessionV2.Service

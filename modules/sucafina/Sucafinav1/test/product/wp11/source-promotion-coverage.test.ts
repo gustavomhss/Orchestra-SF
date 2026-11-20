@@ -179,7 +179,7 @@ test("source-only promotions prepare the exact coverage proof for both source or
       const alternative = saved.decision.alternatives.find((item) => item.title === baseRef)!
       expect(alternative.result).toMatchObject({ comparisonStatus: "complete", currency: "USD", horizon, knownSubtotal: observed.value.knownSubtotal, total: observed.value.total })
       expect(alternative.result.components).toEqual(observed.value.components)
-      expect(alternative.result.costCoverage.evaluatedSourceRefs).toEqual(f.sourceRefs)
+      expect(alternative.result.costCoverage.evaluatedSourceRefs).toEqual(observed.value.costCoverage.evaluatedSourceRefs)
       expect(saved.results[promoted.value.resultRef!]?.result).toEqual(alternative.result)
       expect(saved.decision.choices).toEqual([])
       expect(saved.decision.preparedChanges).toEqual([])

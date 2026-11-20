@@ -383,7 +383,7 @@ test("actual C08 work composition opens a current thread and survives rebuilding
     expect(response?.status).toBe(200)
     const html = await response!.text()
     expect(html).toContain("Read this actual contextual question")
-    expect(html).toContain("page=All+Projects")
+    expect(html).toContain(`<a href="${new URL(`/orchestra/sf-portfolio/projects?year=${period.start.slice(0, 4)}`, origin).href}">dashboard · ${f.source.target.recordId} · v${f.source.target.version} · ${period.start} a ${period.end}</a>`)
     expect(html).not.toContain("sf-human:")
     const reopened = await f.reopen()
     try {
