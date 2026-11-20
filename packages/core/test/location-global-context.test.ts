@@ -7,6 +7,7 @@ import { Database } from "../src/database/database"
 import { EventV2 } from "../src/event"
 import { SessionOwner } from "../src/session/owner"
 import { teamSessionFixture, profileA } from "./fixture/team-session"
+import { applicationServices } from "../../server/src/routes"
 
 class PublishedOverride extends Context.Service<PublishedOverride, { readonly token: object }>()("test/PublishedOverride") {}
 const overrideNode = makeGlobalNode({
@@ -33,7 +34,7 @@ test("Location cold and warm acquisitions reuse the exact completed graph and it
     deps: [Database.node, SessionOwner.node, EventV2.node, overrideNode],
   })
   await using f = await teamSessionFixture({
-    extraNodes: [LayerNode.group([LocationServiceMap.node, overrideNode])],
+    extraNodes: [LayerNode.group([applicationServices, overrideNode])],
     locationNodes: [probe],
     replacements: [[overrideNode, Layer.succeed(PublishedOverride, override)]],
   })
