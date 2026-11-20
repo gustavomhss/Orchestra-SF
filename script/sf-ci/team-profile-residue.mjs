@@ -8,6 +8,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { gunzipSync } from "node:zlib"
 import ts from "typescript"
+import { isReportArraySummary, parseResidueReviewJson } from "./residue-report-json.mjs"
 
 const fail = (message) => { throw new Error("TEAM_PROFILE_RESIDUE_FAIL_CLOSED: " + message) }
 export const hash = (bytes) => createHash("sha256").update(bytes).digest("hex")
@@ -899,7 +900,7 @@ export function summarizeReport(bytes, provenance, selection, env = process.env)
       downloaded.expired !== false) fail("review report download binding is invalid")
   // The exact bytes are independently bound above. No canonical rewrite of this
   // potentially large original report is needed just to navigate its metadata.
-  const report = JSON.parse(utf8.decode(bytes))
+  const projection = parseResidueReviewJson(bytes), report = projection.report
   exactKeys(report, ["schema", "status", "binding", "execution", "readOnly", "counts", "blockers",
     "source", "artifact", "inventory", "occurrences", "reachability", "review", "controls", "proofs", "limitations"])
   const binding = report.binding, artifact = report.artifact, execution = report.execution
@@ -948,7 +949,7 @@ export function summarizeReport(bytes, provenance, selection, env = process.env)
   const entrypoints = (domain, relative) => {
     const graph = report.reachability[domain]
     if (!graph || graph.domain !== domain || !graph.reachable || !Array.isArray(graph.issues) ||
-        !Array.isArray(graph.unresolved) || !Array.isArray(graph.edges) || !Array.isArray(graph.calls))
+        !Array.isArray(graph.unresolved) || !Array.isArray(graph.edges) || !isReportArraySummary(graph.calls))
       fail("original reachability metadata is incomplete")
     const entries = graph.reachable[relative] ?? []
     if (!Array.isArray(entries) || entries.some((entry) => typeof entry.entrypoint !== "string" ||
@@ -1039,6 +1040,8 @@ export function summarizeReport(bytes, provenance, selection, env = process.env)
       binding: { ...binding }, execution: { ...execution }, archiveSha256: artifact.archiveSha256,
       productionArtifact: { id: artifact.artifact.id, digest: artifact.artifact.digest },
       evidenceArtifact: { ...downloaded } },
+    navigationProjection: { notMaterialized: projection.notMaterialized,
+      scope: "Lexical call-expression arrays remain in the original byte-bound report; no call graph is declared empty." },
     recordedCounts: counts, recordedBlockers: [...report.blockers],
     selectedCounts: { files: paths.length, occurrences: selectedOccurrences.length, reachabilityFindings: selectedFindings.length },
     page: { ...selection, totalRows: rows.length, returnedRows: Math.min(selection.limit, rows.length - selection.offset),

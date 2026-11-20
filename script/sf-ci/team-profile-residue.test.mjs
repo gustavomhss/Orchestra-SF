@@ -1,5 +1,7 @@
 import assert from "node:assert/strict"
 import { after, test } from "node:test"
+import { constants as bufferConstants } from "node:buffer"
+import { isReportArraySummary, parseResidueReviewJson } from "./residue-report-json.mjs"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -538,6 +540,78 @@ test("review reads original artifact files without rebuilding source or changing
     await rm(checkout, { recursive: true, force: true })
     await rm(temporary, { recursive: true, force: true })
   }
+})
+
+
+test("review projection validates all original bytes and retains exact call-array counts and digests", () => {
+  const fixture = reviewFixture()
+  const parsed = parseResidueReviewJson(fixture.bytes)
+  for (const domain of ["source", "archive"]) {
+    const summary = parsed.report.reachability[domain].calls
+    assert(isReportArraySummary(summary))
+    assert.equal(summary.elements, fixture.report.reachability[domain].calls.length)
+    assert(summary.byteLength >= 2)
+    assert.match(summary.sha256, /^[a-f0-9]{64}$/)
+    const retained = { ...parsed.report.reachability[domain], calls: fixture.report.reachability[domain].calls }
+    assert.deepEqual(retained, fixture.report.reachability[domain])
+  }
+  assert.equal(parsed.notMaterialized.length, 2)
+  const index = summarizeFixture(fixture)
+  assert.deepEqual(index.navigationProjection.notMaterialized, parsed.notMaterialized)
+  assert.equal(index.qualification, "NOT_EVALUATED")
+  assert.equal(index.original.reportSha256, hash(fixture.bytes))
+  assert(index.navigationProjection.scope.includes("original byte-bound report"))
+  const exact = Buffer.from('{"reachability":{"source":{"calls": [ {"callee":"abc"},42 ] }}}')
+  const summary = parseResidueReviewJson(exact).report.reachability.source.calls
+  const originalArray = Buffer.from('[ {"callee":"abc"},42 ]')
+  assert.equal(summary.elements, 2)
+  assert.equal(summary.byteLength, originalArray.length)
+  assert.equal(summary.sha256, hash(originalArray))
+})
+
+test("review projection rejects malformed syntax duplicate keys and invalid UTF8 inside omitted calls", () => {
+  const wrap = (calls) => Buffer.from('{"reachability":{"source":{"calls":' + calls + '}}}')
+  for (const calls of [
+    '[{"x":1,"x":2}]', '[{"x":1,"\\u0078":2}]', '[{"callee":"\\q"}]',
+    '[{"callee":"\\u00xz"}]', '[{"callee":"line\nbreak"}]', '[1,]', '[01]', '[1e]',
+    '[+1]', '[.5]', '[1.]', '[trueX]', '[undefined]', '[1e999]', '[{"a":1,}]',
+  ]) assert.throws(() => parseResidueReviewJson(wrap(calls)), /REVIEW_JSON_INVALID/)
+  const invalidUtf8 = Buffer.concat([
+    Buffer.from('{"reachability":{"source":{"calls":[{"callee":"'),
+    Buffer.from([0xc3, 0x28]),
+    Buffer.from('"}]}}}'),
+  ])
+  assert.throws(() => parseResidueReviewJson(invalidUtf8), /REVIEW_JSON_INVALID/)
+  for (const text of ['{} {}', '{"reachability":{"source":{"calls":{}}}}', '{"a":1,"a":2}', '[]'])
+    assert.throws(() => parseResidueReviewJson(Buffer.from(text)), /REVIEW_JSON_INVALID/)
+})
+
+test("review projection safely retains ordinary JSON semantics and omits only exact root call paths", () => {
+  const bytes = Buffer.from('{"__proto__":{"polluted":true},"constructor":{"x":1},"reachability.source":{"calls":[1]},"nested":{"reachability":{"source":{"calls":[2]}}},"ordinary":[-0,0,0.5,-4e-2,true,false,null,"é🙂"]}')
+  const parsed = parseResidueReviewJson(bytes)
+  assert.deepEqual(parsed.report, JSON.parse(bytes.toString("utf8")))
+  assert.equal(Object.getPrototypeOf(parsed.report), Object.prototype)
+  assert.equal(Object.prototype.polluted, undefined)
+  assert.equal(parsed.notMaterialized.length, 0)
+  assert(Object.is(parsed.report.ordinary[0], -0))
+})
+
+test("review projection reads an original buffer larger than V8's maximum single string", () => {
+  const prefix = Buffer.from('{"reachability":{"source":{"calls":[{"callee":"')
+  const suffix = Buffer.from('"}]}}}')
+  const bytes = Buffer.alloc(bufferConstants.MAX_STRING_LENGTH + 4096, 0x61)
+  prefix.copy(bytes); suffix.copy(bytes, bytes.length - suffix.length)
+  const parsed = parseResidueReviewJson(bytes)
+  const summary = parsed.report.reachability.source.calls
+  const arrayStart = prefix.indexOf("[")
+  const arrayEnd = bytes.length - 3
+  assert(bytes.length > bufferConstants.MAX_STRING_LENGTH)
+  assert(isReportArraySummary(summary))
+  assert.equal(summary.elements, 1)
+  assert.equal(summary.byteLength, arrayEnd - arrayStart)
+  assert.equal(summary.sha256, hash(bytes.subarray(arrayStart, arrayEnd)))
+  assert.equal(parsed.notMaterialized.length, 1)
+  assert.equal(parsed.notMaterialized[0].path, "reachability.source.calls")
 })
 
 // Only actual returned test bodies can produce this receipt. A failed, skipped,
