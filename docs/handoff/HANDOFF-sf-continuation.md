@@ -1,5 +1,70 @@
 # Handoff — sf-continuation
 
+## Checkpoint vigente — revisão posterior de Reports, Import e integração (20/11/2026)
+
+Este checkpoint sucede todos os estados de execução pendente registrados abaixo. Estado da sessão: **PARTIAL**. Integração auditada: **124d5b5c7fbc4a7a57edc0fe1420d38496402a48**. Guards finais, o único sf-ci e o pacote final ainda NÃO executados. Não há GO/deploy/SF_ORCHESTRA_WEB_PACKAGE_VERIFIED.
+
+### Gate de CI/pacote — success real
+- Composição sf-package-reconciled@8bd50288e72123cff4823ea52004dca024f73a89, código2f520c850b55215e670ff673092b2e18407bd258.
+- Run44670544483 **success**, snapshot07ed37e09e8eb7468a20b08fea64829cecaa455c (filho direto); test136070172103 e cleanup136070935106 **success**.
+- **143 pass / 0 fail / 5 arquivos / 623ms**: gate, shard-plan, shard-adoption, cache-source e auditoria somente de bytes do host. Não foi repetido typecheck; os componentes do #425 têm evidência separada.
+- Snapshot acrescenta somente .ci-run.json e script/sf-ci/wp00-source-hash.test.mjs. Este último não integra o produto.
+- Actions confirmou host Gitblob3f6863be244ce79dc6538564ac0c0b6b8b58e8c1, 95024 bytes, SHA256 **51641a232525128ea4338034ff095a828204a5411dc7dd3334283c00fe6e57bd**, classificação source-bytes-only.
+- O #395 ainda não foi mergeado. Sua reconciliação final preservará os merges posteriores sem repetir código de CI divergente. O hash de pacote antigo2f25f5… continua estritamente histórico, nunca final.
+
+### Reports — conclusão atual failure, sem esconder cancelamentos
+- Run44668834875 **failure / 0 pass / 4 fail**, snapshotcf75dc20a4e42b6945ef4beadffcfc903a323ab3, fonte6b0af4a38e15d98b82d37c6479ca0695fe50292f.
+- Typechecks E2E success; test136064632432 failure e cleanup136068663037 success.
+- RPT01: original browser request cancelado durante preparação, retained-response.ts:41:17 e listener:77:62.
+- RPT02: UI48 ausente em reports-support/review-flow.ts:109:29, após leitura original.
+- RPT03: timeout180000ms seguido de cancelamento; a mensagem secundária não demonstra a causa primária.
+- RPT04: protocol request cancelado, retained-response.ts:41:17 e callback:90:69.
+- Artefato14598804475, playwright-ubuntu-24.04-1,361100bytes; digest ZIP **da103f3cb2af36383236a38fc21af5b169f7db049fc201276de6710bebd1c5fa**. Não é baseline completo nem pacote.
+- Retainer não qualificado globalmente. Não ignorar cancelamentos, trocar resposta, aumentar prazo ou repetir gate idêntico. Leitura de fonte não provou loop em discover nem abort incondicional pós-JSON do transporte web.
+- Reader independente do artefato novo está sendo preparado para discriminar a admissão F01, sem repetir o produto.
+
+### Operations — fonte nova e gate em execução
+- Migração sf-import-native HEADed8db1bd407d09c908aa90b900e7ecba258b41f7, código64d96d475b38f308bea2d468f2d1c33617002a35.
+- Composição sf-ops-import-observed códigoa3dde87cb329cc203170f00e78dc6f766a57d941, sourcef04a654d61772c32be02178532c9f7cc592b1f03.
+- Snapshotfb751a5befe6f7138d5ca3fa802135b561ba5c7a; **run44671315734 IN_PROGRESS**, job136072705652. Não inferir resultado deste estado.
+- Inclui correção concreta de scores com null, UI55/UI57 e recuperação original de um Apply, proveniência do recibo, callback unknown→reconcile, observers #431/#407 e retainer original5b4c.
+- Preserva seis linhas,72000→84000,518000 intacto,CAS+1, fórmulas/digest/recibo/owner e um Apply.
+- Revogação prova403 do produtor separadamente; preflightUI401 provoca zero GETreference de navegador e UIunavailable com DOM privado ausente. Não alega limpeza da memória.
+- **Não mergear composição inteira:** herda dois blobs de #393 como dependência explícita de qualificação. O PR #393 continua com0check-runs/0statuses e estado pending no headd8938c31cd818648cfc78828eb32bcb68c04165e; nenhuma autorização para merge inferida de coleção vazia.
+- Nenhum gate foi iniciado pelos agentes; a raiz mantém no máximo2 execuções próprias simultâneas.
+
+### Ordem real adicional e desvios externos
+Após os25 merges anteriormente registrados, a cadeia primeiro-parent é:
+26. #423 →9fb1514464e75646ec2f96d9ddaf940f1fe2062c.
+27. #440 →8eb020dd6cb776b18dc006a23403f8b3a5e4a0bf.
+28. #425 →c74724c3e82f9a3fd3bdf2cd5492d966069caed8.
+29. #426 →9391cd78afb37883964263f4a43b08aafead131b.
+30. #443 →95d3ffdc5478edcfa0ce012ba7f367ef7ab39259.
+31. #447 →cad07e37262ebc4888422b4cf549e06c37a9390d.
+32. #444 →124d5b5c7fbc4a7a57edc0fe1420d38496402a48.
+
+São merges concorrentes de outras sessões, não efetuados pela raiz. Os recortes de shards continuam anteriores ao merge da UI inteira. Qualificações reais:
+- #437, já na posição25:44668705164 success18/0/1386.
+- #440:44669527682 success17/0/327.
+- #447:44669530310 success3/0/168;44670030550 success1/0/73 (7filtered).
+- #444:44670481763 success1/0/20 (8filtered); não qualifica jornadas filtradas.
+- #426:44669752250 success5/0/913, snapshot690563b2ec4d9a3812f1ff7874fe7bcf0bbbc0ff filho direto de42926f460f6e1b5195aad2be39ecf200e4a5ef71, apenas.ci-run.json adicional. Todos38pins idênticos na integração atual. Rev12 atualiza somente host+narrativa; consumerAcceptance permanece BLOCKED, 17contratos/5perfis/18skills/8packs/39operações/AM01–06 intactos. Não criar rev13 ou repetir gate.
+- **#423 diverge da regra success global**:44666208536 failure; cliente5/0/58, Dashboard0/1/25; unbound(modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts:97:72).
+- **#425 diverge da regra success global**:44668900773 failure por LFS ausente em .github/workflows/ci-efficiency-proof.yml:194;294testes e typechecksCore/Sucafina passaram. Suplemento44669419937 failure em .github/workflows/ci-efficiency-guards.yml:35 (dependência check:spawn-imports ausente), embora comparação dev comprovasse2protected-paths herdados e0novos. A união verde44670544483 não altera retroativamente essas conclusões.
+- **#443 inclui recorte WP05 sem success global**:44654104426 failure12/1/1057, unbound(modules/sucafina/Sucafinav1/test/product/wp05/procurement-integration.test.ts:182:24). Outros9recortes têm runs success; não declarar shardC inteiro verde.
+- O desvio #432 já registrado permanece: casos-alvo pass dentro de runs globalmente failure.
+
+### Retomada concreta
+1. Concluir leitura do runOperations44671315734 e diagnóstico Reports; novos gates somente com correção concreta.
+2. A UI inteira e shards continuam sem qualificação integral; manter PRs partial/draft abertos e registrar file:line. #392 e #237 não tocar.
+3. Resolver a seleção/fixture de ingresso real antes do sf-ci: integração atual ainda aponta Reports/Decisions para listener legado proibido; não executar esse caminho. A correção4174 permanece isolada até qualificação apropriada.
+4. Integrar somente deltas qualificados, preservar suites.json blob57937b0e9df670fb7ccf10a18de5f5a83dec734d e consumerAcceptanceBLOCKED.
+5. Congelar SHA final, executar guards reais e um único sf-ci por drivers já revisados; registrar os jobs mesmo quando baselinePENDING_REAL_COMPLETE_RUN e protected-paths falharem por desenho.
+6. Mover sfa-factory-package por fast-forward ao SHA congelado, ler run/artefato/archiveSha256 reais, sem GO/deploy; atualizar este handoff final com todos os recibos.
+
+
+## Checkpoints históricos preservados
+
 ## SHA e estado
 
 - Data deste checkpoint: 2026-11-20, após início do gate Reports44668834875.
