@@ -80,7 +80,7 @@ export async function teamProductFixture(input: {
     }
     const options: Parameters<typeof createSfProductAuthority>[0] = {
       installationId, origin: publicOrigin, policyVersion: "sf-product-v1", identity: () => technical,
-      persistence, authenticate: installed.identity.authenticate, environment,
+      persistence, authenticate: installed.identity.authenticate, authenticateAll: installed.identity.authenticateAll, environment,
       isAuthenticated: async (request) => Boolean(await installed.identity.person(request)),
       grants, readGrants: async () => { await hooks.beforeGrants?.(); return f.microsoft.readGrants() },
       teamConnections: installed.store.teamConnections ? { store: installed.store.teamConnections, readKey: f.microsoft.readConnectionKey } : undefined,

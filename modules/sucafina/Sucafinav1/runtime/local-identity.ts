@@ -125,7 +125,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
     if (!current || current.value.tokens.expiresAt <= now()) return undefined
     return current
   }
-  const observeMicrosoftSession = async (request: Request): Promise<MicrosoftProfileSession | undefined> => {
+  const captureMicrosoftSession = async (request: Request) => {
     const admissibleRequest = () => binding[0] === "microsoft" && !request.signal.aborted &&
       trusted(request) && (!request.headers.has("origin") || request.headers.get("origin") === options.origin) &&
       request.headers.get("sec-fetch-site") !== "cross-site"
@@ -145,6 +145,12 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         latest.value.tokens.expiresAt === current.value.tokens.expiresAt &&
         JSON.stringify(latest.value.tokens.grantedScopes) === JSON.stringify(current.value.tokens.grantedScopes)
     }
+    return { current, principal, verifyCurrent }
+  }
+  const observeMicrosoftSession = async (request: Request): Promise<MicrosoftProfileSession | undefined> => {
+    const captured = await captureMicrosoftSession(request)
+    if (!captured) return undefined
+    const { current, principal, verifyCurrent } = captured
     // Only these closures retain credentials. This observation is not a grant;
     // the installation resolver revalidates it after its own policy/store awaits.
     const observation: MicrosoftProfileSession = {
@@ -190,6 +196,36 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
       },
     }
     return Object.freeze(observation)
+  }
+  const authenticateAll: NonNullable<LocalIdentity["authenticateAll"]> = async (request, contexts) => {
+    // Copy every selector before the first await. The callback observes groups once
+    // for this boundary only; callers must invoke it again after their own awaits.
+    const originalMaps = JSON.stringify(contexts)
+    const maps = contexts.map((context) => ({
+      surface: context.surface, roleMap: context.roleMap.map((row) => ({ ...row })),
+    }))
+    if (maps.length !== 3 || new Set(maps.map((entry) => entry.surface)).size !== 3 ||
+        maps.some((entry) => !["dashboard", "planner", "procurement"].includes(entry.surface) ||
+          entry.roleMap.some((row) => row.surface !== entry.surface))) return null
+    const intent = () => JSON.stringify([request.url, request.method, request.headers.get("cookie"),
+      request.headers.get("authorization"), request.headers.get("origin"), request.headers.get("sec-fetch-site"),
+      request.headers.get("x-sf-team-profile")])
+    const originalIntent = intent()
+    const unchanged = () => !request.signal.aborted && intent() === originalIntent && JSON.stringify(contexts) === originalMaps
+    const captured = await captureMicrosoftSession(request)
+    if (!captured || !unchanged()) return null
+    const actor = await options.client.resolve(captured.current.value.tokens.accessToken, maps.flatMap((entry) => entry.roleMap))
+      .catch(() => null)
+    if (!actor || actor.id !== captured.current.value.person.id ||
+        actor.roles.some((role) => !maps.some((entry) => entry.surface === role.surface &&
+          entry.roleMap.some((row) => row.role === role.role)))) return null
+    const projected = maps.map((entry) => {
+      const roles = actor.roles.filter((role) => role.surface === entry.surface)
+      return { surface: entry.surface, actor: roles.length ? { id: actor.id, roles,
+        canWrite: roles.some((role) => role.role !== "viewer") } : null }
+    })
+    if (!await captured.verifyCurrent() || !unchanged()) return null
+    return projected
   }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
@@ -289,6 +325,7 @@ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentit
         return observation ? observation.teams() : { state: "unauthenticated" }
       },
     }),
+    ...(binding[0] === "microsoft" ? { authenticateAll } : {}),
     async authenticate(request, context) {
       const current = await ready(request)
       if (!current || !context) return null

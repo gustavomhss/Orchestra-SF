@@ -10,6 +10,7 @@ import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { createTeamProfileResolver, TeamProfileResolution } from "../../runtime/team-profile-resolver.ts"
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import type { Application } from "../../runtime/application.ts"
+import type { LocalIdentity } from "../../runtime/local-contract.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
 import { object } from "../../runtime/contract.ts"
@@ -62,6 +63,7 @@ export function createSfProductAuthority(input: {
   policyVersion: string
   persistence: Application["persistence"]
   authenticate: Application["authenticate"]
+  authenticateAll?: LocalIdentity["authenticateAll"]
   environment: Application["environment"]
   isAuthenticated?: (request: Request) => Promise<boolean>
   grants: readonly SfProductGrant[]
@@ -144,10 +146,14 @@ export function createSfProductAuthority(input: {
     }))
     const mapped = maps()
     const mappedDigest = digestSfValue(mapped)
-    const observed = await Promise.all(mapped.map(async (entry) => ({
-      surface: entry.surface,
-      actor: await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows }),
-    })))
+    const observed = input.authenticateAll
+      ? await input.authenticateAll(request, mapped.map((entry) => ({ surface: entry.surface, roleMap: entry.rows }))).catch(() => null)
+      : await Promise.all(mapped.map(async (entry) => ({
+          surface: entry.surface,
+          actor: await input.authenticate(request, { surface: entry.surface, roleMap: entry.rows }),
+        })))
+    if (!observed || observed.length !== mapped.length || observed.some((entry, index) => entry.surface !== mapped[index].surface))
+      return undefined
     const present = observed.flatMap((entry) => entry.actor ? [{ ...entry, actor: entry.actor }] : [])
     const principalRef = profile?.principal.principalObjectId ?? present[0]?.actor.id
     if (!principalRef || principalRef.startsWith("local:") ||
