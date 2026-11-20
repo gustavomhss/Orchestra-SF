@@ -206,7 +206,9 @@ export function assertWorkflowSourceSelection(workflow) {
     requireContract(step.includes("          ref: " + expression), "checkout is not pinned to the actual PR head")
   requireContract(!workflow.includes('test "$GITHUB_SHA"'), "workflow identity used as product checkout identity")
   requireContract(!workflow.includes("if (sha !== process.env.GITHUB_SHA)"), "guard receipt uses the synthetic merge SHA")
-  requireContract(workflow.includes("workflowSHA: process.env.GITHUB_SHA"), "raw workflow provenance was erased")
+  const identities = [...workflow.matchAll(/\bworkflowSHA:\s*([^,\s}]+)/g)]
+  requireContract(identities.length > 0 && identities.every((entry) => entry[1] === "process.env.GITHUB_SHA"),
+    "raw workflow provenance was erased or rebound")
   requireContract(!/^      [A-Z_]+: \$\{\{ runner\./m.test(workflow), "runner context is not available in job-level env")
   return checkouts.length
 }

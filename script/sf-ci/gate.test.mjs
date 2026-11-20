@@ -768,6 +768,7 @@ test("the canonical workflow pins every product checkout and keeps raw workflow 
     workflow.replace("  SF_PRODUCT_SOURCE_SHA: " + expression, ""),
     workflow.replace("workflowSHA: process.env.GITHUB_SHA", "workflowSHA: process.env.SF_PRODUCT_SOURCE_SHA"),
     workflow.replace('test "$SF_PRODUCT_SOURCE_SHA"', 'test "$GITHUB_SHA"'),
+    workflow.replace("    env:\n".replace("\n", "\n"), "    env:\n      SF_FORBIDDEN: $" + "{{ runner.temp }}\n"),
   ]) assert.throws(() => assertWorkflowSourceSelection(broken), /SF_CI_WORKFLOW_SELECTION/)
 })
 
