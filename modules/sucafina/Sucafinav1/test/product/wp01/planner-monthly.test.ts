@@ -77,7 +77,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
         object(response.request().postDataJSON()).action === action
       const previewCopy = responses.begin([
         { label: "monthly preview", method: "POST", pathname: "/sucafina/planner", query: { sf: "workbench-planner" } },
-      ])
+      ], 5000)
       const [preview, paste] = await Promise.all([
         tab.waitForResponse(monthlyResponse("preview")),
         // Keep the ClipboardEvent and its DataTransfer in the grid's own frame;
@@ -123,7 +123,7 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       })
       const applyCopy = responses.begin([
         { label: "monthly apply", method: "POST", pathname: "/sucafina/planner", query: { sf: "workbench-planner" } },
-      ])
+      ], 5000)
       const [applied] = await Promise.all([
         tab.waitForResponse(monthlyResponse("apply")),
         reviewed.getByRole("button", { name: "Apply reviewed rows", exact: true }).click(),
