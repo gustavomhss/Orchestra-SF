@@ -1,0 +1,190 @@
+name: teams-residue-review-diagnostic
+
+# Directed parser/control validation; no installed-host, Microsoft or recovery verdict.
+on:
+  push:
+    branches:
+      - "ci-review-*"
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  SF_PRODUCT_SOURCE_SHA: ${{ github.sha }}
+
+jobs:
+  preflight:
+    name: Verify and navigate original residue report
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout the exact work-in-progress evidence source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Bind the diagnostic snapshot to its sole source parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$(git show -s --format=%P HEAD)" = "ef6d31ccd3ce00689754633e237e2cf7cdf7de3d"
+          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/teams-residue-review-diagnostic.yml"
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+          git show -s --format='snapshot=%H tree=%T parents=%P'
+      - uses: ./.github/actions/setup-bun
+      - name: Select the exact Node runtime after composite setup
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+      - name: Execute native report, source and residue controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(node --version)" = "v24.15.0"
+          test "$(bun --version)" = "1.3.14"
+          node --input-type=module -e 'import { candidateSource } from "./script/sf-ci/workflow-source.mjs"; candidateSource()'
+          git status --porcelain=v1 --untracked-files=all --ignore-submodules=none
+          git diff --stat
+          git diff -- bun.lock
+          git hash-object bun.lock
+          set +e
+          node --test script/sf-ci/gate.test.mjs script/sf-ci/browser-pool.test.mjs script/sf-ci/team-profile-residue.test.mjs \
+            > "$RUNNER_TEMP/teams-evidence-contracts.log" 2>&1
+          contracts_status=$?
+          set -e
+          cat "$RUNNER_TEMP/teams-evidence-contracts.log"
+          test "$contracts_status" -eq 0
+          git status --porcelain=v1 --untracked-files=all --ignore-submodules=none
+          git diff --stat
+          git diff -- bun.lock
+          git hash-object bun.lock
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+      - name: Preserve exact observed contract output
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-evidence-contracts-${{ github.sha }}
+          path: ${{ runner.temp }}/teams-evidence-contracts.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Download exactly the original unqualified G09 report
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          repository: gustavomhss/Orchestra-SF
+          run-id: 44731293244
+          artifact-ids: 14626646947
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/residue-review-original
+      - name: Independently bind original artifact API ZIP bytes and report bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from "node:crypto"
+          import { mkdirSync, readFileSync, writeFileSync, appendFileSync, lstatSync } from "node:fs"
+          import path from "node:path"
+          const fail = () => { throw new Error("SF_RESIDUE_REVIEW_DOWNLOAD_BINDING_FAILED") }
+          const repo = "gustavomhss/Orchestra-SF", id = "14626646947", runId = "44731293244"
+          const sourceSHA = "48e7110f4b72ffda14cfc2443ac24989f4b7060a"
+          const sourceTreeSHA = "e4570749938a138377a01142ac5943223f225a34"
+          const expectedDigest = "sha256:b7cdacef70dce81cb94d25356554a3d17d397c7a1307d6cbbe50baea6d5bcf1e"
+          const headers = { authorization: "Bearer " + process.env.GH_TOKEN,
+            accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28" }
+          const root = "https://api.github.com/repos/" + repo
+          const metadata = await fetch(root + "/actions/artifacts/" + id, { headers })
+          if (!metadata.ok) fail()
+          const artifact = await metadata.json()
+          const execution = await fetch(root + "/actions/runs/" + runId, { headers })
+          if (!execution.ok) fail()
+          const run = await execution.json()
+          if (String(artifact.id) !== id || artifact.name !== "teams-profile-evidence-G09" ||
+              artifact.digest !== expectedDigest || artifact.expired !== false ||
+              artifact.size_in_bytes !== 72616836 || String(artifact.workflow_run?.id) !== runId ||
+              artifact.workflow_run?.head_sha !== sourceSHA ||
+              artifact.workflow_run?.repository_id !== 1455724710 ||
+              artifact.workflow_run?.head_repository_id !== 1455724710 ||
+              String(run.id) !== runId || run.run_attempt !== 1 || run.head_sha !== sourceSHA ||
+              run.repository?.id !== 1455724710 || run.head_repository?.id !== 1455724710 ||
+              run.event !== "push" || run.status !== "completed" || run.conclusion !== "failure") fail()
+          const zip = await fetch(root + "/actions/artifacts/" + id + "/zip", {
+            headers: { ...headers, accept: "application/vnd.github+json" }, redirect: "follow",
+          })
+          if (!zip.ok || !zip.body) fail()
+          const hash = createHash("sha256")
+          let zipBytes = 0
+          for await (const chunk of zip.body) {
+            zipBytes += chunk.length
+            if (zipBytes > artifact.size_in_bytes) fail()
+            hash.update(chunk)
+          }
+          if (zipBytes !== artifact.size_in_bytes || "sha256:" + hash.digest("hex") !== expectedDigest) fail()
+          const original = path.join(process.env.RUNNER_TEMP, "residue-review-original", "team-profile-residue.json")
+          const before = lstatSync(original)
+          if (!before.isFile() || before.isSymbolicLink()) fail()
+          const bytes = readFileSync(original), after = lstatSync(original)
+          if (before.ino !== after.ino || before.size !== after.size || before.mtimeMs !== after.mtimeMs ||
+              bytes.length !== before.size) fail()
+          const reportSha256 = createHash("sha256").update(bytes).digest("hex")
+          const output = path.join(process.env.RUNNER_TEMP, "residue-review-index")
+          mkdirSync(output, { mode: 0o700 })
+          const provenance = {
+            schema: "teams-profile-residue-review-download-v1", reportSha256, reportBytes: bytes.length,
+            sourceSHA, sourceTreeSHA, workflowSHA: sourceSHA, runId, runAttempt: "1",
+            archiveSha256: "9f3369d185b7d7bded7c5e0833a502c07fd45efc72c698c63496b69b109600bf",
+            evidenceArtifact: { id, name: artifact.name, digest: expectedDigest,
+              workflowRunId: runId, headSha: sourceSHA, expired: false },
+          }
+          writeFileSync(path.join(output, "download.json"), JSON.stringify(provenance, null, 2) + "\n",
+            { flag: "wx", mode: 0o600 })
+          appendFileSync(process.env.GITHUB_ENV, "SF_RESIDUE_REPORT_ARTIFACT_ID=" + id + "\n" +
+            "SF_RESIDUE_REPORT_ARTIFACT_DIGEST=" + expectedDigest + "\n")
+          console.log("SF_RESIDUE_ORIGINAL_REPORT_DOWNLOAD_BOUND " + JSON.stringify({
+            sourceSHA, sourceTreeSHA, originalRunId: runId, artifactId: id,
+            artifactDigest: expectedDigest, zipBytes, reportSha256, reportBytes: bytes.length,
+            qualification: "NOT_EVALUATED",
+          }))
+          NODE
+      - name: Navigate exact original report without rebuilding or classifying it
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+        shell: bash
+        run: |
+          set -euo pipefail
+          node script/sf-ci/team-profile-residue.mjs review-report \
+            --source "$GITHUB_WORKSPACE" \
+            --report "$RUNNER_TEMP/residue-review-original/team-profile-residue.json" \
+            --provenance "$RUNNER_TEMP/residue-review-index/download.json" \
+            --output "$RUNNER_TEMP/residue-review-index/overview.json" --section overview --offset 0 --limit 100
+          node script/sf-ci/team-profile-residue.mjs review-report \
+            --source "$GITHUB_WORKSPACE" \
+            --report "$RUNNER_TEMP/residue-review-original/team-profile-residue.json" \
+            --provenance "$RUNNER_TEMP/residue-review-index/download.json" \
+            --output "$RUNNER_TEMP/residue-review-index/archive-paths.json" --section paths --domain archive --offset 0 --limit 100
+          node script/sf-ci/team-profile-residue.mjs review-report \
+            --source "$GITHUB_WORKSPACE" \
+            --report "$RUNNER_TEMP/residue-review-original/team-profile-residue.json" \
+            --provenance "$RUNNER_TEMP/residue-review-index/download.json" \
+            --output "$RUNNER_TEMP/residue-review-index/source-paths.json" --section paths --domain source --offset 0 --limit 100
+          node script/sf-ci/team-profile-residue.mjs review-report \
+            --source "$GITHUB_WORKSPACE" \
+            --report "$RUNNER_TEMP/residue-review-original/team-profile-residue.json" \
+            --provenance "$RUNNER_TEMP/residue-review-index/download.json" \
+            --output "$RUNNER_TEMP/residue-review-index/source-reachability.json" --section reachability --domain source --offset 0 --limit 50
+          test -z "$(git status --porcelain=v1 --untracked-files=all --ignore-submodules=none)"
+      - name: Retain only bounded navigation indexes and their download provenance
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-residue-review-index-${{ github.sha }}
+          path: ${{ runner.temp }}/residue-review-index/*.json
+          if-no-files-found: warn
+          retention-days: 14
