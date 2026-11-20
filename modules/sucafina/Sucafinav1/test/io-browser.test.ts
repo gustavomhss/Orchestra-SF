@@ -208,8 +208,10 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     await downloaded.saveAs(downloadPath)
     const plannerDownload = Bun.file(downloadPath)
     expect(await plannerDownload.exists()).toBe(true)
+    const downloadedBytes = await plannerDownload.arrayBuffer()
+    expect(Buffer.from(downloadedBytes)).toEqual(await exportResponse.body())
     const exported = new Workbook()
-    await exported.xlsx.load(await plannerDownload.arrayBuffer())
+    await exported.xlsx.load(downloadedBytes)
     const exportedOpex = exported.getWorksheet("OPEX")
     expect(exportedOpex).toBeDefined()
     const rows: unknown[][] = []
@@ -653,9 +655,10 @@ async function membersIoProjection(response: Pick<Response, "status" | "json">) 
   return body.value
 }
 
+
 async function plannerIoProjection(response: Pick<Response, "status" | "json">) {
   expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP18"].output)(await response.json())
+  const body = Schema.decodeUnknownSync(Schema.toType(SfPlanner.operations["domain.page.CAP18"].output), { onExcessProperty: "error" })(await response.json())
   expect(body.status).toBe("ok")
   if (body.status !== "ok") throw new Error("The original authorized Planner projection was unavailable")
   return body.value
