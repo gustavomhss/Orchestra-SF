@@ -31,6 +31,7 @@ import { Global } from "./global"
 import { Location } from "./location"
 import { InstallationVersion } from "./installation/version"
 import { McpAuth } from "./mcp/auth"
+import { SessionOwner } from "./session/owner"
 import { McpCatalog } from "./mcp/catalog"
 import { McpClient } from "./mcp/client"
 import { McpOAuthCallback } from "./mcp/oauth-callback"
@@ -903,9 +904,40 @@ const layer = Layer.effect(
   }),
 )
 
+/** Shared Team settings do not declare private server definitions or tool approval. */
+const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const binding = yield* owners.location.pipe(Effect.orDie)
+  if (!binding) return Context.get(yield* Layer.build(layer), Service)
+  const missing = (name: string) => binding.bind(Effect.fail(new NotFoundError({ name })))
+  const unavailable = () => binding.bind(Effect.fail(new ConfigError({ message: "Private MCP configuration is unavailable for this profile" })))
+  // No project/global/provided server is adopted into a Team. Enumeration is empty;
+  // starting, probing or configuring a server remains denied until an explicit private definition exists.
+  return Service.of({
+    ready: () => binding.bind(Effect.void),
+    applyTrust: () => binding.bind(Effect.void),
+    list: () => binding.bind(Effect.succeed([])),
+    connect: missing,
+    disconnect: missing,
+    add: unavailable,
+    remove: unavailable,
+    config: () => binding.bind(Effect.succeed({})),
+    entries: () => binding.bind(Effect.succeed({})),
+    tools: () => binding.bind(Effect.succeed({})),
+    resources: () => binding.bind(Effect.succeed({ resources: [], templates: [] })),
+    readResource: () => binding.bind(Effect.succeed(undefined)),
+    prompts: () => binding.bind(Effect.succeed([])),
+    getPrompt: (server) => missing(server),
+    startAuth: missing,
+    finishAuth: (name) => missing(name),
+    removeAuth: missing,
+    debug: missing,
+  })
+}))
+
 export const node = makeLocationNode({
   service: Service,
-  layer,
+  layer: admittedLayer,
   deps: [
     Config.node,
     Global.node,
@@ -915,6 +947,7 @@ export const node = makeLocationNode({
     FSUtil.node,
     McpAuth.node,
     McpProvided.node,
+    SessionOwner.node,
   ],
 })
 

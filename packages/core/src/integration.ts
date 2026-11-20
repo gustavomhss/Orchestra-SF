@@ -20,6 +20,9 @@ import { Credential } from "./credential"
 import { State } from "./state"
 import { EventV2 } from "./event"
 import { IntegrationConnection } from "./integration/connection"
+import { SessionOwner } from "./session/owner"
+import { CredentialVault } from "./credential/vault"
+import type { ConnectionAccess } from "@orchestra/schema/connection-access"
 
 export const ID = Integration.ID
 export type ID = Integration.ID
@@ -228,10 +231,18 @@ type TerminalAttempt = {
 }
 type AttemptEntry = PendingAttempt | TerminalAttempt
 
+const ConnectionPolicy = Context.Reference<{
+  readonly environment: boolean
+  readonly check: (action: ConnectionAccess.Action, integrationID: ID) => Effect.Effect<void>
+}>("@orchestra/Integration/ConnectionPolicy", {
+  defaultValue: () => ({ environment: true, check: () => Effect.void }),
+})
+
 export const locationLayer = Layer.effect(
   Service,
   Effect.gen(function* () {
     const credentials = yield* Credential.Service
+    const policy = yield* ConnectionPolicy
     const events = yield* EventV2.Service
     const scope = yield* Scope.Scope
     const attempts = SynchronizedRef.makeUnsafe(new Map<AttemptID, AttemptEntry>())
@@ -303,7 +314,7 @@ export const locationLayer = Layer.effect(
           label: credential.label,
         }))
         .toReversed()
-      const env = (entry?.methods ?? [])
+      const env = (policy.environment ? entry?.methods ?? [] : [])
         .filter((method) => method.type === "env")
         .flatMap((method) => method.names.filter((name) => process.env[name]))
         .map((name) => ({ type: "env" as const, name }))
@@ -410,6 +421,7 @@ export const locationLayer = Layer.effect(
         }),
         resolve: Effect.fn("Integration.connection.resolve")(function* (connection) {
           if (connection.type === "env") {
+            if (!policy.environment) return undefined
             const key = process.env[connection.name]
             return key ? Credential.Key.make({ type: "key", key }) : undefined
           }
@@ -427,7 +439,9 @@ export const locationLayer = Layer.effect(
           if (source) {
             return yield* new Credential.InheritedError({ credentialID: credential.id, source, reason: "refresh" })
           }
+          yield* policy.check("update", credential.integrationID)
           const value = yield* authorize(implementation.refresh(credential.value))
+          yield* policy.check("update", credential.integrationID)
           yield* credentials.update(credential.id, { value })
           return value
         }),
@@ -445,10 +459,14 @@ export const locationLayer = Layer.effect(
           if (!method) {
             return yield* Effect.die(`OAuth method not found: ${input.integrationID}/${input.methodID}`)
           }
+          yield* policy.check("create", input.integrationID)
           const attemptScope = yield* Scope.fork(scope)
           const authorization = yield* authorize(method.authorize(input.inputs)).pipe(
             Scope.provide(attemptScope),
             Effect.onExit((exit) => (Exit.isFailure(exit) ? Scope.close(attemptScope, exit) : Effect.void)),
+          )
+          yield* policy.check("create", input.integrationID).pipe(
+            Effect.onExit((exit) => Exit.isFailure(exit) ? Scope.close(attemptScope, exit) : Effect.void),
           )
           const id = AttemptID.create()
           const created = yield* Clock.currentTimeMillis
@@ -533,6 +551,7 @@ export const locationLayer = Layer.effect(
             return yield* new CodeRequiredError({ attemptID: input.attemptID })
           }
           if (attempt.completing) return yield* Effect.die(`OAuth attempt already completing: ${input.attemptID}`)
+          yield* policy.check("create", attempt.integrationID)
           const callback =
             attempt.authorization.mode === "auto"
               ? attempt.authorization.callback
@@ -556,4 +575,47 @@ export const locationLayer = Layer.effect(
   }),
 )
 
-export const node = makeLocationNode({ service: Service, layer: locationLayer, deps: [Credential.node, EventV2.node] })
+/** Registry handles and OAuth callbacks retain their original private owner, never a caller's later profile. */
+const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
+  const owners = yield* SessionOwner.Service
+  const binding = yield* owners.location.pipe(Effect.orDie)
+  const check = (action: ConnectionAccess.Action, integrationID: ID) => binding
+    ? binding.bind(Effect.gen(function* () {
+      const scope = yield* owners.open().pipe(Effect.orDie)
+      const vault = yield* owners.connections(scope).pipe(Effect.orDie)
+      if (!vault) return yield* Effect.die(new CredentialVault.Denied({ reason: "unavailable" }))
+      yield* vault.check(action, { category: "integration", resourceId: integrationID }).pipe(Effect.orDie)
+    })) : Effect.void
+  // Build in the location's live scope: OAuth attempts and the scrub fiber outlive one method call.
+  const context = yield* Layer.build(locationLayer).pipe(Effect.provideService(ConnectionPolicy, {
+    environment: binding === undefined, check,
+  }))
+  const integrations = Context.get(context, Service)
+  if (!binding) return integrations
+  return Service.of({
+    transform: (transform) => binding.bind(integrations.transform((draft) => binding.bind(Effect.suspend(() => {
+      const effect = transform(draft)
+      return Effect.isEffect(effect) ? effect : Effect.void
+    })))),
+    reload: () => binding.bind(integrations.reload()),
+    get: (id) => binding.bind(integrations.get(id)),
+    list: () => binding.bind(integrations.list()),
+    connection: {
+      active: (id) => binding.bind(integrations.connection.active(id)),
+      resolve: (connection) => binding.bind(integrations.connection.resolve(connection)),
+      key: (input) => binding.bind(integrations.connection.key(input)),
+      oauth: (input) => binding.bind(integrations.connection.oauth(input)),
+      update: (id, input) => binding.bind(integrations.connection.update(id, input)),
+      remove: (id) => binding.bind(integrations.connection.remove(id)),
+      disconnect: (id) => binding.bind(integrations.connection.disconnect(id)),
+    },
+    attempt: {
+      ownedBy: (id, integrationID) => binding.bind(integrations.attempt.ownedBy(id, integrationID)),
+      status: (id) => binding.bind(integrations.attempt.status(id)),
+      complete: (input) => binding.bind(integrations.attempt.complete(input)),
+      cancel: (id) => binding.bind(integrations.attempt.cancel(id)),
+    },
+  })
+}))
+
+export const node = makeLocationNode({ service: Service, layer: admittedLayer, deps: [Credential.node, EventV2.node, SessionOwner.node] })
