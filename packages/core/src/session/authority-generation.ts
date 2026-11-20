@@ -3,6 +3,8 @@ export * as AuthorityGeneration from "./authority-generation"
 import { Context, Effect, Exit } from "effect"
 import { createHash, randomUUID } from "node:crypto"
 import { resolve } from "node:path"
+import { realpathSync } from "node:fs"
+import { fileURLToPath } from "node:url"
 
 export class GenerationError extends Error {
   readonly _tag = "AuthorityGenerationError"
@@ -41,9 +43,16 @@ const Writer = Context.Reference<Proof | undefined>("@orchestra/AuthorityGenerat
 const memoryStores = new WeakMap<object, string>()
 const valid = (value: number) => Number.isSafeInteger(value) && value >= 1
 
+/** Stable private file identity, including aliases and SQLite file: URIs. */
+export function filename(value: string): string | undefined {
+  if (value === ":memory:") return undefined
+  return realpathSync(value.startsWith("file:") ? fileURLToPath(value) : resolve(value))
+}
+
 /** Shared with the SQL adapter; in-memory connections never borrow another database's identity. */
-export function storageID(native: object, filename: string): string {
-  if (filename !== ":memory:") return createHash("sha256").update(resolve(filename)).digest("hex")
+export function storageID(native: object, source: string): string {
+  const path = filename(source)
+  if (path) return createHash("sha256").update(path).digest("hex")
   const known = memoryStores.get(native)
   if (known) return known
   const value = randomUUID()
@@ -63,7 +72,11 @@ export function writerFor(context: Context.Context<never>, storage: string, gene
   return live(proof, storage, generation) ? proof : undefined
 }
 
-export function make(source: Source): Interface {
+export function make(input: Source): Interface {
+  const source: Source = Object.freeze({
+    storageID: input.storageID, current: input.current,
+    verifyGeneration: input.verifyGeneration.bind(input), acquire: input.acquire.bind(input),
+  })
   if (!source.storageID) throw new GenerationError("unavailable")
   const current = source.current.pipe(Effect.flatMap((value) => value === undefined || valid(value)
     ? Effect.succeed(value) : Effect.fail(new GenerationError("unavailable"))))

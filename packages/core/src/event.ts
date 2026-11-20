@@ -16,6 +16,8 @@ import { Location } from "./location"
 import { makeGlobalNode } from "./effect/app-node"
 import { isDeepStrictEqual } from "node:util"
 import { Durable } from "@orchestra/schema/durable-event-manifest"
+import { SessionOwner } from "./session/owner"
+import { SessionSchema } from "./session/schema"
 
 export const ID = Event.ID
 export type ID = import("@orchestra/schema/event").ID
@@ -84,6 +86,7 @@ export const readAggregate = Effect.fn("EventV2.readAggregate")(function* <A>(
     }
   },
 ) {
+  const access = Effect.gen(function* () {
   const after = input.after ?? -1
   const rows = yield* db
     .select()
@@ -117,6 +120,9 @@ export const readAggregate = Effect.fn("EventV2.readAggregate")(function* <A>(
     events,
     hasMore: rows.length > input.limit,
   }
+  })
+  const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(input.aggregateID).valueOrUndefined
+  return yield* (sessionID ? SessionOwner.access(db, sessionID, "read", access) : access)
 })
 
 export class SubscriberOverflowError extends Schema.TaggedErrorClass<SubscriberOverflowError>()(
@@ -151,6 +157,7 @@ type PendingNotification = { readonly ticket: EventOrder.Ticket | undefined; rea
 const TransactionBatch = Context.Reference<{
   readonly owner: object
   readonly pending: PendingNotification[]
+  readonly checks: Array<Effect.Effect<void>>
 } | undefined>("@orchestra/Event/TransactionBatch", { defaultValue: () => undefined })
 
 export interface Interface {
@@ -232,6 +239,49 @@ export const layerWith = (options?: LayerOptions) =>
       const listeners = new Array<Subscriber>()
       const database = yield* Database.Service
       const db = database.db
+      const owners = yield* SessionOwner.Service
+      const currentCheck = owners.active.pipe(Effect.flatMap((scope) => scope ? owners.verify(scope) : Effect.void), Effect.orDie)
+      const writer = <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.gen(function* () {
+        const scope = yield* owners.active.pipe(Effect.orDie)
+        return yield* (scope ? owners.withWriter(scope, effect).pipe(
+          Effect.catchTag("SessionOwner.Denied", Effect.die),
+          Effect.catchTag("AuthorityGenerationError", Effect.die),
+        ) : effect)
+      })
+      const eventAction = (type: string): SessionOwner.Operation => {
+        if (type === "session.next.created" || type === "session.owner.bound") return "create"
+        if (type === "session.next.moved") return "move"
+        if (["session.next.agent.switched", "session.next.model.switched", "session.next.subagent.models.changed",
+          "session.next.permission.changed"].includes(type)) return "model"
+        if (["session.next.prompted", "session.next.prompt.admitted", "session.next.context.updated",
+          "session.next.synthetic"].includes(type)) return "prompt"
+        if (["session.next.renamed", "session.next.deleted", "session.next.archive.changed"].includes(type) ||
+          type.startsWith("session.next.revert.")) return "write"
+        return type.startsWith("session.next.") ? "run" : "write"
+      }
+      const sessionEvent = (data: unknown, operation: SessionOwner.Operation) => Effect.gen(function* () {
+        if (!data || typeof data !== "object" || !("sessionID" in data)) return
+        const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(data.sessionID).valueOrUndefined
+        if (!sessionID) return
+        const scope = yield* owners.open().pipe(Effect.orDie)
+        const action = operation === "replay" ? operation : yield* owners.eventOperation(scope, sessionID, operation)
+        yield* owners.assert(scope, sessionID, action).pipe(Effect.orDie)
+      })
+      const sessionEffect = <A, E, R>(data: unknown, operation: SessionOwner.Operation, effect: Effect.Effect<A, E, R>) =>
+        Effect.gen(function* () {
+          if (!data || typeof data !== "object" || !("sessionID" in data)) return yield* effect
+          const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(data.sessionID).valueOrUndefined
+          if (!sessionID) return yield* effect
+          const scope = yield* owners.open().pipe(Effect.orDie)
+          const action = operation === "replay" ? operation : yield* owners.eventOperation(scope, sessionID, operation)
+          const current = yield* batch
+          if (current) current.checks.push(owners.assert(scope, sessionID, action).pipe(Effect.orDie))
+          return yield* SessionOwner.guard(owners, sessionID, action, () => effect)
+        })
+      const sessionAccess = <A, E, R>(aggregateID: string, operation: SessionOwner.Operation, effect: Effect.Effect<A, E, R>) => {
+        const sessionID = Schema.decodeUnknownOption(SessionSchema.ID)(aggregateID).valueOrUndefined
+        return sessionID ? SessionOwner.guard(owners, sessionID, operation, () => effect) : effect
+      }
       const order = EventOrder.make(yield* Scope.Scope)
       const owner = {}
       const batch = Effect.map(TransactionBatch, (current) => current?.owner === owner ? current : undefined)
@@ -249,13 +299,15 @@ export const layerWith = (options?: LayerOptions) =>
           if (database.inTransaction && (yield* database.inTransaction)) return yield* Effect.die(new InvalidDurableEventError({
             type: "event.transaction", message: "Event transactions cannot begin inside an unmanaged SQL transaction",
           }))
-          const current = { owner, pending: [] as PendingNotification[], committed: false }
+          const current = { owner, pending: [] as PendingNotification[], checks: [] as Array<Effect.Effect<void>>, committed: false }
           const transaction = Effect.uninterruptible(db.transaction(
-            () => effect.pipe(Effect.provideService(TransactionBatch, current)), { behavior: "immediate" },
+            () => effect.pipe(Effect.provideService(TransactionBatch, current),
+              Effect.tap(() => Effect.forEach(current.checks, (check) => check, { discard: true })),
+              Effect.tap(() => currentCheck)), { behavior: "immediate" },
           ).pipe(Effect.catchTag("SqlError", Effect.die), Effect.tap(() => Effect.sync(() => { current.committed = true }))))
           // Acquisition is interruptible; SQL commit plus recording its outcome is masked. If cancellation arrives
           // on guard release after commit, schedule the committed notifications before returning that interruption.
-          const outcome = yield* restore(boundary ? boundary(transaction) : transaction).pipe(Effect.exit)
+          const outcome = yield* restore(boundary ? boundary(writer(transaction)) : writer(transaction)).pipe(Effect.exit)
           if (!current.committed) {
             yield* Effect.forEach(current.pending, (pending) => order.release(pending.ticket), { discard: true })
             return yield* outcome
@@ -300,7 +352,8 @@ export const layerWith = (options?: LayerOptions) =>
         persist = true,
         ordered = false,
       ) {
-        return Effect.gen(function* () {
+        return writer(sessionEffect(event.data, input ? "replay" : eventAction(event.type), Effect.gen(function* () {
+          yield* sessionEvent(event.data, input ? "replay" : eventAction(event.type))
           const origin = Object.freeze({ replay: input !== undefined })
           const box: { ticket?: EventOrder.Ticket } = {}
           const durable = definition?.durable
@@ -349,7 +402,7 @@ export const layerWith = (options?: LayerOptions) =>
                               yield* projector(committed, origin)
                             }
                             return
-                          }),
+                          }).pipe(Effect.tap(() => currentCheck)),
                         { behavior: "immediate" },
                       )
                       .pipe(Effect.orDie)
@@ -492,7 +545,7 @@ export const layerWith = (options?: LayerOptions) =>
                           // Last step of the transaction: the ticket order is the commit order.
                           if (ordered) box.ticket = yield* order.take(aggregateID)
                           return { aggregateID, seq, ticket: box.ticket }
-                        }),
+                        }).pipe(Effect.tap(() => currentCheck)),
                       { behavior: "immediate" },
                     )
                     .pipe(order.guard(box), Effect.orDie)
@@ -502,7 +555,7 @@ export const layerWith = (options?: LayerOptions) =>
               )
             }
           }
-        })
+        })))
       }
 
       function publishEvent<D extends Definition>(
@@ -579,6 +632,13 @@ export const layerWith = (options?: LayerOptions) =>
 
       function publish<D extends Definition>(definition: D, data: Data<D>, options?: PublishOptions) {
         return Effect.gen(function* () {
+          // Seal caller-owned data before an admission check can suspend.
+          const snapshot = data && typeof data === "object" && "sessionID" in data
+            ? Schema.decodeUnknownSync(definition.data)(
+                Schema.decodeUnknownSync(Schema.UnknownFromJsonString)(JSON.stringify(Schema.encodeUnknownSync(definition.data)(data))),
+              )
+            : data
+          yield* sessionEvent(snapshot, eventAction(definition.type))
           const serviceLocation = Option.getOrUndefined(yield* Effect.serviceOption(Location.Service))
           const location =
             options?.location ??
@@ -592,7 +652,7 @@ export const layerWith = (options?: LayerOptions) =>
               ...(options?.metadata ? { metadata: options.metadata } : {}),
               type: definition.type,
               ...(location ? { location } : {}),
-              data,
+              data: snapshot,
             } as Payload<D>,
             options?.commit,
             options?.persist ?? true,
@@ -663,7 +723,7 @@ export const layerWith = (options?: LayerOptions) =>
             )
           }
           const box: { ticket?: EventOrder.Ticket } = {}
-          const committing = db
+          const committing = writer(db
             .transaction(
               () =>
                 Effect.gen(function* () {
@@ -683,10 +743,10 @@ export const layerWith = (options?: LayerOptions) =>
                   // One ticket for the whole batch, taken last so it follows the commit order.
                   if (options?.publish) box.ticket = yield* order.take(source)
                   return { replayed, ticket: box.ticket }
-                }),
+                }).pipe(Effect.tap(() => currentCheck)),
               { behavior: "immediate" },
             )
-            .pipe(order.guard(box), Effect.orDie)
+            .pipe(order.guard(box), Effect.orDie))
           yield* order.commit(committing, (committed) => ({
             value: undefined,
             notifying: Effect.forEach(
@@ -700,23 +760,24 @@ export const layerWith = (options?: LayerOptions) =>
       }
 
       function remove(aggregateID: string) {
-        return db
+        return sessionAccess(aggregateID, "write", writer(db
           .transaction(() =>
             Effect.gen(function* () {
               yield* db.delete(EventSequenceTable).where(eq(EventSequenceTable.aggregate_id, aggregateID)).run()
               yield* db.delete(EventTable).where(eq(EventTable.aggregate_id, aggregateID)).run()
-            }),
+              yield* currentCheck
+            }), { behavior: "immediate" },
           )
-          .pipe(Effect.orDie)
+          .pipe(Effect.orDie)))
       }
 
       function claim(aggregateID: string, ownerID: string) {
-        return db
+        return sessionAccess(aggregateID, "write", writer(db.transaction(() => db
           .update(EventSequenceTable)
           .set({ owner_id: ownerID })
           .where(eq(EventSequenceTable.aggregate_id, aggregateID))
           .run()
-          .pipe(Effect.orDie)
+          .pipe(Effect.orDie, Effect.tap(() => currentCheck)), { behavior: "immediate" }).pipe(Effect.orDie))))
       }
 
       const subscribe = <D extends Definition>(definition: D): Stream.Stream<Payload<D>> =>
@@ -727,7 +788,7 @@ export const layerWith = (options?: LayerOptions) =>
       const streamAll = (): Stream.Stream<Payload> => Stream.fromPubSub(pubsub.all)
 
       const readAfter = (aggregateID: string, after: number) =>
-        (options?.beforeAggregateRead?.(aggregateID) ?? Effect.void).pipe(
+        sessionAccess(aggregateID, "read", (options?.beforeAggregateRead?.(aggregateID) ?? Effect.void).pipe(
           Effect.andThen(
             db
               .select()
@@ -753,7 +814,7 @@ export const layerWith = (options?: LayerOptions) =>
               }),
             ),
           ),
-        )
+        )).pipe(Effect.provideService(SessionOwner.Service, owners))
 
       const subscribeDurable = (aggregateID: string) =>
         Effect.gen(function* () {
@@ -821,10 +882,10 @@ export const layerWith = (options?: LayerOptions) =>
         replayAll,
         remove,
         claim,
-        verifySealWindow: (input) => EventSeal.verifyWindow(db, input),
+        verifySealWindow: (input) => sessionAccess(input.aggregateID, "read", EventSeal.verifyWindow(db, input)),
       })
     }),
   )
 
 const layer = layerWith()
-export const node = makeGlobalNode({ service: Service, layer: layer, deps: [Database.node] })
+export const node = makeGlobalNode({ service: Service, layer: layer, deps: [Database.node, SessionOwner.node] })
