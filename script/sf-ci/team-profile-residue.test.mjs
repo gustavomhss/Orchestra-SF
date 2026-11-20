@@ -1,5 +1,7 @@
 import assert from "node:assert/strict"
 import { after, test } from "node:test"
+import { constants as bufferConstants } from "node:buffer"
+import { isReportArraySummary, parseResidueReviewJson } from "./residue-report-json.mjs"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -7,7 +9,7 @@ import { fileURLToPath } from "node:url"
 import { gzipSync, gunzipSync } from "node:zlib"
 import { auditResidues, buildReachability, controlCases, findOccurrences, gitBlob, gitObject, gitTree,
   hash, parseArguments, parseCanonicalJson, parseTrackedInventory, readSource, readTarArchive, record,
-  requiredEntrypoints, seeds, surfaces, validateManifest, verifyArtifact, verifyControls, verifyGitSource } from "./team-profile-residue.mjs"
+  requiredEntrypoints, runReviewSummary, seeds, summarizeReport, surfaces, validateManifest, verifyArtifact, verifyControls, verifyGitSource } from "./team-profile-residue.mjs"
 
 const completed = new Set(), registered = new Set()
 function control(name, body) {
@@ -355,6 +357,261 @@ control(controlCases[15], () => {
     index === 0 ? fixture.controls.cases[1] : item) }, source, fixture.records, env), /negative controls/)
   assert.throws(() => verifyControls({ ...fixture.controls, testSha256: "9".repeat(64) }, source, fixture.records, env), /negative controls/)
   assert.throws(() => verifyControls({ ...fixture.controls, runAttempt: "1" }, source, fixture.records, env), /negative controls/)
+})
+
+
+function reviewFixture(qualify = false) {
+  const fixture = auditFixture(qualify)
+  fixture.records = fixture.records.map((file) => file.path === "apps/cli/src/index.ts"
+    ? record("source", file.path, "export const profileProject = 'DO_NOT_EMIT_SOURCE_MARKER';\nimport('unlisted-review-import');\n(() => 'DO_NOT_EMIT_CALLEE_MARKER')();\n")
+    : file)
+  const report = auditResidues(qualify ? complete(fixture) : fixture)
+  const bytes = json(report)
+  const reviewEnv = { ...env, SF_RESIDUE_REPORT_ARTIFACT_ID: "1618",
+    SF_RESIDUE_REPORT_ARTIFACT_DIGEST: "sha256:" + "7".repeat(64) }
+  const provenance = { schema: "teams-profile-residue-review-download-v1",
+    reportSha256: hash(bytes), reportBytes: bytes.length, ...execution,
+    archiveSha256: report.artifact.archiveSha256,
+    evidenceArtifact: { id: reviewEnv.SF_RESIDUE_REPORT_ARTIFACT_ID, name: "teams-profile-evidence-G09",
+      digest: reviewEnv.SF_RESIDUE_REPORT_ARTIFACT_DIGEST, workflowRunId: env.GITHUB_RUN_ID,
+      headSha: source.sha, expired: false } }
+  return { report, bytes, provenance, env: reviewEnv }
+}
+const reviewPage = { section: "overview", offset: 0, limit: 100 }
+function summarizeFixture(fixture, selection = reviewPage) {
+  return summarizeReport(fixture.bytes, fixture.provenance, selection, fixture.env)
+}
+function replaceReport(fixture, change) {
+  const report = structuredClone(fixture.report)
+  change(report)
+  const bytes = json(report)
+  return { ...fixture, report, bytes, provenance: { ...fixture.provenance, reportSha256: hash(bytes), reportBytes: bytes.length } }
+}
+
+test("review index preserves the original RED counts and bindings without a new qualification", () => {
+  const fixture = reviewFixture(), original = Buffer.from(fixture.bytes)
+  const index = summarizeFixture(fixture)
+  assert.equal(index.status, "READ_ONLY_REVIEW_INDEX")
+  assert.equal(index.qualification, "NOT_EVALUATED"); assert.equal(index.readOnly, true)
+  assert.equal(index.dispositionsChanged, 0)
+  assert.equal(index.original.recordedStatus, "DIAGNOSTIC_UNQUALIFIED")
+  assert.equal(index.original.reportSha256, hash(original))
+  assert.deepEqual(index.original.binding, fixture.report.binding)
+  assert.deepEqual(index.original.execution, fixture.report.execution)
+  assert.equal(index.original.archiveSha256, fixture.provenance.archiveSha256)
+  assert.equal(index.original.productionArtifact.id, env.SF_TEAMS_RESIDUE_ARTIFACT_ID)
+  assert.equal(index.original.evidenceArtifact.id, fixture.env.SF_RESIDUE_REPORT_ARTIFACT_ID)
+  assert.deepEqual(index.recordedCounts, fixture.report.counts)
+  assert(index.recordedCounts.unclassified > 0)
+  assert(index.rows.every((row) => row.navigationOnly === true))
+  assert.deepEqual(fixture.bytes, original)
+  assert.equal(summarizeFixture(reviewFixture(true)).qualification, "NOT_EVALUATED")
+  assert.equal(summarizeFixture(reviewFixture(true)).original.recordedStatus, "PASS")
+})
+
+test("review pages enumerate every exact occurrence and keep source and archive separate", () => {
+  const fixture = reviewFixture(), ids = []
+  for (let offset = 0; offset < fixture.report.occurrences.length; offset += 3) {
+    const index = summarizeFixture(fixture, { section: "occurrences", offset, limit: 3 })
+    assert.equal(index.page.totalRows, fixture.report.occurrences.length)
+    ids.push(...index.rows.map((row) => row.id))
+  }
+  assert.deepEqual(ids, fixture.report.occurrences.map((row) => row.id))
+  const selected = summarizeFixture(fixture, { section: "occurrences", offset: 0, limit: 200,
+    domain: "source", path: "apps/cli/src/index.ts" })
+  assert.equal(selected.rows.length, 1)
+  assert.equal(selected.rows[0].seed, "profileProject")
+  assert.equal(selected.rows[0].byteOffset, 13)
+  assert.deepEqual(selected.rows[0].reachableEntrypoints, ["cli"])
+  assert.equal(selected.rows[0].reachabilityReason, "reachable-by-recorded-file-edges")
+  assert.equal(selected.rows[0].recordedDisposition, null)
+  assert.deepEqual(selected.recordedCounts, fixture.report.counts)
+  const absent = summarizeFixture(fixture, { section: "occurrences", offset: 0, limit: 200,
+    domain: "archive", path: "apps/cli/src/index.ts" })
+  assert.equal(absent.rows.length, 0); assert.equal(absent.page.nextOffset, null)
+  const paths = summarizeFixture(fixture, { section: "paths", offset: 0, limit: 200 })
+  assert.equal(paths.rows.reduce((sum, row) => sum + row.occurrences, 0), fixture.report.occurrences.length)
+  assert(paths.rows.every((row) => /^[a-f0-9]{64}$/.test(row.fileSha256)))
+})
+
+test("review output exposes structured locations without source excerpts or callee expressions", () => {
+  const fixture = reviewFixture()
+  const output = ["overview", "paths", "occurrences", "reachability"].map((section) =>
+    summarizeFixture(fixture, { section, offset: 0, limit: 200 }))
+  const text = JSON.stringify(output)
+  assert(!text.includes("DO_NOT_EMIT_SOURCE_MARKER"))
+  assert(!text.includes("DO_NOT_EMIT_CALLEE_MARKER"))
+  assert(!text.includes("unlisted-review-import"))
+  const findings = output[3].rows
+  const unresolved = findings.find((row) => row.path === "apps/cli/src/index.ts" &&
+    row.reason === "unresolved-import-or-content-edge")
+  assert(unresolved)
+  assert.equal(unresolved.edge.status, "unresolved")
+  assert.equal(unresolved.edge.specifierSha256, hash("unlisted-review-import"))
+  assert(Number.isSafeInteger(unresolved.edge.start))
+  assert(unresolved.edge.end > unresolved.edge.start)
+  assert.equal(unresolved.recordedDisposition, null)
+})
+
+test("review rejects a rebound ZIP report source tree run workflow or production archive", () => {
+  const fixture = reviewFixture()
+  for (const [key, value] of [
+    ["reportSha256", "9".repeat(64)], ["reportBytes", fixture.bytes.length + 1],
+    ["sourceSHA", "9".repeat(40)], ["sourceTreeSHA", "9".repeat(40)],
+    ["workflowSHA", "9".repeat(40)], ["runId", "999"], ["runAttempt", "99"],
+    ["archiveSha256", "9".repeat(64)],
+  ]) assert.throws(() => summarizeReport(fixture.bytes, { ...fixture.provenance, [key]: value },
+    reviewPage, fixture.env), /binding|identity/)
+  for (const change of [
+    { id: "999" }, { digest: "sha256:" + "8".repeat(64) }, { expired: true },
+    { workflowRunId: "999" }, { headSha: "9".repeat(40) }, { name: "other-artifact" },
+  ]) assert.throws(() => summarizeReport(fixture.bytes, { ...fixture.provenance,
+    evidenceArtifact: { ...fixture.provenance.evidenceArtifact, ...change } }, reviewPage, fixture.env), /binding/)
+  assert.throws(() => summarizeFixture(replaceReport(fixture, (report) => {
+    report.artifact.archiveSha256 = "9".repeat(64)
+  })), /identity/)
+  assert.throws(() => summarizeFixture(replaceReport(fixture, (report) => {
+    report.artifact.artifact.headSha = "9".repeat(40)
+  })), /identity/)
+  assert.throws(() => summarizeFixture(replaceReport(fixture, (report) => {
+    report.execution.workflowSHA = "9".repeat(40)
+  })), /identity/)
+})
+
+test("review rejects omitted unknowns duplicated identities and malformed row metadata", () => {
+  const fixture = reviewFixture()
+  for (const change of [
+    (report) => { report.counts.unclassified = 0 },
+    (report) => { report.occurrences.push(report.occurrences[0]) },
+    (report) => { report.occurrences[0].byteOffset++ },
+    (report) => { report.occurrences[0].fileSha256 = "9".repeat(64) },
+    (report) => { report.occurrences[0].disposition = { classification: "blessed-prefix" } },
+    (report) => { report.inventory.push(report.inventory[0]) },
+    (report) => { report.reachability.findings[0].id = "not-an-exact-id" },
+    (report) => { report.occurrences[0].reachableEntrypoints = ["invented-entry"] },
+  ]) assert.throws(() => summarizeFixture(replaceReport(fixture, change)), /metadata|counts|inventory|reachability/)
+  for (const selection of [
+    { ...reviewPage, limit: 0 }, { ...reviewPage, limit: 201 }, { ...reviewPage, offset: -1 },
+    { ...reviewPage, offset: Number.MAX_SAFE_INTEGER + 1 }, { ...reviewPage, offset: 100000 },
+    { ...reviewPage, path: "../escape" }, { ...reviewPage, domain: "any" },
+    { ...reviewPage, approve: true },
+  ]) assert.throws(() => summarizeFixture(fixture, selection), /selection|offset|path|fields/)
+})
+
+test("review CLI is explicit bounded and cannot accept audit mutations or qualify options", () => {
+  const args = ["review-report", "--source", "/checkout", "--report", "/temp/report.json",
+    "--provenance", "/temp/download.json", "--output", "/temp/index.json",
+    "--section", "occurrences", "--offset", "0", "--limit", "50"]
+  assert.deepEqual(parseArguments(args), { mode: "review-report", source: "/checkout",
+    report: "/temp/report.json", provenance: "/temp/download.json", output: "/temp/index.json",
+    section: "occurrences", offset: 0, limit: 50 })
+  for (const suffix of [["--manifest", "sf/ci/team-profile-residue.json"],
+    ["--diagnostic-source-only"], ["--approve"], ["--section", "paths"], ["--path", "../escape"]])
+    assert.throws(() => parseArguments([...args, ...suffix]), /review argument|inventory path/)
+  assert.throws(() => parseArguments(args.slice(0, -2)), /explicit review/)
+  assert.throws(() => parseArguments([...args.slice(0, -1), "201"]), /bounded/)
+  assert.throws(() => parseArguments(args.map((value) => value === "0" ? "01" : value)), /explicit review/)
+})
+
+test("review reads original artifact files without rebuilding source or changing their bytes", async () => {
+  const checkout = await mkdtemp(path.join(tmpdir(), "sf-residue-review-checkout-"))
+  const temporary = await mkdtemp(path.join(tmpdir(), "sf-residue-review-evidence-"))
+  try {
+    const fixture = reviewFixture()
+    const reportFile = path.join(temporary, "original.json"), provenanceFile = path.join(temporary, "download.json")
+    await writeFile(reportFile, fixture.bytes); await writeFile(provenanceFile, json(fixture.provenance))
+    await writeFile(path.join(checkout, "marker"), "unchanged\n")
+    const options = { mode: "review-report", source: checkout, report: reportFile,
+      provenance: provenanceFile, section: "overview", offset: 0, limit: 100 }
+    const current = { ...fixture.env, GITHUB_SHA: "8".repeat(40), SF_PRODUCT_SOURCE_SHA: "9".repeat(40),
+      GITHUB_RUN_ID: "999", GITHUB_RUN_ATTEMPT: "1" }
+    const index = await runReviewSummary(options, current)
+    assert.equal(index.original.binding.sourceSHA, source.sha)
+    assert.equal(index.readerExecution.sourceSHA, current.SF_PRODUCT_SOURCE_SHA)
+    assert.equal(index.readerExecution.runId, "999")
+    assert.equal(index.qualification, "NOT_EVALUATED")
+    assert.deepEqual(await readFile(reportFile), fixture.bytes)
+    assert.deepEqual(await readFile(provenanceFile), json(fixture.provenance))
+    assert.equal(await readFile(path.join(checkout, "marker"), "utf8"), "unchanged\n")
+    await writeFile(path.join(checkout, "report.json"), fixture.bytes)
+    await assert.rejects(runReviewSummary({ ...options, report: path.join(checkout, "report.json") }, current), /outside/)
+    await assert.rejects(runReviewSummary(options, { ...current, RUNNER_OS: "Windows" }), /hosted/)
+  } finally {
+    await rm(checkout, { recursive: true, force: true })
+    await rm(temporary, { recursive: true, force: true })
+  }
+})
+
+
+test("review projection validates all original bytes and retains exact call-array counts and digests", () => {
+  const fixture = reviewFixture()
+  const parsed = parseResidueReviewJson(fixture.bytes)
+  for (const domain of ["source", "archive"]) {
+    const summary = parsed.report.reachability[domain].calls
+    assert(isReportArraySummary(summary))
+    assert.equal(summary.elements, fixture.report.reachability[domain].calls.length)
+    assert(summary.byteLength >= 2)
+    assert.match(summary.sha256, /^[a-f0-9]{64}$/)
+    const retained = { ...parsed.report.reachability[domain], calls: fixture.report.reachability[domain].calls }
+    assert.deepEqual(retained, fixture.report.reachability[domain])
+  }
+  assert.equal(parsed.notMaterialized.length, 2)
+  const index = summarizeFixture(fixture)
+  assert.deepEqual(index.navigationProjection.notMaterialized, parsed.notMaterialized)
+  assert.equal(index.qualification, "NOT_EVALUATED")
+  assert.equal(index.original.reportSha256, hash(fixture.bytes))
+  assert(index.navigationProjection.scope.includes("original byte-bound report"))
+  const exact = Buffer.from('{"reachability":{"source":{"calls": [ {"callee":"abc"},42 ] }}}')
+  const summary = parseResidueReviewJson(exact).report.reachability.source.calls
+  const originalArray = Buffer.from('[ {"callee":"abc"},42 ]')
+  assert.equal(summary.elements, 2)
+  assert.equal(summary.byteLength, originalArray.length)
+  assert.equal(summary.sha256, hash(originalArray))
+})
+
+test("review projection rejects malformed syntax duplicate keys and invalid UTF8 inside omitted calls", () => {
+  const wrap = (calls) => Buffer.from('{"reachability":{"source":{"calls":' + calls + '}}}')
+  for (const calls of [
+    '[{"x":1,"x":2}]', '[{"x":1,"\\u0078":2}]', '[{"callee":"\\q"}]',
+    '[{"callee":"\\u00xz"}]', '[{"callee":"line\nbreak"}]', '[1,]', '[01]', '[1e]',
+    '[+1]', '[.5]', '[1.]', '[trueX]', '[undefined]', '[1e999]', '[{"a":1,}]',
+  ]) assert.throws(() => parseResidueReviewJson(wrap(calls)), /REVIEW_JSON_INVALID/)
+  const invalidUtf8 = Buffer.concat([
+    Buffer.from('{"reachability":{"source":{"calls":[{"callee":"'),
+    Buffer.from([0xc3, 0x28]),
+    Buffer.from('"}]}}}'),
+  ])
+  assert.throws(() => parseResidueReviewJson(invalidUtf8), /REVIEW_JSON_INVALID/)
+  for (const text of ['{} {}', '{"reachability":{"source":{"calls":{}}}}', '{"a":1,"a":2}', '[]'])
+    assert.throws(() => parseResidueReviewJson(Buffer.from(text)), /REVIEW_JSON_INVALID/)
+})
+
+test("review projection safely retains ordinary JSON semantics and omits only exact root call paths", () => {
+  const bytes = Buffer.from('{"__proto__":{"polluted":true},"constructor":{"x":1},"reachability.source":{"calls":[1]},"nested":{"reachability":{"source":{"calls":[2]}}},"ordinary":[-0,0,0.5,-4e-2,true,false,null,"é🙂"]}')
+  const parsed = parseResidueReviewJson(bytes)
+  assert.deepEqual(parsed.report, JSON.parse(bytes.toString("utf8")))
+  assert.equal(Object.getPrototypeOf(parsed.report), Object.prototype)
+  assert.equal(Object.prototype.polluted, undefined)
+  assert.equal(parsed.notMaterialized.length, 0)
+  assert(Object.is(parsed.report.ordinary[0], -0))
+})
+
+test("review projection reads an original buffer larger than V8's maximum single string", () => {
+  const prefix = Buffer.from('{"reachability":{"source":{"calls":[{"callee":"')
+  const suffix = Buffer.from('"}]}}}')
+  const bytes = Buffer.alloc(bufferConstants.MAX_STRING_LENGTH + 4096, 0x61)
+  prefix.copy(bytes); suffix.copy(bytes, bytes.length - suffix.length)
+  const parsed = parseResidueReviewJson(bytes)
+  const summary = parsed.report.reachability.source.calls
+  const arrayStart = prefix.indexOf("[")
+  const arrayEnd = bytes.length - 3
+  assert(bytes.length > bufferConstants.MAX_STRING_LENGTH)
+  assert(isReportArraySummary(summary))
+  assert.equal(summary.elements, 1)
+  assert.equal(summary.byteLength, arrayEnd - arrayStart)
+  assert.equal(summary.sha256, hash(bytes.subarray(arrayStart, arrayEnd)))
+  assert.equal(parsed.notMaterialized.length, 1)
+  assert.equal(parsed.notMaterialized[0].path, "reachability.source.calls")
 })
 
 // Only actual returned test bodies can produce this receipt. A failed, skipped,
