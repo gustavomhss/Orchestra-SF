@@ -2,7 +2,7 @@
 
 ## Estado do checkpoint
 
-- Estado: FIX_GATES_IN_PROGRESS — os três runs da base encerraram e todas as falhas observadas estão classificadas. Duas fatias de teste aplicadas, aguardando seus gates. A enumeração do shard2 foi completa; as dos shards1/3 foram parciais pelo limite existente de45min.
+- Estado: FIX_GATES_IN_PROGRESS — os três runs da base encerraram e todas as falhas observadas estão classificadas. Três fatias de teste aplicadas. O primeiro gate do shard2 terminou; o gate do shard1 e o segundo do shard2 estão em andamento. A enumeração do shard2 foi completa; as dos shards1/3 foram parciais pelo limite existente de45min.
 - Branch: `sf-shard-a`.
 - Base fixa de código: `f7dd58e32bc834f1485df20b91adbf759b4c4ad0`.
 - Escopo: CI-SF, shards 1, 2 e 3 de 8, módulo `modules/sucafina`.
@@ -188,38 +188,60 @@ Caminhos relativos a `modules/sucafina/`:
 
 ## Fatias aplicadas e gates
 
-SHA atual de código: `d582fe32ca6fcab503a364065d846715642e8837`. As mudanças de teste são disjuntas por shard. Nenhum produto, projeção, fixture compartilhada ou workflow foi alterado.
+SHA atual de código: `2ee5e96198500ed9d2524b692240b90cce86ed79`. Foram alterados dois arquivos de teste, pertencentes aos shards1/2; as duas fatias executivas estão no mesmo arquivo do shard2. Nenhum produto, projeção, fixture compartilhada ou workflow foi alterado.
 
 | Shard | Causa | SHA do fix | Snapshot do gate | Run | Estado |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Registro de descriptors versus admissão por owner | `243c083dfef4caefddf88c64adb46ab7f7b88b2f` | `3edf1737c390f89220337cbcbc0efdf9f689ad51` | [44657265518](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657265518) | Em andamento; contagem pendente |
-| 2 | Recusa C08 anterior ao produtor após revisão da fonte | `d582fe32ca6fcab503a364065d846715642e8837` | `0c352eef4965c9e8c59ca123a95d7ebfba491f8b` | [44657300808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657300808) | Em andamento; contagem pendente |
+| 2 | Recusa C08 anterior ao produtor após revisão da fonte | `d582fe32ca6fcab503a364065d846715642e8837` | `0c352eef4965c9e8c59ca123a95d7ebfba491f8b` | [44657300808](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44657300808) | FAILURE; 507 pass / 7 fail / 1 skip / 1 error |
 
-Jobs: shard1 `136026453241`; shard2 `136026570741`. Cada gate usa exatamente a requisição da enumeração de seu shard (113/107 arquivos, timeout30000). Não houve rerun idêntico nem gate adicional do shard3. Máximo de2 gates simultâneos **desta sessão**.
+| 2 | Recusa anônima com header ausente e corpo textual exato | `2ee5e96198500ed9d2524b692240b90cce86ed79` | `460ca5cbcbe85af34bc1945af832e52ac8db07cc` | [44661562191](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44661562191) | Em andamento; contagem pendente |
 
-As mudanças foram lidas de volta e comparadas no GitHub: fatia1 modifica apenas `product/routine-native-admission/adapter-boundaries.test.ts` (8adições/3remoções); fatia2 apenas `product/wp12/native-execution-executive.test.ts` (3adições/1remoção). A confirmação de comportamento depende dos runs acima.
+Jobs: shard1 `136026453241`; primeiro gate do shard2 `136026570741`; segundo gate do shard2 `136040769695`. Cada gate usa exatamente a requisição da enumeração de seu shard (113/107 arquivos, timeout30000). Não houve rerun idêntico nem gate adicional do shard3. Máximo de2 gates simultâneos **desta sessão**.
+
+As mudanças foram lidas de volta e comparadas no GitHub: fatia1 modifica apenas `product/routine-native-admission/adapter-boundaries.test.ts` (8adições/3remoções); fatia2 apenas `product/wp12/native-execution-executive.test.ts` (3adições/1remoção). A fatia3 modifica apenas o mesmo arquivo executivo (2adições/1remoção). A confirmação final de comportamento depende dos runs em andamento.
+
+### Resultado do primeiro gate executivo
+
+Run44657300808 terminou em FAILURE: **507 pass / 7 fail / 1 skip / 1 error**, 515 testes em107 arquivos, 9141 expectativas, 1738.67s. Cleanup136038955419 terminou com success.
+
+As novas asserções C08 em `native-execution-executive.test.ts:214–215` passaram; o GET anônimo também retornou403 em `:219`. O caso inteiro ainda falhou em `:220`, pois o matcher de string recebeu Content-Type null. O marcador final de reopen não foi emitido. Isso motivou a terceira fatia, sem atribuir ao primeiro fix um PASS que não ocorreu.
+
+| Falha restante nesse run | Classificação |
+| --- | --- |
+| `product/wp05/sensitivity-integration.test.ts:9`; `product/wp05/browser.ts:9` | Chrome launch180000ms; mesmo evento produz o erro não tratado |
+| `product/wp12/native-execution-collaboration-recall.test.ts:143` | Timeout120000ms; pending input comprovado, reabertura não comprovada |
+| `product/wp12/native-execution-executive.test.ts:220` | Matcher sobre header null; terceira fatia aplicada, aguardando gate |
+| `product/wp10/integration/bi-call-scope.test.ts:402` | unbound: Planner record drilldown ausente |
+| `product/wp10/memory-integrity/revocation-tail.test.ts:87` | unbound: positivo do producer indisponível |
+| `product/wp10/memory-integrity/revocation-tail.test.ts:104` | unbound: positivo do verifier indisponível |
+| `product/wp10/memory-integrity/revocation-tail.test.ts:124` | unbound: positivo de output proof indisponível |
+
+O skip segue sendo `local-backups.test.ts:209`, preexistente e dependente de root. O primeiro recorded-fallback, Hot Topic day e document-search passaram sem correção própria; a diferença de3 PASS não deve ser atribuída ao patch executivo. O SQLITE_IOERR não reapareceu nesse run.
 
 ## Feito / pendente
 
-Feito: seleção e requisições conferidas; três enumerações encerradas antes de qualquer fix; todas as falhas observadas classificadas; duas fatias isoladas aplicadas; dois gates completos iniciados. Arquivos que não executaram permanecem explicitamente pendentes.
+Feito: seleção e requisições conferidas; três enumerações encerradas antes de qualquer fix; todas as falhas observadas classificadas; três fatias isoladas aplicadas; um gate por causa corrigida. O terceiro começou somente após o segundo terminar. Arquivos que não executaram permanecem explicitamente pendentes.
 
 Pendente: aguardar os dois gates, registrar suas contagens/conclusões e classificar qualquer falha adicional observada. Não iniciar nova execução sem mudança concreta.
 
-Nenhum teste foi apagado ou pulado e nenhum timeout foi aumentado. Duas expectativas foram substituídas, com justificativas abaixo; nenhuma garantia de negócio foi eliminada. Produto, projeções, fixtures compartilhadas e workflows permanecem sem alterações.
+Nenhum teste foi apagado ou pulado e nenhum timeout foi aumentado. Três expectativas foram substituídas, com justificativas abaixo; nenhuma garantia de negócio foi eliminada. Produto, projeções, fixtures compartilhadas e workflows permanecem sem alterações.
 
-### Justificativas das duas substituições aplicadas
+### Justificativas das três substituições aplicadas
 
 - Adapter (`product/routine-native-admission/adapter-boundaries.test.ts:113`): a expectativa de array vazio para qualquer perda de binding foi substituída pela lista exata de cinco IDs quando publication existir, e por array vazio somente quando publication faltar. A ausência de watch permanece coberta pela lista fechada. Foi acrescentada a chamada real de `routines.readAdmission`, exigindo o erro exato de reader indisponível e contadores exatamente zero. Não é uma redução para nonempty/truthy.
 - Executive (`product/wp12/native-execution-executive.test.ts:213`): o oracle parcial `unavailable/analysis-source-unavailable` foi substituído por HTTP403 e body exato `denied/case-selection-unavailable`, pois o guard C08 externo precede o produtor. Todas as asserções de digest, preservação histórica, downloads GET reais e recusa anônima permanecem.
+
+- Recusa anônima (`product/wp12/native-execution-executive.test.ts:220–221` no terceiro fix): o matcher de string sobre Content-Type null foi substituído por ausência explícita do header e pelo corpo exato `Access denied`, mantendo HTTP403. `product/reviews/application.ts:41,45–46` produz esse corpo textual quando a admissão é negada. Não foi usado fallback para string vazia nem expectativa de zero bytes; o corpo exato comprova a recusa sem receber o documento.
 
 As substituições foram aplicadas somente depois de os três runs encerrarem e suas listas de falhas serem publicadas.
 
 ## Como retomar
 
-1. Aguardar os gates44657265518 e44657300808; não repetir gates idênticos. Os três runs de enumeração estão encerrados, com resultados parciais dos shards1/3 por limite do job.
+1. Aguardar os gates44657265518 e44661562191; o gate44657300808 está encerrado; não repetir gates idênticos. Os três runs de enumeração estão encerrados, com resultados parciais dos shards1/3 por limite do job.
 2. Preservar a distinção entre contagem observada e resumo final. Não declarar PASS para os arquivos não executados.
 3. Comparar os logs finais com os ledgers da base e registrar as falhas restantes, mesmo quando a fatia alvo passar.
 4. A fatia executiva mantém o contrato de business-services.ts:289–291 (guard C08), analysis-host-services.ts:271 (ordem) e analysis-http.ts:102 (HTTP403). Não alterar downloads GET reais nem exports Schema.Never.
 5. Corrigir somente causas comprovadas. Manter runtime/application.ts intacto; não recriar console legado, elevar timeouts ou falsificar baseline/coverage/digest/GO.
-6. Nenhuma mudança compartilhada foi aplicada, portanto estas duas fatias não introduzem dependência de merge shared:. Eventuais correções de produtor, projeção ou fixture compartilhada exigem PR pequeno separado; o integrador deve mergear shared: antes da fatia de testes correspondente.
+6. Nenhuma mudança compartilhada foi aplicada, portanto estas três fatias não introduzem dependência de merge shared:. Eventuais correções de produtor, projeção ou fixture compartilhada exigem PR pequeno separado; o integrador deve mergear shared: antes da fatia de testes correspondente.
 7. Concluir este handoff com estado, SHA e evidências finais. Sem shell, sem sf-ci e sem push nos branches protegidos do briefing.
