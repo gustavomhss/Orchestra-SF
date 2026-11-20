@@ -9,6 +9,14 @@ export type SettingsProjection = Extract<
   { status: "ok" }
 >
 
+/** A first-write CAS is an explicit producer fact, never inferred from a missing version. */
+export function settingsVersion(current: SettingsProjection | undefined): number | undefined {
+  if (!current) return undefined
+  const initial = current.value.data.settingsInitialization
+  if (initial) return Object.hasOwn(current.value.versions, "settings") ? undefined : initial.expectedVersion
+  return current.value.versions.settings?.version
+}
+
 export const SETTINGS_REF = "settings" as SfRef
 export const SETTINGS_INTENT = "settings-configuration-edit" as SfIntentRef
 export const settingsLabel: Readonly<Partial<Record<keyof Settings, string>>> = {
@@ -63,42 +71,50 @@ function fields(settings: Readonly<Settings>, names: readonly (keyof Settings)[]
 }
 export function settingsReview(
   current: SettingsProjection, proposed: Readonly<Settings>, operationRef: SfOperationRef,
+  action: "save" | "reset" = "save",
 ): Omit<SfChangeReviewProps, "onConfirm" | "onRevise" | "onCancel"> {
-  const sourceVersion = current.value.versions.settings?.version
-  const names = changedSettings(current.value.data.settings, proposed)
-  const base: SfReviewSnapshot = sourceVersion === undefined
+  const persistedVersion = current.value.versions.settings?.version
+  const sourceVersion = settingsVersion(current)
+  const names = action === "reset"
+    ? (Object.keys(settingsLabel) as (keyof Settings)[]).filter((name) =>
+        Object.hasOwn(current.value.data.settings, name) || Object.hasOwn(proposed, name))
+    : changedSettings(current.value.data.settings, proposed)
+  const base: SfReviewSnapshot = persistedVersion === undefined
     ? { kind: "not-provided", reason: message("sf.common.previousValuesUnavailable") }
-    : { kind: "persisted", ref: SETTINGS_REF, version: sourceVersion as SfVersion,
+    : { kind: "persisted", ref: SETTINGS_REF, version: persistedVersion as SfVersion,
         fields: fields(current.value.data.settings, names) }
   const draft: SfReviewSnapshot = {
     kind: "draft", intentRef: SETTINGS_INTENT, sourceRef: SETTINGS_REF,
     sourceVersion: sourceVersion ?? null, fields: fields(proposed, names),
   }
-  const blocked = sourceVersion === undefined || names.length === 0
+  const blocked = sourceVersion === undefined || names.length === 0 ||
+    action === "reset" && current.value.data.resetSettings !== proposed
   const reasons: SfMessage[] = blocked
     ? [message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.changesPending")]
     : []
   return {
     operation: {
       ref: operationRef,
-      label: message("sf.u36.save"),
+      label: message(action === "reset" ? "sf.u36.reset" : "sf.u36.save"),
       scope: { kind: "message", message: message("sf.cap28.title") },
     },
     base, current: base, proposed: draft, effects: [],
     coverage: {
       state: sourceVersion === undefined ? "unavailable" : "partial",
       summary: message(sourceVersion === undefined ? "sf.common.previousValuesUnavailable" : "sf.common.partial"),
-      reasons, knownCount: names.length, expectedCount: null,
+      reasons: sourceVersion !== undefined && persistedVersion === undefined
+        ? [message("sf.common.previousValuesUnavailable")] : reasons,
+      knownCount: names.length, expectedCount: null,
     },
     blockingReasons: reasons,
     confirmation: blocked
       ? { kind: "blocked", labelKey: message("sf.common.unavailable").key, reasons }
       : {
           kind: "admitted",
-          labelKey: message("sf.common.save").key,
-          purpose: "save",
+          labelKey: message(action === "reset" ? "sf.u36.reset" : "sf.common.save").key,
+          purpose: action,
           binding: {
-            kind: "catalog-command", operationId: "domain.command.CAP28.save",
+            kind: "catalog-command", operationId: action === "reset" ? "domain.command.CAP28.reset" : "domain.command.CAP28.save",
             version: { kind: "record", expectedVersion: sourceVersion! },
             confirmation: "presentation-only",
           },

@@ -10,6 +10,7 @@ import type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfSurfaceProps } from "../context/contracts"
 import { useSfContext } from "../context"
 import { encodeSfRouteRef } from "../navigation-state"
+import { sfReadyOwnerSelection } from "../host/native-chapter-entry"
 import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
@@ -564,6 +565,22 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const displayValue = (value: Detail["detail"]["changes"][number]["before"]) =>
     value.state !== "present" ? value.state : value.value === null ? "null" : JSON.stringify(value.value)
   const matchedSurface = () => state.manifest?.context.surface === state.surface
+  const continuationHref = (step: "review" | "receipt" | "list") => {
+    const current = auth.state()
+    if (current.status !== "ready" || !auth.ready()) return
+    const selected = sfReadyOwnerSelection(current)
+    const requested = props.route.ownerSelection
+    if (!selected || selected.serverKey !== requested.serverKey ||
+        selected.projectId !== requested.projectId || selected.installationId !== requested.installationId) return
+    const id = state.manifest?.id
+    if (!id) return
+    const path = step === "list" ? "/orchestra/sf-imports" :
+      "/orchestra/sf-imports/" + encodeSfRouteRef(id) + "/" + step
+    // These are same-owner continuations. F01 still readmits the destination.
+    return path + "?" + new URLSearchParams({
+      server: selected.serverKey, project: selected.projectId, installation: selected.installationId,
+    }).toString()
+  }
 
   return (
     <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
@@ -588,7 +605,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isImport()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
@@ -608,7 +625,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </p>
               </Show>
               <label>{t("sf.u23.destination")}
-                <select value={state.selectionRef} disabled={editLocked() || !state.targets.length}
+                <select aria-label={t("sf.u23.destination")} value={state.selectionRef} disabled={editLocked() || !state.targets.length}
                   onChange={(e) => { change(); setState("selectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u23.destinationEmpty")}</option>
                   <For each={state.targets}>{(target) =>
@@ -737,20 +754,20 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 <button type="button" class="mx-btn" disabled={state.busy}
                   onClick={cancelPreview}>{t("sf.u23.cancel")}</button>
               </Show>
-              <Show when={isReference() && props.surfaceId === "UI56" && state.manifest?.state === "preview" && !state.reference?.receipt}>
-                <A class="mx-btn" href={"/orchestra/sf-imports/" + encodeSfRouteRef(state.manifest!.id) + "/review"}>
+              <Show when={isReference() && props.surfaceId === "UI56" && state.manifest?.state === "preview" && !state.reference?.receipt && continuationHref("review")}>
+                {(href) => <A class="mx-btn" href={href()}>
                   {t("sf.ui56.primary")}
-                </A>
+                </A>}
               </Show>
-              <Show when={(isImport() || isHistory()) && state.reference?.receipt}>
-                <A class="mx-btn" href={"/orchestra/sf-imports/" + encodeSfRouteRef(state.manifest!.id) + "/receipt"}>
+              <Show when={(isImport() || isHistory()) && state.reference?.receipt && continuationHref("receipt")}>
+                {(href) => <A class="mx-btn" href={href()}>
                   {t("sf.ui57.primary")}
-                </A>
+                </A>}
               </Show>
-              <Show when={isReference() && props.surfaceId === "UI57"}>
-                <A class="mx-btn" href="/orchestra/sf-imports">
+              <Show when={isReference() && props.surfaceId === "UI57" && continuationHref("list")}>
+                {(href) => <A class="mx-btn" href={href()}>
                   {t("sf.common.returnToList")}
-                </A>
+                </A>}
               </Show>
               <Show when={isImport() || props.route.kind === "review"}>
                 <button type="button" class="mx-btn primary" disabled={!canApply()}
