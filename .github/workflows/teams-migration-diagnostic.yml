@@ -1,0 +1,66 @@
+name: teams-migration-diagnostic
+
+# A bounded diagnostic only. This is not a final qualification gate.
+on:
+  push:
+    branches:
+      - "ci-migration-*"
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact diagnostic source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify source and record identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$(git show -s --format=%P HEAD)" = "ff483f341c90ed320b2ecc5d175db95da7efbca2"
+          test "$(git rev-parse HEAD^)" = "ff483f341c90ed320b2ecc5d175db95da7efbca2"
+          git diff --exit-code
+          git diff --cached --exit-code
+          git show -s --format='source=%H tree=%T parents=%P'
+      - name: Setup canonical Bun dependencies
+        uses: ./.github/actions/setup-bun
+      - name: Build or restore the actual Linux Omni companions
+        uses: ./.github/actions/omni-binaries
+        with:
+          save: "false"
+      - name: Select the pinned Node runtime after composite setup
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15.0"
+      - name: Run original cut case with bounded diagnostic process
+        shell: bash
+        working-directory: packages/core
+        env:
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+          ORCHESTRA_OMNI_CONTROL: declared
+        run: |
+          set -euo pipefail
+          test "$(bun --version)" = "1.3.14"
+          test "$(node --version)" = "v24.15.0"
+          bun -e 'const s = await Bun.file(new URL("./internal/effect.js", import.meta.resolve("effect"))).text(); const i = s.indexOf("this._exit = exit"); console.log("EFFECT_OBSERVER_SOURCE\n" + s.slice(i, i + 500));'
+          timeout --signal=TERM --kill-after=5s 90s bun test ./test/effect-fiber-observers.test.ts --timeout 30000 2>&1 | tee "$RUNNER_TEMP/teams-migration-diagnostic.log"
+      - name: Upload observed diagnostic output
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-migration-diagnostic-${{ github.sha }}
+          path: ${{ runner.temp }}/teams-migration-diagnostic.log
+          if-no-files-found: error
+          retention-days: 7
