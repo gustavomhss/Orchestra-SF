@@ -1,4 +1,4 @@
-import { createStore, reconcile } from "solid-js/store"
+import { createStore, reconcile, unwrap } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { ProviderAccess } from "@orchestra/schema/provider-access"
@@ -102,14 +102,15 @@ export function createTeamPersonalConnections(input: Readonly<{
       baseline = ""; show("sf.teams.personalUnavailable")
     }
     // Log only the bounded outcome label. Requests and credential values never enter diagnostics.
-    console.error("Personal connection action was not completed", status === "denied" ? "denied" : "unavailable")
+    console.error("Personal connection action was not completed",
+      ["denied", "contract-mismatch", "invalid-response", "aborted", "network"].includes(status) ? status : "unavailable")
   }
   const read = async (life: Lifetime, key: ConnectionAccess.PersonalKey) => {
     setState({ busy: true, canWrite: false, secret: "", observed: false })
     try {
       const result = await life.client.read(key, { signal: life.abort.signal })
       if (!current(life)) return false
-      if (result.kind !== "response") { failed(life, "unavailable"); return false }
+      if (result.kind !== "response") { failed(life, result.reason); return false }
       if (result.body.status !== "available") { failed(life, result.body.status); return false }
       const retained = remembered(life, key)
       baseline = result.body.connection.label
@@ -128,7 +129,7 @@ export function createTeamPersonalConnections(input: Readonly<{
     pending = undefined; baseline = ""
     setState({ selected: provider.providerId, connection: undefined, label: "", secret: "",
       pending: false, observed: false, canWrite: false, message: undefined })
-    return read(life, provider.connection)
+    return read(life, structuredClone(unwrap(provider.connection)))
   }
   const open = async () => {
     if (state.busy) return false
@@ -147,7 +148,7 @@ export function createTeamPersonalConnections(input: Readonly<{
     try {
       const result = await life.client.catalog({ signal: life.abort.signal })
       if (!current(life)) return false
-      if (result.kind !== "response") { failed(life, "unavailable"); return false }
+      if (result.kind !== "response") { failed(life, result.reason); return false }
       if (!("namespace" in result.body)) { failed(life, result.body.status); return false }
       setState({ status: "ready", providers: structuredClone(result.body.providers), busy: false })
       if (result.body.providers.length === 1) return choose(result.body.providers[0]!.providerId)
@@ -158,8 +159,8 @@ export function createTeamPersonalConnections(input: Readonly<{
     const life = active, provider = selected(), connection = state.connection
     if (!life || !current(life) || !provider || !connection || state.busy || state.pending || !state.canWrite) return false
     const parsed = Schema.decodeUnknownOption(ConnectionAccess.PersonalCommand, strict)(remove ?
-      { action: "remove", key: provider.connection, expectedRevision: connection.revision } :
-      { action: connection.state === "active" ? "update" : "create", key: provider.connection,
+      { action: "remove", key: structuredClone(unwrap(provider.connection)), expectedRevision: connection.revision } :
+      { action: connection.state === "active" ? "update" : "create", key: structuredClone(unwrap(provider.connection)),
         expectedRevision: connection.revision, label: state.label, secret: state.secret })
     if (Option.isNone(parsed)) { show("sf.teams.personalInvalid"); console.error("Personal connection input is invalid"); return false }
     const written = Schema.decodeUnknownSync(Pending, strict)({ version: 1, owner: life.owner, windowId: input.window.id,

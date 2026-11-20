@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test"
 import { Schema } from "effect"
+import { createComponent } from "solid-js"
+import { render } from "solid-js/web"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
 import { ProviderAccess } from "@orchestra/schema/provider-access"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
@@ -70,7 +72,7 @@ function fixture(options: Readonly<{
     })
     return json({ status: command.action === "remove" ? "removed" : "saved", namespace, connection })
   }
-  const editor = createTeamPersonalConnections({
+  const input = {
     binding, window: { id: windowId, persistent: options.persistent ?? true, dispose() {} },
     storage: {
       getItem: (name) => storage.get(name) ?? null,
@@ -78,9 +80,10 @@ function fixture(options: Readonly<{
       removeItem: (name) => { storage.delete(name) },
     },
     context: () => current, generation: () => generation, fetch, confirmDiscard: async () => consent,
-    notice: (notice) => notices.push(notice),
-  })
-  return { editor, calls, notices, storage, windowId, context, namespace, connection: () => connection,
+    notice: (notice) => { notices.push(notice) },
+  } satisfies Parameters<typeof createTeamPersonalConnections>[0]
+  const editor = createTeamPersonalConnections(input)
+  return { input, editor, calls, notices, storage, windowId, context, namespace, connection: () => connection,
     setConnection: (value: ConnectionAccess.Slot) => { connection = value },
     setHook: (value: typeof hook) => { hook = value }, setConsent: (value: boolean) => { consent = value },
     retire() { generation++; current = structuredClone(context); editor.guard.retire() },
@@ -219,7 +222,8 @@ test("denial removes personal state while preserving the current business contex
 test("retirement clears RAM immediately and a late confirmed response cannot repopulate the next owner", async () => {
   const f = fixture(), entered = Promise.withResolvers<void>(), release = Promise.withResolvers<Response>()
   try {
-    await f.editor.open(); f.editor.edit("label", "Private label"); f.editor.edit("secret", "private-in-flight-key")
+    expect(await f.editor.open()).toBe(true)
+    f.editor.edit("label", "Private label"); f.editor.edit("secret", "private-in-flight-key")
     f.setHook(async (request) => { if (request.method === "POST") { entered.resolve(); return release.promise } })
     const write = f.editor.submit()
     await entered.promise
@@ -290,4 +294,57 @@ test("unavailable catalog and declined draft discard never erase the distinction
     expect(f.editor.state.secret).toBe("keep-this-draft")
     expect(f.calls.length).toBe(before)
   } finally { f.close() }
+})
+
+test("the rendered native form uses password input and scrubs its DOM value before the single POST settles", async () => {
+  const [page, language, platform] = await Promise.all([
+    import(solidDom("../../src/pages/team-personal-connections.tsx", import.meta.dir)),
+    import(solidDom("../../src/context/language.tsx", import.meta.dir)),
+    import(solidDom("../../src/context/platform.tsx", import.meta.dir)),
+  ])
+  const { SfTeamPersonalConnections }: typeof import("../../src/pages/team-personal-connections") = page
+  const { LanguageProvider }: typeof import("../../src/context/language") = language
+  const { PlatformProvider }: typeof import("../../src/context/platform") = platform
+  const f = fixture(), entered = Promise.withResolvers<void>(), release = Promise.withResolvers<Response>()
+  const mount = document.createElement("div")
+  document.body.append(mount)
+  let guard: Parameters<Parameters<typeof SfTeamPersonalConnections>[0]["registerDraft"]>[0] | undefined
+  f.setHook(async (request) => { if (request.method === "POST") { entered.resolve(); return release.promise } })
+  const dispose = render(() => createComponent(PlatformProvider, {
+    value: { platform: "web", openExternal() {}, async restart() {} },
+    get children() { return createComponent(LanguageProvider, { locale: "en",
+      get children() { return createComponent(SfTeamPersonalConnections, { ...f.input,
+        registerDraft(value) { guard = value; return () => value.retire() },
+      }) },
+    }) },
+  }), mount)
+  const wait = async (ready: () => boolean) => {
+    const deadline = performance.now() + 2000
+    while (!ready()) {
+      if (performance.now() >= deadline) throw new Error("Personal native form did not settle")
+      await Bun.sleep(1)
+    }
+  }
+  try {
+    await wait(() => !!mount.querySelector("[data-sf-personal-secret]"))
+    const secret = mount.querySelector<HTMLInputElement>("[data-sf-personal-secret]")!
+    const label = mount.querySelector<HTMLInputElement>("[data-sf-personal-label]")!
+    expect(secret.type).toBe("password")
+    expect(mount.querySelectorAll("select option")).toHaveLength(2)
+    expect(mount.textContent).toContain("Declared provider")
+    label.value = "Rendered personal label"; label.dispatchEvent(new Event("input", { bubbles: true }))
+    secret.value = "synthetic-render-only-key"; secret.dispatchEvent(new Event("input", { bubbles: true }))
+    mount.querySelector("form")!.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }))
+    await entered.promise
+    expect(secret.value).toBe("")
+    expect([...f.storage.values()].join(" ")).not.toContain("synthetic-render-only-key")
+    expect(f.calls.filter((request) => request.method === "POST")).toHaveLength(1)
+    release.resolve(json({ status: "saved", namespace: f.namespace,
+      connection: { key, label: "Rendered personal label", revision: 1, state: "active" } }))
+    await wait(() => !!mount.querySelector("[data-sf-personal-notice]")?.textContent?.includes("Personal key saved"))
+    expect(mount.textContent).toContain("Provider access has not been tested.")
+    guard?.retire()
+    expect(mount.querySelector("[data-sf-personal-secret]")).toBeNull()
+    expect(mount.textContent).not.toContain("Rendered personal label")
+  } finally { dispose(); mount.remove(); f.close() }
 })
