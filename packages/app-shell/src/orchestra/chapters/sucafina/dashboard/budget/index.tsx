@@ -26,25 +26,23 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
     }, { signal }))
   const data = () => read.snapshot()?.data
   const selection = () => read.selection()
-  const year = () => selection().year
+  const year = () => selection().year ?? read.snapshot()?.selection.year
   const versions = () => read.snapshot()?.versions ?? {}
   const money = (value: number | null | undefined) => knownNumber(value) === undefined
     ? t(key("sf.u02.noValue"))
     : new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value!)
   const currentMonth = () => valueAt(data()?.budgetCurrentMonth, year())
   const revenue = () => valueAt(data()?.revenueByYear, year())
-  const unscoped = () => t(key("sf.u02.sourceWarning"))
-  const periodTotals = () => year() === undefined ? data()?.totals : undefined
+  // The native producer returns totals for its admitted selection.year.
+  const periodTotals = () => read.snapshot()?.selection.year === year() ? data()?.totals : undefined
   const admitted = (action: "save-month" | "save-revenue") =>
     read.canAction(action, "domain.command.CAP03." + action)
   const stat = (id: string, label: Key, value: number | null | undefined) =>
     <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{money(value)}</dd></div>
-  const unscopedStat = (id: string, label: Key) =>
-    <div class="sf-u02-stat" data-sf-metric={id} data-sf-scope="unscoped"><dt>{t(key(label))}</dt><dd>{unscoped()}</dd></div>
 
   return <SfPageFrame titleKey={key("sf.cap03.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
-    <div class="sf-u02-page" data-sf-surface="CAP03">
+    <div class="sf-u02-page" data-sf-surface="CAP03" data-sf-year={year()}>
       <SfStatePanel state={read.state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[read.state()])}
           onRetryRead={read.refresh}>
         <section class="sf-u02-section" aria-labelledby="sf-u02-budget-period">
@@ -61,20 +59,17 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-budget-outlook">
           <h2 id="sf-u02-budget-outlook">{t(key("sf.u02.financial"))}</h2>
-          <p role="status">{unscoped()} {t(key("sf.u02.noCurrency"))}</p>
+          <p role="status">{t(key("sf.u02.year"))}: {year() ?? t(key("sf.u02.noValue"))} · {t(key("sf.u02.noCurrency"))}</p>
           <dl class="sf-u02-stats sf-u02-four">
-            {year() === undefined ? stat("budget", "sf.u02.budget", periodTotals()?.totalBudget) : unscopedStat("budget", "sf.u02.budget")}
-            {year() === undefined ? stat("actual", "sf.u02.actual", periodTotals()?.totalActual) : unscopedStat("actual", "sf.u02.actual")}
-            {year() === undefined ? stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast) : unscopedStat("forecast", "sf.u02.forecast")}
+            {stat("budget", "sf.u02.budget", periodTotals()?.totalBudget)}
+            {stat("actual", "sf.u02.actual", periodTotals()?.totalActual)}
+            {stat("forecast", "sf.u02.forecast", periodTotals()?.totalForecast)}
             {stat("revenue", "sf.u02.revenue", revenue())}
           </dl>
         </section>
         <section class="sf-u02-section" aria-labelledby="sf-u02-budget-variance">
           <h2 id="sf-u02-budget-variance">{t(key("sf.u02.budgetByLine"))}</h2>
-          <Show when={year() !== undefined}>
-            <p role="status">{unscoped()}</p>
-          </Show>
-          <Show when={year() === undefined && data()?.totals} fallback={year() === undefined ? <p role="status">{t(key("sf.u02.sourceMissing"))}</p> : null}>
+          <Show when={periodTotals()} fallback={<p role="status">{t(key("sf.u02.sourceMissing"))}</p>}>
             {(totals) => <div class="sf-u02-table-scroll"><table>
               <caption>{t(key("sf.u02.budgetByLine"))}</caption>
               <thead><tr><th scope="col">{t(key("sf.u02.line"))}</th>
@@ -94,7 +89,6 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
               </tbody>
             </table></div>}
           </Show>
-          <p>{t(key("sf.u02.sourceWarning"))}</p>
         </section>
         <Show when={year() !== undefined ? read.owner() : undefined}>
           {(ready) => <section class="sf-u02-section" aria-labelledby="sf-u02-budget-maintenance">

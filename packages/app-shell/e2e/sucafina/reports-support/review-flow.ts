@@ -5,7 +5,7 @@ import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1
 import type { ReviewAgendaPreview } from "../../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
 import type { ReportsCorpus } from "./corpus.ts"
-import { agendaResult, object, projection, readReview, responseFor, review, text } from "./model.ts"
+import { object, projection, readReview, responseFor, review, text } from "./model.ts"
 import { inspectReport, officePackageText } from "./ooxml.ts"
 
 const reportPages = ["Portfolio Dashboard", "Budget Overview", "Hot Topics & Actions"] as const
@@ -127,7 +127,10 @@ async function previewDashboardAgenda(page: Page, app: ReportsInstallation): Pro
   await expect(preview).toBeEnabled()
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
   await preview.click()
-  const response = await pending
+  return dashboardAgendaResult(await pending)
+}
+
+async function dashboardAgendaResult(response: Response): Promise<DashboardPreview> {
   expect(response.status()).toBe(200)
   const body = object(await response.json())
   expect(body.status).toBe("ok")
@@ -238,16 +241,26 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
     if (!retainedIds.includes(text(choice.recordId))) await checkbox.uncheck()
   }
   await expect(records.locator('input[type="checkbox"]:checked')).toHaveCount(24)
-  const load = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
+  const load = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-agenda", "POST"))
   await preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
-  const selected = await agendaResult(await load)
+  const preparedResponse = await load
+  const selected = await dashboardAgendaResult(preparedResponse)
+  const preparedRequest = object(preparedResponse.request().postDataJSON())
+  expect(Array.isArray(preparedRequest.sections)).toBe(true)
+  const submittedSections = (preparedRequest.sections as unknown[]).map(object)
+  expect(submittedSections.map((section) => section.id)).toEqual(prior.sections.map((section) => section.id))
   expect(selected.sections.flatMap((section) => section.projection.values).filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
   expect(selected.sections.filter((section) => section.title === "Projects").map((section) => section.recordCount)).toEqual([24])
-  expect(selected.sectionRecordRefs.filter((entry) => entry.sectionRef === project.id)).toEqual([{
-    sectionRef: project.id,
-    recordRefs: choices.filter((choice) => retainedIds.includes(text(choice.recordId))).map((choice) => text(choice.recordRef)),
-  }])
+  const submittedProject = submittedSections.filter((section) => section.id === project.id)
+  expect(submittedProject).toHaveLength(1)
+  expect(submittedProject[0]!.recordRefs).toEqual(
+    choices.filter((choice) => retainedIds.includes(text(choice.recordId))).map((choice) => text(choice.recordRef)),
+  )
+  const selectedProjects = selected.sections.filter((section) => section.id === project.id)
+  expect(selectedProjects).toHaveLength(1)
+  expect(selectedProjects[0]!.projection.values.filter((value) => /^projects\[id:[^\]]+\]\.id$/.test(value.id))
+    .map((value) => text(value.value)).sort()).toEqual([...retainedIds].sort())
   const revisionPreview = preparation.locator("[data-sf-revision-preview]")
   await expect(revisionPreview).toBeVisible()
   const budget = selected.sections.filter((section) => section.title === "Budget")
@@ -255,12 +268,12 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
   await expect(revisionPreview.locator(`[data-section-id="${budget[0]!.id}"]`)).toContainText(
     `${corpus.forecastField}: ${corpus.after} unspecified · ${corpus.annual.start} – ${corpus.annual.end}`,
   )
-  const preserve = page.waitForResponse(responseFor(app.dashboardURL, "review-preserve", "POST"))
+  const preserve = page.waitForResponse(responseFor(app.dashboardURL, "dashboard-review-preserve", "POST"))
   await preparation.getByRole("button", { name: "Preserve this review", exact: true }).click()
   const response = await preserve
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toEqual({
-    previousReviewRef: prior.id, selectionRef: selected.selectionRef, sectionRefs: selected.sectionRefs,
+    previousReviewRef: prior.id, selectionRef: selected.selectionRef, sectionRefs: selected.sections.map((section) => section.id),
   })
   const body = object(await response.json())
   expect(body.status).toBe("ok")
@@ -542,7 +555,19 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
   await expect(open).toHaveCount(1)
   await expect(open).toHaveAttribute("href", destination.toString())
+  const sourceRead = page.waitForResponse((response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === app.origin &&
+      url.pathname === `${app.mount}/api/ui/pages/CAP03` && url.searchParams.get("year") === String(corpus.year)
+  })
   await open.click()
+  const currentSource = await sourceRead
+  expect(currentSource.status()).toBe(200)
+  const sourceBody = object(await currentSource.json())
+  expect(sourceBody.status).toBe("ok")
+  const sourceValue = object(sourceBody.value)
+  expect(object(sourceValue.selection).year).toBe(corpus.year)
+  expect(object(object(sourceValue.data).totals).totalForecast).toBe(corpus.after)
   await expect(page).toHaveURL(destination.toString())
   const dashboard = page.locator('[data-sf-surface="CAP03"]')
   await expect(dashboard).toBeVisible()
@@ -550,8 +575,11 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   expect(target.origin).toBe(nativeOrigin)
   expect(target.pathname).toBe("/orchestra/sf-dashboard/budget")
   expect(target.searchParams.get("year")).toBe(String(corpus.year))
+  await expect(dashboard).toHaveAttribute("data-sf-year", String(corpus.year))
+  const locale = await page.locator("html").getAttribute("lang")
+  expect(locale).toBe("en-US")
   await expect(dashboard.locator('[data-sf-metric="forecast"] dd'),
-    "UNBOUND WP1: the native year-selected forecast must expose the producer total instead of an unscoped warning").toHaveText(String(corpus.after))
+    "The selected year renders the original producer total").toHaveText(new Intl.NumberFormat(locale!, { maximumFractionDigits: 2 }).format(corpus.after))
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
 }
 

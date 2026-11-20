@@ -1,7 +1,7 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { Schema } from "effect"
-import type { SfReviewUpdate, SfReviewsReviewAgenda } from "@orchestra/schema/sucafina/reviews"
+import type { SfReviewUpdate, SfDashboardDashboardAgenda } from "@orchestra/schema/sucafina/reviews"
 import { useLanguage } from "@/context/language"
 import { SF_U32_COPY } from "@/i18n/orchestra-chapters/sf-u32"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -19,7 +19,7 @@ import "./preserved.css"
 
 const key = (value: string) => value as SfCopyKey
 type Successor = Schema.Schema.Type<typeof SfReviewUpdate>
-type RevisionPreview = Extract<Schema.Schema.Type<typeof SfReviewsReviewAgenda.output>, { status: "ok" }>["value"]
+type RevisionPreview = Extract<Schema.Schema.Type<typeof SfDashboardDashboardAgenda.output>, { status: "ok" }>["value"]
 type RevisionPhase = "selecting" | "previewing" | "reviewing" | "submitting" | "outcome-unknown" | "confirmed"
 
 /** UI48: an original source read under the current owner; never reconstruct from title. */
@@ -44,8 +44,10 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     ? props.route.params.reviewRef : undefined
   let successorAbort: AbortController | undefined
   const revisionLocked = () => store.revisionPhase === "submitting" || store.revisionPhase === "outcome-unknown" || store.revisionPhase === "confirmed"
-  const mayRevise = () => operationGranted(owner.ready()?.context, "reviews.review-agenda", { family: "reviews" })
-  const mayPreserveRevision = () => operationGranted(owner.ready()?.context, "reviews.review-preserve", { family: "reviews" })
+  const mayRevise = () => operationGranted(owner.ready()?.context, "dashboard.dashboard-agenda", { family: "reviews" })
+  const canPrepareSuccessor = () => !!store.successor?.available && store.successor.unavailableSections.length === 0 &&
+    store.successor.items.every((item) => item.agendaNote === undefined)
+  const mayPreserveRevision = () => operationGranted(owner.ready()?.context, "dashboard.dashboard-review-preserve", { family: "reviews" })
   const current = (generation: number, ownerKey: string) => {
     const state = owner.state()
     return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
@@ -155,29 +157,28 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   }
   const prepareRevision = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review, successor = store.successor
-    if (!active || state.status !== "ready" || !review || !successor?.available ||
+    if (!active || state.status !== "ready" || !review || !successor || !canPrepareSuccessor() ||
         successor.previousReviewRef !== review.id || successor.unavailableSections.length ||
         !successor.items.length || !mayRevise() || revisionLocked() || store.revisionPhase === "previewing") return
     const generation = owner.generation(), ownerKey = state.ownerKey
     const controller = new AbortController()
     successorAbort?.abort()
     successorAbort = controller
-    const items = successor.items.map((item) => ({
-      kind: "dashboard" as const, id: item.id, topic: item.topic, selectionRef: item.selectionRef,
+    const sections = successor.items.map((item) => ({
+      id: item.id, title: item.title ?? item.topic, topic: item.topic, selectionRef: item.selectionRef,
       period: { start: item.period.start, end: item.period.end },
       ...(item.recordRefs === undefined ? {} : { recordRefs: [...item.recordRefs] }),
-      ...(item.agendaNote === undefined ? {} : { agendaNote: item.agendaNote }),
     }))
     setStore({ revisionPhase: "previewing", revisionPreview: undefined, updateStatus: "loading" })
     try {
-      const result = await createSfReviewsClient(active.transport)["reviews.review-agenda"](
-        { items }, { signal: controller.signal },
+      const result = await createSfReviewsClient(active.transport)["dashboard.dashboard-agenda"](
+        { sections }, { signal: controller.signal },
       )
       if (controller.signal.aborted || !current(generation, ownerKey)) return
       if (result.kind === "response" && result.body.status === "ok") {
-        const expected = items.map((item) => item.id)
-        if (result.body.value.sectionRefs.length !== expected.length ||
-            result.body.value.sectionRefs.some((id, index) => id !== expected[index])) {
+        const expected = sections.map((section) => section.id)
+        if (result.body.value.sections.length !== expected.length ||
+            result.body.value.sections.some((section, index) => section.id !== expected[index])) {
           setStore({ revisionPhase: "selecting", updateStatus: "stale" })
           return
         }
@@ -200,16 +201,16 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     successorAbort = controller
     setStore({ revisionPhase: "submitting", updateStatus: "loading" })
     try {
-      const result = await createSfReviewsClient(active.transport)["reviews.review-preserve"](
-        { previousReviewRef: review.id, selectionRef: prepared.selectionRef, sectionRefs: [...prepared.sectionRefs] },
+      const result = await createSfReviewsClient(active.transport)["dashboard.dashboard-review-preserve"](
+        { previousReviewRef: review.id, selectionRef: prepared.selectionRef, sectionRefs: prepared.sections.map((section) => section.id) },
         { signal: controller.signal, idempotencyKey: crypto.randomUUID() },
       )
       if (controller.signal.aborted || !current(generation, ownerKey)) return
       if (result.kind === "response" && result.body.status === "ok") {
         const next = result.body.value
         if (next.id === review.id || next.previousReviewRef !== review.id ||
-            next.sections.length !== prepared.sectionRefs.length ||
-            next.sections.some((section, index) => section.id !== prepared.sectionRefs[index])) {
+            next.sections.length !== prepared.sections.length ||
+            next.sections.some((section, index) => section.id !== prepared.sections[index]?.id)) {
           setStore({ revisionPhase: "outcome-unknown", updateStatus: "outcome-unknown" })
           return
         }
@@ -331,7 +332,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <ul><For each={next().confirmations}>{(item) => <li>{item.label}</li>}</For></ul>
                   <h3>{t("sf.u32.unavailableSections")}</h3>
                   <ul><For each={next().unavailableSections}>{(item) => <li><strong>{item.title}</strong>: <StatusText value={item.reason} /></li>}</For></ul>
-                  <Show when={next().available && next().unavailableSections.length === 0}>
+                  <Show when={canPrepareSuccessor()} fallback={<p role="status">{t("sf.u32.updateBlocked")}</p>}>
                     <For each={next().items}>{(item) => <SfAgendaRecordSelection section={item}
                       disabled={revisionLocked() || store.revisionPhase === "previewing"}
                       onSelection={(recordRefs) => {
