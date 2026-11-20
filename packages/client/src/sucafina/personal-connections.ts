@@ -50,7 +50,7 @@ export function createSfPersonalConnections(input: Readonly<{
     namespace ??= structuredClone(value)
     return true
   }
-  const send = async <Output>(schema: Schema.Schema<Output>, path: string, call: SfCallOptions,
+  const send = async <Output>(decode: (value: unknown) => Option.Option<Output>, path: string, call: SfCallOptions,
     command?: ConnectionAccess.PersonalCommand, key?: ConnectionAccess.PersonalKey): Promise<SfTransportResult<Output>> => {
     if (call.signal.aborted || !current()) return failed("aborted")
     if (call.idempotencyKey !== undefined || call.retry !== undefined) return failed("contract-mismatch")
@@ -101,7 +101,7 @@ export function createSfPersonalConnections(input: Readonly<{
         new TextDecoder("utf-8", { fatal: true }).decode(bytes),
       )
       if (Option.isNone(json)) return failure("invalid-response")
-      const parsed = Schema.decodeUnknownOption(Schema.toCodecJson(schema), strict)(json.value)
+      const parsed = decode(json.value)
       if (Option.isNone(parsed) || !current() || controller.signal.aborted || !validStatus(parsed.value, response.status))
         return failure("invalid-response")
       return { kind: "response", status: response.status,
@@ -120,7 +120,7 @@ export function createSfPersonalConnections(input: Readonly<{
   }
   return Object.freeze({
     async catalog(call: SfCallOptions): Promise<SfTransportResult<SfPersonalCatalogResult>> {
-      const result = await send(CatalogResult, "/api/provider/catalog", call)
+      const result = await send(Schema.decodeUnknownOption(Schema.toCodecJson(CatalogResult), strict), "/api/provider/catalog", call)
       if (result.kind !== "response" || !("namespace" in result.body)) {
         keys.clear(); slots.clear()
         return result
@@ -134,7 +134,7 @@ export function createSfPersonalConnections(input: Readonly<{
       const parsed = Schema.decodeUnknownOption(ConnectionAccess.PersonalKey, strict)(key)
       if (Option.isNone(parsed) || !namespace || !keys.has(keyText(parsed.value))) return failed("contract-mismatch")
       slots.delete(keyText(parsed.value))
-      const result = await send(ConnectionAccess.PersonalMetadataResult, "/api/connection/personal", call, undefined, parsed.value)
+      const result = await send(Schema.decodeUnknownOption(Schema.toCodecJson(ConnectionAccess.PersonalMetadataResult), strict), "/api/connection/personal", call, undefined, parsed.value)
       if (result.kind !== "response" || result.body.status !== "available") return result
       if (!inspect(result.body.namespace) || keyText(result.body.connection.key) !== keyText(parsed.value))
         return failed("invalid-response")
@@ -150,7 +150,7 @@ export function createSfPersonalConnections(input: Readonly<{
           value.action !== "create" && observed.state !== "active") return failed("contract-mismatch")
       // A new attempt always requires a later explicit read, even after a lost response.
       slots.delete(keyText(value.key))
-      const result = await send(ConnectionAccess.PersonalCommandResult, "/api/connection/personal", call, value)
+      const result = await send(Schema.decodeUnknownOption(Schema.toCodecJson(ConnectionAccess.PersonalCommandResult), strict), "/api/connection/personal", call, value)
       if (result.kind !== "response") return result
       if (result.body.status === "unavailable") return failed("outcome-unknown")
       if (result.body.status !== "saved" && result.body.status !== "removed") return result

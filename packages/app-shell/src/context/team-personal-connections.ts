@@ -209,7 +209,7 @@ export function createTeamPersonalConnections(input: Readonly<{
       if (!life || !current(life) || !provider || state.busy) return false
       if ((!!state.secret || state.label !== baseline) && !await input.confirmDiscard()) return false
       if (!current(life) || epoch !== serial) return false
-      return read(life, provider.connection)
+      return read(life, structuredClone(unwrap(provider.connection)))
     },
     acceptObserved() {
       const life = active

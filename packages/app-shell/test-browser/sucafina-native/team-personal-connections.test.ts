@@ -231,7 +231,12 @@ test("retirement clears RAM immediately and a late confirmed response cannot rep
     expect(f.editor.guard.pending()).toBe(true)
     expect([...f.storage.values()].join(" ")).not.toMatch(/Private label|private-in-flight-key/)
     f.retire()
-    expect(f.editor.state).toMatchObject({ status: "idle", providers: [], label: "", secret: "", pending: false })
+    expect(f.editor.state.status).toBe("idle")
+    expect(f.editor.state.providers).toEqual([])
+    expect(f.editor.state.label).toBe("")
+    expect(f.editor.state.secret).toBe("")
+    expect(f.editor.state.pending).toBe(false)
+    expect(f.editor.state.sending).toBe(false)
     release.resolve(json({ status: "saved", namespace: f.namespace,
       connection: { key, label: "Private label", revision: 1, state: "active" } }))
     expect(await write).toBe(false)
