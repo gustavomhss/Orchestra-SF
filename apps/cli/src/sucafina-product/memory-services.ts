@@ -16,6 +16,7 @@ import { createSfOutcomeSelectionRegistry } from "../../../../modules/sucafina/S
 import { createSfDomainOutcomeAccess } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts"
 import { createSfReviewOutcomeAdapter } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts"
 import { createPlannerMateriality } from "../../../../modules/sucafina/Sucafinav1/product/planner/materiality.ts"
+import { resolveStoredPlannerScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
 import { createPlannerObservedProjection } from "../../../../modules/sucafina/Sucafinav1/product/planner/observed.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
@@ -31,6 +32,7 @@ export type SfMemoryServicesInput = {
   business: Pick<ReturnType<typeof createSfBusinessServices>, "cases" | "context" | "plannerSources" | "resolveCase" | "operationIdentity" | "readSourceFences" | "lockedSourceFences"> & {
     planner: Pick<ReturnType<typeof createSfBusinessServices>["planner"], "compareScenarios" | "compareForecast">
     plannerProduct: Pick<ReturnType<typeof createSfBusinessServices>["plannerProduct"], "scenarios">
+    withPlannerObservation?: ReturnType<typeof createSfBusinessServices>["withPlannerObservation"]
   }
   signalRegistryWrites: WeakSet<object>
 }
@@ -73,6 +75,8 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
       object(state.versions).cases === captured.casesVersion && sfRunSourceFence(snapshot) === captured.sources.planner && same(captured.sources, locked)
   }
   const scenarios = business.plannerProduct.scenarios
+  const observePlanner: NonNullable<SfMemoryServicesInput["business"]["withPlannerObservation"]> = (request, call, work) =>
+    business.withPlannerObservation ? business.withPlannerObservation(request, call, work) : work()
   const authorizeSignal = (selection: SfSignalSelection, call: TrustedDomainContext) => authorizeFenced(selection, call, async () => {
     const request = host.requestFor(call)
     if (!request || !scenarios || !memorySignalSelection(selection) || !await authorizeEvidence([selection.evidence], call)) return false
@@ -83,7 +87,10 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
     if (stored.status !== "ok" || !stored.value || stored.value.some((record, index) => !record || record.schema !== "sf-decision-result-v1" ||
       record.kind !== "scenario" || record.resultRef !== selection.scenarioRefs[index] || record.caseRef.id !== selection.caseRef.id ||
       record.caseRef.incarnation !== selection.caseRef.incarnation || record.caseRef.version > selection.caseRef.version || record.resultDigest !== digestSfValue(record.result))) return false
-    const resolved = await Promise.all(selection.scenarioRefs.map((ref) => scenarios.resolve(ref, call)))
+    const observed = await observePlanner({ scenarioRefs: selection.scenarioRefs, criteria: [] }, call,
+      async () => ({ status: "ok" as const, value: await resolveStoredPlannerScenarios(scenarios, selection.scenarioRefs, call) }))
+    if (observed.status !== "ok") return false
+    const resolved = observed.value
     const again = await read()
     return resolved.every((result, index) => result.status === "ok" && same(result.value.result, stored.value![index]!.result)) &&
       again.status === "ok" && stored.storageVersion === again.storageVersion && same(stored.value, again.value) && await host.revalidate(call)
@@ -98,14 +105,16 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
   // retaining a one-criterion projection would silently reject every multi-criterion choice.
   const produce: ReturnType<typeof createPlannerMateriality> = async (request, call) => {
     if (!domainProducer) return unavailable("planner-materiality-producer-unavailable")
-    const first = await domainProducer(request, call)
+    const first = await observePlanner({ scenarioRefs: request.selection?.scenarioRefs, criteria: [request.selection?.criterionId] }, call,
+      () => domainProducer(request, call))
     if (first.status !== "ok") return first
     if (same(request.choice.criteria, [request.selection.criterionId])) return first
     const read = () => business.planner.compareScenarios({ scenarioRefs: request.selection.scenarioRefs, criteria: request.choice.criteria }, call)
     const complete = await read()
     if (complete.status !== "ok" || !same(complete.value.criterionResults.filter((item) => item.criterionId === request.selection.criterionId), first.value.comparison.after.criterionResults))
       return unavailable("materiality-comparison-unavailable")
-    const again = await domainProducer(request, call)
+    const again = await observePlanner({ scenarioRefs: request.selection?.scenarioRefs, criteria: [request.selection?.criterionId] }, call,
+      () => domainProducer(request, call))
     const checked = await read()
     if (again.status !== "ok" || !same(first.value, again.value) || checked.status !== "ok" || !same(complete.value, checked.value) || !await host.revalidate(call))
       return unavailable("materiality-comparison-changed")
