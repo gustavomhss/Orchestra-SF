@@ -1,12 +1,23 @@
 # Handoff — audit-one
 
-SHA: a7e4ba71257cd4110671fa9dff73e5a975dd9f6e (head anterior a este commit documental; produto integrado: 887d25a227242ed4f739f322e9485969a0447769)
-Data: 2026-11-19T23:46:33.000-03:00
+SHA: 4f5e03dd7e126d61d9dd1056950ccba16b133069 (head anterior a este commit documental; produto integrado: 887d25a227242ed4f739f322e9485969a0447769)
+Data: 2026-11-20T00:05:35.000-03:00
 Estado: partial
 
 PR existente: [#349](https://github.com/gustavomhss/Orchestra-SF/pull/349), base `close-final-candidate@52d2c24f4f8cb776889b97894131df6ada43ce98`. Não abrir outro PR. Brief e template estão na branch `sf-handoff-brief`.
 
 ## Feito
+
+### Checkpoint após 4f5 — agenda qualificada; C17 corrigido em gates; Reports revalida dependências reais
+
+- **Estado:** produto de audit-one continua Finance`887d25a227242ed4f739f322e9485969a0447769`; o head anterior a este documento é`4f5e03dd7e126d61d9dd1056950ccba16b133069`, tree1a344b175d3877340c57e9baac4d6505cd048778. A base isolada094 permanece. Reports/Decisions não integrados e nenhum sf-ci novo.
+- **Agenda5dcb qualificada:** run **44663139892/job136045929856**, snapshot`4efc8295bfbad83e60379d4400d45571e96f1755`, treee28e6da64d5541f4df90446450c70cf958fbfaad, parent5dcb, sórequest73221848a62a188c2529aa8b34181be657f30048: **38/0/458expects**, cinco arquivos inteiros,43,88s. São16novos,14discovery-filter,1dashboard-agenda-consumer,5installed-review-entry e2dashboard-review-history. Omni declarou not applicable (nenhum teste declarante de spawn); não é prova de execução nativa. Run e cleanup success/attempt1, lidos por root.
+- **Compiler2 agenda GREEN:** **44663165961/job136046016016**, snapshot`2e50a06419b94bfa8d9ccdd90a48fc5b183a0eef`, tree1cfad2df8d8aaac68ab2a5f1eb8ce6d8ad3f3201,parent5dcb; requeste359ff4033d50207f9770b1838b3667a6453321e+harness180af1d5797decb666dcaa8b386608d61724ae08. **2/0/0skip,54,613s** (Sucafina29,758;CLI24,814), scripts reais bun run typecheck e ambos marcadores5dcb. Componente fechado, nominal Reports ainda pendente.
+- **C17 candidato runtime/testes:** `audit-calculation-scope@dee82f1de11654d6b1098ab8a805f1b4d12518c3`, tree5f99c4059515a5db0371c63c9921e5250fa0dea4, parent`d37d8dc46bfe6dc6eb07a08adf147013948de78a`→32897(docJSON)→094. Compare32897…dee82 tem4paths: `apps/cli/src/sucafina-product/planner-calculation-root.ts`b5d4b57afaa45ddeed88588ed93b895ad393ce76; `planner-calculation-services.ts`f4e38e9657791cdc56cbcaa46d5308b5c70acd8c; `modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts`1ab2e06a355982b5f5098b17f5633d9b9244e7ce; `calculation-root-fixture.ts`426254a38180bc00d07b7509a116297494e87132. Todos commits de produto [skip ci]; nenhum original/assert/budget foi alterado.
+- **Revisão C17 root+Native:** preparação real de fontes+coverage antes do baseline; raiz física apenas no issue record-only ancestral elegível. Diretos preservam concorrência original; C08 estrangeiro não prepara/abre/empresta raiz. Valor privado só sai após aceitação e callback único; poison/abort/erro nunca refazem fora. d37 tinha dois problemas estáticos, ambos corrigidos emdee82: allows(call) antes do roteamento evita escape; owner durável separado do frame atual permite filho válido. Receiver coverage igual ao legado. Fixture111linhas replica grants/roles/UI/SQLite/produtores existentes, sem nova aprovação.21casos/356linhas incluem A→B→C real/18leituras/1raiz, foreigncall, escape sem C08 novo, concorrência, poison, abort e adapters negativos. Parecer é estático até os gates.
+- **Dois gates C17 únicos iniciados; gate7 em andamento, compiler2 terminou RED:** sete specs **44664876389/job136051611709**, snapshot`cf19199d09bd755ff59d80767de1dd6b5eb93b3b`, tree2f0c3df5e7a777ff47dd37c5f139f63f63db5008,parentdee82, só.ci-run023c86a72b3c0ac110cc541cc4ca9774b2dae3d1; novo spec +seis originais do44656620394. Compiler2 **44664882950/job136051632907**, snapshot`22d25212a8ac2953496731ace3e732fe6ed84cdf`, tree0f5ccdd9b0c4ac664579165c91b6d75b6948e6f1,parentdee82, requeste98aae27415e5e45b7a31dddde3ae81875a48cb2+harnesscb3f299fac7b1ef045bacadc842d582ca5ee29cc emapps/cli/audit-c17-root-typecheck.node-smoke.mjs. Root conferiu parents/trees/requests, scripts reais e o log do compiler: **1 pass / 1 fail / 0 skip, 72,137s**; CLI passou em34,060s, Sucafina falhou em38,016s somente nos testes novos. Assinaturas: calculation-read-root.test.ts:37/50/84/311/323/342 TS2722 (currentSnapshots opcional), :185 TS2722 (readSnapshotRoot opcional), :58 TS2769 (observação unknown em toEqual); calculation-root-fixture.ts:35 TS2722/TS18048 (readRoot opcional). Correção de presença/tipos em preparação, sem mudar runtime/asserts/budgets; aguardar terminal funcional antes de decidir nova seleção. C17 original conserva120000/105000; OMNI1; nenhum nominal Decisions disparado.
+- **Reports runtime de correção, sem gate:** `reports-source-revalidation@79ffb67ff26a3a7ca858b903ae9d1eaca8a2722a`, treeabf6b989254a6e7a8470f112ce9363fcc35c8990,parent`7d8e9271e4f5eb66cd2d9231a631564fcc70fee4`→8e5→094. O teste negativo e1fad78af8a1c440b9c4dad8cb53a3dfeff12815 permanece literal. Sete paths de runtime: source-lifecycle1b1406812829a723ab75fc62c3b298055fbe6b1d; reviews/portc64cef9881cea4bd8d5bc8907c67c7c3c739bec9; reviews/services7f3e9373eb4a35cf0c87d9ed118d20163b342a59; novo reviews/read-identity3208fc32ca709740eb0d9109b4746947bf9fcfb7; CLIreview-read-integrity2b100e8bdf8d25642d94e4900314ebf499b22c66; review-services9acac26932e86b25cbfffda5afb56fb7eea42920; review-collaboration746534eb57397bdbfe36cb5be1d5f2769766022a.
+- **Mecanismo Reports em revisão:** cada hit relê corpo/recibo C08 e executa novamente a validação inteira do produtor (evidence, projectors, sections/comments, outcomes inclusive[], decision/sensitivity, final host). Só a materialização do corpo é compartilhada; não há resultado/grant emprestado. C05 fence assíncrona repete esse leitor; check síncrono é estrutural. Root/Native acharam em7d8 eagergetters/proxy, optional herdado e recusa indevida de factories opacas;79ff corrige admissão por descriptors próprios/protótipo/ausência real e mantém opacos no legacy original, com C08 real rejeitando writes. Pin previamente admitido que muda falha sem fallback. Testes adicionais e revisão final Native ainda pendentes; não qualificar79ff apenas pela leitura.
 
 ### Checkpoint após a7e — C17 medido; agenda isolada revisada; correção de dependências em preparação
 
@@ -175,6 +186,13 @@ Paths relativos a `modules/sucafina/Sucafinav1/test/`; linhas originais do brief
 
 ## Pendente
 
+### Prioridade atual após 4f5
+
+1. **C17 — colher gate7 e corrigir tipos dos novos testes, sem repetição inalterada:** `apps/cli/src/sucafina-product/planner-calculation-services.ts:149`, `:179`, `:195`, `:209`; `apps/cli/src/sucafina-product/planner-calculation-root.ts:83`; `modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts:294`, `:328` emdee82. Run44664876389 em andamento; compiler44664882950 terminou1/1 apenas nos novos testes. Corrigir presença real das capacidades e tipo das observações em `modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-read-root.test.ts:37`, `:58`, `:185` e `modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-root-fixture.ts:35`, revisar diff e rodar compiler Sucafina no SHA corrigido. CLI de dee82 já verde se o runtime ficar idêntico. Se o gate funcional falhar, registrar assinatura e corrigir a causa; não mudar Expected nem105000. Nominal Decisions só após fechamento desta correção e verificação de histórico/Memory/concorrência originais.
+2. **Reports — concluir testes da revalidação real em79ff:** `apps/cli/src/sucafina-product/review-read-integrity.ts:87`, `:170`, `:218`; `apps/cli/src/sucafina-product/review-collaboration.ts:100`, `:112`; `modules/sucafina/Sucafinav1/product/reviews/port.ts:71`; `modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts:103`. Testar o8e5 intacto, projector separado/compartilhado com closure mutável, evidence revogado, swaps após await, C05 final, opacos positivos/negativos e escapes. Manter originals scope/integrity/Portfolio. Nenhum gate autorizado até teste+diff final revisados.
+3. **Reports nominal — ainda aberto:** agenda5dcb qualificada mas não basta. Compor seus5blobs produto/teste (manifest opcional) com reparo Reports qualificado, sem probes/harness/requests; executar os quatro cenários originais de reports.spec.ts com180s/retries0/produção/Omni1. Preservar console bare404 e fluxo C12 de apply antes da aprovação.
+4. **Integração/final:** main mantém só Finance887d +docs. Fechar WPs antes de integrar blobs [skip ci]; exact typechecks sobre composição. Guard origin/dev conserva dois gates herdados e nenhuma aprovação foi fabricada. Um único sf-ci no SHA final, somente depois dos WPs; não foi executado nesta campanha.
+
 ### Prioridade atual deste checkpoint
 
 1. **Reports agenda — qualificar, sem integrar ainda:** `apps/cli/src/sucafina-product/dashboard-services.ts:45`, `:243`, `:253`, `:266`, `:275` no5dcb. Executar novo agenda-discovery e originais discovery-filter/dashboard-review-history/installed-review-entry/dashboard-agenda-consumer integrais; typechecks reais Sucafina+CLI. Budgets/asserts originais intactos. Só após gates e reparo de dependências considerar nominal.
@@ -228,6 +246,8 @@ Paths relativos a `modules/sucafina/Sucafinav1/test/`; linhas originais do brief
 
 ## Decisões e justificativas
 
+- Checkpoint4f5: separar um owner durável do frame que executa o replay mantém descendentes válidos sem permitir escapes. Em Reviews, shape desconhecido desde a criação conserva o legacy; identidade reconhecida que muda invalida a lease. Nenhuma dessas classificações substitui callbacks/autorização reais.
+
 - **Decisão atual:** não perseguir seletores C17 quando o perfil mede clones abaixo1%do prazo. A candidata de agenda não memoiza catálogo nem autorização; remove apenas histórico que os quatro consumidores internos não pedem. A validação de Reviews deve executar dependências reais mesmo com snapshots/métodos iguais. Não elevar orçamento nem mudar Expected do teste de regressão.
 
 - Nesta retomada, nenhuma asserção original foi removida. A permissão analysis.prepare acrescentada existe somente no ator da fixture autorizada; a mesma montagem prova recusa real sem ela. Nenhuma concessão de produção, escolha humana, approval financeiro ou aprovação de guard foi criada.
@@ -245,6 +265,8 @@ Paths relativos a `modules/sucafina/Sucafinav1/test/`; linhas originais do brief
 
 ## Como retomar
 
+- Priorizar o checkpoint4f5 no topo: agenda5dcb está GREEN; C17dee82 está nos runs44664876389/44664882950; Reports79ff aguarda testes/revisão, mantendo8e5. Os checkpoints anteriores descrevem estados históricos.
+
 - Começar pelas quatro prioridades do checkpointa7e acima; usar base isolada094 e conservar novo5dcb sem importar probes. Os registros anteriores são históricos. C17 já terminou RED, apesar de constar em andamento no checkpoint anterior.
 
 1. Conferir head de audit-one; anterior a este documento e6a6fe852b55d510b3932bc4e31ad94c1c1bc32f, produto integrado887d. PR349/base52d2, nenhum novo PR/full/approval.
@@ -256,6 +278,8 @@ Paths relativos a `modules/sucafina/Sucafinav1/test/`; linhas originais do brief
 7. Ao terminar/parar, atualizar este documento no template com SHA, feito, pendênciasfile:line e IDs de run.
 
 ## Comandos e resultados
+
+- Checkpoint4f5: agenda44663139892=38/0/458 ecompiler44663165961=2/0/0skip. C17 gate7 44664876389 em andamento sobre dee82; compiler2 44664882950=1/1/0skip (CLI verde, Sucafina só tipos dos novos testes). Reports79ff sem gates. Só GitHub APIs/Actions; nenhum terminal ou sf-ci.
 
 - Checkpointa7e: C17perfil44661497930=0/1/2,105s; compilerprofiler44660976919=2/0. Agenda5dcb revisada por root+Reports, gates5specs+compiler2 em preparação. Regressão projector44661290311 continua0/1/29; não rerodada. EvidênciasJSON duráveis nos refs6d8bc e32897. Só GitHub APIs/Actions; nenhum terminal ou sf-ci.
 
