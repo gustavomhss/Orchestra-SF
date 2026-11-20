@@ -1,5 +1,7 @@
 import { Effect, Schema } from "effect"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
+import { ProviderAccess } from "@orchestra/schema/provider-access"
+import { ProviderAdmission } from "@orchestra/core/provider/admission"
 import { CredentialVault } from "@orchestra/core/credential/vault"
 import type { TeamConnectionAccess, TeamConnectionStore } from "../../runtime/team-connection-store.ts"
 import type { TeamConnectionKey } from "../../runtime/team-connection-crypto.ts"
@@ -28,7 +30,7 @@ import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
 
-export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[]; migrationActions?: readonly ("map" | "cut" | "recover")[]; connectionActions?: readonly ConnectionAccess.Action[]; connectionResources?: readonly ConnectionAccess.Resource[] }>
+export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[]; sessionActions?: readonly SessionAccess.Action[]; referenceActions?: readonly "list"[]; migrationActions?: readonly ("map" | "cut" | "recover")[]; connectionActions?: readonly ConnectionAccess.Action[]; connectionResources?: readonly ConnectionAccess.Resource[]; providerBindings?: ProviderAccess.Bindings }>
 
 /** Private verified resolver; the transport supplies only a sealed selection intent. */
 export type SfProductTeams = Readonly<Pick<ReturnType<typeof createTeamProfileResolver>, "revalidate" | "revalidateResolution"> & {
@@ -187,6 +189,7 @@ export function createSfProductAuthority(input: {
       grant: grant ? { namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(),
         humanActions: [...grant.humanActions ?? []].toSorted(), sessionActions: [...grant.sessionActions ?? []].toSorted(),
         referenceActions: [...grant.referenceActions ?? []].toSorted(), migrationActions: [...grant.migrationActions ?? []].toSorted(),
+        providerBindings: grant.providerBindings ?? [],
         connectionActions: [...grant.connectionActions ?? []].toSorted(),
         connectionResources: [...grant.connectionResources ?? []].map((resource) => ({ ...resource }))
           .toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))) } : null,
@@ -538,6 +541,37 @@ export function createSfProductAuthority(input: {
         owner: Object.freeze({ profile: Object.freeze({ ...binding.owner.profile }), principal: Object.freeze({ ...binding.owner.principal }) }),
         revisions: Object.freeze({ ...binding.revisions }),
       }),
+      providers: (fence: () => Effect.Effect<boolean>) => Effect.promise(async () => {
+        if (typeof fence !== "function" || !same(await resolve(request).catch(() => undefined))) return undefined
+        const current = async () => {
+          if (!(await Effect.runPromise(fence()))) throw new Error("SF_PROVIDER_UNAVAILABLE")
+          const actor = await resolve(request).catch(() => undefined)
+          if (!actor || !same(actor) || !(await Effect.runPromise(fence()))) throw new Error("SF_PROVIDER_UNAVAILABLE")
+          return (actor.grant.providerBindings ?? []).filter((value) =>
+            value.profile.installationId === binding.owner.profile.installationId &&
+            value.profile.tenantId === binding.owner.profile.tenantId &&
+            value.profile.teamObjectId === binding.owner.profile.teamObjectId &&
+            actor.grant.connectionActions?.includes("read") &&
+            actor.grant.connectionResources?.some((resource) => resource.category === value.connection.category &&
+              resource.resourceId === value.connection.resourceId))
+        }
+        const run = <A>(work: () => Promise<A>): Effect.Effect<A, ProviderAdmission.Denied> => Effect.tryPromise({
+          try: work, catch: () => new ProviderAdmission.Denied({ reason: "unavailable" }),
+        })
+        const client: ProviderAdmission.Interface = {
+          owner: binding.owner,
+          list: () => run(async () => Object.freeze(await current())),
+          verify: (value) => {
+            const decoded = Schema.decodeUnknownSync(ProviderAccess.Binding)(value)
+            const selected = digestSfValue(decoded)
+            return run(async () => {
+              const values = await current()
+              if (!values.some((candidate) => digestSfValue(candidate) === selected)) throw new Error("SF_PROVIDER_UNAVAILABLE")
+            })
+          },
+        }
+        return Object.freeze(client)
+      }),
       connections: (fence: () => Effect.Effect<boolean>) => Effect.promise(async () => {
         if (!teamConnections || typeof fence !== "function" || !same(await resolve(request).catch(() => undefined))) return undefined
         const authorize: TeamConnectionAccess["authorize"] = async (action, resources) => {
@@ -662,7 +696,8 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
         grant.connectionActions !== undefined && (!Array.isArray(grant.connectionActions) ||
           new Set(grant.connectionActions).size !== grant.connectionActions.length ||
           grant.connectionActions.some((action: unknown) => !ConnectionAccess.Actions.some((known) => known === action))) ||
-        grant.connectionResources !== undefined && !Schema.is(ConnectionAccess.Resources)(grant.connectionResources)))
+        grant.connectionResources !== undefined && !Schema.is(ConnectionAccess.Resources)(grant.connectionResources) ||
+        grant.providerBindings !== undefined && !Schema.is(ProviderAccess.Bindings)(grant.providerBindings)))
     throw new Error("SF_PRODUCT_AUTHORITY_CONFIG_INVALID")
   return Object.freeze(value.map((grant: SfProductGrant) => Object.freeze({
     principalRef: grant.principalRef, namespaces: Object.freeze([...grant.namespaces].toSorted()),
@@ -671,6 +706,10 @@ function productGrants(value: readonly SfProductGrant[]): readonly SfProductGran
     sessionActions: Object.freeze([...grant.sessionActions ?? []].toSorted()),
     referenceActions: Object.freeze([...grant.referenceActions ?? []].toSorted()),
     migrationActions: Object.freeze([...grant.migrationActions ?? []].toSorted()),
+    providerBindings: Object.freeze([...grant.providerBindings ?? []].map((value) => Object.freeze({
+      ...value, profile: Object.freeze({ ...value.profile }), connection: Object.freeze({ ...value.connection }),
+      models: Object.freeze(value.models.map((model) => Object.freeze({ ...model, limit: Object.freeze({ ...model.limit }) }))),
+    })).toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))),
     connectionActions: Object.freeze([...grant.connectionActions ?? []].toSorted()),
     connectionResources: Object.freeze([...grant.connectionResources ?? []].map((resource) => Object.freeze({ ...resource }))
       .toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))),

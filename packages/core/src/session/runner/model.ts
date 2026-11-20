@@ -15,6 +15,9 @@ import { ModelV2 } from "../../model"
 import { ProviderV2 } from "../../provider"
 import { SessionSchema } from "../schema"
 import { SessionSubagentModels } from "../subagent-models"
+import { SessionOwner } from "../owner"
+import { PrivateProvider } from "../../provider/private"
+import { httpClient } from "../../effect/app-node-platform"
 
 const references = new WeakMap<Model, ModelV2.Ref>()
 const prices = new WeakMap<Model, ReadonlyArray<ModelV2.Cost>>()
@@ -276,8 +279,25 @@ export const locationLayer = Layer.effect(
     const catalog = yield* Catalog.Service
     const integrations = yield* Integration.Service
     const policies = yield* SessionSubagentModels.Service
+    const owners = yield* SessionOwner.Service
     return Service.of({
       resolve: Effect.fn("SessionRunnerModel.resolve")(function* (session) {
+        const sessionID = session.id
+        const parentID = session.parentID
+        const selection = session.model ? Object.freeze({ ...Schema.decodeUnknownSync(ModelV2.Ref)(session.model) }) : undefined
+        const scope = yield* owners.open()
+        if (owners.owner(scope)) {
+          const ceilings = yield* policies.forSession(sessionID)
+          const configured = selection ? undefined : yield* catalog.model.default()
+          const selected = selection ?? (configured ? { providerID: configured.providerID, id: configured.id } : undefined)
+          if (!selected) return yield* new ModelNotSelectedError({ sessionID })
+          if (!SessionSubagentModels.permits(ceilings, selected))
+            return yield* new SessionSubagentModels.ModelDeniedError({ sessionID, model: selected, reason: "not-allowed" })
+          return yield* PrivateProvider.resolve(scope, { sessionID, parentID, model: selected }).pipe(
+            Effect.map((value) => withReference(value, selected)),
+            Effect.mapError(() => new ModelUnavailableError({ providerID: selected.providerID, modelID: selected.id })),
+          )
+        }
         // Location plugins populate and filter the catalog asynchronously during layer startup.
         const ceilings = yield* policies.forSession(session.id)
         if (session.model && !SessionSubagentModels.permits(ceilings, session.model))
@@ -340,5 +360,5 @@ export const credential = Effect.fn("SessionRunnerModel.credential")(function* (
 export const node = makeLocationNode({
   service: Service,
   layer: locationLayer,
-  deps: [Catalog.node, Integration.node, SessionSubagentModels.node],
+  deps: [Catalog.node, Integration.node, SessionSubagentModels.node, SessionOwner.node, httpClient],
 })

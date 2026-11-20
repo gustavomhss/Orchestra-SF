@@ -1,6 +1,7 @@
 import { Schema } from "effect"
 import { SessionAccess } from "@orchestra/schema/session-access"
 import { ConnectionAccess } from "@orchestra/schema/connection-access"
+import { ProviderAccess } from "@orchestra/schema/provider-access"
 import { emptyMap } from "../src/identity.ts"
 import type { Surface } from "../src/identity.ts"
 import type { SfProductGrant } from "../product/integration/product-authority.ts"
@@ -27,7 +28,7 @@ export function microsoftPolicy(value: Record<string, unknown>) {
   }
   if (!Array.isArray(value.grants) || value.grants.length > 1000) throw new Error("Explicit Microsoft product grants required")
   const grants: SfProductGrant[] = value.grants.map((entry: unknown) => {
-    if (!record(entry) || Object.keys(entry).some((key) => !["principalRef", "namespaces", "operations", "humanActions", "sessionActions", "referenceActions", "migrationActions", "connectionActions", "connectionResources"].includes(key)) || typeof entry.principalRef !== "string" || !microsoftUuid.test(entry.principalRef)) throw new Error("Resource-tenant object ID required for product grant")
+    if (!record(entry) || Object.keys(entry).some((key) => !["principalRef", "namespaces", "operations", "humanActions", "sessionActions", "referenceActions", "migrationActions", "connectionActions", "connectionResources", "providerBindings"].includes(key)) || typeof entry.principalRef !== "string" || !microsoftUuid.test(entry.principalRef)) throw new Error("Resource-tenant object ID required for product grant")
     const grantedNamespaces = strings(entry.namespaces, namespaces, "namespaces") as SfStateNamespace[]
     const operations = strings(entry.operations, freeze.operations.map((operation) => operation.operation), "operations")
     const humanActions = strings(entry.humanActions ?? [], sfHumanActions, "human actions") as typeof sfHumanActions[number][]
@@ -46,7 +47,12 @@ export function microsoftPolicy(value: Record<string, unknown>) {
     const connectionResources = Schema.decodeUnknownSync(ConnectionAccess.Resources)(
       entry.connectionResources === undefined ? [] : entry.connectionResources,
     ).map((resource) => Object.freeze({ ...resource }))
-    return Object.freeze({ principalRef: entry.principalRef.toLowerCase(), namespaces: Object.freeze(grantedNamespaces), operations: Object.freeze(operations), humanActions: Object.freeze(humanActions), sessionActions: Object.freeze(sessionActions), referenceActions: Object.freeze(referenceActions), migrationActions: Object.freeze(migrationActions), connectionActions: Object.freeze(connectionActions), connectionResources: Object.freeze(connectionResources) })
+    const providerBindings = Schema.decodeUnknownSync(ProviderAccess.Bindings)(
+      entry.providerBindings === undefined ? [] : entry.providerBindings,
+    ).map((binding) => Object.freeze({ ...binding, profile: Object.freeze({ ...binding.profile }),
+      connection: Object.freeze({ ...binding.connection }), models: Object.freeze(binding.models.map((model) =>
+        Object.freeze({ ...model, limit: Object.freeze({ ...model.limit }) }))) }))
+    return Object.freeze({ providerBindings: Object.freeze(providerBindings), principalRef: entry.principalRef.toLowerCase(), namespaces: Object.freeze(grantedNamespaces), operations: Object.freeze(operations), humanActions: Object.freeze(humanActions), sessionActions: Object.freeze(sessionActions), referenceActions: Object.freeze(referenceActions), migrationActions: Object.freeze(migrationActions), connectionActions: Object.freeze(connectionActions), connectionResources: Object.freeze(connectionResources) })
   })
   if (new Set(grants.map((grant) => grant.principalRef)).size !== grants.length) throw new Error("Ambiguous Microsoft product grant")
   return { groups: Object.freeze(groups), grants: Object.freeze(grants) }

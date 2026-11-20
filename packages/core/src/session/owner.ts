@@ -13,6 +13,8 @@ import { SessionOwnerTable } from "./owner.sql"
 import { SessionSchema } from "./schema"
 import { SessionTable } from "./sql"
 import { CredentialVault } from "../credential/vault"
+import { ProviderAdmission } from "../provider/admission"
+import { ProviderAccess } from "@orchestra/schema/provider-access"
 
 export class Denied extends Schema.TaggedErrorClass<Denied>()("SessionOwner.Denied", {
   reason: Schema.Literals([
@@ -36,6 +38,7 @@ export interface Admission {
   /** Private current Team configuration; absence never permits directory/global fallback. */
   readonly configuration?: () => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined>
   readonly connections?: CredentialVault.Factory
+  readonly providers?: ProviderAdmission.Factory
   readonly authorize: (action: SessionAccess.Action, sessionID?: SessionSchema.ID) => Effect.Effect<boolean>
   /** Current resource exceptions within this owner; evaluated before SQL pagination. */
   readonly excludedSessions: () => Effect.Effect<ReadonlyArray<SessionSchema.ID>>
@@ -70,6 +73,7 @@ type LeaseData = Readonly<{
   revisions?: TeamProfile.Revisions
   configuration?: Admission["configuration"]
   connections?: Admission["connections"]
+  providers?: Admission["providers"]
   inspect?: Admission["inspect"]
   authorize?: Admission["authorize"]
   excludedSessions?: Admission["excludedSessions"]
@@ -106,6 +110,9 @@ export interface Interface {
   readonly location: Effect.Effect<LocationBinding | undefined, Failure>
   readonly configuration: (scope: Scope) => Effect.Effect<TeamProfile.ConfigurationSnapshot | undefined, Failure>
   readonly connections: (scope: Scope) => Effect.Effect<CredentialVault.Interface | undefined, Failure>
+  readonly providers: (scope: Scope) => Effect.Effect<ProviderAdmission.Interface | undefined, Failure>
+  /** Requires the exact currently installed lease, not just an equal owner label. */
+  readonly assertCurrent: (scope: Scope) => Effect.Effect<void, Failure>
   readonly verify: (scope: Scope) => Effect.Effect<void, Failure>
   readonly assert: (scope: Scope, sessionID: SessionSchema.ID, operation: Operation) => Effect.Effect<void, Failure>
   readonly authorize: (scope: Scope, operation: Operation, sessionID?: SessionSchema.ID) => Effect.Effect<void, Failure>
@@ -309,12 +316,14 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       const inspection = "binding" in observed ? observed.inspect : undefined
       const configuration = "binding" in observed ? observed.configuration : undefined
       const connections = "binding" in observed ? observed.connections : undefined
+      const providers = "binding" in observed ? observed.providers : undefined
       const authorize = "binding" in observed ? observed.authorize : undefined
       const excludedSessions = "binding" in observed ? observed.excludedSessions : undefined
       const mappedSessions = sessionIds ? new Set(sessionIds) : undefined
       if (inspection !== undefined && typeof inspection !== "function" ||
           configuration !== undefined && typeof configuration !== "function" ||
-          connections !== undefined && typeof connections !== "function")
+          connections !== undefined && typeof connections !== "function" ||
+          providers !== undefined && typeof providers !== "function")
         return yield* new Denied({ reason: "missing-admission" })
       yield* verifyProof(verifyCurrent)
       if (!(yield* provider.verifyGeneration(generation))) return yield* new Denied({ reason: "stale-admission" })
@@ -327,6 +336,7 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         ...(revisions ? { revisions } : {}),
         ...(configuration ? { configuration } : {}),
         ...(connections ? { connections } : {}),
+        ...(providers ? { providers } : {}),
         ...(mappedSessions ? { sessionIds: mappedSessions } : {}),
       })
       return lease
@@ -364,6 +374,60 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
       entries.set(signature, binding)
       return binding
     }),
+    assertCurrent: (scope) => Effect.gen(function* () {
+      const handle = yield* Current
+      const retained = data(scope)
+      if (!handle || !retained.lease || leases.get(handle) !== retained.lease || retained.lease.kind !== "request")
+        return yield* new Denied({ reason: "missing-admission" })
+      yield* verify(scope)
+    }),
+    providers: (scope) => Effect.gen(function* () {
+      yield* verify(scope)
+      const retained = data(scope)
+      const lease = retained.lease
+      if (!lease) return undefined
+      if (lease.kind !== "request" || !lease.providers || !retained.generation)
+        return yield* new Denied({ reason: "storage-unavailable" })
+      const generation = retained.generation
+      const fence = () => generation.verifyGeneration(lease.generation)
+        .pipe(Effect.catchCause(() => Effect.succeed(false)))
+      const client = yield* lease.providers(fence).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
+      const owner = yield* Schema.decodeUnknownEffect(TeamProfile.Owner)(client?.owner)
+        .pipe(Effect.mapError(() => new Denied({ reason: "storage-unavailable" })))
+      if (!client || !sameOwner(owner, lease.owner))
+        return yield* new Denied({ reason: "stale-admission" })
+      yield* verify(scope)
+      const check = <A>(effect: Effect.Effect<A, ProviderAdmission.Denied>) => Effect.gen(function* () {
+        yield* result.assertCurrent(scope)
+        const value = yield* effect
+        yield* result.assertCurrent(scope)
+        return value
+      }).pipe(Effect.mapError((error) => error instanceof ProviderAdmission.Denied ? error :
+        new ProviderAdmission.Denied({ reason: "unavailable" })))
+      const bound: ProviderAdmission.Interface = {
+        owner: freezeOwner(owner),
+        list: () => check(Effect.gen(function* () {
+          const values = yield* client.list()
+          const decoded = yield* Schema.decodeUnknownEffect(ProviderAccess.Bindings)(values)
+            .pipe(Effect.mapError(() => new ProviderAdmission.Denied({ reason: "unavailable" })))
+          if (!decoded.every((value) => value.profile.installationId === owner.profile.installationId &&
+            value.profile.tenantId === owner.profile.tenantId && value.profile.teamObjectId === owner.profile.teamObjectId))
+            return yield* new ProviderAdmission.Denied({ reason: "unavailable" })
+          return Object.freeze(decoded.map((value) => Object.freeze({ ...value,
+            profile: Object.freeze({ ...value.profile }), connection: Object.freeze({ ...value.connection }),
+            models: Object.freeze(value.models.map((model) => Object.freeze({ ...model, limit: Object.freeze({ ...model.limit }) }))),
+          })))
+        })),
+        verify: (value) => {
+          const binding = Schema.decodeUnknownSync(ProviderAccess.Binding)(value)
+          const selected = Object.freeze({ ...binding, profile: Object.freeze({ ...binding.profile }),
+            connection: Object.freeze({ ...binding.connection }), models: Object.freeze(binding.models.map((model) =>
+              Object.freeze({ ...model, limit: Object.freeze({ ...model.limit }) }))) })
+          return check(client.verify(selected))
+        },
+      }
+      return Object.freeze(bound)
+    }),
     connections: (scope) => Effect.gen(function* () {
       yield* verify(scope)
       const retained = data(scope)
@@ -383,9 +447,9 @@ const layer = Layer.effect(Service, Effect.gen(function* () {
         return yield* new Denied({ reason: "stale-admission" })
       yield* verify(scope)
       const check = <A>(effect: Effect.Effect<A, CredentialVault.Denied>) => Effect.gen(function* () {
-        yield* verify(scope)
+        yield* result.assertCurrent(scope)
         const value = yield* effect
-        yield* verify(scope)
+        yield* result.assertCurrent(scope)
         return value
       }).pipe(Effect.mapError((error) => error instanceof CredentialVault.Denied ? error :
         new CredentialVault.Denied({ reason: "unavailable" })))

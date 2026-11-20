@@ -11,6 +11,7 @@ import { Policy } from "./policy"
 import { State } from "./state"
 import { Integration } from "./integration"
 import { SessionOwner } from "./session/owner"
+import type { ProviderAccess } from "@orchestra/schema/provider-access"
 
 export const VIRTUAL_SEPARATOR = "#"
 
@@ -379,31 +380,68 @@ export const locationLayer = layer.pipe(
   Layer.provideMerge(Policy.locationLayer),
 )
 
-/** Corporate discovery has no provider source until an explicit private definition is admitted. */
+/** Corporate metadata comes only from current explicit private bindings, never provider discovery. */
 const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
   const owners = yield* SessionOwner.Service
   const binding = yield* owners.location.pipe(Effect.orDie)
   const service = yield* make
   if (!binding) return service
-  // Provider metadata, ambient keys and a shared model name cannot turn into an
-  // available private provider. This branch does not enumerate or open credentials.
+  const scope = yield* owners.open().pipe(Effect.orDie)
+  const guard = <A>(effect: Effect.Effect<A>) =>
+    owners.assertCurrent(scope).pipe(Effect.orDie, Effect.andThen(binding.bind(effect)))
+  const declared = (active: boolean) => Effect.gen(function* () {
+    const providers = yield* owners.providers(scope)
+    if (!providers) return yield* Effect.die("Private provider metadata unavailable")
+    const values = yield* providers.list()
+    if (!active || values.length === 0) return [...values]
+    const vault = yield* owners.connections(scope)
+    if (!vault) return yield* Effect.die("Private provider metadata unavailable")
+    const selected: ProviderAccess.Binding[] = []
+    for (const value of values) {
+      const metadata = yield* vault.inspect(value.connection)
+      if (metadata?.state === "active") selected.push(value)
+    }
+    // Inspection of a different slot crossed awaits; never publish a stale declaration after them.
+    for (const value of values) yield* providers.verify(value)
+    return selected
+  }).pipe(Effect.orDie)
+  const provider = (value: ProviderAccess.Binding) => ProviderV2.Info.make({
+    ...ProviderV2.Info.empty(value.providerId), name: value.name,
+  })
+  const models = (values: ReadonlyArray<ProviderAccess.Binding>) => values.flatMap((value) =>
+    value.models.map((model) => ModelV2.Info.make({
+      ...ModelV2.Info.empty(value.providerId, model.id), name: model.name,
+      limit: { context: model.limit.context, output: model.limit.output },
+      capabilities: { tools: model.tools, input: ["text"], output: ["text"] },
+    })))
   return Service.of({
-    transform: (callback) => binding.bind(service.transform((draft) => binding.bind(Effect.suspend(() => {
+    transform: (callback) => guard(service.transform((draft) => binding.bind(Effect.suspend(() => {
       const effect = callback(draft)
       return Effect.isEffect(effect) ? effect : Effect.void
     })))),
-    reload: () => binding.bind(service.reload()),
+    reload: () => guard(service.reload()),
     provider: {
-      get: () => binding.bind(Effect.succeed(undefined)),
-      all: () => binding.bind(Effect.succeed([])),
-      available: () => binding.bind(Effect.succeed([])),
+      get: (id) => guard(declared(false).pipe(Effect.map((values) => {
+        const value = values.find((value) => value.providerId === id)
+        return value ? provider(value) : undefined
+      }))),
+      all: () => guard(declared(false).pipe(Effect.map((values) => values.map(provider)))),
+      available: () => guard(declared(true).pipe(Effect.map((values) => values.map(provider)))),
     },
     model: {
-      get: () => binding.bind(Effect.succeed(undefined)),
-      all: () => binding.bind(Effect.succeed([])),
-      available: () => binding.bind(Effect.succeed([])),
-      default: () => binding.bind(Effect.succeed(undefined)),
-      small: () => binding.bind(Effect.succeed(undefined)),
+      get: (providerID, modelID) => guard(declared(false).pipe(Effect.map((values) =>
+        models(values).find((model) => model.providerID === providerID && model.id === modelID)))),
+      all: () => guard(declared(false).pipe(Effect.map(models))),
+      available: () => guard(declared(true).pipe(Effect.map(models))),
+      default: () => guard(Effect.gen(function* () {
+        const configuration = yield* owners.configuration(scope).pipe(Effect.orDie)
+        const selected = configuration?.document.settings.model
+        if (!selected) return undefined
+        const ref = ModelV2.parse(selected)
+        return models(yield* declared(true)).find((model) => model.providerID === ref.providerID && model.id === ref.modelID)
+      })),
+      // There is no price/age heuristic or ambient small-model fallback for a private binding.
+      small: () => guard(Effect.succeed(undefined)),
     },
   })
 }))

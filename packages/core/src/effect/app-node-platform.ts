@@ -4,6 +4,8 @@ import { FileSystem, Path } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
 import { HttpClient } from "effect/unstable/http"
 import { makeGlobalNode } from "./app-node"
+import { PrivateProvider } from "../provider/private"
+import { SessionOwner } from "../session/owner"
 
 export const filesystem = makeGlobalNode({ service: FileSystem.FileSystem, layer: NodeFileSystem.layer, deps: [] })
 export const path = makeGlobalNode({ service: Path.Path, layer: NodePath.layer, deps: [] })
@@ -13,6 +15,6 @@ export const requestExecutor = makeGlobalNode({
   layer: RequestExecutor.layer,
   deps: [httpClient],
 })
-export const llmClient = makeGlobalNode({ service: LLMClient.Service, layer: LLMClient.layer, deps: [requestExecutor] })
+export const llmClient = makeGlobalNode({ service: LLMClient.Service, layer: PrivateProvider.llmLayer, deps: [requestExecutor, SessionOwner.node] })
 
 export * as LayerNodePlatform from "./app-node-platform"
