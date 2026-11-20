@@ -21,7 +21,9 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { inspectWp05Browser } from "./browser.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
-const privateRequestId = "wp05-private-request-b-privacy-sentinel"
+// Private record markers must not collide with ordinary HTML attributes.
+const privateRequestId = "private-request-visible-only-to-b"
+const privateRequestTitle = "Private supplier negotiation for actor b"
 
 test("real procurement registry and port supply scoped BI stock and deny revoked access", async () => {
   expectSpawn(import.meta.path)
@@ -32,7 +34,7 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, projectScope: projectSfProcurementScope, enumerate: enumerateSfSources })
     await persistence.initializeSources("procurement")
     await persistence.transaction("procurement", async (snapshot) => {
-      snapshot.data.store = { requests: { own: { request: { number: "own", createdBy: "a", status: "draft", pr: { title: "visible" } }, version: 1, by: "a" }, waiting: { request: { number: "waiting", createdBy: "a", status: "pr_pending", pr: { title: "no entry" }, prApproval: { steps: [{ status: "pending" }] }, history: [] }, version: 1, by: "a" }, resubmitted: { request: { number: "resubmitted", createdBy: "a", status: "pr_pending", pr: { title: "resubmitted" }, prApproval: { steps: [{ status: "pending", holderId: "a" }] }, history: [{ action: "Requisition submitted for approval", at: "2025-12-30T00:00:00Z", by: "a", note: "" }, { action: "Saved", at: "2026-01-01T00:00:00Z", by: "a", note: "" }] }, version: 1, by: "a" }, returned: { request: { number: "returned", createdBy: "a", status: "pr_rejected", pr: { title: "returned" }, history: [{ action: "Saved", at: "2026-01-01T00:00:00Z", by: "a", note: "" }] }, version: 1, by: "a" }, [privateRequestId]: { request: { number: privateRequestId, createdBy: "b", status: "pr_pending", prApproval: { steps: [{ status: "pending", holderId: "b" }] }, history: [{ action: "Requisition submitted for approval", at: "2025-12-01T00:00:00Z", by: "b", note: "" }] }, version: 1, by: "b" } }, suppliers: [], settings: { currency: "USD" } }
+      snapshot.data.store = { requests: { own: { request: { number: "own", createdBy: "a", status: "draft", pr: { title: "visible" } }, version: 1, by: "a" }, waiting: { request: { number: "waiting", createdBy: "a", status: "pr_pending", pr: { title: "no entry" }, prApproval: { steps: [{ status: "pending" }] }, history: [] }, version: 1, by: "a" }, resubmitted: { request: { number: "resubmitted", createdBy: "a", status: "pr_pending", pr: { title: "resubmitted" }, prApproval: { steps: [{ status: "pending", holderId: "a" }] }, history: [{ action: "Requisition submitted for approval", at: "2025-12-30T00:00:00Z", by: "a", note: "" }, { action: "Saved", at: "2026-01-01T00:00:00Z", by: "a", note: "" }] }, version: 1, by: "a" }, returned: { request: { number: "returned", createdBy: "a", status: "pr_rejected", pr: { title: "returned" }, history: [{ action: "Saved", at: "2026-01-01T00:00:00Z", by: "a", note: "" }] }, version: 1, by: "a" }, [privateRequestId]: { request: { number: privateRequestId, createdBy: "b", status: "pr_pending", pr: { title: privateRequestTitle }, prApproval: { steps: [{ status: "pending", holderId: "b" }] }, history: [{ action: "Requisition submitted for approval", at: "2025-12-01T00:00:00Z", by: "b", note: "" }] }, version: 1, by: "b" } }, suppliers: [], settings: { currency: "USD" } }
       return { commit: true, value: undefined }
     })
     const access = { enabled: true }
@@ -68,6 +70,7 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     if (!output.ok) return
     expect(output.value.values.map((value) => [value.id, value.value])).toEqual([["stock:draft", 1], ["stock:pr_pending", 2], ["stock:pr_rejected", 1]])
     expect(JSON.stringify(output.value)).not.toContain(privateRequestId)
+    expect(JSON.stringify(output.value)).not.toContain(privateRequestTitle)
     expect(JSON.stringify(output.value)).not.toContain("2025-12-01")
     expect(output.value.values[0]?.drilldown?.refId).toBeTruthy()
     const uiProjection = await readBiPresentation(payload, admitted.value, source, authority)
@@ -93,6 +96,7 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     if (aging.ok) {
       expect(aging.value.values.find((value) => value.id.endsWith(":ageDays"))).toMatchObject({ value: null, evidenceState: "absent" })
       expect(JSON.stringify(aging.value)).not.toContain(privateRequestId)
+      expect(JSON.stringify(aging.value)).not.toContain(privateRequestTitle)
       expect(JSON.stringify(aging.value)).not.toContain("2025-12-01")
     }
     const agingView = await readBiPresentation(agingPayload, agingAdmission.value, source, authority)
@@ -181,6 +185,7 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
       phase("assertions:privacy")
       const html = await page.content()
       expect(html).not.toContain(privateRequestId)
+      expect(html).not.toContain(privateRequestTitle)
       expect(html).not.toContain("2025-12-01")
     })
     access.enabled = false
