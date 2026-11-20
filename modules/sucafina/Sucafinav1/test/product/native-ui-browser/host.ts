@@ -91,7 +91,8 @@ export function createNativeBrowserHost(input: NativeBrowserHostInput) {
   const projections = mountSfNativeProjections({ mount: input.mount, context, handlers })
   const descriptor = () => {
     const current = input.identity()
-    return current ? { ...current, publicOrigin: input.origin, mount: input.mount,
+    return current ? { installationId: current.installationId, projectId: current.projectId, hostId: current.hostId,
+      publicOrigin: input.origin, mount: input.mount,
       contractRevision: "sf-native-ui/1" as const, authMode: "local-operator" as const } : undefined
   }
   const installationRuntime = {
