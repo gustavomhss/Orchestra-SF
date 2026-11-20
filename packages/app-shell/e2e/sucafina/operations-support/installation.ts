@@ -1,4 +1,5 @@
 import path from "node:path"
+import { createHash } from "node:crypto"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import type { LocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
@@ -12,6 +13,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { observeSfAssetHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { createSfActionSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -43,9 +45,19 @@ export async function createOperationsInstallation(input: {
   if (input.scanner && (input.scanner.host !== "127.0.0.1" ||
     !Number.isInteger(input.scanner.port) || input.scanner.port < 1 || input.scanner.port > 65535))
     throw new Error("OPERATIONS_SCANNER_LOOPBACK_ENDPOINT_REQUIRED")
+  // Record the original scanner result at the installed boundary. The private
+  // controls observe digests and verdicts; uploaded bytes never leave this call.
+  const scans: Readonly<{ digest: string; size: number; accepted: boolean }>[] = []
   const assets = { persistence: input.persistence, services: {
     signingKey: input.signingKey,
-    scan: (bytes: Uint8Array) => scanLocalFile(bytes, input.scanner),
+    scannerConfiguration: input.scanner,
+    scan: async (bytes: Uint8Array) => {
+      const digest = createHash("sha256").update(bytes).digest("hex")
+      const size = bytes.byteLength
+      const accepted = await scanLocalFile(bytes, input.scanner)
+      scans.push(Object.freeze({ digest, size, accepted }))
+      return accepted
+    },
   } }
   let nativeOperational: Parameters<CreateSfHostRuntime>[0]["operational"]
   let nativeActions: Parameters<CreateSfHostRuntime>[0]["nativeActions"]
@@ -130,6 +142,10 @@ export async function createOperationsInstallation(input: {
       observeSfPlannerPages(application, request, stamp),
       observeSfDashboardPages(application, request, stamp),
       observeSfDomainHealth(dependencies, handlers, request, stamp),
+      observeSfAssetHealth({ source: () => {
+        const authority = runtime.services?.()
+        return authority && runtime.identity() ? { application, producer: business, authority } : undefined
+      } }, request, stamp),
       observeSfHome(runtime.services?.(), request, stamp),
       observeSfCases(dependencies, handlers, request, stamp),
       actions.operational(request, stamp),
@@ -148,6 +164,7 @@ export async function createOperationsInstallation(input: {
     },
   }
   return {
+    scannerObservations: () => [...scans],
     host: runtime.contributions,
     discovery,
     identity: runtime.identity,

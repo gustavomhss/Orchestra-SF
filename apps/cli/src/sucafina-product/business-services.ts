@@ -203,6 +203,15 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     scopedSources: input.persistence, evidence: reviewCollaboration.evidence, procurement, collections: registry, cases,
     authorizeReviewThreadContext: reviewCollaboration.authorizeReviewThreadContext, reviewRecipientAuthority: reviewCollaboration.reviewRecipientAuthority,
     reviewAnswerSource: reviewCollaboration.reviewAnswerSource,
+    resolveAnswerScope: async (source, refs, call) => {
+      if (source.target.surface === "planner") return plannerConfirmation.current?.resolveAnswerScope(source, refs, call) ?? { status: "unavailable", reason: "answer-scope-unavailable" }
+      // Preserve the existing single-record Dashboard manifest. Other domains
+      // still need their own producer; a source reference grants no scope.
+      return source.target.surface === "dashboard" && refs.length === 1 && !!source.target.period
+        ? { status: "ok", value: { scope: { sourceRef: { surface: source.target.surface, type: source.target.recordType, id: source.target.recordId, incarnation: source.target.incarnation },
+          fields: source.target.fields, period: source.target.period, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" } } }
+        : { status: "unavailable", reason: "answer-scope-unavailable" }
+    },
     authority: input.authority.authority, human: input.authority.human, confirmationSource,
     captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
     issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,

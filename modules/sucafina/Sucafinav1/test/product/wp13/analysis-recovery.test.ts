@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
 import { createCriterionResultBindings } from "../../../product/decisions/criterion-rules.ts"
@@ -125,3 +126,66 @@ test("reconciles a persisted sensitivity after its criterion binding fails witho
     expect((await persistent.read(resultRef, world.context)).status).toBe("denied")
   } finally { await world.cleanup() }
 })
+
+test("analysis revalidation batches only result envelopes and retains both inspections and the replay", async () => {
+  const world = await createWp13AnalysisFixture()
+  try {
+    expect((await world.selection.register({ caseRef: world.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"], expectedVersion: 0 }, world.context)).status).toBe("ok")
+    const persist = createPlannerResultPersistence({ store: world.results, scenarios: world.scenarios, comparisonBindings: world.comparisonBindings, replay: world.plannerWithCriteria, resolveCase: async () => ({ status: "ok", value: world.caseRef }) })
+    const producer = createPortfolioAnalysis({ planner: world.plannerWithCriteria, results: world.results, bindings: world.comparisonBindings, persist, select: world.selectPortfolio, idempotencyKey: async () => "analysis-observation" })
+    const produced = await producer.evaluate(world.analysisRequest, world.context)
+    expect(produced.status).toBe("ok")
+    if (produced.status !== "ok") throw new Error("Real portfolio analysis was not persisted")
+    const counts = { reads: 0, cases: 0, sources: 0, inspections: 0, replays: 0 }
+    const hooks: { afterSources?: (count: number) => void; afterReplay?: () => void } = {}
+    const results = createSfDecisionResultStore({
+      state: { ...world.state, read: (request, namespace, reader) => {
+        if (namespace === "cases") counts.reads++
+        return world.state.read(request, namespace, reader)
+      } },
+      host: world.host,
+      authorizeCase: async (decision, context) => {
+        counts.cases++
+        return decision.participants.includes(context.binding.principalRef) && await world.host.revalidate(context)
+      },
+      verifySources: async (_value, refs, context) => {
+        const current = await world.evidenceService.context({ refs }, context)
+        counts.sources++
+        hooks.afterSources?.(counts.sources)
+        return current.every((item, index) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(refs[index]))
+      },
+      createId: () => { throw new Error("Revalidation must not write a result") },
+      now: () => "2026-11-13T00:00:00Z",
+    })
+    const input: Parameters<typeof createPortfolioAnalysis>[0] = {
+      results, persist, select: world.selectPortfolio, idempotencyKey: async () => "analysis-observation",
+      bindings: { ...world.comparisonBindings, read: async (...args) => {
+        counts.inspections++
+        return world.comparisonBindings.read(...args)
+      } },
+      planner: { compareScenarios: async (...args) => {
+        counts.replays++
+        const value = await world.plannerWithCriteria.compareScenarios(...args)
+        hooks.afterReplay?.()
+        return value
+      } },
+    }
+    const analysis = createPortfolioAnalysis(input)
+    expect(await analysis.revalidate(produced.value.analysis, world.context)).toBe(true)
+    expect(counts).toEqual({ reads: 12, cases: 12, sources: 12, inspections: 2, replays: 1 })
+
+    Object.assign(counts, { reads: 0, cases: 0, sources: 0, inspections: 0, replays: 0 })
+    hooks.afterSources = (count) => { if (count === 4) input.results = { ...results } }
+    expect(await analysis.revalidate(produced.value.analysis, world.context)).toBe(false)
+    expect(counts.inspections).toBe(1)
+    expect(counts.replays).toBe(0)
+
+    input.results = results
+    hooks.afterSources = undefined
+    hooks.afterReplay = () => { world.access.allowed = false }
+    Object.assign(counts, { reads: 0, cases: 0, sources: 0, inspections: 0, replays: 0 })
+    expect(await analysis.revalidate(produced.value.analysis, world.context)).toBe(false)
+    expect(counts.inspections).toBe(1)
+    expect(counts.replays).toBe(1)
+  } finally { await world.cleanup() }
+}, 60000)

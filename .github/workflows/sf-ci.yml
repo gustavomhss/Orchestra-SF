@@ -36,12 +36,14 @@ jobs:
           test "$RUNNER_ARCH" = X64
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           node script/sf-ci/gate.mjs manifest
-          node --test script/sf-ci/gate.test.mjs
+          node --test script/sf-ci/gate.test.mjs script/sf-ci/shard-plan.test.mjs script/sf-ci/shard-adoption.test.mjs script/sf-ci/cache-source.test.mjs
           # Existing preflight, no extra job/runner: generated maintenance QA consistency.
           python3 docs/qa/sucafina/uat-cio/scripts/generate-story-skills.py --check
           node --test docs/qa/sucafina/uat-cio/scripts/verify-uat-proof.test.mjs
           python3 -m unittest discover -s docs/qa/sucafina/uat-cio/scripts -p 'test_reconcile_history.py' -v
       - uses: ./.github/actions/setup-bun
+        with:
+          save: "true"
       - name: Verify Linux-only surgical runner contract independently of product typechecks
         env:
           ORCHESTRA_OMNI_CONTROL: declared
@@ -53,6 +55,7 @@ jobs:
 
   static:
     name: sf/static-and-contracts
+    needs: [preflight]
     runs-on: ubuntu-24.04
     timeout-minutes: 22
     steps:
@@ -207,6 +210,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/omni-binaries
+        with:
+          save: "true"
       - name: Require actual Linux binary artifacts
         run: |
           set -euo pipefail
@@ -226,7 +231,7 @@ jobs:
   # CI-SF case or the fail-closed eight-suite release gate.
   procurement-queue-proof:
     name: sf/procurement-queue-integration
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
@@ -256,7 +261,7 @@ jobs:
 
   unit:
     name: sf/test-${{ matrix.id }}
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 28
     strategy:
@@ -277,6 +282,8 @@ jobs:
         with:
           artifact: sf-omni-linux-${{ github.sha }}
       - name: Execute exact manifest-selected Bun files
+        id: tests
+        timeout-minutes: 24
         shell: bash
         env:
           # The canonical Actions Bun runner uses this sentry; CI=true remains enforced.
@@ -295,6 +302,8 @@ jobs:
           node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -gt 0 || exit 2
+          # Keep the receipt inventory unchanged; ./ forces Bun's explicit-file mode.
+          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done
 
           # Selection paths are relative to the manifest's suite.directory.
           suite_dir="$(node --input-type=module -e '
@@ -306,6 +315,7 @@ jobs:
             process.stdout.write(suite.directory)
           ')"
           test -f "$root/$suite_dir/package.json"
+          printf 'SF_TIMINGS_DIRECTORY=%s\n' "$suite_dir" >> "$GITHUB_ENV"
           cd "$root/$suite_dir"
           set +e
           {
@@ -339,6 +349,25 @@ jobs:
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Preserve Bun performance observations
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        env:
+          TEST_CONCLUSION: ${{ steps.tests.outcome }}
+        run: |
+          python3 script/sf-ci/timings.py \
+            --report "sf-ci-evidence/$SF_SUITE_ID/report.xml" \
+            --output "sf-ci-evidence/$SF_SUITE_ID/timings.json" \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite "$SF_SUITE_ID" --directory "${SF_TIMINGS_DIRECTORY:-.}" \
+            --file-root "$GITHUB_WORKSPACE/${SF_TIMINGS_DIRECTORY:-.}" --conclusion "$TEST_CONCLUSION"
+      - name: Publish Bun timings separately from acceptance receipts
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-timings-${{ matrix.id }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/${{ matrix.id }}/timings.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Publish only valid summary and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -352,7 +381,7 @@ jobs:
 
   unit-sf:
     name: sf/test-CI-SF-${{ matrix.shard }}
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -379,6 +408,8 @@ jobs:
         with:
           artifact: sf-omni-linux-${{ github.sha }}
       - name: Execute exact manifest-selected Bun files
+        id: tests
+        timeout-minutes: 26
         shell: bash
         env:
           GITHUB_ACTIONS: "false"
@@ -394,6 +425,8 @@ jobs:
           node script/sf-ci/gate.mjs select > "$evidence/selection.txt" || exit $?
           mapfile -t files < "$evidence/selection.txt"
           test "${#files[@]}" -gt 0 || exit 2
+          # Keep the receipt inventory unchanged; ./ forces Bun's explicit-file mode.
+          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done
 
           suite_dir="$(node --input-type=module -e '
             import { readFileSync } from "node:fs"
@@ -416,6 +449,26 @@ jobs:
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Preserve shard performance observations
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        env:
+          TEST_CONCLUSION: ${{ steps.tests.outcome }}
+        run: |
+          python3 script/sf-ci/timings.py \
+            --report "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX/report.xml" \
+            --output "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX/timings.json" \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite CI-SF --directory modules/sucafina \
+            --file-root "$GITHUB_WORKSPACE/modules/sucafina" --conclusion "$TEST_CONCLUSION" \
+            --shard-index "$SF_SHARD_INDEX" --shard-count "$SF_SHARD_COUNT"
+      - name: Publish shard timings separately from acceptance receipts
+        if: always() && !cancelled() && steps.tests.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-timings-CI-SF-${{ matrix.shard }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/timings.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Publish only valid summary and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -425,6 +478,16 @@ jobs:
             sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/summary.json
             sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/receipt.json
           if-no-files-found: error
+          retention-days: 7
+
+      - name: Preserve original export evidence without binary log dumps
+        if: always() && !cancelled()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-export-originals-CI-SF-${{ matrix.shard }}
+          path: ${{ runner.temp }}/sf66-export-artifacts/
+          if-no-files-found: ignore
+          compression-level: 0
           retention-days: 7
 
       - name: Publish the shard run log on failure
@@ -440,7 +503,7 @@ jobs:
 
   ui:
     name: sf/test-${{ matrix.id }}
-    needs: [omni]
+    needs: [preflight, omni]
     runs-on: ubuntu-24.04
     timeout-minutes: 24
     strategy:
@@ -457,14 +520,16 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
       - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
         with:
           artifact: sf-omni-linux-${{ github.sha }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-        with:
-          node-version: "24.15"
       - name: Install Chromium for Linux only
         working-directory: packages/app-shell
         run: bunx playwright install --with-deps chromium
@@ -473,6 +538,8 @@ jobs:
         shell: bash
         run: bash script/sf-ci/operations-clamd.sh
       - name: Run installed SF UI journey
+        id: ui_journey
+        timeout-minutes: 20
         env:
           SF_OPERATIONS_CLAMD_PORT: ${{ matrix.id == 'CI-UI-OPERATIONS' && '3310' || '' }}
         shell: bash
@@ -507,6 +574,8 @@ jobs:
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
+          # Publish candidates only after the original test run and minimization succeed.
+          echo "minimized=true" >> "$GITHUB_OUTPUT"
           # The coverage gate needs a baseline versioned from an authentic successful
           # run and independently reviewed. Until that baseline exists in the
           # manifest, calling it here would only fail closed on every PR.
@@ -519,6 +588,15 @@ jobs:
           path: |
             sf-ci-evidence/${{ matrix.id }}/report.json
             sf-ci-evidence/${{ matrix.id }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Preserve minimized UI baseline candidate after receipt rejection
+        if: ${{ failure() && steps.ui_journey.outcome == 'failure' && steps.ui_journey.outputs.minimized == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-baseline-candidate-${{ matrix.id }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: sf-ci-evidence/${{ matrix.id }}/report.json
           if-no-files-found: error
           retention-days: 7
 

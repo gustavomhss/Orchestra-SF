@@ -8,6 +8,7 @@ import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../.
 import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
 import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
+import { observeSfAssetHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -153,7 +154,7 @@ export async function createConfiguredInstallation(
   services.jobs = jobs
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
-  const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
+  const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scannerConfiguration: config.scanner, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   let nativeOperational: NonNullable<Parameters<CreateSfHostRuntime>[0]["operational"]> | undefined
   let nativeActions: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeActions"]> | undefined
   let nativeReadBinding: NonNullable<Parameters<CreateSfHostRuntime>[0]["nativeReadBinding"]> | undefined
@@ -245,6 +246,10 @@ export async function createConfiguredInstallation(
       observeSfPlannerPages(nativeApplication, request, stamp),
       observeSfDashboardPages(nativeApplication, request, stamp),
       observeSfDomainHealth(nativeDependencies, nativeHandlers, request, stamp),
+      observeSfAssetHealth({ source: () => {
+        const authority = runtime?.services?.()
+        return authority && nativeReadBinding && runtime?.identity() ? { application: nativeApplication, producer: business, authority } : undefined
+      } }, request, stamp),
       observeSfHome(runtime?.services?.(), request, stamp),
       observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
       actions.operational(request, stamp),

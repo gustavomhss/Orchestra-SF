@@ -294,6 +294,8 @@ export const SfOperationIds = [
   "projection.cases",
   "projection.home",
   "projection.local-admin",
+  "local-admin.summary-read",
+  "local-admin.summary-configure",
   "projection.residents",
   "projection.review",
   "projection.routine",

@@ -23,7 +23,7 @@ export function sfProjectHref(
     query.set("installation", values[2]![0]!)
   }
   if (from.query.year !== undefined) query.set("year", String(from.query.year))
-  if (kind === "overview" || kind === "projects") {
+  if (kind === "overview") {
     if (from.query.status !== undefined) query.set("status", from.query.status)
     if (from.query.filter !== undefined) query.set("filter", from.query.filter)
   }

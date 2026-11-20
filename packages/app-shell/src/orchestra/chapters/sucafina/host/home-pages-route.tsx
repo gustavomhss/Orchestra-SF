@@ -33,10 +33,12 @@ export function homePagesRouteAvailable(context: SfContext, candidate: SfNativeR
   if (candidate.chapterId !== "sf-home" || !isHomePagesSurface(candidate.surfaceId) || candidate.kind !== "entry") return false
   // UI67 renders the same context already read and stamped by F01 preflight.
   if (candidate.surfaceId === "UI67") return true
-  const operation = candidate.surfaceId === "UI31" ? SfWork.operations["projection.search"].operationId : SfDomain.operations["projection.local-admin"].operationId
+  const operations = candidate.surfaceId === "UI31"
+    ? [SfWork.operations["projection.search"].operationId]
+    : [SfDomain.operations["projection.local-admin"].operationId, SfDomain.operations["local-admin.summary-read"].operationId]
   const resource = candidate.surfaceId === "UI31" ? "search" : "local-admin"
   return context.availability.some((entry) => entry.family === "domain-read" && entry.resource === resource &&
-    entry.operations.some((item) => item.operationId === operation && item.state === "ready" && item.operational))
+    entry.operations.some((item) => operations.some((id) => id === item.operationId) && item.state === "ready" && item.operational))
 }
 export function SfHomePages(props: Readonly<{ route: SfResolvedRoute }>): JSX.Element {
   return <Switch>

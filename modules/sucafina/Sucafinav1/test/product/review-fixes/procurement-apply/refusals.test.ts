@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { object, rows } from "../../../../runtime/contract.ts"
 import { domain } from "../../../../runtime/procurement.ts"
-import { prepareProcurementMutation } from "../../../../product/procurement/prepared.ts"
+import { prepareProcurementMutation, procurementPreparationIssue } from "../../../../product/procurement/prepared.ts"
 import { createProcurementPreparedReview } from "../../../../product/procurement/prepared-review.ts"
 import { actor, at, createFixture, period } from "./fixture.ts"
 import type { Fixture } from "./fixture.ts"
@@ -22,12 +22,15 @@ test("OPS-REV-02 canonical po_draft refuses ignored PR preparation, review and H
     expect(ignoredRequest.pr).toEqual(before.request.pr)
     expect(ignored.versions["requests:PR-1"]?.version).toBe(before.version.version + 1)
     expect(rows(ignoredRequest.history)).toHaveLength(rows(before.request.history).length + 1)
+    expect(procurementPreparationIssue(input.snapshot, input.command)).toBe("requisition-stage-not-editable")
     expect(prepareProcurementMutation(input)).toBeUndefined()
     fixture.authority.ui.finish(input.context)
     const chosen = await seedChoice(fixture)
     const rejected = await fixture.http("decision-prepare-changes", chosen)
-    expect(rejected.response.status).toBe(400)
-    expect(rejected.body).toEqual({ status: "needs-input", reason: "requisition-stage-not-editable" })
+    // The current lifecycle denies save-estimate at PO stage before preparing
+    // a command. The lower-level stage refusal remains independently required.
+    expect(rejected.response.status).toBe(403)
+    expect(rejected.body).toEqual({ status: "denied", reason: "requisition-action-unavailable" })
     expect((await fixture.storedCase()).value.preparedChanges).toEqual([])
     expect(await fixture.material()).toEqual(before)
     const legacy = await seedLegacyChange(fixture, 150)
@@ -54,6 +57,7 @@ test("OPS-REV-02 an equal amount is explicitly non-applicable without Saved, CAS
     expect(rejected.response.status).toBe(400)
     expect(rejected.body).toEqual({ status: "needs-input", reason: "requisition-already-matches" })
     const legacy = await seedLegacyChange(fixture, 100)
+    expect(legacy.change.operation.command.confirmed).toBe(false)
     const reviewed = await fixture.http("decision-review", { purpose: "review", ...legacy.request })
     expect(reviewed.response.status).toBe(400)
     expect(reviewed.body).toEqual({ status: "needs-input", reason: "requisition-already-matches" })
@@ -95,7 +99,21 @@ test("OPS-REV-02 a mixed intent keeps equal fields and applies the exact changed
     const prepared = prepareProcurementMutation(input)
     expect(prepared).toBeDefined()
     if (!prepared) throw new Error("partial no-op incorrectly rejected the changed justification")
-    const review = await createProcurementPreparedReview({ port: fixture.business.procurement, individual: fixture.business.individual })(prepared.command, input.context)
+    expect(prepared.command.command.confirmed).toBe(false)
+    const reviewCommand = createProcurementPreparedReview({ port: fixture.business.procurement, individual: fixture.business.individual })
+    // Removing the explicit draft intent or claiming confirmation must still
+    // fail before this real mixed-field preview can be reviewed or executed.
+    for (const confirmed of [undefined, true] as const) {
+      const rejected = structuredClone(prepared.command)
+      if (confirmed === undefined) delete rejected.command.confirmed
+      else rejected.command.confirmed = confirmed
+      expect(prepareProcurementMutation({ ...input, command: rejected.command })).toBeUndefined()
+      expect(procurementPreparationIssue(input.snapshot, rejected.command)).toBe("explicit-draft-command-required")
+      expect(await reviewCommand(rejected, input.context)).toEqual({ status: "needs-input", reason: "explicit-draft-command-required" })
+      expect(await fixture.material()).toEqual(before)
+      expect(await fixture.receipts()).toEqual({})
+    }
+    const review = await reviewCommand(prepared.command, input.context)
     expect(review).toMatchObject({ status: "ok", value: { fields: [{ field: "reason", before: "Recorded need", after: intent.justification }] } })
     const snapshot = structuredClone(input.snapshot)
     expect(prepared.mutation.execute(snapshot, { ...actor, id: "bob" }, input.environment)).toEqual({ commit: false, value: { status: "denied", reason: "actor-changed" } })
@@ -119,7 +137,7 @@ async function preparationInput(fixture: Fixture, pr: Record<string, string | nu
   const target = { surface: "procurement" as const, type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period, observedAt: at }
   return {
     snapshot, actor, context, target, scope: source.value.scope, evidence,
-    command: { page: "Requests", action: "save", id: target.id, version: snapshot.versions["requests:PR-1"]!.version, values: { pr } },
+    command: { page: "Requests", action: "save", id: target.id, version: snapshot.versions["requests:PR-1"]!.version, confirmed: false, values: { pr } },
     environment: { at, id: randomUUID, directory: [{ id: actor.id, name: "Alice" }] }, operationId: "intent-operation", idempotencyKey: "intent-operation",
   }
 }

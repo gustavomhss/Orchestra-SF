@@ -12,6 +12,11 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
+
+concurrency:
+  group: test-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -37,6 +42,8 @@ jobs:
           esac
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 2
 
       - name: Setup request validator Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -46,21 +53,37 @@ jobs:
       - name: Read request
         id: request
         run: |
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
           node --input-type=module <<'NODE'
           import { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import { execFileSync } from 'node:child_process'
+          import { verifyShardRequest } from './script/sf-ci/shard-adoption.mjs'
+          import { createHash } from 'node:crypto'
           import path from 'node:path'
           import { omniControlScope, validateRequest } from './script/test-ci-request.ts'
           import { locateTestPackage } from './script/test-ci-location.ts'
-          const request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+          const requestBytes = readFileSync('.ci-run.json')
+          const requestBlob = createHash('sha1').update('blob ' + requestBytes.length + '\0').update(requestBytes).digest('hex')
+          const raw = JSON.parse(requestBytes.toString('utf8'))
+          const binding = Object.hasOwn(raw, 'sfShard') || process.env.GITHUB_REF_NAME.startsWith('ci-run-linux-sfshard-')
+            ? verifyShardRequest(raw, {
+              plan: JSON.parse(execFileSync('node', ['script/sf-ci/gate.mjs', 'plan', 'CI-SF'], { encoding: 'utf8' })),
+              snapshotSha: process.env.GITHUB_SHA,
+              parentShas: execFileSync('git', ['show', '-s', '--format=%P', 'HEAD'], { encoding: 'utf8' }).trim().split(' '),
+              changedPaths: execFileSync('git', ['diff', '--name-only', 'HEAD^', 'HEAD'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean),
+              refName: process.env.GITHUB_REF_NAME,
+            }) : undefined
+          const request = validateRequest(raw,
             (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
               realpathSync(file).startsWith(realpathSync('.') + path.sep),
             (selector) => locateTestPackage('.', selector))
           writeFileSync('.ci-run.json', JSON.stringify(request))
           mkdirSync('test-ci-evidence', { recursive: true })
+          if (binding) writeFileSync('test-ci-evidence/shard-binding.json', JSON.stringify(binding, null, 2) + '\n')
           writeFileSync('test-ci-evidence/request.json', JSON.stringify({ request,
             platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))
           appendFileSync(process.env.GITHUB_OUTPUT,
-            `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+            `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\nrequest_blob=${requestBlob}\n`)
           const sf66Args = request.args[0] === '--timeout' && request.args[1] === '120000'
             ? request.args.slice(2) : request.args
           const sf66Exports = request.package === 'sucafina' && request.directory === 'modules/sucafina' &&
@@ -84,18 +107,13 @@ jobs:
       - name: Setup Bun
         if: steps.request.outputs.runner != 'pytest'
         uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
 
       # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
       - name: ripgrep
         if: steps.request.outputs.runner != 'pytest'
         uses: ./.github/actions/ripgrep
-
-      # setup-bun selects Node 24; match the existing e2e lane's extraction workaround afterwards.
-      - name: Setup Playwright Node
-        if: steps.request.outputs.runner == 'playwright'
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: "24.15"
 
       - name: Install Chromium
         if: steps.request.outputs.runner == 'playwright'
@@ -190,13 +208,65 @@ jobs:
           echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
           echo "omni control nonce: $nonce"
 
+      # A current approval belongs to the exact source PR, not to arbitrary
+      # uncommitted changes uploaded by test:ci. The API must prove that this
+      # snapshot changes only its request before any approval is transmitted.
+      - name: Resolve source PR guard approval
+        id: guard_context
+        if: steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun'
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+          REQUEST_BLOB: ${{ steps.request.outputs.request_blob }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from 'node:fs'
+          import { githubGuardReader, resolveGuardContext } from './script/test-ci-guard-context.ts'
+          const result = await resolveGuardContext({
+            repository: process.env.GITHUB_REPOSITORY, eventName: process.env.GITHUB_EVENT_NAME,
+            refName: process.env.GITHUB_REF_NAME, snapshot: process.env.GITHUB_SHA,
+            requestBlob: process.env.REQUEST_BLOB, request: JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+          }, githubGuardReader(process.env.GH_READ_TOKEN ?? ''))
+          writeFileSync('test-ci-evidence/guard-context.json', JSON.stringify(result, null, 2) + '\n')
+          appendFileSync(process.env.GITHUB_OUTPUT,
+            'approved=' + result.approved + '\nbase_sha=' + (result.baseSha ?? '') + '\n')
+          console.log('source PR guard context: ' + result.status + ' (' + result.reason + ')')
+          NODE
+
+      - name: Verify approved source PR guard bases
+        if: steps.guard_context.outputs.approved == 'protected-paths'
+        env:
+          GUARDRAIL_APPROVED: ${{ steps.guard_context.outputs.approved }}
+          SF_GUARD_PR_BASE: ${{ steps.guard_context.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+          git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev "$SF_GUARD_PR_BASE"
+          git cat-file -e "$SF_GUARD_PR_BASE^{commit}"
+          set +e
+          bun run check:guards --base origin/dev > test-ci-evidence/guard-dev.log 2>&1
+          dev_status=$?
+          bun run check:guards --base "$SF_GUARD_PR_BASE" > test-ci-evidence/guard-pr-base.log 2>&1
+          pr_status=$?
+          set -e
+          printf 'guards canonical dev status=%s; source PR base=%s status=%s\n' "$dev_status" "$SF_GUARD_PR_BASE" "$pr_status"
+          test "$dev_status" -eq 0 && test "$pr_status" -eq 0
+
       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
       - name: Run tests
         id: sf66_product_run
+        # Keep room inside the existing 45-minute job for failure diagnostics.
+        timeout-minutes: 40
         env:
           ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
           ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
+          # Empty unless the read-only API check admitted the exact source PR.
+          GUARDRAIL_APPROVED: ${{ steps.guard_context.outputs.approved }}
           PACKAGE: ${{ steps.request.outputs.package }}
           DIRECTORY: ${{ steps.request.outputs.directory }}
           RUNNER: ${{ steps.request.outputs.runner }}
@@ -283,6 +353,11 @@ jobs:
                 fi
                 exit $status
               fi
+              if [ "$PACKAGE" = sucafina ]; then
+                GITHUB_ACTIONS=false bun test "${args[@]}" --reporter=junit \
+                  "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/report.xml" 2>&1 | tee "$GITHUB_WORKSPACE/test-ci-evidence/run.log"
+                exit "${PIPESTATUS[0]}"
+              fi
               GITHUB_ACTIONS=false bun test "${args[@]}"
               ;;
             node)
@@ -295,6 +370,51 @@ jobs:
               node --experimental-strip-types --test "${args[@]}"
               ;;
           esac
+
+      - name: Preserve focused SF performance observations
+        if: always() && !cancelled() && steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun' && steps.sf66_product_run.outcome != 'skipped'
+        env:
+          TEST_CONCLUSION: ${{ steps.sf66_product_run.outcome }}
+        run: |
+          python3 script/sf-ci/timings.py \
+            --report test-ci-evidence/report.xml --output test-ci-evidence/timings.json \
+            --source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --job-name "$GITHUB_JOB" --suite CI-SF --directory modules/sucafina \
+            --file-root "$GITHUB_WORKSPACE/modules/sucafina" --conclusion "$TEST_CONCLUSION" --partial
+
+      - name: Upload SF timing and selection observations
+        if: always() && !cancelled() && steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun' && steps.sf66_product_run.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: test-ci-performance-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            test-ci-evidence/timings.json
+            test-ci-evidence/shard-binding.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload focused SF failure diagnostics
+        if: failure() && steps.request.outputs.package == 'sucafina' && steps.request.outputs.runner == 'bun'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: test-ci-sf-failure-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            test-ci-evidence/run.log
+            test-ci-evidence/report.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload source PR guard evidence
+        if: always() && steps.guard_context.outcome != 'skipped'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: test-ci-guard-context-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            test-ci-evidence/guard-context.json
+            test-ci-evidence/guard-dev.log
+            test-ci-evidence/guard-pr-base.log
+          if-no-files-found: error
+          retention-days: 7
 
       # SF88: bounded reader runs only for the existing, validated export-artifact selection.
       # This reuses the validated surgical request; it does not run another product selection.
@@ -320,12 +440,13 @@ jobs:
           python3 script/sf2h/export-visual/reader.py
 
       - name: Upload SF66 generated exports and reader evidence
-        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'
+        if: always() && !cancelled() && runner.os == 'Linux'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/sf66-export-artifacts/
-          if-no-files-found: error
+          if-no-files-found: ${{ steps.request.outputs.sf66_exports == 'true' && 'error' || 'ignore' }}
+          compression-level: 0
           retention-days: 7
 
       - name: Upload Lean dashboard previews (extension)
@@ -353,7 +474,7 @@ jobs:
 
   cleanup:
     needs: test
-    if: always()
+    if: always() && !cancelled()
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -363,4 +484,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
-        run: gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+          SNAPSHOT_SHA: ${{ github.sha }}
+        run: |
+          # An obsolete run must not delete a newer snapshot on the same ref.
+          current="$(gh api "repos/$REPO/git/ref/heads/$BRANCH" --jq .object.sha)" || exit 0
+          if [ "$current" = "$SNAPSHOT_SHA" ]; then
+            gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH"
+          fi

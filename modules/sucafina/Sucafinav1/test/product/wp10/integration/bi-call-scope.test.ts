@@ -155,7 +155,7 @@ async function prepare(deadline: ReturnType<typeof compositionTestDeadline>) {
     })
   }
   const scope = (observed = authority) => createSfBiCallScope({ authority: observed, sources: business.plannerSources, lockedSourceFences: business.lockedSourceFences })
-  return { ...fixture, selection, counts, admit, consume, produce, scope, caseRef: candidate.caseRef }
+  return { ...fixture, selection, issuedSources: sources, counts, admit, consume, produce, scope, caseRef: candidate.caseRef }
 }
 
 test("BI proof starts only after real UI consumption, clones within one invocation and cannot cross a new call or UTC day", async () => {
@@ -398,11 +398,26 @@ test("BI source HTTP reopens its real case after destination resolution and retu
     const { request: selection, call } = await fixture.admit()
     await fixture.consume(selection, call)
     const projection = ok(await business.withCase(call, caseRef, {}, () => bi.source.read(selection, call)), "Actual BI source projection")
-    const value = projection.values.find((entry) => entry.drilldown?.kind === "record" && entry.drilldown.target.surface === "planner")
-    if (value?.drilldown?.kind !== "record") throw new Error("Actual BI projection has no Planner record drilldown")
-    const reference = value.drilldown
-    const url = `https://example.test/dashboard?${new URLSearchParams({ sf: "bi-source", viewId: selection.viewId, selectionRef: selection.selectionRef,
-      valueId: value.id, start: selection.period.start, end: selection.period.end })}`
+    // The actual coverage basis retains both original Planner versions, so a
+    // scenario subtotal has several origins and cannot advertise one drilldown.
+    // Exercise the same explicit source choice as the native BI consumer.
+    const value = projection.values.find((entry) => entry.id === "scenario:candidate-known-subtotal")
+    if (!value) throw new Error("Actual BI projection has no canonical candidate subtotal")
+    const reference = fixture.issuedSources[1]!
+    if (reference.kind !== "record" || reference.target.surface !== "planner")
+      throw new Error("Actual issued candidate source is not a Planner record")
+    expect(reference.target.recordId).toBe("bi-v1")
+    expect(value.drilldown).toBeNull()
+    expect(value.sourceRefs).toContainEqual(fixture.issuedSources[0]!)
+    expect(value.sourceRefs).toContainEqual(reference)
+    const origins = value.sourceRefs.filter((entry, index, all) =>
+      all.findIndex((candidate) => digestSfValue(candidate) === digestSfValue(entry)) === index)
+    expect(origins.length).toBeGreaterThan(1)
+    const sourceUrl = new URL("https://example.test/dashboard")
+    sourceUrl.search = new URLSearchParams({ sf: "bi-source", viewId: selection.viewId, selectionRef: selection.selectionRef,
+      valueId: value.id, start: selection.period.start, end: selection.period.end }).toString()
+    const chosenUrl = new URL(sourceUrl)
+    chosenUrl.searchParams.set("referenceDigest", reference.refDigest)
     const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
     let armed = false, resolvedDestination = false
     const observedBusiness = { ...business, context: { ...business.context,
@@ -422,12 +437,47 @@ test("BI source HTTP reopens its real case after destination resolution and retu
       },
     } }
     const http = createSfExtendedHttp({ authority, business: observedBusiness, bi, reviews: undefined, persistence, origin: "https://example.test", assets })
-    const invoke = () => deadline.phase("http.bi-source", () => http(new Request(url, { signal: deadline.signal }), "dashboard"))
+    const invoke = (url = chosenUrl) => deadline.phase("http.bi-source", () =>
+      http(new Request(url, { signal: deadline.signal }), "dashboard"))
+    const unchosen = await invoke(sourceUrl)
+    expect(unchosen?.status).toBe(409)
+    const unchosenBody = await unchosen!.json()
+    expect(unchosenBody).toEqual({ status: "needs-input", reason: "bi-source-choice-required" })
+    expect(unchosenBody).not.toHaveProperty("links")
+    expect(unchosenBody).not.toHaveProperty("value")
+    const outside = new URL(chosenUrl)
+    const unrelatedDigest = "0".repeat(64)
+    expect(origins.some((entry) => entry.refDigest === unrelatedDigest)).toBe(false)
+    outside.searchParams.set("referenceDigest", unrelatedDigest)
+    const rejected = await invoke(outside)
+    expect(rejected?.status).toBe(403)
+    const rejectedBody = await rejected!.json()
+    expect(rejectedBody).toEqual({ status: "denied", reason: "bi-source-outside-selected-value" })
+    expect(rejectedBody).not.toHaveProperty("links")
+    expect(rejectedBody).not.toHaveProperty("value")
     const positive = await invoke()
     expect(positive?.status).toBe(200)
     const before = await positive!.json() as { links: { label: string; url: string }[] }
     expect(before.links.length).toBeGreaterThan(0)
     expect(before.links.every((link) => !!link.label && !!link.url)).toBe(true)
+    expect(before.links).toHaveLength(1)
+    expect(before.links[0]!.label).toBe(`planner · ${reference.target.recordId} · v${reference.target.version} · ${reference.target.period!.start} a ${reference.target.period!.end}`)
+    const destination = new URL(before.links[0]!.url)
+    expect(destination.origin).toBe("https://example.test")
+    expect(destination.pathname).toBe("/orchestra/sf-planner/overview")
+    expect(Object.fromEntries(destination.searchParams)).toEqual({ version: reference.target.recordId,
+      year: reference.target.period!.start.slice(0, 4) })
+    const selectedVersion = destination.searchParams.get("version")!
+    const opened = ok(await deadline.phase("source.openPlanner", () =>
+      business.plannerProduct.versions.read(selectedVersion, call)), "Open real Planner destination")
+    expect(opened.selectionState).toBe("selected")
+    expect(opened.selectedId).toBe(reference.target.recordId)
+    expect(opened.versions.find((entry) => entry.id === selectedVersion)).toMatchObject({
+      id: "bi-v1", name: "BI candidate", year: 2026,
+    })
+    const reopened = ok(await deadline.phase("source.reopenIdentity", () =>
+      business.plannerProduct.issueSource(selectedVersion, call)), "Reopen exact Planner source")
+    expect(reopened.evidence).toEqual(reference)
     const setParticipants = (participants: string[]) => fixture.store.transaction("dashboard", async (snapshot) => {
       (snapshot.data.__sfProductV1 as SfProductState).cases[caseRef.id]!.participants = participants
       return { commit: true, value: undefined }
@@ -464,5 +514,67 @@ test("BI source HTTP reopens its real case after destination resolution and retu
     const recovered = await invoke()
     expect(recovered?.status).toBe(200)
     expect(await recovered!.json()).toEqual(before)
+  } finally { await deadline.close() }
+}, 120_000)
+
+
+test("BI complete cost proof preserves the canonical plan, isolates caller mutation and expires at UTC rollover", async () => {
+  const deadline = compositionTestDeadline("bi-complete-cost-proof")
+  try {
+    const fixture = await prepare(deadline), scope = fixture.scope()
+    const bi = createSfBiServices({ authority: fixture.authority, business: fixture.business, portfolio: fixture.portfolio })
+    const { request, call } = await fixture.admit()
+    const observed = { produced: 0 }
+    const result = await scope.run(request, call, async () => {
+      await fixture.consume(request, call)
+      const produce = () => {
+        observed.produced++
+        return fixture.business.withCase(call, fixture.caseRef, {}, () => bi.readForReview(request, call))
+      }
+      const first = ok(await scope.readView(request, call, produce), "Canonical complete BI cost view")
+      const canonical = structuredClone(first)
+      expect(canonical.presentation.viewId).toBe("BI09")
+      expect(canonical.projection.decision?.kind).toBe("scenario")
+      Object.assign(first.projection, { engineVersion: "caller-mutated" })
+      const again = ok(await scope.readView(request, call, produce), "Same-dispatch complete BI cost proof")
+      expect(again).toEqual(canonical)
+      expect(again).not.toBe(first)
+      expect(again.projection).not.toBe(first.projection)
+      expect(observed.produced).toBe(1)
+      fixture.clock.at = "2026-11-15T00:00:00Z"
+      const changed = await scope.readView(request, call, produce)
+      expect(changed).toEqual({ status: "stale", reason: "bi-call-proof-changed" })
+      expect(changed).not.toHaveProperty("value")
+      expect(observed.produced).toBe(1)
+      return changed
+    })
+    expect(result.status).toBe("stale")
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("BI complete cost proof denies a copied request changed after the canonical producer returns", async () => {
+  const deadline = compositionTestDeadline("bi-complete-cost-request")
+  try {
+    const fixture = await prepare(deadline), scope = fixture.scope()
+    const bi = createSfBiServices({ authority: fixture.authority, business: fixture.business, portfolio: fixture.portfolio })
+    const { request, call } = await fixture.admit()
+    const forwarded = structuredClone(request)
+    const observed = { produced: 0 }
+    const result = await scope.run(request, call, async () => {
+      await fixture.consume(request, call)
+      const read = await scope.readView(forwarded, call, async () => {
+        observed.produced++
+        const value = await fixture.business.withCase(call, fixture.caseRef, {}, () => bi.readForReview(forwarded, call))
+        expect(value.status).toBe("ok")
+        forwarded.period.end = "2026-02-28"
+        return value
+      })
+      expect(read).toEqual({ status: "denied", reason: "bi-call-authority-changed" })
+      expect(read).not.toHaveProperty("value")
+      expect(observed.produced).toBe(1)
+      return read
+    })
+    expect(result.status).toBe("denied")
+    expect(request.period.end).toBe("2026-01-31")
   } finally { await deadline.close() }
 }, 120_000)

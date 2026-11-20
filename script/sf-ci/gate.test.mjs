@@ -2,10 +2,12 @@ import { test } from "node:test"
 import { assertWorkflowManifestSelection } from "./workflow-contract.mjs"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
+import { spawnSync } from "node:child_process"
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, copyFileSync, existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { parseShardCosts } from "./shard-plan.mjs"
+import { SHARDED, describeShardPlan, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -129,6 +131,44 @@ test("a harness-owned entry that never reaches the pool fails closed", () => {
     assert.throws(() => selectSuiteFiles(invalid, "CI-SF", root), /does not reach the ordered pool/)
   } finally { rmSync(root, { recursive: true, force: true }) }
 })
+test("shared cyclic pool imports preserve per-root admission without retaining a stale graph", () => {
+  const first = "Sucafinav1/test/product/ordered/first.test.ts"
+  const second = "Sucafinav1/test/product/ordered/second.test.ts"
+  const independent = "Sucafinav1/test/product/ordered/independent.test.ts"
+  const root = poolTree(first)
+  const suiteRoot = path.join(root, "modules/sucafina")
+  const write = (name, body) => writeFileSync(path.join(suiteRoot, name), body)
+  try {
+    write(first, 'import "./shared.ts"\n')
+    write(second, 'import "./cycle.ts"\n')
+    write("Sucafinav1/test/product/ordered/shared.ts",
+      'export * from "../wp01/helper.ts"\nexport * from "./cycle.ts"\n')
+    write("Sucafinav1/test/product/ordered/cycle.ts", 'export * from "./shared.ts"\n')
+    write(independent, 'import "./separate-a.ts"\n')
+    write("Sucafinav1/test/product/ordered/separate-a.ts", 'export * from "./separate-b.ts"\n')
+    write("Sucafinav1/test/product/ordered/separate-b.ts", 'export * from "./separate-a.ts"\n')
+    const admitted = structuredClone(manifest)
+    const selection = admitted.suites.find((suite) => suite.id === "CI-SF").selection
+    selection.harnessOwnedFiles = [first, second]
+    selection.releaseOnlyFiles = []
+    assert.deepEqual([...browserPoolConsumers([first, second, independent], suiteRoot)].sort(),
+      [first, second].map((name) => path.resolve(suiteRoot, name)).sort())
+    assert.deepEqual(selectSuiteFiles(admitted, "CI-SF", root),
+      ["Sucafinav1/test/plain.test.ts", independent].sort())
+
+    selection.harnessOwnedFiles = [first]
+    assert.throws(() => selectSuiteFiles(admitted, "CI-SF", root),
+      /ordered browser pool file is still selected/)
+    selection.harnessOwnedFiles = [first, second, independent]
+    assert.throws(() => selectSuiteFiles(admitted, "CI-SF", root),
+      /harness-owned file does not reach the ordered pool/)
+
+    selection.harnessOwnedFiles = [first, second]
+    write("Sucafinav1/test/product/ordered/shared.ts", 'export * from "./cycle.ts"\n')
+    assert.throws(() => selectSuiteFiles(admitted, "CI-SF", root),
+      /harness-owned file does not reach the ordered pool/)
+  } finally { rmSync(root, { recursive: true, force: true }) }
+})
 const bunReport = (files) => Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: files.length, product_executed: files.length, failures: 0, errors: 0, skipped: 0 },
   cases: files.map((file) => ({ name: "case " + file, classname: "", file,
@@ -239,9 +279,176 @@ test("CI workflow has one automatic trigger and preserves exhaustive green cover
   assert.match(workflow, /--max-failures=2/)
   assert.doesNotMatch(workflow, /--pass-with-no-tests|continue-on-error: true|--retry\s+[1-9]/)
 })
+// These are unit fixtures, never product evidence: run the real workflow tail
+// against the real gate CLI, with no browser, upload service or accepted baseline.
+function uiEvidenceSteps() {
+  const workflow = readFileSync(new URL("../../.github/workflows/sf-ci.yml", import.meta.url), "utf8")
+  const ui = workflow.match(/^  ui:\n([\s\S]*?)(?=^  [a-z][\w-]*:\s*$)/m)?.[1]
+  assert.ok(ui, "installed UI job must exist")
+  const steps = ui.split(/^      - name: /m).slice(1)
+  const journeys = steps.filter((step) => /^        id: ui_journey$/m.test(step))
+  const candidates = steps.filter((step) => /^          name: sf-baseline-candidate-/m.test(step))
+  assert.equal(journeys.length, 1, "one UI step owns the minimization output")
+  assert.equal(candidates.length, 1, "one separate candidate artifact is retained")
+  const run = journeys[0].match(/^        run: \|\n((?:^ {10}.*\n|^\n)*)/m)?.[1]
+  assert.ok(run, "UI journey must expose its actual bash script")
+  return { script: run.split("\n").map((line) => line.slice(10)).join("\n"), candidate: candidates[0] }
+}
+
+test("UI baseline candidate upload requires a failed journey and a minimized report", () => {
+  const { candidate } = uiEvidenceSteps()
+  const condition = candidate.match(/^        if: \$\{\{\s*(.*?)\s*\}\}$/m)?.[1]
+  assert.ok(condition, "candidate upload needs an explicit failure condition")
+  assert.deepEqual(condition.split(/\s*&&\s*/).sort(), [
+    "failure()",
+    "steps.ui_journey.outcome == 'failure'",
+    "steps.ui_journey.outputs.minimized == 'true'",
+  ].sort())
+  assert.match(candidate, /^        uses: actions\/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02$/m)
+  assert.match(candidate, /^          name: sf-baseline-candidate-\$\{\{ matrix.id \}\}-\$\{\{ github.sha \}\}-\$\{\{ github.run_attempt \}\}$/m)
+  // A single scalar path prevents broadening the candidate to raw logs or receipts.
+  assert.match(candidate, /^          path: sf-ci-evidence\/\$\{\{ matrix.id \}\}\/report.json$/m)
+  assert.equal((candidate.match(/^          path:/gm) || []).length, 1)
+  assert.match(candidate, /^          if-no-files-found: error$/m)
+  assert.doesNotMatch(candidate, /receipt\.json|run\.log|test-results|sf-evidence-/)
+})
+
+for (const scenario of [
+  { name: "failed original tests", status: "7", baseline: "PENDING_REAL_COMPLETE_RUN", malformed: false, minimized: false, receipt: false },
+  { name: "invalid report", status: "0", baseline: "PENDING_REAL_COMPLETE_RUN", malformed: true, minimized: false, receipt: false },
+  { name: "pending baseline", status: "0", baseline: "PENDING_REAL_COMPLETE_RUN", malformed: false, minimized: true, receipt: false },
+  { name: "valid unit fixture baseline", status: "0", baseline: "HISTORIC_SUCCESSFUL_ARTIFACT", malformed: false, minimized: true, receipt: true },
+]) {
+  test("real UI postprocessing preserves failure and privacy: " + scenario.name, () => {
+    const lines = uiEvidenceSteps().script.split("\n")
+    const start = lines.findIndex((line) => line === 'test "$status" -eq 0')
+    assert.ok(start >= 0, "original test exit status must guard the postprocessing tail")
+    const root = mkdtempSync(path.join(tmpdir(), "sf-ui-evidence-unit-"))
+    try {
+      const unitManifest = structuredClone(manifest)
+      const suite = unitManifest.suites.find((entry) => entry.id === "CI-UI-REPORTS")
+      suite.coverageBaseline.status = scenario.baseline
+      const spec = path.join(root, suite.directory, suite.specFile)
+      const evidence = path.join(root, "sf-ci-evidence", suite.id)
+      mkdirSync(path.join(root, "sf/ci"), { recursive: true })
+      mkdirSync(path.join(root, "script/sf-ci"), { recursive: true })
+      mkdirSync(path.dirname(spec), { recursive: true })
+      mkdirSync(evidence, { recursive: true })
+      writeFileSync(path.join(root, "sf/ci/suites.json"), JSON.stringify(unitManifest))
+      writeFileSync(spec, "// Unit fixture only; no product tests or accepted baseline.\n")
+      copyFileSync(new URL("./gate.mjs", import.meta.url), path.join(root, "script/sf-ci/gate.mjs"))
+      copyFileSync(new URL("./shard-plan.mjs", import.meta.url), path.join(root, "script/sf-ci/shard-plan.mjs"))
+      copyFileSync(new URL("../../sf/ci/shard-costs.json", import.meta.url), path.join(root, "sf/ci/shard-costs.json"))
+      const git = (...args) => {
+        const result = spawnSync("git", ["-C", root, ...args], { encoding: "utf8", timeout: 10_000 })
+        assert.equal(result.status, 0, result.stderr || String(result.error))
+        return result.stdout.trim()
+      }
+      git("init", "--quiet")
+      git("add", "sf/ci/suites.json", "sf/ci/shard-costs.json", "script/sf-ci/gate.mjs", "script/sf-ci/shard-plan.mjs", suite.directory)
+      git("-c", "user.name=SF gate unit fixture", "-c", "user.email=sf-gate-unit@example.invalid",
+        "commit", "--quiet", "-m", "Unit fixture only")
+      const unitSha = git("rev-parse", "HEAD")
+      const unitTree = git("rev-parse", "HEAD^{tree}")
+      const secret = "PRIVATE_UNIT_FIXTURE_MUST_NOT_REACH_BASELINE_CANDIDATE"
+      const raw = JSON.parse(playwright(suite).toString("utf8"))
+      raw.metadata = { token: secret }
+      raw.suites[0].title = secret
+      raw.suites[0].specs[0].tests[0].results[0].stdout = [secret]
+      raw.suites[0].specs[0].tests[0].results[0].attachments = [{ name: secret, body: secret }]
+      const reportFile = path.join(evidence, "report.json")
+      const outputFile = path.join(root, "step-output")
+      writeFileSync(reportFile, scenario.malformed ? "{invalid unit fixture JSON" : JSON.stringify(raw))
+      writeFileSync(outputFile, "")
+      const result = spawnSync("bash", ["--noprofile", "--norc", "-euo", "pipefail", "-c", lines.slice(start).join("\n")], {
+        cwd: root,
+        encoding: "utf8",
+        timeout: 10_000,
+        env: {
+          ...process.env,
+          root,
+          status: scenario.status,
+          GITHUB_WORKSPACE: root,
+          GITHUB_OUTPUT: outputFile,
+          GITHUB_SHA: unitSha,
+          GITHUB_RUN_ID: runId,
+          GITHUB_RUN_ATTEMPT: attempt,
+          SF_CHECKOUT_TREE_SHA: unitTree,
+          SF_SUITE_ID: suite.id,
+          RUNNER_OS: "Linux",
+          RUNNER_ARCH: "X64",
+        },
+      })
+      assert.equal(result.error, undefined)
+      assert.equal(result.status, scenario.receipt ? 0 : 1, result.stderr)
+      assert.equal(readFileSync(outputFile, "utf8"), scenario.minimized ? "minimized=true\n" : "")
+      assert.equal(existsSync(path.join(evidence, "receipt.json")), scenario.receipt)
+      if (!scenario.minimized) {
+        assert.doesNotMatch(result.stdout, /SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED|SF_CI_SUITE_PASS/)
+        return
+      }
+      const minimized = readFileSync(reportFile, "utf8")
+      assert.equal(minimized.includes(secret), false)
+      assert.equal(minimized.includes("attachments"), false)
+      assert.equal(countPlaywrightReport(minimized, suite.specFile), 1)
+      assert.deepEqual(playwrightCoverageIdentity(minimized, suite.specFile),
+        playwrightCoverageIdentity(JSON.stringify(raw), suite.specFile))
+      assert.match(result.stdout, /SF_CI_PLAYWRIGHT_EVIDENCE_MINIMIZED CI-UI-REPORTS/)
+      if (!scenario.receipt) {
+        assert.match(result.stderr, /coverage baseline requires authentic successful run and independent review: CI-UI-REPORTS/)
+        assert.doesNotMatch(result.stdout, /SF_CI_SUITE_PASS/)
+        return
+      }
+      const receipt = JSON.parse(readFileSync(path.join(evidence, "receipt.json"), "utf8"))
+      assert.equal(receipt.status, "PASS")
+      assert.equal(receipt.sourceSha, unitSha)
+      assert.equal(receipt.treeSha, unitTree)
+      assert.equal(receipt.reportSha256, createHash("sha256").update(minimized).digest("hex"))
+      assert.match(result.stdout, /SF_CI_SUITE_PASS CI-UI-REPORTS 1 tests/)
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+}
+
 // A6 consumes this test-defined wiring contract in .github/workflows/sf-ci.yml.
 // The positive fixture is intentionally independent from the live workflow:
 // negative mutations must pass even while A6's YAML still needs updating.
+function uiBootstrapFixture() {
+  return [
+    "      - name: Install Chromium for Linux only",
+    "        working-directory: packages/app-shell",
+    "        run: bunx playwright install --with-deps chromium",
+    "      - name: Qualify real loopback ClamD for Operations uploads",
+    "        if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}",
+    "        shell: bash",
+    "        run: bash script/sf-ci/operations-clamd.sh",
+  ].join("\n")
+}
+
+function timingSidecarFixture(sharded = false) {
+  const directory = sharded ? "sf-ci-evidence/CI-SF-shard-$SF_SHARD_INDEX" : "sf-ci-evidence/$SF_SUITE_ID"
+  const command = [
+    "python3 script/sf-ci/timings.py",
+    '--report "' + directory + '/report.xml" --output "' + directory + '/timings.json"',
+    '--source-sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT"',
+    '--job-name "$GITHUB_JOB"',
+    sharded
+      ? '--suite CI-SF --directory modules/sucafina --file-root "$GITHUB_WORKSPACE/modules/sucafina"'
+      : '--suite "$SF_SUITE_ID" --directory "${SF_TIMINGS_DIRECTORY:-.}" --file-root "$GITHUB_WORKSPACE/${SF_TIMINGS_DIRECTORY:-.}"',
+    '--conclusion "$TEST_CONCLUSION"',
+    ...(sharded ? ['--shard-index "$SF_SHARD_INDEX" --shard-count "$SF_SHARD_COUNT"'] : []),
+  ].join(" ")
+  return [
+    "      - name: Preserve timing observations",
+    "        if: always() && !cancelled() && steps.tests.outcome != 'skipped'",
+    "        env:",
+    "          TEST_CONCLUSION: ${{ steps.tests.outcome }}",
+    "        run: |",
+    "          " + command,
+  ].join("\n")
+}
+
 function manifestWiredWorkflowFixture(actualManifest) {
   const buns = actualManifest.suites.filter((suite) => suite.kind === "bun")
   const single = buns.filter((suite) => !SHARDED[suite.id])
@@ -262,14 +469,27 @@ function manifestWiredWorkflowFixture(actualManifest) {
     '          evidence="$root/sf-ci-evidence/$SF_SUITE_ID"',
     selected,
   ].join("\n")
+  const explicit = '          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done'
+  const directory = [
+    "          suite_dir=\"$(node --input-type=module -e '",
+    '            import { readFileSync } from "node:fs"',
+    '            import { validateManifest } from "./script/sf-ci/gate.mjs"',
+    '            const suites = validateManifest(JSON.parse(readFileSync("sf/ci/suites.json", "utf8")))',
+    '            const suite = suites.find((item) => item.id === process.env.SF_SUITE_ID)',
+    '            if (!suite) throw new Error("SF_CI_UNKNOWN_SUITE")',
+    '            process.stdout.write(suite.directory)',
+    "          ')\"",
+    '          test -f "$root/$suite_dir/package.json"',
+    '          printf \'SF_TIMINGS_DIRECTORY=%s\\n\' "$suite_dir" >> "$GITHUB_ENV"',
+  ].join("\n")
   return [
     "name: sf-ci", "on:", "  pull_request:", "    branches: [close-final-candidate]", "jobs:",
     "  unit:", "    strategy:", "      matrix:",
     `        id: [${single.map((suite) => suite.id).join(", ")}]`,
     "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
-    "    steps:", "      - name: test", "        run: |", prefix,
-    '          test "${#files[@]}" -gt 0 || exit 2',
-    '          case "$SF_SUITE_ID" in', arms, '              *) exit 2 ;;', "          esac",
+    "    steps:", "      - name: test", "        id: tests", "        run: |", prefix,
+    '          test "${#files[@]}" -gt 0 || exit 2', explicit, directory,
+    '          case "$SF_SUITE_ID" in', arms, '              *) exit 2 ;;', "          esac", timingSidecarFixture(),
     ...sharded.map((suite) => {
       const count = SHARDED[suite.id]
       return [
@@ -277,19 +497,20 @@ function manifestWiredWorkflowFixture(actualManifest) {
         `        shard: [${Array.from({ length: count }, (_, offset) => offset + 1).join(", ")}]`,
         "    env:", `      SF_SUITE_ID: ${suite.id}`,
         "      SF_SHARD_INDEX: ${{ matrix.shard }}", `      SF_SHARD_COUNT: "${count}"`,
-        "    steps:", "      - name: test", "        run: |",
+        "    steps:", "      - name: test", "        id: tests", "        run: |",
         '          root="$GITHUB_WORKSPACE"',
         '          evidence="$root/sf-ci-evidence/$SF_SUITE_ID-shard-$SF_SHARD_INDEX"',
         selected,
-        '          test "${#files[@]}" -gt 0 || exit 2',
+        '          test "${#files[@]}" -gt 0 || exit 2', explicit,
         `          cd "$root/${suite.directory}"`,
         `          bun test --timeout 30000 "\${files[@]}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+        timingSidecarFixture(true),
       ].join("\n")
     }),
     "  ui:", "    strategy:", "      matrix:", "        include:",
     ...ui.map((suite) => `          - id: ${suite.id}`),
     "    env:", '      SF_SUITE_ID: ${{ matrix.id }}',
-    "    steps:", "      - name: test", "        run: |", prefix,
+    "    steps:", uiBootstrapFixture(), "      - name: test", "        run: |", prefix,
     '          test "${#files[@]}" -eq 1 || exit 2',
     '          cd "$root/packages/app-shell"',
     '          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2',
@@ -335,6 +556,104 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
     assert.notEqual(broken, good, "mutation must actually change the fixture: " + name)
     assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
   }
+})
+
+test("UI admits exactly the existing Chromium and ClamD setup blocks before its sole execution", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  const setup = uiBootstrapFixture()
+  const mutations = [
+    ["missing setup", good.replace(setup, "")],
+    ["duplicate setup", good.replace(setup, setup + "\n" + setup)],
+    ["Chromium executes tests", good.replace("run: bunx playwright install --with-deps chromium", "run: bunx playwright install --with-deps chromium && bun test")],
+    ["ClamD executes tests", good.replace("run: bash script/sf-ci/operations-clamd.sh", "run: bash script/sf-ci/operations-clamd.sh; bun test")],
+    ["foreign Chromium directory", good.replace("working-directory: packages/app-shell", "working-directory: modules/sucafina")],
+    ["changed ClamD condition", good.replace("if: ${{ matrix.id == 'CI-UI-OPERATIONS' }}", "if: success()")],
+    ["changed ClamD shell", good.replace("        shell: bash", "        shell: sh")],
+    ["extra setup metadata", good.replace("        run: bunx playwright install --with-deps chromium",
+      "        env:\n          BASH_ENV: hidden.sh\n        run: bunx playwright install --with-deps chromium")],
+    ["setup after execution", good.replace(setup, "") + setup + "\n"],
+    ["other inline setup", good.replace(setup, setup + "\n      - run: bun test")],
+    ["quoted executable key", good.replace(setup, setup + '\n      - name: hidden\n        "run": bun test')],
+    ["flow executable step", good.replace(setup, setup + "\n      - { run: bun test }")],
+  ]
+  assert.doesNotThrow(() => assertWorkflowManifestSelection(good, actual))
+  for (const [name, broken] of mutations) {
+    assert.notEqual(broken, good, name)
+    assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
+  }
+})
+
+test("Bun timing sidecars reject extra commands, altered provenance, metadata and duplicate steps", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  for (const sharded of [false, true]) {
+    const sidecar = timingSidecarFixture(sharded)
+    const mutations = [
+      ["extra Bun command", sidecar + '\n          bun test "${files[@]}"'],
+      ["metadata command substitution", sidecar.replace('--job-name "$GITHUB_JOB"', '--job-name "$(bun test)"')],
+      ["metadata Node execution", sidecar.replace("          python3 ", '          node -e "process.exit(0)"\n          python3 ')],
+      ["extra inline script", sidecar + '\n      - run: bun test'],
+      ["extra folded script", sidecar + '\n      - name: hidden\n        run: >\n          bun test'],
+      ["folded sidecar", sidecar.replace("        run: |", "        run: >")],
+      ["duplicate sidecar", sidecar + "\n" + sidecar],
+      ["missing sidecar", ""],
+      ["duplicate argument", sidecar + ' --run-id "$GITHUB_RUN_ID"'],
+      ["false success", sidecar.replace('--conclusion "$TEST_CONCLUSION"', '--conclusion success')],
+      ["foreign source", sidecar.replace('--source-sha "$GITHUB_SHA"', '--source-sha "unverified"')],
+      ["false outcome metadata", sidecar.replace("TEST_CONCLUSION: ${{ steps.tests.outcome }}", "TEST_CONCLUSION: success")],
+      ["hidden shell metadata", sidecar.replace("        env:", '        env:\n          BASH_ENV: hidden.sh')],
+      ["wrong outcome condition", sidecar.replace("always() && !cancelled() && steps.tests.outcome != 'skipped'", "success()")],
+      ["ignored collector error", sidecar + " || true"],
+      ["shell command substitution suffix", sidecar + ' "$(bun test)"'],
+    ]
+    for (const [name, replacement] of mutations) {
+      const broken = good.replace(sidecar, replacement)
+      assert.notEqual(broken, good, name)
+      assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, name)
+    }
+    const continued = sidecar.replace(" --report ", " \\" + "\n            --report ")
+    assert.doesNotThrow(() => assertWorkflowManifestSelection(good.replace(sidecar, continued), actual))
+  }
+  assert.throws(() => assertWorkflowManifestSelection(good.replace("        id: tests", "        id: unrelated"), actual),
+    /SF_CI_WORKFLOW_SELECTION/)
+})
+
+test("only one exact argv prefix follows each Bun guard and leaves saved selection untouched", () => {
+  const actual = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
+  const good = manifestWiredWorkflowFixture(actual)
+  const prefix = '          for index in "${!files[@]}"; do files[$index]="./${files[$index]}"; done'
+  const guard = '          test "${#files[@]}" -gt 0 || exit 2'
+  for (const [job, next] of [["unit", "unit-sf"], ["unit-sf", "ui"]]) {
+    const start = good.indexOf("  " + job + ":\n")
+    const end = good.indexOf("  " + next + ":\n", start)
+    const original = good.slice(start, end)
+    const mutations = [
+      ["missing prefix", original.replace(prefix, "")],
+      ["double prefix", original.replace(prefix, prefix + "\n" + prefix)],
+      ["prefix before guard", original.replace(guard + "\n" + prefix, prefix + "\n" + guard)],
+      ["prefix after execution", original.replace(prefix, "").replace("      - name: Preserve timing observations", prefix + "\n      - name: Preserve timing observations")],
+      ["indented duplicate prefix", original.replace(prefix, prefix + "\n  " + prefix)],
+      ["different prefix", original.replace('"./${files[$index]}"', '"../${files[$index]}"')],
+      ["filter selected argv", original.replace(prefix, prefix + '\n          files=("${files[@]:0:1}")')],
+      ["append selected argv", original.replace(prefix, prefix + '\n          files+=("$extra")')],
+      ["unset selected argv", original.replace(prefix, prefix + '\n          unset files[0]')],
+      ["scalar selected argv", original.replace(prefix, prefix + '\n          files="$extra"')],
+      ["rewrite saved inventory", original.replace(prefix, prefix + '\n          printf "%s\\n" "$extra" > "$evidence/selection.txt"')],
+      ["read a replacement inventory", original.replace(prefix, prefix + '\n          readarray -t files < "$replacement"')],
+      ["repeat full argv", original.replace('"${files[@]}"', '"${files[@]}" "${files[@]}"')],
+    ]
+    for (const [name, replacement] of mutations) {
+      assert.notEqual(replacement, original, job + ": " + name)
+      const broken = good.slice(0, start) + replacement + good.slice(end)
+      assert.throws(() => assertWorkflowManifestSelection(broken, actual), /SF_CI_WORKFLOW_SELECTION/, job + ": " + name)
+    }
+  }
+  const publish = '          printf \'SF_TIMINGS_DIRECTORY=%s\\n\' "$suite_dir" >> "$GITHUB_ENV"'
+  assert.throws(() => assertWorkflowManifestSelection(good.replace(publish, ""), actual), /SF_CI_WORKFLOW_SELECTION/)
+  assert.throws(() => assertWorkflowManifestSelection(good.replace(publish, publish + "\n" + publish), actual), /SF_CI_WORKFLOW_SELECTION/)
+  assert.throws(() => assertWorkflowManifestSelection(good.replace('          test -f "$root/$suite_dir/package.json"', ""), actual),
+    /SF_CI_WORKFLOW_SELECTION/)
 })
 
 test("selected files are read only from the validated Linux SF manifest", () => {
@@ -605,4 +924,25 @@ test("CI-05 explicit selections reject symlinked parent paths inside the checkou
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
+})
+
+
+test("advisory plan reports the validated v2 status and preserves the complete selection", () => {
+  const costs = parseShardCosts({
+    schemaVersion: 2, status: "OBSERVED_TIMINGS", unit: "seconds", measurement: "junit-case-seconds",
+    pathPrefix: "test/", fallbackSeconds: 10, minimumObservedSeconds: 0.001,
+    sourceCount: 1, observedFiles: 1, weightedFiles: 1, exclusionsFromCostProfile: [],
+    sources: [{ id: "green", runId: 123, runAttempt: 1, jobName: "unit-sf", headSha: sha,
+      suiteId: "CI-SF", directory: "modules/sucafina", status: "success", conclusionScope: "test-step",
+      partial: true, observedFiles: 1, passedTests: 1, failedTests: 0, skippedTests: 0,
+      reportSha256: "b".repeat(64), shardIndex: 1, shardCount: 8 }],
+    costs: [["sf-shard-1.test.ts", 0.05, "green"]],
+  })
+  const planned = describeShardPlan(CI_SF_FILES, "CI-SF", costs)
+  assert.equal(planned.profileStatus, "OBSERVED_TIMINGS")
+  assert.equal(planned.selectedFiles, CI_SF_FILES.length)
+  assert.equal(planned.selectedFilesSha256, sha256Lines(CI_SF_FILES))
+  assert.deepEqual(planned.shards.flatMap((part) => part.files).sort(), [...CI_SF_FILES].sort())
+  assert.equal(planned.shards.length, SHARDED["CI-SF"])
+  assert.equal(describeShardPlan(CI_SF_FILES, "CI-SF").profileStatus, "HISTORICAL_RED_OR_PARTIAL")
 })
