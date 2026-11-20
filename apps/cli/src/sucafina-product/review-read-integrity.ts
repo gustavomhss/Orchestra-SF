@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { canonicalSfValue, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -7,6 +7,7 @@ import type { SfProductState } from "../../../../modules/sucafina/Sucafinav1/pro
 import type { createReviewPort } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+import { localRecordReview } from "./review-collaboration.ts"
 
 type ReviewResult = PortResult<PreservedReview>
 type ReadFailure = Exclude<ReviewResult, { status: "ok" }>
@@ -21,12 +22,18 @@ export function protectSfReviewReads(input: {
   reviews: ReturnType<typeof createReviewPort>
   /** Only the default installation readers have their entire authority in these snapshots. */
   localSnapshotReaders?: boolean
+  /** Live recognition supplied only by the registered resident reader factory. */
+  residentSnapshotReaders?: () => boolean
 }) {
   const { authority, reviews } = input
   const host = authority.host
   const read = reviews.read.bind(reviews)
   const execution = new AsyncLocalStorage<ReadScope>()
-  const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => scope.open &&
+  const defaultReaders = input.localSnapshotReaders === true
+  const localReaders = () => defaultReaders || input.residentSnapshotReaders?.() === true
+  // Resident portfolio/native dependencies retain their original producer path.
+  const supported = (review: PreservedReview) => snapshotBoundReview(review) && (defaultReaders || localRecordReview(review))
+  const sameCall = (scope: ReadScope, call: TrustedDomainContext, binding: string) => scope.open && localReaders() &&
     execution.getStore() === scope && host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
     digestSfValue([call.kind, call.binding]) === binding
   const receiptDigest = (state: Readonly<SfProductState>, id: string, digest: string) => {
@@ -126,7 +133,7 @@ export function protectSfReviewReads(input: {
   }
   const protectedRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
     const scope = execution.getStore()
-    if (!scope || !input.localSnapshotReaders) return legacyRead(id, call)
+    if (!scope || !localReaders()) return legacyRead(id, call)
     const binding = digestSfValue([call.kind, call.binding])
     const currentAccess = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
     try {
@@ -140,8 +147,9 @@ export function protectSfReviewReads(input: {
       if (before.status !== "ok") return before
       // A canonical producer can materialize scoped source metadata. Never invoke
       // it from the final read-only C08 group when its complete proof has changed.
-      // A missing proof is uncertainty, not evidence of lost authorization.
-      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : unavailable()
+      // Without that producer proof, this invocation cannot authorize reuse of
+      // the body. Actual producer/snapshot failures retain their own results.
+      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
       let first = before.value
       for (let attempt = 0; attempt < 2; attempt++) {
         const result = structuredClone(await read(id, call))
@@ -150,11 +158,11 @@ export function protectSfReviewReads(input: {
         if (after.status !== "ok") return after
         if (first.digest !== after.value.digest || first.receipt !== after.value.receipt || first.access !== after.value.access ||
           digestSfValue(result.value) !== after.value.digest) return denied()
-        if (first.fence === after.value.fence && snapshotBoundReview(result.value)) {
+        if (first.fence === after.value.fence && supported(result.value)) {
           proofs.set(id, { fence: after.value.fence, result: structuredClone(result) })
           return result
         }
-        if (!snapshotBoundReview(result.value)) {
+        if (!supported(result.value)) {
           let delegated = scope.delegated.get(call)
           if (!delegated) { delegated = new Set(); scope.delegated.set(call, delegated) }
           delegated.add(id)
@@ -185,9 +193,10 @@ export function protectSfReviewReads(input: {
 }
 
 /** External/native outcomes, comments and document readers retain the full producer path. */
-function snapshotBoundReview(review: PreservedReview) {
+export function snapshotBoundReview(review: PreservedReview) {
   if (review.comments.length) return false
   let remaining = 20_000
+  const evidence = new Map<string, number>()
   const visit = (value: unknown, depth = 0): boolean => {
     if (depth > 24 || --remaining < 0) return false
     if (!value || typeof value !== "object") return true
@@ -200,7 +209,15 @@ function snapshotBoundReview(review: PreservedReview) {
     if ("schema" in value && value.schema === "sf-evidence-v1" &&
       (!("kind" in value) || value.kind !== "record" || !("target" in value) || !value.target || typeof value.target !== "object" ||
        !("surface" in value.target) || !["dashboard", "planner", "procurement"].includes(String(value.target.surface)))) return false
-    return Object.values(value).every((entry) => visit(entry, depth + 1))
+    // Repeated cells/charts carry copies of the same complete record evidence.
+    // Reuse only a successful structural visit in this invocation, at an equal
+    // or deeper placement. A deeper occurrence must still prove the depth cap.
+    // Every occurrence above spends budget; source/receipt authority is separate.
+    const canonical = "schema" in value && value.schema === "sf-evidence-v1" ? canonicalSfValue(value) : undefined
+    if (canonical !== undefined && (evidence.get(canonical) ?? -1) >= depth) return true
+    const accepted = Object.values(value).every((entry) => visit(entry, depth + 1))
+    if (accepted && canonical !== undefined) evidence.set(canonical, depth)
+    return accepted
   }
   return visit(review)
 }

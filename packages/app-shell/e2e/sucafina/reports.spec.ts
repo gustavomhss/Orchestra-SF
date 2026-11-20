@@ -33,7 +33,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const pptx = await reportsTest.step("Download PPTX and inspect every content slide", () => exportReview(page, app, saved, corpus, "pptx", info))
     expect(docx.artifact).not.toBe(pptx.artifact)
     expect(docx.sha256).not.toBe(pptx.sha256)
-    await reportsTest.step("Open and reload the real meeting URL", () => openAndReopenMeeting(page, app, saved))
+    await reportsTest.step("Open and reload the real meeting URL", () => openAndReopenMeeting(page, app, saved, info))
     await expectCapturedBudget(page, corpus)
     await reportsTest.step("Follow the captured source reference to current data with the same reporting year", () => followBudgetSource(page, app, saved, corpus))
   })
@@ -43,7 +43,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const { app, corpus } = reports
     const { saved } = await prepareReview(page, app, corpus, info)
     await changeForecast(page, app, corpus)
-    await openAndReopenMeeting(page, app, saved)
+    await openAndReopenMeeting(page, app, saved, info)
     const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true, loseCreatedThreadRead: true }))
     const beforeReload = await api.version()
     const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
@@ -125,7 +125,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const { app, corpus } = reports
     const { saved } = await prepareReview(page, app, corpus, info)
     const artifact = await exportReview(page, app, saved, corpus, "docx", info)
-    await openAndReopenMeeting(page, app, saved)
+    await openAndReopenMeeting(page, app, saved, info)
     const { answer } = await confirmHumanAnswer(page, app, saved, corpus, info)
     await reportsTest.step("Revoke, deny retained old credentials, and verify a fresh positive control", () => revokeReportsSession({ browser, page, app, saved, answer, artifact, info }))
   })

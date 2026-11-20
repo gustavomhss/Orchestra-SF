@@ -76,15 +76,26 @@ export function createApplication(mount: string, application: Application) {
       return reply("Invalid projection selection", 400)
     // Product operations own fresh authentication and transactions; never nest them in the page lock.
     const retiredPage = request.method !== "POST" && !queueProjection && !url.searchParams.has("download") && !url.searchParams.has("asset") && !url.searchParams.has("asset-link")
+    const productModes = url.searchParams.getAll("sf")
+    if (productModes.length && (productModes.length !== 1 || !productModes[0]))
+      return reply("Invalid product operation", 400)
     const product = await application.product?.(request, surface)
     if (product) {
-      // Product JSON and native operations keep their existing authorization and behavior.
+      // Only the installed dispatcher may recognize an explicit product view.
+      // Bare console HTML remains retired; Reports owns its validated Office entry.
       if (request.method !== "POST" && product.headers.get("content-type")?.toLowerCase().includes("text/html")) {
         const denied = await admitRetiredPage(request, surface, application)
         if (denied) return denied
-        return decommissioned()
+        const reportsEntry = surface === "dashboard" && !productModes.length &&
+          url.searchParams.getAll("page").length === 1 && !!url.searchParams.get("page") &&
+          url.searchParams.getAll("download").length === 1 && ["docx", "pptx"].includes(url.searchParams.get("download") ?? "")
+        if (!productModes.length && !reportsEntry) return decommissioned()
       }
       return product
+    }
+    if (productModes.length) {
+      const denied = await admitRetiredPage(request, surface, application)
+      return denied ?? decommissioned()
     }
     const parsed =
       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined

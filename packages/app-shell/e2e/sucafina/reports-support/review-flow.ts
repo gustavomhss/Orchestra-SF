@@ -37,7 +37,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
   await expect(load).toBeEnabled()
-  const transport = observeAgendaTransport(page, app)
+  const transport = observeReviewTransport(page, app)
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
   const selected = await (async () => {
     try {
@@ -84,6 +84,7 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   expect(saved.sections[0]!.count).toBe(options.removeOne ? 24 : 25)
   expect(projection(saved.sections[0]!.content).values).toEqual(retained.sections.find((section) => section.title === "Projects")!.projection.values)
   await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting's captured values.")
+  await expectReviewAddress(page, app, { reviewRef: saved.id })
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
   await info.attach("preserved-selection", { body: JSON.stringify({ selectionRef: retained.selectionRef, selectedRecords: retained.sectionRecordRefs, saved }, null, 2), contentType: "application/json" })
   return { preparation, saved }
@@ -132,11 +133,20 @@ export async function readSourceData(request: APIRequestContext, app: ReportsIns
   return { projects: data.projects, opexOwners: data.opexOwners, opexEntries: data.opexEntries, hotTopics: data.hotTopics }
 }
 
+async function expectReviewAddress(page: Page, app: ReportsInstallation, destination: { reviewRef: string } | { previousReviewRef: string }) {
+  const expected = new URL(app.dashboardURL)
+  expected.search = new URLSearchParams({ sf: "review", ...destination }).toString()
+  expected.hash = ""
+  await expect(page, "The installed URL must identify the confirmed review state without Reports form parameters").toHaveURL(expected.toString())
+}
+
 export async function preserveNewRevision(page: Page, app: ReportsInstallation, prior: PreservedReview, corpus: ReportsCorpus) {
+  await expectReviewAddress(page, app, { reviewRef: prior.id })
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const load = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
   await preparation.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
   const selected = await agendaResult(await load)
+  await expectReviewAddress(page, app, { previousReviewRef: prior.id })
   expect(selected.sections.flatMap((section) => section.projection.values).filter((value) => value.id === corpus.forecastField))
     .toMatchObject([{ value: corpus.after, period: corpus.annual }])
   expect(selected.sections.filter((section) => section.title === "Projects").map((section) => section.recordCount)).toEqual([24])
@@ -159,6 +169,7 @@ export async function preserveNewRevision(page: Page, app: ReportsInstallation, 
     .getByRole("row").filter({ has: page.getByRole("cell", { name: corpus.forecastField, exact: true }) }).getByRole("cell"))
     .toHaveText([corpus.forecastField, `${corpus.after} unspecified`, `${corpus.annual.start} – ${corpus.annual.end}`])
   expect(await readReview(page.request, app.dashboardURL, prior.id)).toEqual(prior)
+  await expectReviewAddress(page, app, { reviewRef: next.id })
   expect(await readReview(page.request, app.dashboardURL, next.id)).toEqual(next)
   return next
 }
@@ -230,10 +241,17 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
   const button = preparation.getByRole("button", { name: `Generate ${format.toUpperCase()}`, exact: true })
   await expect(button).toBeEnabled()
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+  const confirmation = preparation.locator("[data-preserved-review-ref]")
+  await expect(confirmation).toHaveAttribute("data-preserved-review-ref", saved.id)
+  await expect(confirmation).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+  const transport = observeReviewTransport(page, app, "review-report")
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-report", "POST"))
-  await button.click()
-  const response = await pending
+  const response = await (async () => {
+    try {
+      const [, response] = await Promise.all([button.click(), Promise.race([pending, transport.failed])])
+      return response
+    } finally { await transport.finish(info) }
+  })()
   expect(response.status()).toBe(200)
   expect(response.request().postDataJSON()).toMatchObject({ reviewRef: saved.id, sectionRefs: saved.sections.map((section) => section.id), format })
   const body = object(await response.json())
@@ -256,9 +274,14 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(href.origin).toBe(app.origin)
   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
   expect(Object.fromEntries(href.searchParams)).toEqual({ sf: "review-download", artifactRef: artifact })
+  const downloadTransport = observeReviewTransport(page, app, "review-download", "GET")
   const downloaded = page.waitForEvent("download")
-  await link.click()
-  const download = await downloaded
+  const download = await (async () => {
+    try {
+      await link.click()
+      return await downloaded
+    } finally { await downloadTransport.finish(info) }
+  })()
   expect(download.url()).toBe(href.href)
   expect(download.suggestedFilename()).toMatch(new RegExp(`\\.${format}$`))
   expect(await download.failure()).toBeNull()
@@ -271,28 +294,33 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   return { artifact, href: href.href, ...semantics }
 }
 
-export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview) {
-  const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  await expect(preparation.getByRole("status")).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
-  const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
-  await expect(open).toBeVisible()
-  await expect(open).toBeEnabled()
-  const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await open.click()
-  expect(object(await (await pending).json()).value).toEqual(saved)
-  const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
-  await expect(meeting).toHaveCount(1)
-  await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
-  const url = page.url()
-  const reload = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-  await page.reload()
-  expect(object(await (await reload).json()).value).toEqual(saved)
-  await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
-  expect(page.url()).toBe(url)
-  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
-  await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
-  await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
-  return { meeting, url }
+export async function openAndReopenMeeting(page: Page, app: ReportsInstallation, saved: PreservedReview, info: TestInfo) {
+  const transport = observeReviewTransport(page, app, "review-read", "GET")
+  try {
+    const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+    const confirmation = preparation.locator("[data-preserved-review-ref]")
+    await expect(confirmation).toHaveAttribute("data-preserved-review-ref", saved.id)
+    await expect(confirmation).toHaveText("Review preserved. Source updates will not replace this meeting\'s captured values.")
+    const open = preparation.getByRole("button", { name: "Open meeting", exact: true })
+    await expect(open).toBeVisible()
+    await expect(open).toBeEnabled()
+    const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+    await open.click()
+    expect(object(await (await Promise.race([pending, transport.failed])).json()).value).toEqual(saved)
+    const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
+    await expect(meeting).toHaveCount(1)
+    await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
+    const url = page.url()
+    const reload = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+    await page.reload()
+    expect(object(await (await Promise.race([reload, transport.failed])).json()).value).toEqual(saved)
+    await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
+    expect(page.url()).toBe(url)
+    await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
+    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
+    return { meeting, url }
+  } finally { await transport.finish(info) }
 }
 
 export async function expectCapturedBudget(page: Page, corpus: ReportsCorpus, amount = corpus.before) {
@@ -351,7 +379,7 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
 }
 
 /** Observe transport only: never serialize headers, bodies, cookies or query values. */
-function observeAgendaTransport(page: Page, app: ReportsInstallation) {
+function observeReviewTransport(page: Page, app: ReportsInstallation, mode: "review-agenda" | "review-report" | "review-read" | "review-download" = "review-agenda", method: "GET" | "POST" = "POST") {
   const expected = new URL(app.dashboardURL)
   const started = Date.now()
   const entries: Record<string, unknown>[] = []
@@ -375,7 +403,7 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
   }
   const matching = (request: Request) => {
     const route = destination(request.url())
-    return route.sameOrigin && route.samePath && route.mode === "review-agenda" && request.method() === "POST"
+    return route.sameOrigin && route.samePath && route.mode === mode && request.method() === method
   }
   const relevant = (request: Request) => request.method() === "POST" || destination(request.url()).mode.startsWith("review")
   const causes = (value: string) => ({
@@ -403,7 +431,7 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
   const requestfailed = (value: Request) => {
     const failure = causes(value.failure()?.errorText ?? "")
     if (relevant(value)) add("requestfailed", { ...destination(value.url()), method: value.method(), ...failure })
-    if (matching(value)) rejectFailure(new Error("Actual review-agenda POST transport failed: " +
+    if (matching(value)) rejectFailure(new Error("Actual " + mode + " " + method + " transport failed: " +
       [...failure.codes, ...failure.categories].join(", ")))
   }
   const pageerror = (value: Error) => add("pageerror", {
@@ -420,10 +448,15 @@ function observeAgendaTransport(page: Page, app: ReportsInstallation) {
     finish: async (info: TestInfo) => {
       page.off("request", request); page.off("response", response); page.off("requestfailed", requestfailed)
       page.off("pageerror", pageerror); page.off("console", consoleEvent)
-      await info.attach("reports-agenda-transport", { contentType: "application/json", body: JSON.stringify({
-        before, after: destination(page.url()), expected: { method: "POST", mode: "review-agenda" },
+      const observation = {
+        before, after: destination(page.url()), expected: { method, mode },
         elapsedMs: Date.now() - started, entries, dropped, cli: app.diagnostics?.() ?? "diagnostics-unavailable",
-      }, null, 2) }).catch(() => undefined)
+      }
+      if (entries.some((entry) => entry.kind === "requestfailed"))
+        console.info("SF_REPORTS_TRANSPORT_FAILURE", JSON.stringify(observation))
+      await info.attach(`reports-${mode.slice("review-".length)}-transport`, {
+        contentType: "application/json", body: JSON.stringify(observation, null, 2),
+      }).catch(() => undefined)
     },
   }
 }
