@@ -1,9 +1,11 @@
 import { test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { expect } from "@playwright/test"
 import path from "node:path"
 import { inspectWp05Browser } from "./browser.ts"
 
 test("contribution and capacity panels preserve signs, missing values, selection and focus", async () => {
+  expectSpawn(import.meta.path)
   const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
   if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
   const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
