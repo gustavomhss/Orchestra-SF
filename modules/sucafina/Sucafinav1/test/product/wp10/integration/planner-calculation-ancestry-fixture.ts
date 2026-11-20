@@ -74,7 +74,7 @@ export async function ancestryProofFixture() {
       hooks.source?.(result)
       return result
     }
-    business.bindForecastCoverage(async (reference, call) => {
+    let coverageReader: Parameters<typeof business.bindForecastCoverage>[0] = async (reference, call) => {
       counts.coverage++
       const source = await business.plannerSources.resolveForecastSource(reference, call)
       if (source.status !== "ok") return source
@@ -83,7 +83,8 @@ export async function ancestryProofFixture() {
         assessment: { basisId: "fixture-basis", basisVersion: 1, alternativeId: "baseline", alternativeVersion: 1, currency: "USD", horizon: period,
           issues: ["fixture-training-unresolved"], evaluatedSourceRefs: [source.value.evidence], coverageState: "pending",
           entries: [{ status: "pending", categoryId: "training", reason: "Fixture has no training evidence" }], derivedMissingCategoryIds: ["training"] } } }
-    })
+    }
+    business.bindForecastCoverage(coverageReader)
     business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
     const ui = async <Value>(operation: string, work: (call: TrustedUiContext) => Promise<Value>) => {
       const digest = digestSfValue({}), admitted = await authority.ui.admit(request(), operation, digest)
@@ -139,7 +140,8 @@ export async function ancestryProofFixture() {
     const observation = createSfPlannerCalculationAncestryScope({ host: business.host, state: authority.state, sources: business.plannerSources,
       withCalculationCase: selectedScope, lockedSourceFences: business.lockedSourceFences, requireCanonicalReplay: () => false,
       identities: () => [business.calculations, ...Object.entries(business.calculations).flatMap(([key, value]) => [key, value]),
-        business.results, ...Object.entries(business.results).flatMap(([key, value]) => [key, value])] })
+        business.results, ...Object.entries(business.results).flatMap(([key, value]) => [key, value]),
+        business.evidence.current, ...Object.entries(business.evidence.current ?? {}).flatMap(([key, value]) => [key, value]), coverageReader] })
     const incoming = { ...produced.value.request, assumptions: [{ id: "ancestor", value: "Retain prior analysis", state: "hypothetical" as const, evidenceRefs: [eventRef] }] }
     const canonical = (call: TrustedUiContext, ref: BusinessEvidenceRef = leaf) => { counts.resolutions++; return business.calculations.resolveEvidence(ref, call) }
     const resolve = (call: TrustedUiContext, ref: BusinessEvidenceRef = leaf) => observation.resolve(ref, call, () => canonical(call, ref))
@@ -167,6 +169,7 @@ export async function ancestryProofFixture() {
     })
     return { authority, business, store, persistence, control, hooks, counts, caseRef, leaf, eventRef, incoming, request, ui, run,
       canonical, resolve, observe, observation, capture, rawSnapshots, corrupt, changeSource, cleanup,
+      replaceCoverage: () => { const original = coverageReader; coverageReader = (...args) => original(...args); business.bindForecastCoverage(coverageReader) },
       reset: () => { for (const key of Object.keys(counts) as (keyof typeof counts)[]) counts[key] = 0 } }
   } catch (error) { await cleanup(); throw error }
 }
