@@ -26,7 +26,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   // domain command, not a store edit or a replacement consumer response.
   test("a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture", async () => {
     const fixture = await createRecoveryFixture()
-    const browser = await launchWp01Browser().catch(async (error) => { await fixture.close(); throw error })
+    const browser = await launchWp01Browser().catch(async (error) => { try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Review setup and cleanup failed") } throw error })
+    let failure: unknown
     try {
       await fixture.persistence.transaction("dashboard", async (snapshot) => {
         snapshot.data.opexOwners = [{ id: "meeting-owner", name: "Meeting Operations", budget: 1200 }]
@@ -149,8 +150,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await history.textContent()).toBe(originalHistory)
       expect(await total.locator("td").nth(2).textContent()).toBe("2400")
       expect(errors).toEqual([])
-    } finally {
-      const outcomes = await Promise.allSettled([closeWp01Browser(browser), fixture.close()])
+    } catch (error) { failure = error; console.error("G04 review component failed", error); throw error }
+    finally {
+      // The component owns its proxy and contexts. Close it before releasing the
+      // shared browser lease; two concurrent context.close calls are not cleanup.
+      const outcomes = await Promise.allSettled([fixture.close()])
+      outcomes.push(...await Promise.allSettled([closeWp01Browser(browser)]))
       const failures = outcomes.flatMap((outcome) => outcome.status === "rejected" ? [outcome.reason] : [])
       if (failures.length) throw new AggregateError(failures, "Meeting number fixture cleanup failed")
     }

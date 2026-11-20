@@ -121,7 +121,9 @@ export function createAuthorizedComponentRenderer(input: Readonly<{
         const principal = await input.services.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
         const actor = actorFor(principal, snapshot, surface)
         return { commit: false, value: !!actor && actor.id === admitted.principal.principalObjectId &&
-          hash(actor) === projection.actor && allowedPages(actor, snapshot, surface).includes(projection.page) &&
+          hash(actor) === projection.actor &&
+          hash({ profile: admitted.profile, principal: admitted.principal, configRevision: admitted.configRevision, actor, roleMap: roleMap(snapshot, surface) }) === projection.revision &&
+          allowedPages(actor, snapshot, surface).includes(projection.page) &&
           hash(snapshot.versions) === projection.versions && (!prepared || await prepared.current(snapshot, actor)) }
       }, { signal: request.signal })
       if (!retained || request.signal.aborted || !await input.boundary.profiles.revalidate(admitted)) return failure(403)

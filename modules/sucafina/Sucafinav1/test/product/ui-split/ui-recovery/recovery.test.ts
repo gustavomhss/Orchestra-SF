@@ -10,9 +10,13 @@ import { editNewDraft, observedApplication, openWorkbench, prepareApply, reloadA
 test("UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => {
+    try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await fixture.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "One effect with an incomplete ACK")
     const attempts: { body: string | null; key: string | undefined; status: number; receipt: unknown }[] = []
@@ -45,16 +49,21 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
     expect(object(object(await page.evaluate(() => history.state)).sfDashboardWorkbench).application).toBeUndefined()
     expect(await panel.locator("[data-dashboard-pending]").getAttribute("data-dirty")).toBeNull()
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await fixture.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(fixture, driver, failure) }
   driver.report()
 }, 60000)
 
 test("UI recovery reauthorizes the restored attempt and purges it on real denial without another effect", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => {
+    try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await fixture.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "Private revoked recovery")
     const attempts: { body: string | null; key: string | undefined; status: number }[] = []
@@ -125,16 +134,21 @@ test("UI recovery reauthorizes the restored attempt and purges it on real denial
     expect((await observedApplication(fixture)).domain).toEqual(committed.domain)
     expect((await observedApplication(fixture)).decision.receipts).toEqual(committed.decision.receipts)
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await fixture.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(fixture, driver, failure) }
   driver.report()
 }, 60000)
 
 test("UI recovery retains an ambiguous authoritative receipt outcome across repeated reloads without another apply", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => {
+    try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await fixture.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await prepareApply(page, fixture, "One effect before ambiguous receipt")
     const attempts: { body: string | null; key: string | undefined; status: number; result: unknown }[] = []
@@ -174,16 +188,21 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
     expect(attempts[2]).toEqual(attempts[1])
     expect(await observedApplication(fixture)).toEqual(committed)
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await fixture.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(fixture, driver, failure) }
   driver.report()
 }, 60000)
 
 test("UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload", async () => {
   expectSpawn(import.meta.path)
   const fixture = await createRecoveryFixture()
-  const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => { await fixture.close(); throw error })
+  const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => {
+    try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Recovery browser setup failed") }
+    throw error
+  })
+  let failure: unknown
   try {
-    const page = await driver.browser.newPage(), errors: string[] = []
+    const page = await (await fixture.newContext(driver.browser)).newPage(), errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     const panel = await openWorkbench(page, fixture)
     const attempts: { body: string | null; key: string | undefined; status: number; result: unknown }[] = []
@@ -212,7 +231,7 @@ test("UI recovery distinguishes a lost first save without draftRef and never gue
     // matching. It is not a retry and must remain a separate real saved draft.
     const headers = new Headers(fixture.request().headers)
     headers.set("idempotency-key", randomUUID())
-    const second = await fetch(`${fixture.origin}/sucafina/dashboard?sf=dashboard-hot-topic-draft`, { method: "POST", headers, body: attempts[0]!.body })
+    const second = await fixture.fetch(`${fixture.origin}/sucafina/dashboard?sf=dashboard-hot-topic-draft`, { method: "POST", headers, body: attempts[0]!.body })
     expect(second.status).toBe(200)
     expect(object(object(await second.json()).value).draftRef).not.toBe(first.value[0]!.draftRef)
     page.once("dialog", (dialog) => void dialog.accept())
@@ -233,6 +252,14 @@ test("UI recovery distinguishes a lost first save without draftRef and never gue
     expect(available.status === "ok" && available.value.filter((draft) => draft.draftRef === first.value[0]!.draftRef)).toHaveLength(1)
     expect(await fixture.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
     expect(errors).toEqual([])
-  } finally { try { await driver.close() } finally { await fixture.close() } }
+  } catch (error) { failure = error; throw error }
+  finally { await closeRecovery(fixture, driver, failure) }
   driver.report()
 }, 60000)
+
+async function closeRecovery(fixture: Awaited<ReturnType<typeof createRecoveryFixture>>, driver: Awaited<ReturnType<typeof launchBrowserDriver>>, primary: unknown) {
+  const results = await Promise.allSettled([fixture.close()])
+  results.push(...await Promise.allSettled([driver.close()]))
+  const failures = results.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
+  if (failures.length) throw new AggregateError([...(primary === undefined ? [] : [primary]), ...failures], "Recovery browser cleanup failed")
+}

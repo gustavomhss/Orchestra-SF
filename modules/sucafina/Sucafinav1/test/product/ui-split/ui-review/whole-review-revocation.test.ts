@@ -7,7 +7,8 @@ import { loadOptions, openReview } from "./browser-steps.ts"
 export function registerPoolTests(test: typeof import("bun:test").test) {
   test("WholeReview UI removes preserved material when the real history route revokes access", async () => {
     const fixture = await createMeetingFixture()
-    const browser = await launchWp01Browser().catch(async (error) => { await fixture.close(); throw error })
+    const browser = await launchWp01Browser().catch(async (error) => { try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Review setup and cleanup failed") } throw error })
+    let failure: unknown
     try {
       const context = await fixture.newContext(browser)
       const page = await context.newPage()
@@ -39,10 +40,14 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await oldPanel!.textContent()).not.toContain("Preserved Operations")
       expect(await page.locator("[data-dashboard-history-view]").count()).toBe(0)
       expect(await page.locator("body").textContent()).not.toContain(fixture.original.id)
-    } finally {
-      const results = await Promise.allSettled([closeWp01Browser(browser), fixture.close()])
+    } catch (error) { failure = error; console.error("G04 review component failed", error); throw error }
+    finally {
+      // The component owns its proxy and contexts. Close it before releasing the
+      // shared browser lease; two concurrent context.close calls are not cleanup.
+      const results = await Promise.allSettled([fixture.close()])
+      results.push(...await Promise.allSettled([closeWp01Browser(browser)]))
       const errors = results.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
-      if (errors.length) throw new AggregateError(errors, "WholeReview revocation cleanup failed")
+      if (errors.length) throw new AggregateError([...(failure ? [failure] : []), ...errors], "WholeReview revocation cleanup failed")
     }
   }, 60_000)
 }

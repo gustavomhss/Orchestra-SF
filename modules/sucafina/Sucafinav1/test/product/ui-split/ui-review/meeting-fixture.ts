@@ -43,7 +43,10 @@ export async function createMeetingFixture() {
       receipts: Object.values(state.transactions).filter((entry) => entry.namespace === "reviews").length,
     }))
     return { ...fixture, cookie, post, historyUrl, changeBudget, stored, original: original.value }
-  } catch (error) { await fixture.close(); throw error }
+  } catch (error) {
+    try { await fixture.close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Meeting component setup failed") }
+    throw error
+  }
 }
 
 export function meetingTotal(review: PreservedReview) {

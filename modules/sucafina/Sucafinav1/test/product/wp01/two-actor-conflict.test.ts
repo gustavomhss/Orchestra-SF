@@ -3,6 +3,7 @@ import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { object } from "../../../runtime/contract.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { createMicrosoftComponentFixture } from "./microsoft-component-fixture.ts"
+import { other } from "../../microsoft-login/oidc-fixture.ts"
 
 // Registered once by browser-selection.test.ts; importing this source registers no tests.
 export function registerPoolTests(test: typeof import("bun:test").test) {
@@ -43,7 +44,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       })
       const firstContext = await host.newContext(browser)
       contexts.push(firstContext)
-      const secondContext = await host.newContext(browser, host.otherPrincipalRef)
+      const secondContext = await host.newContext(browser, other)
       contexts.push(secondContext)
       const firstPage = await firstContext.newPage()
       const secondPage = await secondContext.newPage()
