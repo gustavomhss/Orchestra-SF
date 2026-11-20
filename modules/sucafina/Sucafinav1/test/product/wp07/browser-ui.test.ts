@@ -239,9 +239,21 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     const errors: string[] = []
     page.on("pageerror", (error) => { errors.push(error.message) })
     const code = await timed("operator-enrollment", () => identity.enroll())
-    const enrollment = await timed("operator-enrollment-http", () => context.request.get(`${origin}/sucafina/auth/local?code=${code}`, { maxRedirects: 0, timeout: 5000 }))
+    const enrollmentUrl = `${origin}/sucafina/auth/local?code=${code}`
+    // Chromium owns the real Set-Cookie exchange. The product redirects to the
+    // native root, which is intentionally absent from this isolated component host.
+    const [enrollment] = await timed("operator-enrollment-http", () => Promise.all([
+      page.waitForResponse((response) => response.url() === enrollmentUrl),
+      page.goto(enrollmentUrl, { waitUntil: "domcontentloaded", timeout: 5000 }).catch((error: unknown) => {
+        if (!(error instanceof Error) || !error.message.includes("net::ERR_HTTP_RESPONSE_CODE_FAILURE")) throw error
+        return null
+      }),
+    ]))
     expect(enrollment.status()).toBe(303)
     expect(enrollment.headers().location).toBe("/")
+    const redirected = enrollment.request().redirectedTo()
+    expect(redirected?.url()).toBe(`${origin}/`)
+    expect((await redirected?.response())?.status()).toBe(404)
     await timed("authenticated-navigation", () => page.goto(`${origin}/sucafina/dashboard`, { waitUntil: "domcontentloaded", timeout: 5000 }))
     const view = page.getByRole("region", { name: "Prepare review", exact: true })
     await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
