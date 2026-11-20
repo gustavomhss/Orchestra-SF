@@ -12,7 +12,9 @@ A base foi verificada no GitHub: as frentes recentes de integração apontam par
 
 O estudo teve três frentes de leitura: runtime/configuração; identidade Microsoft/autoridade do produto; interface/persistência/Dock. A consolidação examinou também CI, integridade de sessões e consumidores que executam sem a tela aberta. Foram enumeradas árvores completas de nomes de arquivos nos principais pacotes e lidos os produtores e consumidores centrais. **Não houve busca textual integral em todos os blobs do monorepo, execução de aplicação, validação no tenant, nem prova de ausência de resíduos.** A busca de código do GitHub cobre a branch default e não serve para certificar o pin estudado.
 
-**Rechecagem de integração:** durante a revisão, `sf-join-four` avançou para `a5b15b51b78469a054ba97b0e87fd1e36e31f73a` (merge #399). O compare completo do pin até esse head contém dois commits e altera apenas `private-admission.check.ts` e o helper E2E `operations-support/installation.ts`: inicialização do host real e observações do scanner. Os patches foram lidos; não alteram os produtores centrais de profile/identidade aqui estudados. Os ajustes de fixture devem ser preservados na execução. A branch documental continua baseada no pin declarado; isso não congela nem aprova a branch de integração.
+**Primeira rechecagem de integração:** a observação de `a5b15b51b78469a054ba97b0e87fd1e36e31f73a` (merge #399) continha dois commits e somente os ajustes de inicialização do host/scanner em `private-admission.check.ts` e `operations-support/installation.ts`. Essa é uma observação histórica, não a descrição do head posterior.
+
+**Rechecagem da cold review:** foi observado `sf-join-four@392cecab68288d4b669828adc5d1aaa738693d80`. O compare completo desde o pin contém **13 commits e 17 arquivos**; desde `a5b15b51…`, são 11 commits e 15 arquivos. O delta inclui identidade de acesso da UI por geração, observações canônicas de Atlas, escopo completo de respostas Planner, provas BI por chamada e o contexto de aprovação de guards no CI. Os patches e os contratos relevantes foram confrontados com o plano; os detalhes e blobs estão no inventário. A implementação precisa preservar essas garantias, descritas em §§5.2, 6 e 9.3. O código da branch documental continua no pin original: atualizar evidência não faz rebase de produto, congela a integração ou certifica esses commits.
 
 O arquivo [teams-profile-inventory.json](./teams-profile-inventory.json) é o inventário inicial rastreável: distingue evidência lida, destino proposto, testes existentes e verificações ainda obrigatórias. Sua existência não significa cobertura integral ou aprovação da mudança.
 
@@ -93,10 +95,10 @@ Não reutilizar `SessionScope` como esse conceito: ele já representa limites de
 
 Fluxo proposto:
 
-1. Autenticar pelo mecanismo Microsoft existente e verificar tenant de recurso/principal.
+1. Autenticar pelo mecanismo Microsoft existente e verificar tenant de recurso/principal. Resolver separadamente a admissão administrativa da instalação descrita em §4.3; ela não exige um Team selecionável nem concede acesso aos dados de equipes.
 2. Obter equipes elegíveis através da capacidade Graph de leitura, com resultado completo e verificável.
 3. Cruzar as equipes com os profiles habilitados/política da instalação.
-4. Restaurar a última seleção apenas se ela continuar autorizada; se houver exatamente uma opção elegível, selecioná-la; com múltiplas e sem seleção válida, pedir escolha explícita; sem opção, mostrar ausência de acesso.
+4. Para jornadas que exigem equipe, restaurar a última seleção apenas se ela continuar autorizada; se houver exatamente uma opção elegível, selecioná-la; com múltiplas e sem seleção válida, pedir escolha explícita. Sem opção, mostrar **nenhum profile de equipe elegível**, impedindo essas jornadas; conservar somente o destino administrativo de §4.3 quando sua autoridade independente tiver sido validada. Zero equipes não equivale a falha de autenticação nem retira uma autoridade administrativa válida.
 5. Resolver configuração e direitos atuais no servidor. A UI recebe uma projeção mínima do contexto e seus destinos admitidos.
 6. Vincular sessão, cache, eventos, drafts, integrações e execução à identidade/revisão corretas.
 7. Revalidar nos pontos de leitura protegida, escrita, admissão, retomada e efeitos; nenhum handle enviado pelo cliente é suficiente por si.
@@ -159,6 +161,16 @@ A implementação atual clona grants ao montar a autoridade. Atualização persi
 
 Administração suprema, admin de superfície, proprietário de equipe e operador local são funções distintas. Não promover owner de Teams ou “líder” de organograma a admin do Orchestra. A tela de administração local atual não serve como substituta dessa prova.
 
+### 4.3 Entrada administrativa sem profile de equipe
+
+A administração da instalação precisa funcionar na primeira entrada, com zero profiles habilitados, com o último profile desabilitado/removido e quando o administrador não participa dos Teams de negócio. O fluxo padrão é uma entrada **nativa** de configuração/recuperação, admitida no backend pelo grupo corporativo de administração suprema configurado pelo dono, independentemente do picker e da enumeração de Teams. Não recriar o console legado. WP1 define o contrato/rota dessa entrada; WP2 apresenta o destino apenas ao principal admitido.
+
+Essa entrada exige sessão Microsoft válida, tenant de recurso correto e verificação atual do grupo administrativo. Falha nessa verificação nega a função; indisponibilidade da capacidade de listar Teams não vira autorização nem precisa bloquear uma função administrativa cuja própria prova de grupo tenha sido obtida. Operador local, Basic do host, admin de superfície e owner de Team não substituem esse grupo. Acesso administrativo não permite ler conteúdo privado, selecionar um Team ou executar uma operação de negócio sem as respectivas autorizações.
+
+Habilitar o primeiro profile é uma configuração explícita e auditada da instalação, referenciando um Team Microsoft verificado. Não criar equipe fictícia, atribuir automaticamente o primeiro Team, escrever em Microsoft ou reseedar roleMaps existentes, inclusive `[]`. O bootstrap atual já distingue configuração inicial de roles e admissão de cada request; essa propriedade precisa sobreviver. [S38][S49]
+
+WP0 deve também identificar as classes de atores atuais — inclusive convidados — autorizadas por grupo/papel/grant/recurso que fiquem sem Team elegível. Para jornadas que passam a exigir Team, registrar vínculo elegível comprovado ou decisão explícita sobre a transição de acesso antes do corte; uma exclusão acidental não conta como migração concluída. Um grant existente não transforma grupo de segurança em Team nem cria um profile pessoal de fallback. O usuário comum permanece no estado sem profile; a via administrativa continua restrita. A45 cobre essa distinção.
+
 ## 5. Interface, estado e mudança de equipe
 
 ### 5.1 Superfícies que mudam juntas
@@ -198,6 +210,8 @@ A troca voluntária de equipe respeita o guard de draft e afeta a seleção da j
 
 Preservar registros duráveis necessários à reconciliação de operações submetidas, acessíveis somente sob autoridade atual; não reenviar nem apagar efeito incerto como draft. Duas janelas podem operar em equipes distintas; RPC e resolver usam a janela/principal autenticados, não um activeProfileID global. Uma troca voluntária local não muda a equipe das outras janelas.
 
+Preservar também a correção observada em `392cecab…`: `SfContextHandle.ready()` conserva o mesmo wrapper congelado dentro da geração admitida e a identidade original do transport; reload/fence/logout/revogação/unmount substituem ou retiram esse acesso. Uma operação que captura esse objeto antes de `await` precisa recusar resultado de geração antiga. Reconstruir um wrapper a cada leitura ou reaproveitá-lo entre gerações quebra a guarda. Incluir `owner-ready.test.ts` na seleção efetiva de regressão; o teste usa dependências injetadas e não é prova de tenant LIVE. [S50][S51]
+
 ### 5.3 Dock e credenciais
 
 Classificar se cada binding Dock é alcançável no pacote SF Linux atual; testar a implementação que efetivamente é entregue. O código Electron auditado não justifica executar lanes macOS/Windows nem provar algo apenas numa plataforma que não será lançada.
@@ -233,6 +247,10 @@ Credenciais MCP continuam pertencendo ao titular e à conexão autorizada. Publi
 O scope da sessão é propriedade durável do agregado, não da janela. Parent/child, fork, move, import e eventos que ligam sessões validam ownership e autorização nas duas pontas. Children herdam o scope autorizado da parent e grants no máximo iguais aos permitidos para delegação. Move altera placement físico, sem transferir Team/titularidade. Transferência entre scopes, se futuramente suportada, exige operação separada e explicitamente autorizada; não ocorre por create/replay ou mapping heurístico. Referências históricas e a associação migrada são validadas antes da projeção, sem alterar os eventos originais.
 
 Schedules retomam a Location gravada; capability owner compara sessão/projeto/diretório, mas esse ponto não representa membership Teams atual. RAG atualmente adota aliases pelo path. Inbox declara dono de instalação e Board filtra repo_project_id. Reuniões e address book têm semântica pessoal própria. Esses casos demonstram por que uma substituição global de project por team produziria perda de isolamento ou transferência indevida. [S19][S20][S21][S22]
+
+Na reconciliação do delta `392cecab…`, preservar ainda três propriedades: renovação de observação Atlas reabre a autoridade original sem ressuscitar o array consumido; resposta Planner mantém o conjunto completo de campos/fonte e seu fence; prova BI é privada da chamada consumida e revalida contexto/fonte antes de retornar. Trocar o contexto de profile não autoriza clonar ou transportar essas provas entre chamadas, principais ou equipes. Seus testes novos/alterados estão no inventário e integram a qualificação de A15/A35/A37. [S54][S55][S56]
+
+WP0 deve concretizar o destino das famílias de evidência durável que contêm `projectId` e digests, incluindo `BusinessEvidenceRef`, documentos, confirmações e artefatos BI. Preservar identificador técnico histórico e validá-lo por associação admitida é uma opção do §3.3. Reescrever a referência e recalcular o hash não prova a origem; tampouco se mantém uma comparação repo→profile como autoridade ativa. Distinguir histórico verificável, projeção atual reautorizada e handles transitórios que precisam expirar/reemitir; esta é uma obrigação de implementação já derivada de preservar proveniência. [S57][S58]
 
 ## 7. Migração de persistência e corte
 
@@ -274,7 +292,13 @@ O plano de recuperação precisa funcionar com autorização atual. Restaurar ba
 
 Antes do corte, é possível abandonar a migração e manter a versão anterior sem liberar a nova funcionalidade. Depois do corte, só restaurar para uma versão comprovadamente compatível com o novo esquema/autoridade; se isso não existir, suspender operações afetadas e reparar adiante. Não prometer rollback genérico por `git revert`.
 
-Falha entre backfill, journal e ativação; execução duplicada; concorrência de escrita; restart; mudança de membership durante migração; dado corrupto; e reabertura de sessão antiga são testes obrigatórios.
+Recuperação após o corte também precisa preservar a **fronteira dos efeitos já produzidos**. Um snapshot com autorização atual não contém necessariamente os recibos gerados depois dele. Cada store deve declarar quais dados podem retornar ao checkpoint e quais registros precisam ser preservados ou reconciliados com o estado posterior: admissões e recibos de efeito, slots consumidos, chaves de deduplicação, cancelamentos/tombstones, revisões relevantes, números emitidos e seus contadores. Não reduzir marcadores monotônicos nem recolocar um job cancelado em execução.
+
+O restore existente já conserva delivery/claims/schedules/inbox/job state atuais, une identificadores emitidos e mantém contadores pelo máximo; a recuperação SQLite é inspecionada em área descartável e não substitui diretamente o banco vivo/auth. WP4 preserva esses adapters e estende a classificação aos stores novos, sem aplicar um merge genérico a estados de ciclo de vida ou cruzar donos. [S45][S46]
+
+O caso obrigatório é **checkpoint → corte → efeito confirmado → restore do checkpoint com a mesma autoridade válida → restart/retry**. Se recibos e eventos posteriores desaparecerem, um ID determinístico não evita readmissão: scheduler e SessionInput dependem desses registros. Preservar ou reconciliar a prova antes de retomar; quando o estado posterior ou o resultado externo for desconhecido, suspender os consumidores capazes de produzir efeitos até reconciliação. Ausência de recibo após restore não prova ausência do efeito. Não inventar recibo nem prometer execução única sem prova. A46 e os testes existentes de operações/backup cobrem a obrigação. [S19][S47][S48]
+
+Falha entre backfill, journal e ativação; execução duplicada; concorrência de escrita; restart; mudança de membership durante migração; dado corrupto; reabertura de sessão antiga; e recuperação de checkpoint anterior a efeitos pós-corte são testes obrigatórios.
 
 ## 8. Execução em seis pacotes, com contratos e propriedade de arquivos
 
@@ -283,10 +307,10 @@ São pacotes propostos, não sessões já iniciadas. Cada pacote terá branch pr
 | Pacote | Dono técnico e arquivos principais | Entrega | Dependência e saída |
 |---|---|---|---|
 | WP0 — inventário fechado | Integrador: manifesto, grafo de imports/callers, plano de testes, ledger de campos/stores | Inventário integral por símbolo/alcançabilidade, entrypoint e builder/parser de URL no SHA de execução; cada ocorrência com dono, destino e teste; baseline observado | Primeiro. Nenhuma contagem de scan ou CI inventada. |
-| WP1 — contrato e autoridade Teams | Schema/contexto, cliente Entra/leitor Graph, local-identity, policy, product-authority, discovery/host | TeamProfileRef e revisão efetiva; leitor real; admissão corporativa em transportes do host; seleção/autoridade server-side; admin corporativo; contrato público e URLs versionados | Após WP0. Positivos e negativos de tenant/membership/grants; clients regenerados. |
+| WP1 — contrato e autoridade Teams | Schema/contexto, cliente Entra/leitor Graph, local-identity, policy, product-authority, discovery/host | TeamProfileRef e revisão efetiva; leitor real; admissão corporativa em transportes do host; seleção/autoridade server-side; entrada nativa de administração/recuperação sem Team, pelo grupo corporativo; contrato público e URLs versionados | Após WP0. Positivos e negativos de tenant/membership/grants; clients regenerados. |
 | WP2 — shell e estado pessoal | app-shell: layout/sidebar/titlebar/home/new-session/tabs/persist/sdk/queries/events/contexto SF | Toda navegação e restauração usam contexto Teams; mesmas guardas em todos breakpoints; sem pasta/Git no fluxo | Após contrato WP1. UI/cache/races/drafts/duas janelas qualificados. |
 | WP3 — runtime e consumidores | Core/server e bindings: config/session/MCP/Arsenal/ToolSafety/Relay/Lean/schedules; adapters RAG/Atlas/Inbox alcançáveis | Ownership durável; admissão antes de SessionLocation/LocationServiceMap; serviços isolados por autoridade; consumidores livres de autoridade por repo; contexto técnico separado | Após WP1. Pode correr em paralelo com WP2 com ownership de arquivos explícito. |
-| WP4 — dados e integrações privadas | Migrador e suas novas migrations; persistência browser/Dock; vínculos de credenciais | Dry-run, backfill, integridade, interrupção/replay; partições pessoais; corte/recuperação | Planejar após WP0; implementar contra contratos WP1–3. Não duplicar edição dos stores de WP2/3. |
+| WP4 — dados e integrações privadas | Migrador e suas novas migrations; persistência browser/Dock; vínculos de credenciais | Dry-run, backfill, integridade, interrupção/replay; partições pessoais; corte/recuperação sem regredir recibos, slots, cancelamentos e números emitidos | Planejar após WP0; implementar contra contratos WP1–3. Não duplicar edição dos stores de WP2/3. |
 | WP5 — qualificação e retirada | Integrador e revisão independente: cobertura, bundle SF, guias, inventário final | Substituição equivalente de testes legados, execução Linux, revisão de resíduos e prova das jornadas; limpeza final | Somente depois dos gates dos pacotes e migração qualificada. Um candidato final com SHA/tree exatos. |
 
 Regras de integração:
@@ -329,7 +353,7 @@ Os testes atuais de Microsoft web mínimo são intencionais. A nova capacidade G
 | Automação/memória | Relay hook/recovery/startup, schedules e claims, Inbox scope, RAG aliases e Atlas ownership, Lean/proveniência. |
 | App unit/browser | layout/tabs/persist/titlebar/apps-panel-controller; contexto nativo e owner mount; duas janelas e stale requests. |
 | E2E | Bootstrap sem repositório, Team switch, mobile/teclado, Dock↔Chat quando entregue e operações/decisões/reports nativos. |
-| Migração | Dry-run, conflitos, dados vazios/corruptos, integridade, crash/replay, concorrência e recuperação com revogação. |
+| Migração | Dry-run, conflitos, dados vazios/corruptos, integridade, crash/replay, concorrência e recuperação com revogação ou com efeitos posteriores ao checkpoint; preservar as provas de não repetição. |
 | Pacote final | Imports/build e bundle entregue sem caminhos ativos de repo-profile; inicialização limpa sem .git/config de projeto. |
 
 O inventário JSON lista caminhos existentes de teste como ponto de partida. A lista precisa ser resolvida contra o SHA de execução; não é um comando pronto que foi rodado.
@@ -352,6 +376,10 @@ O workflow de recorte no pin exige branches `ci-run-linux-*`; rejeita outros sis
 
 O exemplo demonstra formato, não atesta execução nem cobre a mudança inteira. [S24]
 
+O head observado `392cecab…` acrescenta um canal estrito para transportar aprovação real de `protected-paths` ao recorte Bun de `sucafina`. O JSON acima continua sendo somente um request. O snapshot precisa ter um parent e alterar exclusivamente `.ci-run.json` em um único commit, com blob dos bytes originais; seu parent precisa ser o head exato de um PR único, aberto, não draft, do mesmo repositório e com base `sf-join-four`. Código adicional no snapshot não recebe essa aprovação.
+
+O resolver consulta label/evento atual e ator humano atualmente elegível, independente do autor do PR salvo a exceção do dono pessoal do repositório, e relê autoridade/refs antes de concluir. Preservar qualquer restrição mais estreita do dono. Erro, ambiguidade ou mudança deixa approval vazio; não passar aprovação em env/request, fabricar label ou buscar atalho. Com contexto admitido, precisam passar tanto os guards contra `origin/dev` quanto contra o SHA real da base do PR. Testes ordinários podem executar sem essa aprovação; os que exigem `protected-paths` continuam sujeitos ao guard. A decisão de aprovação pertence ao responsável autorizado no PR concreto; esta documentação não fornece essa decisão nem dispara solicitação. Registrar o resolver, seu teste e o artefato de evidência real nos gates que se aplicarem. [S52][S53]
+
 Cadência proposta: gates direcionados por pacote; typecheck/build/geração em Actions; prova de migração; depois um `sf-ci` no candidato integrado final, junto dos gates adicionais exigidos. Se o candidato mudar, as evidências precisam ser vinculadas ao novo conteúdo e gates afetados reexecutados. Nunca usar um run de outro SHA como aprovação do diff final.
 
 Não abrir lanes Windows/macOS. A prova de runtime instalado deve usar o artefato e Linux x64 de destino. Login/membership/revogação reais no tenant são qualificação operacional separada dos testes determinísticos; fixtures não devem ser anunciadas como prova de Teams LIVE.
@@ -363,7 +391,7 @@ Todos os itens abaixo têm estado **PLANNED / NOT_RUN**.
 | ID | Cenário | Resultado obrigatório |
 |---|---|---|
 | A01 | Instalação limpa, sem Git ou repositório | Login → equipe autorizada → capítulos e novo trabalho funcionam. |
-| A02 | Nenhuma, uma e múltiplas equipes elegíveis | Estados distintos; seleção automática só da única opção validada; nenhuma escolha arbitrária. |
+| A02 | Nenhuma, uma e múltiplas equipes elegíveis | Estados distintos; seleção automática só da única opção validada; nenhuma escolha arbitrária; ausência de profile não confunde autenticação nem suprime a via administrativa admitida. |
 | A03 | Nome duplicado, rename e equipe recriada | IDs preservam identidade; novo Object ID não herda dados/grants antigos. |
 | A04 | Dois tenants/instalações com nomes iguais; convidado | Nenhuma colisão; usa tenant de recurso e principal correto. |
 | A05 | Browser inventa team/profile/role/context stamp | Backend recusa; picker não concede autoridade. |
@@ -406,6 +434,8 @@ Todos os itens abaixo têm estado **PLANNED / NOT_RUN**.
 | A42 | Basic/operador/cookie fora do mount/Session ID conhecido nos transportes | Não equivalem a principal Teams; todos entrypoints protegidos recusam sem contexto admitido, sem passthrough. |
 | A43 | URL builder/parser, back/forward e restauração de link antigo | Seletores completos/versionados, duplicatas e chaves desconhecidas tratados; nunca compõe tuple com outro profile. |
 | A44 | Operações Graph observadas | Consultas contratadas, inclusive POST de leitura, permitidas; nenhuma mutação de Microsoft por configurar profile. |
+| A45 | Admin sem Team; instalação sem profiles; último profile removido; usuário/convidado com grant e zero Teams | Admin corporativo atualmente verificado alcança somente configuração/recuperação; usuário comum não é promovido. Revogar grupo retira a via; roleMap vazio permanece vazio. Jornadas de equipe sem vínculo não são admitidas e a transição de atores existentes é classificada antes do corte. |
+| A46 | Checkpoint anterior a efeito pós-corte; restore com autoridade ainda válida; restart/retry | Recibos, slots consumidos, cancelamentos e números emitidos não retrocedem. Sem prova posterior, consumidores ficam suspensos para reconciliação; nenhum reenvio automático ou recibo inventado. |
 
 ## 11. Scanner de resíduos e prova de encerramento
 
@@ -451,6 +481,8 @@ Condições de encerramento:
 | Migração reaplica maps vazios/defaults | Preserve-empty, CAS e auditoria; teste de restart. |
 | Verde SF sem core/profile tests | Seleção adicional obrigatória e evidência no mesmo candidato. |
 | Branch muda enquanto estudo é aplicado | Reconciliar o pin e refazer mapeamento de deltas antes de executar. |
+| Admin não tem Team ou primeiro profile ainda não existe | Via nativa de administração com autoridade própria, independente do picker; A45. |
+| Restore apaga prova de efeito posterior ao checkpoint | Preservar/reconciliar registros monotônicos ou suspender consumidores; A46. |
 
 Ainda não comprovados nesta entrega: consentimento Graph real, autoridade administrativa suprema integrada, dados reais a migrar, todas as ocorrências textuais do monorepo, alcance completo de cada módulo no bundle final e resultados de execução. Esses itens têm destino no plano e gates; não são tratados como PASS.
 
@@ -475,9 +507,15 @@ Os três revisores releram as correções no commit `99499e3f7adbf48ede909c98378
 
 A revisão é do planejamento e de fontes direcionadas; não certifica migração, CI, execução instalada ou ausência global de resíduos.
 
+### 12.2 Cold review adversarial solicitada pelo dono
+
+Três revisores novos, sem herdar a conversa dos autores, examinaram a versão `4d984e0bd3a3bd5445fcd504b96be4f7888da5da` e confrontaram fontes nas frentes de identidade, persistência e UI/CI. O integrador verificou os achados e o delta. Foram aceitos **CR01/P1 — bloqueio de bootstrap/admin sem Team** e **CR02/P2 — contrato/teste de restore pós-corte sem fronteira explícita de recibos e marcadores monotônicos**. Nenhum P0 foi identificado na amostra; UI/rotas/CI não trouxe achado material adicional. Isso não certifica ausência de defeitos fora da amostra.
+
+As correções estão em §§3.2/4.3/A45 e §7.3/WP4/A46. A reconciliação do delta é uma atualização factual, não um finding adicional. O [relatório da cold review](./teams-profile-cold-review.md) registra contraexemplos, severidade, fontes, hipóteses rejeitadas e limites. **Estado desta revisão: correções incorporadas; rechecagem independente pendente.** Implementação, testes e tenant continuam NOT_STARTED/NOT_RUN.
+
 ## 13. Fontes de código e documentação
 
-Todos os links S usam o pin do estudo; os números de linha citados são desse pin. A documentação Microsoft foi consultada durante o estudo para validar as diferenças de identidade, memberships e Teams.
+Os links S usam o pin do estudo, exceto S50–S56, explicitamente vinculados ao head observado na cold review (`392cecab…`). Números de linha devem ser lidos no commit da respectiva fonte. A documentação Microsoft foi consultada durante o estudo para validar as diferenças de identidade, memberships e Teams.
 
 [S01]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/src/identity.ts
 [S02]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/sidebar.tsx
@@ -529,3 +567,18 @@ Todos os links S usam o pin do estudo; os números de linha citados são desse p
 [S42]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/protocol/src/api.ts
 [S43]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx
 [S44]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/renderer/index.tsx
+
+[S45]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/operations.ts
+[S46]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-recovery.ts
+[S47]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/input.ts
+[S48]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/test/operations-runtime.test.ts
+[S49]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts
+[S50]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx
+[S51]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts
+[S52]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/script/test-ci-guard-context.ts
+[S53]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/docs/guardrail/test-ci-context.md
+[S54]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
+[S55]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/product/planner/confirmation.ts
+[S56]: https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/apps/cli/src/sucafina-product/bi-call-scope.ts
+[S57]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+[S58]: https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/analytics/artifact-store.ts
