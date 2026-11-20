@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
-import type { Response as BrowserResponse } from "@playwright/test"
 import { createNativeBrowserAssets } from "../native-ui-browser/browser-assets.ts"
 import { createNativeBrowserHost } from "../native-ui-browser/host.ts"
 import { enrollNativeBrowser } from "../native-ui-browser/session.ts"
@@ -107,6 +106,60 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       await enrollNativeBrowser(context, origin, () => first.enroll())
       const tab = await context.newPage(), errors: string[] = []
       tab.on("pageerror", (error) => errors.push(error.message))
+      type CapturedResponse = { method: string; url: string; status: number; requestBody: unknown; body: unknown; error?: string }
+      const pending = new Set<{ matches: (response: CapturedResponse) => boolean; complete: (response: CapturedResponse) => void }>()
+      const captureResponse = (matches: (response: CapturedResponse) => boolean) => new Promise<CapturedResponse>((resolve, reject) => {
+        const waiter = { matches, complete: (response: CapturedResponse) => {
+          clearTimeout(timeout)
+          pending.delete(waiter)
+          if (response.error) reject(new Error(response.error))
+          else resolve(response)
+        } }
+        const timeout = setTimeout(() => {
+          pending.delete(waiter)
+          reject(new Error("Timed out after 5000 ms waiting for the real personal-view response"))
+        }, 5000)
+        pending.add(waiter)
+      })
+      await context.exposeBinding("__sfPersonalViewResponse", (source, response: CapturedResponse) => {
+        if (source.page !== tab) return
+        for (const waiter of [...pending]) if (waiter.matches(response)) waiter.complete(response)
+      })
+      await context.addInitScript(({ origin }) => {
+        const originalFetch = globalThis.fetch
+        const bridge = (globalThis as unknown as {
+          __sfPersonalViewResponse: (response: CapturedResponse) => Promise<void>
+        }).__sfPersonalViewResponse
+        globalThis.fetch = async function (this: unknown, ...args: Parameters<typeof fetch>) {
+          const [input, init] = args
+          const url = new URL(input instanceof Request ? input.url : String(input), location.href)
+          const method = (init?.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase()
+          const observed = url.origin === origin && (
+            method === "GET" && url.pathname === "/sucafina/api/ui/pages/CAP18" ||
+            method === "POST" && url.searchParams.get("sf") === "workbench-views")
+          if (!observed) return Reflect.apply(originalFetch, this, args)
+          // Clone a Request before fetch can consume its body. The installed client
+          // normally supplies its JSON string in init; neither original body is read.
+          const requestText = method === "POST"
+            ? typeof init?.body === "string" ? Promise.resolve(init.body)
+              : input instanceof Request && init?.body === undefined ? input.clone().text() : Promise.resolve("")
+            : Promise.resolve("")
+          const response = await Reflect.apply(originalFetch, this, args)
+          let requestBody: unknown
+          try {
+            const text = await requestText
+            requestBody = text ? JSON.parse(text) : undefined
+            const body: unknown = await response.clone().json()
+            // Deliver the copy before returning the original response: consumers
+            // may navigate immediately, invalidating CDP's response-body identifier.
+            await bridge({ method, url: response.url, status: response.status, requestBody, body })
+          } catch (error) {
+            await bridge({ method, url: response.url, status: response.status, requestBody, body: undefined,
+              error: error instanceof Error ? error.message : String(error) }).catch(() => {})
+          }
+          return response
+        }
+      }, { origin })
       await tab.goto(origin + "/orchestra/sf-work/views")
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       const openSavedPage = tab.getByRole("link", { name: "Open saved page", exact: true })
@@ -115,18 +168,12 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       expect(Object.fromEntries(candidate.searchParams)).toEqual({
         server: origin, project: binding.projectId, installation: installationId, view: filtered.view.id,
       })
-      const pageResponse = (response: BrowserResponse) =>
-        response.request().method() === "GET" && new URL(response.url()).pathname === "/sucafina/api/ui/pages/CAP18"
-      const openedView = (response: BrowserResponse) =>
-        response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-views" &&
-        object(response.request().postDataJSON()).action === "open" &&
-        object(object(response.request().postDataJSON()).input).id === filtered.view.id
-      // Read each real response body when it arrives. Navigation/reload can
-      // invalidate Chromium's response-body identifier before the later DOM checks.
-      const captureResponse = async (matches: (response: BrowserResponse) => boolean) => {
-        const response = await tab.waitForResponse(matches)
-        return { status: response.status(), url: response.url(), body: await response.json() }
-      }
+      const pageResponse = (response: CapturedResponse) =>
+        response.method === "GET" && new URL(response.url).pathname === "/sucafina/api/ui/pages/CAP18"
+      const openedView = (response: CapturedResponse) =>
+        response.method === "POST" && new URL(response.url).searchParams.get("sf") === "workbench-views" &&
+        object(response.requestBody).action === "open" &&
+        object(object(response.requestBody).input).id === filtered.view.id
       const assertRestored = async (response: Awaited<ReturnType<typeof captureResponse>>, opened: Awaited<ReturnType<typeof captureResponse>>) => {
         expect(opened.status).toBe(200)
         expect(opened.body).toMatchObject({ status: "ok", value: { view: filtered.view } })
