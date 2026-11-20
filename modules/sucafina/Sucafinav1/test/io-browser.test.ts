@@ -58,8 +58,10 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     const [saved] = await Promise.all([
       page.waitForResponse((response) => {
         const url = new URL(response.url())
-        return response.request().method() === "POST" && url.origin === origin &&
-          url.pathname === "/sucafina/planner" && !url.search
+        if (response.request().method() !== "POST" || url.origin !== origin ||
+          url.pathname !== "/sucafina/planner" || url.search !== "?page=Versions") return false
+        const command = response.request().postDataJSON()
+        return command?.page === "Versions" && command?.action === "save"
       }, { timeout: 10000 }),
       confirm.click(),
     ])
