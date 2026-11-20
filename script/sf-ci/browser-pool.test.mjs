@@ -16,6 +16,7 @@ const entryArg = "./" + POOL_ENTRY.slice(POOL_DIRECTORY.length + 1)
 const command = ["bun", "test", entryArg]
 const env = {
   SF_CHECKOUT_SHA: "a".repeat(40), SF_CHECKOUT_TREE_SHA: "b".repeat(40), GITHUB_SHA: "a".repeat(40),
+  SF_PRODUCT_SOURCE_SHA: "a".repeat(40), GITHUB_EVENT_NAME: "push",
   GITHUB_RUN_ID: "123", GITHUB_RUN_ATTEMPT: "1", RUNNER_OS: "Linux", RUNNER_ARCH: "X64",
   ORCHESTRA_OMNI_CONTROL: "declared", ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "strict",
   ORCHESTRA_OMNI_CONTROL_NONCE: "c".repeat(32),

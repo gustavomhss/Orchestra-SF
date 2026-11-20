@@ -80,7 +80,9 @@ for (const filename of [".env", ".env.local", ".env.production", ".env.productio
 const sourceChecks = [
   ["apps/cli/src/commands/handlers/serve.ts", /sucafinaInstallations:\s*installation\?\.discovery/],
   ["apps/cli/src/sucafina-product/installation.ts", /discovery\?:\s*SfTrustedInstallationSource/],
-  ["packages/app-shell/src/orchestra/sidebar.tsx", /sfNativeChapterEntry/],
+  ["apps/web/src/entry.tsx", /if \(isSucafinaBrand\(\)\)[\s\S]*?<SfTeamWebApp origin=\{location\.origin\}/],
+  ["packages/app-shell/src/web.ts", /export \{ SfTeamWebApp \} from "\.\/pages\/team-profile"/],
+  ["packages/app-shell/src/context/team-profile-web.ts", /export async function readCurrentTeamInstallation/],
 ]
 for (const [relative, required] of sourceChecks) {
   if (!required.test(await readFile(path.join(root, relative), "utf8")))

@@ -10,7 +10,7 @@ import { SHARDED, validateManifest } from "./gate.mjs"
 //     mapfile -t files < "$evidence/selection.txt"
 //     test "${#files[@]}" -gt 0 || exit 2         # Bun (UI: -eq 1)
 //   select uses SF_SUITE_ID=${{ matrix.id }}, RUNNER_OS=Linux, RUNNER_ARCH=X64
-//   and the real GITHUB_SHA/RUN_ID/RUN_ATTEMPT. stdout is newline-delimited,
+//   and the exact product SHA plus actual GITHUB_RUN_ID/GITHUB_RUN_ATTEMPT. stdout is newline-delimited,
 //   sorted, checkout-validated paths relative to each suite.directory;
 //   releaseOnlyFiles are excluded by the selector (not by YAML).
 // * Every Bun case must execute bun test ... "${files[@]}" without file globs,
@@ -193,4 +193,19 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     "ui: Playwright must consume the single manifest-selected spec")
   assertNoHardcodes(selectedUi.source, "ui")
   return { bun: unitSuites.map((suite) => suite.id), playwright: uiSuites.map((suite) => suite.id) }
+}
+
+/** Every product job checks out the immutable PR head; GITHUB_SHA remains workflow provenance. */
+export function assertWorkflowSourceSelection(workflow) {
+  const expression = "$" + "{{ github.event.pull_request.head.sha || github.sha }}"
+  requireContract(workflow.includes("  SF_PRODUCT_SOURCE_SHA: " + expression), "missing exact product source declaration")
+  const steps = workflow.split(/(?=^      - )/m)
+  const checkouts = steps.filter((step) => step.includes("uses: actions/checkout@"))
+  requireContract(checkouts.length > 0, "missing product checkouts")
+  for (const step of checkouts)
+    requireContract(step.includes("          ref: " + expression), "checkout is not pinned to the actual PR head")
+  requireContract(!workflow.includes('test "$GITHUB_SHA"'), "workflow identity used as product checkout identity")
+  requireContract(!workflow.includes("if (sha !== process.env.GITHUB_SHA)"), "guard receipt uses the synthetic merge SHA")
+  requireContract(workflow.includes("workflowSHA: process.env.GITHUB_SHA"), "raw workflow provenance was erased")
+  return checkouts.length
 }
