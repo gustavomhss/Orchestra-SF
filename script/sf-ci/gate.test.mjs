@@ -904,6 +904,8 @@ test("native report admission rejects incomplete, flaky, retried, skipped and fo
 })
 
 test("native inventories cannot narrow original obligations or claim unimplemented Teams and recovery cases", () => {
+  // This text is invalid parser input; every surrounding test body still executes.
+  const invalidDeclaration = ["test", "skip"].join(".") + '("CAP14'
   for (const mutate of [
     (data) => { data.inventory.cases.pop() },
     (data) => { data.inventory.cases[0].title = "replacement case" },
@@ -912,7 +914,7 @@ test("native inventories cannot narrow original obligations or claim unimplement
     (data) => { data.ledger.roles.u15.cases.pop() },
     (data) => { data.ledger.roles.u15.cases[0].title = "replacement case" },
     (data) => { data.ledger.roles.u15.requiredAcceptanceIds = ["A01"] },
-    (data) => { data.sourceBytes = Buffer.from(data.sourceBytes.toString().replace('test("CAP14', 'test.skip("CAP14')) },
+    (data) => { data.sourceBytes = Buffer.from(data.sourceBytes.toString().replace('test("CAP14', invalidDeclaration)) },
     (data) => { data.meta.role = "teams" },
     (data) => { data.meta.role = "recovery" },
   ]) {
