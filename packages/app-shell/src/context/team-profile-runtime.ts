@@ -183,7 +183,9 @@ export function createTeamWebRuntime(input: Readonly<{
       if (intent.kind === "context" || intent.kind === "administration") {
         if (!await landing(intent.kind, abort.signal, generation)) {
           if (!abort.signal.aborted) input.notice(owner.handle.hasDirtyDrafts() ? "sf.teams.pending" : "sf.teams.actionFailed")
-          return abort.signal.aborted ? "aborted" : "denied"
+          // A revocation deliberately cancels I/O; report its observed denial,
+          // while a superseded navigation or logout remains an aborted action.
+          return view.kind === "denied" ? "denied" : abort.signal.aborted ? "aborted" : "denied"
         }
         if (epoch !== attempt || abort.signal.aborted) return "aborted"
         setView({ kind: intent.kind, route: undefined })
