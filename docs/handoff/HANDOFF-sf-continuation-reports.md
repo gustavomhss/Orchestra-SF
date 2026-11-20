@@ -17,7 +17,7 @@ Owner: Reports continuation only. Integration and every Actions dispatch belong 
 - After redeeming the original single-use enrollment, signIn calls the already-existing connectInstalledShell(page, installation). That helper reads this isolated Daemon's owner-only issued credential, calls authenticated location discovery, decodes the original installation/context schemas, compares the real actor stamp, and uses the actual shell server/project controls.
 - No identity, grant, descriptor, cookie, localStorage record, response or baseline was manufactured. Project selection is made through the product UI. The helper is reused unchanged.
 - The alternative of appending an explicit owner triplet to the Budget URL was rejected: owner-runtime231.tsx:433-436 deliberately refuses losing an explicit owner through the exact triplet-less Reports href required by the UI task. Real shell project selection preserves that navigation contract without changing the guard.
-- Commit 537b8defbe86606ce3ddb1e9d65e282a6526c9ea adds fail-closed capture checks in reports-support/fixture.ts before withReportsInstallation can prepare enrollment or read the issued credential. The fixture receives Playwright's resolved trace, video and screenshot options and requires all three to be off. reports.spec.ts:21 already selects off for all three. test-ci.yml appends --trace retain-on-failure; if that overrides the spec's effective value, the new assertion stops before credential entry. No assumption about CLI precedence or unproven tracing.stop lifecycle is required. The real gate still must validate the installed Playwright fixture types and resolved option values.
+- Commit 537b8defbe86606ce3ddb1e9d65e282a6526c9ea adds fail-closed capture checks in reports-support/fixture.ts before withReportsInstallation can prepare enrollment or read the issued credential. The fixture receives Playwright's resolved trace, video and screenshot options and requires all three to be off. reports.spec.ts:21 already selects off for all three. test-ci.yml appends --trace retain-on-failure; if that overrides the spec's effective value, the new assertion stops before credential entry. Static verification against the repository's exact Playwright 1.59.1 source confirms these are option fixtures (packages/playwright/src/index.ts:83-85); project/CLI options build the initial pool and file test.use is applied afterward (common/config.ts:200; common/poolBuilder.ts:55-64,77-81). worker/workerMain.ts:369-374 starts tracing from the same resolved trace registration. No tracing.stop lifecycle assumption is needed. The real gate still must confirm the installed candidate end to end.
 - Only two code files changed: packages/app-shell/e2e/sucafina/reports-support/production-installation.ts and fixture.ts. The fixture's worker diagnostic now describes the owned listener; the one-worker assertion is unchanged.
 - GitHub readback matched all intended code files exactly after both code commits.
 
@@ -39,6 +39,13 @@ Owner: Reports continuation only. Integration and every Actions dispatch belong 
 - No GO, deployment or SF_ORCHESTRA_WEB_PACKAGE_VERIFIED claim.
 - All changes used GitHub APIs. No shell, local test, local typecheck or local build.
 
+## Capture contract sources
+
+- https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright/src/index.ts
+- https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright/src/common/config.ts
+- https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright/src/common/poolBuilder.ts
+- https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright/src/worker/workerMain.ts
+
 ## Evidence before this fix
 
 - Run 44646379209, snapshot 47a498e47becb6a9b6ab551099a114fdd66df4fd, code ffa13012bc0ac2bba113860946930355c0a9a37f: failure, four Reports cases fail at packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:21:30, Reports and backup missing. Job 135989909108; installed SF E2E typecheck success; artifact 14589541312 (playwright-ubuntu-24.04-1), SHA256 e09464962bc2774b6456a85cd18e3cdef5800e335444abf925744733a9b1b2a3.
@@ -57,7 +64,7 @@ Owner: Reports continuation only. Integration and every Actions dispatch belong 
 ## Comandos e resultados
 
 GitHub-only source review and readback: performed.
-Applicable packages/app-shell/AGENTS.md and packages/app-shell/e2e/AGENTS.md read; no deeper sucafina or reports-support AGENTS.md exists at this head. Local commands/build/tests/guards/typecheck: not run.
+Applicable packages/app-shell/AGENTS.md and packages/app-shell/e2e/AGENTS.md read; official Playwright v1.59.1 Best Practices, Auto-waiting, Assertions, Locators, Network and Isolation guides read through microsoft/playwright GitHub sources; no deeper sucafina or reports-support AGENTS.md exists at this head. Local commands/build/tests/guards/typecheck: not run.
 Actions gates, sf-ci, PR, merge, package/deploy: not run by this owner.
 
 Smallest supported nominal request (entire Reports file, no grep/skip/relaxed assertion):
