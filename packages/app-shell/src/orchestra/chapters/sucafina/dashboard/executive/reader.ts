@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onCleanup } from "solid-js"
+import { batch, createEffect, createSignal, onCleanup, type Accessor } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfRef, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
@@ -33,23 +33,67 @@ function validMonth(value: number | undefined): number | undefined {
 }
 export function useU02Projection<T>(
   surfaceId: "CAP01" | "CAP03",
-  route: SfResolvedRoute<"CAP01" | "CAP03">,
+  route: Accessor<SfResolvedRoute<"CAP01" | "CAP03">>,
   operationId: "domain.page.CAP01" | "domain.page.CAP03",
   request: Request<T>,
 ) {
   const context = useSfContext()
   const [revision, setRevision] = createSignal(0)
   const [selection, setSelection] = createStore({
-    year: validYear(route.query.year),
-    month: validMonth(route.query.month),
+    year: validYear(route().query.year),
+    month: validMonth(route().query.month),
     opsMonth: undefined as number | undefined,
   })
   const [store, setStore] = createStore<{
     state: SfUiState
     projection: Projection<T> | null
     diagnostic: string | null
-  }>({ state: "loading", projection: null, diagnostic: null })
+    periodPending: boolean
+    periodFailure: SfUiState | null
+  }>({ state: "loading", projection: null, diagnostic: null, periodPending: false, periodFailure: null })
+  let periodRequest: AbortController | undefined
   const current = () => context.state().status === "ready" ? context.ready() : undefined
+  // CAP03 follows only a route already committed by F01, including Back/Reload.
+  // CAP01 keeps its independent executive producer selection.
+  createEffect(() => {
+    const selectedRoute = route()
+    if (surfaceId !== "CAP03" || selectedRoute.surfaceId !== "CAP03") return
+    batch(() => {
+      setSelection({ year: validYear(selectedRoute.query.year), month: validMonth(selectedRoute.query.month) })
+      setStore("periodFailure", null)
+    })
+  })
+  const changeBudgetPeriod = async (period: Readonly<{ year?: number; month?: number }>) => {
+    const source = route(), ready = current(), generation = context.generation()
+    if (source.surfaceId !== "CAP03" || !ready || !context.changeBudgetPeriod) {
+      console.error("Sucafina budget period navigation is unavailable")
+      setStore("periodFailure", "unavailable")
+      return
+    }
+    if (period.year === selection.year && period.month === selection.month) return
+    const abort = new AbortController()
+    periodRequest?.abort()
+    periodRequest = abort
+    setStore({ periodPending: true, periodFailure: null })
+    const stillCurrent = () => !abort.signal.aborted && context.generation() === generation &&
+      current()?.transport === ready.transport
+    try {
+      const status = await context.changeBudgetPeriod({ ...source, surfaceId: "CAP03" }, period, abort.signal)
+      if (!stillCurrent() || status === "committed" || status === "aborted" || status === "kept-editing") return
+      console.error("Sucafina budget period navigation did not commit", { status })
+      setStore("periodFailure", status === "denied" ? "denied" : status === "invalid-link" ? "invalid" : "unavailable")
+    } catch (error) {
+      if (!stillCurrent()) return
+      console.error("Sucafina budget period navigation failed", error instanceof Error ? error.name : "unknown")
+      setStore("periodFailure", "unavailable")
+    } finally {
+      if (periodRequest === abort) {
+        periodRequest = undefined
+        setStore("periodPending", false)
+      }
+    }
+  }
+  onCleanup(() => periodRequest?.abort())
   const admitted = (operation: string): boolean => {
     const ready = current()
     if (!ready) return false
@@ -80,9 +124,12 @@ export function useU02Projection<T>(
     const year = selection.year
     const month = selection.month
     const opsMonth = selection.opsMonth
+    const periodPending = store.periodPending, periodFailure = store.periodFailure
     void _refresh
     if (!ready || state.status !== "ready") {
-      setStore({ projection: null, diagnostic: null,
+      periodRequest?.abort()
+      periodRequest = undefined
+      setStore({ projection: null, diagnostic: null, periodPending: false, periodFailure: null,
         state: state.status === "unauthenticated" ? "session-expired"
           : state.status === "denied" || state.status === "context-mismatch" ? "denied"
           : state.status === "unavailable" ? "unavailable" : "loading" })
@@ -94,6 +141,10 @@ export function useU02Projection<T>(
     }
     if (!admitted(operationId)) {
       setStore({ projection: null, diagnostic: "The producer operation is not currently admitted", state: "unavailable" })
+      return
+    }
+    if (surfaceId === "CAP03" && (periodPending || periodFailure)) {
+      setStore({ projection: null, diagnostic: null, state: periodPending ? "loading" : periodFailure! })
       return
     }
     const abort = new AbortController()
@@ -131,10 +182,18 @@ export function useU02Projection<T>(
     state: () => store.state,
     snapshot: () => store.projection,
     diagnostic: () => store.diagnostic,
-    refresh: () => setRevision((count) => count + 1),
+    refresh: () => batch(() => { setStore("periodFailure", null); setRevision((count) => count + 1) }),
     selection: () => ({ year: selection.year, month: selection.month, opsMonth: selection.opsMonth }),
-    setYear: (year: number) => { if (validYear(year) !== undefined) setSelection("year", year) },
-    setMonth: (month: number) => { if (validMonth(month) !== undefined) setSelection("month", month) },
+    setYear: (year: number) => {
+      if (validYear(year) === undefined) return
+      if (surfaceId === "CAP03") { void changeBudgetPeriod({ year, ...(selection.month === undefined ? {} : { month: selection.month }) }); return }
+      setSelection("year", year)
+    },
+    setMonth: (month: number) => {
+      if (validMonth(month) === undefined) return
+      if (surfaceId === "CAP03") { void changeBudgetPeriod({ ...(selection.year === undefined ? {} : { year: selection.year }), month }); return }
+      setSelection("month", month)
+    },
     setOpsMonth: (month: number) => { if (validMonth(month) !== undefined) setSelection("opsMonth", month) },
     canAction,
     context,
