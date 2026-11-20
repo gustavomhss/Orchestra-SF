@@ -41,6 +41,7 @@ export function SfPrivateHotTopicEditor(_props: SfSurfaceProps<"UI54">): JSX.Ele
   let attempt: Attempt | undefined
   let request: AbortController | undefined
   let generation = -1
+  let disposed = false
   let recoveryStore: SfDashboardRecoveryStore | undefined
   const unresolved = (intent: SfDashboardRecoveryIntent, pending: boolean) => intent.kind === "draft" && current()?.drafts.markUnresolved({
     surfaceId: "UI54", identity: { kind: "new", newIntentRef: intent.key as SfIntentRef },
@@ -73,7 +74,7 @@ export function SfPrivateHotTopicEditor(_props: SfSurfaceProps<"UI54">): JSX.Ele
   }) ?? []
   const sourceId = (record: Workbench["records"][number]) => object(object(record.draft)?.target)?.id
   const fence = (original: NonNullable<ReturnType<typeof current>>, epoch: number, abort: AbortController) =>
-    !abort.signal.aborted && owner.generation() === epoch && current() === original
+    !disposed && !abort.signal.aborted && owner.generation() === epoch && current() === original
   const revoke = () => {
     request?.abort(); attempt = undefined; selection = undefined; setEditor(undefined)
     clearSfDashboardRecovery(owner); recoveryStore = undefined
@@ -375,7 +376,7 @@ export function SfPrivateHotTopicEditor(_props: SfSurfaceProps<"UI54">): JSX.Ele
     const epoch = next
     untrack(() => {
       void openSfDashboardRecovery(owner).then((storage) => {
-        if (owner.generation() !== epoch || current()?.transport !== ready.transport) return
+        if (disposed || owner.generation() !== epoch || current()?.transport !== ready.transport) return
         recoveryStore = storage
         const slot = storage?.read()
         if (!slot || slot.state === "unavailable") {
@@ -388,11 +389,11 @@ export function SfPrivateHotTopicEditor(_props: SfSurfaceProps<"UI54">): JSX.Ele
         } else setState({ correlation: "ready", recovery: null, expired: false })
         void load()
       }).catch(() => {
-        if (owner.generation() === epoch) setState({ correlation: "unavailable", unknown: true, notice: "sf.u38.recoveryUnavailable" })
+        if (!disposed && owner.generation() === epoch) setState({ correlation: "unavailable", unknown: true, notice: "sf.u38.recoveryUnavailable" })
       })
     })
   })
-  onCleanup(() => { request?.abort(); attempt = undefined })
+  onCleanup(() => { disposed = true; request?.abort(); attempt = undefined })
 
   return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null}
     secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>

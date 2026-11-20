@@ -285,13 +285,15 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
     const pending = suggestedPreparation(), ready = current()
     if (!pending || !ready || !store.workbench?.permissions.prepare ||
       !isAdmitted("dashboard.dashboard-hot-topic-prepare") || store.preparationBusy || store.pending || store.correlation !== "ready") return
-    const generation = context.generation()
+    const generation = context.generation(), abort = new AbortController()
+    writeAbort?.abort(); writeAbort = abort
     setStore("preparationBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-prepare"]({
         caseRef: pending.caseRef, choiceId: pending.choiceId, draftRef: pending.draftRef,
-      }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
-      if (context.generation() !== generation || current()?.transport !== ready.transport) return
+      }, { signal: abort.signal, idempotencyKey: crypto.randomUUID() })
+      if (abort.signal.aborted || context.generation() !== generation || current()?.transport !== ready.transport) return
+      if (response.kind === "response" && (response.status === 403 || response.body.status === "denied")) { purge(); return }
       if (response.kind !== "response" || response.body.status !== "ok") {
         setStore("outcome", response.kind !== "response" ? "unknown" : "rejected")
         return
@@ -300,8 +302,8 @@ function SfHotTopicPreparationView(props: SfSurfaceProps<"UI54">): JSX.Element {
       if (!result || !string(result.changeId) || !caseRef(result.caseRef) ||
         result.choiceId !== pending.choiceId) {setStore("outcome", "unknown");return}
       navigate(sfHotTopicProposalRoute(props, result.changeId))
-    } catch {setStore("outcome", "unknown")}
-    finally {setStore("preparationBusy", false)}
+    } catch { if (!abort.signal.aborted) setStore("outcome", "unknown") }
+    finally { if (!abort.signal.aborted) setStore("preparationBusy", false) }
   }
   const acceptReceipt = (value: unknown, intent: SfDashboardRecoveryIntent, recovered: boolean) => {
     const ready = current()
