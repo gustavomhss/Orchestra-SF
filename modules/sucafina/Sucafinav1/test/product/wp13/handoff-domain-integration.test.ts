@@ -351,11 +351,12 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
     snapshot.versions["requests:PR-1"] = { version: 0, by: "principal" }
     return { commit: true, value: true }
   })
+  const admittedRequest = new Request("https://example.test/controlled-domain-admission")
   const host: DomainPortHost = {
     persistence,
     authenticate: async (_request, scope) => ({ id: "principal", canWrite: true, roles: [{ surface: scope?.surface ?? "procurement", role: scope?.surface === "planner" ? "finance" : "requester" }] }),
     environment: async () => environment,
-    requestFor: () => new Request("https://example.test/controlled-domain-admission"),
+    requestFor: () => admittedRequest,
     revalidate: async (context) => context.kind === "ui" && context.binding.installationId === "install" && context.binding.projectId === "project" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" && context.binding.policyVersion === "policy",
   }
   const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-this-fixture" })
