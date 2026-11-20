@@ -1,0 +1,290 @@
+import { describe, expect, test } from "bun:test"
+import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Ref } from "../src/sucafina/team-profile"
+import { SfInstallationSelector } from "../src/sucafina/context"
+
+const profile = {
+  installationId: "installation-one",
+  tenantId: "11111111-2222-4333-8444-555555555555",
+  teamObjectId: "a1111111-2222-4333-8444-555555555555",
+}
+const otherProfile = {
+  ...profile,
+  teamObjectId: "b1111111-2222-4333-8444-555555555555",
+}
+const principal = {
+  tenantId: profile.tenantId,
+  principalObjectId: "c1111111-2222-4333-8444-555555555555",
+}
+const revisions = { configRevision: 0, accessRevision: "authority-1" }
+const choice = { profile, displayName: "Finance" }
+const otherChoice = { profile: otherProfile, displayName: "Finance" }
+const selector = { contractRevision: "sf-team-profile/1", kind: "team", profile }
+const authenticated = {
+  contractRevision: "sf-team-profile/1",
+  status: "authenticated",
+  installationId: profile.installationId,
+  principal,
+  accessRevision: revisions.accessRevision,
+  administration: { status: "denied" },
+  teams: { status: "ready", choices: [choice], selected: profile, configRevision: revisions.configRevision },
+}
+
+describe("Teams profile canonical contracts", () => {
+  test("package entrypoint reexports the exact canonical schema", () => {
+    expect(TeamProfile.Ref).toBe(Ref)
+  })
+
+  test("shared profile and personal owner roundtrip without changing identity bytes", () => {
+    const ref = Schema.decodeUnknownSync(TeamProfile.Ref)(profile)
+    expect(Schema.encodeSync(TeamProfile.Ref)(ref)).toEqual(profile)
+    const owner = Schema.decodeUnknownSync(TeamProfile.Owner)({ profile, principal })
+    expect(Schema.encodeSync(TeamProfile.Owner)(owner)).toEqual({ profile, principal })
+    const binding = Schema.decodeUnknownSync(TeamProfile.Binding)({ owner, revisions })
+    expect(Schema.encodeSync(TeamProfile.Binding)(binding)).toEqual({ owner: { profile, principal }, revisions })
+  })
+
+  test("duplicate display names and rename do not replace Microsoft object identity", () => {
+    const original = Schema.decodeUnknownSync(TeamProfile.Choice)(choice)
+    const renamed = Schema.decodeUnknownSync(TeamProfile.Choice)({ ...choice, displayName: "Finance Global" })
+    const recreated = Schema.decodeUnknownSync(TeamProfile.Choice)(otherChoice)
+    expect(renamed.profile).toEqual(original.profile)
+    expect(recreated.displayName).toBe(original.displayName)
+    expect(recreated.profile).not.toEqual(original.profile)
+  })
+
+  test("private ownership distinguishes two principals in the same Team", () => {
+    const first = Schema.decodeUnknownSync(TeamProfile.Owner)({ profile, principal })
+    const second = Schema.decodeUnknownSync(TeamProfile.Owner)({
+      profile,
+      principal: { ...principal, principalObjectId: "d1111111-2222-4333-8444-555555555555" },
+    })
+    expect(second.profile).toEqual(first.profile)
+    expect(second.principal).not.toEqual(first.principal)
+  })
+
+  test("resource tenant must agree with the principal, including guests", () => {
+    expect(Schema.is(TeamProfile.Owner)({
+      profile,
+      principal: { ...principal, tenantId: "eeeeeeee-2222-4333-8444-555555555555" },
+    })).toBe(false)
+    expect(Schema.is(TeamProfile.Owner)({ profile, principal })).toBe(true)
+  })
+
+  test("Microsoft IDs require complete canonical GUIDs, never repo aliases or rewritten input", () => {
+    for (const teamObjectId of [
+      "", "global", "repo-1234", "/work/finance", profile.teamObjectId.slice(0, 32),
+      profile.teamObjectId.toUpperCase(), " " + profile.teamObjectId, "{" + profile.teamObjectId + "}",
+    ]) {
+      expect(Schema.is(TeamProfile.Ref)({ ...profile, teamObjectId })).toBe(false)
+    }
+    expect(Schema.decodeUnknownSync(TeamProfile.Ref)(profile).teamObjectId).toBe(profile.teamObjectId)
+  })
+
+  test("empty, padded, control-bearing and unbounded installation identifiers are rejected", () => {
+    for (const installationId of ["", " installation-one", "installation-one ", "installation\nother", "x".repeat(257)]) {
+      expect(Schema.is(TeamProfile.Ref)({ ...profile, installationId })).toBe(false)
+    }
+  })
+
+  test("all profile identity components are mandatory and repo-profile fields are forbidden", () => {
+    for (const input of [
+      { installationId: profile.installationId, tenantId: profile.tenantId },
+      { installationId: profile.installationId, teamObjectId: profile.teamObjectId },
+      { tenantId: profile.tenantId, teamObjectId: profile.teamObjectId },
+      { ...profile, projectId: "project-old" },
+      { ...profile, directory: "/work" },
+      { ...profile, principalObjectId: principal.principalObjectId },
+    ]) {
+      expect(Schema.is(TeamProfile.Ref)(input)).toBe(false)
+    }
+  })
+
+  test("principals reject email, home tenant substitution and alternate authority fields", () => {
+    for (const input of [
+      { ...principal, email: "user@example.test" },
+      { principalObjectId: principal.principalObjectId, homeTenantId: profile.tenantId },
+      { ...principal, role: "admin" },
+      { ...principal, accessToken: "untrusted" },
+      { ...principal, principalObjectId: "user@example.test" },
+    ]) {
+      expect(Schema.is(TeamProfile.Principal)(input)).toBe(false)
+    }
+  })
+
+  test("config revision preserves string versus safe integer while authority revision stays opaque", () => {
+    for (const configRevision of [0, 1, Number.MAX_SAFE_INTEGER, "1", "config:0001"]) {
+      const input = { configRevision, accessRevision: "authority:0001" }
+      const decoded = Schema.decodeUnknownSync(TeamProfile.Revisions)(input)
+      expect(Schema.encodeSync(TeamProfile.Revisions)(decoded)).toEqual(input)
+    }
+    for (const configRevision of [-1, 0.5, Number.MAX_SAFE_INTEGER + 1, NaN, Infinity, "", null]) {
+      expect(Schema.is(TeamProfile.Revisions)({ ...revisions, configRevision })).toBe(false)
+    }
+    for (const accessRevision of ["", " authority", "authority\n1", 1, null]) {
+      expect(Schema.is(TeamProfile.Revisions)({ ...revisions, accessRevision })).toBe(false)
+    }
+    expect(Schema.is(TeamProfile.Revisions)({ ...revisions, policyRevision: "redundant" })).toBe(false)
+  })
+
+  test("selectors are versioned complete intents without a client-claimed principal or grant", () => {
+    expect(Schema.encodeSync(TeamProfile.Selector)(Schema.decodeUnknownSync(TeamProfile.Selector)(selector))).toEqual(selector)
+    for (const input of [
+      { ...selector, contractRevision: "sf-native-ui/1" },
+      { ...selector, contractRevision: undefined },
+      { ...selector, principal },
+      { ...selector, revisions },
+      { ...selector, role: "admin" },
+      { ...selector, grant: "all" },
+      { ...selector, profile: { ...profile, projectId: "old" } },
+      { ...selector, kind: "location", directory: "/work" },
+    ]) {
+      expect(Schema.is(TeamProfile.Selector)(input)).toBe(false)
+    }
+  })
+
+  test("administrative selector requires no Team and cannot be used as a business selector", () => {
+    const administration = {
+      contractRevision: "sf-team-profile/1",
+      kind: "administration",
+      installationId: profile.installationId,
+      tenantId: profile.tenantId,
+    }
+    expect(Schema.is(TeamProfile.Selector)(administration)).toBe(true)
+    expect(Schema.is(TeamProfile.Selector)({ ...administration, profile })).toBe(false)
+    expect(Schema.is(TeamProfile.Selector)({ ...administration, kind: "team" })).toBe(false)
+    expect(Schema.is(TeamProfile.Selector)({ ...administration, tenantId: undefined })).toBe(false)
+  })
+
+  test("one eligible Team has an explicit ready selection and multiple Teams may require selection", () => {
+    expect(Schema.is(TeamProfile.Projection)(authenticated)).toBe(true)
+    const teams = { status: "selection-required", choices: [choice, otherChoice] }
+    expect(Schema.is(TeamProfile.Projection)({ ...authenticated, teams })).toBe(true)
+    expect(Schema.is(TeamProfile.TeamState)({ ...teams, choices: [choice] })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({ ...teams, choices: [] })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({ ...teams, selected: profile })).toBe(false)
+  })
+
+  test("restored selection must be in the complete eligible set and cannot fall back", () => {
+    expect(Schema.is(TeamProfile.TeamState)({ ...authenticated.teams, selected: otherProfile })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({ ...authenticated.teams, choices: [] })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({ ...authenticated.teams, selected: undefined })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({
+      ...authenticated.teams, choices: [choice, otherChoice], selected: otherProfile,
+    })).toBe(true)
+  })
+
+  test("duplicate Team IDs are rejected even when their display names differ", () => {
+    expect(Schema.is(TeamProfile.TeamState)({
+      status: "selection-required",
+      choices: [choice, { ...choice, displayName: "Other label" }],
+    })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({
+      ...authenticated.teams, choices: [choice, choice],
+    })).toBe(false)
+  })
+
+  test("eligible lists cannot mix tenants or installations", () => {
+    for (const foreign of [
+      { ...otherProfile, installationId: "installation-two" },
+      { ...otherProfile, tenantId: "eeeeeeee-2222-4333-8444-555555555555" },
+    ]) {
+      expect(Schema.is(TeamProfile.Projection)({
+        ...authenticated,
+        teams: { status: "selection-required", choices: [choice, { ...otherChoice, profile: foreign }] },
+      })).toBe(false)
+      expect(Schema.is(TeamProfile.Projection)({
+        ...authenticated,
+        teams: { ...authenticated.teams, choices: [{ ...choice, profile: foreign }], selected: foreign },
+      })).toBe(false)
+    }
+  })
+
+  test("no-teams, revocation, denial and provider failure are distinct states without retained choices", () => {
+    for (const status of ["no-teams", "revoked", "denied"]) {
+      expect(Schema.is(TeamProfile.Projection)({ ...authenticated, teams: { status } })).toBe(true)
+      expect(Schema.is(TeamProfile.TeamState)({ status, choices: [choice] })).toBe(false)
+      expect(Schema.is(TeamProfile.TeamState)({ status, selected: profile })).toBe(false)
+    }
+    for (const reason of [
+      "identity-unavailable", "consent-required", "forbidden", "rate-limited",
+      "timeout", "incomplete", "invalid-response", "provider-unavailable",
+    ]) {
+      expect(Schema.is(TeamProfile.Projection)({
+        ...authenticated, teams: { status: "unavailable", reason },
+      })).toBe(true)
+      expect(Schema.is(TeamProfile.TeamState)({ status: "no-teams", reason })).toBe(false)
+      expect(Schema.is(TeamProfile.TeamState)({ status: "unavailable", reason, choices: [] })).toBe(false)
+    }
+    expect(Schema.is(TeamProfile.TeamState)({ status: "unavailable" })).toBe(false)
+    expect(Schema.is(TeamProfile.TeamState)({ status: "unavailable", reason: "use-repo" })).toBe(false)
+  })
+
+  test("corporate administration may remain available with zero Teams or failed Teams enumeration", () => {
+    for (const teams of [
+      { status: "no-teams" },
+      { status: "unavailable", reason: "consent-required" },
+      { status: "unavailable", reason: "timeout" },
+    ]) {
+      const input = { ...authenticated, administration: { status: "available" }, teams }
+      const decoded = Schema.decodeUnknownSync(TeamProfile.Projection)(input)
+      expect(Schema.encodeSync(TeamProfile.Projection)(decoded)).toEqual(input)
+    }
+    expect(Schema.is(TeamProfile.Administration)({ status: "available", teamObjectId: profile.teamObjectId })).toBe(false)
+    expect(Schema.is(TeamProfile.Administration)({ status: "available", role: "business-admin" })).toBe(false)
+  })
+
+  test("unavailable administration is explicit and is not an available destination", () => {
+    const administration = { status: "unavailable", reason: "identity-unavailable" }
+    expect(Schema.is(TeamProfile.Projection)({ ...authenticated, administration })).toBe(true)
+    expect(Schema.is(TeamProfile.Administration)({ status: "unavailable" })).toBe(false)
+    expect(Schema.is(TeamProfile.Administration)({ status: "available", reason: "identity-unavailable" })).toBe(false)
+  })
+
+  test("unauthenticated and denied responses cannot carry a stale principal or profile", () => {
+    for (const status of ["unauthenticated", "denied"]) {
+      const input = { contractRevision: "sf-team-profile/1", status }
+      expect(Schema.is(TeamProfile.Projection)(input)).toBe(true)
+      expect(Schema.is(TeamProfile.Projection)({ ...input, principal })).toBe(false)
+      expect(Schema.is(TeamProfile.Projection)({ ...input, teams: authenticated.teams })).toBe(false)
+      expect(Schema.is(TeamProfile.Projection)({ ...input, administration: { status: "available" } })).toBe(false)
+    }
+  })
+
+  test("closed shapes reject unknown nested fields even when the caller asks to ignore them", () => {
+    const decode = Schema.decodeUnknownSync(TeamProfile.Projection, { onExcessProperty: "ignore" })
+    for (const input of [
+      { ...authenticated, projectId: "old" },
+      { ...authenticated, principal: { ...principal, role: "admin" } },
+      { ...authenticated, teams: { ...authenticated.teams, selected: { ...profile, directory: "/work" } } },
+      { ...authenticated, teams: { ...authenticated.teams, choices: [{ ...choice, token: "private" }] } },
+    ]) {
+      expect(() => decode(input)).toThrow()
+    }
+  })
+
+  test("historical selectors retain their old codec but cannot decode as current Teams authority", () => {
+    const historical = { select: "ids", installationId: "historical-install", projectId: "original-project-bytes" }
+    expect(Schema.decodeUnknownSync(SfInstallationSelector)(historical)).toEqual(historical)
+    expect(Schema.is(TeamProfile.Selector)(historical)).toBe(false)
+    expect(Schema.is(TeamProfile.Ref)(historical)).toBe(false)
+    expect(Schema.is(TeamProfile.Owner)({ profile: historical, principal })).toBe(false)
+  })
+
+  test("public schema identifiers are stable, domain-qualified and unique", () => {
+    const schemas = [
+      TeamProfile.ContractRevision, TeamProfile.InstallationId, TeamProfile.TenantId,
+      TeamProfile.PrincipalObjectId, TeamProfile.TeamObjectId, TeamProfile.ConfigRevision,
+      TeamProfile.AccessRevision, TeamProfile.Ref, TeamProfile.Principal, TeamProfile.Revisions,
+      TeamProfile.Owner, TeamProfile.Binding, TeamProfile.Selector, TeamProfile.Choice,
+      TeamProfile.UnavailableReason, TeamProfile.TeamState, TeamProfile.Administration,
+      TeamProfile.Authenticated, TeamProfile.Projection,
+    ]
+    const identifiers = schemas.map((schema) =>
+      schema.ast.checks?.at(-1)?.annotations?.identifier ?? schema.ast.annotations?.identifier)
+    expect(identifiers.every((identifier) =>
+      typeof identifier === "string" && identifier.startsWith("Sucafina.TeamProfile."))).toBe(true)
+    expect(new Set(identifiers).size).toBe(schemas.length)
+  })
+})
