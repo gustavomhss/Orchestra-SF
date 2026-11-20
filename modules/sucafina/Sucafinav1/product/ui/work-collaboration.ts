@@ -51,7 +51,7 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
     if (text) text.disabled = busy || !!replyRequest || !!confirmation || attachConflict
     if (reply) {
       reply.disabled = busy || !!confirmation || replyConflict || attachConflict
-      reply.textContent = replyRequest && !replyConflict ? 'Retry same reply' : 'Send reply'
+      reply.textContent = replyRequest?.recipient && !replyConflict ? 'Retry same reply' : 'Send reply'
     }
     eligible.forEach(({ element, allowed }) => { element.disabled = busy || !allowed || selectionStale || !!replyRequest || attachConflict })
     if (reviewReply) reviewReply.disabled = busy
@@ -293,7 +293,7 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
         busy = true; controls(); status.textContent = 'Sending reply…'
         const wasUncertain = replyUncertain, generation = epoch
         try {
-          if (replyRequest) await currentScope()
+          if (replyRequest?.recipient) await currentScope()
           if (!replyRequest) {
             const draft = currentText.value
             const version = await request('collaboration-storage-version', { namespace: 'threads' })
