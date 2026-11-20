@@ -348,7 +348,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     expect(await nativeBusiness.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
     const afterStore = await openLocalStore(path.join(privateDir, "business-local"))
     try {
-      const after = await afterStore.transaction("dashboard", async (snapshot) => ({
+      const after: unknown = await afterStore.transaction("dashboard", async (snapshot) => ({
         commit: false, value: { product: structuredClone(snapshot.data.__sfProductV1), audit: structuredClone(snapshot.audit) },
       }))
       expect(after).toEqual(businessBefore)
