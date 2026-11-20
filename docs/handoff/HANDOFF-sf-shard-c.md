@@ -4,9 +4,9 @@
 
 | Referência | Valor |
 | --- | --- |
-| Código C documentado | `c84dd505318cc9b3fa04de6660f1c0fe746aa5e9` (causa IO em `dbbc5832811202fecebb09c2adebf65ace0d6c05`) |
+| Código C documentado | `c98ad8be63fe70118c58e181aff54d1aa5fc35b9` (integração qualificada; candidatos não qualificados permanecem isolados) |
 | Base original | `f7dd58e32bc834f1485df20b91adbf759b4c4ad0` |
-| Integração observada | `sf-join-four` em `3e396b258ab5e10476e9a4e0c38e54a54fa0022b`, após #469, #473, #466 externo e #470 |
+| Integração observada | `sf-join-four` em `37beac52b76278b1aad1226368e87f02892939c1`, incluindo #439, #434, #468, #484, #485, #475 e #479 |
 | Data do checkpoint | 2026-11-20 |
 
 Proveniência anterior de C: o merge `b9d897177245c1a58638507894588a3d069012b4` incorporou `c32e906a92193ae33d32b5106a82ee47b81c0ba4`; o pin pós-442 entrou em `5917a488021408261b59ba81106ad582dd167270` e o driver half-close em `e432400faff2cf84ac8bedb9590e14248db3653b`. C preserva a sentinela privada adicional e candidatos ainda não qualificados. Cada gate abaixo identifica sua própria fonte e snapshot.
@@ -16,6 +16,20 @@ Este documento atualiza o checkpoint documental `13394b27c67ef079d467580982da0ed
 ## Feito
 
 Acesso exclusivamente pelo GitHub; execução somente por Actions. A enumeração original mediu shard 7 **518 pass / 12 fail** e shard 8 **618 pass / 2 fail**. Todas as falhas originais estão mapeadas, com suas linhas nos apêndices. A revalidação integral dos mesmos 115 arquivos históricos do shard 8 passou **620/0**; esse resultado vem de um novo log completo, sem subtração de gates focais. Correções de testes permanecem separadas dos PRs `shared:` de produção.
+
+### Checkpoint: Executive mergeado e navegação corrigida em gate
+
+**Executive #475/#479:** segundo gate [44682884013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682884013), **21 pass / 0 fail**, 103 expect() calls do Bun, 64.85s. Fonte `0e9414eebfe268748a9402703d34d4fb713d4400`; snapshot `072a53f1eaaac8583ae7fd73caf8ed24b172d144`; teste136110229357 e cleanup136111984579 success. São 12 controles existentes de projeção, cinco de People, um componente browser em cinco larguras e três typechecks canônicos (Schema, CLI, app-shell) com exit0/saída não truncada. Nenhum número é atribuído ao full shard3 nem à jornada original visual-layout.
+
+Merges efetivos: #484 `6aaad6796e94e6f1f963321505755f00c10db3e4`, #485 `0df0e751d7b9f38cd2c8e4f61dbf5393f7691879`, #475 `2c6823a722e93163439b827d28d992a770472783`, #479 `37beac52b76278b1aad1226368e87f02892939c1`. O campo schema combinado integrado foi conferido byte a byte com a fonte qualificada (`cdb09915b945861ebba3b7337a5182e962e199a8`). Auxiliar de typecheck permanece apenas na fonte de prova. O primeiro18/3 segue registrado como histórico, após correções concretas.
+
+**Navegação:** primeiro [44683335605](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683335605), **1 pass / 2 fail**, 6 expect() calls, 76.00s. Browser falhou em `native-ui-contract/source-navigation-browser.test.ts:105:29`: CAP24 tinha título vazio. A origem é o dicionário existente `procurement/overview/copy.ts` não registrado; #490 `d64009523280e089e29e24c521d810ea85f538f8` registra EN/pt-BR sem alterar nenhum texto. O typecheck de modules/sucafina apontou `product/wp13/handoff-domain-integration.test.ts:311:9/:340:52/:341:50`: namespace esperado alargado para string; #489 `3e4f9056aaac7ed5bdb906b09452e61f5e595035` conserva somente o literal cases via as const. O typecheck app-shell passou. Jobs136111681665/136113063514 (cleanup success).
+
+O segundo gate de navegação está em andamento na fonte `430f74853b00afd9b6d1e83db1d7a2e3d29d14b1`, snapshot `d4bac7c9f3653a8c6b3d551f1d60fa4059f28113`, branch `ci-run-linux-sfc-navigation-fixed`, base integrada37be. Mantém os mesmos oráculos de28nomes/hrefs, deadlines, filtros e fences. Não houve rerun idêntico.
+
+**Integrações externas verificadas:** #439 merge `d1bcd200a3e9f34cf054671d16263ac2407410e1`, fonte `80e2282cb605d204c0b2612cdb0b3da08d6dfe30`, é qualificado especificamente pelos dois originais import-analysis em44678987832; o combinado7/10 continua vermelho. #434 merge `db14b2a3a04689841b033312cb989741e5677a50` preserva identidade do produtor calculation; #468 merge `9d3a70179cc1ced293c58d4dfc032d5d2aa41bf6` provisiona Chromium pareado. Nada disso converte o shard B completo em verde.
+
+**IO1 #474 permanece UNBOUND por diagnóstico insuficiente:** o run44679668214 observou ausência de resposta de contexto em10s, não provou ausência de request. Nenhum segundo gate foi lançado somente para logs. A migração IO2 e seus fixes concretos permanecem em revisão; foi exigido preservar o primeiro corpo original da integração na proposta isolada. Antes de CI, a revisão encontrou CAS inicial legítimo depois de Supplier.create, perda do owner em Import e Cancel/Revise durante digest sem fence da revisão; as correções e os controles negativos estão sendo preparados em commits próprios. #482/#483 continuam NOT_QUALIFIED.
 
 ### Situação atual para decisão
 
@@ -28,8 +42,8 @@ Acesso exclusivamente pelo GitHub; execução somente por Actions. A enumeraçã
 | Review, composição isolada #470 | **16/0; mergeado** | [44678230528](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678230528): 490 asserções, 454.22 s, arquivo completo e cleanup success. |
 | Semantic, transporte Node #469 | **3/0; mergeado** | [44678238009](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678238009): três casos completos, 4.46 s e três fechamentos físicos limpos. |
 | Rollback autenticado #473 | **18/0; mergeado** | [44678639563](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678639563): 542 asserções, quatro arquivos completos, 1.90 s e cleanup success. |
-| Planner XLSX nativo #474 | **0/1; diagnóstico em andamento** | [44679668214](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44679668214): 1 filtered, 39.42 s; wait de contexto em io-browser.test.ts:33:12 excede 10 s. Enrollment e fechamento físico passaram. |
-| B: Portfolio / memória / cálculo | **Pendentes** | Novos terminais: Planner batch 19/3 e recovery 33/1. Cinco perfis AM01 passou; ancestry ainda falha em 105 s. #441 sem fix pre-await; #464 populado NOT_QUALIFIED. |
+| Planner XLSX nativo #474 | **0/1; UNBOUND por diagnóstico insuficiente** | [44679668214](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44679668214): 1 filtered, 39.42 s; wait de contexto em io-browser.test.ts:33:12 excede 10 s. Enrollment e fechamento físico passaram. |
+| B: Portfolio / memória / cálculo | **Pendentes** | Terminais novos: native7/10, Dashboard11/1, Mixed36/1, Planner19/3 e recovery33/1. Cinco perfis AM01 e purchase pending passaram; ancestry105s e purchase complete360s falham. #441 sem fix pre-await; #464 populado NOT_QUALIFIED. |
 | Static / guards | **15/16 comandos PASS; aprovação pendente** | Sete typechecks passaram. O gate de dois paths protegidos continua exigindo label real em #397. |
 
 **Fontes das novas integrações e dos gates ativos**
@@ -160,8 +174,8 @@ O footer repete a mesma falha de `complete`; não são duas falhas. O snapshot c
 | Causa / gate | Estado na consulta deste adendo | Fonte / snapshot / limites |
 | --- | --- | --- |
 | Executive, primeiro [44681543819](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44681543819) | **18 / 3**, 103 asserções, 21 testes / quatro arquivos, 70.94 s; cleanup success | Fonte `04f58283f47c7e9ed439a9740255eeb41c744dfd`; snapshot `1ef269b636ba844ffec41c14f9d3add79289521b`. Dois casos de typecheck falharam: Summary/schema em `test/sucafina-summary-settings.test.ts:22/:35/:36` e sete diagnósticos de receipt em `product/host-binding/atlas-memory.ts:384/:392/:393/:394/:436`. O browser falhou em `native-ui-contract/executive-people-browser.test.ts:131:53` no seletor Month; as verificações anteriores de cinco larguras passaram. |
-| Executive, segundo [44682884013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682884013) | **Em execução; sem resultado atribuído** | Fonte `0e9414eebfe268748a9402703d34d4fb713d4400`; snapshot `072a53f1eaaac8583ae7fd73caf8ed24b172d144`. Composição após os fixes #475 `da38493bb8841fcaf8103f825f5e598ee40e9d2c`, #484 `bcecd8732fef8fe8dd36b23fda23aa5916a99fdf` e #485 `13b170e3508e4e62d970a5e253af1633fefde430`; testes #479 `43e284e2eecf6d8dd9fda4fb5b25a6323fac7d00` inalterados. |
-| Navegação nativa [44683335605](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683335605) | **Em execução; sem resultado atribuído** | Fonte `45c11fb769682d98f2b2b9c06b9ea4cd901a121e`; snapshot `9acef3622fb63e694b24901b35698e3beb2315af`. Produção #478 `fb60b6c1220d1748a0ebde44f402a76b10702ddf` inclui o guard de evento já cancelado; testes #486 `b12cce3747209d47fe11ab4e6bf5c394daa226f5`. O helper de typecheck de `modules/sucafina` e `packages/app-shell` pertence ao snapshot e fica fora do commit a integrar. |
+| Executive, segundo [44682884013](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44682884013) | **21/0; 103 expect() calls, 64.85s; mergeados #484/#485/#475/#479** | Fonte `0e9414eebfe268748a9402703d34d4fb713d4400`; snapshot `072a53f1eaaac8583ae7fd73caf8ed24b172d144`. Composição após os fixes #475 `da38493bb8841fcaf8103f825f5e598ee40e9d2c`, #484 `bcecd8732fef8fe8dd36b23fda23aa5916a99fdf` e #485 `13b170e3508e4e62d970a5e253af1633fefde430`; testes #479 `43e284e2eecf6d8dd9fda4fb5b25a6323fac7d00` inalterados. |
+| Navegação nativa [44683335605](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44683335605) | **1/2; 6 expect() calls, 76.00s; cleanup success** | Fonte `45c11fb769682d98f2b2b9c06b9ea4cd901a121e`; snapshot `9acef3622fb63e694b24901b35698e3beb2315af`. Produção #478 `fb60b6c1220d1748a0ebde44f402a76b10702ddf` inclui o guard de evento já cancelado; testes #486 `b12cce3747209d47fe11ab4e6bf5c394daa226f5`. O helper de typecheck de `modules/sucafina` e `packages/app-shell` pertence ao snapshot e fica fora do commit a integrar. |
 
 A prova de navegação é de componente, F01 e navigation-state com entradas de contexto declaradas: verifica os 28 links, filtros, ownerKey, layout e feedback atrasado após unmount. Não substitui a jornada visual instalada dos 28 produtores. O controle de unmount preserva provider/owner/rota e libera uma recusa atrasada; prova supressão de feedback obsoleto, sem alegar cancelamento de uma transição autorizada.
 
