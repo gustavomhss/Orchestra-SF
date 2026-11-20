@@ -32,12 +32,13 @@ function expectScope(review: PreservedReview, allowed: boolean) {
   expect(snapshotBoundReview(review)).toBe(allowed)
 }
 
-/** The full corpus is produced through the installed agenda/C05/C08. Its
- * existing fixture owns authentication and grants; this test adds no grant.
+/** The full corpus is produced through the real product composition's
+ * agenda/C05/C08. Its fixture owns authentication and grants; no grant is added.
+ * The packaged/native installation is witnessed by the Reports browser gate.
  * Malformed copies below exercise structural classification only, never a
  * successful source reader or an authorization result supplied by the test.
  */
-test("installed Reports scope handles repeated exact evidence and keeps depth, budget and authority fences", async () => {
+test("Reports composition scope handles repeated exact evidence and keeps depth, budget and authority fences", async () => {
   const fixture = await financialCompositionFixture()
   const extended = createSfExtendedBusinessServices({ authority: fixture.authority, business: fixture.business,
     persistence: fixture.persistence, ...fixture.guards, origin: "https://example.test" })
