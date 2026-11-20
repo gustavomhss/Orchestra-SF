@@ -23,7 +23,7 @@ const sources = {
   ".github/actions/setup-bun/action.yml": "reviewed installation recipe",
   "script/ci-cache-inputs.ts": "reviewed fingerprint implementation",
   "packages/core/package.json": JSON.stringify(coreManifest),
-  "packages/core/script/fix-node-pty.ts": 'import fs from "node:fs/promises"\nvoid fs\n',
+  "packages/core/script/fix-node-pty.ts": '#!/usr/bin/env bun\nimport fs from "node:fs/promises"\nvoid fs\n',
   "packages/core/bunfig.toml": "[run]\nshell = 'bun'\n",
   "packages/core/vendor/local.tgz": "local archive bytes",
   "packages/other/package.json": JSON.stringify({ name: "@fixture/other", version: "1" }),
@@ -42,6 +42,14 @@ test.each(Object.keys(sources))("installed cache fingerprint changes when %s cha
   const after = await dependencyFingerprint(directory.path, runtime)
   expect(after.fingerprint).not.toBe(before.fingerprint)
   expect(after.inputs).toContain(file)
+})
+
+test("a leading postinstall shebang is parsed safely and its original bytes still invalidate the cache", async () => {
+  await using directory = await fixture()
+  const before = await dependencyFingerprint(directory.path, runtime)
+  await write(directory.path, "packages/core/script/fix-node-pty.ts",
+    sources["packages/core/script/fix-node-pty.ts"].replace("#!/usr/bin/env bun", "#!/usr/bin/bun"))
+  expect((await dependencyFingerprint(directory.path, runtime)).fingerprint).not.toBe(before.fingerprint)
 })
 
 test("fingerprint is deterministic across roots and creation order", async () => {
@@ -99,7 +107,7 @@ test("unadmitted hooks, redirected postinstall and imports are rejected before c
   }))
   await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_POSTINSTALL_COMMAND_UNADMITTED")
   await write(directory.path, "packages/core/package.json", sources["packages/core/package.json"])
-  await write(directory.path, "packages/core/script/fix-node-pty.ts", 'import "./untracked.ts"\n')
+  await write(directory.path, "packages/core/script/fix-node-pty.ts", '#!/usr/bin/env bun\nimport "./untracked.ts"\n')
   await expect(dependencyFingerprint(directory.path, runtime)).rejects.toThrow("CACHE_POSTINSTALL_IMPORT_UNADMITTED")
 })
 
