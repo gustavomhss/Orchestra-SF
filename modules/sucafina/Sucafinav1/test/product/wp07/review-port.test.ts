@@ -25,6 +25,14 @@ test("preserved review survives changed projections and is denied after access r
       authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }),
     })
     const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+    const requests = new WeakMap<TrustedDomainContext, Request>()
+    const requestFor = (context: TrustedDomainContext) => {
+      const current = requests.get(context)
+      if (current) return current
+      const request = new Request("https://example.test")
+      requests.set(context, request)
+      return request
+    }
     const period = { start: "2026-01-01", end: "2026-12-31" }
     const evidence = { schema: "sf-evidence-v1", refId: "record", installationId: "i", projectId: "p", refDigest: "digest", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "forecast", recordId: "1", incarnation: "original", version: 1, fields: ["value"], projectionDigest: "digest" } } as const
     const source = { surface: "planner", type: "forecast", id: "1", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
@@ -39,12 +47,12 @@ test("preserved review survives changed projections and is denied after access r
     }
     const access = { allowed: true, sections: true, comments: true, sourceAvailable: true }
     const port = createReviewPort({
-      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => access.allowed && decisions.length === 0, authorizeSections: async () => access.sections, authorizeComments: async () => access.comments, authorizeSensitivity: async () => access.allowed, revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
+      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor, authorizeOutcomeComparison: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => access.allowed && decisions.length === 0, authorizeSections: async () => access.sections, authorizeComments: async () => access.comments, authorizeSensitivity: async () => access.allowed, revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
       select: async () => access.sourceAvailable ? { status: "ok", value: [section] } : { status: "unavailable", reason: "source-removed" },
     })
     const emptySection: ReviewSection = { ...section, id: "restricted", recordCount: 0, comments: [], projection: { ...section.projection, values: [], components: [], context: { ...section.projection.context, sourceRefs: [] } } }
     const restricted = createReviewPort({
-      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => outcomes.length === 0, authorizeDecision: async (_context, decisions) => decisions.length === 0, authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor, authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => outcomes.length === 0, authorizeDecision: async (_context, decisions) => decisions.length === 0, authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
       select: async () => ({ status: "ok", value: [emptySection] }),
     })
     expect(await restricted.preview("selection", ["restricted"], binding)).toEqual({ status: "denied", reason: "access-unavailable" })
@@ -64,7 +72,7 @@ test("preserved review survives changed projections and is denied after access r
     const second = structuredClone(section)
     second.id = "second"
     const paired = createReviewPort({
-      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => outcomes.length === 0, authorizeDecision: async (_context, decisions) => decisions.length === 0, authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor, authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => outcomes.length === 0, authorizeDecision: async (_context, decisions) => decisions.length === 0, authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
       select: async () => ({ status: "ok", value: [section, second] }),
     })
     expect((await paired.preview("selection", ["forecast", "second"], binding)).status).toBe("ok")
@@ -201,6 +209,7 @@ test("compact review receipts survive SQLite restart, legacy replay and concurre
   await chmod(directory, 0o700)
   const resources = { store: await openLocalStore(directory) }
   const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+  const boundRequest = new Request("https://example.test")
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const source = { surface: "planner", type: "forecast", id: "forecast", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
   const evidence = { schema: "sf-evidence-v1", kind: "record", refId: "fixture-source", installationId: "i", projectId: "p", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "forecast", recordId: "forecast", incarnation: "original", version: 1, fields: ["value"], projectionDigest: "b".repeat(64) } } as const
@@ -209,7 +218,7 @@ test("compact review receipts survive SQLite restart, legacy replay and concurre
   // idempotency protocol, SQLite codec and actual store restart are exercised.
   const compose = (beforeSelection?: () => Promise<void>) => createReviewPort({
     state: createSfProductState({ persistence: resources.store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "review-incarnation" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) }),
-    creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"),
+    creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => boundRequest,
     authorizeOutcomeComparison: async (_context, outcomes) => control.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => control.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => control.allowed && decisions.length === 0,
     authorizeSections: async () => control.allowed, authorizeComments: async () => control.allowed, authorizeSensitivity: async () => control.allowed,
     revalidate: async () => control.allowed, revalidateEvidence: async () => control.allowed,
@@ -322,6 +331,7 @@ test("review egress revalidates decision and section sources after the other aut
   const storage = testPersistence()
   const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "target" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) })
   const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+  const boundRequest = new Request("https://example.test")
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const source = { surface: "planner", type: "forecast", id: "overview", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
   const decisionSource = { ...source, id: "decision-component", incarnation: "decision-original" }
@@ -331,7 +341,7 @@ test("review egress revalidates decision and section sources after the other aut
     comparison: { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 20, completeDifference: null },
   }
   const access = { allowed: true, revokeDuringSensitivity: false, batches: [] as string[][] }
-  const port = createReviewPort({ state, creationTarget: { ref: "review-creation", incarnation: "target" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => true, authorizeComments: async () => true,
+  const port = createReviewPort({ state, creationTarget: { ref: "review-creation", incarnation: "target" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => boundRequest, authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => true, authorizeComments: async () => true,
     authorizeSensitivity: async () => { if (access.revokeDuringSensitivity) access.allowed = false; return true },
     revalidate: async (_context, refs) => { access.batches.push(refs.map((ref) => ref.id)); return refs.every((ref) => ref.id !== decisionSource.id || access.allowed) },
     revalidateEvidence: async () => true,

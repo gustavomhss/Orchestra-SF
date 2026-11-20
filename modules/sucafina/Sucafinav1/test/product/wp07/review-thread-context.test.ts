@@ -17,14 +17,16 @@ import { object } from "../../../runtime/contract.ts"
 import { createThreadActorsFixture } from "../wp08/thread-actors-fixture.ts"
 import { createReviewAnswersFixture } from "../wp08/review-answers-fixture.ts"
 import { available } from "../wp08/relations-fixture.ts"
+import { createReviewThreadRecipientFixture } from "./review-thread-recipient-fixture.ts"
 
 // Actual C05, C06, C08, Dashboard source issuers and SQLite. Authentication,
 // recipient leases and the C17 historical archive are the fixture's declared
 // boundaries; this does not demonstrate an installed/native host execution.
 test("a question on C05 keeps its original review and source basis through current data changes and denies revoked review access", async () => {
   let reviewContext: ReturnType<typeof createReviewThreadContext> | undefined
+  let reviewServices: ReturnType<typeof createReviewServices> | undefined
   const access = { review: true, revokeAfterFirstRead: false, reads: 0 }
-  const f: Awaited<ReturnType<typeof createThreadActorsFixture>> = await createThreadActorsFixture({ authorizeReviewThreadContext: async (pin, basis, context) => {
+  const f: Awaited<ReturnType<typeof createThreadActorsFixture>> = await createThreadActorsFixture({ reviewRecipientAuthority: createReviewThreadRecipientFixture({ fixture: () => f, services: () => reviewServices, allowed: () => access.review }), authorizeReviewThreadContext: async (pin, basis, context) => {
     const allowed = !!reviewContext && await reviewContext.authorize(pin, basis, context)
     if (access.revokeAfterFirstRead && ++access.reads === 1) access.review = false
     return allowed
@@ -68,6 +70,7 @@ test("a question on C05 keeps its original review and source basis through curre
       authorizeSections: async (context, sections) => access.review && sections.every((section) => section.id === "project") && await sources(context, sections.flatMap((section) => section.sourceRefs)), revalidate: sources,
       authorizeComments: async (context, comments) => comments.length === 0 && await f.host.revalidate(context), authorizeDecision: async (context, values) => values.length === 0 && await f.host.revalidate(context), authorizeOutcome: async (context, values) => values.length === 0 && await f.host.revalidate(context), authorizeOutcomeComparison: async (context, values) => values.length === 0 && await f.host.revalidate(context), authorizeSensitivity: async (context, values) => values.length === 0 && await f.host.revalidate(context),
     } })
+    reviewServices = services
     reviewContext = services.threadContext
     const stored = await f.state.read(f.request("person"), "reviews", () => null)
     expect(stored).toEqual({ status: "unavailable", reason: "product-state-uninitialized" })
