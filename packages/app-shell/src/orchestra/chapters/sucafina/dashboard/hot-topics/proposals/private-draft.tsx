@@ -407,21 +407,21 @@ export function SfPrivateHotTopicEditor(props: SfSurfaceProps<"UI54">): JSX.Elem
         <div class="sf-u38-actions">
           <label>{t(key("sf.u38.privateCase"))}
             <select value={state.caseId} disabled={lockedSelection()} onChange={(event) => chooseCase(event.currentTarget.value)}>
-              <option value="">{t(key("sf.u38.privateChoose"))}</option>
-              <For each={state.workbench?.cases}>{(item) => <option value={item.caseRef.id}>{item.label}</option>}</For>
+              <option value="" selected={state.caseId === ""}>{t(key("sf.u38.privateChoose"))}</option>
+              <For each={state.workbench?.cases}>{(item) => <option value={item.caseRef.id} selected={state.caseId === item.caseRef.id}>{item.label}</option>}</For>
             </select>
           </label>
           <label>{t(key("sf.u38.privateProposal"))}
             <select value={state.draftRef} disabled={lockedSelection() || !state.caseId} onChange={(event) => chooseDraft(event.currentTarget.value)}>
-              <option value="new">{t(key("sf.u38.privateNew"))}</option>
-              <For each={candidates()}>{(item) => <option value={item.value.request.draftRef}>{item.label}</option>}</For>
+              <option value="new" selected={state.draftRef === "new"}>{t(key("sf.u38.privateNew"))}</option>
+              <For each={candidates()}>{(item) => <option value={item.value.request.draftRef} selected={state.draftRef === item.value.request.draftRef}>{item.label}</option>}</For>
             </select>
           </label>
           <label>{t(key("sf.u38.privateSource"))}
             <select value={state.sourceId} disabled={lockedSelection() || !state.caseId || state.draftRef !== "new"}
               onChange={(event) => chooseSource(event.currentTarget.value)}>
-              <option value="">{t(key("sf.u38.privateChoose"))}</option>
-              <For each={sources()}>{(item) => <option value={String(sourceId(item))}>{item.label}</option>}</For>
+              <option value="" selected={state.sourceId === ""}>{t(key("sf.u38.privateChoose"))}</option>
+              <For each={sources()}>{(item) => <option value={String(sourceId(item))} selected={state.sourceId === String(sourceId(item))}>{item.label}</option>}</For>
             </select>
           </label>
         </div>
@@ -487,8 +487,8 @@ export function SfPrivateHotTopicEditor(props: SfSurfaceProps<"UI54">): JSX.Elem
         <section>
           <label>{t(key("sf.u38.privateCaptureSource"))}
             <select value={state.captureRef} disabled={state.busy} onChange={(event) => setState("captureRef", event.currentTarget.value)}>
-              <option value="">{t(key("sf.u38.privateChoose"))}</option>
-              <For each={state.workbench?.records}>{(item) => <option value={item.sourceRef}>{item.label}</option>}</For>
+              <option value="" selected={state.captureRef === ""}>{t(key("sf.u38.privateChoose"))}</option>
+              <For each={state.workbench?.records}>{(item) => <option value={item.sourceRef} selected={state.captureRef === item.sourceRef}>{item.label}</option>}</For>
             </select>
           </label>
           <button type="button" class="mx-btn" disabled={!captureReady()} onClick={() => { void capture() }}>{t(key("sf.u38.privateCapture"))}</button>

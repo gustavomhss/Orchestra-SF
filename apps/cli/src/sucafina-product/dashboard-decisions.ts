@@ -432,10 +432,17 @@ export function createSfDashboardDecisions(input: {
       const previous = await state.read(source, "cases", (stored, authority) => {
         if (!sameAuthority(authority, context)) return undefined
         const decision = stored.cases[request.caseRef.id]
+        // Current participant loss is an authoritative refusal, even when its
+        // administrative change also advanced the selected case version.
+        if (decision?.incarnation === request.caseRef.incarnation && !decision.participants.includes(authority.principalRef))
+          return { kind: "denied" as const }
         const prior = stored.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `dashboard-prepare:${operationIdentity}`])]
-        return decision && decision.incarnation === request.caseRef.incarnation && decision.participants.includes(authority.principalRef) && prior ? { prior, decision } : undefined
+        return decision && decision.incarnation === request.caseRef.incarnation && decision.participants.includes(authority.principalRef) && prior
+          ? { kind: "previous" as const, prior, decision } : undefined
       })
-      if (previous.status === "ok" && previous.value) {
+      if (previous.status === "ok" && previous.value?.kind === "denied")
+        return { status: "denied", reason: "hot-topic-case-access-unavailable" }
+      if (previous.status === "ok" && previous.value?.kind === "previous") {
         if (previous.value.prior.commandDigest !== digestSfValue(request)) return { status: "conflict", reason: "idempotency-content-changed" }
         const saved = object(previous.value.prior.value)
         const savedRef = object(saved.caseRef)
