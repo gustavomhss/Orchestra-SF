@@ -163,7 +163,7 @@ export function createSfPlannerCalculationAncestryScope(input: {
     return found.status === "ok" ? { ...found.value, checkedAt: new Date().toISOString() }
       : { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
   }
-  const observe = async <Value>(incoming: unknown, call: TrustedDomainContext, work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+  const observe = async <Value>(incoming: unknown, call: TrustedDomainContext, work: () => Promise<PortResult<Value>>, leafRead = false): Promise<PortResult<Value>> => {
     const parent = local.getStore()
     if (parent) {
       if (parent.call !== call || !live(parent)) { invalidate(parent); return changed() }
@@ -173,7 +173,7 @@ export function createSfPlannerCalculationAncestryScope(input: {
       try { return await original(parent, work) }
       finally { parent.children-- }
     }
-    if (call.kind !== "ui" || active.has(call) || !nestedPlannerClosure(incoming) || input.host.persistence.currentSnapshots?.()) return work()
+    if (call.kind !== "ui" || active.has(call) || !nestedPlannerClosure(incoming, leafRead) || input.host.persistence.currentSnapshots?.()) return work()
     const host = input.host, state = input.state, sources = input.sources, persistence = host.persistence
     const requestFor = host.requestFor, revalidate = host.revalidate, authenticate = host.authenticate, environment = host.environment
     const stateRead = state.read, snapshots = persistence.currentSnapshots, transaction = persistence.transaction, transactionAll = persistence.transactionAll
@@ -208,7 +208,11 @@ export function createSfPlannerCalculationAncestryScope(input: {
     } catch { invalidate(owner); return changed() }
     finally { owner.open = false; owner.proof = undefined; owner.pins.clear(); if (active.get(call) === owner) active.delete(call) }
   }
-  return { observe, replay, resolve }
+  // The authenticated case/request readers own a complete readonly phase even
+  // when a ledger cites its leaf calculation directly rather than through an event.
+  const observeRead = <Value>(incoming: unknown, call: TrustedDomainContext, work: () => Promise<PortResult<Value>>) =>
+    observe(incoming, call, work, true)
+  return { observe, observeRead, replay, resolve }
 }
 
 function leafFor(state: Readonly<SfProductState>, runId: string, call: TrustedDomainContext): Leaf | undefined {
@@ -251,14 +255,14 @@ function plannerRecords(value: unknown): readonly RecordRef[] | undefined {
   if (!refs?.length || refs.some((ref) => ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version")) return undefined
   return [...new Map((refs as readonly RecordRef[]).map((ref) => [digestSfValue(ref), ref])).values()]
 }
-function nestedPlannerClosure(value: unknown) {
+function nestedPlannerClosure(value: unknown, leafRead: boolean) {
   const refs = evidence(value)
   let nested = false
   const visit = (ref: BusinessEvidenceRef): boolean => {
     if (ref.kind === "record") return ref.target.surface === "planner" && ref.target.recordType === "planner-version"
     if (ref.kind === "case-event") { nested = true; return ref.target.evidenceRefs.every(visit) }
     if (ref.kind === "calculation" && ref.target.calculationId === "planner:scenario" && ref.target.engineVersion === "planner-runtime-v1") {
-      if (ref.target.sourceRefs.some((source) => source.kind !== "record")) nested = true
+      if (leafRead || ref.target.sourceRefs.some((source) => source.kind !== "record")) nested = true
       return ref.target.sourceRefs.every(visit)
     }
     return false

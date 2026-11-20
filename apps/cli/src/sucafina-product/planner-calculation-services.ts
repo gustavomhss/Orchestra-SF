@@ -66,10 +66,11 @@ export function createSfPlannerCalculationServices(input: {
     } })
   // Older/direct compositions without the private producer identity retain full replay.
   const observeAncestry: typeof ancestry.observe = (request, call, work) => input.readerIdentity ? ancestry.observe(request, call, work) : work()
+  const observeRead: typeof ancestry.observeRead = (request, call, work) => input.readerIdentity ? ancestry.observeRead(request, call, work) : work()
   const replayScenario: PlannerPort["simulateScenario"] = (request, call) =>
     observeAncestry(request, call, () => input.replayScenario(request, call))
   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
-    authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
+    authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes, observeRead,
     verifyRequestSources: async (request, stored, call): Promise<boolean> => {
       const records = plannerRecordSources(stored)
       const checked = await observeAncestry({ request, stored }, call, () => input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value:
@@ -294,7 +295,8 @@ export function createSfPlannerCalculationServices(input: {
     }))
     return found.status === "ok" ? found.value : unavailable()
   }
-  return { persist, issue, resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources, requests: { read: requests.read } }
+  return { persist, issue, resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources,
+    simulateScenario: replayScenario, observeRead, requests: { read: requests.read } }
 }
 
 function plannerRecordSources(stored: StoredScenario): readonly PlannerRecord[] | undefined {
