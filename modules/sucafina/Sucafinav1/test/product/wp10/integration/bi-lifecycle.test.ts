@@ -30,6 +30,7 @@ import type { DomainProjection } from "../../../../product/contracts/context.ts"
 import { sfPlannerBiSelection } from "../../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+import { nativeBiDestination } from "../../../../../../../packages/app-shell/src/orchestra/chapters/sucafina/bi/native-destination.ts"
 
 const liveLifecycleFixtures = new Set<() => Promise<void>>()
 let nativeAssetBuild: ReturnType<typeof createNativeBrowserAssets> | undefined
@@ -291,7 +292,9 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     if (!owner) throw new Error("Real native F01 owner unavailable")
     signal.throwIfAborted()
     const count = (mode: string) => observations.filter((entry) => entry.mode === mode).length
-    return { page, context, origin, mount, owner, selectionRef, observations, failures, aborted, holdNext, count, capture, dispose, report: owned.report }
+    const descriptor = native.descriptor()
+    if (!descriptor) throw new Error("The actual native installation descriptor was unavailable")
+    return { page, context, origin, mount, owner, descriptor, selectionRef, observations, failures, aborted, holdNext, count, capture, dispose, report: owned.report }
 
   } catch (error) {
     console.error("SF_BI_LIFECYCLE_SETUP", JSON.stringify({ stage, cancelled: signal.aborted, error: error instanceof Error ? error.message : String(error) }))
@@ -500,8 +503,36 @@ test("native BI returns from its real Planner source with the same human filters
     const original = sourceResponse.body as { links: { label: string; url: string }[] }
     expect(original.links.length).toBeGreaterThan(0)
     const originalUrl = new URL(original.links[0]!.url, world.origin)
+    // Exercise the destination selector with the actual producer link and
+    // installation descriptor. These inputs are selectors, never a grant.
+    const route = new URL(page.url())
+    const ownerSelection = { serverKey: route.searchParams.get("server")!, projectId: route.searchParams.get("project")!,
+      installationId: route.searchParams.get("installation")! } as Parameters<typeof nativeBiDestination>[2]
+    const selectedDestination = nativeBiDestination(originalUrl.href, world.descriptor, ownerSelection)
+    expect(selectedDestination).toBeDefined()
+    const alteredDestination = (alter: (url: URL) => void) => {
+      const url = new URL(originalUrl)
+      alter(url)
+      return nativeBiDestination(url.href, world.descriptor, ownerSelection)
+    }
+    expect(alteredDestination((url) => { url.hostname = "unapproved.example" })).toBeUndefined()
+    expect(alteredDestination((url) => { url.protocol = "ftp:" })).toBeUndefined()
+    expect(alteredDestination((url) => { url.username = "other"; url.password = "credential" })).toBeUndefined()
+    expect(alteredDestination((url) => { url.hash = "unproven" })).toBeUndefined()
+    expect(alteredDestination((url) => { url.searchParams.append("version", "other") })).toBeUndefined()
+    expect(alteredDestination((url) => { url.searchParams.set("unrecognized", "value") })).toBeUndefined()
+    expect(alteredDestination((url) => { url.pathname = "/orchestra/sf-planner/versions" })).toBeUndefined()
+    for (const key of ["server", "project", "installation"])
+      expect(alteredDestination((url) => { url.searchParams.set(key, "different-owner") })).toBeUndefined()
+    expect(nativeBiDestination(originalUrl.href, world.descriptor, {
+      ...ownerSelection, projectId: "different-project" as typeof ownerSelection.projectId,
+    })).toBeUndefined()
+    expect(nativeBiDestination(originalUrl.href, world.descriptor, {
+      ...ownerSelection, installationId: "different-installation" as typeof ownerSelection.installationId,
+    })).toBeUndefined()
     const link = page.getByRole("navigation", { name: "Authorized source links", exact: true }).locator("a").first()
     const nativeUrl = new URL((await link.getAttribute("href"))!, world.origin)
+    expect(nativeUrl.href).toBe(new URL(selectedDestination!, world.origin).href)
     expect(nativeUrl.pathname).toBe("/orchestra/sf-planner/overview")
     expect(nativeUrl.searchParams.get("version")).toBe(originalUrl.searchParams.get("version"))
     expect(nativeUrl.searchParams.get("server")).toBe(world.origin)
