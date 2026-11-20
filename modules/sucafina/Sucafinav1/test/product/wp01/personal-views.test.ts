@@ -121,15 +121,21 @@ test("personal views isolate authenticated principals and reconcile exact retrie
         response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-views" &&
         object(response.request().postDataJSON()).action === "open" &&
         object(object(response.request().postDataJSON()).input).id === filtered.view.id
-      const assertRestored = async (response: BrowserResponse, opened: BrowserResponse) => {
-        expect(opened.status()).toBe(200)
-        expect(await opened.json()).toMatchObject({ status: "ok", value: { view: filtered.view } })
-        expect(response.status()).toBe(200)
-        const query = new URL(response.url()).searchParams
+      // Read each real response body when it arrives. Navigation/reload can
+      // invalidate Chromium's response-body identifier before the later DOM checks.
+      const captureResponse = async (matches: (response: BrowserResponse) => boolean) => {
+        const response = await tab.waitForResponse(matches)
+        return { status: response.status(), url: response.url(), body: await response.json() }
+      }
+      const assertRestored = async (response: Awaited<ReturnType<typeof captureResponse>>, opened: Awaited<ReturnType<typeof captureResponse>>) => {
+        expect(opened.status).toBe(200)
+        expect(opened.body).toMatchObject({ status: "ok", value: { view: filtered.view } })
+        expect(response.status).toBe(200)
+        const query = new URL(response.url).searchParams
         expect(query.get("year")).toBe("2027")
         expect(query.get("mode")).toBe("forecast")
         expect(query.get("q")).toBe("renewal")
-        expect(await response.json()).toMatchObject({ status: "ok", value: {
+        expect(response.body).toMatchObject({ status: "ok", value: {
           selection: { year: 2027, mode: "forecast", q: "renewal" },
           data: { lines: [{ id: "renewal-line", name: "License renewal" }] },
         } })
@@ -143,11 +149,11 @@ test("personal views isolate authenticated principals and reconcile exact retrie
         await browserExpect(tab.getByText("Unrelated hosting", { exact: true })).toHaveCount(0)
       }
       const [opened, response] = await Promise.all([
-        tab.waitForResponse(openedView), tab.waitForResponse(pageResponse), openSavedPage.click(),
+        captureResponse(openedView), captureResponse(pageResponse), openSavedPage.click(),
       ])
       await assertRestored(response, opened)
       const [reopened, refreshed] = await Promise.all([
-        tab.waitForResponse(openedView), tab.waitForResponse(pageResponse), tab.reload(),
+        captureResponse(openedView), captureResponse(pageResponse), tab.reload(),
       ])
       await assertRestored(refreshed, reopened)
       expect(errors).toEqual([])
