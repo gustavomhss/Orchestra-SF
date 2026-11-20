@@ -60,7 +60,7 @@ export async function localBrowser(options: { nativePlanner?: boolean } = {}) {
       XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
     }
     console.info("browser fixture: installation")
-    // Opt in only for the migrated Planner journey. Identity, scanner, storage
+    // Opt in for migrated native browser journeys. Identity, scanner, storage
     // and enrollment below remain the original localBrowser installation.
     const native = options.nativePlanner ? await import("./native-local-host.ts") : undefined
     const installation = await createLocalInstallation({
@@ -198,7 +198,56 @@ export async function localBrowser(options: { nativePlanner?: boolean } = {}) {
     page.setDefaultTimeout(10000)
     page.setDefaultNavigationTimeout(10000)
     const errors: string[] = []
-    page.on("pageerror", (error) => { errors.push(error.message) })
+    const pageErrorKinds: string[] = []
+    const bootstrapStarted = performance.now()
+    const bootstrapTraffic: {
+      event: "request" | "response"; path: string; method: string; status?: number; elapsedMs: number
+    }[] = []
+    const observeBootstrap = (event: "request" | "response", url: string, method: string, status?: number) => {
+      if (!native || bootstrapTraffic.length >= 40) return
+      const parsed = new URL(url)
+      if (parsed.origin !== "http://localhost:3000" || ![
+        "/api/health", "/api/sucafina/installations", "/sucafina/api/ui/context",
+      ].includes(parsed.pathname)) return
+      bootstrapTraffic.push({ event, path: parsed.pathname, method,
+        ...(status === undefined ? {} : { status }), elapsedMs: Math.round(performance.now() - bootstrapStarted) })
+    }
+    page.on("pageerror", (error) => {
+      errors.push(error.message)
+      if (pageErrorKinds.length < 10) pageErrorKinds.push(
+        ["Error", "TypeError", "ReferenceError", "SyntaxError", "RangeError"].includes(error.name) ? error.name : "Error",
+      )
+    })
+    if (native) {
+      page.on("request", (request) => observeBootstrap("request", request.url(), request.method()))
+      page.on("response", (response) => observeBootstrap("response", response.url(), response.request().method(), response.status()))
+    }
+    // Read-only, bounded diagnostics. Never collect headers, bodies, query strings,
+    // enrollment codes, signed asset URLs or field contents from the private page.
+    const nativeDiagnostics = async () => {
+      if (!native) return undefined
+      const url = new URL(page.url())
+      const deadline = { timer: undefined as ReturnType<typeof setTimeout> | undefined }
+      const f01 = await Promise.race([
+        page.evaluate(() => {
+          const host = document.querySelector('[data-sf-host="owner-runtime231"]')
+          const attribute = (element: Element | null, name: string) =>
+            element?.getAttribute(name)?.replace(/[^a-zA-Z0-9_.:-]/g, "_").slice(0, 80) ?? null
+          return {
+            discovery: attribute(host, "data-sf-discovery-state"),
+            provider: attribute(host, "data-sf-provider-state"),
+            reason: attribute(host, "data-sf-provider-reason"),
+            view: attribute(host, "data-sf-view-state"),
+            gate: attribute(document.querySelector("[data-sf-f01]"), "data-sf-f01"),
+          }
+        }).catch(() => ({ unavailable: true })),
+        new Promise<{ unavailable: true }>((resolve) => {
+          deadline.timer = setTimeout(() => resolve({ unavailable: true }), 1000)
+        }),
+      ]).finally(() => { if (deadline.timer) clearTimeout(deadline.timer) })
+      return { url: url.origin + url.pathname, f01, traffic: [...bootstrapTraffic],
+        pageErrorCount: errors.length, pageErrorKinds: [...pageErrorKinds] }
+    }
     // Business tests navigate their own throwaway browser to the real enrollment endpoint.
     // operator-browser.test.ts separately covers the file-to-browser handoff.
     const handoff = (await Bun.file(access.artifact).text()).match(/location\.replace\(("[^"\r\n]*")\)/)?.[1]
@@ -215,7 +264,7 @@ export async function localBrowser(options: { nativePlanner?: boolean } = {}) {
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
     return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose,
-      report: () => nativeDriver?.report() }
+      report: () => nativeDriver?.report(), nativeDiagnostics }
   } catch (error) {
     await dispose()
     throw error

@@ -86,4 +86,4 @@ export async function mountNativeLocalBrowser(
   }
 }
 
-export const launchNativeLocalBrowser = () => launchBrowserDriver("planner-workbook")
+export const launchNativeLocalBrowser = () => launchBrowserDriver("native-private-io")
