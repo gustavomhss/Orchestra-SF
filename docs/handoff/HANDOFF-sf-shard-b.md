@@ -24,11 +24,11 @@ Caminhos abaixo relativos a `modules/sucafina/Sucafinav1/test/product/`. As 14 f
 
 | File:line | Casos | Observação | Classificação / encaminhamento |
 | --- | ---: | --- | --- |
-| wp13/handoff-persistence.test.ts:95 | 1 | `ok` → `stale` | em análise — preparação/revalidação WP13 |
+| wp13/handoff-persistence.test.ts:95 | 1 | `ok` → `stale` | fixture-request-identity — novo Request em cada lookup (:58), incompatível com case-port.ts:84,107; C08 |
 | wp13/coverage-sensitivity-integration.test.ts:115 | 1 | mutação de input aceita (`false` → `true`) | shared-security-input-mutation — `product/portfolio/verification.ts:203-205`; requer PR shared |
 | wp13/handoff-domain-integration.test.ts:392 | 1 | preparação canônica indisponível | fixture sem `confirmed: false` (:391); correção preparada |
-| wp13/handoff-c08-predispatch.test.ts:242 | 1 | replay retorna `conflict`, esperado `ok` | em análise — identidade do replay |
-| wp13/handoff-canonical-integration.test.ts:176 | 1 | replay retorna `conflict`, esperado `ok` | em análise — identidade do replay |
+| wp13/handoff-c08-predispatch.test.ts:242 | 1 | replay retorna `conflict`, esperado `ok` | fixture-original-intent — substitui a versão do case em replay; produtor exige request original; C07 |
+| wp13/handoff-canonical-integration.test.ts:176 | 1 | replay retorna `conflict`, esperado `ok` | fixture-original-intent — substitui a versão do case em replay; produtor exige request original; C07 |
 | proof234/am04-c12-return.test.ts:78 → c12-receipt-recovery/consumer.ts:81 | 1 | leitura de receipts negada após revogação | fixture observa como Alice revogada; observação por Bob já autorizado preparada |
 | wp12/native-execution-reevaluation.test.ts → wp12/native-portfolio-preparation.ts:150 | 1 | esperado total null, recebido 240000 | fixture confunde fonte sem operações com hipótese; correção específica em preparação |
 | wp12/native-execution-purchase.test.ts → wp12/native-procurement-preparation.ts:193 | 2 | pending/complete: esperado total null, recebido 240000 | mesma causa de classificação da fonte; preservar null em hipóteses e cobertura incompleta |
@@ -40,25 +40,25 @@ Caminhos abaixo relativos a `modules/sucafina/Sucafinav1/test/product/`. As 14 f
 
 ## Falhas observadas do shard 5
 
-Mesmo prefixo de caminhos. Diagnóstico em curso; nenhum resultado dos arquivos não iniciados é presumido.
+Mesmo prefixo de caminhos. Falhas observadas classificadas; nenhum resultado dos arquivos não iniciados é presumido.
 
 | File:line | Casos | Observação | Classificação / encaminhamento |
 | --- | ---: | --- | --- |
 | installed-bi-closure/sensitivity-history.test.ts:19,66 | 3 | deadlines cooperativos de 165000 ms | unbound — desempenho/lifecycle; sem aumentar limite por palpite |
-| similarity217/installed.test.ts:53,99,137 | 3 | `ok` → `unavailable` | em análise — memória/Atlas instalados |
-| wp12/native-execution-bi.test.ts:85 | 2 | predicado esperado true, recebido false | em análise — contrato de fonte nativa |
-| wp11/source-promotion-coverage.test.ts:182 | 1 | ordem de evaluatedSourceRefs diverge | em análise — ordem da observação real |
+| similarity217/installed.test.ts:53,99,137 | 3 | `ok` → `unavailable` | shared-canonical-recall-availability — positivos C09+Atlas indisponíveis; reason interno não exposto pelo assert |
+| wp12/native-execution-bi.test.ts:85 | 2 | predicado esperado true, recebido false | fixture-native-source-link — URL e label nativos exatos; mesma causa de work-bridge; C06 |
+| wp11/source-promotion-coverage.test.ts:182 | 1 | ordem de evaluatedSourceRefs diverge | fixture-source-first-evidence-order — comparar exatamente com avaliação humana já validada; C05 |
 | wp01/planner-monthly.test.ts:44 | 1 | inscrição seguida de navegação a console retirado | contrato de UI legado — usa `?page=OPEX`; não restaurar console |
 | wp00/contract-freeze.test.ts:19 | 1 | hash de `product/contracts/decisions.ts` diverge | contract-freeze-drift — não atualizar hash somente para verde |
 | wp10/integration/portfolio-promotion.test.ts:227 → :43 | 1 | deadline cooperativo de 285000 ms | unbound — desempenho/lifecycle |
-| wp10/integration/review-portfolio-http.test.ts:271 | 1 | `denied` → `unavailable` | em análise — fronteira de autoridade |
+| wp10/integration/review-portfolio-http.test.ts:271 | 1 | `denied` → `unavailable` | shared-grouped-revocation-status — C08 externo ok, leitura interna unavailable em vez de denied; sem evidência de divulgação |
 | wp10/integration/review-access-browser-fixture.ts:29 | 1 | WP10_REVIEW_BROWSER_TRANSPORT_DEADLINE | unbound — deadline de transporte da fixture |
 | wp10/integration/bi-lifecycle.test.ts:202 | 4 | inscrição redireciona a `/` não servida | contrato de shell legado; quatro casos de lifecycle, sem restaurar console |
-| wp10/integration/portfolio-exact-threshold.test.ts:43 → :213 | 1 | denied/criterion-result-access-unavailable | em análise — acesso ao resultado de critério |
-| wp10/integration/planner-calculation.test.ts:615 | 1 | 0 resoluções observadas, esperado 1 | em análise — instrumentação/recall Atlas |
-| wp10/integration/work-bridge.test.ts:386 | ≥1 erro de asserção adicional | HTML não contém `page=All+Projects`; marcador fail ausente após linha longa | contrato de navegação legado — não restaurar URL para satisfazer teste |
+| wp10/integration/portfolio-exact-threshold.test.ts:43 → :213 | 1 | denied/criterion-result-access-unavailable | shared-durable-sensitivity-access — verifySensitivity false / bind denied; dentro do orçamento, não timeout |
+| wp10/integration/planner-calculation.test.ts:615 | 1 | 0 resoluções observadas, esperado 1 | fixture-instrumentation-copy — contador intercepta cópia retornada; Atlas usa objeto original (business-services.ts:540,726); preservar esperado 1 |
+| wp10/integration/work-bridge.test.ts:386 | ≥1 erro de asserção adicional | HTML não contém `page=All+Projects`; marcador fail ausente após linha longa | fixture-native-source-link — mesma causa dos dois casos BI; C06 |
 
-O cancelamento ocorreu durante `wp10/integration/planner-calculation.test.ts:684`, na chamada de recall em `:694`. Os testes seguintes em `:718` e `:738` não foram alcançados. A cauda desse arquivo e os 14 arquivos abaixo ficam **unbound — não enumerados por limite do job**:
+O cancelamento ocorreu durante `wp10/integration/planner-calculation.test.ts:684`, na chamada de recall em `:694`. Os dez casos seguintes não foram alcançados: `:718` (fonte persistida alterada), `:738` (oito variantes: source, membership, capture, coverage, selector, clock, principal, lease) e `:810` (isolamento lexical com cálculo paralelo). A cauda desse arquivo e os 14 arquivos abaixo ficam **unbound — não enumerados por limite do job**:
 
 - `Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts`
 - `Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts`
@@ -103,10 +103,44 @@ O cancelamento ocorreu durante `wp10/integration/planner-calculation.test.ts:684
 São execuções cirúrgicas de todos os arquivos dos shards, no Actions. O `test-ci` não produz o recibo completo de `sf-ci`, não executa sua verificação de cobertura e usa Omni no escopo `declared` para seleções explícitas. Não há alegação de baseline, coverage, digest de execução ou GO. Os hashes de seleção são cálculos de inventário, não recibos.
 
 
+## Fatias preparadas — ainda sem commit de código ou gate
+
+Cada fatia preserva os controles de negócio e segurança existentes. Revisão independente: PASS. A enumeração do shard 6 deve terminar antes da publicação.
+
+| Causa | Arquivos sob test/product/ | Correção / gate previsto |
+| --- | --- | --- |
+| C01 — união de permissões | integrated-proofs/am01/recall-five-profiles.test.ts:28 | Deduplicar nomes, manter a união completa; gate deste arquivo. |
+| C02 — observador após revogação | proof234/am04-c12-return.test.ts:78 | Manter Alice negada; ler cases e receipts como Bob já autorizado e comparar estado completo; gate deste arquivo. |
+| C03 — inscrição do componente | wp07/browser-ui.test.ts:242 | GET real via BrowserContext.request sem seguir redirect; afirmar 303 e Location /; abrir componente já existente; gate deste arquivo. |
+| C04 — fonte observada vs hipótese | wp12/native-portfolio-preparation.ts:139-153; native-procurement-preparation.ts:190-199 | Baseline sem operações exige total conhecido exato e cobertura completa; hipóteses e cobertura ausente mantêm null/conditioned. Gate conjunto purchase + reevaluation; incluir consumer do shard 6 se atingir a mesma falha. |
+| C05 — ordem da avaliação | wp11/source-promotion-coverage.test.ts:182 | Comparar lista exata de fontes com avaliação humana independente já verificada; gate deste arquivo. |
+| C06 — link nativo | wp12/native-execution-bi.test.ts:85; wp10/integration/work-bridge.test.ts:386 | Exigir rota /orchestra, origem, ano e label completos com id/versão/período; gate conjunto dos dois arquivos. |
+| C07 — replay da intenção original | wp13/handoff-c08-predispatch.test.ts:242; handoff-canonical-integration.test.ts:162,176 | Afirmar conflito da versão alterada e igualdade completa do replay da request original; gate conjunto dos dois arquivos. |
+| C08 — identidade da request admitida | wp13/handoff-persistence.test.ts:58; handoff-domain-integration.test.ts:358 | Manter uma Request estável no host de cada fixture; gate persistence. O arquivo domain será exercitado pelo gate C09. |
+| C09 — intenção de rascunho | wp13/handoff-domain-integration.test.ts:391 | Acrescentar confirmed:false ao comando de estimate; gate domain, também cobrindo sua identidade corrigida em C08. |
+
+Justificativas independentes:
+- `product/planner/scenario-port.ts:107-129`, `test/product/wp03/source-scenario.test.ts:32-81` e `wp13/source-scenario.test.ts:36-38` distinguem observação corrente, hipótese e cobertura ausente. Não se transforma proposta em aplicação.
+- `test/product/procurement-decision-producer/preparation.test.ts:55-74` exige intenção explícita de rascunho; missing/true são rejeitados. `confirmed:false` não é aprovação.
+- `test/product/c12-recovery-closure/original-intent.test.ts:60-68` exige conflito para case version alterada e recibo idêntico para replay exato, sem nova execução de domínio.
+- `apps/cli/src/sucafina-product/extended-source-links.ts:61-62,76-78,94` define as rotas nativas e labels; as asserções passam de substring para igualdade exata.
+- `product/decisions/cost-coverage.ts:99-121` preserva a ordem da evidência da avaliação humana, que integra o digest.
+
+Limites conhecidos: persistence ainda contém expectativas antigas de reconciliação em :146/:174 e replay com versão alterada em :170. Não serão alteradas antecipadamente; o gate pode expor um bloqueio posterior. Nenhum green será presumido.
+
+## Pendências de produtor compartilhado
+
+Nenhum código compartilhado foi alterado. As duas falhas seguintes são preservadas como regressões:
+- Sensibilidade: `product/portfolio/verification.ts:203-205` usa replay direto sem snapshot/fingerprint final dos inputs quando sensitivityReadScope está ausente. O caminho scoped tem proteção em :217-267. Exigir correção de imutabilidade e publicação do fence somente após validação final; não desviar o teste para outro caminho.
+- Replay de draft: `product/decisions/hot-topic-draft.ts:94-101,206-207` rejeita versão antiga antes de consultar o resultado durável da mesma operação, embora o avanço legítimo mantenha o escopo do draft. Preservar retorno 200 do replay exato e negação de comandos novos stale.
+
+A instrumentação de `planner-calculation.test.ts:112-123` substitui um método da cópia exposta em `business-services.ts:726`; Atlas usa o original capturado em :540. O contador 0 não prova falta de autorização. Corrigir a fronteira observável sem reduzir esperado 1; se exigir composição compartilhada, abrir PR `shared:`.
+
+
 ## Pendente / como retomar
 
 1. Aguardar e enumerar o run 44651628624; não repetir gates sem mudança.
-2. Concluir classificações pendentes; shard 5 não tem total final e não pode ser anunciado completo.
+2. Classificar o shard 6. O shard 5 não tem total final e não pode ser anunciado completo.
 3. Publicar cada causa corrigida em commit separado de `sf-shard-b`; fazer um gate focado nos testes afetados do shard, no máximo dois ativos. Não converter a passagem de um recorte em passagem do shard inteiro.
 4. Preservar as asserções de segurança e negócio. Qualquer correção fora de `Sucafinav1/test/**` deve ir a PR separado com título `shared:`.
 5. Atualizar falhas, commits, gates e estado final deste handoff.
