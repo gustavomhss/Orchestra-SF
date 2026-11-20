@@ -74,9 +74,7 @@ export interface Interface extends State.Transformable<Draft> {
 
 export class Service extends Context.Service<Service, Interface>()("@orchestra/v2/Catalog") {}
 
-const layer = Layer.effect(
-  Service,
-  Effect.gen(function* () {
+const make = Effect.gen(function* () {
     const events = yield* EventV2.Service
     const policy = yield* Policy.Service
     const integrations = yield* Integration.Service
@@ -370,8 +368,9 @@ const layer = Layer.effect(
     }
 
     return Service.of(result)
-  }),
-)
+  })
+
+const layer = Layer.effect(Service, make)
 
 const SMALL_MODEL_RE = /\b(nano|flash|lite|mini|haiku|small|fast)\b/
 
@@ -384,7 +383,7 @@ export const locationLayer = layer.pipe(
 const admittedLayer = Layer.effect(Service, Effect.gen(function* () {
   const owners = yield* SessionOwner.Service
   const binding = yield* owners.location.pipe(Effect.orDie)
-  const service = Context.get(yield* Layer.build(layer), Service)
+  const service = yield* make
   if (!binding) return service
   // Provider metadata, ambient keys and a shared model name cannot turn into an
   // available private provider. This branch does not enumerate or open credentials.
