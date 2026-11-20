@@ -3,7 +3,7 @@ import type { Snapshot } from "../../../runtime/contract.ts"
 import type { BlobTransaction } from "../../../runtime/assets.ts"
 import type { SfProductState } from "../../../product/contracts/state.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { selectSfScenarioCandidates } from "../../../product/host-binding/state-provider.ts"
+import { selectSfCaseIdentity, selectSfScenarioCandidates } from "../../../product/host-binding/state-provider.ts"
 import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
 
 // Real C08/SQLite and Planner corpus; the unchanged renewal fixture declares
@@ -81,12 +81,55 @@ test("scenario candidates keep the complete result graph while omitting unrelate
         timings.push({ mode, elapsedMs: sample.elapsedMs })
       }
     }
+    // The same real corpus supplies the business.selectedCase predicate. This
+    // adds no writes, grants, calculation or synthetic padding between arms.
+    const identitySelector = selectSfCaseIdentity(phase.caseRef, history.fixture.context)
+    const observeIdentity = async (mode: "canonical" | "opaque", instrument: boolean) => {
+      Object.assign(counts, { instrument, transactions: 0, unrelatedClones: 0, caseClones: 0, resultClones: 0 })
+      const start = performance.now()
+      const result = await history.state.read(history.fixture.request, "cases", mode === "opaque"
+        ? (state, actor) => identitySelector(state, actor) : identitySelector)
+      const elapsedMs = performance.now() - start
+      expect(result.status).toBe("ok")
+      if (result.status !== "ok") throw new Error("Current case identity missing")
+      expect(result.value).toEqual(phase.caseRef)
+      return { mode, elapsedMs, transactions: counts.transactions, unrelatedClones: counts.unrelatedClones,
+        caseClones: counts.caseClones, resultClones: counts.resultClones, identityDigest: digestSfValue(result.value),
+        metadata: { storageVersion: result.storageVersion, aggregateRevision: result.aggregateRevision, incarnation: result.incarnation } }
+    }
+    const identityOpaque = await observeIdentity("opaque", true)
+    const identityCanonical = await observeIdentity("canonical", true)
+    expect(identityCanonical.identityDigest).toBe(identityOpaque.identityDigest)
+    expect(identityCanonical.metadata).toEqual(identityOpaque.metadata)
+    expect(identityCanonical.metadata).toEqual(opaque.metadata)
+    expect(identityOpaque).toMatchObject({ transactions: 1, unrelatedClones: 1, caseClones: 1, resultClones: sizes.results })
+    expect(identityCanonical).toMatchObject({ transactions: 1, unrelatedClones: 0, caseClones: 1, resultClones: 0 })
+    const identityTimings: { mode: "canonical" | "opaque"; elapsedMs: number }[] = []
+    for (let pair = 0; pair < 6; pair++) {
+      for (const mode of pair % 2 ? ["opaque", "canonical"] as const : ["canonical", "opaque"] as const) {
+        const sample = await observeIdentity(mode, false)
+        expect(sample.transactions).toBe(1)
+        expect(sample.identityDigest).toBe(identityOpaque.identityDigest)
+        expect(sample.metadata).toEqual(identityOpaque.metadata)
+        identityTimings.push({ mode, elapsedMs: sample.elapsedMs })
+      }
+    }
     counts.instrument = false
     expect(digestSfValue(await history.readCase())).toBe(originalDigest)
     const summarize = (mode: "canonical" | "opaque") => {
       const values = timings.filter((value) => value.mode === mode).map((value) => value.elapsedMs).sort((a, b) => a - b)
       return { samples: values.length, medianMs: (values[2]! + values[3]!) / 2, minimumMs: values[0], maximumMs: values.at(-1) }
     }
+    const summarizeIdentity = (mode: "canonical" | "opaque") => {
+      const values = identityTimings.filter((value) => value.mode === mode).map((value) => value.elapsedMs).sort((a, b) => a - b)
+      return { samples: values.length, medianMs: (values[2]! + values[3]!) / 2, minimumMs: values[0], maximumMs: values.at(-1) }
+    }
+    console.log("DECISION_CASE_IDENTITY_MEASUREMENT " + JSON.stringify({
+      sizes, opaque: identityOpaque, canonical: identityCanonical, timings: identityTimings,
+      summary: { opaque: summarizeIdentity("opaque"), canonical: summarizeIdentity("canonical") },
+      boundary: "one fresh C08/SQLite transaction per selector; full case map, original participant/actor predicate and authority boundaries",
+      disclosure: "same real Planner corpus and unchanged fixture source grants; not installed Decisions or native acceptance",
+    }))
     console.log("DECISION_SCENARIO_CANDIDATE_MEASUREMENT " + JSON.stringify({
       sizes, opaque, canonical, timings, summary: { opaque: summarize("opaque"), canonical: summarize("canonical") },
       boundary: "one fresh C08/SQLite transaction per selector; full result map, original predicate and authority boundaries",

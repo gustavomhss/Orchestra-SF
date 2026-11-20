@@ -17,6 +17,7 @@ import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidence
 import type { DecisionCase, DocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { mapSfEvidenceInOrder } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts"
+import { selectSfCaseIdentity } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import { createSfDocumentScenarios } from "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts"
@@ -248,12 +249,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     if (!selected || !request || (call.kind === "ui" && (!scope || scope.request !== request || scope.bindingDigest !== binding)) ||
       !await host.revalidate(call) || !currentCaseAuthority(call, request, binding)) return { status: "unavailable", reason: "case-selection-unavailable" }
     const captured = structuredClone(selected)
-    const current = await input.authority.state.read(request, "cases", (state, actor) => {
-      const value = state.cases[captured.id]
-      return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
-        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
-        ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
-    })
+    const current = await input.authority.state.read(request, "cases", selectSfCaseIdentity(captured, call))
     const valid = await host.revalidate(call)
     const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     return current.status === "ok" && current.value && digestSfValue(current.value) === digestSfValue(captured) && digestSfValue(again) === digestSfValue(captured) &&
