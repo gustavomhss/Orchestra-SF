@@ -5,7 +5,7 @@ import type { DomainPortHost, PortResult, PreparedApplyPort, PreparedDomainMutat
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
-import { isReviewDigest, preparedOriginalIntentState, receiptProofKey, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
+import { isReviewDigest, preparedOriginalIntentState, receiptProofKey, receiptProofMatches, receiptProofLookup, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
 import { applicationAttempts } from "./application-attempt.ts"
 
 /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
@@ -32,7 +32,12 @@ export function createSfPreparedApply(input: {
       if (!source || !await input.host.revalidate(context).catch(() => false) || !await input.authorizeLookup(request, context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
       const current = await input.state.read(source, "receipts", (state, authority) => {
         if (!sameAuthority(authority, context)) return undefined
-        return Object.values(state.receipts).filter((item) => item.surface === request.surface && item.targetIncarnation === request.targetIncarnation && item.idempotencyKey === request.idempotencyKey && item.principalRef === context.binding.principalRef)
+        const proof = receiptProofLookup(state, authority, request.targetRef, request.idempotencyKey)
+        if (proof.status === "ambiguous") return undefined
+        const receipts = Object.values(state.receipts).filter((item) => item.surface === request.surface && item.targetIncarnation === request.targetIncarnation && item.idempotencyKey === request.idempotencyKey && item.principalRef === context.binding.principalRef)
+        // A scoped intent proof is not the authoritative domain receipt.
+        // Raw absence stays not-found; durable application reservations prevent redispatch.
+        return receipts
       }).catch(() => undefined)
       if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "receipt-unavailable" }
       if (current.value.length > 1) return { status: "unavailable", reason: "receipt-identity-conflict" }
@@ -44,7 +49,7 @@ export function createSfPreparedApply(input: {
       if (!await input.authorizeLookup(request, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
       if (receipt.commandDigest !== request.commandDigest) return { status: "conflict", reason: "idempotency-content-changed" }
       if (!await input.authorizeReceipt(receipt, request, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
-      const retained = await input.state.read(source, "receipts", (state, authority) => sameAuthority(authority, context) && receiptProofMatches(state, { surface: request.surface, id: request.targetRef, incarnation: request.targetIncarnation }, receipt, authority.principalRef)).catch(() => undefined)
+      const retained = await input.state.read(source, "receipts", (state, authority) => sameAuthority(authority, context) && receiptProofMatches(state, { surface: request.surface, id: request.targetRef, incarnation: request.targetIncarnation }, receipt, authority)).catch(() => undefined)
       if (retained?.status !== "ok" || !retained.value || source.signal.aborted || !input.host.requestFor(context)) return { status: "unavailable", reason: "authoritative-receipt-changed" }
       return { status: "ok", value: { state: "found", receipt: structuredClone(receipt) } }
     },
@@ -68,20 +73,25 @@ export function createSfPreparedApply(input: {
         const retained = await input.state.read(source, "receipts", (state, authority) => {
           const actual = state.cases[request.caseRef.id]
           const selected = actual?.preparedChanges.filter((item) => item.id === request.changeId)
-          const attempts = applicationAttempts(state, request)
+          const attempts = applicationAttempts(state, request, authority)
+          const proof = receiptProofLookup(state, authority, change.target.id, change.idempotencyKey)
+          if (attempts.status === "ambiguous" || proof.status !== "found") return false
           return sameAuthority(authority, context) && !!actual && actual.incarnation === request.caseRef.incarnation && actual.version >= request.caseRef.version && actual.participants.includes(authority.principalRef) && selected?.length === 1 && selected[0]!.choiceId === request.choiceId &&
-            (!selected[0]!.receipt || digestSfValue(selected[0]!.receipt) === digestSfValue(receipt)) && receiptProofMatches(state, change.target, receipt, authority.principalRef) &&
-            state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)]?.commandDigest === binding &&
-            (!attempts.length || preparedOriginalIntentState(state, request, selected[0]!, actual.choices.filter((choice) => choice.id === request.choiceId), reviewDigest, context, attempts) === "matched")
+            (!selected[0]!.receipt || digestSfValue(selected[0]!.receipt) === digestSfValue(receipt)) && receiptProofMatches(state, change.target, receipt, authority) &&
+            proof.receipt?.commandDigest === binding &&
+            (!attempts.entries.length || preparedOriginalIntentState(state, request, selected[0]!, actual.choices.filter((choice) => choice.id === request.choiceId), reviewDigest, context, attempts) === "matched")
         }).catch(() => undefined)
         return retained?.status === "ok" && retained.value && !source.signal.aborted && !!input.host.requestFor(context)
       }
       const recorded = await input.state.read(source, "receipts", (state, authority) => {
         if (!sameAuthority(authority, context)) return undefined
-        const prior = state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)]
+        const savedIntent = receiptProofLookup(state, authority, change.target.id, change.idempotencyKey)
+        if (savedIntent.status === "ambiguous") return undefined
+        const prior = savedIntent.status === "found" ? savedIntent.receipt : undefined
         const matching = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.idempotencyKey === change.idempotencyKey && item.targetIncarnation === change.target.incarnation && item.principalRef === authority.principalRef)
-        const attempts = applicationAttempts(state, request)
-        return { prior, matching, intent: attempts.length ? preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, attempts) : undefined }
+        const attempts = applicationAttempts(state, request, authority)
+        if (attempts.status === "ambiguous") return undefined
+        return { prior, matching, intent: attempts.entries.length ? preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, attempts) : undefined }
       }).catch(() => undefined)
       if (!recorded || recorded.status !== "ok" || !recorded.value || recorded.value.matching.length > 1) return { status: "unavailable", reason: "receipt-unavailable" }
       if (recorded.value.intent && recorded.value.intent !== "matched") return { status: recorded.value.intent === "missing" ? "unavailable" : "conflict", reason: recorded.value.intent === "missing" ? "original-intent-unverifiable" : "original-intent-mismatch" }
@@ -107,8 +117,8 @@ export function createSfPreparedApply(input: {
         const selectedChanges = actual?.preparedChanges.filter((item) => item.id === request.changeId)
         const selected = selectedChanges?.[0]
         if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || selectedChanges?.length !== 1 || !selected || selected.choiceId !== request.choiceId || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change) || digestSfValue(actual.choices.filter((choice) => choice.id === request.choiceId)) !== digestSfValue(choices)) return { commit: false, value: null }
-        const attempts = applicationAttempts(state, request)
-        if (attempts.length && preparedOriginalIntentState(state, request, selected, actual.choices.filter((choice) => choice.id === request.choiceId), reviewDigest, context, attempts) !== "matched") return { commit: false, value: null }
+        const attempts = applicationAttempts(state, request, authority)
+        if (attempts.status === "ambiguous" || attempts.entries.length && preparedOriginalIntentState(state, request, selected, actual.choices.filter((choice) => choice.id === request.choiceId), reviewDigest, context, attempts) !== "matched") return { commit: false, value: null }
         const actor = input.resolveActor(snapshot, context)
         if (!actor || actor.id !== context.binding.principalRef || !input.verifyGrant(snapshot, request, selected, actor, context)) return { commit: false, value: null }
         const prior = Object.values(state.receipts).filter((item) => item.surface === selected.target.surface && item.idempotencyKey === selected.idempotencyKey && item.targetIncarnation === selected.target.incarnation && item.principalRef === actor.id)

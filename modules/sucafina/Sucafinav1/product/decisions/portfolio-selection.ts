@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
@@ -66,7 +67,12 @@ export function createDecisionPortfolioSelection(input: {
       const operation = input.operationIdentity(context)
       if (!source || !operation || !Number.isSafeInteger(request.expectedVersion) || request.expectedVersion < 0 || !await input.authorizeSelection(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "selection-access-unavailable" }
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-      const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { active: state.preferences[selectionKey(request.caseRef)], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `portfolio-selection:${operation}`])] } : undefined)
+      const preferences = await input.state.read(source, "preferences", (state, authority) => {
+        if (!(sameAuthority(authority, context))) return undefined
+        const savedIntent = sfTransactionLookup(state, authority, { namespace: "preferences", targetRef: request.caseRef.id, idempotencyKey: `portfolio-selection:${operation}` })
+        if (savedIntent.status === "ambiguous") return undefined
+        return { active: state.preferences[selectionKey(request.caseRef)], prior: savedIntent.status === "found" ? savedIntent.receipt : undefined }
+      })
       if (current.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "selection-access-unavailable" }
       if (preferences.value.prior) {
         if (preferences.value.prior.commandDigest !== digestSfValue(request)) return { status: "conflict", reason: "idempotency-content-changed" }

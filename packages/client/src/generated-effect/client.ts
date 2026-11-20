@@ -2857,6 +2857,8 @@ const adaptGroup46 = (raw: RawClient["server.installation"]) => ({ upgrade: Endp
 type Endpoint47_0Request = Parameters<RawClient["server.sucafina"]["sucafina.installations"]>[0]
 type Endpoint47_0Input = {
   readonly select: Endpoint47_0Request["query"]["select"]
+  readonly contractRevision?: Endpoint47_0Request["query"]["contractRevision"]
+  readonly tenantId?: Endpoint47_0Request["query"]["tenantId"]
   readonly installationId?: Endpoint47_0Request["query"]["installationId"]
   readonly projectId?: Endpoint47_0Request["query"]["projectId"]
   readonly location?: Endpoint47_0Request["query"]["location"]
@@ -2865,6 +2867,8 @@ const Endpoint47_0 = (raw: RawClient["server.sucafina"]) => (input: Endpoint47_0
   raw["sucafina.installations"]({
     query: {
       select: input["select"],
+      ...(input["contractRevision"] === undefined ? {} : { contractRevision: input["contractRevision"] }),
+      ...(input["tenantId"] === undefined ? {} : { tenantId: input["tenantId"] }),
       ...(input["installationId"] === undefined ? {} : { installationId: input["installationId"] }),
       ...(input["projectId"] === undefined ? {} : { projectId: input["projectId"] }),
       ...(input["location"] === undefined ? {} : { location: input["location"] }),

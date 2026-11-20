@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -49,15 +50,16 @@ export function createSfPortfolioHandoff(input: {
     if (call.kind !== "ui" || !source || !identity || records.has(call) || !await registries.intent.authorize(call, action, payload)) return { status: "denied", reason: "portfolio-human-intent-required" }
     // Reopen the committed receipt before re-evaluating mutable inputs on a lost-reply retry.
     const prior = await authority.state.read(source, "cases", (state, actor) => actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
-      ? state.transactions[JSON.stringify([actor.principalRef, "cases", payload.caseRef.id, `${identity}:${operation}`])] : undefined)
-    if (prior.status !== "ok") return { status: "unavailable", reason: "portfolio-receipt-unavailable" }
-    if (prior.value) {
-      const saved = object(prior.value.value)
+      ? sfTransactionLookup(state, actor, { namespace: "cases", targetRef: payload.caseRef.id, idempotencyKey: `${identity}:${operation}` }) : undefined)
+    if (prior.status !== "ok" || !prior.value || prior.value.status === "ambiguous") return { status: "unavailable", reason: "portfolio-receipt-unavailable" }
+    if (prior.value.status === "found") {
+      const receipt = prior.value.receipt
+      const saved = object(receipt.value)
       const proof = object(saved.portfolioReplay)
-      if (prior.value.namespace !== "cases" || prior.value.principalRef !== call.binding.principalRef || prior.value.targetRef !== payload.caseRef.id ||
-        prior.value.targetIncarnation !== payload.caseRef.incarnation || proof.parentDigest !== digestSfValue(payload) || proof.child === undefined ||
-        prior.value.commandDigest !== digestSfValue(proof.child)) return { status: "conflict", reason: "idempotency-content-changed" }
-      records.set(call, { operation, action, payload, childDigest: prior.value.commandDigest })
+      if (receipt.namespace !== "cases" || receipt.principalRef !== call.binding.principalRef || receipt.targetRef !== payload.caseRef.id ||
+        receipt.targetIncarnation !== payload.caseRef.incarnation || proof.parentDigest !== digestSfValue(payload) || proof.child === undefined ||
+        receipt.commandDigest !== digestSfValue(proof.child)) return { status: "conflict", reason: "idempotency-content-changed" }
+      records.set(call, { operation, action, payload, childDigest: receipt.commandDigest })
       try {
         const result = await replay({ operation, caseRef: payload.caseRef, payload }, call)
         return result.status !== "ok" ? result : result.value.state === "found" ? { status: "ok", value: result.value.receipt }

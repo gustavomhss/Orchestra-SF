@@ -1,7 +1,9 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DecisionCase, PreparedChange } from "../contracts/decisions.ts"
 import type { CommandReceipt } from "../contracts/context.ts"
-import type { SfProductState } from "../contracts/state.ts"
+import type { SfProductState, SfStateAuthority } from "../contracts/state.ts"
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
+import type { ApplicationAttemptSelection } from "./application-attempt.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
 export type PreparedApplyRequest = { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }
@@ -14,8 +16,12 @@ export function isReviewDigest(value: string | undefined): value is string {
 export function receiptProofKey(idempotencyKey: string) {
   return `prepared:${idempotencyKey}`
 }
+/** Historical unscoped key encoder; reading its bytes also requires current backend profile authority. */
 export function receiptProofTransactionKey(principalRef: string, targetId: string, idempotencyKey: string) {
   return JSON.stringify([principalRef, "receipts", targetId, receiptProofKey(idempotencyKey)])
+}
+export function receiptProofLookup(state: Pick<SfProductState, "transactions">, authority: SfStateAuthority, targetId: string, idempotencyKey: string) {
+  return sfTransactionLookup(state, authority, { namespace: "receipts", targetRef: targetId, idempotencyKey: receiptProofKey(idempotencyKey) })
 }
 export function receiptReviewBinding(change: PreparedChange, reviewDigest: string) {
   return digestSfValue({
@@ -68,7 +74,9 @@ export function preparedOriginalIntent(request: PreparedApplyRequest, change: Pr
   }
 }
 
-export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][]) {
+export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, attempts: ApplicationAttemptSelection) {
+  if (attempts.status === "ambiguous") return "mismatch"
+  const entries = attempts.entries
   if (!entries.length) return "missing"
   if (entries.length !== 1 || choices.length !== 1) return "mismatch"
   const proof = entries[0]!
@@ -81,9 +89,12 @@ export function preparedOriginalIntentState(state: Readonly<SfProductState>, req
 }
 
 /** Shared raw-receipt fence. The domain reader must still revalidate current access. */
-export function receiptProofMatches(state: Readonly<SfProductState>, target: { surface: CommandReceipt["surface"]; id: string; incarnation: string }, receipt: CommandReceipt, principalRef: string) {
+export function receiptProofMatches(state: Readonly<SfProductState>, target: { surface: CommandReceipt["surface"]; id: string; incarnation: string }, receipt: CommandReceipt, authority: SfStateAuthority) {
+  const principalRef = authority.principalRef
   const stored = state.receipts[receipt.id]
-  const proof = state.transactions[receiptProofTransactionKey(principalRef, target.id, receipt.idempotencyKey)]
+  const selected = receiptProofLookup(state, authority, target.id, receipt.idempotencyKey)
+  if (selected.status !== "found") return false
+  const proof = selected.receipt
   const matches = Object.values(state.receipts).filter((item) => item.surface === target.surface && item.targetIncarnation === target.incarnation && item.idempotencyKey === receipt.idempotencyKey && item.principalRef === principalRef)
   const scope = target.surface === "dashboard" ? ["cases", "receipts"] : { namespaces: ["cases", "receipts"], domainSurface: target.surface }
   return matches.length === 1 && !!stored && !!proof && proof.namespace === "receipts" && proof.scopeDigest === digestSfValue(scope) &&

@@ -3701,6 +3701,8 @@ export function make(options: ClientOptions) {
             path: `/api/sucafina/installations`,
             query: {
               select: input["select"],
+              contractRevision: input["contractRevision"],
+              tenantId: input["tenantId"],
               installationId: input["installationId"],
               projectId: input["projectId"],
               location: input["location"],

@@ -249,9 +249,9 @@ test("admin-http: unsafe methods and cross-origin requests retain the private cl
     if (method !== "HEAD") expect(await response.json()).toEqual({ status: "invalid-request" })
   }
   for (const headers of [
-    { cookie, "content-type": "application/json" },
-    { cookie, origin: "https://foreign.example.test", "content-type": "application/json" },
-    { cookie, origin: publicOrigin, "sec-fetch-site": "cross-site", "content-type": "application/json" },
+    new Headers({ cookie, "content-type": "application/json" }),
+    new Headers({ cookie, origin: "https://foreign.example.test", "content-type": "application/json" }),
+    new Headers({ cookie, origin: publicOrigin, "sec-fetch-site": "cross-site", "content-type": "application/json" }),
   ]) {
     const response = await f.request(`${route}?${f.query}`, { method: "POST", headers, body: JSON.stringify(f.command()) })
     expect(response.status).toBe(403)

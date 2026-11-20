@@ -1,3 +1,4 @@
+import { sfTransactionLookup } from "../host-binding/state-provider.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { ChoiceRecord, DecisionCase } from "../contracts/decisions.ts"
@@ -37,13 +38,17 @@ export function createCurrentChoicePromotion(input: {
       !Number.isSafeInteger(request.caseRef.version) || request.caseRef.version < 1 || !Number.isSafeInteger(request.alternativeRef.version) || request.alternativeRef.version < 1 ||
       !/^[a-f0-9]{64}$/.test(request.choiceDigest) || !/^[a-f0-9]{64}$/.test(request.resultDigest) || !decodeSfOperationInput("sf_scenario_simulate", request.scenario).ok ||
       !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
-    const transactionKey = JSON.stringify([context.binding.principalRef, "cases", request.caseRef.id, `${operation}:promote-current-choice`])
-    const loaded = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
-      ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], binding: readCurrentChoiceBinding(state, request), prior: state.transactions[transactionKey] }
-      : undefined)
+    const transaction = { namespace: "cases" as const, targetRef: request.caseRef.id, idempotencyKey: `${operation}:promote-current-choice` }
+    const loaded = await input.state.read(source, "cases", (state, authority) => {
+      if (!sameAuthority(authority, context)) return undefined
+      const savedIntent = sfTransactionLookup(state, authority, transaction)
+      if (savedIntent.status === "ambiguous") return undefined
+      return { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], binding: readCurrentChoiceBinding(state, request),
+        prior: savedIntent.status === "found" ? savedIntent.receipt : undefined, receiptAuthority: authority }
+    })
     if (loaded.status !== "ok" || !loaded.value?.decision || loaded.value.decision.incarnation !== request.caseRef.incarnation ||
       !loaded.value.decision.participants.includes(context.binding.principalRef) || !await input.authorizeCase(loaded.value.decision, context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
-    const { decision, result, binding, prior } = loaded.value
+    const { decision, result, binding, prior, receiptAuthority } = loaded.value
     let receipt: CurrentChoicePromotionReceipt | undefined
     if (prior) {
       if (prior.commandDigest !== digestSfValue(request) || prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
@@ -93,7 +98,8 @@ export function createCurrentChoicePromotion(input: {
     const observeAdoption = (expectedDecision: DecisionCase, expectedResult: StoredDecisionResult) => {
       input.fence!.observe(context, (snapshots) => {
         const state = snapshots.dashboard.data.__sfProductV1 as SfProductState | undefined
-        const saved = state?.transactions[transactionKey]
+        const savedIntent = state ? sfTransactionLookup(state, receiptAuthority, transaction) : undefined
+        const saved = savedIntent?.status === "found" ? savedIntent.receipt : undefined
         return !!state && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(expectedDecision) &&
           digestSfValue(state.decisionResults?.[resultRef]) === digestSfValue(expectedResult) &&
           digestSfValue(state.decisionResults?.[request.resultRef]) === digestSfValue(result) &&
@@ -134,8 +140,12 @@ export function createCurrentChoicePromotion(input: {
       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "choice-promotion-unavailable" }
     }
     if (!await input.authorizeCase(decision, context) || !await input.authorizePromotion(request, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-promotion-access-unavailable" }
-    const confirmed = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
-      ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[resultRef], receipt: state.transactions[transactionKey] } : undefined)
+    const confirmed = await input.state.read(source, "cases", (state, authority) => {
+      if (!sameAuthority(authority, context)) return undefined
+      const savedIntent = sfTransactionLookup(state, authority, transaction)
+      if (savedIntent.status !== "found") return undefined
+      return { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[resultRef], receipt: savedIntent.receipt }
+    })
     if (confirmed.status !== "ok" || !confirmed.value?.decision || confirmed.value.decision.incarnation !== request.caseRef.incarnation || confirmed.value.decision.version !== caseRef.version ||
       digestSfValue(confirmed.value.decision.choices) !== digestSfValue(decision.choices) || !confirmed.value.result || confirmed.value.result.resultDigest !== request.resultDigest ||
       !confirmed.value.receipt || digestSfValue(confirmed.value.receipt.value) !== digestSfValue(expectedReceipt) || source.signal.aborted ||

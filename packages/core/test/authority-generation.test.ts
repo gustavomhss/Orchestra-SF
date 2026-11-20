@@ -199,3 +199,10 @@ test("the production Bun adapter carries the private proof through a real Effect
   }).pipe(Effect.provide(layer({ filename: f.filename })), Effect.scoped))
   expect(f.business.all("SELECT * FROM protected_item")).toEqual([{ id: "adapter", value: 3 }])
 })
+
+test("a partially missing control journal is refused instead of silently recreating lost writer history", async () => {
+  await using f = await fixture()
+  f.controlDriver.execute("DROP TABLE sf_control_writer")
+  expect(() => AuthorityControl.open(f.controlDriver)).toThrow("unavailable")
+  expect(f.controlDriver.all("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sf_control_writer'")).toEqual([])
+})

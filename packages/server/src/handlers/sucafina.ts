@@ -1,5 +1,7 @@
 import { Effect } from "effect"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
+import { SfInstallationList } from "@orchestra/schema/sucafina/context"
+import { HttpServerResponse } from "effect/unstable/http"
 import { HttpServerRequest } from "effect/unstable/http"
 import { InvalidRequestError } from "@orchestra/protocol/errors"
 import { Api } from "../api"
@@ -22,10 +24,13 @@ export const SucafinaHandler = HttpApiBuilder.group(Api, "server.sucafina", (han
       }
       // The selected connection is already fixed by the HTTP transport; raw query
       // cannot switch servers, inject a directory into ids, or enumerate another runtime.
-      return yield* Effect.tryPromise({
+      const result = yield* Effect.tryPromise({
         try: (signal) => readSfInstallations(installed, selector, signal),
         catch: () => new InvalidRequestError({ message: "Installation discovery unavailable", field: "select" }),
       })
+      return yield* HttpServerResponse.schemaJson(SfInstallationList)(result, {
+        headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+      }).pipe(Effect.mapError(() => new InvalidRequestError({ message: "Installation discovery unavailable", field: "select" })))
     }))
   }),
 )

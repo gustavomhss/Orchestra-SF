@@ -31,8 +31,11 @@ export type SfVersion = string | number // keep the producer type/value; never c
 export type SfServerKey = SfOpaque<"server-key-validated-by-SDK">
 export type SfOwnerSelection = Readonly<{
   serverKey: SfServerKey
+  /** Physical placement for original business contracts; never a corporate profile identifier. */
   projectId: SfRef
   installationId?: SfRef
+  /** Present only after the current Microsoft context validates the complete Team ref. */
+  team?: TeamProfile.Ref
 }>
 /**
  * A presentation carrier, NOT a global API allowlist. Per surface/resource,
@@ -370,6 +373,7 @@ export const SfInstallationList = Schema.Struct({
 }).annotate({ identifier: "Sucafina.InstallationList" })
 export interface SfInstallationList extends Schema.Schema.Type<typeof SfInstallationList> {}
 export const SfInstallationSelector = Schema.Union([
+  Schema.Struct({ select: Schema.Literal("current"), contractRevision: TeamProfile.ContractRevision }),
   Schema.Struct({ select: Schema.Literal("installation"), contractRevision: TeamProfile.ContractRevision,
     installationId: TeamProfile.InstallationId, tenantId: TeamProfile.TenantId }),
   Schema.Struct({ select: Schema.Literal("ids"), installationId: NonEmpty, projectId: NonEmpty }),
@@ -385,7 +389,7 @@ export type SfInstallationSelector = Schema.Schema.Type<typeof SfInstallationSel
  * Do not infer authority from an SDK-decoded query.
  */
 export const SfInstallationQuery = Schema.Struct({
-  select: Schema.Literals(["ids", "location", "installation"]),
+  select: Schema.Literals(["ids", "location", "installation", "current"]),
   contractRevision: optional(TeamProfile.ContractRevision),
   tenantId: optional(TeamProfile.TenantId),
   installationId: Schema.optional(NonEmpty),
@@ -634,6 +638,8 @@ export const SfTeamContext = Schema.Struct({
   { message: "The corporate projection and business destinations must share one current admitted owner" },
 )).annotate({ identifier: "Sucafina.TeamContext", parseOptions: { onExcessProperty: "error" } })
 export interface SfTeamContext extends Schema.Schema.Type<typeof SfTeamContext> {}
+/** Native readers consume the original versioned DTO without relabeling corporate context as legacy. */
+export type SfReadableContext = SfContext | SfTeamContext
 
 export const SfTeamContextResult = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: SfTeamContext }),
