@@ -23,9 +23,32 @@ O skip de ownership estrangeiro requer privilégio de fixture e permanece penden
 
 A baseline integrada via `workflow_dispatch` permanece NOT_RUN: a conexão GitHub disponível não expõe essa operação. Não foi usado um merge sintético de PR como evidência do pin.
 
-## Frentes em implementação
+## Implementação e evidência dirigida
 
-Contrato Schema canônico, leitor Graph opt-in, binding à sessão Microsoft real e correção preparatória F04. Cada frente possui branch isolada, proprietário de arquivos e testes pelas Actions. A UI e os dados não são cortados para um backend incompleto.
+As fatias abaixo foram incorporadas à branch isolada. Seus resultados pertencem aos respectivos SHAs de fonte; não são uma qualificação do candidato final.
+
+| Fatia | Fonte testada | Arquivos | Pass | Fail | Skip | Run |
+|---|---|---:|---:|---:|---:|---|
+| Schema TeamProfile estrito | `d8fc9a2e` | 8 | 68 | 0 | 0 | [44677405980](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677405980) |
+| Contrato preparatório F04 v1 | `616e94c1` | 9 | 52 | 0 | 0 | [44677469998](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44677469998) |
+| Wiring da configuração privada | `8de13695` | 3 | 14 | 0 | 0 | [44678489644](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678489644) |
+| Graph + sessão + configuração | `f719dfd0` | 19 | 347 | 0 | 1 | [44678772113](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44678772113) |
+| Grupo administrativo e Team por ID | `057909d7` | 10 | 294 | 0 | 0 | [44679808152](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44679808152) |
+| Captura de uma geração de sessão + leitores | `d76b74ec` | 20 | 434 | 0 | 1 | [44679893363](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44679893363) |
+
+Os recortes se sobrepõem; suas contagens não devem ser somadas como casos únicos. O skip é o mesmo caso preexistente de ownership estrangeiro, ainda pendente.
+
+O login mínimo continua restrito; `teams: "direct"` habilita explicitamente a leitura delegada de Teams. Escopos omitidos no refresh não herdam consentimento. O leitor distingue lista completa vazia de erro, valida tenant/principal e limita tempo, páginas e bytes. A sessão privada fornece uma closure com revalidação da mesma geração, sem exportar cookie ou tokens. O grupo administrativo é verificado independentemente de Team e de RoleRows; essas observações ainda não concedem acesso de negócio.
+
+Foram observadas e corrigidas duas falhas reais: o primeiro teste do prazo máximo do Graph expirou, e o primeiro recorte combinado encontrou uma fixture que passava array onde o provedor esperava texto de escopos. O timer passou a pertencer à operação; o orçamento original do teste permaneceu igual. A fixture foi corrigida e recebeu prova adicional de perda de consentimento após refresh. Os runs vermelhos permanecem registrados no ledger.
+
+## Trabalho em andamento
+
+O store de configuração de Teams, a admissão pelo grupo supremo e a rota administrativa nativa estão em implementação. O pool G04 preserva os 40 arquivos fonte, com uma entrada única e atribuição por caso; sua qualificação ainda depende da execução real e do encerramento verificado do browser.
+
+A workflow existente `.github/workflows/sf-static-surgical.yml` foi reconciliada individualmente do commit `3910a644…`, blob `e587b7bc6030ff4646b813892484f8a456b6040b`. Seus 16 comandos reais, guards sem aprovação fornecida e agregação de falha foram preservados. Ela permite observar geração, typechecks e build no candidato exato; ainda não foi executada nesta branch e não substitui `sf-ci`/`sf/verify`.
+
+A UI, os consumidores de runtime e os dados ainda não foram cortados para Teams. Nenhuma migration real foi executada.
 
 ## Condições ainda abertas
 
