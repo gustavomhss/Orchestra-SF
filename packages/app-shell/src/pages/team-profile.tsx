@@ -15,7 +15,7 @@ import { SfCasesView } from "../orchestra/chapters/sucafina/decisions/cases"
 import { SfIntentView } from "../orchestra/chapters/sucafina/decisions/intent"
 import type { SfSurfaceProps } from "../orchestra/chapters/sucafina/context/contracts"
 import { sfNativeOwnerChapterRequest } from "../orchestra/chapters/sucafina/host/native-chapter-entry"
-import { resolveSfTeamNativeRoute, sfTeamAdministrationHref, sfTeamSessionHref } from "../orchestra/chapters/sucafina/host/team-route"
+import { resolveSfTeamNativeRoute, sfTeamAdministrationHref, sfTeamConnectionsHref, sfTeamSessionHref } from "../orchestra/chapters/sucafina/host/team-route"
 import { navigation as chapterNavigation } from "../orchestra/navigation"
 import type { SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import type { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
@@ -25,6 +25,10 @@ import "./team-profile.css"
 const SfTeamSessionWorkspace = lazy(async () => {
   const { SfTeamSessionWorkspace } = await import("./team-session")
   return { default: SfTeamSessionWorkspace }
+})
+const SfTeamPersonalConnections = lazy(async () => {
+  const { SfTeamPersonalConnections } = await import("./team-personal-connections")
+  return { default: SfTeamPersonalConnections }
 })
 type CopyKey = Parameters<ReturnType<typeof useLanguage>["t"]>[0]
 const browserStorage = {
@@ -239,6 +243,12 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
         onClick={() => go(item.href)}>{language.t(item.chapter.label)}</button>}</For>
     </Show>
     <button type="button" class="sf-team-nav-item" disabled={ui.busy || !runtime.owner.ready()}
+      data-sf-open-connections aria-current={runtime.view.kind === "connections" ? "page" : undefined}
+      onClick={() => {
+        const profile = context()?.stamp.team?.owner.profile
+        if (profile) go(sfTeamConnectionsHref(props.binding, profile))
+      }}>{language.t("sf.teams.personalConnections")}</button>
+    <button type="button" class="sf-team-nav-item" disabled={ui.busy || !runtime.owner.ready()}
       data-sf-open-chat title={!runtime.owner.ready() ? language.t("sf.teams.chatUnavailable") : undefined}
       aria-current={runtime.view.kind === "session" ? "page" : undefined}
       onClick={() => {
@@ -298,6 +308,13 @@ function SfTeamWebShell(props: Readonly<{ binding: SfTeamInstallationDescriptor;
           context={context} generation={runtime.generation}
           fetch={runtime.fetch} refresh={runtime.refresh} confirmDiscard={confirm}
           registerDraft={runtime.registerAdministrativeDraft} notice={(key) => setUi("notice", key)} />
+      </Show>
+      <Show when={runtime.view.kind === "connections" && runtime.state().status === "authenticated" && runtime.owner.ready()}>
+        <Suspense fallback={<p role="status">{language.t("sf.teams.loading")}</p>}>
+          <SfTeamPersonalConnections binding={props.binding} window={props.window} storage={browserStorage}
+            context={context} generation={runtime.generation} fetch={props.fetch} confirmDiscard={confirm}
+            registerDraft={runtime.registerAdministrativeDraft} notice={(key) => setUi("notice", key)} />
+        </Suspense>
       </Show>
       <Show when={runtime.view.kind === "session" && runtime.state().status === "authenticated" && runtime.owner.ready()}>
         <Suspense fallback={<p role="status">{language.t("session.messages.loading")}</p>}>

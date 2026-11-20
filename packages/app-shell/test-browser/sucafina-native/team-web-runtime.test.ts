@@ -383,3 +383,44 @@ test("administrative drafts participate in per-window consent and pending writes
     expect(dirty).toBe(false)
   } finally { unregister(); f.close() }
 })
+
+test("personal connection URL is only a full Team intent and runtime rereads F02 before opening its view", async () => {
+  const f = fixture({ teams: [a] })
+  try {
+    await f.runtime.start()
+    const target = routes.sfTeamConnectionsHref(binding, a)
+    expect(readSfTeamWebRoute(target, binding)).toEqual({ kind: "connections", profile: a, href: target })
+    const before = f.calls.length
+    expect(await f.runtime.navigate(target)).toBe("committed")
+    expect(f.runtime.view.kind).toBe("connections")
+    expect(f.calls.slice(before).map((call) => call.kind)).toEqual(["team"])
+    expect(f.calls.some((call) => call.path.includes("/connection/") || call.path.includes("/provider/"))).toBe(false)
+    expect(f.runtime.current()?.context.stamp.team?.owner.profile).toEqual(a)
+    for (const invalid of [target + "&principalObjectId=" + principal.principalObjectId,
+      target + "&teamObjectId=" + a.teamObjectId, target + "#private",
+      target.replace(encodeURIComponent(binding.publicOrigin), encodeURIComponent("https://other.example.test")),
+      target.replace("installation-one", "other-installation")]) {
+      expect(readSfTeamWebRoute(invalid, binding)).toEqual({ kind: "invalid" })
+      expect(await f.runtime.navigate(invalid)).toBe("invalid-link")
+    }
+  } finally { f.close() }
+})
+
+test("personal view observes a revocation before rendering and no-Team administration does not open it", async () => {
+  const f = fixture({ teams: [a] })
+  try {
+    await f.runtime.start()
+    f.state.teams = []
+    expect(await f.runtime.navigate(routes.sfTeamConnectionsHref(binding, a))).toBe("denied")
+    expect(f.runtime.view.kind).toBe("denied")
+    expect(f.runtime.owner.ready()).toBeUndefined()
+  } finally { f.close() }
+  const admin = fixture({ teams: [] })
+  try {
+    await admin.runtime.start()
+    expect(await admin.runtime.navigate(routes.sfTeamConnectionsHref(binding, a))).toBe("denied")
+    expect(admin.runtime.view.kind).not.toBe("connections")
+    expect(admin.calls.some((call) => call.path.includes("/connection/") || call.path.includes("/provider/"))).toBe(false)
+    expect(await admin.runtime.navigate(sfTeamAdministrationHref(binding))).toBe("committed")
+  } finally { admin.close() }
+})

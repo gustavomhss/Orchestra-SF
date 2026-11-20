@@ -15,7 +15,7 @@ import { sfSameOwnerSelection, sfSameContextStamp, sfSameTeamRef } from "../orch
 import { readSfTeamWebRoute, resolveSfTeamNativeRoute, sfTeamContextHref, sfTeamSessionHref } from "../orchestra/chapters/sucafina/host/team-route"
 
 type Storage = Pick<globalThis.Storage, "getItem" | "setItem" | "removeItem">
-type View = "context" | "administration" | "business" | "session" | "resolving" | "denied" | "invalid" | "unavailable"
+type View = "context" | "administration" | "connections" | "business" | "session" | "resolving" | "denied" | "invalid" | "unavailable"
 type Result = "committed" | "aborted" | "denied" | "invalid-link" | "unavailable" | "kept-editing"
 export function createTeamWebRuntime(input: Readonly<{
   binding: SfTeamInstallationDescriptor; window: TeamWindowIdentity; storage: Storage; fetch: SfTransportFetch
@@ -229,7 +229,7 @@ export function createTeamWebRuntime(input: Readonly<{
       }
       const s = owner.handle.state()
       if (s.status !== "ready" || !sfSameTeamRef(s.selection.team, intent.profile)) return "denied"
-      if (intent.kind === "session") {
+      if (intent.kind === "session" || intent.kind === "connections") {
         const original = controller.current()
         if (!original) return "denied"
         const fresh = await proof(queryFor(original.context), abort.signal, generation)
@@ -241,7 +241,7 @@ export function createTeamWebRuntime(input: Readonly<{
         if (!sfSameContextStamp(fresh.value.stamp, original.context.stamp)) { changed(); return "denied" }
         // Session tabs preserve their in-memory drafts. A business editor still
         // uses its original consent and a fresh source proof before being left.
-        if (otherDirtyDrafts()) {
+        if (intent.kind === "connections" ? hasDirtyDrafts() : otherDirtyDrafts()) {
           if (!await input.confirmDiscard()) return "kept-editing"
           if (abort.signal.aborted || epoch !== attempt || controller.current() !== original) return "aborted"
           const after = await proof(queryFor(original.context), abort.signal, generation)
@@ -249,11 +249,12 @@ export function createTeamWebRuntime(input: Readonly<{
             changed(); return "denied"
           }
           if (abort.signal.aborted || controller.current() !== original) return "aborted"
-          if (!discardOtherDrafts()) { input.notice("sf.teams.pending"); return "kept-editing" }
+          if (!(intent.kind === "connections" ? discardDrafts() : discardOtherDrafts())) { input.notice("sf.teams.pending"); return "kept-editing" }
         }
-        setView({ kind: "session", route: undefined })
+        setView({ kind: intent.kind, route: undefined })
         if (commit) commit(intent.href)
         else input.commitHref(intent.href, cause === "deep-link" || cause === "history" || cause === "reload")
+        if (intent.kind === "connections") return "committed"
         // A syntactically valid URL opens a draft/read only. Creation requires
         // the later, explicit prompt submission and its own backend admission.
         const opened = await sessions.open(intent.sessionID)
