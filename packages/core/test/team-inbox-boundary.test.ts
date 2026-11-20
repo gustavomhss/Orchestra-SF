@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { Database as BunDatabase } from "bun:sqlite"
 import { Context, Effect, Exit, Layer } from "effect"
 import { sql } from "drizzle-orm"
 import { Credential } from "../src/credential"
@@ -12,7 +13,7 @@ import { ProjectV2 } from "../src/project"
 import { SessionOwner } from "../src/session/owner"
 import { teamSessionFixture } from "./fixture/team-session"
 import { tempLocationLayer } from "./fixture/location"
-import { testEffect } from "./lib/effect"
+import { tmpdir } from "./fixture/tmpdir"
 
 test("team-inbox-01: corporate boot never adopts old installation rows or probes credentials, and Inbox remains unavailable", async () => {
   await using f = await teamSessionFixture({ extraNodes: [Credential.node, SlackAuth.node] })
@@ -54,11 +55,14 @@ test("team-inbox-01: corporate boot never adopts old installation rows or probes
   expect(f.business.all("SELECT * FROM credential ORDER BY id")).toEqual(beforeCredentials)
 }, 30000)
 
-const technical = testEffect(AppNodeBuilder.build(LayerNode.group([Inbox.node, Database.node]), [
-  [Location.node, tempLocationLayer],
-]))
-technical.effect("team-inbox-02: an already constructed technical Inbox refuses a subsequently marked corporate database", () =>
-  Effect.gen(function* () {
+test("team-inbox-02: an already constructed technical Inbox refuses a subsequently marked corporate database", async () => {
+  await using directory = await tmpdir()
+  const filename = `${directory.path}/inbox.sqlite`
+  const layer = AppNodeBuilder.build(LayerNode.group([Inbox.node, Database.node]), [
+    [Location.node, tempLocationLayer],
+    [Database.node, Database.layerFromPath(filename)],
+  ])
+  await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
     const inbox = yield* Inbox.Service
     const database = yield* Database.Service
     expect(yield* inbox.list()).toEqual([])
@@ -66,6 +70,14 @@ technical.effect("team-inbox-02: an already constructed technical Inbox refuses 
     yield* database.db.run(sql`CREATE TABLE sf_authority_generation (id INTEGER PRIMARY KEY)`)
     expect(Exit.isFailure(yield* Effect.exit(inbox.list()))).toBe(true)
     expect(Exit.isFailure(yield* Effect.exit(inbox.accounts()))).toBe(true)
-    expect(yield* database.db.all(sql`SELECT * FROM inbox_row`)).toEqual([])
-  }),
-)
+  }).pipe(Effect.provide(layer))))
+  // Inspect retained bytes separately: the production adapter correctly refuses every read of a malformed marker.
+  const inspection = new BunDatabase(filename, { readonly: true })
+  try {
+    expect(inspection.query("SELECT * FROM inbox_row").all()).toEqual([])
+    expect(inspection.query("SELECT name FROM sqlite_master WHERE name = 'sf_authority_generation'").all())
+      .toEqual([{ name: "sf_authority_generation" }])
+  } finally {
+    inspection.close()
+  }
+}, 30000)
