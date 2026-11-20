@@ -238,8 +238,6 @@ export function createTeamSessionsWorkspace(input: Readonly<{
     void (async () => {
       for await (const event of scope.client.events()) {
         check(scope); setState("stream", "open")
-        if (event.type === "session.status" && state.threads[event.data.sessionID])
-          setState("threads", event.data.sessionID, "running", event.data.status.type !== "idle")
         const decoded = Schema.decodeUnknownOption(SessionEvent.All, strict)(event)
         if (Option.isNone(decoded)) continue
         const value = Schema.encodeSync(SessionEvent.All)(decoded.value), id = value.data.sessionID

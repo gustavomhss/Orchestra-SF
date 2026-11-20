@@ -41,8 +41,8 @@ async function webBuildFilePaths(root: string, current = ""): Promise<string[]> 
   return files.sort()
 }
 
-function actualCheckoutSha() {
-  const result = Bun.spawnSync(["git", "rev-parse", "--verify", "HEAD"], {
+function actualCheckoutSha(ref: "HEAD" | "HEAD^{tree}" = "HEAD") {
+  const result = Bun.spawnSync(["git", "rev-parse", "--verify", ref], {
     cwd: root, stdout: "pipe", stderr: "pipe",
   })
   const sha = result.stdout.toString().trim()
@@ -53,7 +53,7 @@ function actualCheckoutSha() {
 
 function verifiedRunIdentity() {
   const expectedSourceSHA = process.env.SF_FACTORY_EXPECTED_SOURCE_SHA ?? ""
-  return requireSfFactoryRunIdentity({
+  return { ...requireSfFactoryRunIdentity({
     // The selected source SHA comes from the event's actual PR head (or push).
     // Do not use GITHUB_SHA as sourceSHA for a pull_request: that is refs/pull/*/merge.
     sourceSHA: expectedSourceSHA,
@@ -63,7 +63,7 @@ function verifiedRunIdentity() {
     eventName: process.env.SF_FACTORY_EVENT_NAME as "push" | "pull_request",
     runID: process.env.SF_FACTORY_RUN_ID ?? "",
     runAttempt: process.env.SF_FACTORY_RUN_ATTEMPT ?? "",
-  })
+  }), sourceTreeSHA: actualCheckoutSha("HEAD^{tree}") }
 }
 
 // Dedicated Ubuntu native lane, not a unit fixture. Builds a REAL compiled Bun
@@ -290,6 +290,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       throw new Error("SF_FACTORY_OPERATOR_HANDOFF_UNTRUSTED")
     const credentials = await openLocalStore(path.join(privateDir, "business-local"))
     let cookie: string
+    let businessBefore: unknown
     try {
       const identity = createOperatorIdentity({
         origin: loaded.config.origin, mount: loaded.config.mount,
@@ -306,78 +307,67 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       expect(await identity.person(new Request("http://localhost:4110/sucafina/dashboard", {
         headers: { cookie },
       }))).toMatchObject({ id: `macos:${loaded.config.localOperator.installationId}:${loaded.config.localOperator.uid}` })
+      businessBefore = await credentials.transaction("dashboard", async (snapshot) => ({
+        commit: false, value: { product: structuredClone(snapshot.data.__sfProductV1), audit: structuredClone(snapshot.audit) },
+      }))
     } finally { await credentials.dispose() }
     const authenticatedDashboard = await fetch("http://localhost:4110/sucafina/dashboard", {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
     // The compiled/extracted distribution must NOT resurrect the retired HTML
-    // console. Authentication still works: the authenticated C08 command and
-    // read below independently prove the real installed product's JSON paths.
+    // console. The authenticated local operator is a technical identity with
+    // no business authority. Installed Microsoft + Team success is G08.
     expect(authenticatedDashboard.status).toBe(404)
     expect(authenticatedDashboard.headers.get("content-type")).toContain("text/plain")
     expect(await authenticatedDashboard.text()).toBe("legacy console decommissioned — use /")
-    // A virgin installation has no C08 decision state. Author the first case
-    // using the compiled installation's real authenticated human command,
-    // never by writing raw SQLite, bypassing authorization, or forging a fence.
-    const objective = "Installed factory authenticated fence witness"
+    // CHANGE_CONTRACT: a local enrollment must not grant a first C08 write,
+    // an owner-scoped read or a native business projection. This is an actual
+    // compiled/extracted negative; the positive corporate witness belongs to G08.
     const created = await fetch("http://localhost:4110/sucafina/dashboard?sf=workbench-command", {
       method: "POST", redirect: "manual", signal: AbortSignal.timeout(15000),
       headers: { cookie, origin: "http://localhost:4110", "content-type": "application/json",
         "idempotency-key": randomUUID() },
       body: JSON.stringify({ operation: "sf_case_draft", input: {
-        objective, horizon: { start: "2027-01-01", end: "2027-12-31" },
+        objective: "Technical operator must not create a business case",
+        horizon: { start: "2027-01-01", end: "2027-12-31" },
         currency: "USD", criteria: ["Business continuity"], sourceRefs: [],
       } }),
     })
-    const createdBody: unknown = await created.json()
-    if (created.status !== 200)
-      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_CREATION_FAILED " + JSON.stringify({
-        status: created.status, result: createdBody,
-      }))
-    expect(createdBody).toMatchObject({ status: "ok", value: { objective, currency: "USD" } })
-    // The public workbench response intentionally does not expose an identity
-    // receipt in every transport. The read must locate the sole persisted case
-    // by its owner-authored title, and independently validate its opaque ref.
+    expect(created.status).toBe(403)
+    expect(await created.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
     const authenticatedChoice = await fetch("http://localhost:4110" + currentChoiceEndpoint, {
       headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
     })
+    expect(authenticatedChoice.status).toBe(403)
     const currentChoiceBody: unknown = await authenticatedChoice.json()
-    if (authenticatedChoice.status !== 200)
-      throw new Error("SF_FACTORY_AUTHENTICATED_CHOICE_FAILED " + JSON.stringify({
-        status: authenticatedChoice.status, result: currentChoiceBody,
+    expect(currentChoiceBody).toEqual({ status: "denied", reason: "microsoft-team-required" })
+    const nativeBusiness = await fetch("http://localhost:4110/sucafina/api/ui/context", {
+      headers: { cookie }, redirect: "manual", signal: AbortSignal.timeout(15000),
+    })
+    expect(nativeBusiness.status).toBe(403)
+    expect(await nativeBusiness.json()).toEqual({ status: "denied", reason: "microsoft-team-required" })
+    const afterStore = await openLocalStore(path.join(privateDir, "business-local"))
+    try {
+      const after: unknown = await afterStore.transaction("dashboard", async (snapshot) => ({
+        commit: false, value: { product: structuredClone(snapshot.data.__sfProductV1), audit: structuredClone(snapshot.audit) },
       }))
-    // sf_case_read, real product state and WeakSet-registered current-choice
-    // fence are executed by the extracted CLI against an actual human case.
-    expect(currentChoiceBody).toMatchObject({ status: "ok", value: { cases: [
-      { title: objective, version: 1 },
-    ] } })
-    if (!currentChoiceBody || typeof currentChoiceBody !== "object" ||
-      !("value" in currentChoiceBody) || !currentChoiceBody.value ||
-      typeof currentChoiceBody.value !== "object" ||
-      !("cases" in currentChoiceBody.value) || !Array.isArray(currentChoiceBody.value.cases))
-      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_LIST_UNAVAILABLE")
-    const observedCases = currentChoiceBody.value.cases
-    expect(observedCases).toHaveLength(1)
-    const observed = observedCases[0]
-    if (!observed || typeof observed !== "object" || !("ref" in observed) ||
-      typeof observed.ref !== "string" || observed.ref.length === 0)
-      throw new Error("SF_FACTORY_AUTHENTICATED_CASE_REFERENCE_UNAVAILABLE")
-    expect(observed.ref).toMatch(/^[A-Za-z0-9:._%-]+$/)
-    const authenticatedChoiceState = currentChoiceBody !== null && typeof currentChoiceBody === "object" &&
-      "status" in currentChoiceBody ? currentChoiceBody.status : undefined
-    console.info("SF_FACTORY_CURRENT_CHOICE_AUTHENTICATED " + JSON.stringify({
+      expect(after).toEqual(businessBefore)
+    } finally { await afterStore.dispose() }
+    const authenticatedChoiceState = "denied" as const
+    console.info("SF_FACTORY_OPERATOR_BUSINESS_DENIED " + JSON.stringify({
       dashboardStatus: authenticatedDashboard.status, creationStatus: created.status,
-      currentChoiceStatus: authenticatedChoice.status, state: authenticatedChoiceState,
-      observedCases: 1, caseMatchesHumanCreation: true,
+      currentChoiceStatus: authenticatedChoice.status, nativeBusinessStatus: nativeBusiness.status,
+      state: authenticatedChoiceState, businessUnchanged: true,
     }))
     // Re-read the real checkout HEAD immediately before certifying the archive.
     // The success receipt MUST be rejected if the source branch changed in-flight.
     const runIdentity = verifiedRunIdentity()
-    if (runIdentity.sourceSHA !== initialIdentity.sourceSHA ||
+    if (runIdentity.sourceSHA !== initialIdentity.sourceSHA || runIdentity.sourceTreeSHA !== initialIdentity.sourceTreeSHA ||
       runIdentity.runID !== initialIdentity.runID || runIdentity.runAttempt !== initialIdentity.runAttempt)
       throw new Error("SF_FACTORY_RUN_IDENTITY_CHANGED")
     const receipt = {
-      schema: "sf-factory-package-proof-v1", sourceSHA: runIdentity.sourceSHA,
+      schema: "sf-factory-package-proof-v2", proofRole: "factory-technical-packaging",
+      sourceSHA: runIdentity.sourceSHA, sourceTreeSHA: runIdentity.sourceTreeSHA,
       checkoutSHA: runIdentity.checkoutSHA, expectedSourceSHA: runIdentity.expectedSourceSHA,
       workflowSHA: runIdentity.workflowSHA, eventName: runIdentity.eventName,
       runID: runIdentity.runID, runAttempt: runIdentity.runAttempt, version, target,
@@ -402,6 +392,9 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       authenticatedDashboardStatus: authenticatedDashboard.status,
       authenticatedCurrentChoiceStatus: authenticatedChoice.status,
       authenticatedCurrentChoiceState: authenticatedChoiceState,
+      authenticatedBusinessCommandStatus: created.status,
+      authenticatedNativeBusinessStatus: nativeBusiness.status,
+      businessAuthority: "none", businessUnchanged: true,
       origin: "http://localhost:4110",
       extractedOutsideCheckout: true,
     }
@@ -419,6 +412,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
       JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" })
     const expectedReceiptIdentity = {
       sourceSHA: runIdentity.sourceSHA,
+      sourceTreeSHA: runIdentity.sourceTreeSHA,
       checkoutSHA: runIdentity.checkoutSHA,
       workflowSHA: runIdentity.workflowSHA,
       eventName: runIdentity.eventName,
@@ -432,7 +426,7 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
     const receiptFile = path.join(evidenceDir, "factory-package-receipt.json")
     const genuineReceiptBytes = await readFile(receiptFile)
     try {
-      await writeFile(receiptFile, JSON.stringify({ ...receipt, authenticatedCurrentChoiceStatus: 303 }) + "\n")
+      await writeFile(receiptFile, JSON.stringify({ ...receipt, authenticatedCurrentChoiceStatus: 200 }) + "\n")
       await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity))
         .rejects.toThrow("SF_FACTORY_RECEIPT_QUALIFICATION_FIELDS_INVALID")
     } finally {
@@ -444,6 +438,19 @@ test("extracted Linux SF distribution loads its owner-selected factory outside t
         .rejects.toThrow("SF_FACTORY_RECEIPT_SOURCE_SHA_MISMATCH")
     } finally {
       await writeFile(receiptFile, genuineReceiptBytes)
+    }
+    for (const altered of [
+      { ...receipt, schema: "sf-factory-package-proof-v1" },
+      { ...receipt, proofRole: "installed-microsoft-team" },
+      { ...receipt, sourceTreeSHA: "0".repeat(40) },
+      { ...receipt, authenticatedBusinessCommandStatus: 200 },
+      { ...receipt, businessAuthority: "local-operator" },
+      { ...receipt, businessUnchanged: false },
+    ]) {
+      try {
+        await writeFile(receiptFile, JSON.stringify(altered) + "\n")
+        await expect(verifyFactoryPackageReceipt(evidenceDir, expectedReceiptIdentity)).rejects.toThrow("SF_FACTORY_RECEIPT_")
+      } finally { await writeFile(receiptFile, genuineReceiptBytes) }
     }
     const manifestFile = path.join(evidenceDir, "distribution.json")
     const genuineManifestBytes = await readFile(manifestFile)

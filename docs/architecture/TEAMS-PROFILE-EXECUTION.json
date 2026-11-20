@@ -11,8 +11,9 @@
     "baseTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
     "branch": "teams-profile-work",
     "documentImportCommit": "dcbf46eec37fce43e8ff5c12d795a78f39228fa9",
-    "preCheckpointHead": "3936f177457c4cd9532efbe48aa042a648845670",
-    "latestIntegratedSource": "6f9b66a2aaa8b057653244c94183254bb6f008b2"
+    "preCheckpointHead": "0e0aafdd2cd6af86a12766c22926c155f275792a",
+    "latestIntegratedSource": "0e0aafdd2cd6af86a12766c22926c155f275792a",
+    "cohesiveWp1Source": "50389115ac9af07bdc3b951e5686a56edbefece1"
   },
   "wp0": {
     "documentImport": {
@@ -3978,13 +3979,31 @@
       "id": "WP1G",
       "owner": "teams-effective-authority/teams-public-context",
       "scope": "Current business authority, effective AccessRevision, explicit Team selector, F02/host and officially generated clients",
-      "status": "DIRECTED_AUTHORITY_CONTEXT_BOUNDARY_PASSED_RECEIPT_READERS_PENDING"
+      "status": "INTEGRATED_DIRECTED_TESTS_PASSED_STATIC_AND_NATIVE_QUALIFICATION_PENDING"
     },
     {
       "id": "G06-INFRA",
       "owner": "teams-profile-scanner",
       "scope": "Exact candidate/request-only Linux ClamD controls and honest component receipts",
       "status": "REAL_CLAMD_COMPONENT_PASSED_INTEGRATED"
+    },
+    {
+      "id": "WP2",
+      "owner": "teams-shell-web",
+      "scope": "Per-window Team selection, full-owner private state, native Solid Web composition and independent admin",
+      "status": "DIRECTED_156_PASSED_REAL_BUILT_WEB_G02_RED"
+    },
+    {
+      "id": "WP3",
+      "owner": "teams-session-owner/teams-session-runtime",
+      "scope": "Durable SessionOwner, private request/worker admission, canonical namespace, mounted HTTP/SDK and technical operator refusal; TeamConfig and remaining effect/capability consumers unfinished.",
+      "status": "SESSION_HTTP_SDK_INTEGRATED_DIRECTED_PASSED_REMAINDER_IMPLEMENTING"
+    },
+    {
+      "id": "WP4-GENERATION",
+      "owner": "teams-generation-fence",
+      "scope": "Private generation control, SQL fence, canonical census and opaque migration administration are integrated. Current roleMap/access and coupled C08 frontier survive business restore; Core journal/cut, global drain and operational restore remain unfinished.",
+      "status": "INTEGRATED_DIRECTED_PASSED_NO_CUTOVER"
     }
   ],
   "gates": [
@@ -14368,6 +14387,1469 @@
         "2026-11-20T06:28:26.7092481Z (fail) modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts > FIN-IND-004 real keyboard submit reports rejected preparation without starting an analysis [0.02ms]",
         "2026-11-20T06:28:26.8768791Z (pass) modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts > WP01 shares one Chromium across files, releases every lease, and proves final process exit [193.64ms]"
       ]
+    },
+    {
+      "id": "WP1-F02-HTTP",
+      "source": "bc8447d9b9b81f9771e5fb1a99e856af5616d90b",
+      "snapshot": "a3bd4159be977b8fd8adfa6c5c357f321cf40ed3",
+      "runId": 44686602121,
+      "jobId": 136122293658,
+      "counts": {
+        "pass": 55,
+        "fail": 0,
+        "skip": 0,
+        "files": 5
+      },
+      "status": "SUCCESS",
+      "qualification": "Real signed OIDC and SQLite F02 component; no LIVE tenant or installed native proof."
+    },
+    {
+      "id": "WP1-WEB-CLIENTS",
+      "source": "58623fa42d569b288f644a30cf46a0e37abe79aa",
+      "snapshot": "e5654eff8d8f062f5db27ddaff6780fd0536accc",
+      "runId": 44686104440,
+      "jobId": 136120689558,
+      "counts": {
+        "pass": 27,
+        "fail": 0,
+        "skip": 0,
+        "files": 3
+      },
+      "status": "SUCCESS",
+      "qualification": "Production client transport contract; not installed acceptance."
+    },
+    {
+      "id": "WP1-WEB-CHROMIUM",
+      "source": "e024ca44a1f2098bcf401ae3c934c90a775cf83e",
+      "snapshot": "bdfcb9eb09c9d1f3db79cf5c21d2ee0bca334b62",
+      "runId": 44687361580,
+      "jobId": 136124756617,
+      "counts": {
+        "pass": 16,
+        "fail": 0,
+        "skip": 0,
+        "files": 2
+      },
+      "status": "SUCCESS",
+      "qualification": "Actual Chromium, production Web clients, signed OIDC, F02/business/admin and SQLite; G02 component, not G04/F04 LIVE/G08."
+    },
+    {
+      "id": "WP1-BOOTSTRAP-DISCOVERY",
+      "source": "bf383ad8dfbfb375167053c85b1e1cca9689e0f8",
+      "runId": 44688423800,
+      "jobId": 136128179552,
+      "counts": {
+        "pass": 11,
+        "fail": 0,
+        "skip": 0,
+        "files": 1
+      },
+      "status": "SUCCESS",
+      "qualification": "Exact current installation discovery; snapshot identity retained in the producing workflow log (not the separate codegen snapshot)."
+    },
+    {
+      "id": "CORE-SESSION-BASELINE",
+      "source": "1a15b8622a52dede83c87fd934c3f6fe60f5e438",
+      "snapshot": "da33c22390952bd7015d2db3fd9699d3ecf36286",
+      "runId": 44687479891,
+      "jobId": 136125140480,
+      "counts": {
+        "pass": 168,
+        "fail": 0,
+        "skip": 0,
+        "files": 20
+      },
+      "status": "SUCCESS",
+      "qualification": "Baseline for SessionOwner regression; does not qualify new ownership."
+    },
+    {
+      "id": "RECEIPTS-FIRST-INTEGRATION",
+      "source": "443fba0829cfff9bdfcf231cd958345348f11b78",
+      "runId": 44687929115,
+      "jobId": 136126603262,
+      "counts": {
+        "pass": 118,
+        "fail": 2,
+        "skip": 0,
+        "files": 32
+      },
+      "status": "FAILURE",
+      "qualification": "One new receipt-absence regression and one historical AM01 installed-host-catalog-empty failure."
+    },
+    {
+      "id": "RECEIPTS-COMPARABLE-BASELINE",
+      "source": "1a15b8622a52dede83c87fd934c3f6fe60f5e438",
+      "runId": 44688207268,
+      "jobId": 136127509162,
+      "counts": {
+        "pass": 115,
+        "fail": 1,
+        "skip": 0,
+        "files": 31
+      },
+      "status": "FAILURE",
+      "qualification": "Same AM01 failed on baseline. No timeout, skip or assertion relaxation."
+    },
+    {
+      "id": "RECEIPTS-FINAL-DIRECTED",
+      "source": "b335c498ac0d0b74f12c785f47332b9d869f7d75",
+      "snapshot": "9c24ffacf6a709a0dffc474971956874759ec76f",
+      "runId": 44691159492,
+      "jobId": 136137013745,
+      "counts": {
+        "pass": 119,
+        "fail": 0,
+        "skip": 0,
+        "files": 31
+      },
+      "status": "SUCCESS",
+      "qualification": "Directed selection explicitly excludes the separate unresolved AM01 installed-inference test; not a full 32-file PASS."
+    },
+    {
+      "id": "WP1-PROXY-BOOTSTRAP",
+      "source": "ecd798c25069377054c43b6fdb54f35dcfed0c20",
+      "snapshot": "cde19b5be1643016c700b4a83d5e61591bca0eb8",
+      "runId": 44692440311,
+      "jobId": 136141191792,
+      "counts": {
+        "pass": 29,
+        "fail": 0,
+        "skip": 0,
+        "files": 4
+      },
+      "status": "SUCCESS",
+      "qualification": "NodeHttpServer with explicit HTTPS proxy; wrong Host remains421 and private generic request without credentials401."
+    },
+    {
+      "id": "WP1-COMPOSED-FIRST",
+      "source": "50389115ac9af07bdc3b951e5686a56edbefece1",
+      "snapshot": "6ffc74e30b7435b5e01fe753b60aced8f72a1632",
+      "runId": 44691581955,
+      "jobId": 136138401574,
+      "counts": {
+        "pass": 674,
+        "fail": 1,
+        "skip": 3,
+        "files": 36
+      },
+      "status": "FAILURE",
+      "qualification": "One ownership HTTP test exceeded its original30s budget. Existing UID fixture skips are not PASS."
+    },
+    {
+      "id": "WP1-COMPOSED-CORRECTED",
+      "source": "b47d294d1633baa336ea5a2388691cc15fcfa681",
+      "snapshot": "b8ba3e4b3d1233851a90ad20cb629ae4a1359ce6",
+      "runId": 44693507647,
+      "jobId": 136144680770,
+      "counts": {
+        "pass": 675,
+        "fail": 0,
+        "skip": 3,
+        "files": 36
+      },
+      "status": "SUCCESS",
+      "qualification": "Independent reads of one committed snapshot run concurrently; same assertions and30s budget. 4750 assertions,210.20s. Existing UID skips remain."
+    },
+    {
+      "id": "GENERATION-WRITER-FIRST",
+      "source": "4449177bb001e41c2f71b1d28cf7344918352b05",
+      "snapshot": "900320df13f1308b47b322df8b0d9061a3757a9d",
+      "runId": 44690569273,
+      "jobId": 136135095128,
+      "counts": {
+        "pass": 39,
+        "fail": 0,
+        "skip": 0,
+        "files": 3
+      },
+      "status": "SUCCESS",
+      "qualification": "Actual SQLite old/prepared writers and EffectDrizzle transactions; not migration/cutover/restore qualification."
+    },
+    {
+      "id": "GENERATION-CONTROL-RESTART",
+      "source": "9fff0a647f90b129b383cf8ac0d5cfbf077e1d2a",
+      "snapshot": "50ee228273e18d87009357a6d5ced9a73187f9e9",
+      "runId": 44692513809,
+      "jobId": 136141427064,
+      "counts": {
+        "pass": 40,
+        "fail": 0,
+        "skip": 0,
+        "files": 3
+      },
+      "status": "SUCCESS",
+      "qualification": "Missing control-history table refuses initialization;402 assertions."
+    },
+    {
+      "id": "GENERATION-PRIVATE-FILE",
+      "source": "a3f8dd36f65ce3a750e31606f615900b503335c1",
+      "snapshot": "d2580a9891cad17bfc8f84e1e20601da669b5be4",
+      "runId": 44693660695,
+      "jobId": 136145171043,
+      "counts": {
+        "pass": 45,
+        "fail": 0,
+        "skip": 0,
+        "files": 4
+      },
+      "status": "SUCCESS",
+      "qualification": "Empty marker refuses technical downgrade; rollback survives corrupt marker; private control rejects symlinks/hardlinks/unsafe modes.419 assertions."
+    },
+    {
+      "id": "WP2-HAPPYDOM-BASELINE",
+      "source": "a712711ffdcdf4628c98a7cc00e52ee229d5509f",
+      "snapshot": "0ea5d2f4c2fcae6a1f68e20090ae3dbbae9d8424",
+      "runId": 44690927761,
+      "jobId": 136136261994,
+      "status": "SUCCESS",
+      "counts": {
+        "pass": 138,
+        "fail": 0,
+        "skip": 0,
+        "files": 30
+      },
+      "groups": [
+        {
+          "runtime": "bun unit",
+          "cases": 65,
+          "files": 10,
+          "assertions": 565
+        },
+        {
+          "runtime": "bun --conditions=browser with HappyDOM",
+          "cases": 73,
+          "files": 20,
+          "assertions": 599
+        }
+      ],
+      "qualification": "Not Chromium, not the new mounted native Web composition and not installed Microsoft acceptance."
+    },
+    {
+      "id": "WP1-OFFICIAL-CLIENT-GENERATE",
+      "sourceSha": "bf383ad8dfbfb375167053c85b1e1cca9689e0f8",
+      "sourceTree": "158567ec96c436872c10a214f7ac5ee1d7aaf10e",
+      "snapshotSha": "d39b3293ec0f1b5be987b923610cff8f8f71bbd9",
+      "snapshotTree": "4f33d7422f7583a8b03098d7d210a08fa2214b15",
+      "command": "bun run generate",
+      "directory": "packages/client",
+      "commandExit": 0,
+      "runId": "44688420617",
+      "files": [
+        {
+          "path": "packages/client/src/generated-effect/client.ts",
+          "deleted": false,
+          "gitBlobSha": "88bf45a4ea71eaa2fb7e69b2a228f46104f47e9e",
+          "byteLength": 198641,
+          "encoding": "base64"
+        },
+        {
+          "path": "packages/client/src/generated/client.ts",
+          "deleted": false,
+          "gitBlobSha": "ad8cec3aa70619bc19ce772096050706dfd0bef1",
+          "byteLength": 170244,
+          "encoding": "base64"
+        },
+        {
+          "path": "packages/client/src/generated/types.ts",
+          "deleted": false,
+          "gitBlobSha": "647f57277dd1d9163a6b275e7349148536bfec8b",
+          "byteLength": 509394,
+          "encoding": "base64"
+        }
+      ],
+      "status": "SUCCESS",
+      "qualification": "Exact generated blobs imported; not a native tenant proof."
+    },
+    {
+      "id": "WP1-OFFICIAL-CLIENT-VERIFY",
+      "source": "50389115ac9af07bdc3b951e5686a56edbefece1",
+      "sourceTree": "0637c08dcf2b07cac9b0851e6813b9bc072ec0ef",
+      "snapshot": "ea37d4a55a679d56293dde7386f33c0c5dd2cb84",
+      "runId": 44691585626,
+      "jobId": 136138413546,
+      "command": "packages/client: bun run check:generated",
+      "status": "SUCCESS",
+      "commandExit": 0,
+      "generatedDiff": [],
+      "qualification": "Official generation comparison on the composed contracts; no generated-file hand editing."
+    },
+    {
+      "id": "G04-COLLABORATION-ROOT",
+      "source": "87f2f96168a2ec48b16640c103e78d2039b4041c",
+      "snapshot": "ba0183c8dddccb7577e29be7a8bc8c431f4bb849",
+      "runId": 44691251659,
+      "jobId": 136137310150,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 87,
+        "fail": 120,
+        "error": 0
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 206,
+        "bodiesFinished": 206,
+        "bodiesReturned": 87,
+        "bodiesThrew": 119,
+        "activeCase": null,
+        "forcedFinalization": false
+      },
+      "qualification": "Complete40-source selection requested; actual bodies recorded separately. Historical recipient fixture uses exact original blobs and external authority singletons, COMPONENT_HISTORICAL only."
+    },
+    {
+      "id": "G04-EXACT-HISTORICAL-COMPONENTS",
+      "source": "62feb940af82db8128be4674ba83e07c6118de17",
+      "snapshot": "83ebd90035e4b1eaa690e00479bc03006767bbd0",
+      "runId": 44693294978,
+      "jobId": 136143993089,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 17,
+        "fail": 46,
+        "error": 0
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 19,
+        "bodiesFinished": 19,
+        "bodiesReturned": 17,
+        "bodiesThrew": 2,
+        "activeCase": null,
+        "forcedFinalization": true
+      },
+      "qualification": "Complete40-source selection requested; actual bodies recorded separately. Historical recipient fixture uses exact original blobs and external authority singletons, COMPONENT_HISTORICAL only."
+    },
+    {
+      "id": "G04-RECIPIENT-RECOVERY-FIRST",
+      "source": "a5700f09b3f068015f2dac371e4a94cc7432c7c5",
+      "snapshot": "5949a30623ef6820f9b15342382fda878431f364",
+      "runId": 44694122500,
+      "jobId": 136146682578,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 16,
+        "fail": 45,
+        "error": 1
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 18,
+        "bodiesFinished": 18,
+        "bodiesReturned": 16,
+        "bodiesThrew": 2,
+        "activeCase": null,
+        "forcedFinalization": true
+      },
+      "qualification": "Complete40-source selection requested; actual bodies recorded separately. Historical recipient fixture uses exact original blobs and external authority singletons, COMPONENT_HISTORICAL only."
+    },
+    {
+      "id": "CASE_OWNER_PROJECTION",
+      "source": "3642bf226cab5a6e42dccccd0995ae12d8edac1d",
+      "runId": 44694665073,
+      "jobId": 136148425424,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 89,
+        "fail": 0,
+        "files": 6,
+        "expects": 789
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "GENERATION_PROJECT_GUARD_FIRST",
+      "source": "c3a2bd00e57d9d7267a9ab37e60e36e82392c688",
+      "runId": 44697136307,
+      "jobId": 136156485296,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 45,
+        "fail": 1,
+        "files": 4,
+        "expects": 423
+      },
+      "finding": "Test cleanup bypassed the guarded rollback adapter; production guard was retained.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "GENERATION_PROJECT_GUARD_FINAL",
+      "source": "73584912183e5452eb856fd32f7bb1d9ae5f207d",
+      "snapshot": "dd7a7fab3b582a5b70f13a66b057760b2e20ed27",
+      "runId": 44697531033,
+      "jobId": 136157760159,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 46,
+        "fail": 0,
+        "files": 4,
+        "expects": 425
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "CENSUS_CANONICAL_HISTORY",
+      "source": "73b9384d6c77f5bf4df31d2077c686f72ef3ae86",
+      "snapshot": "1a45ff838844a3646d94a3241b343d6e08d829f3",
+      "runId": 44698455778,
+      "jobId": 136160768163,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 50,
+        "fail": 0,
+        "files": 4,
+        "expects": 174
+      },
+      "skip": 1,
+      "skipReason": "Preexisting Windows-only case; not counted as pass.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "CORE_INTEGRATED_EB07",
+      "source": "eb07b470c165363d78daf490e625ca0ceefa7df6",
+      "snapshot": "45dc3fccd2092152094875e1b95ecb6f41a345b0",
+      "runId": 44699164293,
+      "jobId": 136163082372,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 239,
+        "fail": 0,
+        "files": 26,
+        "expects": 1344
+      },
+      "skip": 1,
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./test/session-create.test.ts",
+          "./test/session-persistence.test.ts",
+          "./test/session-projector.test.ts",
+          "./test/session-archive.test.ts",
+          "./test/session-scope.test.ts",
+          "./test/session-store-permissions.test.ts",
+          "./test/session-lifecycle.test.ts",
+          "./test/session-list-projection.test.ts",
+          "./test/session-operations.test.ts",
+          "./test/session-rename-remove.test.ts",
+          "./test/session-prompt.test.ts",
+          "./test/session-legacy-import.test.ts",
+          "./test/move-session.test.ts",
+          "./test/event-transact.test.ts",
+          "./test/event-order.test.ts",
+          "./test/event-durable-pages.test.ts",
+          "./test/event-persist-gate.test.ts",
+          "./test/session-subagent-models.test.ts",
+          "./test/session-title-scope.test.ts",
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-team-owner.test.ts",
+          "./test/authority-generation.test.ts",
+          "./test/database-authority-control-file.test.ts",
+          "./test/database-migration.test.ts",
+          "./test/database-migration-backup.test.ts",
+          "./test/database-migration-team-profile.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "SF_INTEGRATED_EB07",
+      "source": "eb07b470c165363d78daf490e625ca0ceefa7df6",
+      "snapshot": "35b2f95760c31f9767aa7d00a187861f2a65c798",
+      "runId": 44699170834,
+      "jobId": 136163102044,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 115,
+        "fail": 0,
+        "files": 8,
+        "expects": 1037
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+          "./Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+          "./Sucafinav1/test/microsoft-configuration.test.ts",
+          "./Sucafinav1/test/teams-profile/policy-store.test.ts",
+          "./Sucafinav1/test/teams-profile/admin-admission.test.ts",
+          "./Sucafinav1/test/teams-profile/product-authority.test.ts",
+          "./Sucafinav1/test/teams-profile/core-session-policy.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "STATIC_INTEGRATED_EB07",
+      "source": "eb07b470c165363d78daf490e625ca0ceefa7df6",
+      "runId": 44699059541,
+      "jobId": 136162760863,
+      "status": "FAILURE",
+      "checks": {
+        "passed": 15,
+        "failed": 1
+      },
+      "failure": "guard-dev rejects protected godfile-waivers.json and script/spawn-allowlist.json changes without repository approval. No approval was fabricated.",
+      "qualification": "All typechecks, official generated checks, Web build and spawn imports passed on this source; protected gate remains unresolved."
+    },
+    {
+      "id": "MIGRATION_AUTHORITY_FIRST",
+      "source": "7f3dd679b72a851c34b8e40748b5617f47e21f72",
+      "snapshot": "eacb0064561691abde65abd90dfba2cc41648b5c",
+      "runId": 44699497380,
+      "jobId": 136164145253,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 95,
+        "fail": 5,
+        "files": 4,
+        "expects": 431
+      },
+      "finding": "Canonical administration selector omitted installation and tenant binding; resolver correctly denied.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "MIGRATION_AUTHORITY_CANONICAL",
+      "source": "3dbd02f362e6ba80e56c5a4eda14550bb89963dc",
+      "snapshot": "2402b54e4132bdf4fe6a2cf815d826f55fc319ad",
+      "runId": 44699894969,
+      "jobId": 136165434280,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 100,
+        "fail": 0,
+        "files": 4,
+        "expects": 460
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/migration-authority.test.ts",
+          "./Sucafinav1/test/teams-profile/admin-admission.test.ts",
+          "./Sucafinav1/test/teams-profile/admin-membership.test.ts",
+          "./Sucafinav1/test/teams-profile/core-session-policy.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "limit": "Opaque map/cut/recover metadata admission only; migration engine and production cut are not implemented by this test.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "G04_COMPLETE_RECIPIENT_EXACT_ACK",
+      "source": "35c794a7cda5dff4f12c8ef134e83e50db941ce5",
+      "snapshot": "2d56d330af6cb3484b332fade0979213c3f4da88",
+      "runId": 44698645708,
+      "jobId": 136161386840,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 96,
+        "fail": 111,
+        "files": 1,
+        "expects": 1903
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-selection.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "registration": {
+        "sourceCount": 40,
+        "declaredCases": 206,
+        "bodiesStarted": 206,
+        "bodiesFinished": 206,
+        "bodiesReturned": 96,
+        "bodiesThrew": 110,
+        "forcedFinalization": false
+      },
+      "finding": "Full 40-source pool remains RED. Current recipient receipt case passes exact-message acknowledgement with three identical concurrent replies; other families remain under repair.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "HTTP_INSTALLED_SECOND",
+      "source": "3d2557c8d3ded84f127ed30a37187b33cdc996ab",
+      "snapshot": "cad7188a9bb9e585d5af1ba4ad9a3ec48ec2bbd2",
+      "runId": 44699145202,
+      "jobId": 136163024288,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 54,
+        "fail": 8,
+        "files": 12
+      },
+      "finding": "Seven corporate sequences timed out from repeated same-boundary policy observations; one assertion matched namespace in a Session ID instead of a JSON key. No timeout increased.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "CORE_FRESH_INSPECTION",
+      "source": "1d1634687f32f7f44aa6d6d767b5502a139248ef",
+      "snapshot": "663848ba1cadceb0a20b6d99f29880c2e8b87017",
+      "runId": 44701329420,
+      "jobId": 136170165893,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 46,
+        "fail": 0,
+        "files": 3,
+        "expects": 280
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "SF_FRESH_INSPECTION",
+      "source": "1d1634687f32f7f44aa6d6d767b5502a139248ef",
+      "snapshot": "ed005be466429e52c3de0271c37956a9ada08a20",
+      "runId": 44701333339,
+      "jobId": 136170177843,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 52,
+        "fail": 0,
+        "files": 3,
+        "expects": 519
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "HTTP_INSTALLED_FINAL",
+      "source": "360fad134b960fef1bccb3fb925eb4da74d61bbc",
+      "snapshot": "042f9a8407bddf2fd1718b912248eb9d9c616778",
+      "runId": 44701581257,
+      "jobId": 136171000482,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 63,
+        "fail": 0,
+        "files": 12,
+        "expects": 511
+      },
+      "request": {
+        "package": "server",
+        "runner": "bun",
+        "args": [
+          "./test/team-profile-admission.test.ts",
+          "./test/team-profile-events.test.ts",
+          "./test/session-background-http.test.ts",
+          "./test/session-diff-http.test.ts",
+          "./test/session-move-http.test.ts",
+          "./test/session-revert-http.test.ts",
+          "./test/event-stream.test.ts",
+          "./test/body-limit.test.ts",
+          "./test/auth.test.ts",
+          "./test/host-policy.test.ts",
+          "./test/sucafina-team-discovery.test.ts",
+          "./test/sucafina-bootstrap-authorization.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "limit": "Actual shared host graph and private installation admission fixture. Not the final G05 exercise or real tenant G08.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "GENERATOR_IMPORTED_CANONICAL",
+      "source": "376e1fdda03396c1cf1160eee0f941d3a6c9fd68",
+      "snapshot": "2addbabae832ca63ad4f45b7b028a44eadf9be26",
+      "runId": 44701345189,
+      "jobId": 136170217761,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 90,
+        "fail": 0,
+        "files": 6,
+        "expects": 467
+      },
+      "finding": "Generated imported client executes canonical HTTP/input/SSE owner validation. Default/standalone/clone/retarget paths reject unportable or unbound schema.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "OFFICIAL_NAMESPACE_CODEGEN_03",
+      "sourceSha": "376e1fdda03396c1cf1160eee0f941d3a6c9fd68",
+      "sourceTree": "f2688347086abb977d5f64df787408ef411c2264",
+      "snapshotSha": "3fba6f7950b317dde9255e9ef2b871a0e5f0abb9",
+      "snapshotTree": "086584d9857e975aa4d0ee5415e72bab4b984067",
+      "command": "bun run generate",
+      "directory": "packages/client",
+      "commandExit": 0,
+      "runId": 44701673378,
+      "files": [
+        {
+          "path": "packages/client/src/generated-effect/client.ts",
+          "deleted": false,
+          "gitBlobSha": "d3604dfdeb31655f2b3faa3b05a932e7ed1a0d87",
+          "byteLength": 198593,
+          "encoding": "base64"
+        },
+        {
+          "path": "packages/client/src/generated/client.ts",
+          "deleted": false,
+          "gitBlobSha": "ea85d95104dd47dbafbf40aae51764a03849652a",
+          "byteLength": 170197,
+          "encoding": "base64"
+        },
+        {
+          "path": "packages/client/src/generated/types.ts",
+          "deleted": false,
+          "gitBlobSha": "e231afd55ad463716b0c87acd9834a148714c194",
+          "byteLength": 512136,
+          "encoding": "base64"
+        }
+      ],
+      "jobId": 136171298321,
+      "status": "SUCCESS",
+      "importedSource": "51ea7bf58e2e7039c39c63db6a6d8b7545de37a4",
+      "qualification": "Exact official generated blobs re-created and Git blob SHAs verified; no generated code edited by hand."
+    },
+    {
+      "id": "OFFICIAL_NAMESPACE_CODEGEN_01",
+      "source": "a8b22222b782c5b3dd0562c6443010fa157d1191",
+      "snapshot": "ce6cbd3e76b5b7d02afeb3f0fbbe94a905a514b3",
+      "runId": 44698714949,
+      "jobId": 136161616346,
+      "status": "FAILURE",
+      "commandExit": 1,
+      "generatedFiles": [],
+      "finding": "Owner same-tenant refinement cannot be ported by the standalone schema generator. No fake portable/arbitrary metadata or filter removal was accepted."
+    },
+    {
+      "id": "OFFICIAL_NAMESPACE_CODEGEN_02",
+      "source": "02547f28e647d70166e4b4d372702ee0c8c11676",
+      "snapshot": "bbe7bd24c376b92a36c46c06892263250691fc79",
+      "runId": 44699625560,
+      "jobId": 136164557813,
+      "status": "FAILURE",
+      "commandExit": 1,
+      "generatedFiles": [],
+      "finding": "Owner same-tenant refinement cannot be ported by the standalone schema generator. No fake portable/arbitrary metadata or filter removal was accepted."
+    },
+    {
+      "id": "SDK_INSTALLED_ADMISSION",
+      "source": "b3dd39d967ace1bd4b846d34f148c0fa85acf80a",
+      "snapshot": "de3d67b092c254dae9f983e49ad06204f94cae2c",
+      "runId": 44702157391,
+      "jobId": 136172874923,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 7,
+        "fail": 0,
+        "files": 2,
+        "expects": 99
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "SDK_TECHNICAL_REGRESSION",
+      "source": "b3dd39d967ace1bd4b846d34f148c0fa85acf80a",
+      "snapshot": "8ea38792ce5e69e43738798bed43242dbf03cecb",
+      "runId": 44702158466,
+      "jobId": 136172878797,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 4,
+        "fail": 0,
+        "files": 1,
+        "expects": 21
+      },
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "FACTORY_TECHNICAL_MAINTENANCE",
+      "source": "e3171a7f88f946e45400856f35136c7867a3c557",
+      "snapshot": "62fbc6ee6f7abaaf39c657e34a2f12034589db0b",
+      "runId": 44702250679,
+      "jobId": 136173182655,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 26,
+        "fail": 0,
+        "files": 4,
+        "expects": 164
+      },
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/local-entry.test.ts",
+          "./Sucafinav1/test/local-jobs.test.ts",
+          "./Sucafinav1/test/local-maintenance-resilience.test.ts",
+          "./Sucafinav1/test/local-backup-resilience.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "limit": "Composition/SQLite maintenance regressions only; the compiled native G07 package and installer have not run on this candidate.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "WP2_APP_OWNER_AND_LOGOUT",
+      "source": "df5d29529f2e50d32d79ed34d4da39f31ce9d047",
+      "runId": 44697845339,
+      "jobId": 136158793439,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 156,
+        "fail": 0,
+        "files": 32,
+        "expects": 1276
+      },
+      "limit": "HappyDOM/unit evidence. Real built Web G02 selection remains failing and under diagnosis.",
+      "qualification": "Directed source evidence only. Not a final same-candidate gate or installed tenant proof."
+    },
+    {
+      "id": "SESSION_PERFORMANCE_BASELINE_FIRST",
+      "source": "df5d29529f2e50d32d79ed34d4da39f31ce9d047",
+      "snapshot": "30fd023b6b5198c460bd3bd624ee26bd7dc67912",
+      "runId": 44698173797,
+      "jobId": 136159854820,
+      "status": "FAILURE",
+      "pass": 6,
+      "fail": 12,
+      "repeat": 3,
+      "workers": 1,
+      "retries": 0,
+      "finding": "Tab switching passed; stream/review failed before metrics because a fixture reconnect returned a static snapshot without emitted text. No production Session/timeline change or timeout increase was used to manufacture a baseline."
+    },
+    {
+      "id": "CORE_SQL_MIGRATION_OFFICIAL_V2",
+      "source": "cf8c532f072a5e6c398feeab1331e0dc9243c2eb",
+      "runId": 44694828103,
+      "jobId": 136148957194,
+      "status": "SUCCESS",
+      "commandExit": 0,
+      "generatedFiles": [
+        {
+          "path": "packages/core/schema.json",
+          "type": "blob",
+          "mode": "100644",
+          "sha": "186effedaa15a7a0bdb467104d3e5f6490f71747"
+        },
+        {
+          "path": "packages/core/src/database/migration.gen.ts",
+          "type": "blob",
+          "mode": "100644",
+          "sha": "18564296aefb4c2eb26032482262a2d6e0561ada"
+        },
+        {
+          "path": "packages/core/src/database/migration/20261120072545_teams_session_owner.ts",
+          "type": "blob",
+          "mode": "100644",
+          "sha": "81783b355047332f037a3d0353f2519cd98e79c6"
+        },
+        {
+          "path": "packages/core/src/database/schema.gen.ts",
+          "type": "blob",
+          "mode": "100644",
+          "sha": "6a4ce62d17b2262b810dc9139a9decad7cde1fed"
+        }
+      ],
+      "qualification": "Official additive SessionOwner migration, explicit non-null Session ID and no cascade. Historical migrations unchanged.",
+      "importedSource": "5166c4fba3b0b0c337d0f1c1f633c7398d31e184",
+      "snapshot": "42d56ae51d88e75b9fd617d80d32b253d120e271"
+    },
+    {
+      "id": "SF_INTEGRATED_E00E",
+      "source": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
+      "snapshot": "982b4cfed085758db8dde0fd892bde77e9a5fc9e",
+      "runId": 44702867050,
+      "jobId": 136175214945,
+      "status": "SUCCESS",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000",
+          "./Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+          "./Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+          "./Sucafinav1/test/microsoft-configuration.test.ts",
+          "./Sucafinav1/test/teams-profile/policy-store.test.ts",
+          "./Sucafinav1/test/teams-profile/admin-admission.test.ts",
+          "./Sucafinav1/test/teams-profile/product-authority.test.ts",
+          "./Sucafinav1/test/teams-profile/core-session-policy.test.ts",
+          "./Sucafinav1/test/teams-profile/migration-authority.test.ts",
+          "./Sucafinav1/test/local-entry.test.ts",
+          "./Sucafinav1/test/local-jobs.test.ts",
+          "./Sucafinav1/test/local-maintenance-resilience.test.ts",
+          "./Sucafinav1/test/local-backup-resilience.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 149,
+        "fail": 0,
+        "files": 13,
+        "expects": 1273
+      },
+      "qualification": "Integrated component policy, migration admission and technical maintenance proof. No final/real-tenant qualification."
+    },
+    {
+      "id": "HTTP_INTEGRATED_E00E",
+      "source": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
+      "snapshot": "7adcbea9e27ed81ac6503bb0de226d8c57913b0f",
+      "runId": 44702863723,
+      "jobId": 136175203073,
+      "status": "SUCCESS",
+      "request": {
+        "package": "server",
+        "runner": "bun",
+        "args": [
+          "./test/team-profile-admission.test.ts",
+          "./test/team-profile-events.test.ts",
+          "./test/session-background-http.test.ts",
+          "./test/session-diff-http.test.ts",
+          "./test/session-move-http.test.ts",
+          "./test/session-revert-http.test.ts",
+          "./test/event-stream.test.ts",
+          "./test/body-limit.test.ts",
+          "./test/auth.test.ts",
+          "./test/host-policy.test.ts",
+          "./test/sucafina-team-discovery.test.ts",
+          "./test/sucafina-bootstrap-authorization.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 63,
+        "fail": 0,
+        "files": 12,
+        "expects": 511
+      },
+      "cleanup": {
+        "jobId": 136176435065,
+        "status": "SUCCESS"
+      },
+      "qualification": "Exact integrated HTTP component result; no final candidate or real tenant qualification."
+    },
+    {
+      "id": "STATIC_INTEGRATED_E00E",
+      "source": "e00e7c20f5a0a486cd20024110aa0f03b72d11b3",
+      "runId": 44702763217,
+      "jobId": 136174874762,
+      "status": "FAILURE",
+      "findings": [
+        "Installed HTTP group union and request context types",
+        "Technical CLI/TUI consumers must reject corporate envelope before use",
+        "Factory structural assertion inference",
+        "Protected godfile-waivers.json and script/spawn-allowlist.json"
+      ],
+      "qualification": "Preserved negative observation. Subsequent fixes are separately evidenced."
+    },
+    {
+      "id": "STATIC_HTTP_CONSUMERS_D417",
+      "source": "d4177d845ccc149497498adf44cde9ce3577a24e",
+      "runId": 44704895007,
+      "jobId": 136181941503,
+      "status": "FAILURE",
+      "commands": {
+        "pass": 14,
+        "fail": 2,
+        "total": 16
+      },
+      "findings": [
+        "All HTTP/SDK/server/CLI production narrowing errors resolved",
+        "Only factory test TS2769 and protected guard remained"
+      ],
+      "qualification": "Not global static PASS. Factory type corrected in 8bde1897; permission-reader propagation corrected in 17323cf1."
+    },
+    {
+      "id": "STATIC_INTEGRATED_EA8806",
+      "source": "ea8806fdc975a23938436085455f64eee70d38a8",
+      "sourceTree": "21135edcdf845a489881cc828bf91ed882fb1fe9",
+      "snapshot": "7cc28d06150b4fe299799f783657df1f5dc80cd7",
+      "runId": 44707320463,
+      "jobId": 136190040544,
+      "status": "FAILURE",
+      "commands": {
+        "pass": 15,
+        "fail": 1,
+        "total": 16
+      },
+      "findings": [
+        "All generated checks, types, E2E configuration/inclusion and Web build exited zero",
+        "guard-dev only: protected godfile-waivers.json and script/spawn-allowlist.json require actual approval"
+      ],
+      "qualification": "Same-tree static snapshot. No protected approval fabricated and no final G01 PASS claimed."
+    },
+    {
+      "id": "RESTORE_EFFECT_FRONTIER_FIRST",
+      "source": "096bf332aa516d9ad26f7241220e242d68a50ea8",
+      "sourceTree": "6411fb7ea60bed29243221688ab0232542ba4d4d",
+      "snapshot": "91851e371a176aba698def0178e17e7f340b19cc",
+      "runId": 44706205693,
+      "jobId": 136186320479,
+      "status": "FAILURE",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/restore-effect-frontier.test.ts",
+          "./Sucafinav1/test/operations-runtime.test.ts",
+          "./Sucafinav1/test/local-backups.test.ts",
+          "./Sucafinav1/test/local-backup-resilience.test.ts",
+          "./Sucafinav1/test/local-maintenance-resilience.test.ts",
+          "./Sucafinav1/test/parity-recovery-plan.test.ts",
+          "./Sucafinav1/test/parity-pitr.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 60,
+        "fail": 5,
+        "skip": 1,
+        "tests": 66,
+        "files": 7,
+        "expects": 312
+      },
+      "findings": [
+        "New C08 fixture admitted but did not consume its genuine one-time UI lease",
+        "Signed principal surface RoleRows needed the same Actor projection used in production",
+        "Pinned Litestream executable absent for parity-pitr; that operational proof is still pending"
+      ],
+      "cleanup": {
+        "jobId": 136186871460,
+        "status": "SUCCESS"
+      },
+      "qualification": "Negative evidence retained. No assertion weakened and no new skip introduced."
+    },
+    {
+      "id": "RESTORE_EFFECT_FRONTIER_FIXED",
+      "source": "6012cabd2dd16b3835927af78b56d5d7714928fc",
+      "sourceTree": "3a1c02a61e4b46f3d87037431da1236bfdb4506d",
+      "snapshot": "fd6d8eab0fc4f6909453989a61dcbe52a93bdef9",
+      "runId": 44707605762,
+      "jobId": 136190992165,
+      "status": "SUCCESS",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/teams-profile/restore-effect-frontier.test.ts",
+          "./Sucafinav1/test/operations-runtime.test.ts",
+          "./Sucafinav1/test/local-backups.test.ts",
+          "./Sucafinav1/test/local-backup-resilience.test.ts",
+          "./Sucafinav1/test/local-maintenance-resilience.test.ts",
+          "./Sucafinav1/test/parity-recovery-plan.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 63,
+        "fail": 0,
+        "skip": 1,
+        "tests": 64,
+        "files": 6,
+        "expects": 334
+      },
+      "existingSkip": "Foreign-owned existing root requires root fixture privileges; unchanged existing case.",
+      "cleanup": {
+        "jobId": 136191481171,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual signed C08 commit, checkpoint restore through source-lifecycle persistence, current access retention, authority restart and identical retry. Missing/corrupt frontier and blob conflict fail closed. Separate Litestream prerequisite-bound proof remains pending. Not a Core migration/cut or G10 qualification."
+    },
+    {
+      "id": "SESSION_COORDINATOR_MAINTENANCE",
+      "source": "3031efce31f65c7f501ceeadd0fa16aab3336b37",
+      "sourceTree": "e0f849cf736520d27e31e5c019d5791c88686f1c",
+      "snapshot": "9534392e5875541d5e20b3afba8fd6afceb9d0aa",
+      "runId": 44708472156,
+      "jobId": 136193857355,
+      "status": "SUCCESS",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 33,
+        "fail": 0,
+        "files": 2,
+        "expects": 103
+      },
+      "cleanup": {
+        "jobId": 136194378482,
+        "status": "SUCCESS"
+      },
+      "qualification": "Original 28 coordinator cases plus five closure/race cases. Actual owner interruption and finalizers are awaited; no durable pending input consumed or external completion inferred. Global runtime migration barrier and effect census still required."
+    },
+    {
+      "id": "TEAM_CONFIGURATION_INTEGRATED",
+      "source": "1253334922d855f477602c536831265ecf98c0d0",
+      "sourceTree": "114a95fb6c0686cd6f3b675ab4fee55a9a8da380",
+      "snapshot": "474f76036c378b78e663a6a65c6c7f013a81eb87",
+      "runId": 44710851234,
+      "jobId": 136201840711,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 35,
+        "fail": 0,
+        "expects": 432,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136202480948,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual current administration and shared configuration/CAS boundaries. Directed evidence, not final candidate qualification."
+    },
+    {
+      "id": "TEAM_CONFIGURATION_STATIC_FIRST",
+      "source": "1253334922d855f477602c536831265ecf98c0d0",
+      "snapshot": "b2a84913440b5ff07d9842bd2e827611b1e3051e",
+      "runId": 44710854180,
+      "jobId": 136201849442,
+      "status": "FAILURE",
+      "qualification": "13/16 real commands exit zero. Six implicit-any restore callbacks and 16 missing SessionOwner services in three Actions fixture families; guard-dev separately blocks two protected paths."
+    },
+    {
+      "id": "SESSION_FINALIZATION_FIRST",
+      "source": "c53199aa78e0df15d1f12c40e58b7ddaead590d8",
+      "snapshot": "a360020627ea8ea00ceb00b8bd7d6e551fe8d97e",
+      "runId": 44709800993,
+      "jobId": 136198322680,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 41,
+        "fail": 1,
+        "expects": 148,
+        "tests": 42,
+        "files": 3
+      },
+      "qualification": "Original SessionStop cases passed. Waiting the whole entry.done also waits a successful coalesced successor and deadlocked original exclusive coalescing."
+    },
+    {
+      "id": "SESSION_FINALIZATION_OWNED_EXECUTION",
+      "source": "2a140e9a686af602734f9c0743ef955b76f797e6",
+      "snapshot": "6a167294ba9f6f64b2ef100ebed4517d9745f50c",
+      "runId": 44710805363,
+      "jobId": 136201688287,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 42,
+        "fail": 0,
+        "expects": 153,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136202092140,
+        "status": "SUCCESS"
+      },
+      "qualification": "Waits the current owned execution's private binding and settle, distinct from joined/coalesced drain lifecycle; original coalescing semantics retained."
+    },
+    {
+      "id": "CONFIGURATION_AND_SESSION_CORE_INTEGRATED",
+      "source": "547fa4db317a57fcccc302ee2dfbace7f9860cbe",
+      "sourceTree": "f519f2cbe3f98b4dca76b60b25926695b8dfe920",
+      "snapshot": "823801067a223a487272ff078545ea9a8e463ac1",
+      "runId": 44711178894,
+      "jobId": 136202987994,
+      "status": "SUCCESS",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/config/team-configuration.test.ts",
+          "./test/effect/layer-node/node-build.test.ts",
+          "./test/location-startup-globals.test.ts",
+          "./test/relay-hook-recovery-startup.test.ts",
+          "./test/session-prompt-observer.test.ts",
+          "./test/session-stop-runs.test.ts",
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "./test/tool-task-cold.test.ts",
+          "./test/tool-task-governance.test.ts",
+          "./test/tool-task.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 111,
+        "fail": 0,
+        "expects": 605,
+        "files": 11
+      },
+      "cleanup": {
+        "jobId": 136203589708,
+        "status": "SUCCESS"
+      },
+      "qualification": "Configuration, same-graph contracts, startup/recovery, prompt observation, SessionStop, coordinator and tool task regressions. Not global maintenance or final qualification."
+    },
+    {
+      "id": "ACTIONS_REAL_OWNER_FIXTURE",
+      "source": "5ba5d0d2fc7bf86e282cebb96a1c153b70ba19d8",
+      "sourceTree": "68cd705b1ccb501ddf9c45beb7426eeb62f98626",
+      "snapshot": "9c32f9d874296d70256fc67864895de2873a1970",
+      "runId": 44712712942,
+      "jobId": 136208179371,
+      "status": "SUCCESS",
+      "request": {
+        "package": "server",
+        "runner": "bun",
+        "args": [
+          "./test/actions-http.test.ts",
+          "./test/actions-resource-query.test.ts",
+          "./test/actions-run-rename-http.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 20,
+        "fail": 0,
+        "expects": 826,
+        "files": 3
+      },
+      "cleanup": {
+        "jobId": 136208667239,
+        "status": "SUCCESS"
+      },
+      "qualification": "The Actions fixture builds real SessionOwner over its same real Database. No assertion or authority check weakened."
+    },
+    {
+      "id": "TEAM_CONFIGURATION_STATIC_FIXED",
+      "source": "5ba5d0d2fc7bf86e282cebb96a1c153b70ba19d8",
+      "snapshot": "dbefd755e8afd68de29192c437a9c424a2fa8bf1",
+      "runId": 44712718054,
+      "jobId": 136208197250,
+      "status": "FAILURE",
+      "qualification": "15/16 actual commands exit zero, including every typecheck, both generated-code checks, E2E inclusion/config and Web build. guard-dev refuses godfile-waivers.json and script/spawn-allowlist.json; no approval manufactured."
+    },
+    {
+      "id": "HOST_MAINTENANCE_FIRST",
+      "source": "1c84fe9f34ae1cb447432229ee5bb8378955abdc",
+      "snapshot": "3b4b05209387d2beaf2901dfb63b269d249478b4",
+      "runId": 44712135231,
+      "jobId": 136206191685,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 64,
+        "fail": 2,
+        "expects": 259,
+        "tests": 66,
+        "files": 6
+      },
+      "cleanup": {
+        "jobId": 136206834214,
+        "status": "SUCCESS"
+      },
+      "qualification": "Both failures expose real Omni SIGTERM exitCode rejection. Do not treat an exit-code failure as proof that the OS process is alive or as an external-effect success."
+    },
+    {
+      "id": "HOST_MAINTENANCE_TERMINAL_PROBE",
+      "source": "37840afa958f200999d011af2d9a95d5d0ce2582",
+      "snapshot": "b2e5f8f4f85a271f6ed79dba699bccc7b831f5a3",
+      "runId": 44712622672,
+      "jobId": 136207879082,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 65,
+        "fail": 1,
+        "expects": 273,
+        "tests": 66,
+        "files": 6
+      },
+      "cleanup": {
+        "jobId": 136208525770,
+        "status": "SUCCESS"
+      },
+      "qualification": "Actual same graph, exclusive finalizer, native sleep child and future schedule drain pass, including OS pid absence and no later admission. Sole remaining original process fixture omits isRunning after known exit zero; fixed by supplying actual false, no assertion changed."
+    },
+    {
+      "id": "BACKGROUND_OWNER_FIRST",
+      "source": "5c2af0712651a1fce526e74ed2e2dde5b337510b",
+      "sourceTree": "c9513348c1b46240d47e3b98651661f9da3f75c1",
+      "snapshot": "e752e779ffbb54aae441f94b6c833415015b8f73",
+      "runId": 44713428906,
+      "jobId": 136210629378,
+      "status": "FAILURE",
+      "request": {
+        "package": "core",
+        "runner": "bun",
+        "args": [
+          "./test/host-maintenance.test.ts",
+          "./test/session-run-coordinator.test.ts",
+          "./test/session-run-coordinator-maintenance.test.ts",
+          "./test/session-stop-runs.test.ts",
+          "./test/session-process.test.ts",
+          "./test/scheduled-task.test.ts",
+          "./test/scheduled-task-capability.test.ts",
+          "./test/session-background-owner.test.ts",
+          "./test/session-team-owner.test.ts",
+          "--timeout",
+          "30000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "bunReported": {
+        "pass": 100,
+        "fail": 2,
+        "expects": 572,
+        "tests": 102,
+        "files": 9
+      },
+      "cleanup": {
+        "jobId": 136211486687,
+        "status": "SUCCESS"
+      },
+      "qualification": "Original coordinator/process/schedule/capability/owner cases pass. New fixtures failed when trying to reacquire after membership revocation and decoding a nonexistent agent. Next candidate retains the real prior lease and creates a real explicit-agent Session."
+    },
+    {
+      "id": "BACKGROUND_OWNER_RETAINED_LEASE",
+      "source": "9b30e68524acad285fcddb54b612f3a16cf7c862",
+      "sourceTree": "02c74f2b4c30cff668a0861ae1fe1613da8a3afb",
+      "snapshot": "e54fe5c5ef322c3b542ca1c0effeaaec380cbf51",
+      "status": "RUNNING",
+      "qualification": "Directed candidate only. Corporate automatic scheduler remains denied without independently admitted current authority; local drain receipt cannot settle unknown external effects."
+    },
+    {
+      "id": "G04_DECISION_ANALYSIS_HTTP",
+      "source": "00c8ca7e693a7d4d1cbc2131d39ba57a7926eb0a",
+      "snapshot": "f4016def7512daa9b60828093288d6e488284932",
+      "runId": 44711150378,
+      "jobId": 136202888184,
+      "status": "SUCCESS",
+      "bunReported": {
+        "pass": 14,
+        "fail": 0,
+        "expects": 261
+      },
+      "qualification": "Current admission, skill/manifest/schema checks and real prepared input; fixture currency repaired from actual C06 planner projection, no helper authority bypass."
+    },
+    {
+      "id": "G04_DECISION_ANALYSIS_POOL",
+      "source": "51da5e625d4bc48f8c9f816debfb79af86e04f67",
+      "snapshot": "ff520b8a5c52315ae01fbec81819396d071306e2",
+      "runId": 44711982391,
+      "jobId": 136205671485,
+      "status": "FAILURE",
+      "bunReported": {
+        "pass": 135,
+        "fail": 72,
+        "expects": 2124,
+        "tests": 207
+      },
+      "poolJournal": {
+        "sources": 40,
+        "declared": 206,
+        "started": 206,
+        "finished": 206,
+        "returned": 135,
+        "threw": 71,
+        "activeCase": null,
+        "forcedFinalization": false
+      },
+      "cleanup": {
+        "jobId": 136209549195,
+        "status": "SUCCESS"
+      },
+      "qualification": "39 original failures now pass, zero previous passes regressed versus root35c. Decision mutation16, edit recovery34, forecast visibility13 and creation1 pass. Remaining71 bodies and finalizer correctly keep G04 red. Retired HTML stays closed."
+    },
+    {
+      "id": "G04_DECISION_ANALYSIS_STATIC",
+      "source": "51da5e625d4bc48f8c9f816debfb79af86e04f67",
+      "runId": 44711984189,
+      "jobId": 136205676437,
+      "status": "FAILURE",
+      "qualification": "No errors in the nine owned paths. Old reply-identity expected unknown and inherited admin/policy brand errors; integrated over current typed main and explicit expect<unknown> preserves runtime exact equality. Two protected files remain gated."
     }
   ],
   "infrastructureReconciliation": [
@@ -14680,6 +16162,23 @@
         "PR-base guard now passes; dev guard still blocks only the existing protected godfile-waivers.json and script/spawn-allowlist.json deltas."
       ],
       "qualification": "Not a passing gate. Fixes assigned to the current owning agents, with actual static recheck required."
+    },
+    {
+      "id": "STATIC-WP1-COMPOSED-FIRST",
+      "source": "50389115ac9af07bdc3b951e5686a56edbefece1",
+      "tree": "0637c08dcf2b07cac9b0851e6813b9bc072ec0ef",
+      "branch": "ci-static-sfc-teams-wp1-04",
+      "runId": 44691496935,
+      "jobId": 136138122412,
+      "status": "FAILURE",
+      "findings": [
+        "Receipt consumer narrowing and updated receipt-reader fixture API types",
+        "Team selector/schema brand test input types",
+        "Bootstrap test imported a non-exported protocol path",
+        "Three implicit-any grant validator callbacks",
+        "The same preexisting protected paths still require a real approver; no approval supplied"
+      ],
+      "qualification": "Corrections committed through b3b3dc5; exact static rerun is separate evidence, not inferred PASS."
     }
   ],
   "poolSourceEquivalence": {
@@ -14932,7 +16431,7 @@
   "remainingImplementation": [
     {
       "package": "WP1",
-      "work": "Effective business accessRevision, current product roles/grants/resource authority, full F02/discovery/host transport and regenerated clients remain unfinished."
+      "work": "Finish independent current-candidate qualification and protected static gate approval; no forged approval. Preserve explicit grants, all RoleRows and empty role maps."
     },
     {
       "package": "WP2",

@@ -50,9 +50,10 @@ test("Teams Web F02 uses real Chromium, signed session, fixed native routes and 
           return
         }
         const headers = await wire.allHeaders()
+        const body = wire.postDataBuffer()
         const request = new Request(wire.url(), {
           method: wire.method(), headers,
-          ...(["GET", "HEAD"].includes(wire.method()) ? {} : { body: wire.postDataBuffer() }),
+          ...(["GET", "HEAD"].includes(wire.method()) ? {} : { body: body === null ? undefined : new Uint8Array(body).buffer }),
         })
         observed.push({ path: url.pathname, cookie: request.headers.has("cookie"),
           selector: request.headers.get("x-sf-team-profile"), origin: request.headers.get("origin") })

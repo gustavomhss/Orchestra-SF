@@ -12,6 +12,11 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test("an exact C08 reply snapshot survives lost delivery and identical concurrent replies without a duplicate after retry or reload", async () => {
     const app = await createThreadDomainFixture()
     let context: BrowserContext | undefined
+    const waiters: Promise<PromiseSettledResult<unknown>>[] = []
+    const observe = <A>(pending: Promise<A>): Promise<A> => {
+      waiters.push(pending.then((value) => ({ status: 'fulfilled', value }), (reason) => ({ status: 'rejected', reason })))
+      return pending
+    }
     try {
       const body = "The same recipient answer."
       await app.concurrentReply(body)
@@ -41,7 +46,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(original.messages).toHaveLength(3)
       const exact = original.messages[2]!
       expect(committed.value.messages[2]).toEqual(exact)
-      const replayed = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply")
+      const replayed = observe(page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply"))
       await page.getByRole("button", { name: "Send reply", exact: true }).click()
       expect((await (await replayed).json()).value).toEqual(original)
       await page.waitForFunction(() => {
@@ -62,6 +67,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       console.info("UI_WORK_EXACT_REPLY", JSON.stringify({ threadId: app.initial.id, message: { id: exact.id, incarnation: exact.incarnation, version: exact.version }, attempts: 2, storageVersion: committed.storageVersion, equalTextReplies: 3 }))
     } finally {
       await context?.close()
+      await Promise.all(waiters)
       await app.close()
     }
   }, 45_000)

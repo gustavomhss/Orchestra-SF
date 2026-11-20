@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
-import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+import { requireApplicationAttempts } from "../application-attempt-fixture.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
@@ -235,11 +235,12 @@ test("portfolio handoff retains C08 choice and resumes after pre-dispatch produc
     expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
     expect(domain.procurementCalls).toBe(0)
     expect(await amounts()).toEqual([40, 50])
-    const beforeDispatch = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }))
+    const beforeDispatch = await state.read(admittedRequest, "cases", (productState, authority) => requireApplicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, authority))
     expect(beforeDispatch.status).toBe("ok")
     expect(beforeDispatch.status === "ok" && beforeDispatch.value).toEqual([])
     domain.procurementFails = false
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    expect(await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
+    expect((await execution(firstRequest, binding)).status).toBe("ok")
     const beforeResume = await cases.read({ caseRef: caseSelector }, binding)
     if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
     const secondRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }

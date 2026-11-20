@@ -42,6 +42,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     finally { clearTimeout(timer) }
   }
 
+  const waiters = new WeakMap<Page, Promise<PromiseSettledResult<unknown>>[]>()
+  function observe<T>(page: Page, operation: Promise<T>): Promise<T> {
+    const owned = waiters.get(page)
+    if (!owned) throw new Error("Thread page has no waiter owner")
+    // Attach rejection handling immediately while preserving the result for its original assertion.
+    owned.push(operation.then((value) => ({ status: "fulfilled", value }), (reason) => ({ status: "rejected", reason })))
+    return operation
+  }
+
   function unfinished() {
     let controller: ReadableStreamDefaultController<Uint8Array> | undefined
     const response = new Response(new ReadableStream<Uint8Array>({
@@ -61,11 +70,14 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${caseQuestionThreads(typeof view === "function" ? view() : view)}<script>${caseQuestionScript}</script></body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
       : post(request) })
     let context: BrowserContext | undefined
+    let page: Page | undefined
     let failure: unknown
+    const owned: Promise<PromiseSettledResult<unknown>>[] = []
     try {
       if (!browser?.isConnected()) throw new Error("Thread browser unavailable")
       context = await bounded(browser.newContext(), "open isolated context")
-      const page = await bounded(context.newPage(), "open page")
+      page = await bounded(context.newPage(), "open page")
+      waiters.set(page, owned)
       page.setDefaultTimeout(5_000)
       const errors: string[] = []
       page.on("pageerror", (error) => errors.push(error.message))
@@ -76,6 +88,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     finally {
       const cleanup: unknown[] = []
       try { release?.() } catch (error) { cleanup.push(error) }
+      try { if (page && !page.isClosed()) await bounded(page.close({ runBeforeUnload: false }), "close thread page") } catch (error) { cleanup.push(error) }
+      try {
+        const outcomes = await bounded(Promise.all(owned), "settle owned thread waiters")
+        for (const outcome of outcomes) if (outcome.status === "rejected") cleanup.push(outcome.reason)
+      } catch (error) { cleanup.push(error) }
+      if (page) waiters.delete(page)
       try { await bounded(Promise.resolve(server.stop(true)), "stop transport fixture") } catch (error) { cleanup.push(error) }
       try { if (context) await bounded(context.close(), "close isolated context") } catch (error) { cleanup.push(error) }
       if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Thread fixture cleanup failed")
@@ -85,11 +103,14 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   async function domainBrowserCase(check: (page: Page, fixture: Awaited<ReturnType<typeof createThreadDomainFixture>>) => Promise<void>) {
     const fixture = await createThreadDomainFixture()
     let context: BrowserContext | undefined
+    let page: Page | undefined
     let failure: unknown
+    const owned: Promise<PromiseSettledResult<unknown>>[] = []
     try {
       if (!browser?.isConnected()) throw new Error("Thread browser unavailable")
       context = await bounded(browser.newContext(), "open domain context")
-      const page = await bounded(context.newPage(), "open domain page")
+      page = await bounded(context.newPage(), "open domain page")
+      waiters.set(page, owned)
       page.setDefaultTimeout(5_000)
       const errors: string[] = []
       page.on("pageerror", (error) => errors.push(error.message))
@@ -101,6 +122,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     } catch (error) { failure = error; throw error }
     finally {
       const cleanup: unknown[] = []
+      try { if (page && !page.isClosed()) await bounded(page.close({ runBeforeUnload: false }), "close thread page") } catch (error) { cleanup.push(error) }
+      try {
+        const outcomes = await bounded(Promise.all(owned), "settle owned thread waiters")
+        for (const outcome of outcomes) if (outcome.status === "rejected") cleanup.push(outcome.reason)
+      } catch (error) { cleanup.push(error) }
+      if (page) waiters.delete(page)
       try { await bounded(fixture.close(), "close real thread fixture") } catch (error) { cleanup.push(error) }
       try { if (context) await bounded(context.close(), "close domain context") } catch (error) { cleanup.push(error) }
       if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Thread domain cleanup failed")
@@ -114,8 +141,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       const reply = page.getByLabel("Reply", { exact: true })
       await reply.fill("My private unsent reply")
-      const headers = page.waitForResponse((response) => response.headers()["x-thread-body-pending"] === "yes")
-      const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "collaboration-thread-read", timeout: 15_000 })
+      const headers = observe(page, page.waitForResponse((response) => response.headers()["x-thread-body-pending"] === "yes"))
+      const aborted = observe(page, page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "collaboration-thread-read", timeout: 15_000 }))
       page.once("dialog", (dialog) => void dialog.accept())
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       expect((await headers).status()).toBe(200)
@@ -140,8 +167,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(before.status).toBe("ok")
       if (before.status !== "ok") throw new Error("C08 thread unavailable before reply")
       fixture.suspended.nextReply = true
-      const headers = page.waitForResponse((response) => response.headers()["x-thread-real-commit"] === "body-pending")
-      const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "collaboration-thread-reply", timeout: 15_000 })
+      const headers = observe(page, page.waitForResponse((response) => response.headers()["x-thread-real-commit"] === "body-pending"))
+      const aborted = observe(page, page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "collaboration-thread-reply", timeout: 15_000 }))
       await page.getByRole("button", { name: "Send reply", exact: true }).click()
       expect((await headers).status()).toBe(200)
       const committed = await fixture.inspect()
@@ -389,7 +416,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const prior = await fixture.inspect()
       expect(prior.status).toBe("ok")
       if (prior.status !== "ok") throw new Error("Concurrent durable message unavailable")
-      const conflict = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply")
+      const conflict = observe(page, page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply"))
       await page.getByRole("button", { name: "Send reply", exact: true }).click()
       expect((await conflict).status()).toBe(409)
       await page.getByText("Could not confirm the reply. Your text is preserved; retry the same request.", { exact: true }).waitFor()
@@ -438,8 +465,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       await page.getByLabel("Reply", { exact: true }).fill("Reply committed before logout")
       fixture.suspended.nextReply = true
-      const headers = page.waitForResponse((response) => response.headers()["x-thread-real-commit"] === "body-pending")
-      const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "collaboration-thread-reply", timeout: 15_000 })
+      const headers = observe(page, page.waitForResponse((response) => response.headers()["x-thread-real-commit"] === "body-pending"))
+      const aborted = observe(page, page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "collaboration-thread-reply", timeout: 15_000 }))
       await page.getByRole("button", { name: "Send reply", exact: true }).click()
       expect((await headers).status()).toBe(200)
       const committed = await fixture.inspect()
@@ -450,7 +477,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(logout.status()).toBe(204)
       await page.getByText("Could not confirm the reply. Your text is preserved; retry the same request.", { exact: true }).waitFor({ timeout: 15_000 })
       expect((await aborted).failure()?.errorText).toContain("ERR_ABORTED")
-      const denial = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply")
+      const denial = observe(page, page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply"))
       await page.getByRole("button", { name: "Send reply", exact: true }).click()
       expect((await denial).status()).toBe(403)
       await page.getByText("Conversation access changed. Reopen the decision with your current access.", { exact: true }).waitFor()
@@ -504,7 +531,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(confirmations).toHaveLength(2)
       expect(attachments).toHaveLength(1)
       expect(confirmations[1]).toEqual(confirmations[0])
-      const loaded = page.waitForEvent("load")
+      const loaded = observe(page, page.waitForEvent("load"))
       await confirm.click()
       await loaded
       expect(confirmations).toHaveLength(2)
@@ -596,7 +623,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(confirmations).toBe(1)
       expect(preparations).toBe(1)
       expect(answerReads).toBe(2)
-      const navigation = page.waitForEvent("load")
+      const navigation = observe(page, page.waitForEvent("load"))
       await page.getByRole("button", { name: "Attach confirmed answer to this version", exact: true }).click()
       await navigation
       expect(attachments).toHaveLength(2)
@@ -689,8 +716,8 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     }, async (page) => {
       await page.getByRole("button", { name: "Open conversation", exact: true }).click()
       await page.getByLabel("Reply", { exact: true }).fill("Private unsent wording")
-      const headers = page.waitForResponse((response) => response.headers()["x-thread-body-pending"] === "yes")
-      const aborted = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === blocked })
+      const headers = observe(page, page.waitForResponse((response) => response.headers()["x-thread-body-pending"] === "yes"))
+      const aborted = observe(page, page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === blocked }))
       if (blocked !== "collaboration-thread-reply") page.once("dialog", (dialog) => void dialog.accept())
       await page.getByRole("button", { name: blocked === "collaboration-thread-read" ? "Open conversation" : blocked === "collaboration-thread-reply" ? "Send reply" : "Confirm this answer and add to decision", exact: true }).click()
       expect((await headers).status()).toBe(200)

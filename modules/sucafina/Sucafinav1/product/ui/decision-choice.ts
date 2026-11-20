@@ -154,7 +154,7 @@ document.querySelectorAll('[data-decision-choice]').forEach((form) => {
     // Sensitivity may persist its result before a binding conflict is returned.
     // An initial 409 therefore cannot release that request's body or key.
     if (error?.rejected && pending && !pending.resultRef && !(pending.kind === 'sensitivity' && error.httpStatus === 409 && !wasUncertain)) {
-      if (wasUncertain || pending.intent && !error.inputRejected) { reconciliationRequired = true; message.textContent = 'The request was rejected but the earlier ' + kind + ' is still unconfirmed. Reopen the decision to reconcile its current state.' }
+      if (wasUncertain || pending.intent && !error.inputRejected) { reconciliationRequired = true; message.textContent = (wasUncertain ? 'The retry was rejected but the earlier ' : 'The request was rejected but the earlier ') + kind + ' is still unconfirmed. Reopen the decision to reconcile its current state.' }
       else { if (pending.intent) { sessionStorage.removeItem(storageKey); releaseChoicePeers() }; pending = undefined; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID(); sensitivityKey = crypto.randomUUID(); message.textContent = 'The ' + kind + ' was rejected. Your entries are preserved; review the current decision before retrying.' }
       return true
     }

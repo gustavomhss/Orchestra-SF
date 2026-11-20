@@ -434,7 +434,14 @@ test("product-authority-07: reopening real SQLite never adopts an old UI lease, 
   const fresh = await lease(current.authority, f.businessRequest(), "sf_case_read", { caseRef: encodeCaseRef(created) })
   const projection = await cases(f, current.authority).read({ caseRef: encodeCaseRef(created) }, fresh)
   expect(projection.status).toBe("ok")
-  if (projection.status === "ok") expect(projection.value.case.id).toBe(created.id)
+  if (projection.status === "ok") {
+    expect(projection.value.case.id).toBe(created.id)
+    expect(projection.value.context.owner).toEqual(Schema.decodeUnknownSync(TeamProfile.Owner)({
+      profile: profileA, principal: { tenantId: tenant, principalObjectId: oid },
+    }))
+    expect(projection.value.context.owner?.profile.teamObjectId).not.toBe(profileB.teamObjectId)
+    expect(current.authority.ui.requestFor(JSON.parse(JSON.stringify(projection.value.context)))).toBeUndefined()
+  }
   expect(current.authority.ui.requestFor(old)).toBeUndefined()
 })
 

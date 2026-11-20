@@ -104,7 +104,7 @@ test("durable tenant/client pin prevents cross-tenant reuse after a configuratio
 test("explicit principal grants preserve canonical operations without granting roles", async () => {
   const f = await fixture()
   const configured = validateMicrosoftConfiguration({ ...f.config, grants: [{ principalRef: oid, namespaces: ["preferences"], operations: ["sf_work_list"], humanActions: ["views.read"] }] })
-  expect(configured.grants).toEqual([{ principalRef: oid, namespaces: ["preferences"], operations: ["sf_work_list"], humanActions: ["views.read"] }])
+  expect(configured.grants).toEqual([{ principalRef: oid, namespaces: ["preferences"], operations: ["sf_work_list"], humanActions: ["views.read"], sessionActions: [], referenceActions: [], migrationActions: [] }])
   expect(configured.groups.dashboard).toEqual(f.config.groups.dashboard)
   expect(configured.grants.find((grant) => grant.principalRef === other)).toBeUndefined()
 })

@@ -14,7 +14,7 @@ const storedNamespaces = ["preferences", "reviews", "relations", "threads", "con
 // retains code identity, never an observed case, snapshot or admitted authority.
 const caseReads = new WeakMap<object, {
   id: string
-  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
+  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => unknown
 }>()
 const readinessReads = new WeakMap<object, { namespace: SfStateNamespace; mode: "read" | "write"; select: (state: SfProductState, authority: SfStateAuthority) => { storageVersion: number; aggregateRevision: number; incarnation: string } | undefined }>()
 
@@ -29,6 +29,26 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
     })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
+  return read
+}
+
+/**
+ * Projects the owner only from the same current state authority as the case.
+ * The result is display/storage metadata and never a transferable admission.
+ * Preserve the registered single-case clone path; large unrelated cases stay private.
+ */
+export function selectSfCaseWithOwner(id: string, context: TrustedDomainContext) {
+  const selected = selectSfCase(id, context)
+  const project = (cases: SfProductState["cases"], authority: SfStateAuthority) => {
+    const value = selected({ cases }, authority)
+    const owner = value && authority.profile ? Schema.decodeUnknownSync(TeamProfile.Owner)({
+      profile: authority.profile,
+      principal: { tenantId: authority.profile.tenantId, principalObjectId: authority.principalRef },
+    }) : undefined
+    return { value, ...(owner ? { owner } : {}) }
+  }
+  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) => project(state.cases, authority)
+  if (caseReads.has(selected)) caseReads.set(read, { id, project })
   return read
 }
 
@@ -355,6 +375,24 @@ function readSfState(snapshot: Snapshot): SfProductState | undefined {
   if (sfProductStateAdditiveFields.some((field) => state[field] !== undefined && (!state[field] || typeof state[field] !== "object" || Array.isArray(state[field])))) return undefined
   if (!legacy && (!state.biArtifacts || typeof state.biArtifacts !== "object" || Array.isArray(state.biArtifacts))) return undefined
   return (legacy ? { ...state, versions: { ...versions, "bi-artifacts": 0 }, biArtifacts: {} } : state) as SfProductState
+}
+
+
+/**
+ * Private recovery comparison only. This contains digests and monotone metadata,
+ * never an access grant or a receipt that can authorize replay.
+ */
+export function inspectSfProductRestoreFrontier(snapshot: Snapshot) {
+  if (snapshot.data.__sfProductV1 === undefined) return undefined
+  const state = readSfState(snapshot)
+  if (!state) throw new Error("SF_RESTORE_CURRENT_PRODUCT_FRONTIER_INVALID")
+  return Object.freeze({
+    incarnation: state.incarnation, revision: state.revision,
+    versions: Object.freeze({ ...state.versions }),
+    transactions: Object.freeze(Object.entries(state.transactions)
+      .map(([key, value]) => Object.freeze({ key: digestSfValue(key), value: digestSfValue(value) }))
+      .sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0)),
+  })
 }
 
 export function sfTransactionKey(

@@ -79,7 +79,7 @@ function management(authority: Authority) {
     authorizeCase: authorizeCase(authority),
     authorizeEdit: (request, context) => authority.human.authorize(context, "decisions.edit", request),
     verifyEvidence: async (refs, context) => refs.length === 0 && await authority.host.revalidate(context),
-    verifyEdit: (_snapshot, before, after, context) => before.sourceRefs.length === 0 && after.sourceRefs.length === 0 &&
+    verifyEdit: (_snapshot, before, after, context) => context.kind === "ui" && before.sourceRefs.length === 0 && after.sourceRefs.length === 0 &&
       authority.ui.matchesIntent(context, "sf-human:decisions.edit", digestSfValue({
         caseRef: { id: before.id, incarnation: before.incarnation, version: before.version },
         objective: after.objective, criteria: after.criteria, sourceRefs: after.sourceRefs,

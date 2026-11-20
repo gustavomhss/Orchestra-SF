@@ -7,7 +7,7 @@ import { createDecisionPreparedReview } from "../../../product/decisions/prepare
 import { prepareDomainChange } from "../../../product/decisions/prepared-change.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
-import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
+import { requireApplicationAttempts } from "../application-attempt-fixture.ts"
 import { receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "../../../product/decisions/receipt-review-binding.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -210,7 +210,7 @@ async function receiptScopeFixture() {
       return { state: receipt.result.ok ? "applied" : "conflict", evidence: { ...ref, refDigest: digestSfEvidenceRef(ref) } }
     } })
     const witness = async () => {
-      const saved = await state.read(admission.request, "cases", (product) => ({ decision: product.cases[decision.id], receipts: Object.values(product.receipts), proof: product.transactions[receiptProofTransactionKey("principal", target.id, change.idempotencyKey)], attempts: applicationAttempts(product, request) }))
+      const saved = await state.read(admission.request, "cases", (product, authority) => ({ decision: product.cases[decision.id], receipts: Object.values(product.receipts), proof: product.transactions[receiptProofTransactionKey("principal", target.id, change.idempotencyKey)], attempts: requireApplicationAttempts(product, request, authority) }))
       if (saved.status !== "ok") throw new Error("canonical witness unavailable")
       return { ...saved.value, domain: await domainValue() }
     }

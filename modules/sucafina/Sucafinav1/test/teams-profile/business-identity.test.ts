@@ -144,6 +144,7 @@ test.each(["selector", "origin", "cookie", "abort"] as const)(
     const wait = barrier()
     f.provider.hooks.before = async (request) => {
       if (new URL(request.url).pathname.endsWith("/joinedTeams")) await wait.hold()
+      return undefined
     }
     const controller = new AbortController()
     const request = new Request(f.business(), { signal: controller.signal })

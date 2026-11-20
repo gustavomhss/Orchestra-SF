@@ -151,9 +151,10 @@ export async function createThreadDomainFixture() {
     const auth = await identity.handle(incoming)
     if (auth) return auth
     const url = new URL(incoming.url)
-    // The real enrollment producer redirects to this fixed mount destination.
-    // Continue to the component's authorized GET instead of returning a blank 404.
-    if (incoming.method === "GET" && url.pathname === "/sucafina/dashboard") return Response.redirect(`${origin}/sucafina/conversation`, 303)
+    // Enrollment opens "/" in the installed shell. This component fixture sends
+    // that landing (and the earlier dashboard URL) to its actual protected GET.
+    // The destination below still performs fresh read admission and thread access.
+    if (incoming.method === "GET" && ["/", "/sucafina/dashboard"].includes(url.pathname)) return Response.redirect(`${origin}/sucafina/conversation`, 303)
     if (url.pathname !== "/sucafina/conversation") return new Response(null, { status: 404 })
     if (incoming.method === "GET") {
       const visible = await read(incoming, "collaboration.thread.read", { id: initial.value.id }, (context) => threads.read(initial.value.id, context))

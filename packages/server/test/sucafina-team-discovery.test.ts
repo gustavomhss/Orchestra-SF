@@ -1,11 +1,12 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SfInstallationSelector } from "@orchestra/schema/sucafina/context"
 import { parseSfInstallationSelector, readSfInstallations, SfInvalidInstallationSelector,
   type SfTrustedInstallationSource } from "../src/sucafina-installations"
 
-const installationId = "installation-one"
-const tenantId = "11111111-2222-4333-8444-555555555555"
+const installationId = Schema.decodeUnknownSync(TeamProfile.InstallationId)("installation-one")
+const tenantId = Schema.decodeUnknownSync(TeamProfile.TenantId)("11111111-2222-4333-8444-555555555555")
 const query = "select=installation&contractRevision=sf-team-profile%2F1&installationId=" + installationId + "&tenantId=" + tenantId
 const selected = Schema.decodeUnknownSync(SfInstallationSelector)({
   select: "installation", contractRevision: "sf-team-profile/1", installationId, tenantId,

@@ -34,7 +34,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(exact).toHaveLength(1)
       expect(exact[0]!.authorRef).toBe("reader-b")
       expect(exact[0]!.sourceContext?.sourceIncarnation).toBe(lost.receipt.sourceIncarnation)
-      const replay = app.page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply")
+      const replay = app.observe(app.page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply"))
       await app.page.getByRole("button", { name: "Retry same reply", exact: true }).click()
       const replayed = await (await replay).json() as ReplyResponse
       expect(replayed.status).toBe("ok")
@@ -94,7 +94,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(navigationCommits).toBe(0)
       expect(app.attempts.filter((attempt) => attempt.route === "collaboration-thread-read")).toHaveLength(reads)
       expect(replyWrites(app)).toHaveLength(1)
-      const navigated = app.page.waitForEvent("framenavigated", { predicate: (frame) => frame === app.page.mainFrame() })
+      const navigated = app.observe(app.page.waitForEvent("framenavigated", { predicate: (frame) => frame === app.page.mainFrame() }))
       release.resolve()
       await navigated
       await app.page.getByRole("button", { name: "Open conversation", exact: true }).waitFor()
@@ -158,7 +158,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await app.page.getByLabel("Reply", { exact: true }).isDisabled()).toBe(true)
       expect(replyWrites(app)).toHaveLength(1)
       await app.page.unroute("**/*?sf=collaboration-thread-read")
-      const replay = app.page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply")
+      const replay = app.observe(app.page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "collaboration-thread-reply"))
       await app.page.getByRole("button", { name: "Retry same reply", exact: true }).click()
       const result = await (await replay).json() as ReplyResponse
       expect(result.status).toBe("ok")

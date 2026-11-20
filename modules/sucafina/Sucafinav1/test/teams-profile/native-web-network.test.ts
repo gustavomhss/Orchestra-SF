@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { connect } from "node:net"
 import { connect as secureConnect } from "node:tls"
 import type { Duplex } from "node:stream"
+import path from "node:path"
 import { serveNativeTeamsWeb } from "./native-web-network.ts"
 import { publicOrigin } from "../microsoft-login/private-fixture.ts"
 
@@ -45,7 +46,12 @@ test("native Web TLS proxy admits only exact fixture hosts and streams the origi
     expect(incoming).toBeUndefined()
     const allowed = await tunnel(f.proxy, "mvp.example.test:443")
     expect(allowed.status).toBe(200)
-    const socket = secureConnect({ socket: allowed.socket, servername: "mvp.example.test", rejectUnauthorized: false })
+    // The repository fixture certificate is explicitly trusted and its own
+    // pinned.example identity is verified. HTTP still carries the fixed public
+    // fixture host through the allowlisted loopback tunnel.
+    const certificate = await Bun.file(path.resolve(import.meta.dir,
+      "../../../../../packages/core/test/fixture/pinned-example-cert.pem")).text()
+    const socket = secureConnect({ socket: allowed.socket, servername: "pinned.example", ca: certificate })
     let received = ""
     const first = Promise.withResolvers<void>(), ended = Promise.withResolvers<void>()
     const timer = setTimeout(() => {
@@ -55,7 +61,7 @@ test("native Web TLS proxy admits only exact fixture hosts and streams the origi
     }, 3000)
     // Both observers are installed before the request and their rejection is owned.
     void first.promise.catch(() => {}); void ended.promise.catch(() => {})
-    socket.on("error", (error) => { first.reject(error); ended.reject(error) })
+    socket.on("error", (error: Error) => { first.reject(error); ended.reject(error) })
     socket.on("data", (chunk: Buffer) => {
       received += chunk.toString("utf8")
       if (received.includes("data: first\n\n")) first.resolve()

@@ -26,7 +26,7 @@ export function teamTranscriptRows(info: SfTeamSessionInfo, messages: readonly S
         attachments: message.files?.map((file) => file.name ?? file.uri) ?? [],
         info: { id: message.id, sessionID: info.id, role: "user", time: message.time,
           agent: info.agent ?? "", model: { modelID: info.model?.id ?? "", providerID: info.model?.providerID ?? "" },
-          ...(message.type === "user" ? { promptContext: message.promptContext } : {}) } }
+          ...(message.type === "user" && message.promptContext ? { promptContext: { reminders: [...message.promptContext.reminders] } } : {}) } }
     }
     if (message.type !== "assistant") {
       return { kind: "notice", id: message.id, type: message.type,
