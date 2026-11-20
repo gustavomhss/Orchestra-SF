@@ -152,8 +152,14 @@ test("graph-client-03: a failed second page discards every first-page row", asyn
 test("graph-client-03: the entire paginated read has a deadline even when transport ignores abort", async () => {
   const f = await microsoftFixture({ teams: "direct" })
   const session = await login(f)
-  f.hooks.before = (request) => new URL(request.url).pathname === "/v1.0/me/joinedTeams" ? new Promise<Response>(() => {}) : undefined
+  const observed: { signal?: AbortSignal } = {}
+  f.hooks.before = (request) => {
+    if (new URL(request.url).pathname !== "/v1.0/me/joinedTeams") return undefined
+    observed.signal = request.signal
+    return new Promise<Response>(() => {})
+  }
   expect(await read(f.client, input(session))).toEqual({ state: "unavailable", reason: "timeout" })
+  expect(observed.signal?.aborted).toBe(true)
   expect(joinedRequests(f)).toHaveLength(1)
 }, 20000)
 
