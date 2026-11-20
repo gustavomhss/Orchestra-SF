@@ -326,8 +326,10 @@ test("I-OPS-02 postcommit controls preserve uncertainty and reject replacement o
       expect(await observeC12(fixture)).toEqual(committed)
       expect(await receiptEvidence(fixture, change, receipt)).toEqual(bound)
       const reReview = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
-      expect(reReview.response.status).toBe(409)
-      expect(reReview.body).toEqual({ status: "stale", reason: "prepared-case-changed" })
+      // A new Review cannot borrow the historical Apply admission: withCase
+      // rejects the old selector before the producer can inspect preparedChange.
+      expect(reReview.response.status).toBe(403)
+      expect(reReview.body).toEqual({ status: "denied", reason: "case-selection-unavailable" })
       expect(await observeC12(fixture)).toEqual(committed)
 
       const recovery = await fixture.http("decision-recover", { purpose: "recover",
