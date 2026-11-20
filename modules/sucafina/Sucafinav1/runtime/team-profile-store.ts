@@ -252,6 +252,11 @@ function readConfiguration(db: Database, binding: TeamProfilePolicyBinding, prof
   const row = db.query<StoredConfiguration, [string]>(
     "SELECT config_revision, document, document_digest FROM sf_team_configurations WHERE team_object_id = ?").get(profile.teamObjectId)
   if (!row) return undefined
+  const latest = db.query<{ revision: number | null }, [string]>(
+    "SELECT MAX(config_revision) AS revision FROM sf_team_profile_audit WHERE team_object_id = ? AND action = 'configuration'").get(profile.teamObjectId)
+  // A valid historical document is not the current source. Partial restores must
+  // not relabel an older audited row with the current catalog revision.
+  if (!latest || latest.revision !== row.config_revision) throw new Error("Stale stored Team configuration")
   if (!validRevision(row.config_revision) || row.config_revision < 1 || row.config_revision > catalog.configRevision ||
       typeof row.document !== "string" || row.document.length > 65536 || !/^[a-f0-9]{64}$/.test(row.document_digest))
     throw new Error("Invalid stored Team configuration")

@@ -126,3 +126,30 @@ test("team-configuration-05: malformed or unaudited stored content never becomes
     await expect(f.profiles.audit()).rejects.toThrow()
   } finally { db.close(); await f.close() }
 })
+
+test("team-configuration-06: restoring an older valid row cannot masquerade as the current audited source", async () => {
+  const f = await teamProductFixture()
+  const db = new Database(path.join(f.directory, "installation.sqlite"), { strict: true })
+  const read = () => db.query<{ config_revision: number; document: string; document_digest: string }, []>(
+    "SELECT config_revision, document, document_digest FROM sf_team_configurations").get()
+  try {
+    expect((await configure(f)).status).toBe("ok")
+    const original = read()
+    if (!original) throw new Error("Original configuration required")
+    expect((await configure(f, profileA, document("provider/current"))).status).toBe("ok")
+    const current = read()
+    if (!current) throw new Error("Current configuration required")
+    expect(current.config_revision).toBe(3)
+    db.query("UPDATE sf_team_configurations SET config_revision = ?, document = ?, document_digest = ?")
+      .run(original.config_revision, original.document, original.document_digest)
+    expect((await f.profiles.read()).configRevision).toBe(3)
+    expect(await f.profiles.audit()).toHaveLength(3)
+    await expect(f.profiles.readConfiguration(profileA)).rejects.toThrow("Stale stored Team configuration")
+    expect(await f.resolver.configuration(f.request(undefined, f.cookie), profileA))
+      .toEqual({ status: "unavailable", reason: "store-unavailable" })
+    db.query("UPDATE sf_team_configurations SET config_revision = ?, document = ?, document_digest = ?")
+      .run(current.config_revision, current.document, current.document_digest)
+    expect((await f.profiles.readConfiguration(profileA))?.document).toEqual(document("provider/current"))
+    expect((await f.profiles.read()).configRevision).toBe(3)
+  } finally { db.close(); await f.close() }
+})
