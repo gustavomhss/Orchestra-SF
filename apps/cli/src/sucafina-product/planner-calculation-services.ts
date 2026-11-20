@@ -220,11 +220,10 @@ export function createSfPlannerCalculationServices(input: {
             const preparedInput = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
             const records = preparedInput.ok && !preparedInput.value.assumptions.length &&
               !preparedInput.value.operations.some((operation) => operation.replacementRef) ? plannerRecordSources(selected.value.stored) : undefined
-            const mixed = preparedInput.ok && !plannerRecordSources(selected.value.stored) &&
+            const mixed = preparedInput.ok && !records &&
               !preparedInput.value.assumptions.some((assumption) => assumption.state !== "hypothetical") &&
               !preparedInput.value.operations.some((operation) => operation.replacementRef) &&
               input.replayScenario === rootReplay && input.evidence === rootEvidence
-              ? plannerLocalSourcePlan(selected.value.stored, preparedInput.value.baseRef) : undefined
             if (preparedInput.ok && (inheritedOwner && records || mixed)) {
               const stateReader = rootState.read, resultReader = rootResults.readForCalculation
               const evidenceResolve = rootEvidence.resolve, evidenceContext = rootEvidence.context
@@ -244,8 +243,11 @@ export function createSfPlannerCalculationServices(input: {
               // Own and foreign C08 scopes skip this initializer entirely. All
               // extra selectors and any source warming belong before baseline.
               preparedRoot = await readRoot.prepare(call, async () => {
-                if (mixed) return prepareMixedSources(mixed, selected.value.stored, preparedInput.value, call, sameReaders,
-                  (value) => admissions.push({ value, digest: digestSfValue(value) }))
+                if (mixed) {
+                  const plan = plannerLocalSourcePlan(selected.value.stored, preparedInput.value.baseRef)
+                  return plan ? prepareMixedSources(plan, selected.value.stored, preparedInput.value, call, sameReaders,
+                    (value) => admissions.push({ value, digest: digestSfValue(value) })) : "unsupported"
+                }
                 if (!records || !await freshRecordSources(records, call) || !sameReaders()) return false
                 const coverage = await coverageReader(preparedInput.value.baseRef, call)
                 return coverage.status === "ok" && sameReaders()

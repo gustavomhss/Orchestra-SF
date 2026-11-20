@@ -90,9 +90,11 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         // Eligibility was inspected without opening a root or warming sources.
         // Preserve the full producer only while these exact observations live.
         return once(async (work) => {
-          if (!current() || snapshots.call(persistence) !== undefined) return unavailable()
+          if (!current() || snapshots.call(persistence) !== undefined || !await revalidate.call(host, call) ||
+            !current() || snapshots.call(persistence) !== undefined) return unavailable()
           const result = await work()
-          return current() && snapshots.call(persistence) === undefined ? result : unavailable()
+          return current() && snapshots.call(persistence) === undefined && await revalidate.call(host, call) &&
+            current() && snapshots.call(persistence) === undefined ? result : unavailable()
         })
       }
       // The caller opens its original full C08/source witness only after this
