@@ -31,6 +31,8 @@ export interface Coordinator<Key, E> {
   readonly wake: (key: Key) => Effect.Effect<void>
   /** Stops active execution and waits for its cleanup. A wake recorded meanwhile still runs one follow-up. */
   readonly interrupt: (key: Key, options?: InterruptOptions) => Effect.Effect<void>
+  /** Permanently closes local admission, cancels every owned execution and awaits cleanup. It never consumes durable input. */
+  readonly close: Effect.Effect<void>
   /**
    * Runs `effect` as the key's active execution, so it never overlaps a drain: a wake meanwhile drains after it unless
    * `discardPending` is set, and an interrupt stops it. When busy it returns `None`, or waits when `wait` is set.
@@ -63,6 +65,7 @@ export const make = <Key, E>(options: {
 }): Effect.Effect<Coordinator<Key, E>, never, Scope.Scope> =>
   Effect.gen(function* () {
     const active = new Map<Key, Entry<E>>()
+    let closed = false
     const fork = yield* FiberSet.makeRuntime<never, void, never>()
 
     const drain = (key: Key, force: boolean) => Effect.suspend(() => options.drain(key, force))
@@ -90,7 +93,7 @@ export const make = <Key, E>(options: {
     }
 
     const settle = (key: Key, entry: Entry<E>, exit: Exit.Exit<void, E>) => {
-      if (Exit.isSuccess(exit) && !entry.stopping && entry.pendingWake) {
+      if (!closed && Exit.isSuccess(exit) && !entry.stopping && entry.pendingWake) {
         entry.pendingWake = false
         const bind = entry.pendingBind ?? entry.bind
         entry.pendingBind = undefined
@@ -98,7 +101,7 @@ export const make = <Key, E>(options: {
         return
       }
 
-      const successor = entry.pendingWake ? makeEntry(entry.pendingBind ?? entry.bind) : undefined
+      const successor = !closed && entry.pendingWake ? makeEntry(entry.pendingBind ?? entry.bind) : undefined
       if (successor === undefined) active.delete(key)
       else {
         active.set(key, successor)
@@ -109,7 +112,10 @@ export const make = <Key, E>(options: {
 
     const run = (key: Key, runOptions?: RunOptions): Effect.Effect<void, E> =>
       Effect.uninterruptibleMask((restore) => Effect.gen(function* () {
+        if (closed) return yield* restore(Effect.interrupt)
         const bind = yield* restore(options.bind ?? Effect.succeed(unbound))
+        // The private admission callback can suspend; maintenance may close while it is pending.
+        if (closed) return yield* restore(Effect.interrupt)
         const entry = active.get(key)
         if (entry !== undefined) {
           if (entry.stopping) return yield* restore(Deferred.await(entry.done).pipe(Effect.andThen(run(key, runOptions))))
@@ -125,7 +131,9 @@ export const make = <Key, E>(options: {
       }))
 
     const wake = (key: Key) =>
-      Effect.flatMap(options.bind ?? Effect.succeed(unbound), (bind) => Effect.sync(() => {
+      Effect.suspend(() => closed ? Effect.interrupt :
+        Effect.flatMap(options.bind ?? Effect.succeed(unbound), (bind) => Effect.suspend(() =>
+          closed ? Effect.interrupt : Effect.sync(() => {
         const entry = active.get(key)
         if (entry !== undefined) {
           if (entry.discardPending) return
@@ -137,7 +145,7 @@ export const make = <Key, E>(options: {
         const next = makeEntry(bind)
         active.set(key, next)
         start(key, next, bind(drain(key, false)))
-      }))
+      }))))
 
     const exclusive = <A, E2>(
       key: Key,
@@ -145,7 +153,10 @@ export const make = <Key, E>(options: {
       exclusiveOptions?: ExclusiveOptions,
     ): Effect.Effect<Option.Option<A>, E2> =>
       Effect.uninterruptibleMask((restore) => Effect.gen(function* () {
+        if (closed) return yield* restore(Effect.interrupt)
         const bind = yield* restore(options.bind ?? Effect.succeed(unbound))
+        // The private admission callback can suspend; maintenance may close while it is pending.
+        if (closed) return yield* restore(Effect.interrupt)
         const entry = active.get(key)
         if (entry !== undefined) {
           if (!exclusiveOptions?.wait) return Option.none()
@@ -176,8 +187,18 @@ export const make = <Key, E>(options: {
         return Fiber.interrupt(entry.owner)
       })
 
+    const close = Effect.uninterruptible(Effect.suspend(() => {
+      // This synchronous fence precedes enumeration and every interrupt. A late bind,
+      // wake during finalization or waiter restarting after stop can never reopen it.
+      closed = true
+      return Effect.forEach([...active.keys()], (key) => stop(key, undefined, { discardPending: true }),
+        { concurrency: "unbounded", discard: true })
+    }))
+    yield* Effect.addFinalizer(() => close)
+
     return {
       active: Effect.sync(() => new Set(active.keys())),
+      close,
       run,
       wake,
       interrupt: (key, interruptOptions) => stop(key, undefined, interruptOptions),
