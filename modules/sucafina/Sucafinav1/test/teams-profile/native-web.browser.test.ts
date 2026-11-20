@@ -30,6 +30,8 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
   const contexts: BrowserContext[] = [], errors: string[] = [], runtimeErrors: string[] = []
   const contextReplies: { status: string; teams?: string; bound: boolean }[] = []
   const observed: { fixture: "business" | "admin"; path: string; method: string; cookie: boolean; basic: boolean; selector: string | null; status: number }[] = []
+  const startedAt = performance.now()
+  const httpPhases: { fixture: "business" | "admin"; path: string; method: string; startedMs: number; elapsedMs?: number; status?: number }[] = []
   let passed = false, phase = "build", holdLogout = false
   const logoutEntered = Promise.withResolvers<void>(), logoutRelease = Promise.withResolvers<void>(), logoutHandled = Promise.withResolvers<void>()
   try {
@@ -59,9 +61,17 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
           if (name === "business" && holdLogout && url.pathname === fixture.binding.mount + "/auth/logout") {
             logoutEntered.resolve(); await logoutRelease.promise
           }
+          const start = performance.now()
+          const measured = /^\/api\/(?:session(?:\/|$)|event$)/.test(url.pathname.slice(fixture.binding.mount.length))
+            ? { fixture: name, path: url.pathname, method: request.method, startedMs: Math.round(start - startedAt) } : undefined
+          if (measured) httpPhases.push(measured)
           // The actual TLS Request is passed unchanged to the installed handlers.
           const response = url.pathname.startsWith(fixture.binding.mount + "/") || url.pathname.startsWith("/api/")
             ? await fixture.handle(request) : await built!.asset(request) ?? new Response(null, { status: 404 })
+          if (measured) {
+            Object.assign(measured, { elapsedMs: Math.round(performance.now() - start), status: response.status })
+            console.info("SF_TEAMS_NATIVE_HTTP_PHASE " + JSON.stringify(measured))
+          }
           if (url.pathname.endsWith("/api/ui/context")) {
             const decoded: unknown = await response.clone().json()
             if (decoded && typeof decoded === "object" && "status" in decoded && typeof decoded.status === "string") {
@@ -369,6 +379,7 @@ test("native SF Web admits Microsoft Teams, isolates windows, fences drafts and 
           .map((element) => ({ value: element.value, disabled: element.disabled })),
       })))))
       console.info("SF_TEAMS_NATIVE_WEB_FAILURE " + JSON.stringify({ phase, errors, runtimeErrors, contextReplies,
+        httpPhases: httpPhases.map((item) => ({ ...item, pendingMs: item.elapsedMs === undefined ? Math.round(performance.now() - startedAt - item.startedMs) : undefined })),
         pages: pages.map((page) => page.status === "fulfilled" ? page.value : { inaccessible: true }),
         calls: observed.map(({ fixture, path, method, status }) => ({ fixture, path, method, status })) }))
     }
