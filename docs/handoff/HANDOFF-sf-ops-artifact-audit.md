@@ -1,6 +1,6 @@
 # Handoff — sf-ops-artifact-audit
 
-SHA: fdd865713166454c46250e9066380aef2bc52879 (código do diagnóstico; este documento é um commit posterior somente de documentação)
+SHA: 54185fd76427e92c56e3b0dcd77f6810cf68244c (código do diagnóstico; este documento é um commit posterior somente de documentação)
 Base congelada: 392cecab68288d4b669828adc5d1aaa738693d80 (sf-join-four)
 Branch: sf-ops-artifact-audit
 Data: 2026-11-20T02:27:00.511Z
@@ -57,7 +57,7 @@ Tamanho de HTML/ZIP/JSON, quantidade de entradas, árvore, profundidade e quanti
 - Revisão estática do diff feita por GitHub: dois arquivos de código alterados, sem alteração de produto.
 - Workflow: 49 linhas adicionadas; sem remoções do workflow canônico.
 - Parser: `apps/cli/audit-operations-retained.node-smoke.mjs`.
-- Revisão independente de `reports_failure`: sem bloqueio de vazamento ou contrato. Removida uma entrada inexistente da allowlist; nenhuma ampliação de leitura.
+- Revisão independente de `reports_failure`: sem bloqueio de vazamento ou contrato. Removida uma entrada inexistente da allowlist e corrigido o quinto nome fixo para `Operations Requests ready for the original operator`, exatamente como `operations-support/runtime.ts:95` no snapshot original; nenhuma ampliação de leitura.
 - `firstRecordedError` e `lastBeforeFirstRecordedError` seguem a ordem DFS da árvore, não uma ordem temporal comprovada. O primeiro nó com erro pode ser um `test.step` pai que contém a falha.
 - `file:line` é extraído do relatório após validar caminho permitido e limites numéricos. O leitor não compara o conteúdo dessa linha ao snapshot fonte; essa confirmação cabe à triagem posterior.
 - Actions do diagnóstico: não executado. Guards: não executados por esta entrega. A mudança temporária de workflow não é destinada a merge.
