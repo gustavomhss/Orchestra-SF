@@ -1,0 +1,1113 @@
+{
+  "kind": "CI-only Reports producer cost diagnosis",
+  "repository": "gustavomhss/Orchestra-SF",
+  "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+  "reviewedProbeCommit": "821bb6ec5f0bbdba645419f39374de2745c4f754",
+  "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+  "tree": "d814e123613dc81b108f18284c12cd3cfda8b847",
+  "runId": 44655820423,
+  "jobId": 136021652633,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44655820423",
+  "selection": "Sucafinav1/test/product/reports-draft-reconciliation/reports-producer-cost.diagnostic.test.ts",
+  "result": {
+    "passed": 2,
+    "failed": 0,
+    "assertions": 68,
+    "totalSeconds": 82.44,
+    "testMilliseconds": [
+      15007.97,
+      66976.97
+    ]
+  },
+  "interpretationLimits": [
+    "Single sequential diagnostic sample; timers add overhead.",
+    "Inclusive source/state/producer/copy spans overlap their children. Queue waits also overlap between concurrent waiters and are not wall time.",
+    "Successful inner stages are recorded after returning; a throwing stage has no elapsed subtotal.",
+    "Real canonical composition, existing fixture authentication/grants, real agenda/preserve/C05 and read-only C08 fence. No installed browser witness.",
+    "The second revision uses 24 project refs issued by the actual producer and a canonical source transaction changing forecast. No report artifact is generated.",
+    "No production code, budget, assertion, SQL operation, await or provider identity was changed by an optimization. The three modified source blobs contain CI-only observers and must not be integrated.",
+    "The 4.28-second diagnostic prior-review GET does not explain the 107-second installed nominal GET by itself; installed copies/concurrency remain unmeasured.",
+    "All figures are milliseconds except maximumUnits (UTF-16 string units), call counts and explicitly labeled sizes."
+  ],
+  "phases": [
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "inert-volume",
+      "phase": "baseline-read",
+      "completed": true,
+      "elapsedMilliseconds": 1295.9836969999997,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 4,
+          "milliseconds": 22.15313799999967
+        },
+        "review-and-receipt-digests": {
+          "calls": 2,
+          "milliseconds": 19.43918500000109
+        },
+        "live-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 15.510322000000997
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 12.369939999998678
+        },
+        "access-digest": {
+          "calls": 2,
+          "milliseconds": 0.0598390000013751
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 2,
+          "milliseconds": 11.361511000000064
+        },
+        "scope-state-read-inclusive": {
+          "calls": 2,
+          "milliseconds": 108.85260499999913
+        },
+        "current-snapshots-empty": {
+          "calls": 1,
+          "milliseconds": 0.001142000000072585
+        },
+        "canonical-producer-read": {
+          "calls": 1,
+          "milliseconds": 1118.5114439999998
+        },
+        "producer-result-clone": {
+          "calls": 1,
+          "milliseconds": 3.616044000000329
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 22,
+          "milliseconds": 118.27475100000447
+        },
+        "first-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 3.13314900000114
+        },
+        "projection-snapshot-clone": {
+          "calls": 22,
+          "milliseconds": 82.57638300000144
+        },
+        "project-scope-inclusive": {
+          "calls": 22,
+          "milliseconds": 163.9471809999959
+        },
+        "second-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 2.493746000000101
+        },
+        "full-snapshot-after-digest": {
+          "calls": 22,
+          "milliseconds": 116.01578100000006
+        },
+        "observe-inclusive": {
+          "calls": 22,
+          "milliseconds": 420.0009800000007
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 36,
+          "milliseconds": 0.03848600000310398,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 189,
+          "milliseconds": 21.039388000001054,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 1121249
+        },
+        "memo-hit-planner": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 457,
+          "milliseconds": 301.0533979999964,
+          "maximumUnits": 1882090
+        },
+        "current-snapshot-via-plan": {
+          "calls": 268,
+          "milliseconds": 0.7857489999987592,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 6,
+          "milliseconds": 36.272517999999764,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 6,
+          "milliseconds": 36.29453999999987,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 153,
+          "milliseconds": 996.4313990000019,
+          "maximumUnits": 0
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "inert-volume",
+      "phase": "synthetic-5700000-byte-read",
+      "completed": true,
+      "elapsedMilliseconds": 5331.529192,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 4,
+          "milliseconds": 26.25981999999931
+        },
+        "review-and-receipt-digests": {
+          "calls": 2,
+          "milliseconds": 24.85894499999995
+        },
+        "live-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 33.543093999998746
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 27.183945000000676
+        },
+        "access-digest": {
+          "calls": 2,
+          "milliseconds": 0.06472700000085752
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 2,
+          "milliseconds": 26.926659999999174
+        },
+        "scope-state-read-inclusive": {
+          "calls": 2,
+          "milliseconds": 198.0359440000011
+        },
+        "current-snapshots-empty": {
+          "calls": 1,
+          "milliseconds": 0.0010010000005422626
+        },
+        "canonical-producer-read": {
+          "calls": 1,
+          "milliseconds": 4905.648171000001
+        },
+        "producer-result-clone": {
+          "calls": 1,
+          "milliseconds": 3.5183689999994385
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 22,
+          "milliseconds": 247.74309900000117
+        },
+        "first-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 11.300945000006323
+        },
+        "projection-snapshot-clone": {
+          "calls": 22,
+          "milliseconds": 213.03936699999394
+        },
+        "project-scope-inclusive": {
+          "calls": 22,
+          "milliseconds": 407.13905599999634
+        },
+        "second-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 3.400115000002188
+        },
+        "full-snapshot-after-digest": {
+          "calls": 22,
+          "milliseconds": 265.6201419999943
+        },
+        "observe-inclusive": {
+          "calls": 22,
+          "milliseconds": 966.4145299999964
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 36,
+          "milliseconds": 0.023670000007768977,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 189,
+          "milliseconds": 22.032508999995116,
+          "maximumUnits": 0
+        },
+        "memo-miss-dashboard": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 6821301
+        },
+        "decode-snapshot": {
+          "calls": 189,
+          "milliseconds": 2151.8970540000028,
+          "maximumUnits": 6821301
+        },
+        "plan-unit-budget": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 13226550
+        },
+        "plan-inclusive": {
+          "calls": 189,
+          "milliseconds": 970.806323999981,
+          "maximumUnits": 6821301
+        },
+        "plan-rejected": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 6821301
+        },
+        "memo-hit-planner": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 268,
+          "milliseconds": 1.6112520000078803,
+          "maximumUnits": 835
+        },
+        "current-snapshot-via-plan": {
+          "calls": 268,
+          "milliseconds": 1.7021919999951933,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 6,
+          "milliseconds": 38.07416000000194,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 6,
+          "milliseconds": 38.09935900000164,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 153,
+          "milliseconds": 4088.115992999996,
+          "maximumUnits": 0
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "real-revision",
+      "phase": "first-review-read",
+      "completed": true,
+      "elapsedMilliseconds": 1306.421781000001,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 4,
+          "milliseconds": 27.386563999996724
+        },
+        "review-and-receipt-digests": {
+          "calls": 2,
+          "milliseconds": 24.52914399999645
+        },
+        "live-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 10.270524000003206
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 10.90371199999936
+        },
+        "access-digest": {
+          "calls": 2,
+          "milliseconds": 0.06325500000093598
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 2,
+          "milliseconds": 13.793840000002092
+        },
+        "scope-state-read-inclusive": {
+          "calls": 2,
+          "milliseconds": 115.04968699999881
+        },
+        "current-snapshots-empty": {
+          "calls": 1,
+          "milliseconds": 0.0010410000031697564
+        },
+        "canonical-producer-read": {
+          "calls": 1,
+          "milliseconds": 1126.0743409999995
+        },
+        "producer-result-clone": {
+          "calls": 1,
+          "milliseconds": 3.5754889999989246
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 22,
+          "milliseconds": 123.0011930000037
+        },
+        "first-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 3.2816079999938665
+        },
+        "projection-snapshot-clone": {
+          "calls": 22,
+          "milliseconds": 91.02778500000932
+        },
+        "project-scope-inclusive": {
+          "calls": 22,
+          "milliseconds": 168.58135199999742
+        },
+        "second-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 2.4275009999983013
+        },
+        "full-snapshot-after-digest": {
+          "calls": 22,
+          "milliseconds": 122.37162900000112
+        },
+        "observe-inclusive": {
+          "calls": 22,
+          "milliseconds": 439.1773679999933
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 36,
+          "milliseconds": 0.01332899999761139,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 189,
+          "milliseconds": 17.763525999991543,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 1094673
+        },
+        "memo-hit-planner": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 189,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 457,
+          "milliseconds": 299.1249830000306,
+          "maximumUnits": 1837362
+        },
+        "current-snapshot-via-plan": {
+          "calls": 268,
+          "milliseconds": 0.750385000006645,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 6,
+          "milliseconds": 38.00559200000134,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 6,
+          "milliseconds": 38.02032299999337,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 153,
+          "milliseconds": 998.1025879999943,
+          "maximumUnits": 0
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "real-revision",
+      "phase": "first-review-c05-and-c08-fence",
+      "completed": true,
+      "elapsedMilliseconds": 1788.8684670000002,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 14,
+          "milliseconds": 87.3330029999961
+        },
+        "review-and-receipt-digests": {
+          "calls": 7,
+          "milliseconds": 70.83763099999851
+        },
+        "live-full-snapshot-digest": {
+          "calls": 7,
+          "milliseconds": 43.28700300000128
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 7,
+          "milliseconds": 48.220272000002296
+        },
+        "access-digest": {
+          "calls": 7,
+          "milliseconds": 0.26307399999859626
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 7,
+          "milliseconds": 51.26244499999666
+        },
+        "scope-state-read-inclusive": {
+          "calls": 7,
+          "milliseconds": 388.3493729999973
+        },
+        "current-snapshots-empty": {
+          "calls": 1,
+          "milliseconds": 0.0007110000005923212
+        },
+        "canonical-producer-read": {
+          "calls": 1,
+          "milliseconds": 1125.5808190000025
+        },
+        "producer-result-clone": {
+          "calls": 1,
+          "milliseconds": 3.6550289999977394
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 22,
+          "milliseconds": 131.8899420000089
+        },
+        "first-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 5.3329370000028575
+        },
+        "projection-snapshot-clone": {
+          "calls": 22,
+          "milliseconds": 94.85524600001008
+        },
+        "project-scope-inclusive": {
+          "calls": 22,
+          "milliseconds": 178.04709100000036
+        },
+        "second-authorize-inclusive": {
+          "calls": 22,
+          "milliseconds": 2.4333779999869876
+        },
+        "full-snapshot-after-digest": {
+          "calls": 22,
+          "milliseconds": 107.7516070000056
+        },
+        "observe-inclusive": {
+          "calls": 22,
+          "milliseconds": 442.19284699999116
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 60,
+          "milliseconds": 0.025996000003942754,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 213,
+          "milliseconds": 17.7366649999567,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 213,
+          "milliseconds": 0,
+          "maximumUnits": 1094673
+        },
+        "memo-hit-planner": {
+          "calls": 213,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 213,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 581,
+          "milliseconds": 332.4107100000183,
+          "maximumUnits": 1837362
+        },
+        "current-snapshot-via-plan": {
+          "calls": 366,
+          "milliseconds": 1.1911259999869799,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 37,
+          "milliseconds": 174.15724799999953,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 37,
+          "milliseconds": 174.26113999999507,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 153,
+          "milliseconds": 1002.4433850000205,
+          "maximumUnits": 0
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "real-revision",
+      "phase": "second-agenda-preview",
+      "completed": true,
+      "elapsedMilliseconds": 29057.396962000003,
+      "review": {
+        "canonical-producer-read": {
+          "calls": 6,
+          "milliseconds": 10533.961455000004
+        },
+        "legacy-state-read-inclusive": {
+          "calls": 6,
+          "milliseconds": 101.05981299999985
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 737,
+          "milliseconds": 4218.546067000178
+        },
+        "first-authorize-inclusive": {
+          "calls": 737,
+          "milliseconds": 418.1392830000623
+        },
+        "projection-snapshot-clone": {
+          "calls": 737,
+          "milliseconds": 2952.4534210001584
+        },
+        "project-scope-inclusive": {
+          "calls": 737,
+          "milliseconds": 5577.73554200006
+        },
+        "second-authorize-inclusive": {
+          "calls": 737,
+          "milliseconds": 284.24350800012326
+        },
+        "full-snapshot-after-digest": {
+          "calls": 737,
+          "milliseconds": 4065.8381069999887
+        },
+        "observe-inclusive": {
+          "calls": 659,
+          "milliseconds": 13143.887582000018
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 1209,
+          "milliseconds": 0.6227240000953316,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 3399,
+          "milliseconds": 105.7492570000395,
+          "maximumUnits": 0
+        },
+        "memo-miss-dashboard": {
+          "calls": 1,
+          "milliseconds": 0,
+          "maximumUnits": 1094673
+        },
+        "decode-snapshot": {
+          "calls": 1,
+          "milliseconds": 15.471452000001591,
+          "maximumUnits": 1094673
+        },
+        "plan-inclusive": {
+          "calls": 1,
+          "milliseconds": 6.3731450000013865,
+          "maximumUnits": 1094673
+        },
+        "plan-accepted": {
+          "calls": 1,
+          "milliseconds": 0,
+          "maximumUnits": 1837362
+        },
+        "memo-hit-planner": {
+          "calls": 3399,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 3399,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 7602,
+          "milliseconds": 5639.019408999982,
+          "maximumUnits": 1837362
+        },
+        "current-snapshot-via-plan": {
+          "calls": 4204,
+          "milliseconds": 12.939252999993187,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 3398,
+          "milliseconds": 0,
+          "maximumUnits": 1094673
+        },
+        "queue-wait-inclusive": {
+          "calls": 2190,
+          "milliseconds": 224778.18805299993,
+          "maximumUnits": 0
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "real-revision",
+      "phase": "second-preservation",
+      "completed": true,
+      "elapsedMilliseconds": 12947.819575000001,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 8,
+          "milliseconds": 67.83079500000895
+        },
+        "review-and-receipt-digests": {
+          "calls": 4,
+          "milliseconds": 47.624732000011136
+        },
+        "live-full-snapshot-digest": {
+          "calls": 4,
+          "milliseconds": 36.917684000007284
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 4,
+          "milliseconds": 37.39586100001179
+        },
+        "access-digest": {
+          "calls": 4,
+          "milliseconds": 0.14665899999818066
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 4,
+          "milliseconds": 34.18093399999634
+        },
+        "scope-state-read-inclusive": {
+          "calls": 4,
+          "milliseconds": 301.64572300000145
+        },
+        "current-snapshots-empty": {
+          "calls": 2,
+          "milliseconds": 0.0019839999949908815
+        },
+        "canonical-producer-read": {
+          "calls": 2,
+          "milliseconds": 4296.441355999996
+        },
+        "producer-result-clone": {
+          "calls": 2,
+          "milliseconds": 6.600414999993518
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 296,
+          "milliseconds": 1709.1643579998054
+        },
+        "first-authorize-inclusive": {
+          "calls": 296,
+          "milliseconds": 138.85241800016956
+        },
+        "projection-snapshot-clone": {
+          "calls": 296,
+          "milliseconds": 1226.4773259999201
+        },
+        "project-scope-inclusive": {
+          "calls": 296,
+          "milliseconds": 2361.2225629999884
+        },
+        "second-authorize-inclusive": {
+          "calls": 296,
+          "milliseconds": 101.44890899991151
+        },
+        "full-snapshot-after-digest": {
+          "calls": 296,
+          "milliseconds": 1649.7666090001003
+        },
+        "observe-inclusive": {
+          "calls": 270,
+          "milliseconds": 5548.393554000126
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 328,
+          "milliseconds": 0.14163300000655,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 1453,
+          "milliseconds": 15.019140999836964,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 1452,
+          "milliseconds": 0,
+          "maximumUnits": 2089656
+        },
+        "memo-hit-planner": {
+          "calls": 1453,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 1453,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 3206,
+          "milliseconds": 2602.3430210002116,
+          "maximumUnits": 3507954
+        },
+        "current-snapshot-via-plan": {
+          "calls": 1754,
+          "milliseconds": 5.01158899965958,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 1125,
+          "milliseconds": 121649.53759599991,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 12,
+          "milliseconds": 106.65927499999088,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 12,
+          "milliseconds": 106.71847499999421,
+          "maximumUnits": 0
+        },
+        "encode-snapshot": {
+          "calls": 1,
+          "milliseconds": 20.69062500000291,
+          "maximumUnits": 2089656
+        },
+        "decode-snapshot": {
+          "calls": 2,
+          "milliseconds": 48.96268599998439,
+          "maximumUnits": 2089656
+        },
+        "memo-miss-dashboard": {
+          "calls": 1,
+          "milliseconds": 0,
+          "maximumUnits": 2089656
+        },
+        "plan-inclusive": {
+          "calls": 1,
+          "milliseconds": 12.698551999987103,
+          "maximumUnits": 2089656
+        },
+        "plan-accepted": {
+          "calls": 1,
+          "milliseconds": 0,
+          "maximumUnits": 3507954
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "real-revision",
+      "phase": "prior-review-read-after-second-preservation",
+      "completed": true,
+      "elapsedMilliseconds": 4283.860860000001,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 4,
+          "milliseconds": 40.22062800001004
+        },
+        "review-and-receipt-digests": {
+          "calls": 2,
+          "milliseconds": 22.14137299999129
+        },
+        "live-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 31.62727499999164
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 2,
+          "milliseconds": 29.840064000018174
+        },
+        "access-digest": {
+          "calls": 2,
+          "milliseconds": 0.08691100000578444
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 2,
+          "milliseconds": 27.067586000004667
+        },
+        "scope-state-read-inclusive": {
+          "calls": 2,
+          "milliseconds": 200.29951099999016
+        },
+        "current-snapshots-empty": {
+          "calls": 1,
+          "milliseconds": 0.0011519999970914796
+        },
+        "canonical-producer-read": {
+          "calls": 1,
+          "milliseconds": 3995.5690630000026
+        },
+        "producer-result-clone": {
+          "calls": 1,
+          "milliseconds": 3.1867439999914495
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 44,
+          "milliseconds": 480.13604000001214
+        },
+        "first-authorize-inclusive": {
+          "calls": 44,
+          "milliseconds": 6.5582480000157375
+        },
+        "projection-snapshot-clone": {
+          "calls": 44,
+          "milliseconds": 320.28754100004153
+        },
+        "project-scope-inclusive": {
+          "calls": 44,
+          "milliseconds": 600.4792590000288
+        },
+        "second-authorize-inclusive": {
+          "calls": 44,
+          "milliseconds": 4.04604300003848
+        },
+        "full-snapshot-after-digest": {
+          "calls": 44,
+          "milliseconds": 476.44576300001063
+        },
+        "observe-inclusive": {
+          "calls": 44,
+          "milliseconds": 1612.482483000058
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 152,
+          "milliseconds": 0.0817100000276696,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 359,
+          "milliseconds": 16.94600100000389,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 359,
+          "milliseconds": 0,
+          "maximumUnits": 2089656
+        },
+        "memo-hit-planner": {
+          "calls": 359,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 359,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 895,
+          "milliseconds": 1123.0934870001947,
+          "maximumUnits": 3507954
+        },
+        "current-snapshot-via-plan": {
+          "calls": 536,
+          "milliseconds": 1.92617399993469,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 6,
+          "milliseconds": 64.41209500003606,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 6,
+          "milliseconds": 64.43568099998811,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 207,
+          "milliseconds": 1759.8344120000402,
+          "maximumUnits": 0
+        }
+      }
+    },
+    {
+      "productSha": "fe2dfe77fe0817b0ae388d74f96d82657ea8af44",
+      "snapshot": "36df01594dc23c1fee38a4c923725cb813267c9d",
+      "scenario": "real-revision",
+      "phase": "prior-review-c05-and-c08-fence-after-second-preservation",
+      "completed": true,
+      "elapsedMilliseconds": 5247.448003999991,
+      "review": {
+        "current-snapshots-copy": {
+          "calls": 14,
+          "milliseconds": 154.5550629999634
+        },
+        "review-and-receipt-digests": {
+          "calls": 7,
+          "milliseconds": 79.83689199999208
+        },
+        "live-full-snapshot-digest": {
+          "calls": 7,
+          "milliseconds": 91.74642999999924
+        },
+        "captured-full-snapshot-digest": {
+          "calls": 7,
+          "milliseconds": 119.24057200002426
+        },
+        "access-digest": {
+          "calls": 7,
+          "milliseconds": 0.29112600001099054
+        },
+        "full-snapshot-fence-digest": {
+          "calls": 7,
+          "milliseconds": 86.21720899998036
+        },
+        "scope-state-read-inclusive": {
+          "calls": 7,
+          "milliseconds": 706.4892029999901
+        },
+        "current-snapshots-empty": {
+          "calls": 1,
+          "milliseconds": 0.0007909999985713512
+        },
+        "canonical-producer-read": {
+          "calls": 1,
+          "milliseconds": 4123.646166999999
+        },
+        "producer-result-clone": {
+          "calls": 1,
+          "milliseconds": 3.4428459999908227
+        }
+      },
+      "source": {
+        "full-snapshot-before-digest": {
+          "calls": 44,
+          "milliseconds": 509.9194740000239
+        },
+        "first-authorize-inclusive": {
+          "calls": 44,
+          "milliseconds": 9.30595600005472
+        },
+        "projection-snapshot-clone": {
+          "calls": 44,
+          "milliseconds": 341.3699790000246
+        },
+        "project-scope-inclusive": {
+          "calls": 44,
+          "milliseconds": 637.8606489999656
+        },
+        "second-authorize-inclusive": {
+          "calls": 44,
+          "milliseconds": 6.40481699994416
+        },
+        "full-snapshot-after-digest": {
+          "calls": 44,
+          "milliseconds": 504.51873000002524
+        },
+        "observe-inclusive": {
+          "calls": 44,
+          "milliseconds": 1708.63026800011
+        }
+      },
+      "storage": {
+        "queue-empty": {
+          "calls": 176,
+          "milliseconds": 0.09954199989442714,
+          "maximumUnits": 0
+        },
+        "write-lock-inclusive": {
+          "calls": 383,
+          "milliseconds": 15.891893999869353,
+          "maximumUnits": 0
+        },
+        "memo-hit-dashboard": {
+          "calls": 383,
+          "milliseconds": 0,
+          "maximumUnits": 2089656
+        },
+        "memo-hit-planner": {
+          "calls": 383,
+          "milliseconds": 0,
+          "maximumUnits": 246
+        },
+        "memo-hit-procurement": {
+          "calls": 383,
+          "milliseconds": 0,
+          "maximumUnits": 518
+        },
+        "materialize-plan": {
+          "calls": 1019,
+          "milliseconds": 1212.91327500013,
+          "maximumUnits": 3507954
+        },
+        "current-snapshot-via-plan": {
+          "calls": 634,
+          "milliseconds": 2.4932249998819316,
+          "maximumUnits": 0
+        },
+        "clone-snapshot": {
+          "calls": 37,
+          "milliseconds": 347.4531490000227,
+          "maximumUnits": 0
+        },
+        "current-snapshot-via-clone": {
+          "calls": 37,
+          "milliseconds": 347.54079300005105,
+          "maximumUnits": 0
+        },
+        "queue-wait-inclusive": {
+          "calls": 207,
+          "milliseconds": 1891.5201159999997,
+          "maximumUnits": 0
+        }
+      }
+    }
+  ]
+}
