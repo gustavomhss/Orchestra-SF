@@ -23,8 +23,7 @@ async function login(page: Page, account: "first" | "second" | "viewer", scenari
   const entry = await page.goto(new URL("/orchestra/sf-procurement/requests", selected.baseURL).href)
   expect(entry?.status()).toBe(200)
   await expect(page.getByRole("heading", { name: "Requests", exact: true })).toBeVisible()
-  // UNBOUND: the Requests chapter does not expose the C02 provenance anchors.
-  // Keep the source-ref/digest/version assertions until a native route owns them.
+  // The native Requests table exposes the producer-owned C02 provenance.
   const source = page.locator("a[data-source-ref]").first()
   await expect(source).toBeVisible()
   await expect(source).toHaveAttribute("data-source-ref", /.+/)
@@ -72,7 +71,13 @@ async function createDraft(page: Page, account: Account, title: string) {
   const id = (await row.getAttribute("data-sf-row")) ?? ""
   expect(id).toMatch(/^PR-2026-\d+$/)
   await expect(row.getByRole("cell").first()).toContainText(id)
-  await expect(row.getByRole("link")).toHaveCount(0)
+  await expect(row.getByRole("link")).toHaveCount(1)
+  const source = row.getByRole("link", { name: id, exact: true })
+  await expect(source).toBeVisible()
+  await expect(source).toHaveAttribute("href", "?request=" + encodeURIComponent(id) + "#" + encodeURIComponent(id))
+  await expect(source).toHaveAttribute("data-source-ref", /.+/)
+  await expect(source).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
+  await expect(source).toHaveAttribute("data-source-version", /^\d+$/)
   await openRecord(page, account, id)
   await expect(page.locator('[data-request-summary="' + id + '"]')).toContainText("Requisition draft")
   return id
