@@ -13,6 +13,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
+import { createDashboardSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
 import { digestSfContribution, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -34,6 +35,7 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
   await chmod(directory, 0o700)
   const driver = await openLocalStore(path.join(directory, "business"))
   const installationId = randomUUID()
+  const observedAt = "2026-11-20T09:00:00.000Z"
   const operator = { installationId, uid: 1000, name: "Test operator" }
   const principalRef = `macos:${installationId}:${operator.uid}`
   let workbench: ReturnType<typeof createSfWorkbenchHttp> | undefined
@@ -48,14 +50,21 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
   const origin = server.url.origin
   identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: driver.secrets, key: randomBytes(32) })
   const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID,
-    projectScope: createSfSourceScopeProjector(() => new Date().toISOString()) })
+    projectScope: createSfSourceScopeProjector(() => observedAt) })
   let runtime: Awaited<ReturnType<typeof createSfHostRuntime>> | undefined
   try {
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+    await persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.opexOwners = [{ id: "analysis-owner", name: "Operations", budget: 1200 }]
+      snapshot.data.opexEntries = []
+      snapshot.data.capexProjects = []
+      snapshot.data.capexEntries = []
+      return { commit: true, value: undefined }
+    })
     runtime = await createSfHostRuntime({ installationId, directory, sourceRoot: path.resolve(import.meta.dir, "../../../product/ai"), origin,
       mount: "/sucafina", persistence, authenticate: identity.authenticate,
-      grants: [{ principalRef, namespaces: ["cases", "contributions", "preferences"], operations: ["sf_case_draft", "sf_case_read"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
-      environment: async () => ({ at: new Date().toISOString(), id: randomUUID, directory: [] }) })
+      grants: [{ principalRef, namespaces: ["cases", "contributions", "preferences"], operations: ["sf_case_draft", "sf_case_read", "sf_dashboard_read"], humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel"] }],
+      environment: async () => ({ at: observedAt, id: randomUUID, directory: [] }) })
     workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime?.services?.() })
     web = HttpRouter.toWebHandler(createEmbeddedRoutes({ host: [...ProductHost.contributions(), ...runtime.contributions] })
       .pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true, memoMap: Layer.makeMemoMapUnsafe() })
@@ -114,12 +123,44 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       method: "POST", headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() },
       body: JSON.stringify({ operation, input }),
     })
-    const draftInput = { objective: "Frame the current renewal", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Cost", "Coverage"], sourceRefs: [] }
+    const period = { start: "2027-01-01", end: "2027-12-31" }
+    // Issue C06 evidence through its real source port and original authenticated
+    // request. The framing producer derives surface/currency from this source.
+    const sourceSelection = { page: "Budget Overview", fields: ["budgetMetrics"], period }
+    const sourceRequest = new Request(`${origin}/sucafina/dashboard`, { method: "POST",
+      headers: { cookie: cookie ?? "", origin, "content-type": "application/json", "idempotency-key": randomUUID() } })
+    const sourceDigest = digestSfValue(sourceSelection)
+    const sourceAdmission = await services.ui.admit(sourceRequest, "sf_dashboard_read", sourceDigest)
+    if (sourceAdmission.status !== "ok") throw new Error("real dashboard source selection was not authorized")
+    const issued = await (async () => {
+      try {
+        if (!await services.ui.validate(sourceAdmission.value, "sf_dashboard_read", sourceDigest)) throw new Error("source selection lease was not consumed")
+        const result = await createDashboardSourceIssuer({ host: services.host, scopedSources: persistence })(sourceSelection, sourceAdmission.value)
+        if (result.status !== "ok" || !await services.ui.revalidate(sourceAdmission.value)) throw new Error("real C06 source was unavailable")
+        return result.value
+      } finally { services.ui.finish(sourceAdmission.value) }
+    })()
+    const readInput = { selectionRef: issued.selectionRef, fields: sourceSelection.fields, period }
+    const readDigest = digestSfValue(readInput)
+    const readAdmission = await services.ui.admit(sourceRequest, "sf_dashboard_read", readDigest)
+    if (readAdmission.status !== "ok") throw new Error("real dashboard projection was not authorized")
+    const sourceProjection = await (async () => {
+      try {
+        const result = await services.dispatch("sf_dashboard_read", readInput, readAdmission.value)
+        if (result.status !== "ok") throw new Error("real dashboard projection failed")
+        const decoded = decodeSfOperationOutput("sf_dashboard_read", result.result)
+        if (!decoded.ok || !await services.ui.revalidate(readAdmission.value)) throw new Error("real dashboard projection was rejected")
+        return decoded.value
+      } finally { services.ui.finish(readAdmission.value) }
+    })()
+    expect(sourceProjection.context.sourceRefs).toHaveLength(1)
+    const draftInput = { objective: "Frame the current renewal", horizon: period, currency: sourceProjection.context.currency,
+      criteria: ["Cost", "Coverage"], sourceRefs: [issued.evidence] }
     const draft = await command("sf_case_draft", draftInput)
     expect(draft.status).toBe(200)
     const created = await draft.json()
-    const projection = await (async () => {
-      const payload = { caseRef: created.outputRef }
+    const readCase = async (caseRef: string) => {
+      const payload = { caseRef }
       const source = new Request(`${origin}/sucafina/dashboard?sf=workbench-case`, { headers: { cookie: cookie ?? "" } })
       const admitted = await services.ui.admit(source, "sf_case_read", digestSfValue(payload))
       if (admitted.status !== "ok") throw new Error("real case read was not authorized")
@@ -130,7 +171,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
         if (!decoded.ok || !await services.ui.revalidate(admitted.value)) throw new Error("real case projection was rejected")
         return decoded.value
       } finally { services.ui.finish(admitted.value) }
-    })()
+    }
+    const projection = await readCase(created.outputRef)
     const currentCase = projection.case
     const intentRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-enquadrar-decisao"))
     const intentSkill = intentRuntime?.skills.find((skill) => skill.id === "sf-enquadrar-decisao")
@@ -146,7 +188,15 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       Object.keys(state.preferences).filter((key) => key.startsWith("sf:analysis-selection:")).length)
     expect(selections.status === "ok" && selections.value).toBe(1)
     expect(await framed.json()).toEqual({ status: "ok", value: { intentText: currentCase.objective, case: intentRequest.caseRef,
-      context: { surface: "dashboard", period: currentCase.horizon, currency: currentCase.currency, sourceRefs: [] }, selectedSourceRefs: currentCase.sourceRefs } })
+      context: { surface: "dashboard", period: currentCase.horizon, currency: currentCase.currency, sourceRefs: sourceProjection.context.sourceRefs }, selectedSourceRefs: currentCase.sourceRefs } })
+    const emptyDraft = await command("sf_case_draft", { ...draftInput, sourceRefs: [] })
+    expect(emptyDraft.status).toBe(200)
+    const empty = await readCase((await emptyDraft.json()).outputRef)
+    expect((await post({ action: "prepare", input: { request: { ...intentRequest, caseRef: {
+      id: empty.case.id, incarnation: empty.case.incarnation, version: empty.case.version } }, selection: {} } })).status).toBe(400)
+    const unchangedSelections = await services.state.read(stateRequest, "preferences", (state) =>
+      Object.keys(state.preferences).filter((key) => key.startsWith("sf:analysis-selection:")).length)
+    expect(unchangedSelections.status === "ok" && unchangedSelections.value).toBe(1)
     expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, selection: { sourceRefs: ["forged"] } } })).status).toBe(400)
     expect((await post({ ...intentPrepare, input: { ...intentPrepare.input, request: { ...intentRequest, caseRef: { ...intentRequest.caseRef, version: currentCase.version + 1 } } } })).status).toBe(409)
     const scenarioRuntime = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-comparar-cenarios"))
