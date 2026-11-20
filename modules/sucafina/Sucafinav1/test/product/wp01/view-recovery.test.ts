@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import type { SfPersonalViewRecord } from "../../../product/interface/personal-views.ts"
-import { decisionCreateForm, decisionCreateScript } from "../../../product/ui/decision-create.ts"
+import { decisionCreateForm, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../../../product/ui/decision-create.ts"
 import { personalViewsScript, personalViewsWidget } from "../../../product/ui/personal-views.ts"
 import { documentHtml, pageMain } from "../../../src/screen-shell.ts"
 import { fields, form } from "../../../runtime/ui.ts"
@@ -72,6 +72,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   function pageHtml(body: string, script: string) {
     return documentHtml("Budget Planner", "planner", "", pageMain({ drawn: true, key: "OPEX", index: 1 }, body), "").replace("</body>", `<script>${script}</script></body>`)
   }
+  // Component routing partition only: this digest is not an authenticated actor,
+  // Team binding, session token, or proof of installed creation authorization.
+  const scopedCreation = scopeDecisionCreateForm(decisionCreateForm, decisionCreationScope({
+    installationId: "view-recovery-component", projectId: "synthetic-placement",
+    principalRef: "component-principal", policyVersion: "component-policy",
+  }))
   async function fillDecision(page: Page) {
     await page.getByText("Create a decision", { exact: true }).click()
     await page.getByLabel("Decision objective").fill("Review renewal")
@@ -86,10 +92,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test.each(["lost", "stale"])("creation freezes its request after a %s outcome and retains uncertainty on a subsequent 409", async (outcome) => {
     const requests: { key: string | null; body: string }[] = []
     const server = Bun.serve({ port: 0, fetch: async (request) => {
-      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(decisionCreateForm, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
+      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(scopedCreation, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
       requests.push({ key: request.headers.get("Idempotency-Key"), body: await request.text() })
       if (requests.length === 1 && outcome === "stale") return Response.json({ status: "stale" }, { status: 409 })
-      return requests.length === 2 ? Response.json({ status: "conflict" }, { status: 409 }) : Response.json({ status: "ok", outputRef: "case-reference-1" })
+      return requests.length === 2 ? Response.json({ status: "conflict" }, { status: 409 }) : Response.json({ status: "ok", outputRef: "case:created-decision:component-incarnation" })
     } })
     const page = await fixturePage(server)
     const network = { dropped: false }
@@ -107,10 +113,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.getByLabel("Decision objective").isDisabled()).toBe(true)
       expect(await page.getByLabel("Decision objective").inputValue()).toBe("Review renewal")
       await page.getByRole("button", { name: "Retry same creation" }).click()
-      await page.getByText("Creation is unconfirmed.", { exact: false }).waitFor()
+      await page.getByText("Creation was rejected or is uncertain.", { exact: false }).waitFor()
       expect(await page.getByLabel("Decision objective").isDisabled()).toBe(true)
       await page.getByRole("button", { name: "Retry same creation" }).click()
-      await page.waitForURL((url) => url.searchParams.get("caseRef") === "case-reference-1")
+      await page.waitForURL((url) => url.searchParams.get("caseRef") === "case:created-decision:component-incarnation")
       expect(requests.length).toBe(3)
       expect(new Set(requests.map((request) => request.key)).size).toBe(1)
       expect(new Set(requests.map((request) => request.body)).size).toBe(1)
@@ -118,36 +124,49 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     } finally { await closeFixture(page, server) }
   }, 30000)
 
-  test("a confirmed creation rejection unlocks correction and creates a new intention", async () => {
+  test("a rejected creation retains its intention until the person explicitly starts a separate one", async () => {
     const requests: { key: string | null; body: string }[] = []
     const server = Bun.serve({ port: 0, fetch: async (request) => {
-      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(decisionCreateForm, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
+      if (request.method === "GET") return new Response(new URL(request.url).searchParams.has("caseRef") ? "<h1>Created decision</h1>" : pageHtml(scopedCreation, decisionCreateScript), { headers: { "Content-Type": "text/html" } })
       requests.push({ key: request.headers.get("Idempotency-Key"), body: await request.text() })
-      return requests.length === 1 ? Response.json({ status: "invalid" }, { status: 400 }) : Response.json({ status: "ok", outputRef: "corrected-case" })
+      return requests.length === 1 ? Response.json({ status: "invalid" }, { status: 400 }) : Response.json({ status: "ok", outputRef: "case:corrected-decision:component-incarnation" })
     } })
     const page = await fixturePage(server)
     try {
       await page.goto(new URL("planner?sf=workbench", server.url).href)
       await fillDecision(page)
       await page.getByRole("button", { name: "Create decision", exact: true }).click()
-      await page.getByText("Creation was rejected.", { exact: false }).waitFor()
+      await page.getByText("Creation was rejected or is uncertain.", { exact: false }).waitFor()
+      // A rejection is not evidence that a concurrent commit cannot complete.
+      // Keep the original body and correlation key locked until an explicit choice.
+      expect(await page.getByLabel("Decision objective").isDisabled()).toBe(true)
+      expect(await page.getByLabel("Decision objective").inputValue()).toBe("Review renewal")
+      const originalBody = requests[0]!.body
+      const originalKey = requests[0]!.key
+      const accepted = page.waitForEvent("dialog").then((dialog) => {
+        expect(dialog.type()).toBe("confirm")
+        return dialog.accept()
+      })
+      await Promise.all([within(accepted, "confirm separate creation"), page.getByRole("button", { name: "Start a separate decision", exact: true }).click()])
+      expect(requests).toHaveLength(1)
+      expect(requests[0]).toEqual({ key: originalKey, body: originalBody })
       expect(await page.getByLabel("Decision objective").isDisabled()).toBe(false)
       await page.getByLabel("Decision objective").fill("Corrected objective")
       await page.getByRole("button", { name: "Create decision", exact: true }).click()
-      await page.waitForURL((url) => url.searchParams.get("caseRef") === "corrected-case")
+      await page.waitForURL((url) => url.searchParams.get("caseRef") === "case:corrected-decision:component-incarnation")
       expect(requests[0]!.key).not.toBe(requests[1]!.key)
       expect(JSON.parse(requests[1]!.body).input.objective).toBe("Corrected objective")
     } finally { await closeFixture(page, server) }
   }, 30000)
 
   test.each([401, 403])("creation %i removes its inputs and does not echo the denied payload", async (status) => {
-    const server = Bun.serve({ port: 0, fetch: (request) => request.method === "GET" ? new Response(pageHtml(decisionCreateForm, decisionCreateScript), { headers: { "Content-Type": "text/html" } }) : Response.json({ status: "denied", detail: "PRIVATE-DENIAL" }, { status }) })
+    const server = Bun.serve({ port: 0, fetch: (request) => request.method === "GET" ? new Response(pageHtml(scopedCreation, decisionCreateScript), { headers: { "Content-Type": "text/html" } }) : Response.json({ status: "denied", detail: "PRIVATE-DENIAL" }, { status }) })
     const page = await fixturePage(server)
     try {
       await page.goto(server.url.href)
       await fillDecision(page)
       await page.getByRole("button", { name: "Create decision", exact: true }).click()
-      await page.getByText("Your access changed. Reload before creating a decision.").waitFor()
+      await page.getByText("Your access changed. Reopen an authorized page to reconcile this creation.").waitFor()
       expect(await page.locator("[data-decision-create] input, [data-decision-create] textarea").count()).toBe(0)
       expect(await page.content()).not.toContain("PRIVATE-DENIAL")
     } finally { await closeFixture(page, server) }
