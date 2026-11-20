@@ -299,8 +299,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const snapshot = poDraft()?.snapshot()
     return sfDraftForEdit(snapshot, version())
   }
-  const prConflict = () => sfDraftConflicted(prDraft()?.snapshot(), creating() ? null : version())
-  const poConflict = () => sfDraftConflicted(poDraft()?.snapshot(), version())
+  const prConflict = () => view.conflict?.kind === "pr" || sfDraftConflicted(prDraft()?.snapshot(), creating() ? null : version())
+  const poConflict = () => view.conflict?.kind === "po" || sfDraftConflicted(poDraft()?.snapshot(), version())
   const prPending = () => { const state = prDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const poPending = () => { const state = poDraft()?.snapshot(); return state?.availability === "active" && !!state.pendingOperation }
   const prState = () => {

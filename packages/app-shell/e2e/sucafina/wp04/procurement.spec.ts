@@ -270,6 +270,12 @@ test("two authenticated actors review an actual CAS conflict and submit only aft
     await expect(firstSection.getByRole("textbox", { name: "Cost center", exact: true })).toHaveValue("First actor's saved cost center")
     await expect(firstSection.getByRole("textbox", { name: "Description", exact: true })).toHaveValue("Recorded service scope")
 
+    // Local typing cannot release a CAS rejection before the source is reviewed.
+    await secondCostCenter.fill("Local cost center kept pending source review")
+    await expect(review).toBeVisible()
+    await expect(secondSection).toHaveAttribute("data-version", "1")
+    await expect(secondSection.getByRole("button", { name: "Save requisition draft", exact: true })).toBeDisabled()
+    expect(posts).toHaveLength(1)
     await review.getByRole("button", { name: "Review current record", exact: true }).click()
     const keep = review.getByRole("button", { name: "Use reviewed version and keep my entries", exact: true })
     await expect(keep).toBeFocused()
