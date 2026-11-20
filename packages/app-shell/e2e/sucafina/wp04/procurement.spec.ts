@@ -584,8 +584,23 @@ test("the A B C comparison shows score components and retains submitted FX in th
   const decisionFilter = filters.getByRole("combobox", { name: "Decision", exact: true })
   const search = filters.getByRole("searchbox", { name: "Search", exact: true })
   await expect(queueRow.getByRole("cell", { name: "32400 USD", exact: true })).toHaveCount(1)
+  await expect(stageFilter.locator('option[value="src_pending"]')).toHaveCount(1)
+  const statuses = await stageFilter.locator("option").evaluateAll((options) =>
+    options.map((option) => option.getAttribute("value") ?? ""),
+  )
+  expect(statuses[0]).toBe("")
+  expect(new Set(statuses).size).toBe(statuses.length)
+  const sourcingStatus = statuses.indexOf("src_pending")
+  expect(sourcingStatus).toBeGreaterThan(0)
   await stageFilter.focus()
   await page.keyboard.press("End")
+  await expect(stageFilter).toHaveValue(statuses[statuses.length - 1]!)
+  // Statuses follow the authorized source order. Select the required status
+  // with the keyboard without assuming it is the final option.
+  await page.keyboard.press("Space")
+  await page.keyboard.press("Home")
+  for (let index = 0; index < sourcingStatus; index++) await page.keyboard.press("ArrowDown")
+  await page.keyboard.press("Enter")
   await expect(stageFilter).toHaveValue("src_pending")
   await page.keyboard.press("Tab")
   await expect(decisionFilter).toBeFocused()
@@ -605,7 +620,7 @@ test("the A B C comparison shows score components and retains submitted FX in th
   await page.keyboard.type(id)
   await expect(queueRow.getByRole("cell", { name: "Frozen browser sourcing comparison", exact: true })).toHaveCount(1)
   await expect(queueRow.getByRole("cell", { name: "32400 USD", exact: true })).toHaveCount(1)
-  await proof(page, info, "queue-keyboard-filter-restored", { id, filter: "All", search: id, interaction: "End, Tab, Tab, text; Home, Tab, Tab, text", retainedBaseAmount: 32400 })
+  await proof(page, info, "queue-keyboard-filter-restored", { id, filter: "All", search: id, interaction: "End, Space, Home, ArrowDown to src_pending, Enter, Tab, Tab, text; Home, Tab, Tab, text", retainedBaseAmount: 32400 })
 
   // The exact C02 anchor omits owner parameters; the real selected profile survives it.
   await queueRow.getByRole("link", { name: id, exact: true }).click()
