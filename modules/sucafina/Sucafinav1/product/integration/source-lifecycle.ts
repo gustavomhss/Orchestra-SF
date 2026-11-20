@@ -107,20 +107,20 @@ export function createSfSourcePersistence(input: {
     const inputPrototype = Object.getPrototypeOf(input)
     const descriptors = (["persistence", "projectScope"] as const)
       .map((name) => [name, Object.getOwnPropertyDescriptor(input, name)] as const)
-    if (descriptors.some(([, descriptor]) => !descriptor || !("value" in descriptor))) return opaque()
+    if (descriptors.some(([, descriptor]) => !descriptor || !Object.hasOwn(descriptor, "value"))) return opaque()
     const persistence = input.persistence
     if (!persistence || types.isProxy(persistence) || Object.getPrototypeOf(persistence) !== Object.prototype) return opaque()
     const driverPrototype = Object.getPrototypeOf(persistence)
     const methods = (["transaction", "transactionAll", "currentSnapshots", "currentSnapshot", "readSnapshotRoot"] as const)
       .map((name) => [name, Object.getOwnPropertyDescriptor(persistence, name)] as const)
-    if (methods.some(([name, descriptor]) => descriptor ? !("value" in descriptor) : name in persistence)) return opaque()
+    if (methods.some(([name, descriptor]) => descriptor ? !Object.hasOwn(descriptor, "value") : name in persistence)) return opaque()
     const pin = () => Object.getPrototypeOf(input) === inputPrototype && Object.getPrototypeOf(persistence) === driverPrototype &&
       descriptors.every(([name, descriptor]) => {
         const live = Object.getOwnPropertyDescriptor(input, name)
-        return !!live && "value" in live && live.value === descriptor?.value
+        return !!live && Object.hasOwn(live, "value") && live.value === descriptor?.value
       }) && methods.every(([name, descriptor]) => {
         const live = Object.getOwnPropertyDescriptor(persistence, name)
-        return descriptor ? !!live && "value" in live && live.value === descriptor.value : live === undefined && !(name in persistence)
+        return descriptor ? !!live && Object.hasOwn(live, "value") && live.value === descriptor.value : live === undefined && !(name in persistence)
       })
     scope.producers.set(input, pin)
     scope.pins.add(pin)
