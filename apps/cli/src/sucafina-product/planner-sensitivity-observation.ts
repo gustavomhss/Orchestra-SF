@@ -91,6 +91,10 @@ export function sfPlannerSensitivitySources(incoming: unknown, value: DecisionCa
   if (typeof baselineRef !== "string") return false
   const candidate = selected({ scenarioRef: phase.request.scenarioRef, baselineRef, parameterRef: phase.request.parameterBounds.parameterRef })
   if (!candidate) return false
+  // Exact evaluates preview children inside this observation. Keep the entire
+  // solver canonical when those children cannot enter the same source closure.
+  if (phase.kind === "exact" && value.alternatives.filter((alternative) =>
+    alternative.scenario.baseRef === candidate.scenario.baseRef).length !== 1) return false
   // A standalone canonical exact solver does not require a rule's sensitivity
   // extension. Host-bound resolve/revalidate/exact do, and retain its real refs.
   if (phase.kind === "resolve" || phase.binding) {
