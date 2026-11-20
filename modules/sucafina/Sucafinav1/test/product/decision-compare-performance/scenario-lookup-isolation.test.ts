@@ -134,8 +134,8 @@ for (const fault of ["missing-map", "inherited-map", "accessor-map", "nonplain-m
         const handler = { getOwnPropertyDescriptor(target: object, key: PropertyKey) {
           counts.traps++; return Reflect.getOwnPropertyDescriptor(target, key)
         }, getPrototypeOf(target: object) { counts.traps++; return Reflect.getPrototypeOf(target) } }
-        const context = fault === "proxy-context" ? new Proxy(f.context, handler)
-          : fault === "proxy-binding" ? Object.freeze({ ...f.context, binding: new Proxy(f.context.binding, handler) }) : f.context
+        const context = fault === "proxy-context" ? new Proxy<typeof f.context>(f.context, handler)
+          : fault === "proxy-binding" ? Object.freeze({ ...f.context, binding: new Proxy<typeof f.context.binding>(f.context.binding, handler) }) : f.context
         const selector = f.selector(context)
         // Registering a proxy must not trigger introspection before the read.
         if (fault === "proxy-context" || fault === "proxy-binding") expect(counts.traps).toBe(0)
@@ -149,8 +149,8 @@ for (const fault of ["missing-map", "inherited-map", "accessor-map", "nonplain-m
           if (fault === "inherited-map") { delete state.decisionResults; Object.setPrototypeOf(state, { decisionResults: map }) }
           if (fault === "accessor-map") Object.defineProperty(state, "decisionResults", { enumerable: true, configurable: true, get: () => map })
           if (fault === "nonplain-map") Object.setPrototypeOf(map, { marker: "inherited" })
-          if (fault === "proxy-map") state.decisionResults = new Proxy(map, handler)
-          if (fault === "proxy-state") snapshot.data.__sfProductV1 = new Proxy(state, handler)
+          if (fault === "proxy-map") state.decisionResults = new Proxy<typeof map>(map, handler)
+          if (fault === "proxy-state") snapshot.data.__sfProductV1 = new Proxy<typeof state>(state, handler)
         }
         const outcome = await f.state.read(f.request, "cases", opaque ? (state, authority) => selector(state, authority) : selector)
           .then((value) => ({ value }), (error: unknown) => ({ error: error instanceof Error ? error.name : String(error) }))

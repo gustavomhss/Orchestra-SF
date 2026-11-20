@@ -71,7 +71,7 @@ test("scenario candidates keep the complete result graph while omitting unrelate
     expect(canonical.metadata).toEqual(opaque.metadata)
     expect(opaque).toMatchObject({ transactions: 1, unrelatedClones: 1, caseClones: 1, resultClones: sizes.results })
     expect(canonical).toMatchObject({ transactions: 1, unrelatedClones: 0, caseClones: 0, resultClones: sizes.results })
-    const timings = []
+    const timings: { mode: "canonical" | "opaque"; elapsedMs: number }[] = []
     for (let pair = 0; pair < 6; pair++) {
       for (const mode of pair % 2 ? ["opaque", "canonical"] as const : ["canonical", "opaque"] as const) {
         const sample = await observe(mode, false)
