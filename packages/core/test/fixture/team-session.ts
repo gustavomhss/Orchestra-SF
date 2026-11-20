@@ -9,6 +9,8 @@ import { AuthorityControl } from "../../src/database/authority-control"
 import { AuthoritySqlFence } from "../../src/database/authority-sql-fence"
 import { openAuthorityControl } from "../../src/database/sqlite.bun"
 import { AppNodeBuilder } from "../../src/effect/app-node-builder"
+import type { Node } from "../../src/effect/app-node"
+import type { LocationError } from "../../src/location-services"
 import { LayerNode } from "../../src/effect/layer-node"
 import { EventV2 } from "../../src/event"
 import { Global } from "../../src/global"
@@ -43,12 +45,20 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
   actions?: readonly SessionAccess.Action[]
   roles?: boolean
   grants?: readonly SfProductGrant[]
+  enabled?: NonNullable<Parameters<typeof teamProductFixture>[0]>["enabled"]
+  direct?: NonNullable<Parameters<typeof teamProductFixture>[0]>["direct"]
+  teams?: boolean
+  tokenSeconds?: number
+  sessionSeconds?: number
   legacyID?: SessionV2.ID
   extraNodes?: readonly Extra[]
+  locationNodes?: ReadonlyArray<Node.LocationNode<unknown, LocationError>>
+  replacements?: LayerNode.Replacements
 } = {}) {
   const declared = input.actions ?? SessionAccess.Actions
   const f = await teamProductFixture({
-    roles: input.roles, enabled: [profileA, profileB],
+    roles: input.roles, enabled: input.enabled ?? (input.teams === false ? [] : [profileA, profileB]),
+    direct: input.direct, teams: input.teams, tokenSeconds: input.tokenSeconds, sessionSeconds: input.sessionSeconds,
     grants: input.grants ?? [oid, other].map((principalRef) => ({ ...productGrant(principalRef), sessionActions: declared })),
   })
   const filename = path.join(f.directory, "core-owned.sqlite")
@@ -82,7 +92,9 @@ export async function teamSessionFixture<Extra extends LayerNode.Node<unknown, u
       [SessionExecution.node, execution],
       [Global.node, Global.layerWith({ home: f.directory, data: f.directory, config: f.directory,
         cache: f.directory, state: f.directory })],
+      ...input.replacements ?? [],
     ],
+    input.locationNodes,
   ))
   const run = <A, E>(body: Effect.Effect<A, E, Services | LayerNode.Output<Extra> | Scope.Scope>) =>
     Effect.runPromise(body.pipe(Effect.provide(layer()), Effect.scoped))
