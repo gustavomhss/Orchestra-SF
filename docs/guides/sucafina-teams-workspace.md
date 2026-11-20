@@ -73,7 +73,7 @@ Em um perfil habilitado, abra **Configuração compartilhada**. A tela lê a con
 
 O formulário permite definir o modelo no formato `provedor/modelo`, o agente padrão e agentes compartilhados. Cada agente pode ter nome, descrição, instruções, modelo, variante, modo de atuação e opções de visibilidade ou desativação. Os campos que você não altera são preservados ao salvar. Não inclua chaves, senhas ou outros segredos nas instruções.
 
-A gravação compara a revisão que foi lida com a revisão atual do servidor. Em caso de conflito, o rascunho fica na tela; use **Ler configuração atual** e confirme o descarte para editar a versão corrente. O rascunho existe apenas na memória da janela e participa da confirmação de navegação. Revogação de acesso ou saída da conta limpa esses dados.
+A gravação compara a revisão que foi lida com a revisão atual do servidor. Em caso de conflito, o rascunho fica na tela; use **Ler configuração** e confirme o descarte para editar a versão corrente. O rascunho existe apenas na memória da janela e participa da confirmação de navegação. Revogação de acesso ou saída da conta limpa esses dados.
 
 Se a resposta de uma gravação se perder, use **Verificar configuração atual**. A aplicação compara a leitura corrente com as alterações enviadas e não repete a gravação. Uma correspondência confirma o estado atual, sem afirmar qual solicitação o gravou. Uma diferença mantém o resultado original indeterminado.
 
