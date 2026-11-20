@@ -1,3 +1,5 @@
+import { A } from "@solidjs/router"
+import { sfPlannerSavedViewHref } from "./planner-view"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
@@ -47,7 +49,8 @@ const snapshot = (record: RecordView, value: PersonalView): SfReviewSnapshot => 
 /**
  * UI32 consumes the *actual* legacy personal-view port. V2 native views and
  * preferred landing remain unavailable until the real source is released and
- * A12/125 admit schemaVersion:2. Legacy records are not cast into native routes.
+ * A12/125 admit schemaVersion:2. Supported V1 planner views are re-read by the
+ * native destination; no V2 record or preferred-entry permission is fabricated.
  * Drafts are held only by F01/S03, never localStorage or an alternate store.
  */
 export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
@@ -63,6 +66,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
   let mutationRequest: AbortController | undefined
   let scope: string | undefined
 
+  const restoreHref = (view: PersonalView) => sfPlannerSavedViewHref(view, props.route.ownerSelection)
   const current = () => owner.ready()
   const operationReady = (name: "views.list" | "views.open" | "views.save" | "views.remove") => {
     const operation = current()?.context.availability
@@ -371,6 +375,9 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                   <h3 id="sf-u43-editor">{t(key("sf.ui32.legacyEditor"))}</h3>
                   <p>{t(key("sf.ui32.sourcePage"))}: <bdi>{record().view.page}</bdi></p>
                   <p>{t(key("sf.ui32.version"), { version: record().version })}</p>
+                  <Show when={restoreHref(record().view)}>
+                    {(href) => <A class="mx-btn" href={href()}>{t(key("sf.ui32.openSource"))}</A>}
+                  </Show>
                   <Show when={activeDraft()}>
                     {(state) => (
                       <div class="flex flex-col gap-3">
