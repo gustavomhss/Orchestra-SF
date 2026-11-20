@@ -2,11 +2,11 @@
 
 ## Status and provenance
 
-This is an isolated product candidate, not a qualification or an installed-browser witness. No gate has been launched for this repair yet.
+This is an isolated product candidate. The first component gate and both package compilers ran on `1c8eea5b7ebdfae307870156d984d8c9f0378810`; results and the two concrete follow-ups are recorded below. This is not an installed-browser witness or a completed qualification.
 
 - Common product base: `094d8919819dcbad73dc6d7f02ef7b8dd4faefd4`.
 - Confirmed negative regression base: `8e5e4f2623d7dfe80240b4381064fc3d6c638ff4`.
-- Runtime revisions: `7d8e9271e4f5eb66cd2d9231a631564fcc70fee4`, `79ffb67ff26a3a7ca858b903ae9d1eaca8a2722a`, `6e2a0595d9097aa86b3d0e1f3feb54966fec643a`, `fbbde4794c90f6170a64733091f1920f3b22a4b2`, `a31b382c4e1a8cf078db159cdd0810c19f216156`.
+- Runtime revisions: `7d8e9271e4f5eb66cd2d9231a631564fcc70fee4`, `79ffb67ff26a3a7ca858b903ae9d1eaca8a2722a`, `6e2a0595d9097aa86b3d0e1f3feb54966fec643a`, `fbbde4794c90f6170a64733091f1920f3b22a4b2`, `a31b382c4e1a8cf078db159cdd0810c19f216156`, `0dcf6db3ae427fd85f759f10266a3d518dab75f4` (equivalent explicit registry guard for compiler narrowing).
 - Branch: `reports-source-revalidation`. Commits use `[skip ci]`; audit-one, original tests, workflow files and request files are untouched.
 - The original negative file `modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-projector-scope.test.ts` is retained literally (blob `e1fad78af8a1c440b9c4dad8cb53a3dfeff12815`).
 
@@ -43,7 +43,7 @@ The installed order is `apps/cli/src/sucafina-product/host-context.ts:297–305`
 
 A construction-time pin of evidence.current would reject that legitimate first bind. The candidate captures holder/current provider/resolve identities per actual read and retains them through the observation and C05 egress. A new actual read can observe the new provider and execute its callback. A swap while an observation or prepared lease is active is refused.
 
-## New tests (not yet executed)
+## New tests
 
 `modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/source-revalidation-fixture.ts` is a dedicated copy of the real financial composition fixture with its original authentication, grant contents, SQLite, C08 and Atlas setup. It adds only controlled factory input/await hooks and deferred Atlas initialization. It seeds no successful review, receipt or authorization. The original fixture remains byte-identical.
 
@@ -53,7 +53,7 @@ A construction-time pin of evidence.current would reject that legitimate first b
 - Custom evidence resolver closure revocation; projector method replacement during a real authorization await; closure revocation during the final C05 await.
 - Thirteen consumer swaps during an actual await: persistence input, context resolver, agenda owner, authority.state owner, state.read, Atlas provider/resolve, host persistence/currentSnapshots/authenticate/environment/requestFor/revalidate. The interrupted read refuses; a subsequent actual read executes current callbacks.
 - Twelve synchronous C05 egress replacements after a successful real async fence and an affirmative checkAtCommit in the same C08: source projector, context resolver, state owner/read, Atlas provider/resolve, and the six host owners/methods.
-`review-source-scope.test.ts`: **9 cases**, 201 physical lines, with the same 120000ms own limit:
+`review-source-scope.test.ts`: **9 cases**, 206 physical lines, with the same 120000ms own limit:
 
 - Real installed initialization order: create extended/Memory, bind Atlas, then actual Review/C05.
 - Closed Review descendant plus opaque provider; closure during a legacy authorization await; another authenticated call with a different Request.
@@ -93,10 +93,29 @@ C — original complete mixed Portfolio file, 16 cases expected:
 
 Sucafina and CLI package typechecks are separately required on the exact candidate. Root must authorize the exact requests before any trigger.
 
+## First qualification and bounded follow-up
+
+Product `1c8eea5b7ebdfae307870156d984d8c9f0378810`:
+
+| Gate | Snapshot / request | Run / job | Observed result |
+| --- | --- | --- | --- |
+| A, all six files | `6cdbc9d5a8ab9aed1c48da8a889eb6c9b229e829`; only `.ci-run.json` blob `3d6c5464f57832a0ba44c6412e4499c29a2e4ccb` | `44669631616` / `136067235548` | **54 passed / 2 failed / 816 expectations**, 164.08s. |
+| Sucafina + CLI package compilers | `4c8892a5c1a49380b4c8d251d0e8dcf050c2f537`; request `d114b18aa8ad3cbdbd549acc310939e919a12320` plus CI-only Node smoke harness `735ac84dcd610ca01e0dfef5d14606acaf33d3e6` | `44669632624` / `136067238597` | **0 passed / 2 failed**, 61.49s; both report only TS18048 at `product/reviews/port.ts:67:89`. |
+
+A includes the unmodified original projector regression, now passing: first ok, repeated denied with two actual projector calls, fresh scope denied with two calls, identical snapshots/methods. All 33 new live-dependency tests, all four identity tests, all seven original installed-read-integrity cases and both original installed-review-scope cases passed. The scope file was **7 passed / 2 failed**. Its own and opaque cold-source controls received denied where they expected ok at original lines 177 and 173 respectively; those are not the intentionally refused readonly states.
+
+The two new controls accidentally passed January/February periods while retaining the actual Budget page's `budgetMetrics` field. `product/dashboard/scope.ts:19` requires a complete year for that field, so the real projection was unavailable even outside the readonly scope. This fixture-only repair retains the actual Budget page and all its fields but selects full years 2025 and 2024. `product/dashboard/port.ts:100–103` constructs real budget metrics for 2024–2027; the fixture's actual discovery/preservation used only 2026. The original issuer control at `test/product/wp10/integration/dashboard-sources.test.ts:20,34–36` likewise uses a complete year.
+
+Every previous assertion is retained. An additional positive issuer call after the final C08 refusal proves the second cold selection can really be created outside readonly C08, after the existing snapshot-preservation assertion. No Dashboard runtime, grants, old test or timeout changed.
+
+The compiler delta at `0dcf6db3ae427fd85f759f10266a3d518dab75f4` adds an explicit absent-registration return before reading the descriptor. It preserves the existing return behavior and uses no cast or suppression. There were no other compiler diagnostics.
+
+Root limited the next qualification to the entire nine-case scope file plus both package compilers after review of this delta. The other 47 already-green A cases are not repeated. B and C remain pending; no nominal or sf-ci has run. CI-only requests/harnesses are not product files.
+
 ## Limits and pending qualification
 
-- No new test or compiler result is claimed in this manifest.
+- Qualification is incomplete: two new source controls require the corrected selectors to pass; both compilers require the explicit registry guard to pass. B43 and C16 have not run.
 - This fixes a confirmed dependency-validation boundary; it does not by itself establish performance or close the full Reports browser gate.
 - The installed profile `44659526852` identified the heavy HTML review route, with 16 producer and 15 legacy reads. Native's separate agenda change omits unused historical catalog work without memoization; it is not part of this branch.
 - No diagnostic observers, metrics workflows or synthetic payloads belong in this product delta.
-- Root and Native must review these tests and the final diff before Actions. No nominal Reports, no sf-ci and no main integration is authorized by this manifest.
+- Root and Native statically reviewed the initial runtime/tests; that review is distinct from the execution results above. The bounded follow-up requires their delta review before Actions. No nominal Reports, sf-ci or main integration is authorized by this manifest.

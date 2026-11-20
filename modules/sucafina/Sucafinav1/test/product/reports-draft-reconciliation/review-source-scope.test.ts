@@ -157,10 +157,12 @@ for (const shape of ["own", "opaque"] as const) {
   test(`source-check ${shape} admission preserves real scope creation and C08 write refusal`, async () => {
     await withReview({ sources: (input) => shape === "opaque" ? new Proxy(input, {}) : input }, undefined, async (value) => {
       const page = value.saved.sourceRefs.find((source) => source.surface === "dashboard" &&
-        source.type === "dashboard-page" && source.fields?.length)
+        source.type === "dashboard-page" && source.id === "Budget Overview" && source.fields?.includes("budgetMetrics"))
       if (!page?.fields) throw new Error("Actual preserved Dashboard page source unavailable")
       const issue = createDashboardSourceIssuer({ host: value.fixture.authority.host, scopedSources: value.fixture.persistence })
-      const selection = { page: page.id, fields: page.fields, period: { start: "2026-01-01", end: "2026-01-31" } }
+      // Budget metrics require complete years. The real fixture materialized
+      // 2026; these other supported annual scopes have not been issued yet.
+      const selection = { page: page.id, fields: page.fields, period: { start: "2025-01-01", end: "2025-12-31" } }
       const binding = { owner: value.fixture.authority.host, request: value.request,
         current: () => value.fixture.authority.host.requestFor(value.call) === value.request }
       const before = await value.snapshots()
@@ -178,7 +180,7 @@ for (const shape of ["own", "opaque"] as const) {
       const warm = await value.snapshots()
       expect((await withSfScopedSourceChecks(binding, () => issue(selection, value.call))).value).toEqual(opened)
       expect(await value.snapshots()).toBe(warm)
-      const unmaterialized = { ...selection, period: { start: "2026-02-01", end: "2026-02-28" } }
+      const unmaterialized = { ...selection, period: { start: "2024-01-01", end: "2024-12-31" } }
       let entered = 0
       const final = value.fixture.authority.state.read(value.request, "reviews", async () => {
         entered++
@@ -196,6 +198,9 @@ for (const shape of ["own", "opaque"] as const) {
       }
       expect(entered).toBe(1)
       expect(await value.snapshots()).toBe(warm)
+      // The refused cold scope is valid and can be created outside readonly C08.
+      expect((await issue(unmaterialized, value.call)).status).toBe("ok")
+      expect(await value.snapshots()).not.toBe(warm)
     })
   }, 120_000)
 }
