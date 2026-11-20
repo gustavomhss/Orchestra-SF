@@ -21,6 +21,7 @@ if (root && bootstrap) {
   bootstrap.remove()
   let closed = false, generation = 0
   let dispose = () => {}
+  let discussion: ReturnType<typeof createReviewCollaborationView> | undefined
   const pending = new Set<AbortController>()
   let probing = false
   const clearPrivate = () => {
@@ -51,6 +52,9 @@ if (root && bootstrap) {
       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
       if (response.status === 401 || response.status === 403) clearPrivate()
       await response.body?.cancel()
+      // Re-read the mounted discussion only after this focus probe succeeds.
+      // Its refresh retains pending human commands and never retries a mutation.
+      if (response.ok && !closed && !controller.signal.aborted) await discussion?.refresh()
     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
     finally { clearTimeout(timer); pending.delete(controller); probing = false }
   }
@@ -88,7 +92,6 @@ if (root && bootstrap) {
       }
       status.textContent = "Escolha a origem autorizada para abri-la."
     }
-    let discussion: ReturnType<typeof createReviewCollaborationView> | undefined
     const view = createMeetingViewFromReads({ reviewRef: value.reviewRef,
       read: async (reference): Promise<PortResult<PreservedReview>> => {
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-read", reviewRef: reference }).toString()
