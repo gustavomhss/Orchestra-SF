@@ -1,6 +1,6 @@
 # Handoff — sf-ops-artifact-audit
 
-SHA: 246a0217e3fa5d5c1ea846ec86883b957ce55913 (código do diagnóstico; este documento é um commit posterior somente de documentação)
+SHA: fdd865713166454c46250e9066380aef2bc52879 (código do diagnóstico; este documento é um commit posterior somente de documentação)
 Base congelada: 392cecab68288d4b669828adc5d1aaa738693d80 (sf-join-four)
 Branch: sf-ops-artifact-audit
 Data: 2026-11-20T02:27:00.511Z
@@ -48,7 +48,7 @@ A saída aceita somente:
 - Cinco nomes fixos de `test.step` de Operations, categoria e apiName por allowlist.
 - Posições de código apenas quando o caminho corresponde à allowlist de arquivos reais do E2E de Operations.
 - Classes fixas de erro; nunca mensagens, GUIDs, títulos arbitrários, snippets, URLs/querystrings, corpos, parâmetros, cabeçalhos, cookies ou credenciais.
-- Primeira etapa com erro registrado, última etapa anterior registrada sem erro e um recorte limitado das demais. `recorded-without-error` descreve o relatório, sem inventar uma prova de conclusão externa.
+- Primeiro nó com erro registrado na ordem DFS, último nó anterior nessa ordem registrado sem erro e um recorte limitado das demais. `recorded-without-error` descreve o relatório, sem inventar uma prova de conclusão externa.
 
 Tamanho de HTML/ZIP/JSON, quantidade de entradas, árvore, profundidade e quantidade de passos são limitados. Arquivos simbólicos são recusados. Erros internos inesperados viram uma mensagem fixa, evitando serialização de dados do artefato pelo reporter TAP. O leitor exige exatamente cinco árvores detalhadas; se o formato não corresponder, falha fechado e não infere a fase.
 
@@ -57,7 +57,9 @@ Tamanho de HTML/ZIP/JSON, quantidade de entradas, árvore, profundidade e quanti
 - Revisão estática do diff feita por GitHub: dois arquivos de código alterados, sem alteração de produto.
 - Workflow: 49 linhas adicionadas; sem remoções do workflow canônico.
 - Parser: `apps/cli/audit-operations-retained.node-smoke.mjs`.
-- Revisão independente solicitada a `reports_failure`; resultado ainda pendente neste documento.
+- Revisão independente de `reports_failure`: sem bloqueio de vazamento ou contrato. Removida uma entrada inexistente da allowlist; nenhuma ampliação de leitura.
+- `firstRecordedError` e `lastBeforeFirstRecordedError` seguem a ordem DFS da árvore, não uma ordem temporal comprovada. O primeiro nó com erro pode ser um `test.step` pai que contém a falha.
+- `file:line` é extraído do relatório após validar caminho permitido e limites numéricos. O leitor não compara o conteúdo dessa linha ao snapshot fonte; essa confirmação cabe à triagem posterior.
 - Actions do diagnóstico: não executado. Guards: não executados por esta entrega. A mudança temporária de workflow não é destinada a merge.
 - `sf-ci` por job: não aplicável; este diagnóstico usa apenas o runner Node cirúrgico se o integrador autorizar sua execução.
 - Pacote/sha256 de pacote: não aplicável. O digest acima pertence exclusivamente ao artefato Playwright original.
