@@ -176,3 +176,35 @@ Estado atualizado: **in_progress**. O registro bloqueado acima é o checkpoint a
 - O navegador consultado está sem sessão GitHub; nenhum dispatch de `sf-ci` realizado. Operações Git e leituras Actions continuam pelo conector. O dispatch final deve ocorrer uma única vez, somente após os merges.
 
 Nenhuma execução local, nenhum shell, nenhum `sf-ci`, nenhum merge e nenhum digest de pacote foram produzidos nesta retomada até este checkpoint. Os estados e resultados finais serão acrescentados após as qualificações.
+
+
+## Checkpoint de qualificação e integração — 2026-11-20 01:27Z
+
+Este checkpoint substitui os estados pendentes correspondentes acima; a integração continua **in_progress**.
+
+### Conclusões reais
+
+- **PR #395 / factory e retenção: complete.** Fonte de código `98e56b260a2b36030f6edd9711d77b1cebc907be`; atualização documental complete `9b3de4e82df44274e45e9f2f63ca61ecd46b8ae0` sem novo código/gate. Handoff específico: HANDOFF-sf-continuation-package.md.
+- [44652105730](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652105730) **success**, snapshot `e8927363e763c8defe57599abf826589143b356b`, source `143cbb9227c2a33251ec55a95a2b6432effbbb43`; job136009258700:57pass/0fail, cleanup136010485063success, artifacts0.
+- [44652219809](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652219809) **success**, factory PR#395, job136009638049. 13pass/0fail nos três comandos; 21348expect. sourceSHA=checkoutSHA=expectedSourceSHA=98e56b260a2b36030f6edd9711d77b1cebc907be; workflowSHA sintético cdbdf5164df473dcc07b1c34b21850acb8f8d856; attempt1.
+- Artifact [14591363180](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652219809/artifacts/14591363180), nome `sf-factory-package-44652219809-1-98e56b260a2b36030f6edd9711d77b1cebc907be`.
+- Archive factory de qualificação prévia: `orchestra-sf-factory-linux-x64-baseline.tar.gz`, **archiveSha256 `2f25f518095ddf3ade0e4aca36f9c6ba63796655613d9eefa44fcb1fb329af44`**, confirmado igualmente por SF_FACTORY_PACKAGE_QUALIFIED e SF_FACTORY_RECEIPT_VERIFIED. ZIP GitHub distinto:788e491f8daa17925fbf4e4e063191b43a4ada88fe3fae38030dd07f59d716df.
+- Essa prova qualifica o reparo prévio; **não é ainda o pacote final da Parte C**, cujo source será o SHA integrado congelado.
+
+### Gates ativos desta sessão — dois, sem repetição
+
+1. Operations [44652946889](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44652946889), snapshot `4617bed5afbfcf4bb0e7e81a2da5a4e025af73cc`; parent `sf-ops-composed@fc100c76312177213a58a6b73020e587faa52b07`, mais config compartilhado blob43861cf e request. Composição publicada sobre sf-ui-c02@f732f105; três overlaps reconciliados e native producer limitado a CAP26request/attachments. Files#393 está explicitamente incluído como dependência do teste; isso **não autoriza integração indireta do PR sem seus checks**.
+2. Reports [44653389217](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44653389217), snapshot `0d7e3ec545def9b247253b5215a5d1ed93b94ae9`; parent `sf-reports-composed@042fe208f907c779bc4b65aa5544a4ffb4762dc6`, código9c8502cf sobre UI f1e8aa1c. Preserva disponibilidade real corrigida pela Sessão1 em33fd90d; acrescenta ingresso/config do PR draft#396 e aborta preview obsoleto ao mudar seleção. Nenhuma asserção alterada por essa composição.
+
+### Estado de integração
+
+- Nenhum merge novo em sf-join-four neste checkpoint; permanece f7dd58e32bc834f1485df20b91adbf759b4c4ad0.
+- #393 permanece aberto: head d8938c31, zero check-runs/statuses/runs de Actions; check-suite Claude120819278709queued sem check-run. Gate histórico verde qualifica df9280a8, não cria check do head. Não fabricar status e não esconder esse delta no merge de Operations.
+- #392 e #237 preservados draft.
+- Shards A@8838141b/B@0bbb22c1 são documentação, sem fixes publicados; C@218e2ab6 contém três fixes verdes, mas AM02 ainda falha em performance-public-c16-reopen.test.ts:175:43. Nenhum PR de shard ou shared dos donos disponível nesse checkpoint. Gates de enumeração3/6 continuam em andamento.
+- PR#257 preservado **open/draft**. GitHub recusou retarget direto para sf-join-four com422 (zero commits novos); foi retargetado para **sf-package-hold@52d2c24f4f8cb776889b97894131df6ada43ce98**, exatamente o SHA da base anterior, preservando diff. Isso evita sf-ci adicional no push final do pacote. Nenhuma escrita em close-final-candidate. sfa-factory-package ainda4372b98d.
+- Guards finais NOT_RUN; sf-ci final NOT_RUN; pacote final NOT_PRODUCED. O único sf-ci permanece reservado para depois do último merge.
+
+### Próximos passos concretos
+
+Concluir gates Operations/Reports; corrigir somente causas novas comprovadas antes de qualquer gate adicional. Revalidar entregas dos donos, integrar apenas as qualificadas na ordem shared → UI → A/B/C → restos. Registrar blocos sem qualificação. Depois executar guards, o único dispatch final e o push de fábrica no SHA congelado; atualizar a seção final deste handoff com todos os jobs, artifacts e hash do pacote final.
