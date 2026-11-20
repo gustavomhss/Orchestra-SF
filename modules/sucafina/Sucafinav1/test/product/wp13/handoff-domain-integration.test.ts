@@ -5,7 +5,8 @@ import { expect, test } from "bun:test"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
-import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
+import { preparedOriginalIntent, proposalReviewDigest, receiptProofKey, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
+import { applicationAbortKey, applicationAttemptKey, applicationDispatchKey } from "../../../product/decisions/application-attempt.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
@@ -175,6 +176,7 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     }
     const reviewDigestFor: Parameters<typeof createSfPreparedApply>[0]["reviewDigestFor"] = (context, request, change) => context.kind === "ui" && context.binding.principalRef === "principal" && request.caseRef.id === decision.id && request.caseRef.incarnation === decision.incarnation && request.choiceId === choice.id && change.caseId === decision.id && saved.value!.preparedChanges.some((original) => original.id === change.id && original.operation.commandDigest === change.operation.commandDigest) ? reviews.get(change.id) : undefined
     const producerCalls: string[] = []
+    const retryDispatch = { hold: false, entered: dispatchLatch(), release: dispatchLatch() }
     const apply = createSfPreparedApply({
       state, host,
       authorizeCase: async (value, context) => value.id === decision.id && value.participants.includes(context.binding.principalRef) && host.revalidate(context),
@@ -192,7 +194,10 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
       createId: randomUUID, now: () => domains.at, reviewDigestFor,
     })
     const execution = createPreparedExecution({
-      state, host, apply, reviewDigestFor,
+      state, host, apply: { ...apply, executePrepared: async (request, context) => {
+        if (retryDispatch.hold) { retryDispatch.entered.resolve(); await retryDispatch.release.promise }
+        return apply.executePrepared(request, context)
+      } }, reviewDigestFor,
       revalidateProducer: async (request, context) => {
         const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
         if (!change || !reviewDigestFor(context, request, change)) return { status: "unavailable", reason: "review-producer-unavailable" }
@@ -249,6 +254,8 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     if (receiptsBeforeFailure.status !== "ok") throw new Error(`Receipts before storage failure: ${JSON.stringify(receiptsBeforeFailure)}`)
     expect(receiptsBeforeFailure.value.receipts).toHaveLength(1)
     expect(receiptsBeforeFailure.value.proofs[1]).toBeUndefined()
+    const applicationBeforeFailure = await state.read(new Request("https://example.test"), "cases", (productState) => productState)
+    if (applicationBeforeFailure.status !== "ok") throw new Error("Application envelope unavailable before rollback")
 
     // WP13.T04.CHK.02: the canonical Procurement command runs on the staged
     // snapshot, then the driver boundary throws before SQLite commits. This is a
@@ -259,7 +266,50 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     expect(producerCalls).toEqual(["planner", "procurement"])
     expect(await domains.snapshots()).toEqual(partialDomains)
     expect(await amounts()).toEqual([40, 50])
-    expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
+    // The reservation and authenticated abort are two append-only C08 writes.
+    // The complete receipt envelope still has exactly its original value/version.
+    expect(await durableReceipts()).toEqual({ ...receiptsBeforeFailure, aggregateRevision: receiptsBeforeFailure.aggregateRevision + 2 })
+    const applicationAfterFailure = await state.read(new Request("https://example.test"), "cases", (productState) => productState)
+    if (applicationAfterFailure.status !== "ok") throw new Error("Application envelope unavailable after rollback")
+    const transactionKey = (key: string) => JSON.stringify(["principal", "cases", decision.id, key])
+    const attemptKey = transactionKey(applicationAttemptKey(secondRequest))
+    const abortKey = transactionKey(applicationAbortKey(secondRequest, 0))
+    const rollback = object(object(applicationAfterFailure.value.transactions[abortKey]?.value).rollback)
+    expect(rollback.storageIdentity).toMatch(/^[a-f0-9]{64}$/)
+    expect(rollback.transactionId).toMatch(/^[a-f0-9-]{36}$/)
+    const attempted = {
+      schema: "sf-decision-application-attempt-v1", state: "receipt-required",
+      caseRef: secondRequest.caseRef, changeId: secondChange.id, choiceId: choice.id,
+      changeDigest: digestSfValue(secondChange), reviewBinding: receiptReviewBinding(secondChange, reviews.get(secondChange.id)!),
+      principalRef: "principal", operationIdentity: "domain-apply-operation",
+      originalIntent: preparedOriginalIntent(secondRequest, secondChange, choice, reviews.get(secondChange.id)!, binding),
+    }
+    const reservation = {
+      namespace: "cases" as const, scopeDigest: digestSfValue(["cases"]), principalRef: "principal",
+      targetRef: decision.id, targetIncarnation: decision.incarnation, commandDigest: digestSfValue(attempted),
+      storageVersion: applicationBeforeFailure.storageVersion + 1, aggregateRevision: applicationBeforeFailure.aggregateRevision + 1,
+      incarnation: applicationBeforeFailure.incarnation, value: attempted,
+    }
+    const aborted = {
+      schema: "sf-decision-application-abort-v1", state: "rolled-back", caseRef: secondRequest.caseRef,
+      changeId: secondChange.id, choiceId: choice.id, requestDigest: digestSfValue(secondRequest),
+      attemptDigest: digestSfValue(attempted), ordinal: 0, reservationDigest: digestSfValue(reservation),
+      rollback: { storageIdentity: rollback.storageIdentity, transactionId: rollback.transactionId,
+        command: { namespace: "receipts", domainSurface: "procurement", expectedStorageVersion: receiptsBeforeFailure.storageVersion,
+          additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: applicationBeforeFailure.storageVersion + 1 }],
+          targetRef: secondChange.target.id, targetIncarnation: secondChange.target.incarnation,
+          idempotencyKey: receiptProofKey(secondChange.idempotencyKey), commandDigest: receiptReviewBinding(secondChange, reviews.get(secondChange.id)!) },
+        envelope: { incarnation: applicationBeforeFailure.incarnation, aggregateRevision: applicationBeforeFailure.aggregateRevision + 1,
+          versions: { ...applicationBeforeFailure.value.versions, cases: applicationBeforeFailure.storageVersion + 1 } } },
+    }
+    const abortJournal = { ...reservation, commandDigest: digestSfValue(aborted), storageVersion: applicationBeforeFailure.storageVersion + 2,
+      aggregateRevision: applicationBeforeFailure.aggregateRevision + 2, value: aborted }
+    expect(applicationAfterFailure).toEqual({
+      ...applicationBeforeFailure, storageVersion: applicationBeforeFailure.storageVersion + 2, aggregateRevision: applicationBeforeFailure.aggregateRevision + 2,
+      value: { ...applicationBeforeFailure.value, revision: applicationBeforeFailure.value.revision + 2,
+        versions: { ...applicationBeforeFailure.value.versions, cases: applicationBeforeFailure.storageVersion + 2 },
+        transactions: { ...applicationBeforeFailure.value.transactions, [attemptKey]: reservation, [abortKey]: abortJournal } },
+    })
     const afterFailure = await cases.read({ caseRef: caseSelector }, binding)
     expect(afterFailure).toEqual(partial)
     expect(await execution(firstRequest, binding)).toEqual(firstExecution)
@@ -269,8 +319,31 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     // The failed transaction committed neither its domain effect nor its receipt.
     // Retrying the same WP11 request invokes Procurement again and commits once;
     // the completed Planner command is recovered from its existing receipt.
-    const secondExecution = await execution(secondRequest, binding)
+    confirmations.apply.delete(secondChange.id)
+    expect(await execution(secondRequest, binding)).toEqual({ status: "denied", reason: "application-confirmation-required" })
+    expect(producerCalls).toEqual(["planner", "procurement"])
+    confirmations.apply.add(secondChange.id)
+    retryDispatch.hold = true
+    const secondPending = execution(secondRequest, binding)
+    try {
+      const entered = await Promise.race([retryDispatch.entered.promise.then(() => "entered" as const), secondPending])
+      if (entered !== "entered") throw new Error(`Retry dispatch unavailable: ${JSON.stringify(entered)}`)
+      const concurrent = await Promise.all([execution(secondRequest, binding), execution(secondRequest, binding)])
+      for (const result of concurrent) expect(result).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
+      expect(producerCalls).toEqual(["planner", "procurement"])
+      expect(await amounts()).toEqual([40, 50])
+    } finally { retryDispatch.release.resolve() }
+    const secondExecution = await secondPending
     if (secondExecution.status !== "ok") throw new Error(`Procurement canonical application: ${JSON.stringify(secondExecution)}`)
+    const retryJournal = await state.read(new Request("https://example.test"), "cases", (productState) => productState.transactions)
+    if (retryJournal.status !== "ok") throw new Error("Durable retry journal unavailable")
+    expect(retryJournal.value[attemptKey]).toEqual(reservation)
+    expect(retryJournal.value[abortKey]).toEqual(abortJournal)
+    expect(retryJournal.value[transactionKey(applicationDispatchKey(secondRequest, 1))]?.value).toEqual({
+      schema: "sf-decision-application-dispatch-v1", state: "receipt-required", caseRef: secondRequest.caseRef,
+      changeId: secondChange.id, choiceId: choice.id, requestDigest: digestSfValue(secondRequest), attemptDigest: digestSfValue(attempted),
+      principalRef: "principal", operationIdentity: "domain-apply-operation", ordinal: 1, previousAbortDigest: digestSfValue(abortJournal),
+    })
     expect(secondExecution.value).toMatchObject({ surface: "procurement", result: { ok: true }, version: 1 })
     expect(await amounts()).toEqual([40, 60])
     expect(producerCalls).toEqual(["planner", "procurement", "procurement"])
@@ -351,11 +424,12 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
     snapshot.versions["requests:PR-1"] = { version: 0, by: "principal" }
     return { commit: true, value: true }
   })
+  const admittedRequest = new Request("https://example.test/controlled-domain-admission")
   const host: DomainPortHost = {
     persistence,
     authenticate: async (_request, scope) => ({ id: "principal", canWrite: true, roles: [{ surface: scope?.surface ?? "procurement", role: scope?.surface === "planner" ? "finance" : "requester" }] }),
     environment: async () => environment,
-    requestFor: () => new Request("https://example.test/controlled-domain-admission"),
+    requestFor: () => admittedRequest,
     revalidate: async (context) => context.kind === "ui" && context.binding.installationId === "install" && context.binding.projectId === "project" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" && context.binding.policyVersion === "policy",
   }
   const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-this-fixture" })
@@ -388,7 +462,7 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
   const procurementEvidence = procurementSource.value.evidence
   const procurementTarget: SourceRef = { surface: "procurement", type: "procurement-request", id: "PR-1", incarnation: procurementEvidence.target.incarnation, version: procurementEvidence.target.version, fields: procurementEvidence.target.fields, period: horizon, observedAt: at }
   const procurementSnapshot = await persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
-  const preparedProcurement = prepareProcurementMutation({ snapshot: procurementSnapshot, actor: procurementActor, environment, context: binding, target: procurementTarget, evidence: procurementEvidence, scope: procurementSource.value.scope, command: { page: "Requests", action: "save", id: "PR-1", version: 0, values: { pr: { estAmount: 60 } } }, operationId: "procurement-operation", idempotencyKey: "procurement-estimate-edit" })
+  const preparedProcurement = prepareProcurementMutation({ snapshot: procurementSnapshot, actor: procurementActor, environment, context: binding, target: procurementTarget, evidence: procurementEvidence, scope: procurementSource.value.scope, command: { page: "Requests", action: "save", id: "PR-1", version: 0, confirmed: false, values: { pr: { estAmount: 60 } } }, operationId: "procurement-operation", idempotencyKey: "procurement-estimate-edit" })
   if (!preparedProcurement) throw new Error("Canonical Procurement preparation unavailable")
   const procurementAmount = preparedProcurement.preview.values.find((value) => value.id === "baseAmount")
   if (!procurementAmount || typeof procurementAmount.value !== "number" || procurementAmount.currency !== "USD") throw new Error("Canonical Procurement amount unavailable")
@@ -428,4 +502,10 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
     },
     receiptVersion: (snapshot: Snapshot, change: PreparedChange) => change.target.surface === "planner" ? plannerPreparedRevision(snapshot, change.operation.command) : bridge.receiptVersion(snapshot, change),
   }
+}
+
+function dispatchLatch() {
+  const value: { resolve?: () => void } = {}
+  const promise = new Promise<void>((resolve) => { value.resolve = resolve })
+  return { promise, resolve: () => value.resolve?.() }
 }

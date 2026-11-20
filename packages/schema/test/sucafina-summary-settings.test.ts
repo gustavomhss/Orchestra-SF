@@ -6,7 +6,7 @@ import { DASHBOARD_PAGES } from "../../../modules/sucafina/Sucafinav1/src/nav"
 
 const context = { installationId: "install", projectId: "project", hostId: "host",
   principalRef: "operator", policyVersion: "policy", accessRevision: "access" }
-const valid = { context, version: 0, pages: ["IT Risks"] }
+const valid = { context, version: 0, pages: ["IT Risks"] } satisfies typeof SfLocalSummaryConfigure.input.Type
 test("summary codecs retain one schema identity and only the original closed page selection", () => {
   expect(SfDomain.operations["local-admin.summary-read"]).toBe(SfLocalSummaryRead)
   expect(SfDomain.operations["local-admin.summary-configure"]).toBe(SfLocalSummaryConfigure)
@@ -32,6 +32,6 @@ test("summary registry exposes only bounded original read and configure paths", 
   expect(Schema.decodeUnknownSync(SfLocalSummaryRead.output)({
     status: "ok", context, value: { pages: [], availablePages: [...DASHBOARD_PAGES], version: 0, canConfigure: true },
   }).status).toBe("ok")
-  for (const status of ["denied", "unauthenticated"]) expect(Schema.decodeUnknownSync(SfLocalSummaryRead.output)({ status })).toEqual({ status })
+  for (const status of ["denied", "unauthenticated"] as const) expect(Schema.decodeUnknownSync(SfLocalSummaryRead.output)({ status })).toEqual({ status })
   expect(Schema.decodeUnknownSync(SfLocalSummaryConfigure.output)({ ok: false, status: 409 })).toEqual({ ok: false, status: 409 })
 })

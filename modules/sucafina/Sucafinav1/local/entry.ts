@@ -234,6 +234,8 @@ export async function createConfiguredInstallation(
   nativeReadBinding = (operationId, producer) => {
     const current = runtime?.services?.()
     if (!current) return undefined
+    if (operationId === "views.list" || operationId === "views.open" || operationId === "views.save" || operationId === "views.remove")
+      return current.personalViews === producer && applicationServices.product === productBinding ? workbench : undefined
     if (operationId === "projection.review")
       return current.nativeReviewProjection === producer && nativeHandlers.includes(nativeReviewHandler) ? nativeReviewHandler : undefined
     return current.productHttp === producer && applicationServices.product === productBinding ? productBinding : undefined

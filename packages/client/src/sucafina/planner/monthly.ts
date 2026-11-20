@@ -1,4 +1,4 @@
-import type { Schema } from "effect"
+import { Option, Schema } from "effect"
 import { SfPlannerMonthlyPreview } from "@orchestra/schema/sucafina/planner"
 
 /** This is the ONE UI edge mapping of 0-based grid indices to producer months 1..12.
@@ -53,6 +53,19 @@ export function prepareSfPlannerMonthlyRange(
     drafts.push({ rowId: row.rowId, revision: row.revision, cells })
   }
   return { status: "ready", input: { page, versionId, drafts } }
+}
+
+/** Snapshot the JSON request when it leaves a reactive store. Framework symbol
+ * metadata is not part of the wire DTO; unexpected JSON fields still fail the
+ * same closed producer schema. Row CAS, measures, months and raw text are kept.
+ */
+export function snapshotSfPlannerMonthlyDraft(input: SfPlannerMonthlyDraftInput): SfPlannerMonthlyDraftInput | undefined {
+  try {
+    const decoded = Schema.decodeUnknownOption(SfPlannerMonthlyPreview.input, { onExcessProperty: "error" })({
+      action: "preview", input: JSON.parse(JSON.stringify(input)),
+    })
+    return Option.isSome(decoded) ? decoded.value.input : undefined
+  } catch { return undefined }
 }
 
 /** Preserve each original row and raw cell text after a partial commit.

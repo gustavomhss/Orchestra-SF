@@ -28,7 +28,7 @@ export async function observeSfImportHealth(input: {
   const authority = input.authority
   const source = sourceFor()
   if (!bindingFor || !source || request.signal.aborted || typeof source.producer !== "function" ||
-    typeof source.handler !== "function" || source.assets.persistence !== source.persistence ||
+    typeof source.handler !== "function" || !Object.is(source.assets.persistence, source.persistence) ||
     source.persistence !== authority.host.persistence) return []
   const producer = source.producer
   const handler = source.handler

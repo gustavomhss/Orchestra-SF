@@ -98,6 +98,7 @@ import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
+import { observeSfPersonalViewsHealth } from "./native-ui/personal-views-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
@@ -968,6 +969,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
+        observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+          source: () => identity() && services.personalViews === personalViews ? personalViews : undefined }, request, stamp),
         observeSfImportHealth({ authority, binding: input.nativeReadBinding, source: () => {
           if (!identity() || services.productHttp !== productHttp || !imports || !input.assets) return undefined
           return { producer: productHttp, handler: importHttp, service: imports,

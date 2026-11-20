@@ -1,0 +1,264 @@
+name: sf-static-surgical
+
+# Temporary, separately reviewed proof of the canonical static commands.
+# This trigger never schedules test-ci or sf-ci and does not replace sf/verify.
+on:
+  push:
+    branches:
+      - "ci-static-sfc-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-static-surgical-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  static:
+    name: sf-static-surgical
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact proof candidate
+        id: checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+
+      - name: Capture source identity and install the exit-status recorder
+        id: source
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = push
+          test "$GITHUB_REPOSITORY" = gustavomhss/Orchestra-SF
+          test "$GITHUB_REPOSITORY_ID" = 1455724710
+          case "$GITHUB_REF_NAME" in
+            ci-static-sfc-*) ;;
+            *) echo "::error::Unexpected static proof ref"; exit 2 ;;
+          esac
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
+          test ! -e "$evidence"
+          mkdir -p "$evidence"
+          git rev-parse HEAD > "$evidence/source-sha.txt"
+          git rev-parse 'HEAD^{tree}' > "$evidence/source-tree.txt"
+          git show -s --format=%P HEAD > "$evidence/source-parents.txt"
+          git rev-parse 'HEAD:.github/workflows/sf-static-surgical.yml' > "$evidence/workflow-blob.txt"
+          git rev-parse 'HEAD:.github/workflows/sf-ci.yml' > "$evidence/canonical-workflow-blob.txt"
+          git ls-tree -r HEAD -- .github/actions/setup-bun/action.yml bun.lock package.json \
+            modules/atlas/boundary/package.json modules/sucafina/package.json \
+            modules/sucafina/Sucafinav1/package.json packages/core/package.json \
+            packages/server/package.json packages/client/package.json apps/cli/package.json \
+            packages/app-shell/package.json script/check-spawn-imports.ts script/spawn-allowlist.json \
+            script/guards script/sf2h/final-bundle/verify-e2e-typecheck.mjs godfile-waivers.json \
+            > "$evidence/source-input-blobs.txt"
+          cat > "$evidence/run-check.sh" <<'CHECK'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          id="$1"
+          directory="$2"
+          shift 2
+          evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
+          test ! -e "$evidence/$id.status"
+          printf '%s\n' "$directory" > "$evidence/$id.cwd"
+          printf '%s\0' "$@" > "$evidence/$id.argv"
+          date +%s%3N > "$evidence/$id.started-ms"
+          set +e
+          (cd "$GITHUB_WORKSPACE/$directory" && "$@") > "$evidence/$id.stdout.log" 2> "$evidence/$id.stderr.log"
+          status=$?
+          set -e
+          date +%s%3N > "$evidence/$id.finished-ms"
+          printf '%s\n' "$status" > "$evidence/$id.status"
+          printf '::group::%s (exit %s)\n' "$id" "$status"
+          cat "$evidence/$id.stdout.log" "$evidence/$id.stderr.log"
+          printf '::endgroup::\n'
+          # Every status is enforced by the mandatory final aggregate below.
+          CHECK
+
+      - name: Setup canonical Bun dependencies
+        id: setup
+        uses: ./.github/actions/setup-bun
+
+      - name: Run every canonical generator, compiler and Web build
+        id: compilers
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
+          node --version > "$evidence/node-version.txt"
+          bun --version > "$evidence/bun-version.txt"
+          export SF_PRODUCT_TREE="$(git rev-parse 'HEAD^{tree}')"
+          bash "$evidence/run-check.sh" atlas-generated modules/atlas/boundary \
+            bash -euo pipefail -c 'bun run check:generated && bun run generate && git diff --exit-code -- .'
+          bash "$evidence/run-check.sh" client-generated packages/client bun run check:generated
+          bash "$evidence/run-check.sh" typecheck-atlas modules/atlas/boundary bun run typecheck
+          bash "$evidence/run-check.sh" typecheck-sucafina modules/sucafina bun run typecheck
+          bash "$evidence/run-check.sh" typecheck-core packages/core bun run typecheck
+          bash "$evidence/run-check.sh" typecheck-server packages/server bun run typecheck
+          bash "$evidence/run-check.sh" typecheck-client packages/client bun run typecheck
+          bash "$evidence/run-check.sh" typecheck-cli apps/cli bun run typecheck
+          bash "$evidence/run-check.sh" typecheck-app packages/app-shell bun run typecheck
+          bash "$evidence/run-check.sh" e2e-config packages/app-shell bun run typecheck:sf-e2e --showConfig
+          bash "$evidence/run-check.sh" e2e-typecheck packages/app-shell bun run typecheck:sf-e2e --listFiles --pretty false
+          cp "$evidence/e2e-config.stdout.log" "$evidence/effective-config.json"
+          cat "$evidence/e2e-typecheck.stdout.log" "$evidence/e2e-typecheck.stderr.log" > "$evidence/typecheck.log"
+          bash "$evidence/run-check.sh" e2e-inclusion . node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+            --config "$evidence/effective-config.json" --log "$evidence/typecheck.log" \
+            --config-status "$(cat "$evidence/e2e-config.status")" \
+            --typecheck-status "$(cat "$evidence/e2e-typecheck.status")" \
+            --output "$evidence/inclusion.json"
+          bash "$evidence/run-check.sh" web-build apps/web bun run build
+
+      - name: Resolve both real canonical guard bases
+        id: guard_bases
+        if: ${{ !cancelled() && steps.source.outcome == 'success' }}
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
+          # Read-only authentication is scoped to fetch and never persisted or logged.
+          auth="$(printf 'x-access-token:%s' "$GH_READ_TOKEN" | base64 -w0)"
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+            git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+            git fetch --no-tags origin +refs/heads/close-final-candidate:refs/remotes/origin/close-final-candidate
+          unset auth GH_READ_TOKEN
+          git rev-parse 'origin/dev^{commit}' > "$evidence/guard-dev-ref.txt"
+          git merge-base origin/dev HEAD > "$evidence/guard-dev-merge-base.txt"
+          git rev-parse 'origin/close-final-candidate^{commit}' > "$evidence/guard-close-ref.txt"
+          git merge-base origin/close-final-candidate HEAD > "$evidence/guard-pr-base.txt"
+          test -s "$evidence/guard-pr-base.txt"
+          git cat-file -e "$(cat "$evidence/guard-pr-base.txt")^{commit}"
+
+      - name: Execute strict spawn and guard checks without supplying approval
+        id: guards
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.guard_bases.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
+          bash "$evidence/run-check.sh" spawn-imports . bun run check:spawn-imports
+          bash "$evidence/run-check.sh" guard-dev . bun run check:guards --base origin/dev
+          bash "$evidence/run-check.sh" guard-pr-base . bun run check:guards --base "$(cat "$evidence/guard-pr-base.txt")"
+
+      - name: Record complete evidence and the actual aggregate verdict
+        id: evidence
+        if: always()
+        env:
+          CHECKOUT_OUTCOME: ${{ steps.checkout.outcome }}
+          SOURCE_OUTCOME: ${{ steps.source.outcome }}
+          SETUP_OUTCOME: ${{ steps.setup.outcome }}
+          COMPILERS_OUTCOME: ${{ steps.compilers.outcome }}
+          GUARD_BASES_OUTCOME: ${{ steps.guard_bases.outcome }}
+          GUARDS_OUTCOME: ${{ steps.guards.outcome }}
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
+          mkdir -p "$evidence"
+          if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            git rev-parse HEAD > "$evidence/checkout-after-sha.txt"
+            git status --porcelain=v1 --untracked-files=no > "$evidence/tracked-worktree-after.txt"
+          fi
+          node --input-type=module <<'NODE'
+          import { appendFileSync, existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs"
+          import { createHash } from "node:crypto"
+          const directory = process.env.RUNNER_TEMP + "/sf-static-surgical-evidence"
+          const read = (name) => existsSync(directory + "/" + name) ? readFileSync(directory + "/" + name, "utf8").trim() : null
+          const sha = (value) => typeof value === "string" && /^[a-f0-9]{40}$/.test(value)
+          const expected = [
+            "atlas-generated", "client-generated", "typecheck-atlas", "typecheck-sucafina",
+            "typecheck-core", "typecheck-server", "typecheck-client", "typecheck-cli", "typecheck-app",
+            "e2e-config", "e2e-typecheck", "e2e-inclusion", "web-build",
+            "spawn-imports", "guard-dev", "guard-pr-base",
+          ]
+          const checks = expected.map((id) => {
+            const raw = read(id + ".status")
+            const status = raw !== null && /^(0|[1-9][0-9]{0,2})$/.test(raw) && Number(raw) <= 255 ? Number(raw) : null
+            const cwd = read(id + ".cwd")
+            const args = read(id + ".argv")
+            const argv = args === null ? [] : args.split("\0").filter((value) => value.length > 0)
+            const started = read(id + ".started-ms"), finished = read(id + ".finished-ms")
+            const duration = started !== null && finished !== null && /^[0-9]+$/.test(started) && /^[0-9]+$/.test(finished)
+              ? Number(finished) - Number(started) : null
+            const logs = [id + ".stdout.log", id + ".stderr.log"]
+            const complete = status !== null && cwd !== null && argv.length > 0 && duration !== null && duration >= 0 &&
+              logs.every((file) => existsSync(directory + "/" + file) && statSync(directory + "/" + file).isFile())
+            return { id, cwd, argv, status, durationMs: duration, complete, logs }
+          })
+          const parents = (read("source-parents.txt") ?? "").split(/\s+/).filter(Boolean)
+          const source = {
+            sha: read("source-sha.txt"), tree: read("source-tree.txt"), parents,
+            checkoutAfter: read("checkout-after-sha.txt"),
+            workflowBlob: read("workflow-blob.txt"), canonicalWorkflowBlob: read("canonical-workflow-blob.txt"),
+            canonicalDevRef: read("guard-dev-ref.txt"), canonicalDevMergeBase: read("guard-dev-merge-base.txt"),
+            closeCandidateRef: read("guard-close-ref.txt"), prBase: read("guard-pr-base.txt"),
+            ref: process.env.GITHUB_REF, run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+            os: process.env.RUNNER_OS, arch: process.env.RUNNER_ARCH,
+          }
+          const sourceValid = source.sha === process.env.GITHUB_SHA && source.checkoutAfter === source.sha &&
+            sha(source.tree) && parents.length > 0 && parents.every(sha) && sha(source.workflowBlob) && sha(source.canonicalWorkflowBlob) &&
+            [source.canonicalDevRef, source.canonicalDevMergeBase, source.closeCandidateRef, source.prBase].every(sha) &&
+            source.os === "Linux" && source.arch === "X64" && source.ref?.startsWith("refs/heads/ci-static-sfc-") === true
+          const recorded = readdirSync(directory).filter((name) => name.endsWith(".status")).map((name) => name.slice(0, -7))
+          const inventoryValid = recorded.length === expected.length && recorded.every((id) => expected.includes(id))
+          const execution = {
+            checkout: process.env.CHECKOUT_OUTCOME, source: process.env.SOURCE_OUTCOME,
+            setup: process.env.SETUP_OUTCOME, compilers: process.env.COMPILERS_OUTCOME,
+            guardBases: process.env.GUARD_BASES_OUTCOME, guards: process.env.GUARDS_OUTCOME,
+          }
+          const executionValid = Object.values(execution).every((value) => value === "success")
+          const success = sourceValid && inventoryValid && executionValid && checks.every((check) => check.complete && check.status === 0)
+          const report = { schema: "sf-static-surgical-v1", source, sourceValid, inventoryValid, execution, executionValid,
+            conclusion: success ? "success" : "failure", checks,
+            scope: "Executed canonical static commands only; no suite receipt, sf/verify, approval or release claim." }
+          writeFileSync(directory + "/report.json", JSON.stringify(report, null, 2) + "\n")
+          const files = readdirSync(directory).filter((file) => statSync(directory + "/" + file).isFile()).sort()
+          writeFileSync(directory + "/sha256sums.txt", files.map((file) =>
+            createHash("sha256").update(readFileSync(directory + "/" + file)).digest("hex") + "  " + file).join("\n") + "\n")
+          const table = ["## SF surgical static proof", "", "Candidate: " + process.env.GITHUB_SHA, "",
+            "| Check | Exit | Complete |", "|---|---:|---|",
+            ...checks.map((check) => "| " + check.id + " | " + (check.status ?? "missing") + " | " + check.complete + " |"),
+            "", "Source identity valid: " + sourceValid, "Command inventory valid: " + inventoryValid,
+            "Execution steps valid: " + executionValid, "Aggregate: " + report.conclusion, "", report.scope, ""].join("\n")
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, table)
+          console.log(table)
+          NODE
+
+      - name: Publish exact outputs including failed checks
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sf-static-surgical-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-static-surgical-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Fail unless every real static command succeeded
+        if: always()
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs"
+          const report = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/sf-static-surgical-evidence/report.json", "utf8"))
+          if (report.schema !== "sf-static-surgical-v1" || report.source.sha !== process.env.GITHUB_SHA ||
+            report.sourceValid !== true || report.inventoryValid !== true || report.executionValid !== true || report.conclusion !== "success" ||
+            report.checks.length !== 16 || report.checks.some((check) => check.complete !== true || check.status !== 0)) {
+            console.error("SF_STATIC_SURGICAL_FAILED: missing, invalid or nonzero real command evidence")
+            process.exit(1)
+          }
+          NODE

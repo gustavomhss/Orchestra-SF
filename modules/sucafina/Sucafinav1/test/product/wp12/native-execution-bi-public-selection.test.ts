@@ -323,7 +323,9 @@ async function assertPresentation(context: Wp12NativeMissionContext, selectionRe
   expect(linksResponse.status).toBe(200)
   const linksBody = object(await linksResponse.json())
   const links = Array.isArray(linksBody.links) ? linksBody.links.map(object) : []
-  expect(links.some((link) => typeof link.url === "string" && (link.url.includes("Budget+Overview") || link.url.includes("Budget%20Overview")))).toBe(true)
+  // The authorized Budget source opens the native destination with its exact year.
+  const budgetUrl = new URL(`/orchestra/sf-dashboard/budget?year=${period.start.slice(0, 4)}`, context.request().url).href
+  expect(links.some((link) => link.url === budgetUrl)).toBe(true)
 }
 async function nativeAudit(context: Wp12NativeMissionContext, witness: Wp12CompletedNativeMission, expected: {
   caseRef: CaseRef; series: Awaited<ReturnType<typeof issueBudget>>; metric: Awaited<ReturnType<typeof issueBudget>>;

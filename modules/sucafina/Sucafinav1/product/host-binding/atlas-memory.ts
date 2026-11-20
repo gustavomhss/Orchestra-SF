@@ -14,6 +14,7 @@ import type { AuthorizedMemoryProjection, RecallFeatures, RecallScope } from "..
 import { createSfAtlasDurableMemory } from "./atlas-store.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
 import { mapSfEvidenceInOrder } from "./evidence-order.ts"
+import type { SfAtlasReadObservation } from "./atlas-recall-scope.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
@@ -108,6 +109,8 @@ export function createSfAtlasMemory(input: {
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   scanner: NamedScanner
   scannerVersion: string
+  /** Applied only after a durable settled receipt was selected; never around an append. */
+  observeRecovery?: SfAtlasReadObservation
   now: () => string
 }) {
   const lockedSourceFence = () => {
@@ -356,80 +359,89 @@ export function createSfAtlasMemory(input: {
       if (digestSfValue(captured.value.item.eventRef) !== digestSfValue(ref)) return { ...unavailable("idempotency-content-changed"), status: "conflict" }
       // A durable receipt is a recovery result, not a second append. Reauthorize it without rerunning the scanner.
       if (captured.value.item.state === "settled") {
-        const replay = await input.state.read(request, "outbox", (state, actor) => {
-          const value = state.cases[ref.target.caseId]
-          const events = value?.ledger.filter((item) => item.id === ref.target.eventId)
-          const event = events?.length === 1 ? events[0] : undefined
-          return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
-            (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) &&
-            actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
-            event && event.caseRef.id === ref.target.caseId && event.caseRef.incarnation === ref.target.caseIncarnation && event.caseRef.version === ref.target.caseVersion &&
-            event.outputDigest === ref.target.outputDigest && digestSfValue(event.evidenceRefs) === digestSfValue(ref.target.evidenceRefs)
-            ? { item: state.outbox[key], value } : undefined
-        }).catch(() => undefined)
-        if (!replay || replay.status !== "ok" || !replay.value || digestSfValue(replay.value.item) !== digestSfValue(captured.value.item)) return unavailable("outbox-unavailable")
-        if (!stable()) return unavailable("authority-unavailable")
-        pin(replay.value)
-        const selected = { id: ref.target.caseId, incarnation: ref.target.caseIncarnation }
-        // A lightweight membership ACL cannot authorize an old receipt's sources.
-        // Reopen the complete case even when authorizeCase was supplied.
-        const readable = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
-        if (readable.status !== "ok" || !stable()) return unavailable("case-unavailable")
-        pin(readable.value)
         const receipt = captured.value.item.receipt
-        const committed = receipt.status === "committed" || receipt.status === "already-committed"
-        const owner = committed ? deriveSfMemoryOwner(readable.value.context, readable.value.case) : undefined
-        if (committed && !owner) return unavailable("capture-unavailable")
-        const atlas = owner ? await input.state.read(request, "atlas", (state) => ({
-          partition: state.atlas[owner], outboxVersion: state.versions.outbox,
-        })).catch(() => undefined) : undefined
-        if (!stable() || committed && (!atlas || atlas.status !== "ok" || !atlas.value.partition)) return unavailable("capture-unavailable")
-        if (atlas?.status === "ok") pin(atlas.value)
-        const records = committed ? await readRecords(selected, call, { eventId: receipt.eventId }) : undefined
-        if (!stable() || committed && (!receipt.eventId || records?.status !== "ok" ||
-          records.records.length !== 1 || records.records[0]?.recordDigest !== receipt.recordDigest ||
-          records.records[0]?.envelope.sourceEventId !== ref.target.eventId ||
-          !records.records[0]?.envelope.evidenceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))))
-          return unavailable("capture-unavailable")
-        if (records?.status === "ok") pin(records.records)
-        const sources = records?.status === "ok" ? records.records.flatMap((record) => record.resolutions) :
-          await mapSfEvidenceInOrder(expandEvidence(ref), (source) => input.evidence.resolve(source, call))
-        if (!stable() || sources.some((source) => (source.state !== "fresh" && source.state !== "historical") ||
-          !source.currentRef || !source.authorizedProjection || source.accessRevision !== call.binding.accessRevision ||
-          source.state === "historical" && source.differences === undefined)) return unavailable("source-unavailable")
-        pin(sources)
-        const current = await input.state.read(request, "cases", (state) => ({
-          replay: { value: state.cases[ref.target.caseId], item: state.outbox[key] },
-          sourceFence: lockedSourceFence(), sourceState: digestSfValue(state),
-        })).catch(() => undefined)
-        if (!current || current.status !== "ok" || !stable() || !current.value.sourceFence || digestSfValue(current.value.replay) !== digestSfValue(replay.value))
-          return unavailable("case-unavailable")
-        pin(current.value)
-        if ((input.authorizeCase && !await input.authorizeCase(current.value.replay.value!, call)) || !await authorized()) return unavailable("case-unavailable")
-        const rechecked = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
-        if (rechecked.status !== "ok" || !stable() || digestSfValue(rechecked.value.case) !== digestSfValue(readable.value.case))
-          return unavailable("case-unavailable")
-        const sourceIdentity = (source: BusinessEvidenceResolution) => digestSfValue({ state: source.state, ref: source.ref, currentRef: source.currentRef,
-          accessRevision: source.accessRevision, projection: projectionForComparison(source), differences: source.differences })
-        for (const source of sources) {
-          const again = await input.evidence.resolve(structuredClone(source.ref), call)
-          if (!stable() || sourceIdentity(again) !== sourceIdentity(source)) return unavailable("source-unavailable")
-          pin(again)
-        }
-        // Read-only recovery: no transaction, scanner, append or replacement
-        // receipt. Keep the durable audit's bytes and final authorization fence.
-        const latest = await input.state.read(request, committed ? "atlas" : "outbox", async (state) => {
-          // Keep the last authority await inside C08's protected read. An await
-          // after it would reopen a corruption window before receipt egress.
-          if (!await authorized()) return undefined
-          return { replay: { value: state.cases[ref.target.caseId], item: state.outbox[key] },
+        const recover = async (): Promise<MemoryWriteReceipt> => {
+          const replay = await input.state.read(request, "outbox", (state, actor) => {
+            const value = state.cases[ref.target.caseId]
+            const events = value?.ledger.filter((item) => item.id === ref.target.eventId)
+            const event = events?.length === 1 ? events[0] : undefined
+            return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
+              (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) &&
+              actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
+              event && event.caseRef.id === ref.target.caseId && event.caseRef.incarnation === ref.target.caseIncarnation && event.caseRef.version === ref.target.caseVersion &&
+              event.outputDigest === ref.target.outputDigest && digestSfValue(event.evidenceRefs) === digestSfValue(ref.target.evidenceRefs)
+              ? { item: state.outbox[key], value } : undefined
+          }).catch(() => undefined)
+          if (!replay || replay.status !== "ok" || !replay.value || digestSfValue(replay.value.item) !== digestSfValue(captured.value.item)) return unavailable("outbox-unavailable")
+          if (!stable()) return unavailable("authority-unavailable")
+          pin(replay.value)
+          const selected = { id: ref.target.caseId, incarnation: ref.target.caseIncarnation }
+          // A lightweight membership ACL cannot authorize an old receipt's sources.
+          // Reopen the complete case even when authorizeCase was supplied.
+          const readable = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
+          if (readable.status !== "ok" || !stable()) return unavailable("case-unavailable")
+          pin(readable.value)
+          const committed = receipt.status === "committed" || receipt.status === "already-committed"
+          const owner = committed ? deriveSfMemoryOwner(readable.value.context, readable.value.case) : undefined
+          if (committed && !owner) return unavailable("capture-unavailable")
+          const atlas = owner ? await input.state.read(request, "atlas", (state) => ({
+            partition: state.atlas[owner], outboxVersion: state.versions.outbox,
+          })).catch(() => undefined) : undefined
+          if (!stable() || committed && (!atlas || atlas.status !== "ok" || !atlas.value.partition)) return unavailable("capture-unavailable")
+          if (atlas?.status === "ok") pin(atlas.value)
+          const records = committed ? await readRecords(selected, call, { eventId: receipt.eventId }) : undefined
+          if (!stable() || committed && (!receipt.eventId || records?.status !== "ok" ||
+            records.records.length !== 1 || records.records[0]?.recordDigest !== receipt.recordDigest ||
+            records.records[0]?.envelope.sourceEventId !== ref.target.eventId ||
+            !records.records[0]?.envelope.evidenceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))))
+            return unavailable("capture-unavailable")
+          if (records?.status === "ok") pin(records.records)
+          const sources = records?.status === "ok" ? records.records.flatMap((record) => record.resolutions) :
+            await mapSfEvidenceInOrder(expandEvidence(ref), (source) => input.evidence.resolve(source, call))
+          if (!stable() || sources.some((source) => (source.state !== "fresh" && source.state !== "historical") ||
+            !source.currentRef || !source.authorizedProjection || source.accessRevision !== call.binding.accessRevision ||
+            source.state === "historical" && source.differences === undefined)) return unavailable("source-unavailable")
+          pin(sources)
+          const current = await input.state.read(request, "cases", (state) => ({
+            replay: { value: state.cases[ref.target.caseId], item: state.outbox[key] },
             sourceFence: lockedSourceFence(), sourceState: digestSfValue(state),
-            atlas: owner ? { partition: state.atlas[owner], outboxVersion: state.versions.outbox } : undefined }
-        }).catch(() => undefined)
-        if (!latest || latest.status !== "ok" || !latest.value || !stable() || latest.value.sourceFence !== current.value.sourceFence ||
-          latest.value.sourceState !== current.value.sourceState || digestSfValue(latest.value.replay) !== digestSfValue(replay.value) ||
-          committed && (atlas?.status !== "ok" || digestSfValue(latest.value.atlas) !== digestSfValue(atlas.value))) return unavailable("case-unavailable")
-        return structuredClone(receipt.status === "committed" ? { ...receipt, status: "already-committed" as const } : receipt)
+          })).catch(() => undefined)
+          if (!current || current.status !== "ok" || !stable() || !current.value.sourceFence || digestSfValue(current.value.replay) !== digestSfValue(replay.value))
+            return unavailable("case-unavailable")
+          pin(current.value)
+          if ((input.authorizeCase && !await input.authorizeCase(current.value.replay.value!, call)) || !await authorized()) return unavailable("case-unavailable")
+          const rechecked = await input.cases.read({ caseRef: encodeCaseRef(selected) }, call)
+          if (rechecked.status !== "ok" || !stable() || digestSfValue(rechecked.value.case) !== digestSfValue(readable.value.case))
+            return unavailable("case-unavailable")
+          const sourceIdentity = (source: BusinessEvidenceResolution) => digestSfValue({ state: source.state, ref: source.ref, currentRef: source.currentRef,
+            accessRevision: source.accessRevision, projection: projectionForComparison(source), differences: source.differences })
+          for (const source of sources) {
+            const again = await input.evidence.resolve(structuredClone(source.ref), call)
+            if (!stable() || sourceIdentity(again) !== sourceIdentity(source)) return unavailable("source-unavailable")
+            pin(again)
+          }
+          // Read-only recovery: no transaction, scanner, append or replacement
+          // receipt. Keep the durable audit's bytes and final authorization fence.
+          const latest = await input.state.read(request, committed ? "atlas" : "outbox", async (state) => {
+            // Keep the last authority await inside C08's protected read. An await
+            // after it would reopen a corruption window before receipt egress.
+            if (!await authorized()) return undefined
+            return { replay: { value: state.cases[ref.target.caseId], item: state.outbox[key] },
+              sourceFence: lockedSourceFence(), sourceState: digestSfValue(state),
+              atlas: owner ? { partition: state.atlas[owner], outboxVersion: state.versions.outbox } : undefined }
+          }).catch(() => undefined)
+          if (!latest || latest.status !== "ok" || !latest.value || !stable() || latest.value.sourceFence !== current.value.sourceFence ||
+            latest.value.sourceState !== current.value.sourceState || digestSfValue(latest.value.replay) !== digestSfValue(replay.value) ||
+            committed && (atlas?.status !== "ok" || digestSfValue(latest.value.atlas) !== digestSfValue(atlas.value))) return unavailable("case-unavailable")
+          return structuredClone(receipt.status === "committed" ? { ...receipt, status: "already-committed" as const } : receipt)
+        }
+        if (!input.observeRecovery) return recover()
+        // The settled branch retains every canonical case, record, capture and
+        // source check. Only its completed calculation may be reused by this
+        // lexical read; the first append and scanner are outside the observation.
+        const observed = await input.observeRecovery({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }, call,
+          async () => ({ status: "ok", value: await recover() }))
+        return observed.status === "ok" && stable() ? observed.value : unavailable("recovery-observation-changed")
       }
       const found = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
       if (found.status !== "ok") return unavailable("case-unavailable")

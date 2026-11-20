@@ -453,7 +453,7 @@ test("canonical comparison scopes reject overlap, input replacement and authorit
       return result
     }
     const scope = createSfPortfolioComparisonScope({ authority: state.authority, business: state.business, compareCanonical })
-    ok(await state.business.withCase(call, state.caseRef, {}, async () => {
+    const caseInvocation = await state.business.withCase(call, state.caseRef, {}, async () => {
       const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
       interleave = async () => { reached.resolve(); await release.promise }
       const pending = scope.run(call, () => scope.compare(request, call))
@@ -503,7 +503,10 @@ test("canonical comparison scopes reject overlap, input replacement and authorit
       expect(finalInvocation).toMatchObject({ status: "denied", reason: "portfolio-comparison-invocation-unavailable" })
       expect(finalInvocation).not.toHaveProperty("value")
       return { status: "ok", value: true }
-    }))
+    })
+    // The same revoked lease must fail the enclosing case guard after its callback.
+    expect(caseInvocation).toMatchObject({ status: "denied", reason: "case-selection-authority-changed" })
+    expect(caseInvocation).not.toHaveProperty("value")
   } finally { await state.close() }
 }, 120_000)
 

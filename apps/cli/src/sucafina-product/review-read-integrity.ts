@@ -140,8 +140,10 @@ export function protectSfReviewReads(input: {
       if (before.status !== "ok") return before
       // A canonical producer can materialize scoped source metadata. Never invoke
       // it from the final read-only C08 group when its complete proof has changed.
-      // A missing proof is uncertainty, not evidence of lost authorization.
-      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : unavailable()
+      // This invocation must establish its own authorization before entering that
+      // group. A missing or invalidated proof denies the read; snapshot failures
+      // above still retain their unavailable classification.
+      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
       let first = before.value
       for (let attempt = 0; attempt < 2; attempt++) {
         const result = structuredClone(await read(id, call))
