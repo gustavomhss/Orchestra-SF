@@ -22,7 +22,7 @@ export async function serveNativeTeamsWeb(input: Readonly<{
   const key = Bun.file(path.resolve(import.meta.dir, "../../../../../packages/core/test/fixture/pinned-example-key.pem"))
   let disposed = false
   const calls: { authority: string; allowed: boolean }[] = []
-  const peers = new Set<Duplex>()
+  const peers = new Map<Duplex, Promise<void>>()
   const secure = Bun.serve({
     hostname: "127.0.0.1", port: 0, tls: { cert, key },
     // SSE owns its lifetime and sends bounded server heartbeats.
@@ -39,8 +39,7 @@ export async function serveNativeTeamsWeb(input: Readonly<{
   const securePort = secure.port
   if (typeof securePort !== "number") { await secure.stop(true); throw new Error("TLS listener did not bind") }
   const remember = (socket: Duplex) => {
-    peers.add(socket)
-    socket.once("close", () => peers.delete(socket))
+    peers.set(socket, new Promise<void>((resolve) => socket.once("close", () => { peers.delete(socket); resolve() })))
     // Cancelled browser connections can close either half first. Their peer is
     // destroyed below; cleanup never logs a private payload.
     socket.on("error", () => socket.destroy())
@@ -94,9 +93,10 @@ export async function serveNativeTeamsWeb(input: Readonly<{
       async close() {
         if (disposed) return
         disposed = true
-        const closed = [...peers].map((socket) => socket.closed ? Promise.resolve() :
-          new Promise<void>((resolve) => socket.once("close", () => resolve())))
-        peers.forEach((socket) => socket.destroy())
+        // A stream can set .closed before emitting close. Await the event
+        // registered at acquisition, never infer cleanup from that early flag.
+        const closed = [...peers.values()]
+        peers.forEach((_closed, socket) => socket.destroy())
         await secure.stop(true)
         await Promise.all(closed)
         await new Promise<void>((resolve, reject) => proxy.close((error) => error ? reject(error) : resolve()))
@@ -104,7 +104,7 @@ export async function serveNativeTeamsWeb(input: Readonly<{
       },
     })
   } catch (error) {
-    disposed = true; peers.forEach((socket) => socket.destroy()); await secure.stop(true)
+    disposed = true; peers.forEach((_closed, socket) => socket.destroy()); await secure.stop(true)
     await new Promise<void>((resolve) => proxy.close(() => resolve()))
     throw error
   }
