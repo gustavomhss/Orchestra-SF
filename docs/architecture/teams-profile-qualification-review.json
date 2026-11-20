@@ -1,0 +1,2563 @@
+{
+  "schema": "teams-profile-qualification-review/1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "sourceCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+  "sourceTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+  "documentaryParent": "db46ee5dadcf68ba9a18f70921f243c604a0d6d6",
+  "status": "NOT_RUN",
+  "purpose": "Complemento documental: cross-check da cadeia de execução final, produtores/probes operacionais Azure e contratos de testes. Nenhuma implementação, ação CI, deploy, autenticação ou restore executado.",
+  "scope": {
+    "method": "GitHub MCP fetch_file pinado + leitura semântica dirigida em V8; nenhum shell, checkout ou execução de produto.",
+    "reviewedSourceFiles": 36,
+    "existingPythonTestFilesBodyRead": 2,
+    "existingPythonCasesBodyRead": 13,
+    "operationalProofEntrypointsBodyRead": [
+      "sf/azure/identity/az02-proof.cjs",
+      "sf/azure/runtime/identity_health.py",
+      "sf/azure/vm/probe-serving.py",
+      "sf/azure/recovery/recovery.py"
+    ],
+    "limits": [
+      "Não é revarredura do corpus de testes nem revisão integral de infraestrutura.",
+      "Campos e runners propostos não existem no pin salvo onde explicitamente classificados EXISTING.",
+      "Testes sintéticos/textuais não contam como prova operacional Azure, Entra, Teams, migration ou restore.",
+      "A identidade e disponibilidade de VM, tenant, vault, recovery point, sessões e aprovações não foram consultadas nem presumidas.",
+      "Um fetch exploratório sf/azure/vm/owner.example.json devolveu 404 e não foi usado como evidência; owner.json é contrato privado lido em deploy.py."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/sf-ci.yml",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+      "lines": 581,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-ci.yml",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "script/sf-ci/gate.mjs",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+      "lines": 737,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/ci/assemble-orchestra-web.mjs",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+      "lines": 193,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": ".github/workflows/sf-factory-package.yml",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "041b1df8288db6414488fb2afe57ca0837e70bf2",
+      "lines": 109,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-factory-package.yml",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": ".github/workflows/sf-release.yml",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "92fdd5b8f7ff7a1d0ccc6c15a2fdabe99377ed95",
+      "lines": 46,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-release.yml",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": ".github/workflows/sucafina-native-localhost-visual.yml",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "8b7e9b47a56d3ef446de5a4c889c9fe8f9f2eb2e",
+      "lines": 86,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sucafina-native-localhost-visual.yml",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/ci/suites.json",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "57937b0e9df670fb7ccf10a18de5f5a83dec734d",
+      "lines": 257,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/suites.json",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "script/sf-ci/workflow-contract.mjs",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "b4fbb1cfc0d7c6472bcaeae499532e5bf834f9d1",
+      "lines": 197,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/workflow-contract.mjs",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/azure/recovery/recovery.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+      "lines": 354,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/azure/runbooks/AZ-03-LINUX-DATA-RECOVERY.md",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "dd534bb3a0ee37ca426d8b9381c7428007506689",
+      "lines": 89,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runbooks/AZ-03-LINUX-DATA-RECOVERY.md",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/azure/vm/install-factory-distribution.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+      "lines": 464,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/install-factory-distribution.py",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "apps/cli/script/factory-receipt-check.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "efeee62b81454945cd57b6cd76fd144e0dc3605c",
+      "lines": 158,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/script/factory-receipt-check.ts",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "apps/cli/test/factory-distribution-linux.test.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "846f19ce4eff89c960954681fabbcf310a2f8ed7",
+      "lines": 553,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/test/factory-distribution-linux.test.ts",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "apps/cli/test/distribution-web-native.test.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "2c72db84605c33bd19d04ea5eb023d271f2578f1",
+      "lines": 221,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/test/distribution-web-native.test.ts",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "apps/cli/test/fixture/distribution-native-proof.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "94f879775689676b05777063fed5ef00440c26ae",
+      "lines": 422,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/test/fixture/distribution-native-proof.ts",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "script/sf-ci/gate.test.mjs",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "5a04281dc86e7a5d377bd077831bc98c0a454ac8",
+      "lines": 647,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.test.mjs",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "1a0d476f7cec8c03daedcf14eb1fa99cbdb22019",
+      "lines": 279,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/test-ci-request.ts",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
+      "lines": 444,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/test-ci.yml",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": ".github/workflows/sucafina-vm-localhost-bundle.yml",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "11c9a358cbdee407f2cdc8d03b16ba629709a8f9",
+      "lines": 88,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sucafina-vm-localhost-bundle.yml",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "script/test-ci-guard-context.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "acb672e9734b761316b0914180a295aa74235365",
+      "lines": 198,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/test-ci-guard-context.ts",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/azure/vm/deploy.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+      "lines": 235,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py",
+      "readScope": "FOCUSED_CONTRACT_AND_CALLERS"
+    },
+    {
+      "path": "sf/azure/runtime/identity_health.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+      "lines": 130,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/identity_health.py",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/test_contracts.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "4d177b6900869696e22321424b3457898691975d",
+      "lines": 102,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/test_contracts.py",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/test_flamengo_demo_contract.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "d98132bfc3ef61fa486cea7856d51c5391e6e918",
+      "lines": 74,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/test_flamengo_demo_contract.py",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/vm/probe-serving.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "8fcfa88187661497f41215aa39564d4afe9be174",
+      "lines": 162,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/probe-serving.py",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/identity/az02-proof.cjs",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+      "lines": 226,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/identity/az02-proof.config.example.json",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "6981dee09f20ba5da7368a7f17a2d4142b95d138",
+      "lines": 26,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.config.example.json",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/flamengo-microsoft.example.json",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "02a6eeed779ace6efc764b368561be0cfeffc78a",
+      "lines": 36,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/flamengo-microsoft.example.json",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/bundle.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+      "lines": 175,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/bundle.py",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/vm/caddy-switch.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "95248006985e4cfe90e43d9c775a6ecfea35384b",
+      "lines": 149,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/caddy-switch.py",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/smoke-transaction.sh",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "46f34c0129658c1ce706acddf293bd72981026c4",
+      "lines": 86,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/smoke-transaction.sh",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/runtime.env.example",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "d89032f1767d0ef581128e1e3375a31252bd7374",
+      "lines": 16,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/runtime.env.example",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "sf/azure/runtime/runtime.env.flamengo.example",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "abd6ed44d5c628cd40075a00ef7ec162f2a9e961",
+      "lines": 15,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/runtime.env.flamengo.example",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "db2597d7e9dd2b4069364a857f4fe16611bcf467",
+      "lines": 57,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/playwright.production.config.ts",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "lines": 111,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/package.json",
+      "readScope": "FULL_BODY"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+      "lines": 12,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+      "readScope": "FULL_BODY"
+    }
+  ],
+  "pipelineFindings": [
+    {
+      "id": "Q01",
+      "severity": "BLOCKER",
+      "title": "Três identidades de revisão precisam ser distinguidas",
+      "status": "NOT_RUN",
+      "observed": "sf-ci usa checkout padrão + github.sha (merge sintético no PR); factory faz checkout de pull_request.head.sha; test-ci usa snapshot ci-run-* que pode ter C como pai e só .ci-run.json diferente.",
+      "required": [
+        "Definir C/tree final e registrar sourceSHA, checkoutSHA, workflow/event SHA e requestSnapshotSHA em campos distintos.",
+        "Para candidato de PR escolher explicitamente o mesmo C no job artifact/native e na qualificação dos gates que devem provar C; teste de merge M pode continuar como prova adicional, não substituto de C.",
+        "No test-ci validar pelo GitHub commit snapshot com um pai, ahead=1/behind=0/total=1 e único diff .ci-run.json cujo blob é o esperado; não exigir que run.head_sha de snapshot seja C.",
+        "Generalizar prova de snapshot para os requests Core/Server/etc: resolveGuardContext atual é restrito a sucafina+Bun. Preservar controles atuais de aprovação/revalidação onde se aplicam."
+      ],
+      "sourceEvidence": [
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+          "lines": {
+            "start": 27,
+            "end": 38
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-ci.yml#L27"
+        },
+        {
+          "path": ".github/workflows/sf-factory-package.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "041b1df8288db6414488fb2afe57ca0837e70bf2",
+          "lines": {
+            "start": 40,
+            "end": 45
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-factory-package.yml#L40"
+        },
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
+          "lines": {
+            "start": 43,
+            "end": 69
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/test-ci.yml#L43"
+        },
+        {
+          "path": "script/test-ci-guard-context.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "acb672e9734b761316b0914180a295aa74235365",
+          "lines": {
+            "start": 124,
+            "end": 170
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/test-ci-guard-context.ts#L124"
+        }
+      ],
+      "verificationTests": [
+        "script/sf-ci/gate.test.mjs: rejeitar merge M tratado como C e snapshot com segundo arquivo, segundo pai, blob trocado ou mais de um commit.",
+        "Novo verify-teams-profile: aceitar request-only snapshot correto sem afirmar source tree S==tree C."
+      ]
+    },
+    {
+      "id": "Q02",
+      "severity": "BLOCKER",
+      "title": "needs YAML não torna recibos novos obrigatórios",
+      "status": "NOT_RUN",
+      "observed": "requirePrerequisites tem seis JOBS fixos; validateManifest fixa oito suites; verify espera inventário exato sf-evidence-* e seu próprio run/attempt; o sucesso final é impresso, sem attestation final persistida.",
+      "required": [
+        "Atualizar needs e requirePrerequisites simultaneamente para jobs novos e tornar sua evidência obrigatória no agregador.",
+        "Usar namespace distinto para artefatos adicionais ou versionar de forma explícita o inventário; extras com prefixo sf-evidence-* hoje falham, fora do prefixo são ignorados pelo verify antigo.",
+        "Persistir attestation final com hashes dos recibos e relatórios verificados; verify-teams-profile não existe hoje.",
+        "Verificar metadados de cada run/attempt independente; não comparar recibos de outros workflows ao runId do agregador."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 8,
+            "end": 27
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L8"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 306,
+            "end": 359
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L306"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 439,
+            "end": 465
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L439"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 469,
+            "end": 478
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L469"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 699,
+            "end": 734
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L699"
+        },
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+          "lines": {
+            "start": 550,
+            "end": 580
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-ci.yml#L550"
+        }
+      ],
+      "verificationTests": [
+        "script/sf-ci/gate.test.mjs: receipt obrigatório ausente, job skipped, run/attempt stale, namespace extra, tar substituído, relatório trocado."
+      ]
+    },
+    {
+      "id": "Q03",
+      "severity": "BLOCKER",
+      "title": "Artefato prod deve ser o mesmo extraído e executado",
+      "status": "NOT_RUN",
+      "observed": "sf/ci/assemble-orchestra-web.mjs exige Linux x64/Bun1.3.14, HEAD==SOURCE_REVISION, checkout totalmente limpo, arquivo absoluto fora do checkout, ausência de VITE_*; compila prod/SF e verifica tar extraído. Receipt atual é somente stdout e declara native/fullSfCi REQUIRED_SEPARATELY.",
+      "required": [
+        "Rodar assembler em job com checkout limpo C; escrever archive, log, receipt e inventário fora de GITHUB_WORKSPACE até a checagem final.",
+        "Wrapper de artifact gera receipt versionado vinculando C/tree, run/attempt, identidade do workflow, inner tar SHA256, distribution/closure/inventory hashes e comandos/versões; só após sucesso observável do assembler.",
+        "Native qualification e residue devem baixar o mesmo artifact ID e validar o hash do tar interno; não reconstruir outro pacote do mesmo C.",
+        "Não interpretar SF_ORCHESTRA_WEB_ARCHIVE_EXTRACTED_VERIFIED como SF_ORCHESTRA_WEB_PACKAGE_VERIFIED."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/ci/assemble-orchestra-web.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+          "lines": {
+            "start": 17,
+            "end": 24
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs#L17"
+        },
+        {
+          "path": "sf/ci/assemble-orchestra-web.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+          "lines": {
+            "start": 42,
+            "end": 73
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs#L42"
+        },
+        {
+          "path": "sf/ci/assemble-orchestra-web.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+          "lines": {
+            "start": 104,
+            "end": 122
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs#L104"
+        },
+        {
+          "path": "sf/ci/assemble-orchestra-web.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+          "lines": {
+            "start": 149,
+            "end": 188
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs#L149"
+        }
+      ],
+      "verificationTests": [
+        "Gate negativo: checkout dirty/untracked, SHA distinto, destino interno, VITE input, tar alterado; native receipt com hash de outro rebuild deve falhar."
+      ]
+    },
+    {
+      "id": "Q04",
+      "severity": "BLOCKER",
+      "title": "Factory v1 e formatos de instalação não equivalem ao pacote prod",
+      "status": "NOT_RUN",
+      "observed": "Factory test usa canal dev; receipt checker exige local-operator e current-choice200; installer aceita schema sf-factory-package-proof-v1 e nome exato factory. bundle.py/identity_health seguem ainda formato azure-bundle.v1 (web/index.html) distinto do distribution.json (bin/web/index.html).",
+      "required": [
+        "Manter factory como regressão de empacotamento e atualizar sua parte de acesso business ao novo contrato; local-operator não pode obter current-choice business em SF.",
+        "Versionar receipt/validador de factory e/ou introduzir adaptador explicitamente verificado para o tar prod; não renomear recibo dev para satisfazer installer.",
+        "Escolher superfície de instalação que valide o mesmo arquivo prod G09 antes de qualquer escrita; registrar layout/manifest reais consumidos por health/restore.",
+        "Não usar teste sintético do bundle antigo como aceitação do novo formato prod."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "apps/cli/test/factory-distribution-linux.test.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "846f19ce4eff89c960954681fabbcf310a2f8ed7",
+          "lines": {
+            "start": 98,
+            "end": 120
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/test/factory-distribution-linux.test.ts#L98"
+        },
+        {
+          "path": "apps/cli/script/factory-receipt-check.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "efeee62b81454945cd57b6cd76fd144e0dc3605c",
+          "lines": {
+            "start": 33,
+            "end": 63
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/script/factory-receipt-check.ts#L33"
+        },
+        {
+          "path": "sf/azure/vm/install-factory-distribution.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+          "lines": {
+            "start": 70,
+            "end": 101
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/install-factory-distribution.py#L70"
+        },
+        {
+          "path": "sf/azure/runtime/bundle.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+          "lines": {
+            "start": 42,
+            "end": 79
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/bundle.py#L42"
+        },
+        {
+          "path": "sf/azure/runtime/identity_health.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+          "lines": {
+            "start": 69,
+            "end": 89
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/identity_health.py#L69"
+        }
+      ],
+      "verificationTests": [
+        "apps/cli/test/factory-distribution-linux.test.ts: substituir positive business local-operator por corporate+Team e preservar status/empacotamento; admin semTeam só manutenção.",
+        "Novo sf/azure/vm/test_teams_profile_artifact_contract.py."
+      ]
+    },
+    {
+      "id": "Q05",
+      "severity": "HIGH",
+      "title": "Upload factory perde o segundo build receipt",
+      "status": "NOT_RUN",
+      "observed": "distribution-web-native.test.ts grava build-receipt.json e orchestra-sf-linux-x64-baseline.tar.gz em distribution-logs/; workflow só sobe distribution-logs/<run>-<attempt>/ do factory test.",
+      "required": [
+        "Se essa prova for requerida, publicar explicitamente seu receipt e tar em artefato próprio, com identidade e escopo corretos.",
+        "Não inferir que o artifact factory já contém a prova web-native; preferir native qualification diretamente sobre o tar prod do job teams-profile-artifact."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "apps/cli/test/distribution-web-native.test.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2c72db84605c33bd19d04ea5eb023d271f2578f1",
+          "lines": {
+            "start": 153,
+            "end": 179
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/cli/test/distribution-web-native.test.ts#L153"
+        },
+        {
+          "path": ".github/workflows/sf-factory-package.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "041b1df8288db6414488fb2afe57ca0837e70bf2",
+          "lines": {
+            "start": 101,
+            "end": 108
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-factory-package.yml#L101"
+        }
+      ],
+      "verificationTests": [
+        "Verificador rejeita build receipt requerido ausente; não localizar por prefixo 'latest'."
+      ]
+    },
+    {
+      "id": "Q06",
+      "severity": "HIGH",
+      "title": "Gatilhos existentes deixam mudanças de backend sem factory",
+      "status": "NOT_RUN",
+      "observed": "Factory PR target é close-final-candidate, mas paths restringe a lista e omite Core/Server/Schema/Protocol/engine/continuity/app-shell e assembler. Native visual e VM bundle têm branches/paths próprios, não um gate geral de Teams.",
+      "required": [
+        "Preservar target close-final-candidate, ampliar filtros aos produtores/consumidores de migração ou tornar factory obrigatório para todo PR desse target.",
+        "Workflow novo Teams deve ter trigger/input explícito do candidato final e verificar que suas dependências se referem a ele.",
+        "Não contar visual source-CLI/OMNI0 ou bundle source+web+Bun como execução do tar prod compilado."
+      ],
+      "sourceEvidence": [
+        {
+          "path": ".github/workflows/sf-factory-package.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "041b1df8288db6414488fb2afe57ca0837e70bf2",
+          "lines": {
+            "start": 3,
+            "end": 24
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-factory-package.yml#L3"
+        },
+        {
+          "path": ".github/workflows/sucafina-native-localhost-visual.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "8b7e9b47a56d3ef446de5a4c889c9fe8f9f2eb2e",
+          "lines": {
+            "start": 1,
+            "end": 86
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sucafina-native-localhost-visual.yml#L1"
+        },
+        {
+          "path": ".github/workflows/sucafina-vm-localhost-bundle.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "11c9a358cbdee407f2cdc8d03b16ba629709a8f9",
+          "lines": {
+            "start": 1,
+            "end": 88
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sucafina-vm-localhost-bundle.yml#L1"
+        }
+      ],
+      "verificationTests": [
+        "workflow-contract/gate tests: mudanças só de Core, Schema, assembler e novo recovery spec continuam selecionando gates exigidos."
+      ]
+    },
+    {
+      "id": "Q07",
+      "severity": "BLOCKER",
+      "title": "Baselines pendentes e seleção de testes novos",
+      "status": "NOT_RUN",
+      "observed": "CI-SF, CI-UI-DECISIONS e CI-UI-REPORTS têm PENDING_REAL_COMPLETE_RUN; gate exige baseline histórico e hashes exatos. Preflight executa somente script/sf-ci/gate.test.mjs; suites antigas não coletam qualquer novo script/test .mjs automaticamente.",
+      "required": [
+        "Gerar evidência real completa, revisar/versionar baseline e depois congelar candidato final; repetir gates nesse C. Não preencher contagens com expectativa ou promover um run parcial.",
+        "Executar explicitamente novos testes de gate/residue/seleção e os dois Python; não confiar na presença do arquivo.",
+        "Manter Core/Server/etc regression gate explícito: static SF só typechecks sete pacotes; test-ci node aceita apenas *.node-smoke.mjs, portanto gate *.test.mjs precisa comando Node explícito em workflow."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/ci/suites.json",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "57937b0e9df670fb7ccf10a18de5f5a83dec734d",
+          "lines": {
+            "start": 1,
+            "end": 257
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/suites.json#L1"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 288,
+            "end": 301
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L288"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 661,
+            "end": 697
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L661"
+        },
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+          "lines": {
+            "start": 38,
+            "end": 44
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-ci.yml#L38"
+        },
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+          "lines": {
+            "start": 75,
+            "end": 84
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-ci.yml#L75"
+        },
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
+          "lines": {
+            "start": 345,
+            "end": 353
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/test-ci.yml#L345"
+        }
+      ],
+      "verificationTests": [
+        "Novas unidades devem constar no comando node --test; preservar teste de fail-on-skip/report coverage; baseline nunca aceita zero/skipped."
+      ]
+    },
+    {
+      "id": "Q08",
+      "severity": "HIGH",
+      "title": "Entry do browser pool é seletor, não 41ª prova",
+      "status": "NOT_RUN",
+      "observed": "selectSuiteFiles exclui somente harnessOwnedFiles e rejeita qualquer consumidor remanescente do pool; checkReceipt exige coverage.files hash igual selectedFiles hash. Entry novo .test.ts seria descoberto no glob CI-SF.",
+      "required": [
+        "Adicionar selection.harnessEntryFiles versionado com path exato browser-selection.test.ts; validar existência, isTestFile, unicidade, inclusão em discover, disjunção com owned/release-only e exclusão antes do check de consumidores restantes.",
+        "Preservar inventário dos 40 originais; executor novo prova startup/ordem/finalizer e execução factual de seus casos.",
+        "Receipt deve separar entry path/blob/argumento dos 40 source files e seus cases; não reutilizar a igualdade selectedFiles==coverageFiles antiga nem fabricar remapeamento de um relatório de um arquivo para 40.",
+        "União das shards +40 originais+release-only deve corresponder ao corpus de provas; entry é infraestrutura com identidade separada, sem dupla execução."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 179,
+            "end": 226
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L179"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 228,
+            "end": 248
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L228"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 439,
+            "end": 465
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L439"
+        }
+      ],
+      "verificationTests": [
+        "gate.test: entry ausente, duplicado, ainda selecionado numa shard, symlink, overlap owned/release-only; rejeitar original ausente/duplicado e case attribution falsa."
+      ]
+    },
+    {
+      "id": "Q09",
+      "severity": "HIGH",
+      "title": "Novo recovery spec exige seleção e recibo próprios",
+      "status": "NOT_RUN",
+      "observed": "gate Playwright normativo aceita só e2e/sucafina/<nome>.spec.ts; não aceita e2e/sucafina/native/teams-profile-recovery-linux.spec.ts. Runner de produção existente reconhece o path native e exige manifest instalado+C+GITHUB_ACTIONS; não sobe webServer dev.",
+      "required": [
+        "Job migration-restore-linux seleciona o path exato com test:e2e:local e config production, 1worker/0retries; nenhum grep que elimine casos novos.",
+        "Novo verify-teams-profile valida o nested path exato e report minimizado próprio, não força o spec nas oito suites normativas antigas.",
+        "Manifest instalado real, tar e source IDs observados são obrigatórios; preserve trace/video/screenshots off e mantenha JSON bruto somente em armazenamento privado."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 251,
+            "end": 258
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L251"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "lines": {
+            "start": 343,
+            "end": 348
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.mjs#L343"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+          "lines": {
+            "start": 1,
+            "end": 10
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/selection.ts#L1"
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "db2597d7e9dd2b4069364a857f4fe16611bcf467",
+          "lines": {
+            "start": 10,
+            "end": 57
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/playwright.production.config.ts#L10"
+        },
+        {
+          "path": "packages/app-shell/package.json",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+          "lines": {
+            "start": 1,
+            "end": 60
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/package.json#L1"
+        }
+      ],
+      "verificationTests": [
+        "Novo packages/app-shell/e2e/sucafina/native/teams-profile-recovery-linux.spec.ts; gate negativo de receipt omitindo esse spec/caso."
+      ]
+    },
+    {
+      "id": "Q10",
+      "severity": "BLOCKER",
+      "title": "Recovery atual ainda consome owner/project triplet",
+      "status": "NOT_RUN",
+      "observed": "deploy.owner_config exige azure-owner.v1 com projectId/principalRef; identity_health e probe-serving constroem triplet installationId/projectId/hostId. rollback-code/deploy chamam health que exige destinations não vazio. AZ02 repete triplet e só exige principalRef/revisions não vazios.",
+      "required": [
+        "Versionar contrato de owner/health/probe/AZ02 para tenant/principal/Team/revisions observados e validados contra o contexto atual.",
+        "Distinguir health administrativo semTeam de business admission; manutenção/recovery semTeam deve funcionar sem simular Team nem gerar destinos business.",
+        "Bindings legados só como proveniência/mapeamento explícito, nunca fallback de autorização. Testar mismatch de cada dimensão e revogação após cache/restore.",
+        "Atualizar schema+configexample+sanitized receipts juntos, preservando privacidade e TLS."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/vm/deploy.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+          "lines": {
+            "start": 87,
+            "end": 115
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L87"
+        },
+        {
+          "path": "sf/azure/vm/deploy.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+          "lines": {
+            "start": 188,
+            "end": 197
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L188"
+        },
+        {
+          "path": "sf/azure/runtime/identity_health.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+          "lines": {
+            "start": 69,
+            "end": 126
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/identity_health.py#L69"
+        },
+        {
+          "path": "sf/azure/vm/probe-serving.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "8fcfa88187661497f41215aa39564d4afe9be174",
+          "lines": {
+            "start": 66,
+            "end": 101
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/probe-serving.py#L66"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 24,
+            "end": 76
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L24"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 287,
+            "end": 320
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L287"
+        }
+      ],
+      "verificationTests": [
+        "Novos identity/probe contract tests e recovery operacional."
+      ]
+    },
+    {
+      "id": "Q11",
+      "severity": "BLOCKER",
+      "title": "Comandos de recovery existentes não provam migração/effect retry",
+      "status": "NOT_RUN",
+      "observed": "checkpoint para serviço e só copia estado consistente; verify-clone verifica integridade em Azure clone parado; vault commands só comprovam jobs Azure; rollback-code só troca release compatível e faz leitura health. Nenhum implementa a sequência Teams completa.",
+      "required": [
+        "Novo executor deve chamar superfícies reais admitidas e observar o processo/serviço, a migração, o efeito e seu receipt durável fora do checkpoint, restore e retry.",
+        "Checkpoint receipt apenas repete candidate/tree fornecidos; adicionar observação da release/tar realmente instalada antes e depois, não tratar esses argumentos como prova independente.",
+        "Definir bootstrap/quiesce/drain, modo restore e reconciliação como implementação necessária; não inventar comando migrate-teams ou ambiente já pronto.",
+        "Se receipt monotônico ausente, suspender efeito; se autoridade revogada, negar; admin semTeam recupera administrativamente sem permitir negócio."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 89,
+            "end": 129
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L89"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 146,
+            "end": 199
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L146"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 209,
+            "end": 320
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L209"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 323,
+            "end": 346
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L323"
+        },
+        {
+          "path": "sf/azure/runbooks/AZ-03-LINUX-DATA-RECOVERY.md",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "dd534bb3a0ee37ca426d8b9381c7428007506689",
+          "lines": {
+            "start": 12,
+            "end": 88
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runbooks/AZ-03-LINUX-DATA-RECOVERY.md#L12"
+        }
+      ],
+      "verificationTests": [
+        "Novo recovery spec + contract tests de comando/proofClass."
+      ]
+    },
+    {
+      "id": "Q12",
+      "severity": "HIGH",
+      "title": "Prova Azure requer recursos observados e não libera deployment",
+      "status": "NOT_RUN",
+      "observed": "recovery.preflight exige Azure LUN0/ext4, root, cloud-init, usuário/home privados e serviços; verify-clone exige IMDS de outra VM. sf-release está intencionalmente BLOCKED e sai1; gate.test preserva essa cerca.",
+      "required": [
+        "CI hosted Linux sozinho não satisfaz Azure recovery; fornecer instalação descartável real, identidade de clone, recursos/point IDs e aprovação de owner para operações destrutivas.",
+        "Sem essa capacidade, marcar BLOCKED/NOT_RUN e reprovar agregação final obrigatória; não usar skip nem fixture LIVE.",
+        "Workflow Teams de qualificação não altera o estado do gate de ativação nem declara AZURE_RELEASE_QUALIFIED; preservar classes de prova separadas."
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/vm/deploy.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+          "lines": {
+            "start": 52,
+            "end": 84
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L52"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 146,
+            "end": 171
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L146"
+        },
+        {
+          "path": ".github/workflows/sf-release.yml",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "92fdd5b8f7ff7a1d0ccc6c15a2fdabe99377ed95",
+          "lines": {
+            "start": 30,
+            "end": 46
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-release.yml#L30"
+        },
+        {
+          "path": "script/sf-ci/gate.test.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5a04281dc86e7a5d377bd077831bc98c0a454ac8",
+          "lines": {
+            "start": 392,
+            "end": 408
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf-ci/gate.test.mjs#L392"
+        }
+      ],
+      "verificationTests": [
+        "Receipts de checkpoint/clone/backup não podem satisfazer migration-restore-linux nem ativação."
+      ]
+    }
+  ],
+  "operationalSources": [
+    {
+      "path": "sf/azure/vm/deploy.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+      "action": "CHANGE_CONTRACT",
+      "role": "Owner config e ativação administrada",
+      "requiredChange": [
+        "Versionar owner.json atual de chaves exatas; separar installation/host/disk/origin técnicos do contexto corporativo tenant/principal/Team/revisions.",
+        "Ativação/recovery administrativos semTeam não podem depender do positive business context; selecionar health administrativo explícito.",
+        "No checkpoint/restore anexar identidade observada da release e source tree, não só entrada string."
+      ],
+      "preserve": [
+        "Linux/root/cloud-init/LUN0/ext4/user/home/mode/Caddy preflight; diskUuid deve continuar observado.",
+        "frozen_checkout precisa manter HEAD/tree/clean tracked files exatos."
+      ],
+      "callers": [
+        "sf/azure/recovery/recovery.py imports preflight/owner_config; checkpoint e rollback_code",
+        "deploy activation chama identity_health.py"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/vm/deploy.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+          "lines": {
+            "start": 52,
+            "end": 115
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L52"
+        },
+        {
+          "path": "sf/azure/vm/deploy.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+          "lines": {
+            "start": 188,
+            "end": 197
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L188"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/runtime/identity_health.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+      "action": "CHANGE_CONTRACT",
+      "role": "Probe HTTPS + bytes web + contexto Microsoft",
+      "requiredChange": [
+        "Retirar triplet projectId como admission/current-owner; validar tenant/principal/Team/revisions atuais contra o contrato corporativo novo.",
+        "Separar probe administrativo semTeam (saúde/manutenção somente) do probe business comTeam; não exigir destinations business de admin semTeam.",
+        "Alinhar layout/verificador da release ao mesmo tar prod do artifact job; formato antigo usa manifest.json/web/index.html."
+      ],
+      "preserve": [
+        "HTTPS default CA sem proxy/redirect e cookie confinado ao origin, modos privados, serviço não-root/loopback.",
+        "Bytes web servidos devem corresponder ao artefato exato; anonymous context deve falhar fechado; receipt continua read-only sem transaction/AZ03 inferidos."
+      ],
+      "callers": [
+        "sf/azure/vm/deploy.py activation",
+        "sf/azure/recovery/recovery.py rollback_code"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/runtime/identity_health.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+          "lines": {
+            "start": 17,
+            "end": 57
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/identity_health.py#L17"
+        },
+        {
+          "path": "sf/azure/runtime/identity_health.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+          "lines": {
+            "start": 69,
+            "end": 126
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/identity_health.py#L69"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/vm/probe-serving.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "8fcfa88187661497f41215aa39564d4afe9be174",
+      "action": "CHANGE_CONTRACT",
+      "role": "Smoke pós-cutover/rollback de distribution.json",
+      "requiredChange": [
+        "identity() deve usar seleção/contexto corporativo e não installation/project/host triplet.",
+        "Acrescentar resultado administrativo semTeam separado e vínculo explícito de tree/innerTarSHA/manifest ao artifact confirmado.",
+        "Não permitir que --local-only/status200 seja tratado como identidade ou negócio."
+      ],
+      "preserve": [
+        "FQDN real, root, release symlink==C, serviço não-root, bind loopback4096.",
+        "Public TLS e bin/web/index hash; quando auth ausente marcar auth/business NOT_RUN; nenhum ator é criado pelo probe."
+      ],
+      "callers": [
+        "Operador pós-install/cutover/rollback; não há teste unitário de identity() nos dois test_*.py revisados"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/vm/probe-serving.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "8fcfa88187661497f41215aa39564d4afe9be174",
+          "lines": {
+            "start": 66,
+            "end": 101
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/probe-serving.py#L66"
+        },
+        {
+          "path": "sf/azure/vm/probe-serving.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "8fcfa88187661497f41215aa39564d4afe9be174",
+          "lines": {
+            "start": 104,
+            "end": 156
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/probe-serving.py#L104"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/identity/az02-proof.cjs",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+      "action": "CHANGE_CONTRACT",
+      "role": "Executor operacional owner-operated de seis fases; não é unit test",
+      "requiredChange": [
+        "Validar binding corporativo tenant/principal/Team/revisions; comparar principal esperado por ator, não só nonempty e distinto.",
+        "Mudar qp/ctx/stampOk e controles BIND/DUPLICATE/MISSING para o contrato sem projectId; cobrir tenant/Team/principal/revision mismatch e zeroTeam/admin.",
+        "Versionar receipt e config para source tree + innerTarSha256 + binarySha256 separados e run/attempt verificados externamente.",
+        "Preservar fases de revogação/logout/restart e adicionar prova de Team membership revogada; after-restart atual só nega cookie, não prova effect replay."
+      ],
+      "preserve": [
+        "No-store, CORS/CSRF/origin/Fetch-Site; OIDC confidential code+PKCE S256/state/nonce/secure HttpOnly cookies.",
+        "Sem credenciais off-origin, input/output privado; producer negativo só com aprovação explícita e estado/version antes/depois iguais.",
+        "Fases com falha retornam FAIL/BLOCKED; jamais gerar ator/cookie a partir de fixture."
+      ],
+      "callers": [
+        "owner-run node >=20 --config PRIVATE --phase ...; config.example; novo workflow Teams consome somente evidência real validada"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 24,
+            "end": 76
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L24"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 82,
+            "end": 138
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L82"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 140,
+            "end": 225
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L140"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/identity/az02-proof.config.example.json",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "6981dee09f20ba5da7368a7f17a2d4142b95d138",
+      "action": "CHANGE_CONTRACT",
+      "role": "Template privado de inputs operacionais",
+      "requiredChange": [
+        "Remover projectId como binding de negócio; declarar inputs corporativos/proveniência que o executor v2 exige.",
+        "Distinguir tar interno, binário, tree e origin/protected runtime identity.",
+        "Config é template sem valores operacionais presumidos; não inserir Team ou principal inventado."
+      ],
+      "preserve": [
+        "Placeholders privados, approvedForNegativeWrites false, cookies em arquivos privados, IDs de recursos obtidos do ambiente real."
+      ],
+      "callers": [
+        "sf/azure/identity/az02-proof.cjs validate/cookie/producer/restart"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/identity/az02-proof.config.example.json",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6981dee09f20ba5da7368a7f17a2d4142b95d138",
+          "lines": {
+            "start": 1,
+            "end": 26
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.config.example.json#L1"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/recovery/recovery.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+      "action": "CHANGE_CONTRACT",
+      "role": "Checkpoint, clone integrity, jobs Azure, rollback-code",
+      "requiredChange": [
+        "Consumir owner/health v2 e contexto administrativo semTeam, sem authorização de negócio pelo operador.",
+        "Emitir/apensar identidade instalada observada de C/tree/tar antes e depois; checkpoint hoje apenas valida os formatos dos argumentos.",
+        "Novo protocolo Teams deve reconciliar journal/receipts monotônicos e revogações atuais fora do snapshot antes de habilitar produtores; ausência suspende.",
+        "Preservar separação de prova local/clone/vault/rollback; não marcar releaseQualified por esse helper."
+      ],
+      "preserve": [
+        "Approval privado vinculado à ação/argumentos; quiesce/drain e stop comprovado; backup fora do volume; clone IMDS distinto/egress fenced.",
+        "Hash/inventory integral e safe extraction; jobs Azure operação/status corretos; rollback só com schema compatibility e fallback stopped."
+      ],
+      "callers": [
+        "Nova qualification orchestration, owner-run CLI atual; rollback_code chama identity_health"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 37,
+            "end": 86
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L37"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 89,
+            "end": 199
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L89"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 209,
+            "end": 346
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L209"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/vm/install-factory-distribution.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+      "action": "CHANGE_CONTRACT",
+      "role": "Instalador receipt-driven de factory v1",
+      "requiredChange": [
+        "Adicionar contrato versionado do tar prod se esse for o instalador escolhido para qualification; validar bytes/receipt/manifest antes de qualquer escrita.",
+        "Não usar factory dev/local-operator receipt para instalar e certificar o prod tar; cada proofRole explicitamente declarado.",
+        "Recibo novo deve vincular C/tree/run/attempt/inner tar digest observados e artifact ID validado por agregador."
+      ],
+      "preserve": [
+        "Rejeitar GitHub artifact ZIP no lugar do tar interno, digest antes de mutation, membros/manifest/checksums/closure completos.",
+        "Dry-run sem writes, apply explícito, lock, release imutável, manutenção e rollback compatível."
+      ],
+      "callers": [
+        "Owner-run install/rollback; novo job migration-restore-linux somente após implementação e autorização operacional separada"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/vm/install-factory-distribution.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+          "lines": {
+            "start": 70,
+            "end": 101
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/install-factory-distribution.py#L70"
+        },
+        {
+          "path": "sf/azure/vm/install-factory-distribution.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+          "lines": {
+            "start": 288,
+            "end": 319
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/install-factory-distribution.py#L288"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/runtime/bundle.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+      "action": "KEEP_REGRESSION",
+      "role": "Verificador técnico do formato azure-bundle.v1",
+      "requiredChange": [
+        "Não usar como prova do formato distribution.json ou da identidade corporativa; manter regressões enquanto formato legacy/proveniência for lido."
+      ],
+      "preserve": [
+        "Revision/tree/target exatos; lista fechada de membros e hashes; ELF64, Omni, permissões; sem symlinks/path traversal/arquivos extras.",
+        "Receipts .archive-sha256 vinculados ao arquivo correto; staging não implica ativação."
+      ],
+      "callers": [
+        "test_contracts.py",
+        "deploy.py",
+        "recovery.py rollback_code",
+        "identity_health.py"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/runtime/bundle.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+          "lines": {
+            "start": 42,
+            "end": 109
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/bundle.py#L42"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/runtime/flamengo-microsoft.example.json",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "02a6eeed779ace6efc764b368561be0cfeffc78a",
+      "action": "KEEP_REGRESSION",
+      "role": "Exemplo declarado de configuração Microsoft e roles, sem execução",
+      "requiredChange": [
+        "Não converter grupos de papel em Teams nem inventar membership/TeamId.",
+        "workspaceDirectory é localização técnica do exemplo, não prova de seleção/admission; novo teste de autoridade demonstra que nenhuma config directory concede Team."
+      ],
+      "preserve": [
+        "IDs/origins declarados do exemplo, onze grupos independentes, grants vazios/scanner null, ingress unresolved, ausência de segredo."
+      ],
+      "callers": [
+        "test_flamengo_demo_contract.py"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/runtime/flamengo-microsoft.example.json",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "02a6eeed779ace6efc764b368561be0cfeffc78a",
+          "lines": {
+            "start": 1,
+            "end": 36
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/flamengo-microsoft.example.json#L1"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/runtime/runtime.env.example",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "d89032f1767d0ef581128e1e3375a31252bd7374",
+      "action": "KEEP_REGRESSION",
+      "role": "Config de localização técnica privada do host",
+      "requiredChange": [
+        "Não usar ORCHESTRA_CONFIG_DIR/DB/XDG como seleção de Team ou fallback repo-profile."
+      ],
+      "preserve": [
+        "Isolamento de config/data/cache/state, chave em arquivo, ORCHESTRA_INHERIT_CREDENTIALS=0 e ORCHESTRA_DISABLE_PROJECT_CONFIG=1.",
+        "Exemplos não demonstram que recursos/secret/config privados existam."
+      ],
+      "callers": [
+        "Native service/owner runtime; nenhuma autorização de negócio inferida"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/runtime/runtime.env.example",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "d89032f1767d0ef581128e1e3375a31252bd7374",
+          "lines": {
+            "start": 1,
+            "end": 15
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/runtime.env.example#L1"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/runtime/runtime.env.flamengo.example",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "abd6ed44d5c628cd40075a00ef7ec162f2a9e961",
+      "action": "KEEP_REGRESSION",
+      "role": "Config de localização técnica privada do host",
+      "requiredChange": [
+        "Não usar ORCHESTRA_CONFIG_DIR/DB/XDG como seleção de Team ou fallback repo-profile."
+      ],
+      "preserve": [
+        "Isolamento de config/data/cache/state, chave em arquivo, ORCHESTRA_INHERIT_CREDENTIALS=0 e ORCHESTRA_DISABLE_PROJECT_CONFIG=1.",
+        "Exemplos não demonstram que recursos/secret/config privados existam."
+      ],
+      "callers": [
+        "Native service/owner runtime; nenhuma autorização de negócio inferida"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/runtime/runtime.env.flamengo.example",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "abd6ed44d5c628cd40075a00ef7ec162f2a9e961",
+          "lines": {
+            "start": 1,
+            "end": 15
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/runtime.env.flamengo.example#L1"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/vm/caddy-switch.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "95248006985e4cfe90e43d9c775a6ecfea35384b",
+      "action": "KEEP_REGRESSION",
+      "role": "Controle técnico de manutenção/proxy",
+      "requiredChange": [
+        "Apenas availability/native factory check; não contar como proof de Teams ou de mutation."
+      ],
+      "preserve": [
+        "FQDN exato, config administrada, current release completo, preflight Microsoft-configured status.",
+        "Dry-run zero writes, validação antes de reload, rollback da config se reload falhar, path /sucafina preservado."
+      ],
+      "callers": [
+        "Owner cutover/maintenance; usado como envelope operacional, não business principal"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/vm/caddy-switch.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "95248006985e4cfe90e43d9c775a6ecfea35384b",
+          "lines": {
+            "start": 52,
+            "end": 76
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/caddy-switch.py#L52"
+        },
+        {
+          "path": "sf/azure/vm/caddy-switch.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "95248006985e4cfe90e43d9c775a6ecfea35384b",
+          "lines": {
+            "start": 97,
+            "end": 149
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/caddy-switch.py#L97"
+        }
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "sf/azure/runtime/smoke-transaction.sh",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "46f34c0129658c1ce706acddf293bd72981026c4",
+      "action": "CHANGE_CONTRACT",
+      "role": "Gate release-only de U39/U40 via runner native real",
+      "requiredChange": [
+        "Evoluir validação do installed manifest usado pelo runner para identidade corporativa/Team/revisions e mesmo tar prod; preservar requester/holder/denied distintos.",
+        "Não reutilizar esse script como A46: ele seleciona apenas U39/U40 e dois prefixes de mutation, nenhum recovery spec."
+      ],
+      "preserve": [
+        "Runner GitHub LinuxX64, HEAD==C, inputs/outputs privados, aprovação de mutation, HTTPS instalado.",
+        "Playwright workers1/retries0; validar todos os casos esperados, nenhum skip/retry/flaky; raw JSON privado; output declara AZ03 separado."
+      ],
+      "callers": [
+        "packages/app-shell native I00/journeys u39/u40; root/shell frente cobre esses specs"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "sf/azure/runtime/smoke-transaction.sh",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "46f34c0129658c1ce706acddf293bd72981026c4",
+          "lines": {
+            "start": 1,
+            "end": 39
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/smoke-transaction.sh#L1"
+        },
+        {
+          "path": "sf/azure/runtime/smoke-transaction.sh",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "46f34c0129658c1ce706acddf293bd72981026c4",
+          "lines": {
+            "start": 44,
+            "end": 86
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/smoke-transaction.sh#L44"
+        }
+      ],
+      "status": "NOT_RUN"
+    }
+  ],
+  "existingTests": [
+    {
+      "path": "sf/azure/runtime/test_contracts.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "4d177b6900869696e22321424b3457898691975d",
+      "kind": "EXECUTABLE_UNIT_STDLIB_PYTHON",
+      "action": "KEEP_REGRESSION",
+      "status": "NOT_RUN",
+      "bodyRead": true,
+      "caseCount": 9,
+      "cases": [
+        {
+          "name": "test_directory_contract_accepts_structurally_complete_synthetic_sample_only",
+          "line": 50,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "verify_release retorna exatamente5 arquivos para payload sintético declarado; não é ELF executado, factory real ou Azure PASS."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_missing_omni_refused",
+          "line": 54,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Retirar bin/hugr_omni.node continua lançando RuntimeError contendo Omni."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_cross_candidate_revision_refused",
+          "line": 59,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Manifest C/tree não pode ser lido sob candidato d*40; erro revision."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_unlisted_file_refused",
+          "line": 63,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "web/unlisted.js rejeitado como not admitted."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_modified_payload_refused",
+          "line": 69,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Alteração de web/index.html rejeitada por hash changed."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_file_permission_widening_refused",
+          "line": 76,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "chmod0666 rejeitado por owner/mode."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_symlink_in_release_refused",
+          "line": 82,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Symlink /etc/passwd no release rejeitado."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_missing_file_refused",
+          "line": 88,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Ausência de web/index.html rejeitada."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_revision_receipt_mismatch_refused",
+          "line": 94,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            ".archive-sha256 incompatível rejeitado."
+          ],
+          "status": "NOT_RUN"
+        }
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/runtime/bundle.py",
+          "blob": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d"
+        }
+      ],
+      "gate": {
+        "proposedJob": "sf-ci / Orchestra-regression",
+        "cwd": ".",
+        "command": "python3 sf/azure/runtime/test_contracts.py -v",
+        "currentAutomaticSelection": "Não selecionado por comandos sf-ci/factory/release revisados; adicionar comando explícito."
+      },
+      "parentRunner": {
+        "type": "direct unittest.main",
+        "file": "sf/azure/runtime/test_contracts.py"
+      },
+      "proofClass": "STATIC_SYNTHETIC_CONTRACT_ONLY",
+      "notProofOf": [
+        "Live Azure resources",
+        "Microsoft sign-in",
+        "Team membership",
+        "Admin authorization",
+        "Migration",
+        "Restore",
+        "Effect deduplication"
+      ]
+    },
+    {
+      "path": "sf/azure/runtime/test_flamengo_demo_contract.py",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "d98132bfc3ef61fa486cea7856d51c5391e6e918",
+      "kind": "EXECUTABLE_UNIT_STDLIB_PYTHON",
+      "action": "KEEP_REGRESSION",
+      "status": "NOT_RUN",
+      "bodyRead": true,
+      "caseCount": 4,
+      "cases": [
+        {
+          "name": "test_exact_public_app_and_origins",
+          "line": 36,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Preservar versão/deployment/authentication Microsoft e IDs/origins/listener/mount declarados no exemplo; isso não verifica recursos atuais."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_exact_eleven_role_groups_no_extra_authority",
+          "line": 47,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Mapeamento exato de11 grupos de papéis, group:UUID, grants[] e scanner null; grupos não se tornam Teams por inferência."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_ingress_deliberately_unresolved_not_guessed",
+          "line": 56,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Ingress continua REQUIRES_OBSERVED_CADDY_HTTP_INGRESS_ORIGIN, não URL inventada."
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "name": "test_no_secret_or_unsupported_schema_keys",
+          "line": 60,
+          "action": "KEEP_REGRESSION",
+          "assertions": [
+            "Conjunto exato de chaves do exemplo e nenhuma clientsecret/client-secret.txt/access_token. workspaceDirectory é técnico e não fonte de autoridade."
+          ],
+          "status": "NOT_RUN"
+        }
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/runtime/flamengo-microsoft.example.json",
+          "blob": "02a6eeed779ace6efc764b368561be0cfeffc78a",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d"
+        }
+      ],
+      "gate": {
+        "proposedJob": "sf-ci / Orchestra-regression",
+        "cwd": ".",
+        "command": "python3 sf/azure/runtime/test_flamengo_demo_contract.py -v",
+        "currentAutomaticSelection": "Não selecionado por comandos sf-ci/factory/release revisados; adicionar comando explícito."
+      },
+      "parentRunner": {
+        "type": "direct unittest.main",
+        "file": "sf/azure/runtime/test_flamengo_demo_contract.py"
+      },
+      "proofClass": "STATIC_SYNTHETIC_CONTRACT_ONLY",
+      "notProofOf": [
+        "Live Azure resources",
+        "Microsoft sign-in",
+        "Team membership",
+        "Admin authorization",
+        "Migration",
+        "Restore",
+        "Effect deduplication"
+      ]
+    }
+  ],
+  "newTests": [
+    {
+      "path": "sf/azure/runtime/test_teams_profile_identity_contract.py",
+      "existsAtSourcePin": false,
+      "status": "NOT_IMPLEMENTED_NOT_RUN",
+      "action": "ADD_NEW_TEST",
+      "kind": "UNIT_PYTHON",
+      "gate": {
+        "proposedJob": "sf-ci / Orchestra-regression",
+        "cwd": ".",
+        "command": "python3 sf/azure/runtime/test_teams_profile_identity_contract.py -v",
+        "runnerExists": true,
+        "note": "Command is proposed; file does not exist at pin."
+      },
+      "scenarios": [
+        "Valid owner technical installation/host/disk config is distinct from current business Team admission; legacy-only project triplet cannot confer business authorization.",
+        "Positive corporate health binds expected tenant/principal/Team and every required policy/access/membership revision; change each dimension independently and reject before business reads.",
+        "Administrative health for an admitted admin without Team succeeds for maintenance only, publishes no business destinations and does not manufacture Team.",
+        "Probe must reject anonymous/foreign/stale/missing context, replayed cookie after revision/revocation, and wrong frontend/manifest/inner tar.",
+        "Preserve private-file/TLS/loopback/no-redirect guards using controlled unit inputs; every report labeled unit-only."
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/vm/deploy.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+          "lines": {
+            "start": 87,
+            "end": 115
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L87"
+        },
+        {
+          "path": "sf/azure/runtime/identity_health.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "0a00ce403041fddb8e48b534f38f3fb4011f9307",
+          "lines": {
+            "start": 69,
+            "end": 126
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/identity_health.py#L69"
+        },
+        {
+          "path": "sf/azure/vm/probe-serving.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "8fcfa88187661497f41215aa39564d4afe9be174",
+          "lines": {
+            "start": 66,
+            "end": 101
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/probe-serving.py#L66"
+        }
+      ],
+      "proofClass": "UNIT_CONTRACT_ONLY_NO_LIVE_IDENTITY",
+      "parentRunner": {
+        "type": "stdlib unittest.main explicit"
+      }
+    },
+    {
+      "path": "sf/azure/vm/test_teams_profile_artifact_contract.py",
+      "existsAtSourcePin": false,
+      "status": "NOT_IMPLEMENTED_NOT_RUN",
+      "action": "ADD_NEW_TEST",
+      "kind": "UNIT_PYTHON",
+      "gate": {
+        "proposedJob": "sf-ci / Orchestra-regression",
+        "cwd": ".",
+        "command": "python3 sf/azure/vm/test_teams_profile_artifact_contract.py -v",
+        "runnerExists": true,
+        "note": "Command is proposed; file does not exist at pin."
+      },
+      "scenarios": [
+        "Correct prod receipt/inner tar accepted by new adapter before writes; factory dev/local-operator receipt cannot satisfy prod proofRole.",
+        "Reject wrong source C/tree, run/attempt, artifact ID binding, inner tar digest, distribution manifest/checksums/closure, and GitHub ZIP substituted for tar.",
+        "Reject extra/missing/tampered archive member, link/traversal, wrong target/layout and widened permissions; failed validation performs zero installer-owned writes.",
+        "Old azure-bundle/factory formats remain separately labeled and cannot be relabeled to satisfy Teams native qualification."
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/vm/install-factory-distribution.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+          "lines": {
+            "start": 70,
+            "end": 101
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/install-factory-distribution.py#L70"
+        },
+        {
+          "path": "sf/azure/vm/install-factory-distribution.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "ec25b00c619542c03a2a471ff76d7ede7bf40aa9",
+          "lines": {
+            "start": 288,
+            "end": 319
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/install-factory-distribution.py#L288"
+        },
+        {
+          "path": "sf/ci/assemble-orchestra-web.mjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+          "lines": {
+            "start": 149,
+            "end": 188
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs#L149"
+        },
+        {
+          "path": "sf/azure/runtime/bundle.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+          "lines": {
+            "start": 42,
+            "end": 109
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/bundle.py#L42"
+        }
+      ],
+      "proofClass": "UNIT_INSTALLER_CONTRACT_ONLY",
+      "parentRunner": {
+        "type": "stdlib unittest.main explicit"
+      }
+    },
+    {
+      "path": "sf/azure/recovery/test_teams_profile_recovery_contract.py",
+      "existsAtSourcePin": false,
+      "status": "NOT_IMPLEMENTED_NOT_RUN",
+      "action": "ADD_NEW_TEST",
+      "kind": "UNIT_PYTHON",
+      "gate": {
+        "proposedJob": "sf-ci / Orchestra-regression",
+        "cwd": ".",
+        "command": "python3 sf/azure/recovery/test_teams_profile_recovery_contract.py -v",
+        "runnerExists": true,
+        "note": "Command is proposed; file does not exist at pin."
+      },
+      "scenarios": [
+        "Reject unbound candidate/tree/installed archive, wrong action approval, missing writesBlocked/drain, active service, wrong clone IMDS, unsafe restore target and checkpoint digest mismatch.",
+        "Checkpoint, clone integrity, Azure backup job, Azure restore job and code rollback receipts remain different proofClasses; none alone satisfies operational Teams migration receipt.",
+        "Administrative recovery context without Team is admitted only for recovery; business requests still denied and no fallback to legacy projectId.",
+        "Reconciliation plan requires current revision/authority and durable effect receipt independent of restored snapshot; missing/unavailable receipt suspends, revoked current membership denies.",
+        "Failure leaves producers stopped/quiesced; test dispatch with mocked process/network effects proves contract only, never Azure PASS."
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 37,
+            "end": 86
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L37"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 89,
+            "end": 199
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L89"
+        },
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 276,
+            "end": 346
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L276"
+        }
+      ],
+      "proofClass": "UNIT_RECOVERY_DISPATCH_ONLY_NO_OPERATIONAL_RESTORE",
+      "parentRunner": {
+        "type": "stdlib unittest.main explicit"
+      }
+    },
+    {
+      "path": "sf/azure/identity/az02-proof.test.cjs",
+      "existsAtSourcePin": false,
+      "status": "NOT_IMPLEMENTED_NOT_RUN",
+      "action": "ADD_NEW_TEST",
+      "kind": "UNIT_NODE",
+      "gate": {
+        "proposedJob": "sf-ci / Orchestra-regression",
+        "cwd": ".",
+        "command": "node --test sf/azure/identity/az02-proof.test.cjs",
+        "runnerExists": true,
+        "note": "Node runtime exists; explicit node --test command must be wired. test-ci node runner will not accept this non-node-smoke name."
+      },
+      "scenarios": [
+        "Extract/import a guarded test seam for validation/context construction/receipt parsing; do not let importing the test automatically execute the owner-operated network main.",
+        "New context query/body never sends legacy project selector as authority; reject unknown/duplicate/foreign tenant/Team/principal/revision.",
+        "Positive stamp requires exact expected actor, tenant, Team and revisions; nonempty principal or distinct actors alone insufficient.",
+        "Admin-withoutTeam maintenance result is not accepted by business-positive stamp validation.",
+        "Receipt v2 distinguishes source C/tree, binary digest and inner tar digest; source hash/runId self-assertions alone cannot satisfy cross-workflow aggregation.",
+        "Preserve PKCE/cookie/origin/no-store/CORS/CSRF/revoke/logout/restart validations with unit mocks; mark evidence unit-only."
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 24,
+            "end": 76
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L24"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 82,
+            "end": 138
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L82"
+        },
+        {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 185,
+            "end": 225
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L185"
+        }
+      ],
+      "proofClass": "UNIT_HTTP_PROOF_VALIDATOR_ONLY",
+      "parentRunner": {
+        "type": "node:test explicit"
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/teams-profile-recovery-linux.spec.ts",
+      "existsAtSourcePin": false,
+      "status": "NOT_IMPLEMENTED_NOT_RUN",
+      "action": "ADD_NEW_TEST",
+      "kind": "OPERATIONAL_NATIVE_E2E",
+      "gate": {
+        "proposedJob": "teams-profile-linux-qualification / migration-restore-linux",
+        "cwd": "packages/app-shell",
+        "command": "bun run test:e2e:local e2e/sucafina/native/teams-profile-recovery-linux.spec.ts --config e2e/playwright.production.config.ts --workers 1 --retries 0 --reporter=json",
+        "runnerExists": true,
+        "note": "Command is proposed; file does not exist at pin."
+      },
+      "scenarios": [
+        "Observe exact source C/tree/prod inner tar/installed closure and real admitted corporate actors on a disposable Linux/Azure installation; never promote fixture or synthetic manifest to LIVE.",
+        "Create/read legacy state through an admitted real producer or reviewed supported prior-release migration setup; record original IDs/provenance before checkpoint. No direct SQL seeding or manufactured auth.",
+        "Observe quiescence/drain→checkpoint→migration with explicit mapping and preserved IDs→business effect and external durable receipt→restore checkpoint→restart actual service→retry same operation.",
+        "With receipt retained outside restored snapshot, retry observes original receipt/result and effect counter/source observation proves exactly one external effect.",
+        "With receipt missing or unavailable through an admitted controlled failure mechanism, retry suspends and produces zero new external effect. No manual rawSQL/receipt forgery.",
+        "Revoke Team membership/authorization before restore/retry; restored caches/session/job cannot revive access; deny before business/effect.",
+        "Admitted admin without Team can perform the recovery action through its real administrative authorization boundary; subsequent business operation remains denied, no project/Team invented.",
+        "Fresh authorized corporate actor can reopen preserved IDs after recovery and new scope admission; cross-Team/tenant actor cannot.",
+        "Persist sanitized case/operation receipt hashes, phase identities, before/after version/stamps, resource-role IDs/hashes and actual effect outcome; no raw cookies/secrets/DB in CI artifact.",
+        "Every scenario mandatory, zero skips/retries/fixture fallbacks; missing environment or an unimplemented fault/recovery surface reports BLOCKED, not PASS."
+      ],
+      "sourceDependencies": [
+        {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 89,
+            "end": 199
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L89"
+        },
+        {
+          "path": "sf/azure/runtime/smoke-transaction.sh",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "46f34c0129658c1ce706acddf293bd72981026c4",
+          "lines": {
+            "start": 1,
+            "end": 39
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/smoke-transaction.sh#L1"
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "db2597d7e9dd2b4069364a857f4fe16611bcf467",
+          "lines": {
+            "start": 10,
+            "end": 57
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/playwright.production.config.ts#L10"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+          "lines": {
+            "start": 1,
+            "end": 10
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/selection.ts#L1"
+        }
+      ],
+      "proofClass": "LIVE_MIGRATION_RESTORE_EFFECT_AND_AUTHORITY_REQUIRED",
+      "parentRunner": {
+        "workflow": ".github/workflows/teams-profile-linux-qualification.yml",
+        "job": "migration-restore-linux",
+        "configuration": "packages/app-shell/e2e/playwright.production.config.ts",
+        "requires": [
+          "SF_NATIVE_INSTALLED_MANIFEST real",
+          "SF_NATIVE_CANDIDATE_SHA exact C",
+          "GITHUB_ACTIONS true",
+          "Protected LinuxX64 execution",
+          "Same prod archive verified before execution"
+        ]
+      }
+    }
+  ],
+  "recoveryRecipe": {
+    "status": "PROPOSED_NOT_RUN",
+    "separation": "Commands below are real CLI forms in the pin. Angle-bracket values are required observed/private inputs, not available values or an executable runbook for this session.",
+    "existingCommands": [
+      {
+        "phase": "Consistent local checkpoint",
+        "command": "python3 sf/azure/recovery/recovery.py checkpoint --candidate <C> --tree <TREE> --output-dir <ROOT_0700_OTHER_VOLUME_DIR> --approval <PRIVATE_APPROVAL>",
+        "proof": "orchestra-sf.azure-checkpoint.v1; LOCAL_CONSISTENT_CHECKPOINT_ONLY_SERVICE_REMAINS_STOPPED",
+        "limits": [
+          "Stops orchestra-sf.service and leaves it stopped.",
+          "Candidate/tree in receipt are supplied arguments, not independently observed installed release.",
+          "Does not perform Azure backup/restore, migration, restart or business proof."
+        ],
+        "source": {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 89,
+            "end": 129
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L89"
+        }
+      },
+      {
+        "phase": "Isolated clone file restore integrity",
+        "command": "python3 sf/azure/recovery/recovery.py verify-clone --clone-role <PRIVATE_CLONE_ROLE> --receipt <CHECKPOINT_RECEIPT> --archive <CHECKPOINT_TAR> --target /mnt/orchestra-sf-restore",
+        "proof": "CLONE_FILE_RESTORE_INTEGRITY_ONLY; businessReadWrite NOT_RUN; releaseQualified false",
+        "limits": [
+          "Requires root/Linux and actual IMDS identity of another Azure VM, egress fenced/credentials disabled.",
+          "Target must be empty root-owned0700 and service stopped.",
+          "Restores/checks archive bytes; not activated application or live Teams/business read/write."
+        ],
+        "source": {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 146,
+            "end": 199
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L146"
+        }
+      },
+      {
+        "phase": "Azure vault backup",
+        "command": "python3 sf/azure/recovery/recovery.py vault-backup --resource-group <REAL_RG> --vault <REAL_VAULT> --container <OBSERVED_CONTAINER> --item <OBSERVED_PROTECTED_ITEM> --retain-until <FUTURE_UTC> --approval <PRIVATE_APPROVAL> --checkpoint-receipt <CHECKPOINT_RECEIPT>",
+        "proof": "AZURE_BACKUP_JOB_COMPLETED; actual operation Backup and status Completed",
+        "limits": [
+          "Requires protected item and owner approval; app remains stopped during checkpoint/vault backup.",
+          "A completed job is not proof of restore or correct application recovery."
+        ],
+        "source": {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 209,
+            "end": 241
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L209"
+        }
+      },
+      {
+        "phase": "Azure vault alternate-location restore",
+        "command": "python3 sf/azure/recovery/recovery.py vault-restore-disks --source-group <SOURCE_RG> --target-group <ISOLATED_TARGET_RG> --vault <REAL_VAULT> --container <OBSERVED_CONTAINER> --item <OBSERVED_ITEM> --recovery-point <REAL_POINT_ID> --storage-account <OBSERVED_STORAGE> --approval <PRIVATE_APPROVAL>",
+        "proof": "Actual Azure Restore operation/status Completed; isolated alternate location",
+        "limits": [
+          "Target group must differ from source; point and authorization must be observed.",
+          "Does not install/start/migrate the restored application or prove effect safety."
+        ],
+        "source": {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 243,
+            "end": 274
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L243"
+        }
+      },
+      {
+        "phase": "Code-only compatible rollback",
+        "command": "python3 sf/azure/recovery/recovery.py rollback-code --target-candidate <PREVIOUS_C> --target-tree <PREVIOUS_TREE> --target-archive-sha <PREVIOUS_ARCHIVE_SHA256> --approval <PRIVATE_APPROVAL> --cookie <PRIVATE_REAL_COOKIE_FILE> --compatibility-proof <PRIVATE_REVIEWED_PROOF>",
+        "proof": "CODE_ROLLBACK_IDENTITY_READ_OBSERVED; DB_RESTORE_AND_AZ03_NOT_INFERRED",
+        "limits": [
+          "Requires exact known previous immutable release and schema-compatibility proof.",
+          "Calls identity_health currently bound to legacy owner contract; must evolve for Teams/admin scope.",
+          "No DB restore; failed start/health leaves service stopped."
+        ],
+        "source": {
+          "path": "sf/azure/recovery/recovery.py",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+          "lines": {
+            "start": 276,
+            "end": 320
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L276"
+        }
+      }
+    ],
+    "environmentRequired": [
+      "Disposable protected LinuxX64 Azure installation with actual VM/resource identifiers and owner-approved isolated clone; a generic ubuntu-latest runner is insufficient for recovery.py preflight/IMDS.",
+      "cloud-init done; Azure LUN0 ext4 mounted exactly at /var/lib/orchestra-sf with actual UUID; non-root orchestra-sf service user, private HOME and root-owned /etc/orchestra-sf; actual service/Caddy foundation.",
+      "Observed source and target C/tree/inner tar hashes, compatible installed-layout adapter, read-only manifest/closure inventory and prior-release migration provenance.",
+      "Real Microsoft sessions and current authority for corporate actors plus admitted admin without Team; private cookie/config files; no real credentials copied into public artifacts.",
+      "Owner action-bound approvals, quiescence and Task/Relay drain, target backup directory outside state volume, real vault/container/item/recovery-point/target storage and approved RPO/RTO.",
+      "Independent monotonic receipt/effect ledger and current authorization source outside the restored snapshot; documented no-effect recovery behavior when unavailable.",
+      "Admitted fault/recovery control to test missing receipt and restore; no rawSQL, secret forgery, synthetic LIVE host or fabricated receipt.",
+      "Sanitized receipts/hashes accessible to final gate; raw state archives/cookies/JSON traces remain private."
+    ],
+    "missingImplementationAtPin": [
+      "No command executes a Teams migration or full checkpoint→migration→effect→restore→restart→retry sequence.",
+      "No reviewed installed prod receipt adapter connects assembler tar to the factory-v1/azure-bundle installers without format mismatch.",
+      "No operational test establishes admin-withoutTeam recovery through the product administrative boundary; OS root running recovery.py alone does not prove that authorization.",
+      "No existing health/probe/AZ02 v2 carries complete Team current-context binding and unambiguous tree/innerTar/binary identities.",
+      "No verify-teams-profile mode validates cross-workflow evidence and new mandatory recovery report."
+    ],
+    "proposedExecutionSequence": [
+      {
+        "step": 1,
+        "name": "Freeze and bind",
+        "requiredEvidence": [
+          "C/tree and all run IDs/attempts/artifact IDs authenticated via GitHub metadata",
+          "Prod inner tar bytes match artifact receipt and residue audit",
+          "Installed manifest/closure matches extracted and running artifact"
+        ]
+      },
+      {
+        "step": 2,
+        "name": "Prepare real migration input",
+        "requiredEvidence": [
+          "Original durable IDs/provenance created/read via supported admitted producer",
+          "Approved migration mapping and current tenant/Team admission",
+          "No fixture promoted to live, no rawSQL data"
+        ]
+      },
+      {
+        "step": 3,
+        "name": "Quiesce and checkpoint",
+        "requiredEvidence": [
+          "Admissions blocked, Task/Relay drained, real service stopped",
+          "Checkpoint hash/inventory and observed installed source/target",
+          "Safe separate-volume/clone environment"
+        ]
+      },
+      {
+        "step": 4,
+        "name": "Migrate and perform one effect",
+        "requiredEvidence": [
+          "Migration version/mapping complete and IDs retained",
+          "Real authorized effect observed",
+          "Operation key and durable receipt hash in independent monotonic authority"
+        ]
+      },
+      {
+        "step": 5,
+        "name": "Restore and restart",
+        "requiredEvidence": [
+          "Actual restore job/file integrity as appropriate, clone remains isolated",
+          "Migration reruns/resumes safely against restored legacy state",
+          "Service restarted from exact prod tar, authority revalidated before producers enabled"
+        ]
+      },
+      {
+        "step": 6,
+        "name": "Retry and deny branches",
+        "requiredEvidence": [
+          "Retained receipt: original effect/result reused, exactly one effect",
+          "Missing/unavailable receipt: suspended with zero new effect",
+          "Revoked membership/revision: denied despite restored cache/session/jobs",
+          "Admin withoutTeam: administrative recovery succeeds, business denied"
+        ]
+      },
+      {
+        "step": 7,
+        "name": "Attest final candidate",
+        "requiredEvidence": [
+          "Required spec and all mandatory cases executed once with zero skips/retries",
+          "Minimized report, case/file inventory hashes, phase and artifact identity preserved",
+          "No operational PASS inferred from unit tests, status route, checkpoint or Azure job alone"
+        ]
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "path": "sf/azure/vm/deploy.py",
+        "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "blob": "6db6740f2e888dfb4e4f525567d7028d39320ad6",
+        "lines": {
+          "start": 52,
+          "end": 115
+        },
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/vm/deploy.py#L52"
+      },
+      {
+        "path": "sf/azure/recovery/recovery.py",
+        "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "blob": "5011c6a793196ef3f0e4f8656a879c8a90fb3022",
+        "lines": {
+          "start": 323,
+          "end": 346
+        },
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/recovery/recovery.py#L323"
+      },
+      {
+        "path": "sf/azure/runbooks/AZ-03-LINUX-DATA-RECOVERY.md",
+        "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "blob": "dd534bb3a0ee37ca426d8b9381c7428007506689",
+        "lines": {
+          "start": 12,
+          "end": 88
+        },
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runbooks/AZ-03-LINUX-DATA-RECOVERY.md#L12"
+      }
+    ]
+  },
+  "finalVerifierContract": {
+    "path": "script/sf-ci/gate.mjs",
+    "mode": "verify-teams-profile",
+    "existsAtPin": false,
+    "status": "NOT_IMPLEMENTED_NOT_RUN",
+    "requiredProofRoles": [
+      "Complete eight-suite sf-ci with reviewed coverage baselines",
+      "HTTP API exercise with fail-on-missing/fail-on-skip and parent helpers",
+      "Browser-pool 40 original sources with entry identity separate",
+      "Explicit Orchestra module regression selectors",
+      "SF prod artifact + extracted inventory/inner tar hash",
+      "Residue audit of that same prod artifact",
+      "Factory packaging regression with corporate business assertions updated",
+      "Linux native qualification of same prod artifact",
+      "migration-restore-linux actual operational receipt"
+    ],
+    "identityFields": [
+      "repository",
+      "sourceCommit C",
+      "sourceTree",
+      "checkoutCommit/tree",
+      "workflow identity/path/ref/event",
+      "runId and runAttempt per producing run",
+      "run.head_sha and explicit source/head/merge/snapshot relation",
+      "request original blob and normalized selection where applicable",
+      "artifact immutable ID",
+      "inner tar SHA256 separately from outer artifact/archive transport digest",
+      "distribution manifest/closure hashes",
+      "selected source file paths+blobs",
+      "executed file/case inventory hashes",
+      "report SHA256",
+      "proofRole and schema version",
+      "runtime OS/arch and command exit/status"
+    ],
+    "metadataTrust": "Fetch/validate trusted run/artifact metadata independently. Receipt self-claims, current branch names, latest artifact names and a URL alone are insufficient. Compare each producing run against its own immutable identity; never force all into the qualification runId.",
+    "rejectionCases": [
+      "Absent required role/job/report/spec/case",
+      "Cancelled/skipped/failed/partial run or receipt",
+      "Run attempt/candidate/tree mismatch",
+      "PR merge substituted for head candidate",
+      "Snapshot with any code change besides exact request blob",
+      "Same source but different rebuilt tar",
+      "Extra/substituted artifact/report/file/case",
+      "Receipt role conflation e.g. factory dev/checkpoint/clone/status used as prod/restore/Teams",
+      "Fixture/synthetic local proof relabeled LIVE/Azure",
+      "Missing runtime/owner approval represented as skipped PASS",
+      "Stale current authorization or receipt ledger restored backwards",
+      "Unreviewed baseline or zero tests/retry/flaky execution"
+    ],
+    "gateTestsToChange": [
+      {
+        "path": "script/sf-ci/gate.test.mjs",
+        "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "blob": "5a04281dc86e7a5d377bd077831bc98c0a454ac8",
+        "action": "CHANGE_CONTRACT",
+        "changes": [
+          "New prerequisite jobs and cross-workflow role inventory mandatory",
+          "Head/merge/request-snapshot identity tests",
+          "harnessEntryFiles rules and factual 40-original attribution",
+          "Nested native recovery spec exact identity and missing-case rejection",
+          "New receipt schema/tar/report hash substitution negative controls",
+          "Preserve eight normative suites and intentional release activation block"
+        ]
+      },
+      {
+        "path": "script/sf-ci/workflow-contract.mjs",
+        "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "blob": "b4fbb1cfc0d7c6472bcaeae499532e5bf834f9d1",
+        "action": "CHANGE_CONTRACT",
+        "changes": [
+          "Validate real selectors/commands of new jobs, not only job names",
+          "Assert prerequisite dependencies and artifact download identity",
+          "Do not silently treat helpers as standalone selectors"
+        ]
+      }
+    ],
+    "currentReleaseBoundary": "sf-release.yml intentionally exits1 with activation BLOCKED; passing this proposed qualification never implies deployment or Azure release authorization."
+  },
+  "existingOperationalProof": {
+    "path": "sf/azure/identity/az02-proof.cjs",
+    "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+    "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+    "action": "CHANGE_CONTRACT",
+    "kind": "OWNER_OPERATED_HTTP_PROOF",
+    "status": "NOT_RUN",
+    "runner": {
+      "runtime": "Node>=20 standard library, Linuxx64",
+      "cwd": ".",
+      "template": "node sf/azure/identity/az02-proof.cjs --config <PRIVATE_ABSOLUTE_CONFIG> --phase <PHASE> --out <NEW_PRIVATE_ABSOLUTE_REPORT>",
+      "requires": "Inputs/sessions/approval reais; placeholders não são comandos prontos."
+    },
+    "phaseLedger": [
+      {
+        "phase": "preflight",
+        "currentCaseCount": 14,
+        "change": [
+          "MISSING_SELECTORS/DUPLICATE_SELECTOR/BIND_installationId/BIND_projectId/BIND_hostId: retirar expectativa centrada no triplet; substituir por contrato moderno sem project fallback, tenant/Team/host mismatch e duplicate/unknown-selector rejeitados.",
+          "Adicionar corporate session missingTeam negada em business e admin semTeam limitado a manutenção."
+        ],
+        "keep": [
+          "GUEST deny",
+          "CROSS_ORIGIN_GET/CROSS_SITE_GET",
+          "CSRF_NO_ORIGIN/OTHER_ORIGIN/CROSS_SITE",
+          "OIDC_REDIRECT PKCE/state/nonce/secure cookie",
+          "CALLBACK_WITHOUT_CHALLENGE/CALLBACK_DUPLICATE_STATE"
+        ],
+        "source": {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 82,
+            "end": 115
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L82"
+        }
+      },
+      {
+        "phase": "actors",
+        "currentCaseCount": 11,
+        "change": [
+          "ACTOR_REQUESTER/ACTOR_HOLDER exigem stamp inteiro com expected principal, tenant, Team e revisões; ACTOR_DENIED mantém falha.",
+          "AUTH_BIND_* vira matriz tenant/principal/Team/host/revision; nenhum fallback projectId.",
+          "DISTINCT_ACTORS continua, mas não substitui vínculo exato do ator esperado."
+        ],
+        "keep": [
+          "CSRF logout rejects preserve session",
+          "AUTH_CSRF_SESSION_SURVIVES sob contexto corporativo válido"
+        ],
+        "source": {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 116,
+            "end": 138
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L116"
+        }
+      },
+      {
+        "phase": "producer",
+        "currentCaseCount": 2,
+        "change": [
+          "Snapshots e writes devem partir de Teams admission válido e atual; manter casos source-CAS e validation."
+        ],
+        "keep": [
+          "CAS_409 e VALIDATION_422 deixam versão+registro exatamente iguais; aprovação e request isolado existentes"
+        ],
+        "requiresFlag": "--confirm-producer-writes",
+        "source": {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 140,
+            "end": 169
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L140"
+        }
+      },
+      {
+        "phase": "after-revoke",
+        "currentCaseCount": 2,
+        "change": [
+          "Revogar membership/Team ou grant atual e repetir mesma sessão; invalidar caches/contexto e preservar negação de leitura de fonte."
+        ],
+        "keep": [
+          "REVOKE_CONTEXT e REVOKE_SOURCE401/403"
+        ],
+        "source": {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 170,
+            "end": 174
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L170"
+        }
+      },
+      {
+        "phase": "logout",
+        "currentCaseCount": 2,
+        "change": [
+          "Usar ator corporativo real; receipt v2 identifica source/tree/tar."
+        ],
+        "keep": [
+          "LOGOUT204 duas cookies limpas; replay same cookie401/403"
+        ],
+        "requiresFlag": "--confirm-logout",
+        "source": {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 175,
+            "end": 184
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L175"
+        }
+      },
+      {
+        "phase": "after-restart",
+        "currentCaseCount": 1,
+        "change": [
+          "Restart witness deve estar vinculado a C/tree/tar+serviço realmente observado; não satisfaz A46 sozinho."
+        ],
+        "keep": [
+          "REPLAY_AFTER_RESTART401/403 same cookie"
+        ],
+        "requiresFlag": "--restart-receipt <PRIVATE_A7_WITNESS>",
+        "source": {
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2ffede199faa15afc56dcd0aa36297f335cdc4dc",
+          "lines": {
+            "start": 185,
+            "end": 194
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/identity/az02-proof.cjs#L185"
+        }
+      }
+    ],
+    "currentNamedCaseTotal": 32,
+    "notUnitSuite": true,
+    "notOperationallyRun": true,
+    "notProofOf": "Fases positivas não observadas; script existente não cobre checkpoint→migration→effect→restore→retry."
+  },
+  "counts": {
+    "existingPythonFiles": 2,
+    "existingPythonCases": 13,
+    "existingPythonActions": {
+      "KEEP_REGRESSION": 13
+    },
+    "existingOwnerOperatedAz02Phases": 6,
+    "existingOwnerOperatedAz02NamedCases": 32,
+    "newTestPaths": 5,
+    "newOperationalTestPaths": 1,
+    "newUnitTestPaths": 4,
+    "pipelineFindings": 12,
+    "operationalSourceRows": 13,
+    "sourceFiles": 36
+  },
+  "delivery": {
+    "branch": "teams-radius-core",
+    "path": "docs/architecture/teams-profile-qualification-review.json",
+    "onlyDocumentation": true,
+    "priorArtifactsUnchanged": true
+  }
+}

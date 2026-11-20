@@ -1,0 +1,3062 @@
+{
+  "schemaVersion": 1,
+  "title": "Orchestra-SF repo-profile to Teams migration: targeted audit inventory",
+  "status": "EXPANDED_BLAST_RADIUS_AND_TEST_PLAN",
+  "analysisDateLocal": "2026-11-19",
+  "timezone": "America/Sao_Paulo",
+  "repository": "gustavomhss/Orchestra-SF",
+  "analysisBranch": "sf-join-four",
+  "analysisCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+  "analysisTree": "871b534fa92d22d6783305aaa73a8c521819f448",
+  "deliveryBranch": "teams-profile-plan",
+  "implementationStatus": "NOT_STARTED",
+  "testsStatus": "NOT_RUN",
+  "realTenantVerification": "NOT_RUN",
+  "reviewStatus": "COLD_REVIEW_DOCUMENT_FINDINGS_RESOLVED_AND_RECHECKED",
+  "scopeNote": "Study of repository-derived profile ownership and its dependencies. Not a claim that every project/directory symbol must be deleted. Product-specific dead repo-profile code must be removed; technical location, personal data, installation data and workflow profiles need explicit classification.",
+  "coverage": {
+    "sourceGroups": 30,
+    "mappedSourcePaths": 133,
+    "testGroups": 19,
+    "existingTestPaths": 89,
+    "acceptanceScenarios": 46,
+    "fullRepositoryContentScan": "NOT_PERFORMED",
+    "sourceReading": "Targeted reads of producers, direct consumers and important indirect consumers; paths and blobs verified against the indicated evidence commit (analysis pin when no evidenceCommit is present). First review added host-auth boundary; cold review added admin/bootstrap, restore/effect-proof, canonical evidence and integration-delta sources.",
+    "semanticTestCoverage": "Not certified. Primary bodies read in the audits and supplementary tree-discovered candidates are distinguished. No tests run.",
+    "codeSearchLimitation": "GitHub code search targets default dev, not analysis pin. No-result is not evidence of absence.",
+    "unresolvedImplementationEntryGate": "WP0 reconciles candidate delta and real-data/artifact census. Known source/test/fixture/runner decisions are in expanded investigation; do not delegate their rediscovery."
+  },
+  "records": [
+    {
+      "id": "UI01",
+      "wp": "WP2",
+      "disposition": "MIGRATE",
+      "area": "Profile selector, state and native chapter ownership",
+      "acceptanceIds": [
+        "A01",
+        "A02",
+        "A15",
+        "A18",
+        "A19",
+        "A32"
+      ],
+      "observation": "server+directory/project resolve profile; chapter owner key and SDK providers carry directory",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/app-shell/src/orchestra/sidebar.tsx",
+          "blobSha": "2f593f404af6743e8cf896fa924538bbfb21d306",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/sidebar.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapter-route.tsx",
+          "blobSha": "c774d836601ce352490a6a6ce947625bd2a33592",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapter-route.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/context/layout.tsx",
+          "blobSha": "b6225247e0951ed85a8b0febc32204fdbd1f69fb",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/layout.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/app.tsx",
+          "blobSha": "7cdcea2d2a15998c2996c94337decfa5b94ab152",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/app.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/context/sdk.tsx",
+          "blobSha": "2f757be8e9c5ef85838e7c2e991ad7f6e1de5645",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/sdk.tsx"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "UI02",
+      "wp": "WP2",
+      "disposition": "MIGRATE",
+      "area": "Tabs, drafts, prompt and session entry",
+      "acceptanceIds": [
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19"
+      ],
+      "observation": "tabMatchesProfile uses directory/root; missing directory admits all server tabs; new chat can open first project",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/app-shell/src/components/titlebar.tsx",
+          "blobSha": "198508bc085f9dd488d0a7351041363b0f80dbe4",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/components/titlebar.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/components/titlebar-tab-strip.tsx",
+          "blobSha": "ddc9155e2d531f49083d55968342fceaed457aeb",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/components/titlebar-tab-strip.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/components/titlebar-tab-order.ts",
+          "blobSha": "5c4e7c34026808df31bfeff3662b08d93929a9a4",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/components/titlebar-tab-order.ts"
+        },
+        {
+          "path": "packages/app-shell/src/context/tabs.tsx",
+          "blobSha": "6db4efe606323509c89d13c24e88d57c476afe54",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/tabs.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/context/tab-migration.ts",
+          "blobSha": "04c1cb6804ab5dc4422024e11072e67f007ec07f",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/tab-migration.ts"
+        },
+        {
+          "path": "packages/app-shell/src/context/prompt.tsx",
+          "blobSha": "c366bbd52250474d0478a1ccb569744384b09c9b",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/prompt.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/pages/new-session.tsx",
+          "blobSha": "ebf3a5a4ff439b4bf4e65c0f9782835fcc14ffbd",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/pages/new-session.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/components/prompt-project-selector.tsx",
+          "blobSha": "8613cb36c62342c8410adc1129e5e283d6ce8b17",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/components/prompt-project-selector.tsx"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "UI03",
+      "wp": "WP2",
+      "disposition": "REMOVE_REPO_PROFILE_FLOW",
+      "area": "Home, shortcuts, empty states and copy",
+      "acceptanceIds": [
+        "A01",
+        "A18",
+        "A20",
+        "A32"
+      ],
+      "observation": "project picker/Git init and narrow HomeProjects are reachable residuals",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+          "blobSha": "139bb793e1cb6033039ce4a4899d4dab19d47167",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/shell/navigation-commands.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/pages/home.tsx",
+          "blobSha": "b473a8d3eca1f8313c10f05c2e5f5751880c2765",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/pages/home.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/pages/home/home-controller.tsx",
+          "blobSha": "0756eb63688a37dd375f03c30116f6d9c002e7d2",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/pages/home/home-controller.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapter-empty.tsx",
+          "blobSha": "a731c6e1b5f5f14bdd303af67ebc48f18d3042c8",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapter-empty.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/no-repository.tsx",
+          "blobSha": "2e66b09668a2d860194e0046933d868d259660ed",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/no-repository.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra.ts",
+          "blobSha": "b627fdca4490e3af30d62745ba4207c390c9c509",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/i18n/orchestra.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "UI04",
+      "wp": "WP2",
+      "disposition": "MIGRATE_WITH_OWNERSHIP_CLASSIFICATION",
+      "area": "Persistence, queries, events and notifications",
+      "acceptanceIds": [
+        "A12",
+        "A15",
+        "A16",
+        "A17",
+        "A25",
+        "A31"
+      ],
+      "observation": "workspace keys/aliases and directory-scoped caches/events; model preference can be personal/global instead of team-owned",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/app-shell/src/utils/persist.ts",
+          "blobSha": "0eb22df372aba1d9a05f3fea84d0c85b31699572",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/utils/persist.ts"
+        },
+        {
+          "path": "packages/app-shell/src/context/server-queries.ts",
+          "blobSha": "4d3278b9da92d6184bdb83b475c84333c5ee0582",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/server-queries.ts"
+        },
+        {
+          "path": "packages/app-shell/src/context/server-sdk.tsx",
+          "blobSha": "d299123b284217d002a3a7fa23766c934ad5f166",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/server-sdk.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/context/notification.tsx",
+          "blobSha": "66e1a450530bb551a060e05fe26d2cafbbb99207",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/notification.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/context/models.tsx",
+          "blobSha": "1d1a1f4e67e2ef67d887990cfbc86f9610f12eaa",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/context/models.tsx"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "UI05",
+      "wp": "WP2",
+      "disposition": "MIGRATE_PRESERVE_GUARDS",
+      "area": "Installed owner selection and draft safety",
+      "acceptanceIds": [
+        "A01",
+        "A05",
+        "A09",
+        "A15",
+        "A19",
+        "A35",
+        "A41",
+        "A43"
+      ],
+      "observation": "discovery via explicit triplet or directory; maintain exact owner, ambiguity rejection, generation, accessRevision and draft revocation; per-family URL parsers reject unknown/duplicate/partial selectors and window URL restore must share the versioned contract; observed head 392cecab preserves stable frozen ready() access object per generation and original transport identity (see FRESH02)",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+          "blobSha": "3cfd89615082b90b81385501e05cc704bee0f08e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/native-chapter-entry.ts",
+          "blobSha": "64167b3b1015379e9b1d75ed34da27282155b191",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/host/native-chapter-entry.ts"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "blobSha": "4ed78485f6704fed4ca57b0c76f047359d6a59bc",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx",
+          "blobSha": "af8d3b1309c573a4b931aa217a28e3844712fdd8",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx"
+        },
+        {
+          "path": "apps/desktop/src/renderer/index.tsx",
+          "blobSha": "8a3442c9736badfcf59e9ad9c1eb7342fae1430b",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/renderer/index.tsx"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "DOCK01",
+      "wp": "WP4",
+      "disposition": "MIGRATE_IF_REACHABLE",
+      "area": "Repository-derived browser profile",
+      "acceptanceIds": [
+        "A12",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A21"
+      ],
+      "observation": "appDockProfile returns repo-FNV(server,directory); responsive breakpoint changes profile mode",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/app-shell/src/pages/session/apps-panel-controller.ts",
+          "blobSha": "be46cd8ef0dd728688b9fcfb3dda44ff92dff6bf",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/pages/session/apps-panel-controller.ts"
+        },
+        {
+          "path": "packages/app-shell/src/pages/session/apps-panel.tsx",
+          "blobSha": "ef2bd9c943d4cdea0ee8ca5b99f7ee2e170b8916",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/pages/session/apps-panel.tsx"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "DOCK02",
+      "wp": "WP4",
+      "disposition": "MIGRATE_PRESERVE_PRIVATE_OWNER",
+      "area": "Browser registry, partitions and RPC window binding",
+      "acceptanceIds": [
+        "A15",
+        "A16",
+        "A17",
+        "A21",
+        "A29",
+        "A40"
+      ],
+      "observation": "max32 profile identifier, random persisted storageKey, global bookmarks/history; verify activeProfile resolver per sender/window; qualify delivered Linux binding",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "apps/desktop/src/main/app-dock-profile-registry.ts",
+          "blobSha": "51b63ddc3a072b7734ccb281a4826dbd93237167",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/main/app-dock-profile-registry.ts"
+        },
+        {
+          "path": "apps/desktop/src/main/app-dock-session.ts",
+          "blobSha": "a54327e6094ba89eb1b15c9c2cd2d11dae456ec4",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/main/app-dock-session.ts"
+        },
+        {
+          "path": "apps/desktop/src/main/app-dock.ts",
+          "blobSha": "e67d046dd9ac9a69af5e589c453db7af5b25ff99",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/main/app-dock.ts"
+        },
+        {
+          "path": "apps/desktop/src/main/ipc-app-dock.ts",
+          "blobSha": "1323e958c305b2122353d7f7a9122e84ae40a210",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/main/ipc-app-dock.ts"
+        },
+        {
+          "path": "apps/desktop/src/main/app-dock-rpc.ts",
+          "blobSha": "ebc5f281a9d06bb0ff15c462830976f46d55d34e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/main/app-dock-rpc.ts"
+        },
+        {
+          "path": "apps/desktop/src/preload/index.ts",
+          "blobSha": "2b8d4c9913d7a43e4a89ef3c34d8d7f1b01d8c4f",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/preload/index.ts"
+        },
+        {
+          "path": "apps/desktop/src/preload/types.ts",
+          "blobSha": "ebcf9ef9801a0a7d3d2bd73a612b8c2764769782",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/desktop/src/preload/types.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE01",
+      "wp": "WP3",
+      "disposition": "DECOUPLE_PROFILE_FROM_EXECUTION_LOCATION",
+      "area": "Git project resolution and cached services",
+      "acceptanceIds": [
+        "A01",
+        "A12",
+        "A20",
+        "A31",
+        "A33",
+        "A37"
+      ],
+      "observation": "Git remote/cache/root derives identity; no Git gives global; services capture config by Location",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/project.ts",
+          "blobSha": "bbedbbf34cbc5b431538db37993c0cc0830fa393",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/project.ts"
+        },
+        {
+          "path": "packages/core/src/location.ts",
+          "blobSha": "af889448fe9340187266ab622cb7249751e52328",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/location.ts"
+        },
+        {
+          "path": "packages/schema/src/location.ts",
+          "blobSha": "c01ce36372a698a289b1591466d4b01b323543d9",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/schema/src/location.ts"
+        },
+        {
+          "path": "packages/core/src/location-service-map.ts",
+          "blobSha": "2f9f70c7edf21ab9e8d57eb6966aacab13c47c33",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/location-service-map.ts"
+        },
+        {
+          "path": "packages/core/src/location-services.ts",
+          "blobSha": "b6eaefbc8dd8df2be112371c69b7791f462cf82e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/location-services.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE02",
+      "wp": "WP3",
+      "disposition": "MIGRATE_DURABLE_SCOPE_PRESERVE_HISTORY",
+      "area": "Session ownership, lookup, archive and replay",
+      "acceptanceIds": [
+        "A13",
+        "A14",
+        "A23",
+        "A24",
+        "A29",
+        "A30",
+        "A39",
+        "A42"
+      ],
+      "observation": "NOT NULL project FK cascade; create reuses ID early; filters before pagination; HTTP cwd fallback",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/session.ts",
+          "blobSha": "33778d390e7d69a283eadb77b43610c311c898f5",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session.ts"
+        },
+        {
+          "path": "packages/core/src/session/sql.ts",
+          "blobSha": "21b589483ae47f8d924cc58b8d2377525d381cc0",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/sql.ts"
+        },
+        {
+          "path": "packages/core/src/project/sql.ts",
+          "blobSha": "ab05fdac4a1adb971ec18ecb53c80bd8859be188",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/project/sql.ts"
+        },
+        {
+          "path": "packages/core/src/session/archive.ts",
+          "blobSha": "4fc5ae5f43abd43809e33b6774a504c83be80bd4",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/archive.ts"
+        },
+        {
+          "path": "packages/server/src/location.ts",
+          "blobSha": "1881a570a893ec8c55aa436598db44ad19edde04",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/location.ts"
+        },
+        {
+          "path": "packages/server/src/middleware/session-location.ts",
+          "blobSha": "86d49275ece013a3a1af6a75ed6a5e31d195781b",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/session-location.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE03",
+      "wp": "WP3",
+      "disposition": "REMOVE_REPO_PROFILE_AUTHORITY",
+      "area": "Configuration, agents, skills and instructions",
+      "acceptanceIds": [
+        "A01",
+        "A20",
+        "A22",
+        "A31",
+        "A33"
+      ],
+      "observation": "repo-local discovery and trust may select models/engine/tools/instructions; replace SF producer, keep source and path safeguards",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/config.ts",
+          "blobSha": "8aff899dcf691f81d9f9ee00f2013a5e50a4919a",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/config.ts"
+        },
+        {
+          "path": "packages/core/src/config/plugin/agent.ts",
+          "blobSha": "8e21386d092d22bd54ebece9a1279eb14f08b235",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/config/plugin/agent.ts"
+        },
+        {
+          "path": "packages/core/src/config/plugin/skill.ts",
+          "blobSha": "ee16e6694a52221899b2853f5bd85dd686f95bb6",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/config/plugin/skill.ts"
+        },
+        {
+          "path": "packages/core/src/instruction-context.ts",
+          "blobSha": "6ba99cade2574448b9a8008b544791581b22bb11",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/instruction-context.ts"
+        },
+        {
+          "path": "packages/core/src/config/trust.ts",
+          "blobSha": "a8b068f1fdb5c01e59ad43c56b9e6241ec3dfc78",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/config/trust.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE04",
+      "wp": "WP3",
+      "disposition": "MIGRATE_CONFIG_SEPARATE_CREDENTIALS",
+      "area": "MCP config writes and personal authentication",
+      "acceptanceIds": [
+        "A20",
+        "A21",
+        "A22",
+        "A31"
+      ],
+      "observation": "project-config files/locks by directory; add can trust directory; mcp-auth global keyed by name/serverUrl is not a shared Team credential store",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/mcp/project-config.ts",
+          "blobSha": "9979165ddc6d542f5675e2b77d9e81d4d336b289",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/mcp/project-config.ts"
+        },
+        {
+          "path": "packages/core/src/mcp.ts",
+          "blobSha": "42389dd13f1507320852be092edc4ad396bc930e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/mcp.ts"
+        },
+        {
+          "path": "packages/core/src/mcp/auth.ts",
+          "blobSha": "bfdafead0d7c0b2cab504750438a4ae13ec24293",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/mcp/auth.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE05",
+      "wp": "WP3",
+      "disposition": "MIGRATE_PRESERVE_RESTRICTIVE_POLICY",
+      "area": "Arsenal and tool safety profiles",
+      "acceptanceIds": [
+        "A12",
+        "A20",
+        "A22",
+        "A29"
+      ],
+      "observation": "state root and tools derive from projectID; preferences never grant permission; preserve symlink/size/TOCTOU/strict decode guards",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/tool/maestro-arsenal.ts",
+          "blobSha": "84283f5af5ab599479b8185694f67c9a7142545c",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/tool/maestro-arsenal.ts"
+        },
+        {
+          "path": "packages/core/src/tool-safety-profile.ts",
+          "blobSha": "5a3c5150718bad42ea9b949f0c170ec4973bd25b",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/tool-safety-profile.ts"
+        },
+        {
+          "path": "modules/maestro/arsenal/src/tools/profile.ts",
+          "blobSha": "8c9bf4846c2506d8e93bde154353d946cf502482",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/maestro/arsenal/src/tools/profile.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE06",
+      "wp": "WP3",
+      "disposition": "MIGRATE_DURABLE_EXECUTION_BINDINGS",
+      "area": "Relay hooks and workflow consumers",
+      "acceptanceIds": [
+        "A09",
+        "A22",
+        "A23",
+        "A24",
+        "A29"
+      ],
+      "observation": "hook path shares profile; ledgers/arms by project; preserve workflow templates and revalidation",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/relay-hook-install.ts",
+          "blobSha": "df1a8ef2e1656d4f2a9a235447c3439fa25fa0f1",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/relay-hook-install.ts"
+        },
+        {
+          "path": "packages/core/src/relay.ts",
+          "blobSha": "25fb509203f933a2e8b0f311c3fc8f9476d53e16",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/relay.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE07",
+      "wp": "WP3",
+      "disposition": "MIGRATE_WITH_PROVENANCE",
+      "area": "Lean preferences, metrics and public contract",
+      "acceptanceIds": [
+        "A12",
+        "A14",
+        "A27",
+        "A29"
+      ],
+      "observation": "sha256(projectID,directory), session filters and public fields; update producers/consumers together",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/session/lean-profile-preferences.ts",
+          "blobSha": "104f337150300426ca056f3ff101628f0e841754",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/lean-profile-preferences.ts"
+        },
+        {
+          "path": "packages/core/src/session/lean-project.ts",
+          "blobSha": "c19a0d4101bfa2ff6e543c846ef3e44495deb6e1",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/lean-project.ts"
+        },
+        {
+          "path": "packages/core/src/tool/registry.ts",
+          "blobSha": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/tool/registry.ts"
+        },
+        {
+          "path": "packages/schema/src/lean-dashboard.ts",
+          "blobSha": "7c679f6d69fb586a71b232214e3b5178fda90c54",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/schema/src/lean-dashboard.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE08",
+      "wp": "WP3",
+      "disposition": "MIGRATE_REVALIDATE_ON_RESUME",
+      "area": "Durable scheduled tasks",
+      "acceptanceIds": [
+        "A09",
+        "A23",
+        "A24",
+        "A29",
+        "A46"
+      ],
+      "observation": "stored directory and capability owner; resume exact durable prompt; scope change must not reassign jobs",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/scheduled-task.ts",
+          "blobSha": "0a89bbdc576091ca01445e45e1500ed4008898a9",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/scheduled-task.ts"
+        },
+        {
+          "path": "packages/core/src/scheduled-task/sql.ts",
+          "blobSha": "f7b58d09202d0eb4026623b587363798a0908874",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/scheduled-task/sql.ts"
+        },
+        {
+          "path": "packages/core/src/scheduled-task/capability.ts",
+          "blobSha": "ab0410651446d3d1d98d9d8028a3ad79bb46aecb",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/scheduled-task/capability.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE09",
+      "wp": "WP3",
+      "disposition": "PRESERVE_INSTALLATION_OWNER_MIGRATE_SELECTION",
+      "area": "Inbox and Board",
+      "acceptanceIds": [
+        "A15",
+        "A25",
+        "A27"
+      ],
+      "observation": "Inbox owner is installation; Board visibility uses repo_project_id; reconciliation must not archive another context's attention",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/inbox/install.ts",
+          "blobSha": "2367785fa7a8028eaf53517d1293f5071f570076",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/inbox/install.ts"
+        },
+        {
+          "path": "packages/core/src/inbox/service.ts",
+          "blobSha": "6cb685ef5d5d99c2cb21aa0b267ff835c97220f4",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/inbox/service.ts"
+        },
+        {
+          "path": "packages/core/src/inbox/board.ts",
+          "blobSha": "9c1deaf31f2aa65659db0734c5e8c8e06c8ad7e0",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/inbox/board.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE10",
+      "wp": "WP3",
+      "disposition": "CLASSIFY_DATA_OWNER_MIGRATE_BINDINGS",
+      "area": "RAG and Atlas",
+      "acceptanceIds": [
+        "A12",
+        "A26",
+        "A27",
+        "A29"
+      ],
+      "observation": "RAG uses path-derived location and adopts aliases; Atlas territory has host-owned projectID; keep source grants and reject foreign catalog",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/server/src/handlers/rag-studio-session.ts",
+          "blobSha": "4dc16c41d4a2ee4cfc00078ddf6d9a17455466e3",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/handlers/rag-studio-session.ts"
+        },
+        {
+          "path": "packages/core/src/rag-studio/sql.ts",
+          "blobSha": "0a953186e6110bc09b1ca991cef266ec1787afbf",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/rag-studio/sql.ts"
+        },
+        {
+          "path": "packages/core/src/atlas.ts",
+          "blobSha": "f6718654785fb155e1bb1b2acb7e9985478b983b",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/atlas.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CORE11",
+      "wp": "WP3",
+      "disposition": "PRESERVE_PERSONAL_OWNER_AND_EXISTING_MEANING",
+      "area": "Meeting memory and child session restrictions",
+      "acceptanceIds": [
+        "A22",
+        "A27"
+      ],
+      "observation": "meetings/address book personal; SessionScope is skills/tools budget, not Teams profile scope",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/core/src/session/meeting.sql.ts",
+          "blobSha": "790966f434170292634397d3f2d5383796bf1404",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/meeting.sql.ts"
+        },
+        {
+          "path": "packages/core/src/session/meeting-memory.sql.ts",
+          "blobSha": "9fc8d27136338d7333b54c72ebc86f1b63a68dcd",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/meeting-memory.sql.ts"
+        },
+        {
+          "path": "packages/core/src/session/scope.ts",
+          "blobSha": "5a46114bdfa8a47b410136d91c2b750bf85302cb",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/scope.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "ID01",
+      "wp": "WP1",
+      "disposition": "REUSE_AUTHORITY_PRESERVE_ROLE_CATALOG",
+      "area": "Business roles and Microsoft policy",
+      "acceptanceIds": [
+        "A04",
+        "A05",
+        "A09",
+        "A10",
+        "A11",
+        "A21"
+      ],
+      "observation": "15 canonical ROWS; group UUID mapping and direct Object ID grants; no new roles inferred from Team selection",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+          "blobSha": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/src/identity.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+          "blobSha": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "ID02",
+      "wp": "WP1",
+      "disposition": "IMPLEMENT_EXPLICIT_TEAMS_READER_PRESERVE_LOGIN",
+      "area": "Entra, Graph directory contract and sessions",
+      "acceptanceIds": [
+        "A02",
+        "A03",
+        "A04",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A36",
+        "A41",
+        "A44",
+        "A45"
+      ],
+      "observation": "web-confidential User.Read/directory me only; optional graphDirectory contract not implemented in read factory; preserve fresh checks and encrypted tokens",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+          "blobSha": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/entra-client.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+          "blobSha": "55982088948974d0451bf5171e589d3039317a83",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-contract.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "blobSha": "8d77f4024b6080c72caecd3061d05656899497d5",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-identity.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blobSha": "b036df618b0986851ab8a3839871b1101d04554f",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/local/entry.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "ID03",
+      "wp": "WP1",
+      "disposition": "PRESERVE_INSTALLATION_DATA_ADD_PROFILE_STORE",
+      "area": "Installation store, bootstrap and admin",
+      "acceptanceIds": [
+        "A10",
+        "A11",
+        "A27",
+        "A28",
+        "A29",
+        "A30",
+        "A45"
+      ],
+      "observation": "snapshots keyed by surface; roleMap seed only absent; preserve explicit empty; add team config independently from business records; corporate administrative admission must remain independent of Team eligibility for first setup and recovery, without reseeding explicit empty maps or granting private data access",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "blobSha": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-store.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts",
+          "blobSha": "dac2f4eff48fef6c1aac4199b57e28b116d8b32f",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+          "blobSha": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/admin.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "ID04",
+      "wp": "WP1",
+      "disposition": "MIGRATE_CONTEXT_PRESERVE_NATIVE_PROOFS",
+      "area": "Product authority, discovery and host contracts",
+      "acceptanceIds": [
+        "A05",
+        "A09",
+        "A10",
+        "A12",
+        "A13",
+        "A15",
+        "A35"
+      ],
+      "observation": "projectId participates in accessRevision/native session binding/tickets/discovery; cloned grants need explicit reload/rebind",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "blobSha": "d00e6d8707aef8e99bdeabb485599399408d7ced",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "blobSha": "b9853f15305d94a0893b45457f17fe15fcefc697",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+        },
+        {
+          "path": "packages/server/src/sucafina-installations.ts",
+          "blobSha": "83e7123556f4973059cd01856ac956e4e4c63006",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/sucafina-installations.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+          "blobSha": "0fb9359e0ad4b5090bc5fa1417bbe354b951fc4e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/cli/src/sucafina-product/native-ui/context.ts"
+        },
+        {
+          "path": "packages/schema/src/sucafina/context.ts",
+          "blobSha": "b5e9da34c5161a98c27846143c156d6c4cdd0567",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/schema/src/sucafina/context.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "ID05",
+      "wp": "WP1",
+      "disposition": "SEPARATE_GRAPH_IDENTITY_FROM_OPERATIONAL_HR",
+      "area": "Team Structure and local administration",
+      "acceptanceIds": [
+        "A05",
+        "A10",
+        "A27",
+        "A36"
+      ],
+      "observation": "CAP07 is snapshot cio/leaders/members with edit actions; UI69 is local-operator notifications/backups, not proof of Graph org or supreme admin",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+          "blobSha": "764726bc6912f060e1d1fe34a7745a0659e804c5",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/apps/cli/src/sucafina-product/native-ui/people.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "blobSha": "c8be36e9eb49f6fbd10fae3429d6f3cd2af0151e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/dashboard-people.ts"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+          "blobSha": "df976de5c4a6226a982cea3289c2dcfdda4db358",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "CI01",
+      "wp": "WP5",
+      "disposition": "EXTEND_EVIDENCE_WITHOUT_WEAKENING_GATES",
+      "area": "Test selection, request validation and final suite",
+      "acceptanceIds": [
+        "A33",
+        "A34",
+        "A35",
+        "A36"
+      ],
+      "observation": "SF suite does not execute every affected core/server/Arsenal/Dock test; require ci-run-linux naming and current env whitelist; observed head 392cecab adds source-PR-bound protected-path approval context, not request/env authorization (see FRESH02)",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "sf/ci/suites.json",
+          "blobSha": "57937b0e9df670fb7ccf10a18de5f5a83dec734d",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/sf/ci/suites.json"
+        },
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "blobSha": "d1a0c0e58f503e9eb8b0e53f431ad070f0b43718",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/.github/workflows/sf-ci.yml"
+        },
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "blobSha": "87ffd428361327192bf0535cc5ab505282d0fcf0",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/.github/workflows/test-ci.yml"
+        },
+        {
+          "path": "script/test-ci-request.ts",
+          "blobSha": "1a0d476f7cec8c03daedcf14eb1fa99cbdb22019",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/script/test-ci-request.ts"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "blobSha": "1ccf87ef27dcf7b374b9c970494f8fc18cf3695e",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/script/sf-ci/gate.mjs"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "AUTH01",
+      "wp": "WP1",
+      "disposition": "ADMIT_CORPORATE_CONTEXT_BEFORE_HOST_SERVICES",
+      "area": "Host authentication versus Microsoft installation authority",
+      "acceptanceIds": [
+        "A04",
+        "A05",
+        "A09",
+        "A13",
+        "A37",
+        "A42"
+      ],
+      "observation": "Microsoft cookie/trust are mount scoped; host Basic/passthrough and operator bearer are a different authority. Classify every reachable transport and apply corporate context before SessionLocation/service selection/data/event emission.",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "packages/server/src/auth.ts",
+          "blobSha": "c8b4c0006f2fa2b60862f03572a322a476645976",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/auth.ts"
+        },
+        {
+          "path": "packages/server/src/middleware/authorization.ts",
+          "blobSha": "4917c54afd9c7343fdc9dac8026a43a642107cab",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/authorization.ts"
+        },
+        {
+          "path": "packages/server/src/middleware/capability-authorization.ts",
+          "blobSha": "ca7a6eaeef94c55cb8c4df36a7b7a89a6256b58d",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/server/src/middleware/capability-authorization.ts"
+        },
+        {
+          "path": "packages/protocol/src/api.ts",
+          "blobSha": "e6d64297b2a0c9071387442d47790429502e8540",
+          "presentAtPin": true,
+          "evidenceCommit": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/protocol/src/api.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "FRESH01",
+      "wp": "WP5",
+      "disposition": "PRESERVE_CONCURRENT_INTEGRATION_FIXTURES",
+      "area": "Observed integration update while document was reviewed",
+      "acceptanceIds": [
+        "A35"
+      ],
+      "observation": "Full compare and both file patches read; initialization of installed fixture host and scanner observation. No central mapped profile or identity producer changed in this observed delta.",
+      "evidenceLevel": "PATCH_READ_AT_OBSERVED_HEAD",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+          "blobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
+          "presentAtPin": true,
+          "evidenceCommit": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a5b15b51b78469a054ba97b0e87fd1e36e31f73a/modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "blobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+          "presentAtPin": true,
+          "evidenceCommit": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a5b15b51b78469a054ba97b0e87fd1e36e31f73a/packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+        }
+      ],
+      "implementationStatus": "NO_CHANGE_PROPOSED",
+      "verificationStatus": "PATCH_REVIEW_ONLY"
+    },
+    {
+      "id": "RECOVERY01",
+      "wp": "WP4",
+      "disposition": "PRESERVE_MONOTONIC_EFFECT_PROOF",
+      "area": "Recovery after post-checkpoint effects",
+      "acceptanceIds": [
+        "A24",
+        "A29",
+        "A30",
+        "A46"
+      ],
+      "observation": "Existing SF restore retains current delivery/claims/schedule/inbox/job state, unions issued identifiers and keeps sequence maxima; recovered SQLite does not replace live auth/database. New profile stores need explicit restore-versus-preserve classification and suspension when post-checkpoint effect proof is unavailable.",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operations.ts",
+          "blobSha": "4bc3ee2d64608863634c8d0b48492b7c809ba6dd",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/operations.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-recovery.ts",
+          "blobSha": "d5ef708b8a6c56b9c7211815136c55970c15056c",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/runtime/local-recovery.ts"
+        },
+        {
+          "path": "packages/core/src/session/input.ts",
+          "blobSha": "d945b00cf43d03b923cc90d51970d47e2dd3a9c2",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/packages/core/src/session/input.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "EVIDENCE01",
+      "wp": "WP0/WP3/WP4",
+      "disposition": "CLASSIFY_HISTORICAL_IDENTIFIERS_AND_CURRENT_AUTHORITY",
+      "area": "Durable evidence identifiers, hashes and admitted bindings",
+      "acceptanceIds": [
+        "A13",
+        "A27",
+        "A29",
+        "A35",
+        "A39"
+      ],
+      "observation": "projectId participates in durable evidence refs, digests and BI bindings. The plan already permits immutable technical provenance plus authorized association. Classify readers/producers per family; do not rehash history to imply fresh authority, reuse transient proofs or mistake a retained historical key for an active repository profile. This is a concretized inventory obligation, not an additional cold-review finding.",
+      "evidenceLevel": "TARGETED_SOURCE_READING",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "blobSha": "102c849084980ae52223809d33bdeea36a58536b",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blobSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "blobSha": "755639b2a16265fe164ba2e6343738c1362d168c",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/state.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blobSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "blobSha": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/artifact-store.ts",
+          "blobSha": "7761f3d65c7fe50d197800beef22693e2b9a812f",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/analytics/artifact-store.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/evidence.ts",
+          "blobSha": "6379310c439d2643ba64efd4c54777aac10e582c",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/collaboration/evidence.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts",
+          "blobSha": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+          "presentAtPin": true,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f7dd58e32bc834f1485df20b91adbf759b4c4ad0/modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    },
+    {
+      "id": "FRESH02",
+      "wp": "WP0/WP2/WP3/WP5",
+      "disposition": "RECONCILE_OBSERVED_INTEGRATION_DELTA",
+      "area": "Cold-review integration delta: context identity, business observations and CI guards",
+      "acceptanceIds": [
+        "A15",
+        "A34",
+        "A35",
+        "A37",
+        "A41"
+      ],
+      "observation": "Observed a5b15b51 to 392cecab: 11 commits and 15 files; f7dd58e3 to 392cecab: 13 commits and 17 files. Preserve ready() object identity per admitted generation, canonical Atlas observation renewal, complete Planner answer scope, same-dispatch BI proofs and real source-PR guard admission. Patches/contracts/test obligations were read; no qualification run or source rebase performed.",
+      "evidenceLevel": "OBSERVED_DELTA_PATCH_AND_TARGETED_CONTRACT_READING",
+      "paths": [
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "blobSha": "60d4ec50be167379747be198ffbd205fb58ec971",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/.github/workflows/test-ci.yml"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+          "blobSha": "3f21eabd8a40178e5054b28ef59ad54473abe2aa",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/apps/cli/src/sucafina-product/bi-call-scope.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "blobSha": "24cb859d3508309c0cfe7476907f5421be9149a8",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/apps/cli/src/sucafina-product/bi-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blobSha": "03e6260fb965f189a4cb40287dd8c8d5d23af05e",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+          "blobSha": "5b3357fa5f88fb78ab1fea3201c13b5c1ae6d6c5",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/apps/cli/src/sucafina-product/memory-case-read-scope.ts"
+        },
+        {
+          "path": "docs/guardrail/test-ci-context.md",
+          "blobSha": "64cf88dc315cf0a19ef556754c640326cd16f031",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/docs/guardrail/test-ci-context.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "blobSha": "2f0a09ff71fa73ee11509c3860e1a6fe94e4c763",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+          "blobSha": "ac471400f2fac9cedec45d693ebf35b815ad0b9f",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-observation.test.ts",
+          "blobSha": "bfb31c704dc695595cd45041e722de2d03e7da53",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-observation.test.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+          "blobSha": "1e309a6f2f56eeba5e9a038eb06d226a7d9c56a0",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/planner-answer-scope.test.ts",
+          "blobSha": "058f173ba1f74ac7d0669a109773a54d089d425f",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/modules/sucafina/Sucafinav1/test/product/wp12/planner-answer-scope.test.ts"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "blobSha": "047643f93ac4f97c4c627dda4802c5406f791a52",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+          "blobSha": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts"
+        },
+        {
+          "path": "packages/core/test/test-ci-guard-context.test.ts",
+          "blobSha": "d41808d4c498ed26b94d24746abc1c3d214bea88",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/packages/core/test/test-ci-guard-context.test.ts"
+        },
+        {
+          "path": "script/test-ci-guard-context.ts",
+          "blobSha": "acb672e9734b761316b0914180a295aa74235365",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/392cecab68288d4b669828adc5d1aaa738693d80/script/test-ci-guard-context.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN",
+      "comparisonBase": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+      "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+    },
+    {
+      "id": "FRESH03",
+      "wp": "WP0/WP5",
+      "disposition": "RECONCILE_CI_EVIDENCE_OWNERSHIP",
+      "area": "Post-recheck CI observation: selection distribution versus real static execution",
+      "acceptanceIds": [
+        "A33",
+        "A34",
+        "A35"
+      ],
+      "observation": "7 commits/17 files after 392cecab. Historical costs distribute the existing complete selection, not its membership. Four static tests now prove mandatory job wiring instead of running duplicate compiler/guard commands; their isolated PASS is not execution evidence. sf/static-and-contracts and actual candidate outcomes remain required. Source-PR guard resolver is unchanged. No performance or CI result certified.",
+      "evidenceLevel": "TARGETED_DELTA_CONTRACT_READING",
+      "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+      "paths": [
+        {
+          "path": ".github/actions/setup-bun/action.yml",
+          "blobSha": "5372f6a10b0f9b3a1472c301ef7699b539901604",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/actions/setup-bun/action.yml"
+        },
+        {
+          "path": ".github/workflows/sf-ci.yml",
+          "blobSha": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/workflows/sf-ci.yml"
+        },
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "blobSha": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/.github/workflows/test-ci.yml"
+        },
+        {
+          "path": "script/sf-ci/gate.mjs",
+          "blobSha": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+          "presentAtPin": true,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/script/sf-ci/gate.mjs"
+        },
+        {
+          "path": "script/sf-ci/shard-plan.mjs",
+          "blobSha": "afa82dbec794ca607f64dd2fe3a6fb7cdfcd8dd2",
+          "presentAtPin": false,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/script/sf-ci/shard-plan.mjs"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts",
+          "blobSha": "40fac03d180476e73c4ec333c1ac880c61247246",
+          "presentAtPin": false,
+          "evidenceCommit": "72830e53adfcb2059575b249e76c88753beb04e8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/72830e53adfcb2059575b249e76c88753beb04e8/modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts"
+        }
+      ],
+      "implementationStatus": "PLANNED",
+      "verificationStatus": "NOT_RUN"
+    }
+  ],
+  "existingTestGroups": [
+    {
+      "id": "core-context",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/core/test/project.test.ts",
+          "blobSha": "753c080483b594e18ae6246e95e48fa15be44927",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/project-root.test.ts",
+          "blobSha": "8c090e86b99534dbb17c1065a961949f289633e4",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/location.test.ts",
+          "blobSha": "30227f68798eff5151641d222e750c59349259ff",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/location-layer.test.ts",
+          "blobSha": "8487ddf7ad2c91a330fa0cf181222526bec8b5b0",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/location-hoisted-map.test.ts",
+          "blobSha": "174bd6fb36fef3bf7a91521357c1c0f35f892a4f",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/config/config.test.ts",
+          "blobSha": "32d5b5c2921edea7c72c1c47523f38439f9b7833",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/config/config-global.test.ts",
+          "blobSha": "1dd6bf2a77317d3a88ef17be64519d32d6740657",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/config/trust.test.ts",
+          "blobSha": "d5fdf45c158e4f3d4968a5054c53c65cf933f003",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/instruction-context.test.ts",
+          "blobSha": "d8c9388256b7d05237d18550a6ced00bb1f4e3be",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "core-session",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/core/test/session-create.test.ts",
+          "blobSha": "ea81222d683c9c2bef1d0fcdaad474f26d328371",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-persistence.test.ts",
+          "blobSha": "77a0f7663ae1260cb0a1154d5f851262d750c94b",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-projector.test.ts",
+          "blobSha": "4595e3d179d05b3fb834e72d5cf5f5ed35730b02",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-archive.test.ts",
+          "blobSha": "7bbba6a8509a86311d5c129274fda7e21d50501e",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-archive-http.test.ts",
+          "blobSha": "71ec4a07fa1b53b32d2882eb1a4052497811556f",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-scope.test.ts",
+          "blobSha": "08817600bf7d993ddb5c356f9f0e209f4bdc06e8",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-store-permissions.test.ts",
+          "blobSha": "486af6d291154f56e59d7a9d4a198f47c0b853d6",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/session-run-coordinator.test.ts",
+          "blobSha": "384fc9c72da65c98ac485e1940e005e99ca22ebc",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "core-mcp",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/core/test/mcp/project-config.test.ts",
+          "blobSha": "3b36dd21356c24e368387175e32cc0e634f16b0c",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/mcp/auth.test.ts",
+          "blobSha": "cad6688c1aa89baa8b4cae3b0ae57555e6570986",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/mcp/oauth-provider.test.ts",
+          "blobSha": "765343042dc3c2841788a761e4f8a3cb28b35267",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/mcp/session-recovery.test.ts",
+          "blobSha": "6586508220074eb4df30b725c2208d1b10dc01ae",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "core-tools",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/core/test/maestro-arsenal.test.ts",
+          "blobSha": "611d531dcf64de3bbb4dcdcd1e52ee71a183bc0f",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/maestro-arsenal-package.test.ts",
+          "blobSha": "5bf1d485083c3f565d5bb68a5c96f2541a88cd58",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/tool-safety-binding.test.ts",
+          "blobSha": "1dd5f04fb8967f539fc4ead43fb1d86515dfef27",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/tool-safety-hooks.test.ts",
+          "blobSha": "a3d608e56a4c4ef61b6cd90ca1099edbce600bf3",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/tool-safety-relay.test.ts",
+          "blobSha": "6be8480a5aba1a9f31d95a1bbdef9117f3086d85",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "core-relay",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/core/test/relay-hook-install.test.ts",
+          "blobSha": "fb903ba67d4dcfa55bdea704d27435d930a0e823",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/relay-hook-session.test.ts",
+          "blobSha": "9bbd6f9e04e42d430d787551b0c817ae752cd4fa",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/relay-hook-recovery.test.ts",
+          "blobSha": "ec6537a5ab3a4c87acb5d18cfc008673a1a678e5",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/relay-hook-recovery-startup.test.ts",
+          "blobSha": "d7f18c2688d8a35ac2e804777cf510242ce36168",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/relay-workflow-binding.test.ts",
+          "blobSha": "6205649eb98d965768999475a475a4578b15f0e9",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/relay.test.ts",
+          "blobSha": "9b76894196e6a5648322bb3c086f43c2ff31e73b",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "core-lean",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/core/test/lean-project-v2.test.ts",
+          "blobSha": "540343799458dcce8ad72a6126ba06b1fcc71465",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/lean-recall.test.ts",
+          "blobSha": "650313352ee1ed25b08c109766d3ac009d9da5c1",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/lean-telemetry.test.ts",
+          "blobSha": "fcb0b7b3745d1a67494765273b8d473b041da9c2",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/lean-v2-projection.test.ts",
+          "blobSha": "20af7fd2deebbcf6f3e59727b88e44f4d7561c67",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/config/tool-output-lean.test.ts",
+          "blobSha": "42b1b4e46863a8df0159bc21ec12035e69569bb1",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "server",
+      "package": "packages/server",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/server/test/config-project-http.test.ts",
+          "blobSha": "0e257f2fe19dbb75e8544de82a7d3a00ce9e792b",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/server/test/account-mcp-http.test.ts",
+          "blobSha": "fe2efeb199c85b4c43f22241c21b42d6c7a350aa",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/server/test/session-move-http.test.ts",
+          "blobSha": "28078ff922a444864a04e4c062284b907fee2663",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/server/test/httpapi-exercise/global-config.ts",
+          "blobSha": "a42c88ea6a29f2dae18f2415bfc1c9191753d5f7",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/server/test/httpapi-exercise/mcp.ts",
+          "blobSha": "d9c1b0c96e4526606c52bd2b826ca92532e16db0",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/server/test/httpapi-exercise/session-settings.ts",
+          "blobSha": "13bed94069869327ecd42a18a5263a14e9eaf553",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "arsenal",
+      "package": "modules/maestro/arsenal",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "modules/maestro/arsenal/test/profile.test.ts",
+          "blobSha": "4e318cb30cc11ba1b1604a0b136bc7e77007a242",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/maestro/arsenal/test/repository.governance.test.ts",
+          "blobSha": "1580b7688f3eb4d7a94d0bb40159ac280404ba8e",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "microsoft",
+      "package": "modules/sucafina",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+          "blobSha": "17422dc0c812b22da51cc3bd6b57bb9e9ab01966",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+          "blobSha": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+          "blobSha": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/local-bootstrap.test.ts",
+          "blobSha": "f9cfd378f92d4b33118ae91eb5754b8ae6f22b4c",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+          "blobSha": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/admin-runtime.test.ts",
+          "blobSha": "94c96ebe384def1d8b92626a31e4245d62d5e865",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-first-login.test.ts",
+          "blobSha": "995510b73d50dbeb5b8bebdad406e3e80648e68b",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "blobSha": "a059b3e711f2b627ead1bd7aa16738ff2d7ef97c",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "app-unit",
+      "package": "packages/app-shell",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/app-shell/src/pages/session/apps-panel-controller.test.ts",
+          "blobSha": "96edd1cc2af9f43e9c7f645972b44e03b50e38b0",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/src/components/titlebar-tab-order.test.ts",
+          "blobSha": "a3e23eaba4d4606239ea170940fda88ce40b93cf",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/src/pages/layout/helpers.test.ts",
+          "blobSha": "27d86e797b8481b358f52935db6760793abe119b",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/src/utils/persist.test.ts",
+          "blobSha": "317bddfb63a4223a0e521d0e37939624d6215613",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "app-browser",
+      "package": "packages/app-shell",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file; cold reviewer inspected owner-ready.test.ts at evidenceCommit 392cecab, not an installed/live-tenant proof",
+      "tests": [
+        {
+          "path": "packages/app-shell/test-browser/orchestra/titlebar-tab-order.test.ts",
+          "blobSha": "57f6b5f948ab440c48ba11933993892a8b8a95fb",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/test/sucafina-native/native-chapter-entry.test.ts",
+          "blobSha": "8ac82ca5b97052b7dbcc59f796009ace079b5815",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts",
+          "blobSha": "5cfab26e9f171097994b3ec72c53c587b87268a5",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "blobSha": "e0da88f9b5c9eacf33ccf44b5e245dce17888ece",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+          "blobSha": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+        }
+      ]
+    },
+    {
+      "id": "app-e2e",
+      "package": "packages/app-shell",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "packages/app-shell/e2e/orchestra/chapter-dock.spec.ts",
+          "blobSha": "84a64c3c7448c5f7f232b729c762081bb6611cd4",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/chapter-bootstrap.spec.ts",
+          "blobSha": "56131bc7c914e0900573fccf8bff3f259dd488a4",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/project-git-init.spec.ts",
+          "blobSha": "d652838a700ad9627803ea9026e13bbf74245305",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "blobSha": "bab6a804e5f082cc60eb6f27209070b552981035",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "blobSha": "0d95609508b8931ca930d95323578efcb67800c0",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "blobSha": "69b587773c372fc30185f3e39d3263292474c894",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "dock-host",
+      "package": "apps/desktop",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Key test bodies inspected during targeted study; not a claim of complete semantic review of every listed file",
+      "tests": [
+        {
+          "path": "apps/desktop/src/main/app-dock-profile-registry.test.ts",
+          "blobSha": "7a8f0cccb01d74fca759d0991c54f71a63185fcd",
+          "presentAtPin": true
+        },
+        {
+          "path": "apps/desktop/src/main/app-dock-rpc.test.ts",
+          "blobSha": "ab66b27bdf22c7a36094c9ae019c55bdd7ec25bf",
+          "presentAtPin": true
+        },
+        {
+          "path": "apps/desktop/src/main/app-dock-security.test.ts",
+          "blobSha": "8806add844fd137790e31056db4267a8848cec0b",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "schedule-candidates",
+      "package": "packages/core",
+      "state": "TREE_DISCOVERED_REVIEW_REQUIRED",
+      "execution": "NOT_RUN",
+      "bodyReview": "File existence checked at analysis pin; body coverage must be reviewed in WP0",
+      "tests": [
+        {
+          "path": "packages/core/test/scheduled-task.test.ts",
+          "blobSha": "4d242fd64503184fbfe362fc52907c67539a3686",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/scheduled-task-model.test.ts",
+          "blobSha": "60c8056f1820a31a2e7acefa5395c0f2312c654d",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/scheduled-task-capability.test.ts",
+          "blobSha": "c96b90a80f985a84c74f8859c211b533f8600db6",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/scheduled-task-capability-model.test.ts",
+          "blobSha": "b210caa320ec005453ce48d7d952f274549be95e",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "inbox-candidates",
+      "package": "packages/core",
+      "state": "TREE_DISCOVERED_REVIEW_REQUIRED",
+      "execution": "NOT_RUN",
+      "bodyReview": "File existence checked at analysis pin; body coverage must be reviewed in WP0",
+      "tests": [
+        {
+          "path": "packages/core/test/inbox/account-isolation.test.ts",
+          "blobSha": "20de84916b8665d52d506574ecd6ef05aba63d69",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/inbox/location-migration.test.ts",
+          "blobSha": "0dec866eef1e8eec311ff365c752181fe15f6cba",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/inbox/service.test.ts",
+          "blobSha": "a849e1272d563f8db617e0ecd7ab440d9af0be1f",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/core/test/inbox/work-pagination.test.ts",
+          "blobSha": "8ca7952e6ed02cbcf1cebb3b11220b53261a4483",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "rag-candidates",
+      "package": "packages/server",
+      "state": "TREE_DISCOVERED_REVIEW_REQUIRED",
+      "execution": "NOT_RUN",
+      "bodyReview": "File existence checked at analysis pin; body coverage must be reviewed in WP0",
+      "tests": [
+        {
+          "path": "packages/server/test/rag-studio-httpapi.test.ts",
+          "blobSha": "afac23fbc809e6188b5d10127abbc09961b459c7",
+          "presentAtPin": true
+        },
+        {
+          "path": "packages/server/test/rag-studio-location.test.ts",
+          "blobSha": "3d5f8b45db520f91dc75aa4c08d722cccd1c7751",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "recovery-regressions",
+      "package": "modules/sucafina",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "Restore and backup test names plus relevant assertions/bodies inspected during cold review. These are existing obligations to preserve; A46 still needs a new composed post-cutover rewind scenario.",
+      "tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/operations-runtime.test.ts",
+          "blobSha": "94925659f1971c9793d6381fb8f291c3d3ebc1fc",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+          "blobSha": "1781a9f6f2011270418d6808afc67a20d7d00a21",
+          "presentAtPin": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/local-backup-resilience.test.ts",
+          "blobSha": "b07a23ad44e4830219eb4dd5c324a6cbdc2b8a03",
+          "presentAtPin": true
+        }
+      ]
+    },
+    {
+      "id": "business-observation-regressions",
+      "package": "modules/sucafina",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "New or changed test patches read at observed integration head. Preserve source completeness, consumed observation/dispatch identity and mutation/authority rejection; tests not executed.",
+      "tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-observation.test.ts",
+          "blobSha": "bfb31c704dc695595cd45041e722de2d03e7da53",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+          "blobSha": "1e309a6f2f56eeba5e9a038eb06d226a7d9c56a0",
+          "presentAtPin": true,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/planner-answer-scope.test.ts",
+          "blobSha": "058f173ba1f74ac7d0669a109773a54d089d425f",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+        }
+      ]
+    },
+    {
+      "id": "ci-guard-context",
+      "package": "packages/core",
+      "state": "EXISTING_TESTS_TO_REVIEW_AND_SELECT",
+      "execution": "NOT_RUN",
+      "bodyReview": "New guard-context regression inspected by cold reviewer; existing request validator is a tree-verified companion candidate. Neither fixtures nor this listing prove a real approval.",
+      "tests": [
+        {
+          "path": "packages/core/test/test-ci-guard-context.test.ts",
+          "blobSha": "d41808d4c498ed26b94d24746abc1c3d214bea88",
+          "presentAtPin": false,
+          "evidenceCommit": "392cecab68288d4b669828adc5d1aaa738693d80"
+        },
+        {
+          "path": "packages/core/test/test-ci-request.test.ts",
+          "blobSha": "46c52e307ed2c6857820b1a591b0c47187cbb355",
+          "presentAtPin": true
+        }
+      ]
+    }
+  ],
+  "acceptanceScenarios": [
+    {
+      "id": "A01",
+      "scenario": "Instalação limpa, sem Git ou repositório",
+      "requiredResult": "Login → equipe autorizada → capítulos e novo trabalho funcionam.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A02",
+      "scenario": "Nenhuma, uma e múltiplas equipes elegíveis",
+      "requiredResult": "Estados distintos; seleção automática só da única opção validada; nenhuma escolha arbitrária; ausência de profile não confunde autenticação nem suprime a via administrativa admitida.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A03",
+      "scenario": "Nome duplicado, rename e equipe recriada",
+      "requiredResult": "IDs preservam identidade; novo Object ID não herda dados/grants antigos.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A04",
+      "scenario": "Dois tenants/instalações com nomes iguais; convidado",
+      "requiredResult": "Nenhuma colisão; usa tenant de recurso e principal correto.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A05",
+      "scenario": "Browser inventa team/profile/role/context stamp",
+      "requiredResult": "Backend recusa; picker não concede autoridade.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A06",
+      "scenario": "Grupo transitivo, overage e informação parcial",
+      "requiredResult": "Sem concessão por suposição; consulta completa/validação definida.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A07",
+      "scenario": "Canal privado/compartilhado",
+      "requiredResult": "Acesso ao canal não abre automaticamente o Team inteiro.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A08",
+      "scenario": "Graph 403/429/timeout/página faltante/ciclo",
+      "requiredResult": "Erro explícito e acesso seguro; sem fallback repo ou falso vazio.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A09",
+      "scenario": "Revogação em leitura/edição/execução pendente",
+      "requiredResult": "Novo efeito recusado; resposta/contexto obsoleto não é aceito.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A10",
+      "scenario": "Grupo/admin/policy muda",
+      "requiredResult": "Revisão invalida handles; admin supremo e admin de superfície não se confundem.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A11",
+      "scenario": "RoleMap vazio antes de restart/migração",
+      "requiredResult": "Continua vazio; seed não restaura acesso.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A12",
+      "scenario": "Equipes A/B usam o mesmo diretório físico",
+      "requiredResult": "Config/cache/serviços/sessões/métricas não colidem.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A13",
+      "scenario": "Reutilizar Session ID de outro scope",
+      "requiredResult": "Nega adoção; retry idempotente continua funcionando no mesmo scope.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A14",
+      "scenario": "Listagem/busca/export/replay/paginação",
+      "requiredResult": "Filtro autorizado ocorre antes de limite/paginação e de retornar dados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A15",
+      "scenario": "Troca A→B com requests/events/late-open em voo",
+      "requiredResult": "Nada de A aparece ou é gravado em B; owner/generation corretos.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A16",
+      "scenario": "Duas janelas em equipes distintas",
+      "requiredResult": "RPC, seleção, tabs e persistência independentes e autorizados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A17",
+      "scenario": "Troca de usuário no mesmo dispositivo",
+      "requiredResult": "Cookies/tokens/drafts/histórico privados não são herdados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A18",
+      "scenario": "UI estreita, keyboard, deep link, novo chat",
+      "requiredResult": "Mesmo contrato Teams; nenhum picker ou fallback de pasta/repo.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A19",
+      "scenario": "Draft não enviado e submissão com resultado incerto",
+      "requiredResult": "Guard correto; recibo/reconciliação preservados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A20",
+      "scenario": "orchestra.json/.orchestra/AGENTS perto do cwd",
+      "requiredResult": "Não modificam o profile nem elevam autoridade SF.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A21",
+      "scenario": "MCP compartilhado e credencial pessoal",
+      "requiredResult": "Catálogo pode ser comum; segredo e uso seguem titular/grants.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A22",
+      "scenario": "ToolSafety e profile de agente",
+      "requiredResult": "Preferências não ampliam permissão; limites de arquivo e origem sobrevivem.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A23",
+      "scenario": "Job vence após logout/switch/revogação",
+      "requiredResult": "Mantém dono original, revalida antes de efeito, registra suspensão/recusa honestamente.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A24",
+      "scenario": "Claim retoma após crash com prompt já admitido",
+      "requiredResult": "Sem duplicar efeito nem falsificar recibo; autoridade atual aplicada.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A25",
+      "scenario": "Inbox muda de contexto",
+      "requiredResult": "Não arquiva atenção pendente de outro contexto nem transfere contas.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A26",
+      "scenario": "RAG aliases/Atlas na mesma pasta",
+      "requiredResult": "Nenhuma adoção cruzada de corpus/catálogo entre equipes.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A27",
+      "scenario": "Reuniões, endereço e dados empresariais compartilhados",
+      "requiredResult": "Ownership original e grants preservados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A28",
+      "scenario": "Migration dry-run e vínculo ambíguo",
+      "requiredResult": "Zero escrita; conflito explícito; não há mapping por nome/primeiro Team.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A29",
+      "scenario": "Migração interrompida, repetida e concorrente",
+      "requiredResult": "Idempotência, integridade e CAS; nenhum cascade perde história.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A30",
+      "scenario": "Recuperação após revogação",
+      "requiredResult": "Não restaura concessões/segredos nem repo-profile ativo.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A31",
+      "scenario": "Store novo corrupto ou schema inesperado",
+      "requiredResult": "Recusa segura; nunca recorre ao store repo antigo.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A32",
+      "scenario": "APIs/selectors/writers legados",
+      "requiredResult": "Retirados ou recusam explicitamente no SF; não permanecem alias ativos de profile.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A33",
+      "scenario": "Scan/import graph/runtime tracing do pacote final",
+      "requiredResult": "Zero ocorrência ativa não classificada de repo-profile; sem allowlist ampla.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A34",
+      "scenario": "Testes substituídos e suites selecionadas",
+      "requiredResult": "Equivalência registrada; nenhuma asserção/seleção enfraquecida.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A35",
+      "scenario": "Jornadas reais Operations, Decisions, Reports",
+      "requiredResult": "Funcionam no novo contexto sem regressão de proveniência/recuperação/guardas.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A36",
+      "scenario": "Tenant real e artefato Linux final",
+      "requiredResult": "Login, memberships, troca, revogação e restart provados no ambiente; evidência separada dos mocks.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A37",
+      "scenario": "Dois usuários simultâneos no mesmo Team/pasta com grants distintos",
+      "requiredResult": "Serviços/cache/queries/credenciais não retêm autoridade do outro; ordem de abertura não muda acesso.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A38",
+      "scenario": "Writer antigo e scheduler concorrem com snapshot/backfill/flip",
+      "requiredResult": "Deltas reconciliados ou recusados pelo fence; geração obsoleta não escreve, inclusive após restart.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A39",
+      "scenario": "parentID/fork/move/import/replay entre scopes",
+      "requiredResult": "Referências cruzadas negadas sem evento parcial; operações válidas preservam scope e grants estreitados.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A40",
+      "scenario": "Registry tenta reatribuir storageKey sem copiar cookies",
+      "requiredResult": "Rebind sem titular/tenant/contexto autorizado é negado; partição nova exige reauth; legado permanece isolado.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A41",
+      "scenario": "Revogação durante modal de draft, janela em background e stream antigo",
+      "requiredResult": "Retirada de autoridade vence confirmação; todas as janelas do auth epoch invalidam, sem perder reconciliação.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A42",
+      "scenario": "Basic/operador/cookie fora do mount/Session ID conhecido nos transportes",
+      "requiredResult": "Não equivalem a principal Teams; todos entrypoints protegidos recusam sem contexto admitido, sem passthrough.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A43",
+      "scenario": "URL builder/parser, back/forward e restauração de link antigo",
+      "requiredResult": "Seletores completos/versionados, duplicatas e chaves desconhecidas tratados; nunca compõe tuple com outro profile.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A44",
+      "scenario": "Operações Graph observadas",
+      "requiredResult": "Consultas contratadas, inclusive POST de leitura, permitidas; nenhuma mutação de Microsoft por configurar profile.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A45",
+      "scenario": "Admin sem Team; instalação sem profiles; último profile removido; usuário/convidado com grant e zero Teams",
+      "requiredResult": "Admin corporativo atualmente verificado alcança somente configuração/recuperação; usuário comum não é promovido. Revogar grupo retira a via; roleMap vazio permanece vazio. Jornadas de equipe sem vínculo não são admitidas e a transição de atores existentes é classificada antes do corte.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A46",
+      "scenario": "Checkpoint anterior a efeito pós-corte; restore com autoridade ainda válida; restart/retry",
+      "requiredResult": "Recibos, slots consumidos, cancelamentos e números emitidos não retrocedem. Sem prova posterior, consumidores ficam suspensos para reconciliação; nenhum reenvio automático ou recibo inventado.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "requiredRemainingInventory": [
+    "Reconcile the actual implementation candidate delta against 687759276c2c9121c2cfd20a5994b277ceb7ee4d; update paths/contracts only for that delta.",
+    "Produce the final occurrence/caller/reachability ledger from the implemented source and actual SF prod archive; execute negative residue controls. Scope searches are not proof of artifact absence.",
+    "Census actual stored legacy profiles/data/credentials, prove owner mapping and privacy, and rehearse migration with writer fence, partial interruption, cutover and monotonic effect recovery.",
+    "Observe real Microsoft tenant eligibility/consent/revocation and corporate recovery-admin admission without selected Team; inventory authorized actors who lack eligible Team before cutover.",
+    "Implement the exact missing runners/receipt contracts/operational adapters named in the new test plan; existing workflow/config blockers remain blocking until fixed and actually run.",
+    "Run final exact selections and all integrated/installed/recovery gates on the same product candidate/tree/archive; no result was obtained in this study."
+  ],
+  "residueSearchSeeds": [
+    "profileProject",
+    "HomeProjectSelection",
+    "appDockProfile",
+    "repo-",
+    "tabMatchesProfile",
+    "selectProject",
+    "project.open",
+    "home.selection",
+    "Project.resolve",
+    "ProjectID.global",
+    "project_id",
+    "projectId",
+    "projectID",
+    "worktree",
+    "directoryKey",
+    "serverWorkspace",
+    "McpProjectConfig",
+    "trustedProjects",
+    "trusted_projects",
+    "profileDirectory",
+    "LeanProfilePreferences",
+    "location_id",
+    "repo_project_id",
+    "orchestra.json",
+    ".orchestra"
+  ],
+  "evidenceRules": {
+    "finalEvidenceMustPinCommitAndTree": true,
+    "missingEmptySkippedCancelledIsPass": false,
+    "oldRepoFallbackAllowed": false,
+    "permanentDualWriteAllowed": false,
+    "credentialPromotionToSharedTeamAllowed": false,
+    "policyRollbackMayRestoreRevokedAccess": false,
+    "dataOwnershipTransfersFromSelectionAllowed": false,
+    "broadResidualAllowlistAllowed": false,
+    "sharedTeamMaySharePrincipalAuthority": false,
+    "legacyStorageKeyMayBeReboundWithoutOwnerProof": false,
+    "draftGuardMayVetoRevocation": false,
+    "cutoverRequiresServerWriterFence": true,
+    "corporateAdminRequiresSelectedTeam": false,
+    "corporateAdminGrantsPrivateBusinessRead": false,
+    "restoreMayRewindConsumedEffectProof": false,
+    "unknownPostCheckpointEffectMayAutoRetry": false,
+    "ciRequestMaySupplyGuardApproval": false,
+    "staticOwnershipTestPassProvesCompilerOrGuardExecution": false,
+    "historicalShardCostsProveSuccessfulRuntime": false
+  },
+  "authoritativeExternalSources": [
+    {
+      "topic": "Direct Team membership and shared-channel limitation",
+      "url": "https://learn.microsoft.com/en-us/graph/api/user-list-joinedteams?view=graph-rest-1.0"
+    },
+    {
+      "topic": "Transitive group membership, delegated endpoints and limited information",
+      "url": "https://learn.microsoft.com/en-us/graph/api/user-list-transitivememberof?view=graph-rest-1.0"
+    },
+    {
+      "topic": "Tenant/principal validation",
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/claims-validation"
+    },
+    {
+      "topic": "Immutable identity and groups overage",
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference"
+    }
+  ],
+  "freshnessCheck": {
+    "observedBranch": "sf-join-four",
+    "observedHead": "72830e53adfcb2059575b249e76c88753beb04e8",
+    "comparisonBase": "392cecab68288d4b669828adc5d1aaa738693d80",
+    "status": "ahead",
+    "totalCommits": 7,
+    "evidence": "Post-recheck CI-only observation. Complete compare enumerated 17 files; integrator and cold_scope read relevant workflow, static ownership, selection/shard and approval contracts. suites.json unchanged; source-PR guard resolver blob unchanged. Not an audit of every optimization, performance claim or test execution.",
+    "sourceBranchFrozen": false,
+    "changedFiles": [
+      {
+        "path": ".github/actions/setup-bun/action.yml",
+        "headBlobSha": "5372f6a10b0f9b3a1472c301ef7699b539901604",
+        "status": "modified",
+        "additions": 43,
+        "deletions": 4
+      },
+      {
+        "path": ".github/workflows/sf-ci.yml",
+        "headBlobSha": "91a13d5db368a55d72480c0c991f76ee8ce2ddd0",
+        "status": "modified",
+        "additions": 19,
+        "deletions": 4
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "headBlobSha": "a6accff582c82792ef3d6f1d627972a5bb429a9e",
+        "status": "modified",
+        "additions": 15,
+        "deletions": 4
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts",
+        "headBlobSha": "a10445d5f226b5f966bd97082ddb2fa2310763e5",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 5
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.test.ts",
+        "headBlobSha": "d029f234ed50140fba32771fe3dc1743e71236d0",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/fixture/ci-static-contract.ts",
+        "headBlobSha": "40fac03d180476e73c4ec333c1ac880c61247246",
+        "status": "added",
+        "additions": 109,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/static-checks.test.ts",
+        "headBlobSha": "0451db983a19e6d708c428c6f87626c86895d9a4",
+        "status": "modified",
+        "additions": 10,
+        "deletions": 39
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/guards.test.ts",
+        "headBlobSha": "0187c6b7c6792ad4ce8278eb752d631c9e014991",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+        "headBlobSha": "e934400cb61810af3913416a6104b672cb2a1f74",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 27
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts",
+        "headBlobSha": "be16ada7558535b22c05ddc7ef088a8973973f69",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 27
+      },
+      {
+        "path": "script/sf-ci/gate.mjs",
+        "headBlobSha": "3e54f79fa87afee56ec7b80f0a0cbdb5e0b3409c",
+        "status": "modified",
+        "additions": 28,
+        "deletions": 22
+      },
+      {
+        "path": "script/sf-ci/gate.test.mjs",
+        "headBlobSha": "5a04281dc86e7a5d377bd077831bc98c0a454ac8",
+        "status": "modified",
+        "additions": 38,
+        "deletions": 0
+      },
+      {
+        "path": "script/sf-ci/shard-plan.mjs",
+        "headBlobSha": "afa82dbec794ca607f64dd2fe3a6fb7cdfcd8dd2",
+        "status": "added",
+        "additions": 104,
+        "deletions": 0
+      },
+      {
+        "path": "script/sf-ci/shard-plan.test.mjs",
+        "headBlobSha": "859ff15c2950ffdadae18a63627fc4a33a3aa266",
+        "status": "added",
+        "additions": 148,
+        "deletions": 0
+      },
+      {
+        "path": "sf/ci/PERFORMANCE.md",
+        "headBlobSha": "de56e3f1e5a72651063ee0fdeba087cabbcbd832",
+        "status": "added",
+        "additions": 160,
+        "deletions": 0
+      },
+      {
+        "path": "sf/ci/README.md",
+        "headBlobSha": "31dd916a7d484d33108af9d398001ddcf4cb7717",
+        "status": "modified",
+        "additions": 12,
+        "deletions": 9
+      },
+      {
+        "path": "sf/ci/shard-costs.json",
+        "headBlobSha": "508a62d91c00758e18cffa06db5459a138acb4cd",
+        "status": "added",
+        "additions": 294,
+        "deletions": 0
+      }
+    ]
+  },
+  "documentReview": {
+    "initialDocumentCommit": "77d16eed187931f1bf2434a449fed9894bc2137e",
+    "reviewers": 3,
+    "scope": "Independent document reviews by agents that did not author the plan; source reads only, not implementation certification",
+    "findings": [
+      {
+        "id": "R01",
+        "severity": "P1",
+        "reviewer": "teams_identity",
+        "subject": "Host versus Microsoft authority",
+        "sections": "3.4; WP1/WP3",
+        "acceptanceIds": [
+          "A42"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R02",
+        "severity": "P1",
+        "reviewer": "profile_runtime",
+        "subject": "Two principals in the same Team",
+        "sections": "3.2",
+        "acceptanceIds": [
+          "A37"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R03",
+        "severity": "P1",
+        "reviewer": "profile_runtime",
+        "subject": "Old writers during cutover",
+        "sections": "7.2",
+        "acceptanceIds": [
+          "A38"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R04",
+        "severity": "P1",
+        "reviewer": "profile_runtime",
+        "subject": "Session parent/fork/move/import scope",
+        "sections": "6",
+        "acceptanceIds": [
+          "A39"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R05",
+        "severity": "P1",
+        "reviewer": "profile_ui",
+        "subject": "Rebinding storageKey transfers cookies",
+        "sections": "5.3",
+        "acceptanceIds": [
+          "A40"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R06",
+        "severity": "P1",
+        "reviewer": "profile_ui",
+        "subject": "Draft guard cannot veto revocation",
+        "sections": "5.2",
+        "acceptanceIds": [
+          "A41"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R07",
+        "severity": "P2",
+        "reviewer": "profile_runtime",
+        "subject": "Quarantine does not grant private-content access",
+        "sections": "7.1",
+        "acceptanceIds": [
+          "A27",
+          "A28",
+          "A30"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      },
+      {
+        "id": "R08",
+        "severity": "P2",
+        "reviewer": "profile_ui",
+        "subject": "URL builders/parsers and window restore",
+        "sections": "5.1; WP0/WP1/WP2",
+        "acceptanceIds": [
+          "A43"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5"
+      }
+    ],
+    "recheckedDocumentCommit": "99499e3f7adbf48ede909c98378a0f8d2fa8b3b5",
+    "recheckResults": [
+      {
+        "reviewer": "teams_identity",
+        "findings": [
+          "R01"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "scope": "Identity and host transport admission"
+      },
+      {
+        "reviewer": "profile_runtime",
+        "findings": [
+          "R02",
+          "R03",
+          "R04",
+          "R07"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "scope": "Principal isolation, writer fence, session relations, private quarantine"
+      },
+      {
+        "reviewer": "profile_ui",
+        "findings": [
+          "R05",
+          "R06",
+          "R08"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "scope": "Storage key binding, compulsory revocation, URL parsers/builders"
+      }
+    ]
+  },
+  "freshnessHistory": [
+    {
+      "observedBranch": "sf-join-four",
+      "observedHead": "a5b15b51b78469a054ba97b0e87fd1e36e31f73a",
+      "comparisonBase": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+      "status": "ahead",
+      "totalCommits": 2,
+      "evidence": "Full compare and both file patches read; initialization of installed fixture host and scanner observation. No central mapped profile or identity producer changed in this observed delta.",
+      "sourceBranchFrozen": false,
+      "changedFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+          "headBlobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
+          "status": "modified",
+          "additions": 37,
+          "deletions": 5
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "headBlobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+          "status": "modified",
+          "additions": 12,
+          "deletions": 1
+        }
+      ]
+    },
+    {
+      "observedBranch": "sf-join-four",
+      "observedHead": "392cecab68288d4b669828adc5d1aaa738693d80",
+      "comparisonBase": "f7dd58e32bc834f1485df20b91adbf759b4c4ad0",
+      "status": "ahead",
+      "totalCommits": 13,
+      "evidence": "Complete compare enumerated 17 changed files. Additional 15-file delta after a5b15b51 read by integrator and fresh reviewers through patches and targeted contracts/tests. Source branch is not frozen or rebased into the documentation branch. No CI/tenant/runtime result inferred.",
+      "sourceBranchFrozen": false,
+      "changedFiles": [
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "headBlobSha": "60d4ec50be167379747be198ffbd205fb58ec971",
+          "status": "modified",
+          "additions": 68,
+          "deletions": 2
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+          "headBlobSha": "3f21eabd8a40178e5054b28ef59ad54473abe2aa",
+          "status": "modified",
+          "additions": 50,
+          "deletions": 30
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "headBlobSha": "24cb859d3508309c0cfe7476907f5421be9149a8",
+          "status": "modified",
+          "additions": 14,
+          "deletions": 2
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "headBlobSha": "03e6260fb965f189a4cb40287dd8c8d5d23af05e",
+          "status": "modified",
+          "additions": 9,
+          "deletions": 0
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+          "headBlobSha": "5b3357fa5f88fb78ab1fea3201c13b5c1ae6d6c5",
+          "status": "modified",
+          "additions": 10,
+          "deletions": 4
+        },
+        {
+          "path": "docs/guardrail/test-ci-context.md",
+          "headBlobSha": "64cf88dc315cf0a19ef556754c640326cd16f031",
+          "status": "added",
+          "additions": 42,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "headBlobSha": "2f0a09ff71fa73ee11509c3860e1a6fe94e4c763",
+          "status": "modified",
+          "additions": 33,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+          "headBlobSha": "ac471400f2fac9cedec45d693ebf35b815ad0b9f",
+          "status": "modified",
+          "additions": 35,
+          "deletions": 5
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-observation.test.ts",
+          "headBlobSha": "bfb31c704dc695595cd45041e722de2d03e7da53",
+          "status": "added",
+          "additions": 122,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+          "headBlobSha": "f110a5b3ee8ef19bda7a325742124be6bbea77e6",
+          "status": "modified",
+          "additions": 37,
+          "deletions": 5
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+          "headBlobSha": "1e309a6f2f56eeba5e9a038eb06d226a7d9c56a0",
+          "status": "modified",
+          "additions": 62,
+          "deletions": 0
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/planner-answer-scope.test.ts",
+          "headBlobSha": "058f173ba1f74ac7d0669a109773a54d089d425f",
+          "status": "added",
+          "additions": 141,
+          "deletions": 0
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "headBlobSha": "96b17f856ca02e82959db26dc7a14063a6036771",
+          "status": "modified",
+          "additions": 12,
+          "deletions": 1
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "headBlobSha": "047643f93ac4f97c4c627dda4802c5406f791a52",
+          "status": "modified",
+          "additions": 21,
+          "deletions": 4
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+          "headBlobSha": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+          "status": "added",
+          "additions": 152,
+          "deletions": 0
+        },
+        {
+          "path": "packages/core/test/test-ci-guard-context.test.ts",
+          "headBlobSha": "d41808d4c498ed26b94d24746abc1c3d214bea88",
+          "status": "added",
+          "additions": 296,
+          "deletions": 0
+        },
+        {
+          "path": "script/test-ci-guard-context.ts",
+          "headBlobSha": "acb672e9734b761316b0914180a295aa74235365",
+          "status": "added",
+          "additions": 197,
+          "deletions": 0
+        }
+      ]
+    }
+  ],
+  "coldReview": {
+    "reviewedDocumentCommit": "4d984e0bd3a3bd5445fcd504b96be4f7888da5da",
+    "analysisDateLocal": "2026-11-19",
+    "reviewers": 3,
+    "freshContext": true,
+    "scope": "Three new reviewers with no inherited author conversation; independent identity, persistence and UI/client/CI reviews, followed by integrator source verification. Targeted reading only.",
+    "status": "DOCUMENT_FINDINGS_RESOLVED_AND_RECHECKED",
+    "findings": [
+      {
+        "id": "CR01",
+        "severity": "P1",
+        "reviewer": "cold_auth",
+        "subject": "Team eligibility globally gates corporate admin bootstrap/recovery",
+        "sections": "3.2; 4.3; WP1; A45",
+        "acceptanceIds": [
+          "A45"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6"
+      },
+      {
+        "id": "CR02",
+        "severity": "P2",
+        "reviewer": "cold_data",
+        "subject": "Post-cutover restore must preserve effects admitted after checkpoint",
+        "sections": "7.3; WP4; A46",
+        "acceptanceIds": [
+          "A46"
+        ],
+        "resolution": "RESOLVED_IN_PLAN_RECHECKED",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6"
+      }
+    ],
+    "noAdditionalFindings": [
+      {
+        "reviewer": "cold_scope",
+        "scope": "UI, clients, routes, residues and CI acceptance",
+        "result": "NO_ADDITIONAL_MATERIAL_FINDING_IN_REVIEWED_SAMPLE"
+      }
+    ],
+    "observations": [
+      "Source delta reconciliation is required by the existing WP0 contract and is not counted as another finding",
+      "Historical project identifiers in canonical evidence have a permitted non-authoritative preservation route; no additional finding asserted from their presence alone"
+    ],
+    "recheckResults": [
+      {
+        "reviewer": "cold_auth",
+        "findings": [
+          "CR01"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+        "scope": "Independent corporate administrative admission without Team eligibility; bootstrap/recovery; no implicit business or private access",
+        "remainingFindings": []
+      },
+      {
+        "reviewer": "cold_data",
+        "findings": [
+          "CR02"
+        ],
+        "result": "RESOLVED_IN_PLAN",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+        "scope": "Post-checkpoint effect proof, restore classification, suspension of uncertain consumers and regression obligations; historical evidence remains inventory obligation",
+        "remainingFindings": []
+      },
+      {
+        "reviewer": "cold_scope",
+        "findings": [],
+        "result": "RECONCILIATION_ACCURATE",
+        "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+        "scope": "Stable ready-access identity per generation, source-PR CI guard contract, freshness references and related inventory/tests",
+        "remainingFindings": []
+      }
+    ],
+    "limitations": [
+      "No code implementation or product mutation",
+      "No tests, build, Actions, sf-ci or tenant qualification",
+      "No exhaustive content scan or final Linux artifact reachability trace"
+    ],
+    "recheckedDocumentCommit": "353e74afb2d7fdbceb8842188e42f30d743186d6",
+    "postRecheckObservation": {
+      "reviewer": "cold_scope",
+      "sourceBase": "392cecab68288d4b669828adc5d1aaa738693d80",
+      "sourceHead": "72830e53adfcb2059575b249e76c88753beb04e8",
+      "result": "COMPATIBLE_WITH_PLAN_NO_ADDITIONAL_FINDING",
+      "scope": "CI selection/shard coverage, mandatory static execution ownership and unchanged source-PR guard contract",
+      "qualificationStatus": "NOT_RUN",
+      "limitations": "Relevant contracts read, not a full audit of CI optimizations or performance assertions"
+    }
+  },
+  "initialRequiredRemainingInventory": [
+    "Complete content scan and import/caller reachability in final SF Linux artifact",
+    "All generated schema/protocol/client endpoints and emitted events impacted by business context",
+    "All schedule/Relay hook and recovery producers plus notification adapters",
+    "RAG bridges, Atlas territorial catalog and SF business memory source grants",
+    "All i18n dictionaries, command entries, deep links, examples, fixtures and shipped agent prompts/skills",
+    "Actual stored legacy profiles and owner mapping; data census and privacy classification",
+    "Runtime membership, tenant consent and corporate supreme-admin integration",
+    "Current concurrent integration deltas affecting shell/host/identity/CI",
+    "Complete route URL builder/parser/back-forward/restore contract by native chapter family",
+    "Corporate-admin bootstrap/recovery admission independent of Team selection; identify already-authorized actor classes with no eligible Team before cutover",
+    "Restore-versus-preserve classification per store, including post-checkpoint receipts, consumed schedule slots, cancellations, dedup keys and issued identifiers; suspend uncertain effect producers",
+    "Durable BusinessEvidenceRef/BI/confirmation families, canonical digests and historical project identifiers versus current authorized projection and transient proofs",
+    "Handwritten native client consumers including packages/client/src/sucafina/transport.ts; generating clients alone does not update handwritten owner/stamp guards",
+    "At execution SHA, distinguish static ownership/wiring regression PASS from actual mandatory static job execution; preserve complete shard coverage and source-PR guard contract after CI optimization delta 72830e53"
+  ],
+  "expandedInvestigation": {
+    "analysisCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+    "analysisTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+    "branchObserved": "sf-join-four",
+    "fixedPin": true,
+    "sourceCodeRebasedInDocumentationBranch": false,
+    "implementation": "NOT_STARTED",
+    "tests": "NOT_RUN",
+    "normativeDocuments": [
+      "docs/architecture/teams-profile-blast-radius.md",
+      "docs/architecture/teams-profile-test-plan.json",
+      "docs/architecture/teams-profile-acceptance-map.json",
+      "docs/architecture/teams-profile-fixture-review.json",
+      "docs/architecture/teams-profile-pool-review.json",
+      "docs/architecture/teams-profile-qualification-review.json",
+      "docs/architecture/teams-profile-ui-fixture-review.json"
+    ],
+    "initialTestCandidatesSuperseded": true,
+    "sourceDomainMatrices": [
+      "docs/architecture/teams-profile-radius-core.json",
+      "docs/architecture/teams-profile-radius-identity.json",
+      "docs/architecture/teams-profile-radius-shell.json"
+    ],
+    "semanticCandidateClosure": {
+      "originalCount": 213,
+      "reviewed": 213,
+      "unclassified": 0,
+      "meaning": "Constructor/fixture and relevant assertion slices, not whole-monorepo semantic review."
+    },
+    "coverageCounts": "Authoritative deduplicated counts are in teams-profile-test-plan.json.",
+    "sourceCoverageByFront": {
+      "core": {
+        "fullBlobsFetched": 1038,
+        "sourceBodiesFetched": 238,
+        "coreTestsLexicallyScanned": 641,
+        "coreExecutableRows": 219
+      },
+      "identity": {
+        "sourceFilesScanned": 727,
+        "testAndSupportFilesScanned": 1172,
+        "initialSemanticExecutables": 58
+      },
+      "shell": {
+        "initialExecutableRows": 90,
+        "fullBodies": 83,
+        "targetedBodies": 7
+      },
+      "root": {
+        "selectedCiCliPackagingPaths": 117,
+        "shippedPromptSkillPlaybookFilesScanned": 57
+      }
+    },
+    "proofLimit": "Source reading, textual scans, semantic slices, structural parent closure, and runtime execution are different; no actual run or absence-of-residue certification.",
+    "normalizedCounts": {
+      "tests": 638,
+      "existingTests": 590,
+      "proposedTests": 48,
+      "byAction": {
+        "KEEP_REGRESSION": 140,
+        "CHANGE_CONTRACT": 323,
+        "NEW": 48,
+        "CHANGE_FIXTURE": 121,
+        "REMOVE_SF_CASE": 6
+      },
+      "requiredClassifiedTests": 631,
+      "outsideSfFinalLane": 7,
+      "supportPaths": 154,
+      "supportFiles": 152,
+      "generatedDirectories": 2,
+      "existingSupportPaths": 150,
+      "proposedSupportPaths": 4,
+      "additionalStructuralRegressionParents": 224,
+      "closedOriginalFixtureCandidates": 213,
+      "originalBrowserPoolFiles": 40,
+      "requestRecipes": 44,
+      "finalTargetedRequests": 30,
+      "finalTargetedFiles": 299,
+      "acceptanceCriteria": 46,
+      "finalGates": 10,
+      "uiOriginalCases": 14,
+      "nativeExistingRegistrations": 50,
+      "operationalAz02Phases": 6,
+      "operationalAz02Cases": 32
+    },
+    "documentaryValidation": {
+      "checks": 22,
+      "status": "CONSISTENT",
+      "productTests": "NOT_RUN"
+    }
+  }
+}

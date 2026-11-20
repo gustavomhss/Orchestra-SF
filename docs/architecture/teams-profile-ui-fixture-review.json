@@ -1,0 +1,1842 @@
+{
+  "schemaVersion": 1,
+  "title": "Focused authority and installation review of CI-UI Operations, Decisions and Reports",
+  "repository": "gustavomhss/Orchestra-SF",
+  "codeCommit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+  "documentaryBase": "41befa40d271a8ef2317548ad4e8e535c16c9f12",
+  "branch": "teams-radius-identity",
+  "status": "DOCUMENTATION_ONLY_PLAN_WITH_PREEXISTING_BLOCKERS_NOT_IMPLEMENTED_NOT_RUN",
+  "purpose": "Close the three existing E2E parent entries that the acceptance map previously knew only as gate metadata; classify the concrete installation/auth helper chain without re-auditing every commercial leaf.",
+  "supersedes": {
+    "document": "docs/architecture/teams-profile-acceptance-map.json",
+    "commit": "ff22cf98239082bc430b09e4e9fb5074e87c8dc0",
+    "blob": "752ea7f349f581ab5e06a8f0a8ddef2adae4aa9f",
+    "scope": "The three CI-UI spec entries now have body and authority-helper evidence. No prior document edited, no LIVE or PASS assertion added."
+  },
+  "method": {
+    "access": "GitHub MCP fixed-pin fetches; content reviewed in V8. No shell, checkout, product/test execution, sf-ci, Actions or public message.",
+    "review": "Each row declares full-body or exact focal ranges. The three spec bodies and named installation/authentication helpers were read. Commercial computations outside stated ranges were not re-audited.",
+    "graph": "actualEdges are observed imports/calls/owned child prerequisites; nonImportEdges explicitly name manifest, subprocess and handle invocation relations. ParentTests are exact scoped parents, not a claim of exhaustive repository-wide reverse closure.",
+    "proofClassification": "Original local operator sessions are real local sessions, not Microsoft. Planned CI-UI uses controlled signed OIDC/JWKS/Graph with original auth/factory/domain handlers. G08/G10 require actual Microsoft/tenant/host contexts and remain separate.",
+    "mutability": "26 existing rows classified; 23 helper/runner rows never count as independent test files. Two new E2E supports are proposed plus extension of an already proposed central Teams fixture; no new standalone test file is introduced here.",
+    "metadata": "The counts are files and top-level declarations read, not observed collected/passed cases. Baseline and final results are NOT_RUN."
+  },
+  "summary": {
+    "byAction": {
+      "CHANGE_CONTRACT": 18,
+      "KEEP_REGRESSION": 6,
+      "CHANGE_FIXTURE": 2
+    },
+    "byKind": {
+      "PLAYWRIGHT_SPEC": 3,
+      "SUPPORT": 16,
+      "SUPPORT_PROCESS": 5,
+      "RUNNER_SUPPORT": 2
+    },
+    "specFiles": 3,
+    "supportOrRunnerFiles": 23,
+    "originalTopLevelCases": 14
+  },
+  "proofClasses": {
+    "CURRENT_PIN": {
+      "id": "LOCAL_OPERATOR_REAL_PRODUCT_CONTROLLED_INSTALLATION",
+      "meaning": "Real local identity handler, session storage, host graph and product ports, with macos synthetic principals/local enrollment. Does not establish Microsoft, Teams, guest semantics or real tenant membership."
+    },
+    "PLANNED_CI_UI": {
+      "id": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT",
+      "meaning": "Real Microsoft authentication validation and application/factory/SQLite/native producers, signed synthetic token/JWKS/PKCE/nonce and bounded controlled Graph/OIDC transport; correct HTTPS/Secure cookie contract. Not LIVE Entra/Teams or final artifact attestation."
+    },
+    "G08": {
+      "id": "LIVE_MICROSOFT_REAL_TENANT_AND_EXACT_LINUX_ARTIFACT",
+      "meaning": "Actual original authenticated host contexts, real memberships/consent/revocation, exact assembled Linux artifact. No controlled provider, injected cookie, storageState or fake business reply as qualification."
+    },
+    "G10": {
+      "id": "LIVE_DISPOSABLE_LINUX_AZURE_RESTORE",
+      "meaning": "Actual host-admitted backup/effect/restore and genuine receipts. CI-UI fixtures cannot stand in for this proof."
+    }
+  },
+  "currentChains": [
+    {
+      "id": "operations",
+      "parent": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "gate": "CI-UI-OPERATIONS",
+      "currentAuthority": "Real local operator sessions with synthetic macos principals; no Microsoft/Teams attestation.",
+      "actualEdges": [
+        [
+          "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/imports.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/documents.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts"
+        ],
+        [
+          "packages/app-shell/e2e/playwright.production.config.ts",
+          "packages/app-shell/e2e/sucafina/wp04/selection.ts"
+        ],
+        [
+          "packages/app-shell/e2e/playwright.production.config.ts",
+          "packages/app-shell/e2e/sucafina/wp04/host.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "apps/cli/src/sucafina-product/host-context.ts"
+        ]
+      ],
+      "nonImportEdges": [
+        {
+          "from": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "to": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+          "kind": "private .host-manifest.json producer/reader; actual mount discrepancy documented"
+        }
+      ]
+    },
+    {
+      "id": "decisions",
+      "parent": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "gate": "CI-UI-DECISIONS",
+      "currentAuthority": "Owned real CLI, local enrollment, handler-issued operator cookie then Basic+directory/project selection for discovery.",
+      "actualEdges": [
+        [
+          "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "packages/app-shell/e2e/sucafina/decisions-support/journey.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+          "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+          "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+          "packages/app-shell/e2e/sucafina/installed-shell.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+          "modules/sucafina/Sucafinav1/local/enroll.ts"
+        ]
+      ],
+      "nonImportEdges": [
+        {
+          "from": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+          "to": "apps/cli/src/index.ts",
+          "kind": "owned Bun child serve --installation local/entry.ts"
+        },
+        {
+          "from": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+          "to": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "kind": "CLI --installation module plus SUCAFINA_LOCAL_CONFIG; not controlled Microsoft"
+        }
+      ]
+    },
+    {
+      "id": "reports",
+      "parent": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "gate": "CI-UI-REPORTS",
+      "currentAuthority": "Owned real CLI and local prepare/enroll; synthetic corpus in business-local; retained/fresh sessions have the same macos actor.",
+      "actualEdges": [
+        [
+          "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/fixture.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/revocation.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/model.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts"
+        ],
+        [
+          "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "packages/app-shell/e2e/sucafina/reports-support/model.ts"
+        ]
+      ],
+      "nonImportEdges": [
+        {
+          "from": "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+          "to": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+          "kind": "setupEntry argument -> owned child seed command before app start"
+        },
+        {
+          "from": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "to": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "kind": "owned CLI --installation after prepare/enroll --enable-local"
+        },
+        {
+          "from": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "to": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "kind": "app.signIn fresh control redeems a new operator session of the same actor"
+        }
+      ]
+    }
+  ],
+  "existingFiles": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "kind": "PLAYWRIGHT_SPEC",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          38
+        ]
+      ],
+      "reason": "Cinco casos delegam a helpers cujo host/grants/login são locais; o authMode atual não pode qualificar admissão Microsoft/Team. A seleção também expõe defeitos prévios de manifesto e contexto de ator.",
+      "plannedChanges": [
+        "Manter os cinco IDs/casos e seus oráculos; executar sob a fixture Microsoft/Teams controlada descrita neste plano, com identidade validada pelo adapter real.",
+        "Registrar proofClass CONTROLLED_MICROSOFT_INSTALLED_PRODUCT, candidato e tuple corporativo seguro; desligar trace/video/screenshot autenticados como nas outras jornadas.",
+        "Acrescentar aos mesmos casos as negativas de ausência/revogação/troca de Team nos pontos de egress/admission, sem substituir fonte removida, falta de FX ou logout."
+      ],
+      "preserve": [
+        "OP-PROC-01: J04 literal, quotes A/B/C, 30240 USD para EUR28000@1.08 e prêmio2160/7.14%, C02 ref/version/digest/drilldown.",
+        "OP-PROC-02: sourcing submetido conserva FX1.08/30240; futuro PO reflete FX2/56000, sem novo sourcing.",
+        "OP-PROC-03: JPY sem FX retorna422 e fieldErrors reais, sem nova versão/história/estado aprovado.",
+        "OP-IMPORT-01: um Apply, resposta perdida, GET/reload/refresh recuperam recibo exato e valores/versões sem duplicação; logout suprime contexto/receipt.",
+        "OP-DOC-01: bytes reais, schema/confirm explícitos; remover fonte nega asset403, evidence409/stale e limpa caches."
+      ],
+      "proofLimits": [
+        "A composição local atual não é Entra/Teams nem LIVE. Cinco títulos não equivalem a cinco provas já executadas."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "self"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": true,
+      "executionRole": "Declared Playwright parent"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "0d95609508b8931ca930d95323578efcb67800c0",
+      "kind": "PLAYWRIGHT_SPEC",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "reason": "Os cinco testes usam withInstallation→startPlannerInstallation→/auth/local; comentários e receipts atuais dizem operador real. Corpos preservam contratos que as rotas nativas parciais não substituem.",
+      "plannedChanges": [
+        "Trocar somente a fonte de autoridade/seleção para Microsoft/Team controlada e atualizar metadados de prova; manter todos os cinco testes e dependências reais.",
+        "Exigir contexto Team atual nas criações, discovery, escolha/preparação/Apply e reabertura; old selector/lease de outro Team é negativo.",
+        "Não aceitar HTML200, superfície visível, confirmação isolada ou fallback local como substituto da produção financeira/proveniência/recovery."
+      ],
+      "preserve": [
+        "Escolha humana após fonte mudar; proposta Procurement e aprovação real antes de Apply com recibo único.",
+        "Create/edit/reopen do mesmo caso durável.",
+        "Discovery exato de um caso recém-criado sem alternativas, versões/ref exatas, save evaluation desabilitado e payload caseRefs exato.",
+        "Perda de resposta de criação recupera o mesmo caso sem resubmeter.",
+        "retries0, timeouts explícitos, ausência de produtor permanece falha; não seedar alternativas/choices/aprovações para passar."
+      ],
+      "proofLimits": [
+        "Não demonstra native model/critique/AM ou todos os contratos C10/C12 por mera navegação; os limites anotados devem continuar."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "self"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": true,
+      "executionRole": "Declared Playwright parent"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "69b587773c372fc30185f3e39d3263292474c894",
+      "kind": "PLAYWRIGHT_SPEC",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reason": "Os quatro casos usam ReportsInstallation local; RPT04 mede logout de sessão e novo login do mesmo actor. A migração deve conservar C05/Office sem confundir Teams com reenrollment.",
+      "plannedChanges": [
+        "Executar sob fixture corporativa controlada e atualizar proof metadata, mantendo os quatro IDs e trace/video/screenshot off.",
+        "RPT04 mantém logout e credencial retida; acrescentar revogação de membership/config/grant como estímulo distinto, com controle positivo de ator ainda admitido e negativo cross-Team.",
+        "Exigir actor/Team/config/epoch corrente nos reads/downloads/reconcile; adaptar URLs com builder canônico sem alterar captura/recibos."
+      ],
+      "preserve": [
+        "RPT01:25 projetos, notas longas, DOCX/PPTX reais com digests diferentes, captura antiga idêntica após mudança da fonte e navegação ao dado atual.",
+        "RPT02:C05 resposta exata, reuso sem escrita, edição torna seletor antigo stale, história intacta, perda de resposta reconcilia sem nova edição.",
+        "RPT03:remover1 da seleção=24/25 sem editar fonte e somente revisão nova explícita.",
+        "RPT04:logout204/no-store; dados/drafts/pending sumem; old credential permanece negado após novo login legítimo; bytes do artifact positivo conservam SHA."
+      ],
+      "proofLimits": [
+        "RPT03 tem bloqueio pré-existente explícito em review-flow.ts26–28. Não remover/skippar/xfail nem declarar regressão Teams observada; baseline não executado."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "self"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": true,
+      "executionRole": "Declared Playwright parent"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "96b17f856ca02e82959db26dc7a14063a6036771",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          169
+        ]
+      ],
+      "reason": "createSfHostRuntime recebe authMode local-operator (69), grants são derivados automaticamente de operators (81–86) e discovery admite location.directory (150–158).",
+      "plannedChanges": [
+        "Receber identidade Microsoft produzida pelo adapter real com Team/config/epoch admitidos; retirar derivação automática de grants a partir de operador/readOnly.",
+        "Usar grants explícitos separados de grupos/roles/Team; viewer continua sem human actions de escrita.",
+        "Migrar discovery current/forAdmittedLocation para fonte admitida versionada; directory deixa de selecionar negócio; old location-mode vira negativa SF."
+      ],
+      "preserve": [
+        "Mesmas portas runtime/native/domain e os mesmos Request/producer bindings; nativeReadBinding por identidade do objeto permanece.",
+        "Scanner real loopback, validação de porta, hashes/veredictos originais e sem bytes em receipt.",
+        "SQLite/source lifecycle e handlers reais; nenhuma resposta artificial para uma página ausente."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "46a41509d7d6e2901934b8ec2a619083cac68d09",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "reason": "Manifest exige /wp04/{key} e /^macos:/, enquanto o produtor escreve /sucafina. login redime auth/local e depois navega negócio.",
+      "plannedChanges": [
+        "Substituir EnrolledAccount/Manifest local por DTO de fixture corporativa estrito que transporta identidade/Team/revisões e referência privada ao controlador de login, sem credencial pública.",
+        "Unificar produtor/leitor no mount emitido e validado, corrigindo a contradição /wp04/{key} vs /sucafina; não remover a verificação de origem/mount.",
+        "login executa o fluxo real login→callback da instalação com OIDC/JWKS/Graph controlados e depois seleciona Team elegível; não atribuir macos a oid por string.",
+        "Account e modeURL usam o contexto admitido/builder público vNext em todas as chamadas; no fallback por origin/mount/directory."
+      ],
+      "preserve": [
+        "Três principais distintos, viewer sem criação, nomes não são autoridade, ausência de manifest falha.",
+        "Observations continuam sem medir human timing/native parity, com proofClass controlada explícita; nunca LIVE por estar em Actions."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "5232f82e8344621805dc7d631a8b849550149333",
+      "kind": "SUPPORT_PROCESS",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FOCAL_AUTHORIZATION_OR_SELECTOR_SLICES",
+      "reviewedRanges": [
+        [
+          1,
+          125
+        ],
+        [
+          155,
+          219
+        ]
+      ],
+      "reason": "O host cria três createOperatorIdentity com uid, escolhe sessão por cookie, sobrescreve viewer role e escreve envelopes de enrollment; a instalação composta usa o mesmo store.",
+      "plannedChanges": [
+        "Substituir o produtor de identidade local por createMicrosoftInstallation/adapter real com provider controlado, grupos canônicos, memberships Teams e grants explícitos por ator.",
+        "Preservar um contexto de browser por principal e rejeição de sessão ambígua; nunca escolher o primeiro cookie para fazer fixture passar.",
+        "Publicar manifest coerente com runtime.ts, candidato e tuple Team; manter segredo/controlador privado efêmero fora dos artifacts.",
+        "Manter seeds comerciais em estado novo isolado, com autoria corporativa sintética verificável, sem fabricar escolhas/recibos da jornada."
+      ],
+      "preserve": [
+        "CLI/embedded host graph, SQLite real, stores privados, no credential inheritance, dynamic imports após private environment.",
+        "Scanners permanecem serviço ClamD real fornecido pelo runner; readiness, origin checks, CSRF, lifecycle/cleanup de processo proprietário.",
+        "Rejeitar present.length!=1 continua obrigatório quando credenciais conflitantes forem fornecidas."
+      ],
+      "proofLimits": [
+        "É composição controlada, não três identidades Entra reais. O handler /api genérico também deve receber a admissão corporativa prevista na matriz server."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Owned child/setup process, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "8b87dda4af0f36ae833b21eefc7717528f9001bf",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FOCAL_AUTHORIZATION_OR_SELECTOR_SLICES",
+      "reviewedRanges": [
+        [
+          1,
+          32
+        ],
+        [
+          76,
+          145
+        ],
+        [
+          158,
+          190
+        ],
+        [
+          210,
+          270
+        ]
+      ],
+      "reason": "ImportManifest/receipt checam principal dinâmico; viewerPage é criado no mesmo BrowserContext (249) antes de login viewer (250), mas os cookies por principal coexistem e o host recusa múltiplas sessões válidas.",
+      "plannedChanges": [
+        "Criar BrowserContext separado para viewer e encerrá-lo em cleanup; reader e workbench do primeiro ator permanecem no mesmo contexto para o logout revogar a credencial que está sendo provada.",
+        "Estender expected current context/receipt authorization ao Team/config/epoch do Account, preservando commandDigest/refDigest e os bytes do comando original.",
+        "Utilizar Account/builder admitido nas leituras e writes diretos; evitar headers de principal inventados."
+      ],
+      "preserve": [
+        "Semente via domínio real e não como cobertura UI de line creation; import de XLSX de bytes reais.",
+        "Preview uma alteração, Apply único apesar de resposta perdida, recuperação sem reenviar, versões e fórmulas preservadas.",
+        "Logout204, import-reference403/{status:denied}, caches esvaziados e Apply desabilitado, applies.length1; viewer independente ainda lê o resultado autorizado."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "72d67f5d5293812cad238ecdc142eb38f723974f",
+      "kind": "SUPPORT",
+      "action": "KEEP_REGRESSION",
+      "reviewLevel": "FOCAL_AUTHORIZATION_OR_SELECTOR_SLICES",
+      "reviewedRanges": [
+        [
+          1,
+          32
+        ],
+        [
+          190,
+          268
+        ]
+      ],
+      "reason": "Consome login/Account/modeURL centrais e não constrói principal/Team/TrustedContext próprio no recorte; a negativa remove a fonte, não membership.",
+      "plannedChanges": [],
+      "preserve": [
+        "Confirmar bytes/candidato/schema originais; revogar fonte removendo supplier por comando/version real.",
+        "Asset403 Access denied; document-open409 stale sem value; discovery fica vazio; caches/candidate/link removidos e nenhum extra document-confirm.",
+        "Source removal continua caso distinto de logout/revogação Team que será coberto pela fixture e testes Teams."
+      ],
+      "proofLimits": [
+        "Sem auditoria integral de extração/OCR; a prova declara UTF-8 text e não OCR."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "f99b7983f0541554201a5878e7c53f582348fa11",
+      "kind": "SUPPORT",
+      "action": "KEEP_REGRESSION",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "reason": "Helper recebe Account já admitido; não cria identidade, sessão ou profile próprio. IDs/versões de requisicão são objetos comerciais, não repo-profile.",
+      "plannedChanges": [],
+      "preserve": [
+        "Revisão humana não envia comando antes de Confirm action; payload/version exatos e incremento de versão real.",
+        "C02 única linha/ref/digest/version e drilldown da mesma requisição; nenhum cálculo/oráculo de FX novo."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "f8a74070a3560f2a9ca9df1b68cb5c6181a85600",
+      "kind": "SUPPORT",
+      "action": "CHANGE_FIXTURE",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "reason": "Login/manifest vêm do helper central; os asserts são J04 comercial literal e C02, sem stamp autoritativo inline.",
+      "plannedChanges": [
+        "Compor expected C02 href pelo builder canônico/contexto admitido quando o link público passa ao selector versionado; manter request ID e hash exatos. Esta é adaptação de fixture de URL, não mudança do oráculo J04."
+      ],
+      "preserve": [
+        "A/B/C e 1.08,30240,2160/7.14%; sourcing pendente não editável; mesmo request/hash no drilldown.",
+        "c06MaterialConfirmation NOT_EXERCISED permanece; a migração de auth não transforma esse caso em confirmação C06."
+      ],
+      "proofLimits": [
+        "Não remover a assertiva de URL exata nem ampliar para qualquer link que retorne200."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "785868c8f1e798b1f2706cb4d0f1009761c12a1f",
+      "kind": "SUPPORT",
+      "action": "KEEP_REGRESSION",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          178
+        ]
+      ],
+      "reason": "Usa Account/login central e payloads comerciais reais; não há construtor de owner/profile autoritativo próprio.",
+      "plannedChanges": [],
+      "preserve": [
+        "FX submetido1.08/30240 não muda após configuraçãoFX2; futuro PO56000 fica não submetido; source version persistida intacta.",
+        "Reverter a taxa em finally, preservar limites de comparação de proposta única e dependência C06 BLOCKED_DEPENDENCY."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "2415ae799ca00ad540ace4bb79c93ea9041c0a0a",
+      "kind": "SUPPORT",
+      "action": "KEEP_REGRESSION",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          179
+        ]
+      ],
+      "reason": "Usa login/Account central; a recusa é financeira por FX ausente, não modelo de identidade.",
+      "plannedChanges": [],
+      "preserve": [
+        "422 e fieldErrors/produtor JPY exatos; aria-invalid/describedby; sem alteração de version/história/status, sem aprovação corrente.",
+        "Quote ID e supplier conservados, comparação continua fx-missing e submit não cria etapa aprovada."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "3239c050be6324840e88bdf8ed1e3032141125ce",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          234
+        ]
+      ],
+      "reason": "withInstallation chama setup local e signIn; readCase usa API direta e receipts não capturam Team. O matcher de resposta garante JSON do produtor real e não pode ser substituído.",
+      "plannedChanges": [
+        "Consumir instalação corporativa controlada e exigir contexto admitido antes de cada jornada; registrar proofClass e tuple seguro no receipt.",
+        "Retirar suposição de porta3000/local operator como autoridade; comparar origem pública atestada da fixture e Team selecionado.",
+        "Passar o contexto admitido ao builder/transport público em readCase e comandos; revalidar no reopen e evitar contextos implícitos por cwd/Basic."
+      ],
+      "preserve": [
+        "Observações só de estágios alcançados, redaction de auth URLs e tokens; finally para stop.",
+        "Fetch interception devolve os mesmos bytes/status/headers já produzidos: não transforma 404/HTML200 em sucesso.",
+        "checkedReply exige content-type JSON, status200 e status ok; readCase valida schema/refs/versões e ausência de alternativas/prepared inventados."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "2367cfb379ef5f68242e8b1b986ac4a573cdf3e0",
+      "kind": "SUPPORT_PROCESS",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "reason": "Cria config local, exige status local-operator, redime /auth/local, produz actor macos e injeta cookie no BrowserContext antes de connectInstalledShell.",
+      "plannedChanges": [
+        "Delegar a configuração/identidade à instalação Microsoft controlada e usar entrypoint de teste que chama o factory Microsoft real com transport/clock controlados.",
+        "Exigir status/authMode Microsoft, resource tenant+oid+Team habilitado e grants atuais; signIn percorre login/callback do handler real em origem HTTPS da fixture.",
+        "Retirar readOperatorSessionCookie/addCookies do positivo SF; contexto de teste recebe somente a sessão realmente emitida pelo callback e usa picker Team admitido.",
+        "Conservar processo CLI real e factory/runtime; relatório precisa dizer que o provider é controlado e o entrypoint de teste difere da qualificação do artefato LIVE."
+      ],
+      "preserve": [
+        "Port reservation e não adotar/matar processo estranho; diretório privado0700 e ambientes/credenciais isolados.",
+        "SIGTERM/SIGKILL bound, port release antes rm, logs limitados/redigidos, cleanup em toda falha."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Owned child/setup process, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "15489ae174954ae765bd8e9850daa62863b02393",
+      "kind": "SUPPORT_PROCESS",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          12
+        ]
+      ],
+      "reason": "Setup faz prepareLocalConfiguration + prepareOperatorAccess(true), portanto sua saída só pode criar credencial de operador local.",
+      "plannedChanges": [
+        "Trocar a preparação SF para private Microsoft config e dados controlados de resource tenant/oid/groups/Team/explicit grants; nenhuma chamada enable-local no positivo.",
+        "Reusar o support Teams central para produzir configuração versionada e validada; arquivo e chaves efêmeros0600/raiz0700."
+      ],
+      "preserve": [
+        "Validar diretório temporário absoluto e argv estritos; preparar somente a instalação própria; não inicializar config pessoal do runner."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Owned child/setup process, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/installed-shell.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "93d4c69f05b94142e101a8da980b023cc2cb207a",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          95
+        ]
+      ],
+      "reason": "Conecta usando senha Daemon para discovery select=location/directory, exige authMode local-operator e triplet installation/project/host, e escolhe pasta via Choose project/Add project.",
+      "plannedChanges": [
+        "Basic/Daemon pode continuar somente credencial técnica da conexão; descoberta/contexto de negócio precisam da sessão Microsoft+Team atualmente admitida.",
+        "Retirar select=location e folder/project picker do caminho SF; selecionar apenas Team listado e validado e exigir DTO/stamp versionados corretos.",
+        "Separar origin técnico de conexão do publicOrigin seguro; exigir retorno de contexto compatível com principal/tenant/Team/config/epoch e objeto host atual.",
+        "Tornar a mesma prova de conexão/discovery acessível aos três producers; Reports não deve apenas navegar com cookie sem comprovar contexto corporativo atual."
+      ],
+      "preserve": [
+        "Senha real privada do Daemon, ownership/mode/symlink checks, frontend server recovery UI e nenhum descriptor/storageRecord inventado.",
+        "JSON/schema strict, origem/mount corretos, nunca usar Basic sozinho para negócios ou TeamId de URL como grant."
+      ],
+      "proofLimits": [
+        "Consumidor direto observado nesta cadeia: wp03 installation-fixture. Reuso futuro por Operations/Reports é planejado, não alegação de import atual."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "plannedAdditionalConsumers": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS"
+        }
+      ],
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "9100e1d35ab570b11d77ed673ff70a6266b280af",
+      "kind": "SUPPORT",
+      "action": "KEEP_REGRESSION",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "reason": "Parser estrito é utilitário legítimo do cookie de operador; não pode ser generalizado por rename para validar cookie Microsoft.",
+      "plannedChanges": [
+        "Remover chamadas positivas de negócio SF nos dois installers acima; usar o helper de login/callback Microsoft proposto como substituto.",
+        "Manter o parser existente para regressões/admin utilitários de operador que ainda o usem, sem relaxar regex/attributes para aceitar qualquer cookie."
+      ],
+      "preserve": [
+        "Loopback origin, exatamente1 Set-Cookie, cookieName/value formatados, Path=/sucafina, HttpOnly, SameSite=Lax, Max-Age28800 e atributos sem excesso/duplicação."
+      ],
+      "proofLimits": [
+        "KEEP_REGRESSION do corpo; REMOVE_SF_POSITIVE_CALLERS é ação nos installers, não apagar a proteção do cookie local."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "support executed by this parent"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "2a53115e2f116f49dc23c779aff2349cd149dc1c",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "reason": "Registra authentication real-local-operator e actorId local como recibo de instalação; seed é inicializado antes do host.",
+      "plannedChanges": [
+        "Usar fixture corporativa controlada e emitir proofClass explícito, tenant/principal/Team/config revision seguros, sem token/cookie.",
+        "Preservar seed sintético de25projetos e controles de config production, worker1/retries0; registrar inicialização e candidato sem chamar isso de tenant LIVE."
+      ],
+      "preserve": [
+        "Timeout180000, initialize antes de use, corpus data e receipt de seed exatos; não tratar metadata bundle=production como prova suficiente de autenticação."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "d3626790269abfaf6116440aeea77a979a6297da",
+      "kind": "SUPPORT_PROCESS",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          257
+        ]
+      ],
+      "reason": "Roda prepare.ts/enroll.ts --enable-local, lê perfil local, monta actor macos e signIn re-redime operador. Sua gestão de processo/armazenamento é real e deve permanecer.",
+      "plannedChanges": [
+        "Trocar config/readOperatorProfile/prepare-enroll pelo provider Microsoft controlado e entrypoint de teste que chama createMicrosoftInstallation com fetch/clock injetados apenas no teste.",
+        "ReportsInstallation deve expor identidade corporativa e Team admitido, contexto/builder de chamadas e operação signIn do fluxo Microsoft; origin/mount/cookie Secure seguem a configuração real da fixture HTTPS.",
+        "Conservar CLI/host graph/SQLite reais; diretório/config/credenciais efêmeros, sem herança e com dados separados de auth.",
+        "Remover re-enrollment local do controle positivo; após logout, novo callback para o mesmo oid e Team com grants ainda válidos emite sessão nova, sem revalidar a antiga."
+      ],
+      "preserve": [
+        "GITHUB_ACTIONS guard, setupEntry limitado ao diretório Reports, não carregar graph ao listar teste.",
+        "AppProcess scoped real, timeout/output caps, readiness do processo próprio, não adotar port ocupado; abort/join setup antes de remover DB.",
+        "Não deletar DB se child ainda vivo, log redaction/allowlist, same original server and artifacts."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Owned child/setup process, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "a32cac26786e4ace96490f719677370e42f87958",
+      "kind": "SUPPORT_PROCESS",
+      "action": "CHANGE_FIXTURE",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "reason": "Seed exige config local-operator, deriva principal macos e escreve business-local; a autoria/version fixture precisa corresponder à nova instalação controlada.",
+      "plannedChanges": [
+        "Carregar a configuração Microsoft de teste e o principal sintético declarado pelo mesmo provider; escrever no store business-microsoft que o factory realmente usa.",
+        "Version/by e access mapping usam esse principal sem ampliar grants ou criar fontes/recibos do produto; Team/config ficam no produtor de admissão, não num cast do corpus."
+      ],
+      "preserve": [
+        "Só seed antes de iniciar app; store vazio obrigatório;25projetos/valores/período intactos; source lifecycle e projeções permanecem reais.",
+        "Não rehash de captura histórica e não seed de resultados de aprovação/recibo que a jornada deve produzir."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Owned child/setup process, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          204
+        ]
+      ],
+      "reason": "O caso retém credential real com storageState in-memory, faz logout, prova cache/byte denial e novo enrollment do mesmo actor. Não verifica membership Team ou conta diferente.",
+      "plannedChanges": [
+        "No gate controlado, reter a sessão Microsoft realmente emitida para testar logout e preservar fresh BrowserContext independente; nenhuma credencial é fabricada.",
+        "Substituir app.signIn/enrollment por callback novo do mesmo oid/Team ainda admitido; o old session continua negado antes/depois.",
+        "Adicionar estímulos separados de Team/group/config/grant revoke e de outro Team/principal; o controle positivo deve possuir autoridade própria válida, nunca restaurar grant para mascarar negativa.",
+        "Adaptar builders e status esperados por tipo: logout/auth ausente mantém contrato de login/no-store; membership revogado sob sessão válida é denial/no-profile definido, não broad status allowlist."
+      ],
+      "preserve": [
+        "GETs/read/download recusados, POSTs403, no-store, nenhuma referência/draft/valor privado no body; UI retira meeting/discussion/confirmed answer/topic navigation.",
+        "Tentativa abortada antes de producer mantém exatamente1 request serializado, nenhuma mensagem/storageVersion nova e nenhum retry após logout/reenrollment.",
+        "Fresh legitimately authorized session lê mesmos bytes SHA do artifact e resposta histórica; old credential continua negado.",
+        "Contexts e routes/listeners têm cleanup, estado/cookies não são persistidos nem anexados."
+      ],
+      "proofLimits": [
+        "storageState aqui é instrumento negativo de retained credential em fixture controlada; não substitui actor pages reais G08. A declaração atual selectiveTalentRevocation NOT_PROVEN permanece até prova específica."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/model.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "dc4c34866e35b8eee0911897b79396dce51a600e",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reason": "productURL apaga search/hash e recompõe somente sf+parameters; readReview e responseFor aceitam mount string sem tuple. Isso pode descartar selectors corporativos vNext.",
+      "plannedChanges": [
+        "Receber contexto/base admitidos tipados e compor URLs por builder canônico que preserve o selector versionado inteiro, validando wrong/mixed/duplicate fields.",
+        "responseFor deve vincular resposta ao contexto/origin/mount da chamada original; não completar Team a partir de outro estado corrente.",
+        "Atualizar callers do helper no mesmo parent Reports; payload/review reference continua literal e não é fonte de grant."
+      ],
+      "preserve": [
+        "JSON shape/readReview200/statusok/ref exato, no-store e ausência de redirect; conteúdo histórico não muda para acomodar nova URL."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "cb84582104730dbddf3e236dd92680939a81a37e",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FOCAL_AUTHORIZATION_OR_SELECTOR_SLICES",
+      "reviewedRanges": [
+        [
+          18,
+          42
+        ],
+        [
+          140,
+          151
+        ],
+        [
+          317,
+          335
+        ],
+        [
+          463,
+          489
+        ]
+      ],
+      "reason": "Leituras/raw export e download assertion dependem de app.dashboardURL; query exata aceita só sf/artifactRef. O recorte também contém bloqueio explícito RPT03 removeOne.",
+      "plannedChanges": [
+        "Usar instalação/contexto/builder corporativos nos reads/URLs; validar selector completo do download além do artifactRef e não limpar Team/revision.",
+        "Manter native routes reais e controles de origem/transport; diagnóstico classifica auth Microsoft sem registrar códigos/cookies/headers.",
+        "Resolver o produtor UI de remoção de1registro como dependência de implementação antes de RPT03 passar; não editar o teste para contornar UNBOUND."
+      ],
+      "preserve": [
+        "Bytes Office/MIME/Content-Disposition/artifact identity continuam verificados; ref da revisão, projetos/valores/digests históricos não são reescritos.",
+        "readSourceData compara fonte original; nenhum source mutation para simular remoção só da seleção.",
+        "Baseline inicial não foi executado; autenticação nova não torna Office/C05/removeOne automaticamente atendidos."
+      ],
+      "proofLimits": [
+        "Revisão focal de wrappers/blocks; os545linhas de semântica Office/agenda não foram re-auditados integralmente."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "9580eaf32f59508ad50d02339b4e8cf396ff405e",
+      "kind": "SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FOCAL_AUTHORIZATION_OR_SELECTOR_SLICES",
+      "reviewedRanges": [
+        [
+          24,
+          107
+        ]
+      ],
+      "reason": "reportsCollaboration recebe APIRequestContext+mount e zera search/hash antes de POST; C05 usa principalRef dinâmico do input e não deve virar TeamId.",
+      "plannedChanges": [
+        "Trocar mount string por transporte/contexto admitido tipado e builder canônico de chamadas; preservar selector/owner original e revalidar antes de request/egress.",
+        "Atualizar callers da mesma cadeia Reports para o novo handle sem header de principal arbitrário e sem reconstituir sessão de objeto serializado."
+      ],
+      "preserve": [
+        "Origin/content-type/idempotency-key, no-store, maxRedirects0, status200/ok e nenhuma auto-reexecução.",
+        "C05 self-recipient continua prova do próprio autor; created/replied/history/pin/basis originais e distinção ACK versus RecipientThread.current intactas."
+      ],
+      "proofLimits": [
+        "Nenhuma afirmação de separate-person lease por este helper; esse limite está explicitamente no corpo66–68."
+      ],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Imported helper, not an independent test selector"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "db2597d7e9dd2b4069364a857f4fe16611bcf467",
+      "kind": "RUNNER_SUPPORT",
+      "action": "CHANGE_CONTRACT",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          57
+        ]
+      ],
+      "reason": "Config seleciona o host WP04/4174 para Operations e upstream CLI4110 para as outras; sfNative é lane separada sem webServer e exige manifest real. Positivos controlados Microsoft precisam transporte HTTPS válido e fixture correta.",
+      "plannedChanges": [
+        "Ligar os três parents à origem/ingress HTTPS privado da fixture controlada, mantendo bundle prod real e upstream real; não ampliar cookie Path/Secure nem relaxar política pública Microsoft para HTTP.",
+        "Manter seleção exata, workers1/retries0 de CI-UI e recusar reuso de server estrangeiro; não coletar secrets em trace/video/screenshot.",
+        "Preservar sfNative/G08 como real-host manifest sem mock webServer; nenhuma fixture controlada deste plano serve de fallback LIVE."
+      ],
+      "preserve": [
+        "wp04BrowserSelected só inicia prerequisite, não muda grep/selector; Operations já está incluído.",
+        "G08 sfNative exige GITHUB_ACTIONS+manifest+candidato e não inicia webServer sintético; cinco specs e2e/orchestra continuam config própria fora desta lane."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS",
+          "role": "support executed by this parent"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Runner selection/config support"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "kind": "RUNNER_SUPPORT",
+      "action": "KEEP_REGRESSION",
+      "reviewLevel": "FULL_BODY",
+      "reviewedRanges": [
+        [
+          1,
+          10
+        ]
+      ],
+      "reason": "O seletor já contém operations.spec.ts e normaliza regexp/path para iniciar o prerequisite; erro de runtime.ts que diz só procurement está obsoleto.",
+      "plannedChanges": [],
+      "preserve": [
+        "Lista exata de dois specs, suffix/anchored regex suportados e ausência de filtro de testes; --list não inicia host via config.",
+        "Não usar mudança de seleção para esconder caso bloqueado ou afrouxar CI."
+      ],
+      "proofLimits": [],
+      "parentTests": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS",
+          "role": "support executed by this parent"
+        }
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED_NOT_RUN",
+      "standaloneTest": false,
+      "executionRole": "Runner selection/config support"
+    }
+  ],
+  "originalCaseInventory": {
+    "operations": [
+      {
+        "line": 13,
+        "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown"
+      },
+      {
+        "line": 18,
+        "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes"
+      },
+      {
+        "line": 23,
+        "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version"
+      },
+      {
+        "line": 28,
+        "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      },
+      {
+        "line": 33,
+        "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      }
+    ],
+    "decisions": [
+      {
+        "line": 16,
+        "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change"
+      },
+      {
+        "line": 26,
+        "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt"
+      },
+      {
+        "line": 41,
+        "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through native Decisions"
+      },
+      {
+        "line": 48,
+        "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200"
+      },
+      {
+        "line": 97,
+        "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+      }
+    ],
+    "reports": [
+      {
+        "line": 26,
+        "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source"
+      },
+      {
+        "line": 41,
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version"
+      },
+      {
+        "line": 107,
+        "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision"
+      },
+      {
+        "line": 123,
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access"
+      }
+    ]
+  },
+  "proposedSupport": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/teams-profile/installation-fixture.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": null,
+      "existence": "ALREADY_PROPOSED_IN_IDENTITY_MATRIX_NOT_AT_PIN",
+      "action": "EXTEND_PLANNED_SUPPORT",
+      "standaloneTest": false,
+      "parents": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS"
+        }
+      ],
+      "responsibilities": [
+        "Central controlled resource tenant/oid/group/Team/role/grant/configRevision/epoch vectors, shared by SF contract tests and browser host fixtures.",
+        "Use real createEntraClient/createMicrosoftIdentity/factory validation and signed RS256/JWKS/state/nonce/PKCE; only remote OIDC/Graph transport and deterministic clock are controlled.",
+        "Extend provider with complete eligible Team datasets, separate role groups, zero/one/many/partial/error/revoked cases; no implicit role or namespace grant from Team."
+      ],
+      "alreadyPlannedSource": {
+        "path": "docs/architecture/teams-profile-radius-identity.json",
+        "commit": "a91489b035be3e5b05256965f7a472c096cc2d8c",
+        "blob": "f3e9686a9addb91c4edc8f283457fb852d2aaf6d"
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/microsoft-support/entry.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": null,
+      "existence": "PROPOSED_NOT_AT_PIN",
+      "action": "NEW_SUPPORT",
+      "standaloneTest": false,
+      "executionRole": "Test-only CLI installation factory module",
+      "parents": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS"
+        }
+      ],
+      "responsibilities": [
+        "Thin test-only factory calls createMicrosoftInstallation(context, privateFile, isolatedEnvironment, {fetch,now}) and composes the original host/runtime/native ports; it does not return a forged admitted principal or fake product response.",
+        "Provider/controller state remains inside the owned fixture process and private channel; no product runtime flag accepting arbitrary issuers, no leaked credential/control endpoint, no inclusion as alternate production entry.",
+        "Return actual handler-issued sessions through login/callback and actual typed discovery/context; metadata marks CONTROLLED_MICROSOFT_INSTALLED_PRODUCT."
+      ],
+      "rationale": "Existing default local entry does not inject the controlled transport. A test-only caller of the already exposed factory override makes that distinction explicit without weakening shipped authentication."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/microsoft-support/installation.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": null,
+      "existence": "PROPOSED_NOT_AT_PIN",
+      "action": "NEW_SUPPORT",
+      "standaloneTest": false,
+      "executionRole": "Owned browser/CLI fixture lifecycle and controlled provider bridge",
+      "parents": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+          "gate": "CI-UI-OPERATIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "gate": "CI-UI-DECISIONS"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gate": "CI-UI-REPORTS"
+        }
+      ],
+      "responsibilities": [
+        "Own isolated files/processes, valid private HTTPS ingress/test certificate and browser context for each corporate actor; preserve Secure/HttpOnly/mount/SameSite policy rather than relabel a local cookie.",
+        "Coordinate the controlled authorization provider only at the OIDC boundary; actual product login/callback validates state/nonce/PKCE/JWT and issues its session. No interception/fabrication of business responses to create positive proof.",
+        "Expose a typed fixture handle with safe admitted tuple, actual public origin/mount, signIn via callback and provider-side membership/error/revocation controls; neither TeamId nor private control data becomes request authority by itself.",
+        "Use the same producer/consumer manifest validation and canonical public DTO/builders; close contexts, join processes and delete only owned private state. Preserve first/viewer actor separation and negative controls.",
+        "Reuse real factory/SQLite/ClamD/domain commands; do not pre-seed business outcomes the test is meant to produce. Explicitly separate this fixture from G08/G10 LIVE actor pages."
+      ]
+    }
+  ],
+  "supportingFactoryEvidence": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "reviewedRanges": [
+        [
+          1,
+          113
+        ]
+      ],
+      "role": "Existing signed controlled provider, not LIVE; extend with Teams cases already planned.",
+      "bodySource": "Previously fetched fixed-pin corpus, focal reread for this chain"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "reviewedRanges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "role": "Private synthetic Microsoft config/environment; extend explicit Team/admin/grants; not provisioned Azure.",
+      "bodySource": "Previously fetched fixed-pin corpus, focal reread for this chain"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/native-host.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "c33830b637060a172c824c42830d91e2e185ee25",
+      "reviewedRanges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "role": "Original host graph/SQLite composition with private storage; not fake identity/role/grant ports.",
+      "bodySource": "Previously fetched fixed-pin corpus, focal reread for this chain"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-first-login.test.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "995510b73d50dbeb5b8bebdad406e3e80648e68b",
+      "reviewedRanges": [
+        [
+          19,
+          91
+        ]
+      ],
+      "role": "Existing proof of real factory {fetch,now} controlled injection and login→callback; Group-only positive must still gain eligible Team.",
+      "bodySource": "Previously fetched fixed-pin corpus, focal reread for this chain"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "b036df618b0986851ab8a3839871b1101d04554f",
+      "reviewedRanges": [
+        [
+          55,
+          68
+        ],
+        [
+          279,
+          292
+        ],
+        [
+          352,
+          366
+        ]
+      ],
+      "role": "Factory seam and original Request/auth/native ordering; no new production test-mode bypass.",
+      "bodySource": "Previously fetched fixed-pin corpus, focal reread for this chain"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+      "blob": "ff40ce2410a8be0b6ef86532f19e51ee02a1094c",
+      "reviewedRanges": [
+        [
+          14,
+          27
+        ],
+        [
+          51,
+          61
+        ]
+      ],
+      "role": "Source evidence for distinct cookie names and durable revocation; retain legitimate technical utility.",
+      "bodySource": "Previously fetched fixed-pin corpus, focal reread for this chain"
+    }
+  ],
+  "preexistingBlockersAndLimits": [
+    {
+      "id": "UIFIX-01",
+      "status": "PREEXISTING_CONTRACT_CONTRADICTION_NOT_EXECUTED",
+      "summary": "Operations manifest reader expects distinct /wp04/{key}; producer emits canonical /sucafina for all accounts.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "46a41509d7d6e2901934b8ec2a619083cac68d09",
+          "reviewedRanges": [
+            [
+              28,
+              37
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5232f82e8344621805dc7d631a8b849550149333",
+          "reviewedRanges": [
+            [
+              192,
+              203
+            ]
+          ]
+        }
+      ],
+      "requiredResolution": "One strict canonical manifest contract for producer/consumer, distinct principals/contexts rather than mount paths as identity. Keep origin/mount checks and fail missing/malformed manifest."
+    },
+    {
+      "id": "UIFIX-02",
+      "status": "PREEXISTING_AUTH_FIXTURE_CONFLICT_NOT_EXECUTED",
+      "summary": "OP-IMPORT viewer login uses the first actor's BrowserContext; cookies per principal coexist but the host rejects more than one valid principal.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "8b87dda4af0f36ae833b21eefc7717528f9001bf",
+          "reviewedRanges": [
+            [
+              249,
+              265
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "5232f82e8344621805dc7d631a8b849550149333",
+          "reviewedRanges": [
+            [
+              79,
+              102
+            ]
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "ff40ce2410a8be0b6ef86532f19e51ee02a1094c",
+          "reviewedRanges": [
+            [
+              14,
+              27
+            ],
+            [
+              51,
+              61
+            ]
+          ]
+        }
+      ],
+      "inference": "The cookie names differ by [mount,person.id], so viewer login does not replace the first actor cookie. The subsequent shared-context request can carry two valid sessions and sessionAccount returns undefined. No runtime reproduction claimed.",
+      "requiredResolution": "Separate viewer BrowserContext; keep first actor reader/workbench together for actual logout. Preserve ambiguous-credential denial, never pick first cookie."
+    },
+    {
+      "id": "UIFIX-03",
+      "status": "PREEXISTING_EXPLICIT_PRODUCT_DEPENDENCY_NOT_EXECUTED",
+      "summary": "RPT03 invokes removeOne:true; prepareReview explicitly throws UNBOUND WP1 because UI47 lacks remove-one-record control.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "69b587773c372fc30185f3e39d3263292474c894",
+          "reviewedRanges": [
+            [
+              107,
+              120
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "cb84582104730dbddf3e236dd92680939a81a37e",
+          "reviewedRanges": [
+            [
+              18,
+              28
+            ]
+          ]
+        }
+      ],
+      "requiredResolution": "Implement the real selection producer/control and retain 24/25, unchanged source and explicit-new-revision assertions. No delete/skip/xfail/narrowing."
+    },
+    {
+      "id": "UIFIX-04",
+      "status": "PROOF_LIMIT_CURRENT_AUTHORITY",
+      "summary": "Local operator roles/grants and same-actor reenrollment cannot be relabeled Microsoft/Teams or tenant LIVE.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "96b17f856ca02e82959db26dc7a14063a6036771",
+          "reviewedRanges": [
+            [
+              63,
+              86
+            ],
+            [
+              150,
+              158
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "2367cfb379ef5f68242e8b1b986ac4a573cdf3e0",
+          "reviewedRanges": [
+            [
+              95,
+              117
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "d3626790269abfaf6116440aeea77a979a6297da",
+          "reviewedRanges": [
+            [
+              114,
+              127
+            ],
+            [
+              157,
+              168
+            ],
+            [
+              199,
+              235
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
+          "reviewedRanges": [
+            [
+              72,
+              102
+            ]
+          ]
+        }
+      ],
+      "requiredResolution": "Controlled Microsoft factory/provider boundary for CI-UI; actual original Microsoft contexts and real tenant/artifact for G08/G10."
+    },
+    {
+      "id": "UIFIX-05",
+      "status": "PREEXISTING_DIAGNOSTIC_DRIFT_NOT_MISSING_GATE",
+      "summary": "runtime.ts missing-manifest diagnostic says the runner only mounts wp04/procurement, but the actual selector already includes operations.spec.ts.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "46a41509d7d6e2901934b8ec2a619083cac68d09",
+          "reviewedRanges": [
+            [
+              15,
+              20
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+          "reviewedRanges": [
+            [
+              1,
+              10
+            ]
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "commit": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+          "blob": "db2597d7e9dd2b4069364a857f4fe16611bcf467",
+          "reviewedRanges": [
+            [
+              4,
+              17
+            ],
+            [
+              34,
+              49
+            ]
+          ]
+        }
+      ],
+      "requiredResolution": "Correct diagnostic while preserving exact prerequisite selection. Do not misreport an absent Operations host or absent test-ci ClamD on the strength of the obsolete string."
+    }
+  ],
+  "requiredAssertionExtensionsInExistingParents": [
+    {
+      "parent": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "case": "OP-PROC-01",
+      "assertions": [
+        "Before the commercial positive, the bound native context matches the current corporate resource tenant/oid/Team/config revision from the actual handler.",
+        "No eligible Team or local operator/Basic-only context cannot reach the business producer; then the independently admitted positive actor performs the unmodified J04 sequence."
+      ],
+      "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT"
+    },
+    {
+      "parent": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "case": "OP-IMPORT-01",
+      "assertions": [
+        "Viewer owns a distinct BrowserContext and cannot write; first actor's reader/workbench share only that actor's session.",
+        "Preserve exact one-Apply/lost-response/receipt/logout negative. Separately stale/cross-Team context cannot read/reapply the captured manifest, while an authorized control still reads committed domain values."
+      ],
+      "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT"
+    },
+    {
+      "parent": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "case": "OP-DOC-01",
+      "assertions": [
+        "Retain source-removal403/409 and no extra confirm; add current Team/grant denial without treating source removal as proof of membership revocation.",
+        "Scanner verdict and original evidence/capture digest stay unchanged under fresh current authorization."
+      ],
+      "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT"
+    },
+    {
+      "parent": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "case": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "assertions": [
+        "Current Team/revision fences the original intention/prepared command and retry; another Team or revoked membership cannot reuse case/choice/receipt.",
+        "Fresh same-owner retry retains original command bytes and one receipt; no fixture inserts proposal/approval to bypass missing producer."
+      ],
+      "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT"
+    },
+    {
+      "parent": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "case": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "assertions": [
+        "Recovery uses original admitted owner and request identity; switching Team cannot adopt the same known case ID.",
+        "Maintain no resubmission and no conflation of creation receipt with financial Apply/native AM proof."
+      ],
+      "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT"
+    },
+    {
+      "parent": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "case": "RPT-04",
+      "assertions": [
+        "Logout of real handler-issued Microsoft fixture session still denies the retained session and clears view/drafts/pending attempts before/after a new same-principal login.",
+        "Team/group/config/grant revocation is a separate stimulus; a new login cannot revive missing authorization. Another Team/principal cannot borrow review/answer/export references.",
+        "An independently still-authorized control reads the original artifact bytes and SHA; the original revoked actor never regains access by control setup."
+      ],
+      "proofClass": "CONTROLLED_MICROSOFT_INSTALLED_PRODUCT"
+    },
+    {
+      "parent": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "case": "RPT-01/RPT-02/RPT-03",
+      "assertions": [
+        "Canonical typed URL builders preserve current selector across read/export/download/C05 calls and bind async responses to the originating Team/epoch.",
+        "Old captures, sourceRefs, review digests, history and receipt bodies are not rewritten into a new Team to make assertions pass.",
+        "RPT03 must reach a real one-record removal control; explicit UNBOUND remains a failing dependency until implementation, not a skip."
+      ]
+    }
+  ],
+  "gates": {
+    "CI-UI-OPERATIONS": {
+      "status": "PLANNED_NOT_RUN",
+      "cwd": "packages/app-shell",
+      "packageAlias": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "selector": "e2e/sucafina/operations.spec.ts",
+      "workers": 1,
+      "retries": 0,
+      "originalTopLevelCases": 5,
+      "prerequisites": [
+        "Production bundle",
+        "Owned WP04 host composition through the existing selector",
+        "Real loopback ClamD as already configured in matching test-ci production request",
+        "New controlled Microsoft/Team fixture and secure ingress"
+      ],
+      "notIncluded": "Three scanner .check.ts controls remain their separate lane."
+    },
+    "CI-UI-DECISIONS": {
+      "status": "PLANNED_NOT_RUN",
+      "cwd": "packages/app-shell",
+      "packageAlias": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "selector": "e2e/sucafina/decisions.spec.ts",
+      "workers": 1,
+      "retries": 0,
+      "originalTopLevelCases": 5,
+      "prerequisites": [
+        "Production bundle",
+        "Fixture-owned real CLI and factory graph",
+        "New controlled Microsoft/Team fixture and secure ingress",
+        "Real Decisions/Procurement producers required by the original cases"
+      ]
+    },
+    "CI-UI-REPORTS": {
+      "status": "PLANNED_NOT_RUN",
+      "cwd": "packages/app-shell",
+      "packageAlias": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "selector": "e2e/sucafina/reports.spec.ts",
+      "workers": 1,
+      "retries": 0,
+      "originalTopLevelCases": 4,
+      "prerequisites": [
+        "GITHUB_ACTIONS=true",
+        "Production bundle",
+        "Fixture-owned real CLI and factory graph",
+        "New controlled Microsoft/Team fixture and secure ingress",
+        "Office/C05 and remove-one-record producers required by original cases"
+      ]
+    },
+    "G08": {
+      "status": "PROPOSED_REAL_TENANT_NOT_RUN",
+      "proofClass": "LIVE_MICROSOFT_REAL_TENANT_AND_EXACT_LINUX_ARTIFACT",
+      "entry": "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts",
+      "requirement": "Uses original host-authenticated actor contexts, real Microsoft/Teams, actual assembled artifact and receipts. The new controlled fixture must never satisfy this prerequisite."
+    },
+    "G10": {
+      "status": "PROPOSED_REAL_RESTORE_NOT_RUN",
+      "proofClass": "LIVE_DISPOSABLE_LINUX_AZURE_RESTORE",
+      "entry": "packages/app-shell/e2e/sucafina/native/teams-profile-recovery-linux.spec.ts",
+      "requirement": "Real host-admitted checkpoint/effect/restore/restart/retry; no test provider or fake receipts as qualification."
+    }
+  },
+  "executionAndEvidenceRules": [
+    "Run each exact CI-UI spec through its existing production configuration with workers1/retries0 after implementation; root owns concrete request JSON and prerequisites.",
+    "Do not reduce the14 original cases, remove proof-limit annotations, fabricate expected-failure greens or relabel existing red/blocked dependencies as Teams regressions.",
+    "Retain genuine ClamD and the separate explicit scanner controls. Current matching test-ci Operations production request already provides loopback ClamD; no service or workflow was executed here.",
+    "Controlled provider hooks exist only in test support through an explicit test-only factory caller of the production injection seam. Do not add a permissive production issuer/session/role override.",
+    "No new positive business session is made by renaming macos IDs or changing authMode, minting a TrustedContext object, copying operator roles into corporate grants, or widening cookie Path/Secure.",
+    "Real handler-issued retained credentials may be copied in-memory solely for the controlled logout negative; no such copy or provider mock qualifies G08/G10.",
+    "Preserve genuine local operator utilities/parser and their security assertions outside SF business; remove only their use as the corporate product principal.",
+    "Candidate-bound reports separate baseline NOT_RUN, fixture defects, missing existing producers, controlled Microsoft observations and LIVE observations. No current PASS is asserted."
+  ],
+  "limitations": [
+    "Focused review of the requested three journey chains, not an exhaustive audit of app-shell business helpers or every indirect consumer of shared fixtures.",
+    "Reports review-flow/confirmation and Operations imports/documents were read only at recorded slices; full Office/C05/financial computation semantics are preserved from their existing tests, not re-proven here.",
+    "Exact test-only provider bridge/TLS/CLI fixture code is proposed and not implemented; the shipped artifact continues to require actual corporate admission.",
+    "Missing native U39/U40 producer/reader conditions and Azure operational addenda are maintained by root/shell separately; this report does not erase those prerequisites.",
+    "No tests, compilation, browser session, Graph network request, tenant operation, backup or restore executed."
+  ],
+  "unresolvedPathObligations": [],
+  "preservedDocumentation": [
+    "docs/architecture/teams-profile-radius-identity.md",
+    "docs/architecture/teams-profile-radius-identity.json",
+    "docs/architecture/teams-profile-fixture-identity.json",
+    "docs/architecture/teams-profile-acceptance-map.json"
+  ]
+}

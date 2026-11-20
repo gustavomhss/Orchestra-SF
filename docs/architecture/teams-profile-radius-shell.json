@@ -1,0 +1,2938 @@
+{
+  "schema": "teams-profile-radius-shell.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "analysisPin": "687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+  "analysisTree": "c3ac6f64b79e75fc5a178c90692f36435e99d236",
+  "documentBase": "41befa40d271a8ef2317548ad4e8e535c16c9f12",
+  "documentBaseTree": "b32bc21db923c0258f754686ae9dd9ac185a8566",
+  "status": "PLAN_ONLY_NOT_RUN",
+  "scope": "app-shell/client/sdk-next/desktop; source reachability for Linux SF Web",
+  "method": {
+    "access": "GitHub MCP only; fixed-ref trees/file bodies; V8 textual filtering",
+    "executedTests": false,
+    "executedBuilds": false,
+    "invokedActions": false,
+    "productModified": false,
+    "fullRepositoryBlobScan": false,
+    "bodyReadCounts": {
+      "FULL_BODY": 83,
+      "TARGETED_BODY": 7
+    },
+    "testFilesClassified": 90,
+    "countMeaning": "reviewed test files, not semantic case count or exhaustive suite count",
+    "limitations": [
+      "No compiled-bundle/runtime/tenant observation",
+      "No textual scan of all app-shell2599 entries; selected producer/consumer closure only",
+      "Source bodies may be read by focused symbols;7 large test/script files read targeted",
+      "Held/native duplicate test dirs and all domain stores remain outside exhaustive claim",
+      "External Playwright docs not browsed due GitHub MCP-only session; no E2E implementation"
+    ]
+  },
+  "delivery": {
+    "target": "Linux x64 Bun + SF Web",
+    "releaseTargetStatus": "activation blocked; no activation proof made",
+    "electron": "Absent from assembler/service artifact; separate package",
+    "dock": "Shared sidebar/chapter source-reachable; web no bridge; repo-owner calculation before unavailable UI still needs retirement, not directory-wide ignore"
+  },
+  "graph": [
+    {
+      "id": "SH01",
+      "producer": "apps/web/src/entry.tsx → AppBaseProviders/AppInterface",
+      "consumers": [
+        "packages/app-shell/src/app.tsx",
+        "packages/app-shell/src/orchestra/chapter-route.tsx",
+        "packages/app-shell/src/orchestra/navigation.ts"
+      ],
+      "persistence": [
+        "defaultServerUrl",
+        "home.selection"
+      ],
+      "action": "SF Web abre shared shell sem feature cut explícito; migrar shell e fechar imports/rotas SF, não apenas renderer Desktop.",
+      "tests": [
+        "e2e/orchestra/chapter-bootstrap.spec.ts",
+        "src/orchestra/navigation.test.ts"
+      ]
+    },
+    {
+      "id": "SH02",
+      "producer": "sidebar.selectProject/chooseProject + home.project.add/openNewSession + navigation-commands",
+      "consumers": [
+        "packages/app-shell/src/context/layout.tsx",
+        "packages/app-shell/src/context/tabs.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+      ],
+      "persistence": [
+        "layout.home.selection(server,directory)",
+        "server.projects/lastProject"
+      ],
+      "action": "Substituir por verified Team selection; remover directory picker/initGit/trust/last/first fallback em todos entrypoints.",
+      "tests": [
+        "src/context/team-profile-selection.test.ts",
+        "e2e/orchestra/project-git-init.spec.ts"
+      ]
+    },
+    {
+      "id": "SH03",
+      "producer": "titlebar.openNewTab + prompt-project-selector.selected=current??available[0]",
+      "consumers": [
+        "packages/app-shell/src/pages/new-session.tsx",
+        "packages/app-shell/src/pages/new-session/new-session-draft-controller.ts",
+        "packages/app-shell/src/context/prompt.tsx"
+      ],
+      "persistence": [
+        "tabs.draft",
+        "prompt.draft",
+        "home.selection"
+      ],
+      "action": "Seleção compartilhada validada, nenhuma decisão de owner por cwd/draft directory/root project.",
+      "tests": [
+        "src/components/titlebar-tab-order.test.ts",
+        "src/pages/new-session/team-profile-new-session.test.ts"
+      ]
+    },
+    {
+      "id": "SH04",
+      "producer": "HomeProjectSelection e session/legacy URL restore",
+      "consumers": [
+        "packages/app-shell/src/components/titlebar-tab-order.ts",
+        "packages/app-shell/src/context/tab-migration.ts",
+        "packages/app-shell/src/orchestra/shell/mobile-navigation.tsx"
+      ],
+      "persistence": [
+        "tabs/recent/info/closed",
+        "desktop.last-active-url"
+      ],
+      "action": "Scope pessoal+janela; links antigos não ganham owner por activeServer; narrow invoca o mesmo controller e guards.",
+      "tests": [
+        "src/context/tabs.test.ts",
+        "src/utils/session-route.test.ts",
+        "e2e/orchestra/compact-navigation.spec.ts"
+      ]
+    },
+    {
+      "id": "SH05",
+      "producer": "F01 selection + explicit URL; resolveSfUrlSelection/native transitions",
+      "consumers": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/host/native-chapter-entry.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+      ],
+      "persistence": [
+        "in-memory retained owner/surface/accessRevision/scope",
+        "one-shot returns/resume focus"
+      ],
+      "action": "Versionar tuple em producers/parsers/stamp/guards/login, preservando preflight/consent/recheck/atomic commit e propriedade original.",
+      "tests": [
+        "test/sucafina-native/native-chapter-entry.test.ts",
+        "test/sucafina-native/navigation-consent-recheck.test.ts",
+        "test-browser/sucafina-native/context.test.ts"
+      ]
+    },
+    {
+      "id": "SH06",
+      "producer": "global.ensureServerCtx por conn transport identity; sdk.ensureDirSdkContext(dir)",
+      "consumers": [
+        "packages/app-shell/src/context/server-sdk.tsx",
+        "packages/app-shell/src/context/sdk.tsx",
+        "packages/app-shell/src/context/server-queries.ts",
+        "packages/app-shell/src/context/global-sync/bootstrap.ts"
+      ],
+      "persistence": [
+        "QueryClient por server",
+        "child stores por directory"
+      ],
+      "action": "Transport credential identity não detecta cookie principal swap; separar host context técnico de private context owner/revisions; cancel/dispose e capture immutable authority.",
+      "tests": [
+        "src/context/server-sdk.test.ts",
+        "src/context/server-sync.test.ts",
+        "src/context/global-sync/bootstrap.test.ts"
+      ]
+    },
+    {
+      "id": "SH07",
+      "producer": "server eventApi subscribe → queue location.directory??global",
+      "consumers": [
+        "packages/app-shell/src/context/server-sdk.tsx",
+        "packages/app-shell/src/context/notification.tsx",
+        "packages/app-shell/src/context/global-sync/home-session-index.ts"
+      ],
+      "persistence": [
+        "event coalesce",
+        "session index",
+        "notification.v1"
+      ],
+      "action": "Routing/coalescing requer owner validado; no global for missing owner. Filtrar no servidor antes de emissões/paginação e recusar old authEpoch no cliente.",
+      "tests": [
+        "src/context/server-sdk.test.ts",
+        "test-browser/notification-origin.test.ts",
+        "src/context/global-sync/home-session-index.test.ts"
+      ]
+    },
+    {
+      "id": "SH08",
+      "producer": "Persist.window/serverGlobal/serverWorkspace/serverSession/draft",
+      "consumers": [
+        "packages/app-shell/src/context/layout.tsx",
+        "packages/app-shell/src/context/tabs.tsx",
+        "packages/app-shell/src/context/prompt-state.ts",
+        "packages/app-shell/src/context/models.tsx"
+      ],
+      "persistence": [
+        "localStorage",
+        "orchestra-drafts IndexedDB/documents/blobs",
+        "draft objectURL map"
+      ],
+      "action": "Identity tuple pessoal + janela; importador legado explícito; fence assíncrono nas leituras, gravações, encoding e GC.",
+      "tests": [
+        "src/utils/persist.test.ts",
+        "test-browser/prompt-persistence.test.ts",
+        "test-browser/team-profile-private-state.test.ts"
+      ]
+    },
+    {
+      "id": "SH09",
+      "producer": "ClientApi(schema/protocol) → packages/client/script/build.ts",
+      "consumers": [
+        "packages/client/src/generated",
+        "packages/client/src/generated-effect",
+        "packages/client/src/wire.ts",
+        "packages/sdk-next/src/orchestra.ts"
+      ],
+      "persistence": [
+        "serialized wire contracts/cursors/events"
+      ],
+      "action": "Regenerar pelas ferramentas oficiais e check:generated; acrescentar Team public contract coerente em ambos clients. Não handedit generated nem cast ProjectID→Team.",
+      "tests": [
+        "packages/client/test/promise.test.ts",
+        "packages/client/test/effect.test.ts",
+        "packages/client/test/type-conformance.test.ts"
+      ]
+    },
+    {
+      "id": "SH10",
+      "producer": "handwritten SfTransport/bindings + ctx.context",
+      "consumers": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/client/src/sucafina/context.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+      ],
+      "persistence": [
+        "admittedStamp",
+        "human intent map",
+        "byte transfer handles"
+      ],
+      "action": "Mudar selection/descriptor/stamp/header/chunks/login/retry juntos; clients antigos falham explicitamente; cookies same-origin mount não alargam por conveniência.",
+      "tests": [
+        "packages/client/test/sucafina/human-retry.test.ts",
+        "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts"
+      ]
+    },
+    {
+      "id": "SH11",
+      "producer": "SDK Orchestra.create → CapabilityOperator(scope instance *,actions *) → embedded routes",
+      "consumers": [
+        "packages/sdk-next/src/operator-transport.ts",
+        "packages/sdk-next/src/orchestra.ts"
+      ],
+      "persistence": [
+        "operator bearer lifetime",
+        "shared host DB"
+      ],
+      "action": "Operador do host é técnico, nunca principal Teams. Autorização corporativa antes seleção do serviço e leitura, inclusive chamada interna e eventos.",
+      "tests": [
+        "packages/sdk-next/test/embedded.test.ts",
+        "packages/sdk-next/test/capability-connections.test.ts",
+        "packages/sdk-next/test/team-profile-admission.test.ts"
+      ]
+    },
+    {
+      "id": "SH12",
+      "producer": "AppsPanel desktopWide -> appDockProfile(server,directory); narrow -> undefined",
+      "consumers": [
+        "packages/app-shell/src/pages/session/apps-panel-controller.ts",
+        "apps/desktop/src/main/ipc-app-dock.ts",
+        "apps/desktop/src/main/app-dock-profile-registry.ts",
+        "apps/desktop/src/main/app-dock-session.ts"
+      ],
+      "persistence": [
+        "repo-FNV profileID",
+        "manifest activeProfileID/global bookmarks/history",
+        "opaque storageKey → persist:app-dock-* cookies"
+      ],
+      "action": "Fora SF artifact: retirar dependência repo do caminho web/alcance SF, conservar registry genérico isolado. Não fabricar Teams Dock para qualificar web. Se Desktop evoluir em outro escopo, precisa dono pessoal autenticado sem default global.",
+      "tests": [
+        "src/pages/session/apps-panel-controller.test.ts",
+        "e2e/orchestra/chapter-dock.spec.ts",
+        "apps/desktop/src/main/app-dock-security.test.ts"
+      ]
+    },
+    {
+      "id": "SH13",
+      "producer": "F04 installed-manifest registration/readiness + real browser attachment",
+      "consumers": [
+        "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+        "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+        "packages/app-shell/e2e/playwright.production.config.ts"
+      ],
+      "persistence": [
+        "private manifest v1",
+        "selected-installation v1",
+        "real browser cookie jars"
+      ],
+      "action": "Versão Team consistente factory/reader/links/stamps; resolver contradição existing negative origins; não serializar auth nem criar context fake. App selected spec registra runtime; locator sozinho não prova jornada.",
+      "tests": [
+        "test-browser/sucafina-native/fixture/selection.test.ts",
+        "test/sucafina-native/installed-manifest-contract.test.ts",
+        "e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "category": "home selection",
+      "current": "Persist.serverGlobal(scope,'layout',['layout.v6']); home.selection={server,directory}",
+      "required": "verified principal+Team selection per actual window"
+    },
+    {
+      "category": "tabs/recent/info/closed",
+      "current": "Persist.window web windowID='browser'; localStorage orchestra.window.browser.dat:*",
+      "required": "private principal/Team/installation/tenant plus real window identity; no labels preadmission"
+    },
+    {
+      "category": "draft documents/blobs",
+      "current": "IndexedDB orchestra-drafts v1 documents/blobs; blobID SHA256(bytes); objectURL map by blobID",
+      "required": "private owner refs, isolated reads/writes/GC and URL revoke; digest is not owner"
+    },
+    {
+      "category": "prompt/comments/file-view/subagent models/layout",
+      "current": "Persist.draft(draftID,key) or serverWorkspace/serverSession(directory)",
+      "required": "owner+Team category; explicit legacy mapping; async encoding/hydration fence"
+    },
+    {
+      "category": "model preferences",
+      "current": "Persist.global('model',['model.v1']); window provider reused",
+      "required": "personal prefs limited to permitted catalog; common config defaults separate"
+    },
+    {
+      "category": "queries/children",
+      "current": "QueryClient per server; child by directory; [scope,directory,kind]",
+      "required": "principal+Team+authority/configRevision or per-call immutable admission"
+    },
+    {
+      "category": "notifications",
+      "current": "Persist.serverGlobal(scope,'notification',['notification.v1']); server/session/project index",
+      "required": "private owner; captured origin+owner revalidated on dispatch/click"
+    },
+    {
+      "category": "native owner retention",
+      "current": "in-memory ownerKey/surface/accessRevision/scope; drafts quarantine/intents",
+      "required": "same ready wrapper only admitted generation; invalidate old async handles on auth replacement"
+    },
+    {
+      "category": "desktop url",
+      "current": "orchestra.desktop.window.${windowID}.last-active-url; no ID→browser",
+      "required": "outside web target; validate owner before private restore if this host evolves"
+    },
+    {
+      "category": "Dock",
+      "current": "repo-FNV(server,directory)→opaque UUID storageKey→persist:app-dock-*; global manifest.activeProfileID/bookmarks/history",
+      "required": "outside SF delivery; no copy cookie/draft/history into Team; preserve CAS/tombstones"
+    }
+  ],
+  "fixtureDefect": {
+    "kind": "CONTRADICTORY_FIXTURE_CONTRACT_NOT_PROVEN_DATA_LEAK",
+    "producer": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+    "producerRule": "rejects equality of target.publicOrigin with wrongProject and wrongInstallation",
+    "consumer": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+    "consumerRule": "rejects inequality of the same origins",
+    "effect": "No common manifest accepted by factory+reader for negative boundaries",
+    "requiredFix": "shared boundary contract roundtrip; wrongTeam replaces wrongProject; preserve wrongServer/wrongInstallation",
+    "testToAdd": "packages/app-shell/test/sucafina-native/installed-manifest-contract.test.ts"
+  },
+  "existingTests": [
+    {
+      "path": "packages/app-shell/src/components/titlebar-tab-order.test.ts",
+      "blob": "a3e23eaba4d4606239ea170940fda88ce40b93cf",
+      "action": "CHANGE_CONTRACT",
+      "change": "Substituir profile {server,directory} e rootDirectory/pathKey por seleção Teams admitida + dono pessoal. Assertions tabMatchesProfile(...,undefined)===true e profile só server===true não podem admitir tabs privadas no SF.",
+      "keep": "Manter reorder visível sem mover hidden, sucessor visível ao fechar, fechamento da última tab→Home e histórico.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/orchestra/titlebar-tab-order.test.ts",
+      "blob": "57f6b5f948ab440c48ba11933993892a8b8a95fb",
+      "action": "CHANGE_CONTRACT",
+      "change": "Fixtures A1/A2/B1 precisam owner Team/principal; nenhuma B pode entrar no successor temporário visível.",
+      "keep": "Manter override de B1 escolhido pelo fechamento nativo para A2, ordem e closed history.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/tabs.test.ts",
+      "blob": "abd62a4dae1360699bd4cab9098c380936bd7797",
+      "action": "CHANGE_CONTRACT",
+      "change": "migrateTabs adiciona fallbackServer ao legado; no SF trocar por resultado quarantined/sem admissão até mapa verificado. Tab keys/recents/info/closed incluem dono privado; draft fixtures owner-bound.",
+      "keep": "Preservar cleanup de memória, limite25 closed, não registrar draft fechado, reopen sem duplicata, delete e background sem navegar.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/session-route.test.ts",
+      "blob": "dcc00300da9cd15e3a1e100f4b94c230c588f6a6",
+      "action": "CHANGE_CONTRACT",
+      "change": "Resolução de link legado não pode adotar activeServer quando ambíguo; exigir associação autorizada explícita. Atualizar href/restore de sessões SF para novo seletor versionado, sem preencher tuple com active profile.",
+      "keep": "Preservar malformed base64, traversal de raiz/ciclo e URL encoding; links técnicos antigos só importador explícito.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/server-scope.test.ts",
+      "blob": "67d43b7abbb6e8ae95d5e4c62baef2591b5d6c18",
+      "action": "KEEP_REGRESSION",
+      "change": "Manter ServerScope como identidade técnica de conexão (sidecar/local, canonical web explicitamente admitido, loopback remoto distinto); não tratar este teste como isolamento de principal/Team.",
+      "keep": "Adicionar escopo privado em novos testes, sem renomear ServerScope para Team.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/notification-origin.test.ts",
+      "blob": "d8d4f67a4fb6a01c4fe7a977f35c00d066258341",
+      "action": "CHANGE_CONTRACT",
+      "change": "Casos turn-complete e error compartilham directory/session entre servidores. Capturar/revalidar também principal+Team+authEpoch antes de clique; evento atrasado de A não é exibido em B.",
+      "keep": "Manter callback indo ao servidor de origem mesmo após mudança da seleção visual.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/deep-link-ingress.test.ts",
+      "blob": "33059698ea626e52c44e3ddc11e389c9c662e281",
+      "action": "KEEP_REGRESSION",
+      "change": "Sequenciamento queued+initial+live+remount permanece; ampliar apenas os inputs de link SF no teste novo.",
+      "keep": "Não confundir listener desktop importado sob happy-dom com execução do artefato SF Web.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/utils/persist.test.ts",
+      "blob": "317bddfb63a4223a0e521d0e37939624d6215613",
+      "action": "CHANGE_CONTRACT",
+      "change": "Testes serverWorkspace(local)===workspace e serverGlobal(local)===global não podem ser a política de dados privados SF; acrescentar novos targets e negar leitura/migração automática das aliases de directory/global sem mapa. Draft-only ID deixa de ser namespace suficiente.",
+      "keep": "Preservar quota/fallback técnico de storage, JSON inválido, remoção e alias Windows apenas consumidores técnicos documentados. Falha de storage não muda identidade.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sync.test.ts",
+      "blob": "1811eb82e7757340e3ea3557a906ecad2a48d5f4",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar keys [ServerScope,directory,*], activeSessions só server, list root {directory,limit,order}, delete {server,directory,sessionIDs} para dono/revisão admitidos e zero seleção por directory.",
+      "keep": "Manter contagem, cache, reconexão, resultado atrasado, falha, cancelamento e eviction.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/layout/helpers.test.ts",
+      "blob": "27d86e797b8481b358f52935db6760793abe119b",
+      "action": "REMOVE_SF_CASE",
+      "change": "Retirar do caminho SF parseOpenProjectDeepLink/new-session?directory, homeProject selection/toggle/close, ordem/repo picker e projectForDirectory como fonte do profile. Não usar project global ou root/sandbox como Team.",
+      "keep": "Manter normalização técnica de paths/roots, ordenação de sessões por timestamp, exclusão archived/child, permissions filter, drain-once e erro.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": [
+        "packages/app-shell/src/context/team-profile-selection.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/team-profile-routes.test.ts"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/prompt-scope.test.ts",
+      "blob": "fad19dcff77d80f3b67ed59748b9c27f34b3c84f",
+      "action": "CHANGE_CONTRACT",
+      "change": "selectPromptTab hoje resolve por server/sessionID ou draftID; fixtures precisam tuple privada. Testar o mesmo sessionID em duas Teams e duas contas.",
+      "keep": "Preservar escolha da rota atual em vez da tab ativa.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/prompt-persistence.test.ts",
+      "blob": "7c3d28226f434014837bb5cab7757526552a7414",
+      "action": "CHANGE_CONTRACT",
+      "change": "Alterar chaves de draft/prompt/blob para dono privado e epoch; migração dataURL só sob associação autorizada; read de A pendente não hidrata B.",
+      "keep": "Manter hidratação assíncrona e barreira que impede migração atrasada de sobrescrever draft mais novo.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/draft-session-key.test.ts",
+      "blob": "c553145ce91d7f18da4d1965565bdba5367164f6",
+      "action": "CHANGE_CONTRACT",
+      "change": "Substituir identidade server+directory+draft por private owner+Team+draft; mesmo diretório em duas Teams não colide e nova Location técnica não transfere o owner.",
+      "keep": "Preservar isolamento entre drafts.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-workspace-controller.test.ts",
+      "blob": "3c57063d495e38d9d47a0f84326d5761c88d23ca",
+      "action": "REMOVE_SF_CASE",
+      "change": "Seleção preferred workspace, derive worktree, stale→main e branch fallback dev deixam de escolher profile SF; Location técnica pode ser testada separadamente sem grant.",
+      "keep": "Preservar seleção técnica apenas onde alcançabilidade independente de profile for provada.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": [
+        "packages/app-shell/src/pages/new-session/team-profile-new-session.test.ts"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/context/server-provider-refresh.test.ts",
+      "blob": "ff5a78c92ef729fa796e8af19fc2c28df7b80e62",
+      "action": "CHANGE_CONTRACT",
+      "change": "Keys [ServerScope.local,/repo,providers] e predicate posição2 precisam owner+config/accessRevision; caso dois principals mesma Team/directory deve cancelar só o owner correto.",
+      "keep": "Manter cancelQueries antes de fetchQuery, nenhum resultado preauth tardio, outro server/global sem efeito e propagação do erro.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sdk.test.ts",
+      "blob": "7b693748e851c934455f9cde4a5c10bbcdd5ca09",
+      "action": "CHANGE_CONTRACT",
+      "change": "Queue e textDelta fixtures carregam só location.directory; coalescer deve exigir owner/principal/epoch além de mensagem/ordinal. Reconnect antigo nunca escreve no novo contexto.",
+      "keep": "Manter ready promise compartilhada, recovery, dispose, bfcache apenas persisted, malformed decode skip e warning uma vez por tipo.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/server-event-native.test.ts",
+      "blob": "883d8319a460d4063e47f328cb7752e6b22ab7b9",
+      "action": "CHANGE_CONTRACT",
+      "change": "Fixture de stream V2 e assert adapted[2] location devem carregar envelope de owner validado quando contrato público mudar; testar preservação ao adapter e recusa no ingress de owner errado.",
+      "keep": "Manter texto/reasoning/usage/status/custo, sequência e recusa de nome não V2.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
+      "blob": "83e3238a34a69ed66b227dc066a07f92c1934a6d",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar bootstrap/query fixtures e asserts location-only para contexto admitido. Caso 'a superseded run’s successful read stays ready...' permanece somente na MESMA autoridade; adicionar A→B+B fail esperando nenhum config/provider/agent de A.",
+      "keep": "Manter 3 estados independentes de reads, older failure não sobrescreve, sem global provider fallback e árvore de permission/question.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/child-store.test.ts",
+      "blob": "1831d8629f12a7c0dddc8123fb8c24e3e92d5a8d",
+      "action": "CHANGE_CONTRACT",
+      "change": "Manager.children[directory], mock query [directory,kind] e persist fake precisam tuple owner/revisão; dois owners no mesmo directory não compartilham child/store.",
+      "keep": "Manter ready-empty catálogo NÃO herda global, pin/evict, passive bootstrap e lazy MCP.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/home-session-index.test.ts",
+      "blob": "236607c416a9c017b52e2d0c9d8dcfd07f018758",
+      "action": "CHANGE_CONTRACT",
+      "change": "Trocar 'one global V2 request' {limit,order}, cache só server e retenção por directory por índice principal+Team+revisão; cursor não pode ser reaproveitado no outro scope.",
+      "keep": "Manter paginação completa/abort, roots visíveis, event baseline, replay, reconnect e remoção mesmo sem índice montado.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/layout.test.ts",
+      "blob": "895c0e85e217db91e723835051879328287ef755",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller.",
+      "keep": "ensureSessionKey touch→seed, leitura lazy, bounded prune que conserva active",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/layout-route.test.ts",
+      "blob": "ac65d57e017a8b1b291656874b8df9bee7a65c8b",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller.",
+      "keep": "chapter/subview parse e malformed server→Home; parser não é grant",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/layout-tabs.test.ts",
+      "blob": "646ed086cef9f0d233effb5fc3edfcaad88731da",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller.",
+      "keep": "preview/durable file tabs e placeholder; seleção à esquerda",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/context/prompt-state.test.ts",
+      "blob": "24afe5424e71ac5d71537600a68787bf34625f7c",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller.",
+      "keep": "inicialização coerente texto/cursor/model e clone; defaults",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar-history.test.ts",
+      "blob": "25035d7ccf77638ac2305e3e6382e4d1b39e8992",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller.",
+      "keep": "limite, índices back/forward e ausência de duplicata por navegação",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-ready.test.ts",
+      "blob": "4b44def00bf9190e0a5e26987edaa92ea7259a2b",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem troca semântica necessária; esses algoritmos recebem chave/estado já admitidos pelo novo caller.",
+      "keep": "ready true; erro→false reportado sem rejeição silenciosa",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/orchestra-compact-navigation.test.ts",
+      "blob": "e13c3b05488bfd4be9dc6d9768e97771cb0ef514",
+      "action": "CHANGE_CONTRACT",
+      "change": "O caso 'remembers ... another window' usa platform desktop/windowID; acrescentar web real window identity. Persist.window web='browser' não atende à promessa de tabs privadas por janela.",
+      "keep": "Manter early toggle vence hidratação e narrow não sobrescreve preferência expandida.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/navigation.test.ts",
+      "blob": "c58dffa60780c8ac4dea4b8d84dd81e6d34c6b85",
+      "action": "CHANGE_CONTRACT",
+      "change": "Asserção do array global inclui dock/workspaces/env/cicd; especificar manifesto alcançável SF separado e não divulgar affordances de repo. Breadcrumb dir-new-session não pode servir profile SF.",
+      "keep": "Manter destinos únicos, labels, Home fallback e WIP só desenvolvimento.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/actions-navigation.test.ts",
+      "blob": "cd72175665cc48f89d1c9d0ebf2cb4570be6e0f9",
+      "action": "KEEP_REGRESSION",
+      "change": "Binding GitHub/directory é contexto técnico de Actions e não Teams profile; conservar somente via boundary de produto explícita, nunca como admissão SF.",
+      "keep": "URL escopada, foreign binding recusado, stale binding e remoção seguem o model atual.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/native-chapter-entry.test.ts",
+      "blob": "8ac82ca5b97052b7dbcc59f796009ace079b5815",
+      "action": "CHANGE_CONTRACT",
+      "change": "Alterar seleção/stamp/binding projectId e exact href ?server&project&installation para contrato Team versionado; arrays de mutação devem incluir tenant/team/principal/authEpoch/config/accessRevision.",
+      "keep": "Manter todos capítulos canônicos, live denial, inválido preserva editor atual, branch sem directory não fabrica owner, snapshot coerente e transition F01.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+      "blob": "6214f06108cf45abcf987454fb9707d2fdb1588c",
+      "action": "CHANGE_CONTRACT",
+      "change": "Substituir fixtures e URLs v1; transformar caso positivo 'location mode'/forAdmittedLocation em legado recusado no SF (REMOVE_SF_CASE), com substituto discovery Teams sem directory. Relembrar seleção exige validação atual.",
+      "keep": "Manter IDs nunca fallback, unknown/mixed/duplicate/partial rejeitados, explícito A não pega B, guard voluntary→purge→commit, late A abortado, focus/scroll owner+revision.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": [
+        "packages/app-shell/src/context/team-profile-selection.test.ts"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts",
+      "blob": "5cfab26e9f171097994b3ec72c53c587b87268a5",
+      "action": "CHANGE_CONTRACT",
+      "change": "Trocar identidade de fixture por tuple Team/pessoal; acrescentar forced revoke enquanto confirmação de discard pendente, sem aguardar/cancelar revogação.",
+      "keep": "Manter cancel preserva draft, discard explícito, submitted/unknown não descarta como draft, revoke mata facade, quarentena e bridge singleton.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+      "blob": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar fixture context/selection/stamp/binding para nova versão. Mutar cada identidade/revisão separadamente durante await.",
+      "keep": "Manter mesmo wrapper congelado + transport original na geração, novo no reload, undefined em expiry/revoke/logout/unmount, late context não substitui sucessor.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts",
+      "blob": "e0da88f9b5c9eacf33ccf44b5e245dce17888ece",
+      "action": "KEEP_REGRESSION",
+      "change": "Não muda owner fixture: manter chapterPages native→mesmo SfOwnerRuntime231 e sourcing/compare.",
+      "keep": "Guarda composição single-owner; não prova tenant autenticado.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+      "blob": "9821bf2abae2355129e3952ae136b4d68291340f",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar selected.projectId/installation e context stamp; troca de Team não pode capturar outro ServerConnection nem authority derivada da Location.",
+      "keep": "Manter wrong connection nega antes de fetch, identidade do transport, GET projection.case exato e unknown route negado.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/draft-quarantine.test.ts",
+      "blob": "beb1314c7217720f1e819ddb9ae268f041dc549a",
+      "action": "CHANGE_CONTRACT",
+      "change": "Alterar stamp/selection/identity/binding projectId para tuple versionada. Ampliar foreign identity loop com tenantId/teamObjectId/authEpoch; outra conta da mesma Team não recupera valor.",
+      "keep": "Manter exact first-attempt409/422, desconhecido continua pending, todos proofs antes de active, explícita negação purga mesmo depois de unavailable, logout/principal novo, CAS e revalidação.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/navigation-consent-recheck.test.ts",
+      "blob": "c2630424358f6a14081ba16539bcb14f09019599",
+      "action": "CHANGE_CONTRACT",
+      "change": "Trocar oldSelection/project e target query; após consent verificar Team/principal/grants atual, não só owner string.",
+      "keep": "Manter sequência consent→source recheck→promote→invalidate→commit, revoked target não retira old owner, outgoing change/abort não promove.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/decisions-pages-route.test.ts",
+      "blob": "fa6e13f3bb0c2b73c8d0b67da8aac9584c9d5985",
+      "action": "CHANGE_CONTRACT",
+      "change": "trocar query duplicada server=s&server=t&project=p&installation=i; adicionar novo tuple completo aceito e tuple antigo rejeitado.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/files-route.test.ts",
+      "blob": "59b8917de5dd5a85d3b45a850ebfd2a6386284eb",
+      "action": "CHANGE_CONTRACT",
+      "change": "trocar triplet duplicado; imports/document refs, source e returnTo continuam fechados.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts",
+      "blob": "f026c54dfdf8d5434aaea91edba82ed570eab204",
+      "action": "CHANGE_CONTRACT",
+      "change": "trocar seleção de login {serverKey,projectId,installationId}, URL matching completa; admin/config sem Team usa admissão administrativa própria.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/memory-route.test.ts",
+      "blob": "9c34f7434f1e7e4deb512a13e9d4799a78b7d330",
+      "action": "CHANGE_CONTRACT",
+      "change": "trocar triplet duplicado mantendo outcome ref opaco e bloqueio case/returnTo.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/operations-route.test.ts",
+      "blob": "d90b988a1701e9c3f9da1e76cb04d4d9982b1799",
+      "action": "CHANGE_CONTRACT",
+      "change": "estender whitelist para novo seletor completo e rejeitar misto/parcial; preservar period/status bounds.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/people-route.test.ts",
+      "blob": "f00cb8515d3a70e106ec734d84ea00ad9b40be2c",
+      "action": "CHANGE_CONTRACT",
+      "change": "substituir project=p&project=q e server parcial pelos novos negativos; manter ano/mês/status CAP08.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/planner-pages-route.test.ts",
+      "blob": "6528528c2208ac50218b7f97147efd2ca3634183",
+      "action": "CHANGE_CONTRACT",
+      "change": "validar novo tuple em todos paths; manter ano 2026, duplicata/year bounds e filter privado negado.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/portfolio-route.test.ts",
+      "blob": "6135a6f426a54040ab5190f34c73d79051dc9435",
+      "action": "CHANGE_CONTRACT",
+      "change": "novo tuple válido e parcial rejeitado; preservar filter watch e CAP-only+exact operations.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts",
+      "blob": "aa21c0ef1ee0ad8ddaa53fc8b685c0102e2f6230",
+      "action": "CHANGE_CONTRACT",
+      "change": "trocar triplet duplicado; preservar previous/current distintos, report prepare+download e não Office legado.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/routines-route.test.ts",
+      "blob": "3c7edd08e0ed08d1bfc0224216dd27542450e4e5",
+      "action": "CHANGE_CONTRACT",
+      "change": "novo tuple completo/partial; preservar case vazio/duplicado negado.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/work-route.test.ts",
+      "blob": "913650b3e8667127234a406b7f34e712d3cf7740",
+      "action": "CHANGE_CONTRACT",
+      "change": "trocar triplet duplicado; source só relations/new, detalhes exigem read original.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/extended-routes.test.ts",
+      "blob": "fff3b0ccf6248ce6206434ffe7979ff8e63a00cb",
+      "action": "KEEP_REGRESSION",
+      "change": "Dispatch família People e duplicação de year não dependem do owner antigo; manter. Adicionar tabela transversal no novo team-profile-routes.test.ts.",
+      "keep": "Preservar exact operation dispatch e rejeição sem grant.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/bi-route.test.ts",
+      "blob": "e47a0e0b9722d59e3de883992c96ed49f9da4670",
+      "action": "CHANGE_CONTRACT",
+      "change": "query server=b&project=p&installation=i hoje aceita e foreign.projectId esperado: atualizar para tuple Team. Nunca completar project parcial com seleção local.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/dashboard-route.test.ts",
+      "blob": "3b566e8d56adb9c3a0010b6e709d2f61c0e43129",
+      "action": "CHANGE_CONTRACT",
+      "change": "Todas entradas/detail atualmente aceitam query server=s&project=p&installation=i; atualizar aceitação, duplicados e versão antiga.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant. Preservar proposals workbench e year/month/status.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/planner-route.test.ts",
+      "blob": "628521b990e697c034fd2e4ff413ee4ac3a23df4",
+      "action": "CHANGE_CONTRACT",
+      "change": "selection, foreign.projectId e URL com encoded server usam triplet antigo; atualizar para tuple versionado e não fallback parcial.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant. Preservar overview removed version/wrong year/filter guard.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/procurement-route.test.ts",
+      "blob": "d7119a2ec863836ab6272e70ac84f566c5760b0c",
+      "action": "CHANGE_CONTRACT",
+      "change": "Trocar query positivo/duplicado e foreign owner assertions em todos paths, sem mudar sourceRecord PR/Supplier.",
+      "keep": "Preservar schema fechado, referência original e operação exata + destino readable; nome Team/selector nunca concede grant. Preservar not-submitted vs not-pending separados.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/owner-exit.test.ts",
+      "blob": "77c7fc32d00e612983f40c19e287aab1f4d7d232",
+      "action": "CHANGE_CONTRACT",
+      "change": "selection.projectId e mutação in-place→outro owner passam a Team/principal/revisões; ampliar matriz de campos.",
+      "keep": "Manter consent/discard/purge ordem, cancel, pending refusal, troca owner/generation/handle/status e abort nunca descartam successor.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "blob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+      "action": "KEEP_REGRESSION",
+      "change": "Recognizer regex já aceita native/teams-profile-linux.spec.ts; adicionar exemplo exato da nova spec, mantendo --list/fixture/*/wp04/grep false.",
+      "keep": "Arquivo verifica seleção literal, não inicia host nem prova login.",
+      "runner": "APP_BUN_HAPPYDOM",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-bootstrap.spec.ts",
+      "blob": "56131bc7c914e0900573fccf8bff3f259dd488a4",
+      "action": "CHANGE_CONTRACT",
+      "change": "Retirar seeds repo project+layout home.directory e expected orchestra.window.browser.dat:tabs {draft,server,directory}; selecionar Team validada, scope pessoal+janela, novo Chat sem file/Git.",
+      "keep": "Manter capítulo→draft sem criar sessão antes de submit; fixture HTTP não é prova instalada.",
+      "runner": "E2E_ORCHESTRA",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/project-git-init.spec.ts",
+      "blob": "d652838a700ad9627803ea9026e13bbf74245305",
+      "action": "REMOVE_SF_CASE",
+      "change": "Os três casos pasta vazia+Git confirm/skip e pasta não vazia não são onboarding SF. Substituir por 0/1/N Teams + erro/parcial + zero calls /api/project/git ou directory picker.",
+      "keep": "Não declarar ausência de Git apenas por mock não chamar endpoint.",
+      "runner": "E2E_ORCHESTRA",
+      "bodyRead": "FULL_BODY",
+      "replacement": [
+        "packages/app-shell/e2e/sucafina/team-profile.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation.spec.ts",
+      "blob": "f5d10744277900635c6f7fc2f5389f8a09b7f094",
+      "action": "CHANGE_CONTRACT",
+      "change": "setupCompactNavigation repo seeds, Choose project/Compact project/ProjectAvatar/breadcrumb e '1 agent · main' precisam Team metadata. Caso V2 branch é REMOVE_SF_CASE→no-vcs+catálogo Team admitido; narrow767 hoje verifica Home apenas, adicionar picker+keyboard+dirty revoke.",
+      "keep": "Manter geometria/foco/tooltip/menu/reload/RTL, storage preferência e branch prod sem WIP. Mock HTTP não é installed.",
+      "runner": "E2E_ORCHESTRA",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation-direction.spec.ts",
+      "blob": "5b9ff5d92af18b5270f8d4d4ab4af64475223472",
+      "action": "CHANGE_CONTRACT",
+      "change": "projectName/renameProject/Choose project passam a Team com ID imutável; assert elemento DOM igual após rename precisa continuar e incluir nomes Team duplicados.",
+      "keep": "Manter portal direction/alignment, tab order, light/dark e Arabic; overrides @development-only não contam produção.",
+      "runner": "E2E_ORCHESTRA",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-dock.spec.ts",
+      "blob": "84a64c3c7448c5f7f232b729c762081bb6611cd4",
+      "action": "REMOVE_SF_CASE",
+      "change": "bridge fake e assert /^repo-/ não demonstram feature SF entregue; remover esses cenários da aceitação SF e substituir pelo SF Web sem bridge/repo affordance. Cenários host continuam regressões genéricas separadas.",
+      "keep": "Manter fora SF overlay/late tabs/generation/errors e unavailable sem nenhuma chamada.",
+      "runner": "E2E_ORCHESTRA",
+      "bodyRead": "FULL_BODY",
+      "replacement": [
+        "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/pages/session/apps-panel-controller.test.ts",
+      "blob": "96edd1cc2af9f43e9c7f645972b44e03b50e38b0",
+      "action": "REMOVE_SF_CASE",
+      "change": "Casos stable repository hash, repository restore e sem repo→manifest.default/work não podem qualificar SF. profileA/B hoje são hash(server,directory); não converter hash em Team.",
+      "keep": "KEEP_REGRESSION de no-bridge zero calls e algoritmos late-open/navigation/generation/occlusion/recovery no host. Leitura focal, não auditoria integral dos casos Linux.",
+      "runner": "APP_BUN_SOLID",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": [
+        "packages/app-shell/test-browser/sucafina-native/team-profile-shell.test.ts"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "blob": "75b5ba96b64b5650b4566eb0d149d89a2a8296e1",
+      "action": "REMOVE_SF_CASE",
+      "change": "D01 exige _electron e app empacotado; não é gate de entrega Bun+SFWeb Linux. Substituto precisa cookie jar real, duas contas/janelas e artefato web atestado; não mock window.api.",
+      "keep": "Conservar como teste separado de produto Desktop se esse produto mudar; não relaxar packaged/no-fake-auth guards.",
+      "runner": "PLAYWRIGHT_ELECTRON_INSTALLED",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": [
+        "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ]
+    },
+    {
+      "path": "packages/client/test/promise.test.ts",
+      "blob": "b57885468ca4522ee361299285483af992c175a8",
+      "action": "KEEP_REGRESSION",
+      "change": "Conservar contrato técnico atual; acrescentar owner/revisão no contrato SF e suas fixtures oficiais quando gerado, sem transformar ProjectID técnico em Team por cast.",
+      "keep": "groups exatos de ClientApi, session projection, skill catalog/by-name/list technical Location, events SSE bounds/malformed, sessions/history URLs/error contracts",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/effect.test.ts",
+      "blob": "84ec5ea971c9599163b7a8ac45576337bdf380a8",
+      "action": "KEEP_REGRESSION",
+      "change": "Conservar contrato técnico atual; acrescentar owner/revisão no contrato SF e suas fixtures oficiais quando gerado, sem transformar ProjectID técnico em Team por cast.",
+      "keep": "decoded Effect dates/plain outputs, event protocol errors, session/history inputs/cursor and SessionNotFound",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/session-settings-promise.test.ts",
+      "blob": "0622d04e245f000eadd2d723de1e0a1aea638cf0",
+      "action": "KEEP_REGRESSION",
+      "change": "Conservar contrato técnico atual; acrescentar owner/revisão no contrato SF e suas fixtures oficiais quando gerado, sem transformar ProjectID técnico em Team por cast.",
+      "keep": "policy allowlist vazia/inherit, archive204, includeArchived + opaque encoded cursor",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/session-settings-effect.test.ts",
+      "blob": "b266137ed235ce1404fda6afc1e53910895b4cc7",
+      "action": "KEEP_REGRESSION",
+      "change": "Conservar contrato técnico atual; acrescentar owner/revisão no contrato SF e suas fixtures oficiais quando gerado, sem transformar ProjectID técnico em Team por cast.",
+      "keep": "os mesmos contracts com Effect decoded input/output",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/type-conformance.test.ts",
+      "blob": "cca5cfad6fe95933ca26cf045719004ee49711d3",
+      "action": "KEEP_REGRESSION",
+      "change": "Conservar contrato técnico atual; acrescentar owner/revisão no contrato SF e suas fixtures oficiais quando gerado, sem transformar ProjectID técnico em Team por cast.",
+      "keep": "bidirectional types encoded events/history, numeric timestamps, usage optional e JSON null; generated-client codegen comparison + nested typecheck",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/collaboration-routes.test.ts",
+      "blob": "e6783dbdfedd9190b5858f03c6cc3b58ceaf218b",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar binding.projectId + sf-native-ui/1; não mudar os29 adapters nem corpos fechados source.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/dashboard-draft-read.test.ts",
+      "blob": "e364324fbce5bdd2bb28d9daa7b4576dd97d9440",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar binding/stamp/refresh ctx tuple; manter primeiro outcome read com original command key e refresh403 mata admissão.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/decision-routes.test.ts",
+      "blob": "0bcf6085215e8f1eae06cfff0a0a7f36422bb0d3",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar binding/stamp/context tuple; os20 adapters, exact source bodies, headers e source CAS continuam.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/human-retry.test.ts",
+      "blob": "9b9e42ef3853f554cd9c5989fa8fc7ce0782f14a",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar descriptor/stamp/context refresh, v1 e loop de mudança principal/policy/accessRevision; adicionar tenant/team/authEpoch/membership rev; reauth não restaura intent antigo.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/report-retry.test.ts",
+      "blob": "4667c7b8e63e4693b9ad119f89e9f94edc281995",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar descriptor/stamp/ctx tuple synthetic IPC; manter503 unknown, retry exato não concorrente e corpo/chave originais.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/talent-members.test.ts",
+      "blob": "5bb001a6a6e551673cb866058efbd78a66e70b28",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar descriptor/stamp/ctx tuple; bounded byte chunks e no renderer fetch preservados; adicionar web bytes owner fence no teste novo.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+      "blob": "cc654ff6a7bc462895cfca4dab30668830af200d",
+      "action": "CHANGE_CONTRACT",
+      "change": "Atualizar SfInstallationDescriptor projectId+revision v1; manter search same-origin POST/no query, UTF8 max, excess keys/MIME, abort vence late response e People facade pretransport.",
+      "keep": "Preservar fronteira de cookies/origin, schemas estritos, auth errors, idempotência e ausência de replay automático; synthetic transport não prova tenant LIVE.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/decision-edit.test.ts",
+      "blob": "f61e9d55628291c0c6a107c9e8df3cd5ec1b62e2",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem repo-profile de autoridade neste teste de codec.",
+      "keep": "Manter closed CAS, injected principal rejected, denial/stale/conflict não vira receipt.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/native-codecs.test.ts",
+      "blob": "e9b33b985760598dca0b5f970dab97dc2eb067d1",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem repo-profile de autoridade neste teste de codec.",
+      "keep": "Manter CAP23 exato, undefined e Infinity recusados, arrays12 sem null coercion.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/source-codecs.test.ts",
+      "blob": "554e92882bedf76f52d157ba610ab8bc99ddbb3d",
+      "action": "KEEP_REGRESSION",
+      "change": "Sem repo-profile de autoridade neste teste de codec.",
+      "keep": "Manter 28schemas, 8byte routes, field false/zero, hostile URL/header, slot/MIME/size bounds e no implicit URL.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/actions-transfer-download.test.ts",
+      "blob": "cfca559d4571517dd1e9b69c5525066b20524958",
+      "action": "KEEP_REGRESSION",
+      "change": "Adapter handwritten separado dos clients gerados. Capturar novo contexto SF quando esse adapter for mediado; não apagar checks de autoridade do transporte.",
+      "keep": "Manter raw bytes+headers, Location técnica query, consumer abort fecha peer, partial failure visible.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/actions-transfer-upload.test.ts",
+      "blob": "fe34b39f37c35431fe1413d97f500f43e9ea95eb",
+      "action": "KEEP_REGRESSION",
+      "change": "Adapter handwritten separado dos clients gerados. Capturar novo contexto SF quando esse adapter for mediado; não apagar checks de autoridade do transporte.",
+      "keep": "Manter raw stream sem multipart, durable metadata, Blob, abort sem replay, captured input/config before await.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/client/test/actions-transfer-errors.test.ts",
+      "blob": "1b807fba08352f94b7a5a522b72382f2fb8d2cbc",
+      "action": "KEEP_REGRESSION",
+      "change": "Adapter handwritten separado dos clients gerados. Capturar novo contexto SF quando esse adapter for mediado; não apagar checks de autoridade do transporte.",
+      "keep": "Manter provider auth≠server auth, bounded errors, timeout, redirect não envia auth a foreign origin, invalid target before network, captured immutable request.",
+      "runner": "CLIENT_BUN",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/sdk-next/test/embedded.test.ts",
+      "blob": "6fe30ce4ee65de629cbb63dbba7de447a0a2464c",
+      "action": "KEEP_REGRESSION",
+      "change": "Location continua técnica; não converter global operator em pessoa Teams. Acrescentar suíte SF admission separada.",
+      "keep": "Router/SQL reais, operator origin sdk/requestID fresh, session/history/event missing errors, global event delivery, dois hosts não compartilham notificações, Layer lifecycle.",
+      "runner": "SDK_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/sdk-next/test/capability-connections.test.ts",
+      "blob": "8b1121f3d66e2b20f805a83676b86ff590e97e97",
+      "action": "KEEP_REGRESSION",
+      "change": "it.live é helper @orchestra/core/test/lib/effect + bun:test; manter admissão técnica. Novo teste deve negar wildcard operator usado como identidade Microsoft.",
+      "keep": "Nove métodos Promise/Effect, receipts replay, SQL actor, opaque cursor ligado a escopo, foreign denied, unauthenticated, secret redaction.",
+      "runner": "SDK_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/sdk-next/test/capability-setup.test.ts",
+      "blob": "031daea54692bcab38d718f9d4ff3c8bd4c3dbf5",
+      "action": "KEEP_REGRESSION",
+      "change": "Single parent Bun test lança isolated fixture workers; markers sdk-effect/sdk-promise/*local obrigatórios. Project.ID.global nessa fixture não prova profile SF.",
+      "keep": "Connect/getTarget/bindings, receipts/empty permissions, anonymous errors e implicit-local técnico; sem transformar isso em permissão Teams.",
+      "runner": "SDK_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/sdk-next/test/import-boundaries.test.ts",
+      "blob": "67768189e194eafe084bd2296ca9075e69ac8a4b",
+      "action": "KEEP_REGRESSION",
+      "change": "Manter build import boundaries client/core/server por Bun.spawn; não classificar helper de build como prova de autenticação.",
+      "keep": "Gerado/SDK mantém dependências permitidas.",
+      "runner": "SDK_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "packages/sdk-next/test/operator-transport.test.ts",
+      "blob": "415c5665517b7994b2adc47be2a3b8c1386f6161",
+      "action": "KEEP_REGRESSION",
+      "change": "Renovação bearer default é admissão de operador SDK; não promover a principal Teams.",
+      "keep": "Concurrent renewal uma vez, explicit foreign Authorization não substituída, scope expired não chama handler.",
+      "runner": "SDK_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-profile-registry.test.ts",
+      "blob": "7a8f0cccb01d74fca759d0991c54f71a63185fcd",
+      "action": "KEEP_REGRESSION",
+      "change": "Fora do alvo SF Linux. repo-abc/alpha/beta são fixtures de opaque ID; conservar CAS, distinct persistent storage keys e reload; não prova isolamento por conta/Team.",
+      "keep": "Registry tombstone/atomicidade não devem ser relaxados na limpeza do shared shell.",
+      "runner": "DESKTOP_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-rpc.test.ts",
+      "blob": "ab66b27bdf22c7a36094c9ae019c55bdd7ec25bf",
+      "action": "KEEP_REGRESSION",
+      "change": "Script top-level Bun.build+Electron, required R01–R13/M01; não é suíte bun:test nem .node-smoke. Fora da aceitação SF Web.",
+      "keep": "Leitura focal: R10 storage profile isolation e R12 bound originating window; preserve RPC sender/generation.",
+      "runner": "ELECTRON_RPC_SCRIPT",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": []
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-security.test.ts",
+      "blob": "8806add844fd137790e31056db4267a8848cec0b",
+      "action": "KEEP_REGRESSION",
+      "change": "Script top-level Bun.build+spawn Electron, package test:app-dock:e2e. Não é teste browser happy-dom/Playwright SF nem node-smoke.",
+      "keep": "Leitura focal: U19 shared profile2windows delete, U23 real restart cookies, U24 tombstone, U25 corrupt registry denies rebind, U26 restart separation e U31 stale generation. Não auditados todos os casos.",
+      "runner": "ELECTRON_SECURITY_SCRIPT",
+      "bodyRead": "TARGETED_BODY",
+      "replacement": []
+    },
+    {
+      "path": "apps/desktop/src/main/window-registry.test.ts",
+      "blob": "23cdd01f642842eab0582f508f3ccd3a72751986",
+      "action": "KEEP_REGRESSION",
+      "change": "Fora do artefato SF; identity de janela/restauro técnico permanece.",
+      "keep": "IDs válidos/dedupe, last-window restore, forget explicit close, quit reset, focus.",
+      "runner": "DESKTOP_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    },
+    {
+      "path": "apps/desktop/src/main/window-state.test.ts",
+      "blob": "af2b5a13c26c9e61854f237d79286b09b39930b4",
+      "action": "KEEP_REGRESSION",
+      "change": "Fora do artefato SF; nada depende de repo-profile.",
+      "keep": "Restore minimized antes de show/focus; unminimized sem alterar tamanho.",
+      "runner": "DESKTOP_BUN",
+      "bodyRead": "FULL_BODY",
+      "replacement": []
+    }
+  ],
+  "newTests": [
+    {
+      "path": "packages/app-shell/src/context/team-profile-selection.test.ts",
+      "runner": "APP_BUN_SOLID",
+      "cases": [
+        "0/1/N equipes completas admitidas; única opção só autoseleciona após validação",
+        "Graph unavailable/403/partial/empty/revoked distintos; zero cwd/global/lastProject/firstProject fallback",
+        "restore same ID rename; nomes duplicados; novo objectID não herda; wrong tenant/install/principal rejeitado",
+        "admin recovery admitido sem Team não dá acesso de negócio"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/team-profile-new-session.test.ts",
+      "runner": "APP_BUN_SOLID",
+      "cases": [
+        "new Chat/titlebar shortcut/palette exige Team admitida; não chama file.list/project.current/initGit/trust",
+        "mesma Location técnica para A/B não altera owner; SessionID foreign nunca adotado",
+        "nenhuma Team selecionada gera estado explícito, não draft com available[0]"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/utils/team-profile-storage.test.ts",
+      "runner": "APP_BUN_SOLID",
+      "cases": [
+        "namespace instalação+tenant+Team+principal+categoria; janela para seleção/tabs; encoding sem colisões",
+        "mesma Team duas contas; mesma conta duas Teams; duas janelas seleção independente",
+        "legacy layout/tabs/prompt/model/notification ficam quarantined até mapa inequívoco",
+        "backfill idempotente, writer epoch antigo recusa após cut/restart; quota/corrupt JSON sem mudar owner"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/context/team-profile-queries.test.ts",
+      "runner": "APP_BUN_SOLID",
+      "cases": [
+        "duas contas mesma Team/directory não compartilham catálogo privilegiado/config/grants",
+        "duas Teams same directory chaves diferentes, sync/SDK children capturam tuple imutável",
+        "late A success + B failure nunca repõe A; provider refresh cancela epoch; old SSE/bfcache/reconnect não revive",
+        "server-home index e cursor por owner antes paginação; envelope sem owner não vai para global"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/team-profile-shell.test.ts",
+      "runner": "APP_BUN_HAPPYDOM",
+      "cases": [
+        "single shared owner entre native chapters; Team picker/sidebar/titlebar/new-chat/palette/keyboard equivalentes",
+        "voluntary A→B com dirty cancel/confirm e recheck após consent",
+        "revoke/logout/principal replacement durante modal cancela authority em todas janelas do authEpoch; resposta velha não vence",
+        "no bridge não monta/calcule repo owner nem faz IPC; nenhum fallback manual/default"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/team-profile-routes.test.ts",
+      "runner": "APP_BUN_HAPPYDOM",
+      "cases": [
+        "table todos family parsers/builders/native-entry/resume/login/F04 href producers com seleção versionada completa",
+        "partial/duplicate/mixed/unknown keys/old project URL rejeitados ou importador explícito sem grant",
+        "explicit A não completa com B; back/forward/reload/deep-link native válido revalida",
+        "private search nunca URL; admitted admin recovery sem Team é distinto de profile fallback"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test-browser/team-profile-private-state.test.ts",
+      "runner": "APP_BUN_HAPPYDOM",
+      "cases": [
+        "tabs/recent/closed/info/title/history/prompts/comments/fileviews/subagent models/notifications com A/B mesma Team duas contas",
+        "Web window identifier de verdade no target; não desktop mock para promessa web",
+        "draft doc+blob refs e objectURLs owner-bound; excluir/GC A não elimina B; logout revoga URL/re-hydration",
+        "notificação de A após B não mostra dado; clique revalida origin+owner ou estado neutro"
+      ]
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/installed-manifest-contract.test.ts",
+      "runner": "APP_BUN_SOLID",
+      "cases": [
+        "factory/reader compartilham validação pure de boundary; roundtrip positivo do mesmo manifest DTO",
+        "wrong tenant/Team/install/server/principal independentes; versão v1/missing/excess rejeitadas",
+        "detectar contradição atual equal vs unequal publicOrigin sem simular login/real session"
+      ]
+    },
+    {
+      "path": "packages/client/test/sucafina/team-profile-context.test.ts",
+      "runner": "CLIENT_BUN",
+      "cases": [
+        "strict native context/selection/stamp vNext em JSON e type contract; generated Promise/Effect e handwritten coerentes",
+        "cliente v1→servidor novo e cliente novo→servidor antigo recusam explicitamente",
+        "Team/principal de header arbitrário sem sessão não concede autoridade; tuple parcialmente renomeado não decode"
+      ]
+    },
+    {
+      "path": "packages/client/test/sucafina/team-profile-transport.test.ts",
+      "runner": "CLIENT_BUN",
+      "cases": [
+        "captura tuple original em mutation/header/context/response antes e depois de await",
+        "same-origin, mount, no-store, redirecterror e cookiePath preservados; nenhum Graph token renderer",
+        "downloads/uploads/chunks interrompem após revogação/epoch e não aceitam bytes do predecessor",
+        "retry original outcome unknown mantém chave/body/owner e não cruza principal/Team; nenhuma auto-reexecução"
+      ]
+    },
+    {
+      "path": "packages/sdk-next/test/team-profile-admission.test.ts",
+      "runner": "SDK_BUN",
+      "cases": [
+        "operator wildcard/Basic/SessionID conhecido não substituem principal Microsoft",
+        "dois principals simultâneos mesma Team+Location/DB; dois Teams mesma Location; negative read/write/list/history/event/catalog",
+        "transport default renewal não renova/reassocia sessão corporativa revogada; internal routes mediadas por original authority"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/team-profile.spec.ts",
+      "runner": "PLAYWRIGHT_PRODUCTION",
+      "proof": "UI_CONTRACT_WITH_EXPLICIT_CONTROLLED_BACKEND_NOT_LIVE_AUTH",
+      "cases": [
+        "boot0/1/N+errors e newChat sem Git/directory; duplicate labels/rename IDs",
+        "wide1152/900/767 e localeRTL; picker/keyboard/palette/restore/back-forward",
+        "duas pages mesma conta seleção distinta; controlled context stale replies/dirty/revoke; assert visible state ready before actions"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/teams-profile-linux.spec.ts",
+      "runner": "PLAYWRIGHT_NATIVE_INSTALLED",
+      "proof": "REQUIRES_ATTESTED_BUN_SF_WEB_ARTIFACT_AND_REAL_HOST_AUTH",
+      "cases": [
+        "artefato Linux do candidato SHA/tree, sem .git/configrepo; traps não lidos como policy/agent/tool",
+        "attach F04 a contextos Microsoft pré-autenticados; duas contas mesma Team + uma conta duas pages/Teams",
+        "real membership/grant change, logout/relogin/restart/cookie mount: nenhum dado privado/late SSE/tab/blob revivido",
+        "voluntary switch cancela só janela iniciadora; forced revoke invalida authEpoch todo",
+        "originais operations/decisions/reports mantêm CAS/unknown/retry; sem Electron bridge nem repo picker"
+      ]
+    }
+  ],
+  "supportFiles": [
+    {
+      "paths": [
+        "packages/app-shell/happydom.ts",
+        "packages/app-shell/bunfig.toml"
+      ],
+      "action": "KEEP_SUPPORT",
+      "parents": [
+        "APP_BUN_SOLID",
+        "APP_BUN_HAPPYDOM"
+      ],
+      "notes": "DOM simulado; preserva fetch/Response/Abort nativos Bun. test-guard continua obrigatório. Não é Chromium."
+    },
+    {
+      "paths": [
+        "packages/app-shell/test-browser/real-ui-solid.ts",
+        "packages/app-shell/test-browser/solid-dom.ts"
+      ],
+      "action": "KEEP_SUPPORT",
+      "parents": [
+        "test-browser/sucafina-native/context.test.ts",
+        "test-browser/sucafina-native/owner-ready.test.ts",
+        "test-browser/sucafina-native/draft-quarantine.test.ts"
+      ],
+      "notes": "Bun plugin/transform Solid para DOM; não passar como test args executáveis."
+    },
+    {
+      "paths": [
+        "packages/app-shell/test/sucafina-native/source-context-fixture.ts"
+      ],
+      "action": "KEEP_SUPPORT",
+      "parents": [
+        "test-browser/sucafina-native/portfolio-route.test.ts",
+        "test-browser/sucafina-native/reviews-route.test.ts",
+        "test-browser/sucafina-native/work-route.test.ts",
+        "test/sucafina-native/dashboard-route.test.ts"
+      ],
+      "notes": "Destinations CAP-only originais, sem grant derivado de rótulo."
+    },
+    {
+      "paths": [
+        "packages/app-shell/e2e/orchestra/compact-navigation.fixture.ts"
+      ],
+      "action": "CHANGE_SUPPORT",
+      "parents": [
+        "e2e/orchestra/compact-navigation.spec.ts",
+        "e2e/orchestra/compact-navigation-direction.spec.ts"
+      ],
+      "notes": "Seed project/lastProject/home.selection.directory e renameProject viram fixture Team+principal+janela; mantém mock class explícita."
+    },
+    {
+      "paths": [
+        "packages/app-shell/e2e/sucafina/native/fixture/selection.ts"
+      ],
+      "action": "KEEP_SUPPORT",
+      "parents": [
+        "test-browser/sucafina-native/fixture/selection.test.ts",
+        "e2e/playwright.production.config.ts"
+      ],
+      "notes": "Regex reconhece qualquer native/**/*.spec.ts fora fixture; --list nunca liga host. Adicionar exemplo da spec nova."
+    },
+    {
+      "paths": [
+        "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+        "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
+      ],
+      "action": "CHANGE_SUPPORT",
+      "parents": [
+        "test/sucafina-native/installed-manifest-contract.test.ts",
+        "e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ],
+      "notes": "Versão/tuple/wrongTeam/exactKeys e igualdade de origins coerentes factory→reader; defeito atual oposto. Auth não serializada."
+    },
+    {
+      "paths": [
+        "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
+      ],
+      "action": "CHANGE_SUPPORT",
+      "parents": [
+        "e2e/sucafina/native/teams-profile-linux.spec.ts"
+      ],
+      "notes": "Reattach CDP do host, contexts Microsoft distintos. admittedContext relê tuple+principal/membership; não criar login fake ou context novo como auth."
+    },
+    {
+      "paths": [
+        "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+        "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts"
+      ],
+      "action": "CHANGE_SUPPORT",
+      "parents": [
+        "e2e/sucafina/native/teams-profile-linux.spec.ts",
+        "installed U15/U39/U40 callers"
+      ],
+      "notes": "v1 projectId/selectedHref/context URL/stamp/check grant e producer CAS; preservar original business refs. Registro prereq nunca PASS."
+    },
+    {
+      "paths": [
+        "script/sf2h/proofs/installed/register.ts",
+        "script/sf2h/proofs/installed/consume.ts"
+      ],
+      "action": "CHANGE_SUPPORT",
+      "parents": [
+        "proposed installed Linux qualification job"
+      ],
+      "notes": "Exports host-only, não CLI ou testes. ApprovedInstalledHost real registry/actors/F01/source callbacks; ampliar suites deliberadamente."
+    },
+    {
+      "paths": [
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "packages/app-shell/tsconfig.sf-e2e.json"
+      ],
+      "action": "CHANGE_SUPPORT",
+      "parents": [
+        "PLAYWRIGHT_PRODUCTION",
+        "PLAYWRIGHT_NATIVE_INSTALLED",
+        "app typecheck:sf-e2e"
+      ],
+      "notes": "Mesma config prod; native webServer=[]; env/candidate required. tsconfig.sf inclui e2e/sucafina/**/*.ts(x)."
+    },
+    {
+      "paths": [
+        "packages/client/src/contract.ts",
+        "packages/client/script/build.ts",
+        "packages/client/src/generated",
+        "packages/client/src/generated-effect",
+        "packages/client/src/wire.ts"
+      ],
+      "action": "CHANGE_GENERATED_CONTRACT",
+      "parents": [
+        "packages/client/test/promise.test.ts",
+        "packages/client/test/effect.test.ts",
+        "packages/client/test/type-conformance.test.ts",
+        "new client Teams tests"
+      ],
+      "notes": "Schema/protocol→codegen; nunca handedit outputs; handwritten sucafina/transport e actions-transfer tratados separadamente."
+    },
+    {
+      "paths": [
+        "packages/core/test/lib/effect.ts",
+        "packages/client/bunfig.toml",
+        "packages/sdk-next/bunfig.toml"
+      ],
+      "action": "KEEP_SUPPORT",
+      "parents": [
+        "CLIENT_BUN",
+        "SDK_BUN"
+      ],
+      "notes": "it.live wrapper de bun:test; test-guard preload; não Vitest."
+    }
+  ],
+  "gates": {
+    "status": "PLANNED_NOT_RUN",
+    "lanes": [
+      {
+        "id": "APP_BUN_SOLID",
+        "packageAlias": "app",
+        "runner": "bun",
+        "args": [
+          "src/components/titlebar-tab-order.test.ts",
+          "src/context/tabs.test.ts",
+          "src/utils/session-route.test.ts",
+          "src/utils/server-scope.test.ts",
+          "src/utils/persist.test.ts",
+          "src/context/server-sync.test.ts",
+          "src/pages/layout/helpers.test.ts",
+          "src/pages/new-session/new-session-workspace-controller.test.ts",
+          "src/context/server-provider-refresh.test.ts",
+          "src/context/server-sdk.test.ts",
+          "src/context/server-event-native.test.ts",
+          "src/context/global-sync/bootstrap.test.ts",
+          "src/context/global-sync/child-store.test.ts",
+          "src/context/global-sync/home-session-index.test.ts",
+          "src/context/layout.test.ts",
+          "src/context/layout-route.test.ts",
+          "src/context/layout-tabs.test.ts",
+          "src/context/prompt-state.test.ts",
+          "src/components/titlebar-history.test.ts",
+          "src/pages/new-session/new-session-ready.test.ts",
+          "src/orchestra/navigation.test.ts",
+          "test/sucafina-native/native-chapter-entry.test.ts",
+          "test/sucafina-native/navigation-consent-recheck.test.ts",
+          "test/sucafina-native/bi-route.test.ts",
+          "test/sucafina-native/dashboard-route.test.ts",
+          "test/sucafina-native/planner-route.test.ts",
+          "test/sucafina-native/procurement-route.test.ts",
+          "test/sucafina-native/owner-exit.test.ts",
+          "src/pages/session/apps-panel-controller.test.ts"
+        ],
+        "conditions": "solid",
+        "preloads": [
+          "script/test-guard.ts",
+          "packages/app-shell/happydom.ts"
+        ],
+        "note": "src/* e test/sucafina-native/* explicitamente; package test:unit só ./src não coleta test/ por si"
+      },
+      {
+        "id": "APP_BUN_HAPPYDOM",
+        "packageAlias": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser/orchestra/titlebar-tab-order.test.ts",
+          "test-browser/notification-origin.test.ts",
+          "test-browser/deep-link-ingress.test.ts",
+          "test-browser/prompt-scope.test.ts",
+          "test-browser/prompt-persistence.test.ts",
+          "test-browser/draft-session-key.test.ts",
+          "test-browser/orchestra-compact-navigation.test.ts",
+          "test-browser/actions-navigation.test.ts",
+          "test-browser/sucafina-native/context.test.ts",
+          "test-browser/sucafina-native/shell-guard237.test.ts",
+          "test-browser/sucafina-native/owner-ready.test.ts",
+          "test-browser/sucafina-native/owner-mount-integration.test.ts",
+          "test-browser/sucafina-native/host-binding231.test.ts",
+          "test-browser/sucafina-native/draft-quarantine.test.ts",
+          "test-browser/sucafina-native/decisions-pages-route.test.ts",
+          "test-browser/sucafina-native/files-route.test.ts",
+          "test-browser/sucafina-native/home-pages-route.test.ts",
+          "test-browser/sucafina-native/memory-route.test.ts",
+          "test-browser/sucafina-native/operations-route.test.ts",
+          "test-browser/sucafina-native/people-route.test.ts",
+          "test-browser/sucafina-native/planner-pages-route.test.ts",
+          "test-browser/sucafina-native/portfolio-route.test.ts",
+          "test-browser/sucafina-native/reviews-route.test.ts",
+          "test-browser/sucafina-native/routines-route.test.ts",
+          "test-browser/sucafina-native/work-route.test.ts",
+          "test-browser/sucafina-native/extended-routes.test.ts",
+          "test-browser/sucafina-native/fixture/selection.test.ts"
+        ],
+        "conditions": "browser",
+        "preloads": [
+          "script/test-guard.ts",
+          "script/test-omni-control.ts",
+          "packages/app-shell/happydom.ts"
+        ],
+        "note": "test-browser/* não Chromium; não misturar com solid"
+      },
+      {
+        "id": "CLIENT_BUN",
+        "packageAlias": "client",
+        "runner": "bun",
+        "args": [
+          "test/promise.test.ts",
+          "test/effect.test.ts",
+          "test/session-settings-promise.test.ts",
+          "test/session-settings-effect.test.ts",
+          "test/type-conformance.test.ts",
+          "test/sucafina/collaboration-routes.test.ts",
+          "test/sucafina/dashboard-draft-read.test.ts",
+          "test/sucafina/decision-routes.test.ts",
+          "test/sucafina/human-retry.test.ts",
+          "test/sucafina/files-transport226/report-retry.test.ts",
+          "test/sucafina/files-transport226/talent-members.test.ts",
+          "test/sucafina/transport-type-repair/f02-transport.test.ts",
+          "test/sucafina/decision-edit.test.ts",
+          "test/sucafina/native-codecs.test.ts",
+          "test/sucafina/files-transport226/source-codecs.test.ts",
+          "test/actions-transfer-download.test.ts",
+          "test/actions-transfer-upload.test.ts",
+          "test/actions-transfer-errors.test.ts"
+        ],
+        "preloads": [
+          "script/test-guard.ts"
+        ],
+        "note": "Mais geração/check:generated e typecheck"
+      },
+      {
+        "id": "SDK_BUN",
+        "packageAlias": "sdk-next",
+        "runner": "bun",
+        "args": [
+          "test/embedded.test.ts",
+          "test/capability-connections.test.ts",
+          "test/capability-setup.test.ts",
+          "test/import-boundaries.test.ts",
+          "test/operator-transport.test.ts"
+        ],
+        "registryAliasStatus": "CONFIRMED_BY_ROOT_AT_687759276c2c9121c2cfd20a5994b277ceb7ee4d",
+        "preloads": [
+          "script/test-guard.ts"
+        ],
+        "note": "it.live helper Bun; import-boundaries spawn e setup isolated workers executam"
+      },
+      {
+        "id": "E2E_ORCHESTRA",
+        "packageAlias": "app",
+        "runner": "dedicated-playwright-job",
+        "config": "e2e/orchestra/playwright.config.ts",
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "existingSpecs": [
+          "e2e/orchestra/chapter-bootstrap.spec.ts",
+          "e2e/orchestra/project-git-init.spec.ts",
+          "e2e/orchestra/compact-navigation.spec.ts",
+          "e2e/orchestra/compact-navigation-direction.spec.ts",
+          "e2e/orchestra/chapter-dock.spec.ts"
+        ],
+        "note": "Canonical generic Orchestra regression only; unsupported by test-ci production/performance allowlist. Planned Linux job must align metadata.bundle=production with actual built web and explicit development-only exclusion. SF acceptance ports to new sucafina/team-profile.spec.ts and native/teams-profile-linux.spec.ts.",
+        "notSfAcceptance": true
+      },
+      {
+        "id": "DESKTOP_BUN",
+        "packageAlias": "desktop",
+        "runner": "bun",
+        "args": [
+          "src/main/app-dock-profile-registry.test.ts",
+          "src/main/window-registry.test.ts",
+          "src/main/window-state.test.ts"
+        ],
+        "notSfFinalGate": true,
+        "note": "Electron fora do pacote SF Linux; regressão genérica se shared host muda"
+      },
+      {
+        "id": "ELECTRON_RPC_SCRIPT",
+        "notSfFinalGate": true,
+        "cwd": "apps/desktop",
+        "command": [
+          "bun",
+          "run",
+          "test:app-dock:rpc"
+        ],
+        "expandsTo": [
+          "bun",
+          "run",
+          "src/main/app-dock-rpc.test.ts"
+        ],
+        "note": "Bun.build+Electron; não bun:test ou node-smoke"
+      },
+      {
+        "id": "ELECTRON_SECURITY_SCRIPT",
+        "notSfFinalGate": true,
+        "cwd": "apps/desktop",
+        "command": [
+          "bun",
+          "run",
+          "test:app-dock:e2e"
+        ],
+        "expandsTo": [
+          "bun",
+          "run",
+          "src/main/app-dock-security.test.ts"
+        ],
+        "note": "Bun.build+Electron restart cookies; não Playwright Web"
+      },
+      {
+        "id": "PLAYWRIGHT_PRODUCTION",
+        "packageAlias": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "proposedSpecs": [
+          "e2e/sucafina/team-profile.spec.ts"
+        ],
+        "note": "Controlled backend UI contract only. Real Microsoft/installed acceptance belongs to newInstalledLinuxGate."
+      }
+    ],
+    "newInstalledLinuxGate": {
+      "status": "REQUIRES_EXPLICIT_NEW_RELEASE_JOB_NOT_GENERIC_TEST_CI",
+      "proposedWorkflowPath": ".github/workflows/teams-profile-linux-qualification.yml",
+      "proposedJobId": "qualify-teams-profile-linux",
+      "workflowExistence": "PROPOSED_NOT_CREATED",
+      "target": "Linux x64 Bun + SF Web, exact assembled artifact",
+      "cwd": "packages/app-shell",
+      "command": [
+        "bun",
+        "run",
+        "test:e2e:local",
+        "e2e/sucafina/native/teams-profile-linux.spec.ts",
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--workers",
+        "1",
+        "--retries",
+        "0",
+        "--repeat-each",
+        "1"
+      ],
+      "requiredEnvironment": {
+        "GITHUB_ACTIONS": "provided by Actions",
+        "ORCHESTRA_CHANNEL": "prod",
+        "SF_NATIVE_CANDIDATE_SHA": "exact candidate commit",
+        "SF_NATIVE_INSTALLED_MANIFEST": "absolute0600 manifest inside private0700 root, produced by real host",
+        "SF_NATIVE_BROWSER_ENDPOINT_FILE": "absolute0600 file in same root containing private loopback CDP endpoint"
+      },
+      "hostPrerequisites": [
+        "exact candidate commit+tree+archiveSHA256+runtime and web/factory payload receipt",
+        "resolveApprovedConnection from approved actual registry",
+        "liveMicrosoftActorPages from original distinct host-authenticated BrowserContexts",
+        "original F01 route resolution and original producer source rows/CAS",
+        "Team eligibility/membership/negative tuple proof; manifest/readiness contradiction fixed"
+      ],
+      "existingHostAPIs": {
+        "registration": "script/sf2h/proofs/installed/register.ts#registerInstalledProofFromHost",
+        "consumption": "script/sf2h/proofs/installed/consume.ts#consumeInstalledSuiteFromHost",
+        "note": "Only U15/U39/U40 supported now; extend/new Teams registration explicitly. No CLI execution claimed."
+      },
+      "requiredReceiptFields": [
+        "candidateSha",
+        "candidateTree",
+        "artifactSha256",
+        "buildRunId",
+        "testedArchiveEntries",
+        "runtime",
+        "specPath",
+        "configPath",
+        "collectedCount",
+        "passedCount",
+        "failedCount",
+        "skippedCount",
+        "cancelledCount",
+        "fixtureContractVersion",
+        "proofClass",
+        "negativeBoundaryCaseIds",
+        "privateOutputRedactionStatus"
+      ],
+      "proofFailureRules": [
+        "no real manifest/auth/callback => blocked, never skip-as-pass",
+        "zero collected or required skipped/cancelled => not qualified",
+        "native trace/screens/video off; no private endpoint/cookies/tokens in artifacts",
+        "locator visibility does not prove successful transaction"
+      ],
+      "notSatisfiableBy": [
+        "generic test-ci env CHANNEL/OMNI allowlist",
+        "D01 Electron",
+        "happy-dom mocks",
+        "route.fulfill/storageState/cookie injection",
+        "ProjectID cast as Team"
+      ]
+    },
+    "rootCiObservations": [
+      "test-ci app args prefix selects solid vs browser+happy-dom",
+      "node gate only *.node-smoke.mjs; *.check.ts scanner special lane",
+      "operations.spec.ts prod request already ClamD test-ci179–183; existing gate admissible",
+      "manifest/CDP env does not fit generic test-ci request; explicit release job required"
+    ]
+  },
+  "evidence": [
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "sha": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+      "size": 5328,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/AGENTS.md"
+    },
+    {
+      "path": "packages/app-shell/bunfig.toml",
+      "sha": "ae3760c675ef21de26e5c4f6b9a62df7bfa9c6d8",
+      "size": 157,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/bunfig.toml"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "sha": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "size": 2379,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/AGENTS.md"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-bootstrap.spec.ts",
+      "sha": "56131bc7c914e0900573fccf8bff3f259dd488a4",
+      "size": 3272,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/orchestra/chapter-bootstrap.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-dock.spec.ts",
+      "sha": "84a64c3c7448c5f7f232b729c762081bb6611cd4",
+      "size": 23207,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/orchestra/chapter-dock.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation-direction.spec.ts",
+      "sha": "5b9ff5d92af18b5270f8d4d4ab4af64475223472",
+      "size": 9288,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/orchestra/compact-navigation-direction.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation.fixture.ts",
+      "sha": "9e6fb1e10439542be672c6dc804f28fd0ec9e438",
+      "size": 2778,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/orchestra/compact-navigation.fixture.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/compact-navigation.spec.ts",
+      "sha": "f5d10744277900635c6f7fc2f5389f8a09b7f094",
+      "size": 18970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/orchestra/compact-navigation.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/project-git-init.spec.ts",
+      "sha": "d652838a700ad9627803ea9026e13bbf74245305",
+      "size": 6150,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/orchestra/project-git-init.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "sha": "db2597d7e9dd2b4069364a857f4fe16611bcf467",
+      "size": 2823,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/playwright.production.config.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts",
+      "sha": "567ef2bf1d472e248468ad4eed93ead751aaaa22",
+      "size": 5405,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "sha": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9",
+      "size": 12560,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/readiness.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+      "sha": "ed2ea1dcf1716dddbd71e358001be22291cca564",
+      "size": 22186,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+      "sha": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+      "size": 698,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/selection.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "sha": "75b5ba96b64b5650b4566eb0d149d89a2a8296e1",
+      "size": 12649,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/happydom.ts",
+      "sha": "eb766a70655e1ea04e38d01ec84c38c92a486024",
+      "size": 3062,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/happydom.ts"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "sha": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "size": 4281,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/package.json"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "sha": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "size": 1892,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/playwright.config.ts"
+    },
+    {
+      "path": "packages/app-shell/src/app.tsx",
+      "sha": "7cdcea2d2a15998c2996c94337decfa5b94ab152",
+      "size": 23432,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/app.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/components/prompt-project-selector.tsx",
+      "sha": "8613cb36c62342c8410adc1129e5e283d6ce8b17",
+      "size": 22847,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/components/prompt-project-selector.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar-history.test.ts",
+      "sha": "25035d7ccf77638ac2305e3e6382e4d1b39e8992",
+      "size": 1961,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/components/titlebar-history.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar-tab-order.test.ts",
+      "sha": "a3e23eaba4d4606239ea170940fda88ce40b93cf",
+      "size": 2176,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/components/titlebar-tab-order.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar-tab-order.ts",
+      "sha": "5c4e7c34026808df31bfeff3662b08d93929a9a4",
+      "size": 1739,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/components/titlebar-tab-order.ts"
+    },
+    {
+      "path": "packages/app-shell/src/components/titlebar.tsx",
+      "sha": "198508bc085f9dd488d0a7351041363b0f80dbe4",
+      "size": 24299,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/components/titlebar.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
+      "sha": "83e3238a34a69ed66b227dc066a07f92c1934a6d",
+      "size": 18594,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/global-sync/bootstrap.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/bootstrap.ts",
+      "sha": "aefa45daa1296df417ddba040c6412895140521a",
+      "size": 21828,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/global-sync/bootstrap.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/child-store.test.ts",
+      "sha": "1831d8629f12a7c0dddc8123fb8c24e3e92d5a8d",
+      "size": 10311,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/global-sync/child-store.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/global-sync/home-session-index.test.ts",
+      "sha": "236607c416a9c017b52e2d0c9d8dcfd07f018758",
+      "size": 6360,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/global-sync/home-session-index.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/global.tsx",
+      "sha": "13386451ef1a4350a9dda37af92a76b93b92f54d",
+      "size": 6019,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/global.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/layout-route.test.ts",
+      "sha": "ac65d57e017a8b1b291656874b8df9bee7a65c8b",
+      "size": 1089,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/layout-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/layout-tabs.test.ts",
+      "sha": "646ed086cef9f0d233effb5fc3edfcaad88731da",
+      "size": 2868,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/layout-tabs.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/layout.test.ts",
+      "sha": "895c0e85e217db91e723835051879328287ef755",
+      "size": 1704,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/layout.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/layout.tsx",
+      "sha": "b6225247e0951ed85a8b0febc32204fdbd1f69fb",
+      "size": 34519,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/layout.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/models.tsx",
+      "sha": "1d1a1f4e67e2ef67d887990cfbc86f9610f12eaa",
+      "size": 3914,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/models.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/notification.tsx",
+      "sha": "66e1a450530bb551a060e05fe26d2cafbbb99207",
+      "size": 17586,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/notification.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/platform.tsx",
+      "sha": "ed2faa58c39f824a8741080e44340e1390803d9d",
+      "size": 8213,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/platform.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/prompt-state.test.ts",
+      "sha": "24afe5424e71ac5d71537600a68787bf34625f7c",
+      "size": 1045,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/prompt-state.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/prompt-state.ts",
+      "sha": "a91fe4683751296f980c6495b6258a2aaa1e6434",
+      "size": 8549,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/prompt-state.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/prompt.tsx",
+      "sha": "c366bbd52250474d0478a1ccb569744384b09c9b",
+      "size": 5386,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/prompt.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/sdk.tsx",
+      "sha": "2f757be8e9c5ef85838e7c2e991ad7f6e1de5645",
+      "size": 909,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/sdk.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/server-event-native.test.ts",
+      "sha": "883d8319a460d4063e47f328cb7752e6b22ab7b9",
+      "size": 5401,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/server-event-native.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/server-provider-refresh.test.ts",
+      "sha": "ff5a78c92ef729fa796e8af19fc2c28df7b80e62",
+      "size": 3759,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/server-provider-refresh.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/server-queries.ts",
+      "sha": "4d3278b9da92d6184bdb83b475c84333c5ee0582",
+      "size": 4736,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/server-queries.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sdk.test.ts",
+      "sha": "7b693748e851c934455f9cde4a5c10bbcdd5ca09",
+      "size": 7311,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/server-sdk.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sdk.tsx",
+      "sha": "d299123b284217d002a3a7fa23766c934ad5f166",
+      "size": 19208,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/server-sdk.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/context/server-sync.test.ts",
+      "sha": "1811eb82e7757340e3ea3557a906ecad2a48d5f4",
+      "size": 12049,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/server-sync.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/tab-migration.ts",
+      "sha": "04c1cb6804ab5dc4422024e11072e67f007ec07f",
+      "size": 940,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/tab-migration.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/tabs.test.ts",
+      "sha": "abd62a4dae1360699bd4cab9098c380936bd7797",
+      "size": 4308,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/tabs.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/context/tabs.tsx",
+      "sha": "6db4efe606323509c89d13c24e88d57c476afe54",
+      "size": 15128,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/context/tabs.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapter-route.tsx",
+      "sha": "c774d836601ce352490a6a6ce947625bd2a33592",
+      "size": 8044,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapter-route.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "sha": "047643f93ac4f97c4c627dda4802c5406f791a52",
+      "size": 21632,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/native-chapter-entry.ts",
+      "sha": "64167b3b1015379e9b1d75ed34da27282155b191",
+      "size": 8959,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapters/sucafina/host/native-chapter-entry.ts"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "sha": "3cfd89615082b90b81385501e05cc704bee0f08e",
+      "size": 31601,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx",
+      "sha": "af8d3b1309c573a4b931aa217a28e3844712fdd8",
+      "size": 3733,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapters/sucafina/host/people-route.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+      "sha": "8fcfdd254831cfd875444dfacb0efad5f95db69a",
+      "size": 15561,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts",
+      "sha": "44c3ad22099b2a20047fe79dbc058cc7a37bbd63",
+      "size": 8941,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/resume.ts"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/navigation.test.ts",
+      "sha": "c58dffa60780c8ac4dea4b8d84dd81e6d34c6b85",
+      "size": 3845,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/navigation.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/navigation.ts",
+      "sha": "7bd6946f0ef916063b0f5c8b295c2fd19215ca5e",
+      "size": 4490,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/navigation.ts"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/shell/mobile-navigation.tsx",
+      "sha": "d8ef79a9e1e1a75bc93bf6c0233b3c7ab64c71a2",
+      "size": 2171,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/shell/mobile-navigation.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+      "sha": "139bb793e1cb6033039ce4a4899d4dab19d47167",
+      "size": 11380,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/shell/navigation-commands.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/sidebar.tsx",
+      "sha": "2f593f404af6743e8cf896fa924538bbfb21d306",
+      "size": 38203,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/orchestra/sidebar.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/pages/home.tsx",
+      "sha": "b473a8d3eca1f8313c10f05c2e5f5751880c2765",
+      "size": 3149,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/home.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/pages/home/home-controller.tsx",
+      "sha": "0756eb63688a37dd375f03c30116f6d9c002e7d2",
+      "size": 8702,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/home/home-controller.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/pages/layout/helpers.test.ts",
+      "sha": "27d86e797b8481b358f52935db6760793abe119b",
+      "size": 14016,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/layout/helpers.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session.tsx",
+      "sha": "ebf3a5a4ff439b4bf4e65c0f9782835fcc14ffbd",
+      "size": 3274,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/new-session.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-draft-controller.ts",
+      "sha": "44ec155f32562bae0cf3a2210367b49485608aee",
+      "size": 2316,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/new-session/new-session-draft-controller.ts"
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-ready.test.ts",
+      "sha": "4b44def00bf9190e0a5e26987edaa92ea7259a2b",
+      "size": 867,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/new-session/new-session-ready.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/pages/new-session/new-session-workspace-controller.test.ts",
+      "sha": "3c57063d495e38d9d47a0f84326d5761c88d23ca",
+      "size": 3861,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/new-session/new-session-workspace-controller.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/pages/session/apps-panel-controller.test.ts",
+      "sha": "96edd1cc2af9f43e9c7f645972b44e03b50e38b0",
+      "size": 39300,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/session/apps-panel-controller.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/pages/session/apps-panel-controller.ts",
+      "sha": "be46cd8ef0dd728688b9fcfb3dda44ff92dff6bf",
+      "size": 35665,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/session/apps-panel-controller.ts"
+    },
+    {
+      "path": "packages/app-shell/src/pages/session/apps-panel.tsx",
+      "sha": "ef2bd9c943d4cdea0ee8ca5b99f7ee2e170b8916",
+      "size": 27018,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/pages/session/apps-panel.tsx"
+    },
+    {
+      "path": "packages/app-shell/src/utils/draft-store.ts",
+      "sha": "1b1e36a5e19cd0c8a210d6d404a854521d0c3dd8",
+      "size": 6719,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/utils/draft-store.ts"
+    },
+    {
+      "path": "packages/app-shell/src/utils/persist.test.ts",
+      "sha": "317bddfb63a4223a0e521d0e37939624d6215613",
+      "size": 8502,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/utils/persist.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/utils/persist.ts",
+      "sha": "0eb22df372aba1d9a05f3fea84d0c85b31699572",
+      "size": 20361,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/utils/persist.ts"
+    },
+    {
+      "path": "packages/app-shell/src/utils/server-scope.test.ts",
+      "sha": "67d43b7abbb6e8ae95d5e4c62baef2591b5d6c18",
+      "size": 2640,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/utils/server-scope.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/utils/session-route.test.ts",
+      "sha": "dcc00300da9cd15e3a1e100f4b94c230c588f6a6",
+      "size": 2820,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/utils/session-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/src/web.ts",
+      "sha": "7bb367fc69f3616c3c0c8bcacbfc6ccd55bd1379",
+      "size": 300,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/src/web.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/actions-navigation.test.ts",
+      "sha": "cd72175665cc48f89d1c9d0ebf2cb4570be6e0f9",
+      "size": 6159,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/actions-navigation.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/deep-link-ingress.test.ts",
+      "sha": "33059698ea626e52c44e3ddc11e389c9c662e281",
+      "size": 1333,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/deep-link-ingress.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/draft-session-key.test.ts",
+      "sha": "c553145ce91d7f18da4d1965565bdba5367164f6",
+      "size": 1085,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/draft-session-key.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/notification-origin.test.ts",
+      "sha": "d8d4f67a4fb6a01c4fe7a977f35c00d066258341",
+      "size": 2508,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/notification-origin.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/orchestra-compact-navigation.test.ts",
+      "sha": "e13c3b05488bfd4be9dc6d9768e97771cb0ef514",
+      "size": 4587,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/orchestra-compact-navigation.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/orchestra/titlebar-tab-order.test.ts",
+      "sha": "57f6b5f948ab440c48ba11933993892a8b8a95fb",
+      "size": 1722,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/orchestra/titlebar-tab-order.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/prompt-persistence.test.ts",
+      "sha": "7c3d28226f434014837bb5cab7757526552a7414",
+      "size": 3778,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/prompt-persistence.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/prompt-scope.test.ts",
+      "sha": "fad19dcff77d80f3b67ed59748b9c27f34b3c84f",
+      "size": 532,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/prompt-scope.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/real-ui-solid.ts",
+      "sha": "a92dfeb1b574ff75a2de6a4466f18100758037e6",
+      "size": 1053,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/real-ui-solid.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/solid-dom.ts",
+      "sha": "37797c440693d9f2660679962714108e2eb18397",
+      "size": 3040,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/solid-dom.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+      "sha": "6214f06108cf45abcf987454fb9707d2fdb1588c",
+      "size": 9970,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/context.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/decisions-pages-route.test.ts",
+      "sha": "fa6e13f3bb0c2b73c8d0b67da8aac9584c9d5985",
+      "size": 2374,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/decisions-pages-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/draft-quarantine.test.ts",
+      "sha": "beb1314c7217720f1e819ddb9ae268f041dc549a",
+      "size": 23350,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/draft-quarantine.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/extended-routes.test.ts",
+      "sha": "fff3b0ccf6248ce6206434ffe7979ff8e63a00cb",
+      "size": 1404,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/extended-routes.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/files-route.test.ts",
+      "sha": "59b8917de5dd5a85d3b45a850ebfd2a6386284eb",
+      "size": 1926,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/files-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "sha": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+      "size": 1245,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts",
+      "sha": "f026c54dfdf8d5434aaea91edba82ed570eab204",
+      "size": 2586,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+      "sha": "9821bf2abae2355129e3952ae136b4d68291340f",
+      "size": 4177,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/memory-route.test.ts",
+      "sha": "9c34f7434f1e7e4deb512a13e9d4799a78b7d330",
+      "size": 1956,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/memory-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/operations-route.test.ts",
+      "sha": "d90b988a1701e9c3f9da1e76cb04d4d9982b1799",
+      "size": 2727,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/operations-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts",
+      "sha": "e0da88f9b5c9eacf33ccf44b5e245dce17888ece",
+      "size": 1303,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts",
+      "sha": "7af5f437944dec54dd02fd585ce1395699a65c7f",
+      "size": 6921,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/owner-ready.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/people-route.test.ts",
+      "sha": "f00cb8515d3a70e106ec734d84ea00ad9b40be2c",
+      "size": 2235,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/people-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/planner-pages-route.test.ts",
+      "sha": "6528528c2208ac50218b7f97147efd2ca3634183",
+      "size": 2069,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/planner-pages-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/portfolio-route.test.ts",
+      "sha": "6135a6f426a54040ab5190f34c73d79051dc9435",
+      "size": 2965,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/portfolio-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts",
+      "sha": "aa21c0ef1ee0ad8ddaa53fc8b685c0102e2f6230",
+      "size": 3622,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/routines-route.test.ts",
+      "sha": "3c7edd08e0ed08d1bfc0224216dd27542450e4e5",
+      "size": 1904,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/routines-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts",
+      "sha": "5cfab26e9f171097994b3ec72c53c587b87268a5",
+      "size": 5997,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/work-route.test.ts",
+      "sha": "913650b3e8667127234a406b7f34e712d3cf7740",
+      "size": 3075,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test-browser/sucafina-native/work-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/bi-route.test.ts",
+      "sha": "e47a0e0b9722d59e3de883992c96ed49f9da4670",
+      "size": 2912,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/bi-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/dashboard-route.test.ts",
+      "sha": "3b566e8d56adb9c3a0010b6e709d2f61c0e43129",
+      "size": 4201,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/dashboard-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/native-chapter-entry.test.ts",
+      "sha": "8ac82ca5b97052b7dbcc59f796009ace079b5815",
+      "size": 9467,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/native-chapter-entry.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/navigation-consent-recheck.test.ts",
+      "sha": "c2630424358f6a14081ba16539bcb14f09019599",
+      "size": 5523,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/navigation-consent-recheck.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/owner-exit.test.ts",
+      "sha": "77c7fc32d00e612983f40c19e287aab1f4d7d232",
+      "size": 5200,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/owner-exit.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/planner-route.test.ts",
+      "sha": "628521b990e697c034fd2e4ff413ee4ac3a23df4",
+      "size": 4908,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/planner-route.test.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/procurement-route.test.ts",
+      "sha": "d7119a2ec863836ab6272e70ac84f566c5760b0c",
+      "size": 4420,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/procurement-route.test.ts"
+    },
+    {
+      "path": "packages/client/package.json",
+      "sha": "f98b17574eaa8ab67b00c7b8812c682e80a0b321",
+      "size": 2085,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/package.json"
+    },
+    {
+      "path": "packages/client/script/build.ts",
+      "sha": "99ae2184b9c13f6175d7ba8e3025068bee07ee4f",
+      "size": 1532,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/script/build.ts"
+    },
+    {
+      "path": "packages/client/src/contract.ts",
+      "sha": "94f1ddd42964636fbc4b1908c47c51f24dcce226",
+      "size": 4924,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/src/contract.ts"
+    },
+    {
+      "path": "packages/client/src/index.ts",
+      "sha": "b65f3f982384824273b9641df98671bc4392bc15",
+      "size": 194,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/src/index.ts"
+    },
+    {
+      "path": "packages/client/src/sucafina/context.ts",
+      "sha": "aac93d7c9e34674db51a143b3638a4f626b6398a",
+      "size": 765,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/src/sucafina/context.ts"
+    },
+    {
+      "path": "packages/client/src/sucafina/people.ts",
+      "sha": "2b07a465d2208a57b192147e6bca229b76ec6b3d",
+      "size": 5032,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/src/sucafina/people.ts"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "sha": "7de38571d46e647a9ede5f2625fbdf1d692ac332",
+      "size": 54883,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/src/sucafina/transport.ts"
+    },
+    {
+      "path": "packages/client/src/wire.ts",
+      "sha": "8ff88190163e1254d4c92ea5c70ef0f9c8fc8d04",
+      "size": 190,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/src/wire.ts"
+    },
+    {
+      "path": "packages/client/test/actions-transfer-download.test.ts",
+      "sha": "cfca559d4571517dd1e9b69c5525066b20524958",
+      "size": 7625,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/actions-transfer-download.test.ts"
+    },
+    {
+      "path": "packages/client/test/actions-transfer-errors.test.ts",
+      "sha": "1b807fba08352f94b7a5a522b72382f2fb8d2cbc",
+      "size": 12155,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/actions-transfer-errors.test.ts"
+    },
+    {
+      "path": "packages/client/test/actions-transfer-upload.test.ts",
+      "sha": "fe34b39f37c35431fe1413d97f500f43e9ea95eb",
+      "size": 10516,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/actions-transfer-upload.test.ts"
+    },
+    {
+      "path": "packages/client/test/effect.test.ts",
+      "sha": "84ec5ea971c9599163b7a8ac45576337bdf380a8",
+      "size": 9925,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/effect.test.ts"
+    },
+    {
+      "path": "packages/client/test/promise.test.ts",
+      "sha": "b57885468ca4522ee361299285483af992c175a8",
+      "size": 17044,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/promise.test.ts"
+    },
+    {
+      "path": "packages/client/test/session-settings-effect.test.ts",
+      "sha": "b266137ed235ce1404fda6afc1e53910895b4cc7",
+      "size": 5487,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/session-settings-effect.test.ts"
+    },
+    {
+      "path": "packages/client/test/session-settings-promise.test.ts",
+      "sha": "0622d04e245f000eadd2d723de1e0a1aea638cf0",
+      "size": 4120,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/session-settings-promise.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/collaboration-routes.test.ts",
+      "sha": "e6783dbdfedd9190b5858f03c6cc3b58ceaf218b",
+      "size": 4803,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/collaboration-routes.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/dashboard-draft-read.test.ts",
+      "sha": "e364324fbce5bdd2bb28d9daa7b4576dd97d9440",
+      "size": 5946,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/dashboard-draft-read.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/decision-edit.test.ts",
+      "sha": "f61e9d55628291c0c6a107c9e8df3cd5ec1b62e2",
+      "size": 2404,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/decision-edit.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/decision-routes.test.ts",
+      "sha": "0bcf6085215e8f1eae06cfff0a0a7f36422bb0d3",
+      "size": 9472,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/decision-routes.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/report-retry.test.ts",
+      "sha": "4667c7b8e63e4693b9ad119f89e9f94edc281995",
+      "size": 4028,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/files-transport226/report-retry.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/source-codecs.test.ts",
+      "sha": "554e92882bedf76f52d157ba610ab8bc99ddbb3d",
+      "size": 8623,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/files-transport226/source-codecs.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/files-transport226/talent-members.test.ts",
+      "sha": "5bb001a6a6e551673cb866058efbd78a66e70b28",
+      "size": 3284,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/files-transport226/talent-members.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/human-retry.test.ts",
+      "sha": "9b9e42ef3853f554cd9c5989fa8fc7ce0782f14a",
+      "size": 20472,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/human-retry.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/native-codecs.test.ts",
+      "sha": "e9b33b985760598dca0b5f970dab97dc2eb067d1",
+      "size": 2331,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/native-codecs.test.ts"
+    },
+    {
+      "path": "packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts",
+      "sha": "cc654ff6a7bc462895cfca4dab30668830af200d",
+      "size": 7925,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/sucafina/transport-type-repair/f02-transport.test.ts"
+    },
+    {
+      "path": "packages/client/test/type-conformance.test.ts",
+      "sha": "cca5cfad6fe95933ca26cf045719004ee49711d3",
+      "size": 4458,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/test/type-conformance.test.ts"
+    },
+    {
+      "path": "packages/sdk-next/package.json",
+      "sha": "7b96125b9aa768181cc99c19028659e6d9e72da3",
+      "size": 677,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/package.json"
+    },
+    {
+      "path": "packages/sdk-next/src/index.ts",
+      "sha": "becc7d72c269c90f638c1fb47433403aa2e39f8f",
+      "size": 363,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/src/index.ts"
+    },
+    {
+      "path": "packages/sdk-next/src/operator-transport.ts",
+      "sha": "ef67f666b8ef7a94c270058903d1f8ecf34abbf0",
+      "size": 1926,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/src/operator-transport.ts"
+    },
+    {
+      "path": "packages/sdk-next/src/orchestra.ts",
+      "sha": "0a8009ba9ac8d51b0a0c27363786176479dc8532",
+      "size": 2642,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/src/orchestra.ts"
+    },
+    {
+      "path": "packages/sdk-next/test/capability-connections.test.ts",
+      "sha": "8b1121f3d66e2b20f805a83676b86ff590e97e97",
+      "size": 12714,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/test/capability-connections.test.ts"
+    },
+    {
+      "path": "packages/sdk-next/test/capability-setup.test.ts",
+      "sha": "031daea54692bcab38d718f9d4ff3c8bd4c3dbf5",
+      "size": 13140,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/test/capability-setup.test.ts"
+    },
+    {
+      "path": "packages/sdk-next/test/embedded.test.ts",
+      "sha": "6fe30ce4ee65de629cbb63dbba7de447a0a2464c",
+      "size": 10581,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/test/embedded.test.ts"
+    },
+    {
+      "path": "packages/sdk-next/test/import-boundaries.test.ts",
+      "sha": "67768189e194eafe084bd2296ca9075e69ac8a4b",
+      "size": 1906,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/test/import-boundaries.test.ts"
+    },
+    {
+      "path": "packages/sdk-next/test/operator-transport.test.ts",
+      "sha": "415c5665517b7994b2adc47be2a3b8c1386f6161",
+      "size": 2415,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/test/operator-transport.test.ts"
+    },
+    {
+      "path": "apps/desktop/electron-builder.config.ts",
+      "sha": "30cdff984b46f20c76066ff24e4304d76b5a8467",
+      "size": 13149,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/electron-builder.config.ts"
+    },
+    {
+      "path": "apps/desktop/package.json",
+      "sha": "2020cbd445c197c226397d85a9305049198c5223",
+      "size": 3548,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/package.json"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-profile-registry.test.ts",
+      "sha": "7a8f0cccb01d74fca759d0991c54f71a63185fcd",
+      "size": 2151,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/app-dock-profile-registry.test.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-profile-registry.ts",
+      "sha": "51b63ddc3a072b7734ccb281a4826dbd93237167",
+      "size": 13333,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/app-dock-profile-registry.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-rpc.test.ts",
+      "sha": "ab66b27bdf22c7a36094c9ae019c55bdd7ec25bf",
+      "size": 14221,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/app-dock-rpc.test.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-security.test.ts",
+      "sha": "8806add844fd137790e31056db4267a8848cec0b",
+      "size": 62220,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/app-dock-security.test.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock-session.ts",
+      "sha": "a54327e6094ba89eb1b15c9c2cd2d11dae456ec4",
+      "size": 7147,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/app-dock-session.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/app-dock.ts",
+      "sha": "e67d046dd9ac9a69af5e589c453db7af5b25ff99",
+      "size": 28200,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/app-dock.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/ipc-app-dock.ts",
+      "sha": "1323e958c305b2122353d7f7a9122e84ae40a210",
+      "size": 15373,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/ipc-app-dock.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/window-registry.test.ts",
+      "sha": "23cdd01f642842eab0582f508f3ccd3a72751986",
+      "size": 3832,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/window-registry.test.ts"
+    },
+    {
+      "path": "apps/desktop/src/main/window-state.test.ts",
+      "sha": "af2b5a13c26c9e61854f237d79286b09b39930b4",
+      "size": 686,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/main/window-state.test.ts"
+    },
+    {
+      "path": "apps/desktop/src/renderer/index.tsx",
+      "sha": "8a3442c9736badfcf59e9ad9c1eb7342fae1430b",
+      "size": 17963,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/desktop/src/renderer/index.tsx"
+    },
+    {
+      "path": "apps/web/package.json",
+      "sha": "e63f6bb31e454f1cae299f551eea1335b89e7592",
+      "size": 575,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/web/package.json"
+    },
+    {
+      "path": "apps/web/src/entry.tsx",
+      "sha": "cdc9bb1d32c86be9e85b87188a72a661f8536fff",
+      "size": 5837,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/web/src/entry.tsx"
+    },
+    {
+      "path": "apps/web/vite.config.ts",
+      "sha": "3198b71c84993ac066e98fc2dddc67635cab727f",
+      "size": 2404,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/apps/web/vite.config.ts"
+    },
+    {
+      "path": "sf/release-target.json",
+      "sha": "d09d113a3d7d328fdeb2f8b8a504dd478a3080ba",
+      "size": 1127,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/release-target.json"
+    },
+    {
+      "path": "sf/ci/assemble-orchestra-web.mjs",
+      "sha": "34ed1aa2f74e4395bfa339ea0cc0af6565483820",
+      "size": 10359,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/ci/assemble-orchestra-web.mjs"
+    },
+    {
+      "path": "sf/azure/runtime/orchestra-sf.service",
+      "sha": "d0152eb58f906517bef3c8f88d824b3a9e72dd42",
+      "size": 1167,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/orchestra-sf.service"
+    },
+    {
+      "path": "sf/azure/runtime/package.py",
+      "sha": "afb8c0e7e3f0473405154495a9204a2ee15a65b6",
+      "size": 5541,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/package.py"
+    },
+    {
+      "path": "sf/azure/runtime/bundle.py",
+      "sha": "339059b8e18217ec8e67b581dd27f14d9f77e0b2",
+      "size": 7905,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/sf/azure/runtime/bundle.py"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+      "sha": "66e269a78af8262764228557e2eeccd29bca1a36",
+      "size": 4540,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/journeys.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+      "sha": "bc84476891d97e7baad4f6462933c60688c11847",
+      "size": 5448,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/source-context-fixture.ts",
+      "sha": "eea862b6b7391c12bfefacb94fa61886a6f0b141",
+      "size": 498,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/test/sucafina-native/source-context-fixture.ts"
+    },
+    {
+      "path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "sha": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+      "size": 533,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/tsconfig.sf-e2e.json"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "sha": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+      "size": 2593,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/app-shell/e2e/tsconfig.json"
+    },
+    {
+      "path": "packages/client/bunfig.toml",
+      "sha": "625b8da1173ddfb1ccb758c54f1585e90dbe2b6a",
+      "size": 104,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/client/bunfig.toml"
+    },
+    {
+      "path": "packages/sdk-next/bunfig.toml",
+      "sha": "625b8da1173ddfb1ccb758c54f1585e90dbe2b6a",
+      "size": 104,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/sdk-next/bunfig.toml"
+    },
+    {
+      "path": "packages/core/test/lib/effect.ts",
+      "sha": "4e9a5c195d29d621f96f326041fa1d8a52be7147",
+      "size": 2864,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/packages/core/test/lib/effect.ts"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/README.md",
+      "sha": "726b6cb98e697d4c583fa72e8289debf74258a5e",
+      "size": 5452,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf2h/proofs/installed/README.md"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/register.ts",
+      "sha": "5fa9b5d1c82a9a70ea6351f4403b8854a64a2296",
+      "size": 8595,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf2h/proofs/installed/register.ts"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/consume.ts",
+      "sha": "ce5191c0217cc581ee4258cc244ca146e1d42f06",
+      "size": 2684,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/script/sf2h/proofs/installed/consume.ts"
+    },
+    {
+      "path": ".github/workflows/sucafina-native-localhost-visual.yml",
+      "sha": "8b7e9b47a56d3ef446de5a4c889c9fe8f9f2eb2e",
+      "size": 3976,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sucafina-native-localhost-visual.yml"
+    },
+    {
+      "path": ".github/workflows/sf-release.yml",
+      "sha": "92fdd5b8f7ff7a1d0ccc6c15a2fdabe99377ed95",
+      "size": 1855,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/687759276c2c9121c2cfd20a5994b277ceb7ee4d/.github/workflows/sf-release.yml"
+    }
+  ],
+  "integrationCorrections": {
+    "review": "root + shell follow-up",
+    "status": "DOCUMENTARY_NOT_RUN",
+    "items": [
+      "Confirmed sdk-next alias from exact-pin module-registry.",
+      "Corrected five Orchestra spec runners; never emit generic test-ci production requests for them.",
+      "Generic Orchestra config builds web but omits metadata.bundle production; fix metadata and built/dev fixture expectations in planned regression job. A returning production-only test is not coverage.",
+      "Native command made explicit workers1/retries0/repeat1; no secret-bearing trace/screens/video.",
+      "213 prior identity inventory-only paths have a separate focused fixture review; see consolidated test plan."
+    ]
+  }
+}
