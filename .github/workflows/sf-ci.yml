@@ -582,6 +582,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git diff --exit-code
+          git diff --cached --exit-code
           export SF_CHECKOUT_SHA="$(git rev-parse HEAD)"
           export SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
           export SF_BROWSER_POOL_OUTPUT="$RUNNER_TEMP/sf-browser-pool"
@@ -618,6 +620,11 @@ jobs:
           set -euo pipefail
           test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
           test "$SF_CHECKOUT_TREE_SHA" = "$(git rev-parse 'HEAD^{tree}')"
+          # A committed tree cannot identify dirty tracked product inputs. Keep the
+          # evidence but refuse to issue a receipt if a test changed those inputs.
+          git status --porcelain=v1 --untracked-files=no > "$SF_BROWSER_POOL_OUTPUT/tracked-worktree-after.txt"
+          git diff --exit-code > "$SF_BROWSER_POOL_OUTPUT/tracked-diff-after.txt"
+          git diff --cached --exit-code > "$SF_BROWSER_POOL_OUTPUT/staged-diff-after.txt"
           set +e
           python3 script/sf2h/final-bundle/verify-bun-report.py "$SF_BROWSER_POOL_OUTPUT/report.xml" \
             > "$SF_BROWSER_POOL_OUTPUT/summary.json"

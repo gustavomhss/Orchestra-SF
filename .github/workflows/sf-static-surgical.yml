@@ -51,6 +51,9 @@ jobs:
           evidence="$RUNNER_TEMP/sf-static-surgical-evidence"
           test ! -e "$evidence"
           mkdir -p "$evidence"
+          git status --porcelain=v1 --untracked-files=no > "$evidence/tracked-worktree-before.txt"
+          git diff --exit-code
+          git diff --cached --exit-code
           git rev-parse HEAD > "$evidence/source-sha.txt"
           git rev-parse 'HEAD^{tree}' > "$evidence/source-tree.txt"
           git show -s --format=%P HEAD > "$evidence/source-parents.txt"
@@ -204,6 +207,7 @@ jobs:
           const source = {
             sha: read("source-sha.txt"), tree: read("source-tree.txt"), parents,
             checkoutAfter: read("checkout-after-sha.txt"),
+            trackedWorktreeBefore: read("tracked-worktree-before.txt"), trackedWorktreeAfter: read("tracked-worktree-after.txt"),
             workflowBlob: read("workflow-blob.txt"), canonicalWorkflowBlob: read("canonical-workflow-blob.txt"),
             canonicalDevRef: read("guard-dev-ref.txt"), canonicalDevMergeBase: read("guard-dev-merge-base.txt"),
             closeCandidateRef: read("guard-close-ref.txt"), prBase: read("guard-pr-base.txt"),
@@ -211,6 +215,7 @@ jobs:
             os: process.env.RUNNER_OS, arch: process.env.RUNNER_ARCH,
           }
           const sourceValid = source.sha === process.env.GITHUB_SHA && source.checkoutAfter === source.sha &&
+            source.trackedWorktreeBefore === "" && source.trackedWorktreeAfter === "" &&
             sha(source.tree) && parents.length > 0 && parents.every(sha) && sha(source.workflowBlob) && sha(source.canonicalWorkflowBlob) &&
             [source.canonicalDevRef, source.canonicalDevMergeBase, source.closeCandidateRef, source.prBase].every(sha) &&
             source.os === "Linux" && source.arch === "X64" && source.ref?.startsWith("refs/heads/ci-static-sfc-") === true
