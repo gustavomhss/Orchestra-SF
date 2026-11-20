@@ -66,6 +66,8 @@ const active: { ready: boolean; handle?: (request: Request) => Promise<Response>
 const server = Bun.serve({
   hostname: "127.0.0.1",
   port: 4174,
+  // The native event stream sends its heartbeat every 15s; Bun defaults to a 10s idle cutoff.
+  idleTimeout: 0,
   fetch: async (request) => {
     if (new URL(request.url).pathname === "/__wp04_ready")
       return new Response(active.ready ? "ready" : "starting", { status: active.ready ? 200 : 503 })

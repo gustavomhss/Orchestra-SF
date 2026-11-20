@@ -5,7 +5,8 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
-import { selectSfProfile } from "../native/select-profile"
+import { connectInstalledShell, installedShellOrigin } from "../installed-shell"
+import { prepareLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 
 /** This fixture starts the existing CLI installation, never a fixture HTTP server. */
 export type ReportsInstallation = {
@@ -112,7 +113,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
       return result.stdout.toString("utf8")
     })
     const app = yield* Effect.gen(function* () {
-      yield* Effect.promise(() => run(["run", path.join(local, "prepare.ts"), root]))
+      yield* Effect.promise(() => prepareLocalConfiguration(root, installedShellOrigin()))
       yield* Effect.promise(() => run(["run", path.join(local, "enroll.ts"), config, "--enable-local"]))
       const enrollment = { prepared: true }
       const profile = yield* Effect.promise(() => readOperatorProfile(config))
@@ -132,7 +133,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
       const tail = { value: "" }
       const child = yield* launcher.spawn(command([
         "run", path.join(repository, "apps/cli/src/index.ts"), "serve",
-        "--hostname", "localhost", "--port", "4110", "--installation", path.join(local, "entry.ts"),
+        "--hostname", "127.0.0.1", "--port", "4174", "--public-origin", profile.origin, "--installation", path.join(local, "entry.ts"),
       ]))
       owned.child = child
       // The real CLI emits this event after loading the actual host graph and binding its listener.
@@ -142,7 +143,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         Stream.splitLines,
         Stream.runForEach((line) => {
           tail.value = `${tail.value}\n${redact(line)}`.slice(-8192)
-          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4110\/?$/.test(line.trim())
+          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4174\/?$/.test(line.trim())
             ? Deferred.succeed(ready, undefined)
             : Effect.void
         }),
@@ -155,12 +156,6 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
       yield* Deferred.await(ready)
       if (!(yield* child.isRunning)) throw new Error("Reports CLI stopped immediately after readiness")
 
-      // The CLI shell has its own real Basic credential in addition to the
-      // business operator cookie. Keep it private and prove its actual health
-      // endpoint before selecting the server through the existing recovery UI.
-      const server = yield* Effect.promise(() => track(() => readInstalledServer(
-        root, installation.origin, AbortSignal.any([lifetime.signal, AbortSignal.timeout(input.startupTimeoutMs)]),
-      )))
       const authenticated = {
         ...installation,
         diagnostics: () => diagnosticTail(tail.value),
@@ -169,7 +164,9 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
           await redeemOperatorEnrollment(page, installation,
             AbortSignal.any([lifetime.signal, AbortSignal.timeout(input.startupTimeoutMs)]))
           enrollment.prepared = false
-          await selectSfProfile(page, { origin: installation.origin, directory: installation.root, server })
+          // Select the issued server credential and admitted project through the
+          // existing shell controls before any native chapter is opened.
+          await connectInstalledShell(page, installation)
         }),
       }
       yield* Effect.promise(() => authenticated.signIn(input.page))
@@ -180,37 +177,6 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
     }))
     return yield* Effect.promise(() => use(app))
   })).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
-}
-
-/** Read the credential created by this exact CLI, never synthesize another authority. */
-async function readInstalledServer(root: string, origin: string, signal: AbortSignal) {
-  // isolatedEnvironment supplies XDG_STATE_HOME; Global.Path.state appends
-  // "orchestra", and Daemon.password writes this private file before listening.
-  const password = await readFile(path.join(root, "host-state", "orchestra", "password"), "utf8")
-    .catch(() => { throw new Error("Reports core server credential file is unavailable") })
-  if (!password) throw new Error("Reports core server credential file is empty")
-  const health = new URL("/api/health", origin)
-  // Native fetch keeps these credentials outside Playwright traces and reports.
-  // Both observations are real: the shell requires Basic and admits its saved key.
-  const anonymous = await fetch(health, { redirect: "manual", signal }).catch(() => {
-    throw new Error("Reports core server anonymous health transport failed")
-  })
-  if (anonymous.status !== 401)
-    throw new Error(`Reports core server did not require its own credential (${anonymous.status})`)
-  await anonymous.body?.cancel()
-  const username = "orchestra"
-  const response = await fetch(health, {
-    headers: { Authorization: "Basic " + Buffer.from(username + ":" + password).toString("base64") },
-    redirect: "manual", signal,
-  }).catch(() => { throw new Error("Reports core server authenticated health transport failed") })
-  if (response.status !== 200)
-    throw new Error(`Reports core server credential was not admitted (${response.status})`)
-  const body: unknown = await response.json().catch(() => undefined)
-  if (!body || typeof body !== "object" || !("healthy" in body) || body.healthy !== true ||
-      !("version" in body) || typeof body.version !== "string" || !body.version)
-    throw new Error("Reports core server health did not identify the running installation")
-  signal.throwIfAborted()
-  return { username, password }
 }
 
 function isolatedEnvironment(root: string) {
@@ -237,7 +203,7 @@ function isolatedEnvironment(root: string) {
 
 async function readOperatorProfile(config: string) {
   const value: unknown = JSON.parse(await readFile(config, "utf8"))
-  if (!value || typeof value !== "object" || !("origin" in value) || value.origin !== "http://localhost:4110" ||
+  if (!value || typeof value !== "object" || !("origin" in value) || value.origin !== installedShellOrigin() ||
       !("mount" in value) || value.mount !== "/sucafina" || !("authentication" in value) || value.authentication !== "local-operator" ||
       !("localOperator" in value) || !value.localOperator || typeof value.localOperator !== "object" ||
       !("installationId" in value.localOperator) || typeof value.localOperator.installationId !== "string" ||
