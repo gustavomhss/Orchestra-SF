@@ -81,6 +81,7 @@ export function createSfPortfolioServices(input: {
     sources: business.plannerSources, evidence: business.context, results: business.results, revalidate: authority.host.revalidate,
     readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences, caseFor: business.resolveCase,
     idempotencyKey, decisions: mutations, createReceipt, units, coveragePreview, exactThreshold,
+    sensitivityReadScope: authority.host,
     candidateCoverageRefFor: async (candidate) => {
       const ref = parseCaseRef(candidate.caseRef)
       return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) }

@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
 import type { StoredDecisionResult, createSfDecisionResultStore } from "../decisions/result-store.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import type { PortfolioBinding } from "../decisions/portfolio-bindings.ts"
 import type { CriterionResultBinding } from "../decisions/criterion-rules.ts"
 import type { PlannerDirectIntervalProof } from "../decisions/coverage-interval.ts"
@@ -113,9 +114,12 @@ export function createPortfolioProofVerifier(input: {
     const issued = structuredClone(await input.units.resolve(binding.request, context))
     if (issued.status !== "ok" || issued.value.ruleRef !== binding.ruleRef || issued.value.ruleVersion !== binding.ruleVersion || digestSfValue(issued.value.caseRef) !== digestSfValue(binding.caseRef)) return false
     const unitBinding = issued.value
-    const source = structuredClone(await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context))
-    const baseline = structuredClone(await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context))
-    if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== binding.request.scenarioRef || baseline.value.resultRef !== unitBinding.baselineRef || source.value.requestDigest !== digestSfValue(unitBinding.scenario) || [source.value, baseline.value].some((value) => value.resultDigest !== digestSfValue(value.result) || value.caseRef.id !== binding.caseRef.id || value.caseRef.incarnation !== binding.caseRef.incarnation || value.caseRef.version > binding.caseRef.version)) return false
+    // Both historical reads precede validation. The original C08 producer can
+    // share its read envelopes while retaining every per-result source check.
+    const resultStore = input.results
+    const [source, baseline] = (await readHistoricalScenarios(resultStore,
+      [binding.request.scenarioRef, unitBinding.baselineRef], context)).map((value) => structuredClone(value))
+    if (input.results !== resultStore || source?.status !== "ok" || baseline?.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== binding.request.scenarioRef || baseline.value.resultRef !== unitBinding.baselineRef || source.value.requestDigest !== digestSfValue(unitBinding.scenario) || [source.value, baseline.value].some((value) => value.resultDigest !== digestSfValue(value.result) || value.caseRef.id !== binding.caseRef.id || value.caseRef.incarnation !== binding.caseRef.incarnation || value.caseRef.version > binding.caseRef.version)) return false
     const sourceScenario = source.value.result
     const baselineScenario = baseline.value.result
     const interval = input.coveragePreview ? structuredClone(await input.coveragePreview.issue(structuredClone(binding.request), unitBinding.baselineRef, context)) : undefined
@@ -164,9 +168,10 @@ export function createPortfolioProofVerifier(input: {
       },
       revalidate: async (_samples, _threshold, trusted) => {
         if (!await input.units.revalidate(unitBinding, trusted) || samples.length !== expectedResult.evaluated.length) return false
-        const currentSource = structuredClone(await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, trusted))
-        const currentBaseline = structuredClone(await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, trusted))
-        if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
+        const currentResultStore = input.results
+        const [currentSource, currentBaseline] = (await readHistoricalScenarios(currentResultStore,
+          [binding.request.scenarioRef, unitBinding.baselineRef], trusted)).map((value) => structuredClone(value))
+        if (input.results !== currentResultStore || currentSource?.status !== "ok" || currentBaseline?.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         if (interval?.status === "ok" && (!input.coveragePreview || !await input.coveragePreview.revalidate(interval.value.intervalRef, trusted))) return false
         if (!exact.value) return true
         if (!input.exactThreshold) return false

@@ -223,11 +223,15 @@ async function persistedServices(fixture: Awaited<ReturnType<typeof createPortfo
   const transactionAll = fixture.store.transactionAll?.bind(fixture.store)
   if (!transactionAll) throw new Error("The C08 fixture requires durable multi-surface transaction support")
   const sourceFences = (snapshots: Readonly<Record<"dashboard" | "planner" | "procurement", Snapshot>>) => ({ dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) })
-  const readSourceFences = async (context: TrustedDomainContext) => await revalidate(context) ? transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) })) : undefined
+  const readSourceFences = async (context: TrustedDomainContext) => {
+    if (!await revalidate(context)) return undefined
+    const current = fixture.store.currentSnapshots?.()
+    return current ? sourceFences(current) : transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) }))
+  }
   const verifier = createPortfolioProofVerifier({ cases: fixture.cases, planner: fixture.plannerWithCriteria, sources: fixture.sources, evidence: fixture.evidence, results, revalidate, readSourceFences, lockedSourceFences: () => {
     const snapshots = fixture.store.currentSnapshots?.()
     return snapshots ? sourceFences(snapshots) : undefined
-  }, caseFor: async () => ({ status: "ok", value: fixture.caseRef }), idempotencyKey: async (digest) => `wp13-certified:${training}:${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "human-choice-required" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "portfolio-candidates-not-requested" }), revalidateAnalysis: async () => false, units: fixture.issuer, sensitivityPreview: preview, coveragePreview, exactThreshold })
+  }, caseFor: async () => ({ status: "ok", value: fixture.caseRef }), idempotencyKey: async (digest) => `wp13-certified:${training}:${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "human-choice-required" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "portfolio-candidates-not-requested" }), revalidateAnalysis: async () => false, units: fixture.issuer, sensitivityPreview: preview, coveragePreview, exactThreshold, sensitivityReadScope: fixture.host })
   const bindings = createCriterionResultBindings({ state, host: fixture.host, rules: fixture.rules, results, authorizeCase: async (decision, context) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && await fixture.host.revalidate(context), verifyBinding: (binding, _rule, result, context) => verifier.verifySensitivity(binding, result, context), verifySnapshot: (snapshot, binding, _rule, context) => verifier.verifySnapshot(snapshot, binding, context), operationIdentity: () => `wp13-certified-binding:${training}`, proposalCoverageWrites: writes, now: () => "2026-11-13T00:00:00Z" })
   const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "portfolio-not-requested" }), sensitivity }, results, bindings, resolveBinding: fixture.issuer.resolve, idempotencyKey: async (digest) => `wp13-certified-result:${training}:${digest}` })
   return { state, results, bindings, verifier, sensitivity, persistent, calls, faults, readSourceFences }
