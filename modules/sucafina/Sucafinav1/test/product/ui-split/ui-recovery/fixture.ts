@@ -75,7 +75,7 @@ export async function editNewDraft(page: Page, action: string) {
   await panel.getByLabel("Notes", { exact: true }).fill("Private recovery explanation")
 }
 
-export async function prepareApply(page: Page, fixture: RecoveryFixture, action: string) {
+export async function openPreparation(page: Page, fixture: RecoveryFixture, action: string) {
   const panel = await openWorkbench(page, fixture)
   await editNewDraft(page, action)
   const save = receive(page, "dashboard-hot-topic-draft")
@@ -90,6 +90,12 @@ export async function prepareApply(page: Page, fixture: RecoveryFixture, action:
   await panel.getByRole("link", { name: "Review saved proposal", exact: true }).click()
   const preparation = applicationPanel(page)
   await preparation.getByText(action, { exact: true }).waitFor()
+  expect(await preparation.getByRole("button", { name: "Review before applying", exact: true }).isEnabled()).toBe(true)
+  return preparation
+}
+
+export async function prepareApply(page: Page, fixture: RecoveryFixture, action: string) {
+  const preparation = await openPreparation(page, fixture, action)
   const prepared = receive(page, "dashboard-hot-topic-prepare")
   await preparation.getByRole("button", { name: "Review before applying", exact: true }).click()
   const result = await prepared
