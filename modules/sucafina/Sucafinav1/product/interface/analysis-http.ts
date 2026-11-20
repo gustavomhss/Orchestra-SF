@@ -78,7 +78,7 @@ function selectedRequest(runtime: AnalysisHttpRuntime, request: SfAnalysisReques
   if (skills.length !== 1 || new Set(request.requestedOperationScope).size !== request.requestedOperationScope.length) return false
   const skill = skills[0]!
   const kind = inputKind(request.skillId)
-  return !!kind && skill.input_type === kind && request.requestedOperationScope.every((operation) =>
+  return !!kind && skill.inputSchemaRef === kind && request.requestedOperationScope.every((operation) =>
     parent.operationIds.includes(operation) && parent.profile.allowedOperations.includes(operation) && skill.allowedOperations.includes(operation))
 }
 
